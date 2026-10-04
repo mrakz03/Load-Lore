@@ -1,0 +1,23 @@
+cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,group
+12 Gauge,"2¾"" #8 Target · 1⅛ oz",492.2,1200,0.015,18,0.35,yes,approx,Target
+12 Gauge,"2¾"" #6 Game · 1¼ oz",546.9,1330,0.018,24,0.65,,approx,Game
+12 Gauge,"3"" #2 Steel Goose · 1¼ oz",546.9,1450,0.018,32,1.40,,partial,Waterfowl
+12 Gauge,"3"" #5 Turkey · 1¾ oz",765.6,1250,0.02,30,2.00,,approx,Turkey
+12 Gauge,"2¾"" #4 Buck · 27 pellets",561.6,1325,0.041,28,1.20,,partial,Buckshot
+12 Gauge,"2¾"" #1 Buck · 16 pellets",648,1325,0.051,30,1.30,,partial,Buckshot
+12 Gauge,"2¾"" 00 Buck · 9 pellets",486,1325,0.057,30,1.30,,partial,Buckshot
+12 Gauge,"2¾"" Low-Recoil 00 Buck · 8 pellets",432,1140,0.057,22,1.80,,partial,Buckshot
+12 Gauge,"2¾"" Rifled Slug · 1 oz",437.5,1600,0.09,36,1.75,,approx,Slug
+20 Gauge,"2¾"" #8 Target · ⅞ oz",382.8,1200,0.015,15,0.35,yes,approx,Target
+20 Gauge,"2¾"" #3 Buck · 20 pellets",470,1200,0.043,24,1.60,,approx,Buckshot
+20 Gauge,"2¾"" Rifled Slug · ⅝ oz",273.4,1600,0.079,28,1.60,,approx,Slug
+28 Gauge,"2¾"" #8 Target · ¾ oz",328.1,1330,0.015,14,0.60,yes,partial,Target
+28 Gauge,"2¾"" #9 Target · ¾ oz",328.1,1250,0.013,13,0.55,,partial,Target
+28 Gauge,"2¾"" #6 Upland · ¾ oz",328.1,1295,0.018,14,0.85,,partial,Game
+28 Gauge,"2¾"" #7½ Game · 1 oz",437.5,1220,0.016,17,0.90,,partial,Game
+28 Gauge,"2¾"" #6 Steel Upland · ⅝ oz",273.4,1350,0.013,15,1.10,,partial,Game
+28 Gauge,"3"" #3 Steel · ¾ oz",328.1,1400,0.017,18,1.60,,partial,Waterfowl
+28 Gauge,"3"" #9 TSS Turkey · 1½ oz",656.2,1050,0.022,24,5.50,,partial,Turkey
+.410 Bore,"2½"" #8 Target · ½ oz",218.8,1200,0.015,8.5,0.45,yes,approx,Target
+.410 Bore,"3"" 000 Buck · 5 pellets",350,1135,0.062,12,1.40,,approx,Buckshot
+.410 Bore,"2½"" Rifled Slug · ⅕ oz",87.5,1800,0.057,14,1.50,,approx,Slug
