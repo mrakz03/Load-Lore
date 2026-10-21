@@ -10,6 +10,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Compare Cartridges uses data/ammo_*.csv: generic loads, no brand names. Compare Loads uses
   data/loads_*.csv: every load name starts with its brand (Federal, Hornady, SIG Sauer...).
   Generic rows never go in loads_*.csv, branded rows never in ammo_*.csv.
+  ammo_*.csv names are bullet types only (Soft Point, Polymer Tip, Match BTHP, FMJ, JHP, Solid,
+  Copper (lead-free)...), no product lines; it covers the common bases per cartridge, not every load.
 - Compare Cartridges grades on an absolute curve; Compare Loads grades relative to the
   same cartridge and purpose (median/MAD, centre 70).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
