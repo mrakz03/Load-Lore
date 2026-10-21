@@ -60,6 +60,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .main{padding:26px 34px 48px;min-width:0}
   .wrap.wide{max-width:1040px}.wrap{margin:0}
   .wrap.home{max-width:760px}
+  .nav>button.phone{display:none}
 }
 .lgrid{align-items:start;display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
 @media(min-width:720px){.lgrid{grid-template-columns:1fr 1fr}}
@@ -156,6 +157,18 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .hbtns .btn{padding:9px 14px;font-size:.85rem}
 .hbtns .btn.d{color:var(--danger)}
 .look{display:flex;align-items:center;gap:10px;margin-top:22px}.look select{max-width:240px}
+/* phone: a line under the app name, Home and the two menus sit a little lower, and Text size /
+   Theme live on the Settings tab instead of the header and Home screen */
+@media(max-width:899px){
+  .brand{border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:14px}
+  .brand #size1,#app .look{display:none}
+  #app.home,#app.picker{padding-top:7vh}
+}
+.setlist{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.setrow{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.setrow b{font-size:.98rem}.setrow .muted{font-size:.85rem}
+.setrow select{max-width:220px}
+.setrow .size{font-size:0}.setrow .size button{font-size:.95rem;min-width:52px;min-height:42px}
 .safety{font-size:.78rem;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:14px;line-height:1.4}
 .costlbl{font-weight:700;margin-top:10px}
 </style>
@@ -377,8 +390,10 @@ const app=$("#app");
 const ICON={
   home:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10"/></svg>',
   cart:'<svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 7a3 3 0 0 0 6 0L7 7zM17 7l-3 7a3 3 0 0 0 6 0l-3-7z"/></svg>',
-  loads:'<svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg>'};
-const NAVS=[["home","Home",ICON.home],["cartridges","Compare Cartridges",ICON.cart],["loads","Compare Loads",ICON.loads]];
+  loads:'<svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg>',
+  settings:'<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>'};
+// Settings is a phone-only tab; wide screens keep Text size in the sidebar and Theme on Home
+const NAVS=[["home","Home",ICON.home],["cartridges","Compare Cartridges",ICON.cart],["loads","Compare Loads",ICON.loads],["settings","Settings",ICON.settings]];
 const NAV={mode:"home",cat:null};
 const hasDetail=cat=>(state.detail[cat.title]||[]).length>0;
 function lastCat(){try{return localStorage.getItem("cartridge_calc_cat");}catch(e){return null;}}
@@ -386,8 +401,8 @@ function drawChrome(){
   const nav=$("#nav");
   nav.innerHTML=NAVS.map(([k,t,ic])=>{
     const on=NAV.mode===k;
-    return `<button data-nav="${k}" class="${on?"on":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Compare ","<i class='cmp'>Compare </i>")}</span></button>`+
-      (on&&k!=="home"?`<div class="sub">${CATEGORIES.filter(c=>k==="cartridges"||hasDetail(c)).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
+    return `<button data-nav="${k}" class="${on?"on":""}${k==="settings"?" phone":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Compare ","<i class='cmp'>Compare </i>")}</span></button>`+
+      (on&&k!=="home"&&k!=="settings"?`<div class="sub">${CATEGORIES.filter(c=>k==="cartridges"||hasDetail(c)).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
   nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(NAV.mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
@@ -395,14 +410,14 @@ function drawChrome(){
 function navigate(mode,cat){
   if(app._leave){try{app._leave();}catch(e){}}
   app._leave=null;app.onkeydown=null;
-  NAV.mode=mode;NAV.cat=mode==="home"?null:(cat||null);
+  NAV.mode=mode;NAV.cat=mode==="home"||mode==="settings"?null:(cat||null);
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
-  if(mode==="home")showHome();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
+  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
   window.scrollTo(0,0);
 }
 function showHome(){
-  document.title=APP_TITLE;app.classList.remove("wide");app.classList.add("home");
+  document.title=APP_TITLE;app.classList.remove("wide","picker");app.classList.add("home");
   app.innerHTML=`<div class="hero"><h2>${APP_TITLE}</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost.</p></div>
   <div class="feat">
     <button class="fcard" data-go="cartridges"><div class="ic">${ICON.cart}</div><b>Compare Cartridges</b><span>Which caliber gives the most for the money?</span></button>
@@ -412,8 +427,18 @@ function showHome(){
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
   $("#theme").onchange=e=>applyTheme(e.target.value);
 }
+function showSettings(){
+  document.title=APP_TITLE;app.classList.remove("wide","home","picker");
+  app.innerHTML=`<div class="phead"><h2>Settings</h2></div><div class="setlist">
+    <div class="setrow"><b>Text size</b>${sizeCtl()}</div>
+    <div class="setrow"><label for="theme2"><b>Theme</b></label><select id="theme2">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>
+    <div class="setrow"><b>Version</b><span class="muted">${esc(VERSION_TEXT)}</span></div>
+  </div>`;
+  wireSize(app);
+  $("#theme2").onchange=e=>applyTheme(e.target.value);
+}
 function showPicker(mode){
-  document.title=APP_TITLE;app.classList.remove("wide","home");
+  document.title=APP_TITLE;app.classList.remove("wide","home");app.classList.add("picker");
   const last=lastCat();
   app.innerHTML=`<div class="phead"><h2>${mode==="loads"?"Compare Loads":"Compare Cartridges"}</h2><p class="sub">Choose a category.</p></div><div class="pick">${
     CATEGORIES.filter(c=>mode==="cartridges"||hasDetail(c)).map(c=>{
@@ -425,7 +450,7 @@ function showPicker(mode){
 function openCategory(cat,tab){
   tab=tab||"cartridges";
   document.title=`${APP_TITLE} — ${cat.title}`;
-  app.classList.remove("home");app.classList.toggle("wide",tab==="loads");
+  app.classList.remove("home","picker");app.classList.toggle("wide",tab==="loads");
   app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2>${esc(cat.title)}</h2></div><div id="pane"></div>`;
   $("[data-back]",app).onclick=()=>navigate(tab);
   const pane=$("#pane",app);
@@ -511,7 +536,7 @@ function openCartridges(cat,pane){
       <hr><div class="row"><span class="muted">Overall</span><span class="v" style="font-size:1.1rem">${og}  ·  ${overall.toFixed(1)}%</span></div>
       <div class="bar"><i style="width:${Math.max(0,Math.min(100,overall))}%;background:${GRADE_COLORS[og][0]}"></i></div>
       <div class="rank">Ranks #${rk[0]} of ${rk[1]} ${esc(it.cartridge)} loads  ·  #${rk[2]} of ${rk[3]} in ${esc(cat.title)}  <span class="muted">(others at their default price)</span></div>
-      <div class="note">${esc(src)} Recoil assumes a ${g(inp.gun)} lb gun.${cat.terminal?" Taylor KO and HITS start at weight 0 in the grade.":""}</div>`;
+      <div class="note">${esc(src)} Recoil assumes a ${g(inp.gun)} lb gun.</div>`;
     res.classList.remove("hidden");res.scrollIntoView({behavior:"smooth",block:"nearest"});
   }
   function reset(){
@@ -715,6 +740,14 @@ function openLoads(cat,pane){
     box.innerHTML=[["All",items.length]].concat(names.map(n=>[n,cnt[n]])).map(([n,c])=>`<button data-p="${esc(n)}" class="${L.purpose===n?"on":""}" aria-pressed="${L.purpose===n}">${esc(n)}<small>${c}</small></button>`).join("");
     box.querySelectorAll("button").forEach(b=>b.onclick=()=>{L.purpose=b.dataset.p;L.open=null;buildChips();render();});
   }
+  // chip counts follow the brand/load filter (and the purpose chips the Show choice too)
+  const matchesFilter=x=>{const q=$$("#lf").value.trim().toLowerCase().split(/\s+/).filter(Boolean),t=(x.load+" "+(x.group||"")+" "+x.bullet_gr).toLowerCase();return q.every(w=>t.includes(w));};
+  function countChips(){
+    const items=(groups.get($$("#lc").value)||[]).filter(matchesFilter);
+    $$("#lsrc").querySelectorAll("button").forEach(b=>{const s=b.dataset.s;b.querySelector("small").textContent=items.filter(x=>s==="All"||!!x.handload===(s==="Handloads")).length;});
+    const shown=items.filter(x=>L.src==="All"||!!x.handload===(L.src==="Handloads"));
+    $$("#lp").querySelectorAll("button").forEach(b=>{const p=b.dataset.p;b.querySelector("small").textContent=p==="All"?shown.length:shown.filter(x=>purposeOf(x)===p).length;});
+  }
   function compute(){
     const dist=readNum("#ld",0,cat.max_distance), gun=readNum("#lg",.5,30);
     const weights={};let bad=false;
@@ -736,8 +769,8 @@ function openLoads(cat,pane){
     const out=compute(),box=$$("#lres");
     if(!out){box.innerHTML=`<div class="muted">Enter a distance, gun weight and weights (numbers) to see results.</div>`;$$("#lcnt").textContent="";return;}
     if(!(groups.get($$("#lc").value)||[]).length){box.innerHTML=`<div class="muted">No factory loads listed for ${esc($$("#lc").value)}. Use “+ Add handload” to grade your own.</div>`;$$("#lcnt").textContent="";return;}
-    const q=$$("#lf").value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>{const t=(r.it.load+" "+(r.it.group||"")+" "+r.it.bullet_gr).toLowerCase();return q.every(w=>t.includes(w));});
+    countChips();
+    let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>matchesFilter(r.it));
     const key=$$("#ls").value;
     const cmp={score:(a,b)=>(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
       cost:(a,b)=>a.st.cost-b.st.cost,velocity:(a,b)=>b.st.velocity-a.st.velocity,energy:(a,b)=>b.st.energy-a.st.energy,taylor:(a,b)=>b.st.taylor-a.st.taylor,hits:(a,b)=>b.st.hits-a.st.hits,recoil:(a,b)=>a.st.recoil-b.st.recoil}[key];

@@ -95,9 +95,9 @@ METRICS = {
 }
 TERMINAL_KEYS = ("taylor", "hits")     # need a bullet diameter, so they don't apply to shotshells
 # Default scoring weights: velocity / energy / recoil / cost / Taylor KO / HITS.
-# 3 / 3 / 1 / 3 -> 30% / 30% / 10% / 30%.  Taylor KO and HITS are shown everywhere but only
-# change the grades once you give them a weight (open "Scoring weights").
-DEFAULT_WEIGHTS = (3, 3, 1, 3, 0, 0)
+# 3 / 3 / 1 / 3 / 3 / 3 -> about 19% each, recoil 6%. Shotshells have no Taylor KO / HITS
+# (no bullet diameter), so the Shotgun category keeps those two at 0.
+DEFAULT_WEIGHTS = (3, 3, 1, 3, 3, 3)
 
 # Curve shape. A load that matches the category's typical (median) value for a
 # factor scores TYPICAL_SCORE on it. Higher-is-better factors climb toward 100
@@ -123,7 +123,7 @@ class Category:
     grain_style: bool = True     # dropdown reads "168 gr  ·  ELD-M"; False = group + load text
     show_oz: bool = False        # also show payload in ounces (shotgun)
     legacy_filename: str = ""    # older file name to fall back to
-    weights: tuple = DEFAULT_WEIGHTS   # velocity, energy, recoil, cost
+    weights: tuple = DEFAULT_WEIGHTS   # velocity, energy, recoil, cost, Taylor KO, HITS
     allow_custom: bool = True    # show "Add your own caliber"
     default_bc: float = 0.30     # used when a custom entry leaves BC blank
     sort_loads: bool = True      # sort the load dropdown by weight (False = keep file order)
@@ -141,13 +141,13 @@ CATEGORIES = (
              loads_filename="loads_handgun.csv"),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
              "ammo_rimfire_rifle.csv", 50, 500, 5.0, "RIFLE WEIGHT (LB)",
-             weights=(3, 3, 1, 6, 0, 0), default_bc=0.13,
+             weights=(3, 3, 1, 6, 3, 3), default_bc=0.13,
              loads_filename="loads_rimfire_rifle.csv"),
     Category("Shotgun", "Birdshot, buckshot and slugs",
              "ammo_shotgun.csv", 25, 300, 7.5, "SHOTGUN WEIGHT (LB)",
              cartridge_label="GAUGE", load_label="LOAD", payload_row="Payload",
              payload_col="Payload (gr)", grain_style=False, show_oz=True,
-             allow_custom=False, sort_loads=False, terminal=False,
+             allow_custom=False, sort_loads=False, terminal=False, weights=(3, 3, 1, 3, 0, 0),
              loads_filename="loads_shotgun.csv"),
 )
 
@@ -483,6 +483,16 @@ def make_label(item, grain_style):
     if item.group and item.load:
         return f"{item.group}  ·  {item.load}"
     return item.load or f"{item.bullet_gr:g} gr"
+
+
+def icon_path():
+    """assets/icon.png: bundled into the packaged app by PyInstaller (--add-data), or the
+    repo's copy when running from a git checkout. None if it isn't there."""
+    here = getattr(sys, "_MEIPASS", None)
+    if here is None:
+        here = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets")
+    path = os.path.join(here, "icon.png")
+    return path if os.path.exists(path) else None
 
 
 def app_dir():
@@ -877,6 +887,11 @@ class App:
             self.scale = min(1.6, max(0.85, float(self.settings.get("text_scale", 1.0))))
         except (TypeError, ValueError):
             self.scale = 1.0
+        # pixel sizes grow with the screen DPI like the point-sized fonts do (96 dpi = 1.0)
+        try:
+            self.dpi = max(1.0, float(root.tk.call("tk", "scaling")) * 72 / 96)
+        except (tk.TclError, ValueError):
+            self.dpi = 1.0
         self.view = None
         self._base_w = self._auto_w = None   # window width before / after grow_to_fit
         families = set(tkfont.families(root))
@@ -884,6 +899,12 @@ class App:
                                         "Cantarell", "Ubuntu", "Helvetica Neue", "Helvetica",
                                         "Arial", "DejaVu Sans") if f in families), "TkDefaultFont")
         root.configure(bg=BG)
+        try:                                   # window / taskbar icon instead of Tk's feather
+            big = tk.PhotoImage(file=icon_path())                    # 1024 px master
+            self._icons = (big.subsample(4), big.subsample(16))       # 256 and 64 px
+            root.iconphoto(True, *self._icons)
+        except (tk.TclError, TypeError):
+            pass
         self._style()
 
         # load every category's data up front so the picker can show counts
@@ -995,8 +1016,8 @@ class App:
         return (self.family, max(7, int(round(size * self.scale))), "bold" if bold else "normal")
 
     def px(self, n):
-        """Scale a pixel measurement with the text size."""
-        return int(round(n * self.scale))
+        """Scale a pixel measurement with the text size and the screen DPI."""
+        return int(round(n * self.scale * self.dpi))
 
     def set_scale(self, new_scale):
         """Text size A- / A+. Rebuilds the current screen and keeps what was entered."""
@@ -1143,9 +1164,10 @@ class App:
         """Comfortable default size, centred; the window can be resized from there."""
         r = self.root
         sw, sh = r.winfo_screenwidth(), r.winfo_screenheight()
-        w, h = min(self.WIN_W, sw - 40), min(self.WIN_H, sh - 90)
+        w = min(int(self.WIN_W * self.dpi), sw - 40)
+        h = min(int(self.WIN_H * self.dpi), sh - 90)
         r.geometry(f"{w}x{h}+{max(0, (sw - w) // 2)}+{max(0, (sh - h) // 3)}")
-        r.minsize(min(self.MIN_W, w), min(self.MIN_H, h))
+        r.minsize(min(int(self.MIN_W * self.dpi), w), min(int(self.MIN_H * self.dpi), h))
         r.resizable(True, True)
         r.title(APP_TITLE)
 
@@ -2432,6 +2454,12 @@ class LoadsView:
         self.d_title = a.label(self.detail, "", 13, TEXT, True, anchor="w", justify="left",
                                wraplength=a.px(820))
         self.d_title.grid(row=0, column=0, sticky="w", padx=18, pady=(14, 2))
+        close = tk.Label(self.detail, text="✕", bg=SURFACE, fg=MUTED, font=a.f(13, True),
+                         padx=8, pady=2, cursor="hand2")
+        close.grid(row=0, column=1, sticky="ne", padx=(0, 10), pady=(10, 0))
+        close.bind("<Button-1>", lambda e: self._close_detail())
+        close.bind("<Enter>", lambda e: close.config(fg=TEXT, bg=SURFACE_2))
+        close.bind("<Leave>", lambda e: close.config(fg=MUTED, bg=SURFACE))
         self.d_info = a.label(self.detail, "", 10, MUTED, anchor="w", justify="left",
                               wraplength=a.px(820))
         self.d_info.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 10))
@@ -2672,6 +2700,19 @@ class LoadsView:
             self.chips[name] = chip
         self._style_chips()
 
+    def _count_chips(self):
+        """Chip counts follow the brand/load filter (and the purpose chips the Show choice too)."""
+        terms = self.filter_var.get().lower().split()
+        items = [x for x in self.groups.get(self.cart_var.get(), [])
+                 if all(t in x.label.lower() for t in terms)]
+        for name, chip in self.src_chips.items():
+            n = sum(name == "All" or x.handload == (name == "Handloads") for x in items)
+            chip.config(text=f"{name} ({n})")
+        shown = [x for x in items if self.source == "All" or x.handload == (self.source == "Handloads")]
+        for name, chip in self.chips.items():
+            n = len(shown) if name == "All" else sum(self._purpose_of(x) == name for x in shown)
+            chip.config(text=f"{name} ({n})")
+
     def _style_chips(self):
         for name, chip in self.chips.items():
             on = name == self.purpose
@@ -2747,6 +2788,7 @@ class LoadsView:
         self._render()
 
     def _render(self):
+        self._count_chips()
         terms = self.filter_var.get().lower().split()
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
                 and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))]
@@ -2851,6 +2893,13 @@ class LoadsView:
         self.detail.grid()
         self.fit_table_height()
 
+    def _close_detail(self):
+        """The panel's ✕: deselect the load and give the table its rows back."""
+        self.selected = None
+        self.detail.grid_remove()
+        self.tree.selection_remove(*self.tree.selection())
+        self.fit_table_height()
+
     def fit_table_height(self):
         """Give the table as many rows as fit in the window, so the selected load's scores
         (below the table) show without scrolling at the default window size. With nothing
@@ -2910,10 +2959,27 @@ class LoadsView:
                 break
 
 
+def sharp_on_windows():
+    """Tell Windows this app draws at the screen's real DPI. Without it Windows renders the
+    window at 100% and stretches it to the display scaling (125%, 150%...), which looks blurry.
+    Must run before the first Tk window exists."""
+    if sys.platform != "win32":
+        return
+    try:
+        import ctypes
+        try:
+            ctypes.windll.shcore.SetProcessDpiAwareness(1)     # Windows 8.1+: system DPI aware
+        except (AttributeError, OSError):
+            ctypes.windll.user32.SetProcessDPIAware()          # Windows 7 / Vista
+    except Exception:
+        pass                                                   # blurry is better than not starting
+
+
 def main():
     if tk is None:
         sys.exit("Tkinter is not available. On Linux, install it with your package manager "
                  "(for example: sudo apt install python3-tk).")
+    sharp_on_windows()
     root = tk.Tk()
     App(root)
     root.mainloop()

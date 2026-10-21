@@ -62,4 +62,4 @@ bash CartridgeCalculator/install.sh
 - After editing any CSV or `web/template.html`, run `python3 web/build_web.py`.
 
 ## Taylor KO and HITS
-Every rifle and handgun result shows the Taylor Knock-Out factor (bullet weight × velocity × diameter ÷ 7000) and Hornady's HITS index ((weight² ÷ 7000) × (velocity ÷ diameter²) ÷ 100), calculated at the distance you pick. Both start at weight 0 in the grade, so raise them under "Scoring weights" if you want them to count. Bullet diameters come from the `DIAMETERS` table in `src/cartridge_calculator.py`; custom calibers can supply their own. Shotshells don't show them.
+Every rifle and handgun result shows the Taylor Knock-Out factor (bullet weight × velocity × diameter ÷ 7000) and Hornady's HITS index ((weight² ÷ 7000) × (velocity ÷ diameter²) ÷ 100), calculated at the distance you pick. Both count toward the grade (weight 3, like velocity, energy and cost); change that under "Scoring weights". Bullet diameters come from the `DIAMETERS` table in `src/cartridge_calculator.py`; custom calibers can supply their own. Shotshells don't show them.

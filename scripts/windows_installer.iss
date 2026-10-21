@@ -22,6 +22,7 @@ DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 OutputDir=dist
 OutputBaseFilename=CartridgeCalculator-Setup
+SetupIconFile=assets\icon.ico
 UninstallDisplayIcon={app}\CartridgeCalculator.exe
 UninstallDisplayName=Cartridge Calculator
 CloseApplications=yes

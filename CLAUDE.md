@@ -1,6 +1,7 @@
 # Cartridge Calculator
 
-Grades ammo S–F on velocity, energy, recoil, cost (plus Taylor KO and HITS, weight 0 by default).
+Grades ammo S–F on velocity, energy, recoil, cost (plus Taylor KO and HITS;
+default weights 3/3/1/3/3/3, Shotgun keeps Taylor KO and HITS at 0: no bullet diameter).
 Desktop app: src/cartridge_calculator.py (Tkinter, stdlib only). Phone/web: web/template.html,
 built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK in CI).
 
@@ -30,11 +31,21 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the window for it and gives the room back later, never below the width the user chose.
   LoadsView.fit_table_height sets the table's row count from the window height so the
   selected load's scores panel fits without scrolling (min 6 rows, then the page scrolls).
+  App.px() scales by text size AND screen DPI (self.dpi, 96 dpi = 1.0). On Windows,
+  sharp_on_windows() declares DPI awareness before Tk starts, otherwise Windows stretches the
+  window and it looks blurry (issue #5).
+
+- App icon: scripts/make_icons.py (needs Pillow) draws assets/icon.png, icon.ico and the Android
+  launcher icons in assets/android/res. CI bakes icon.ico into the .exe/installer, bundles
+  icon.png for the window icon (icon_path), ships it in the Linux tar for the .desktop entry,
+  and copies assets/android/res over the Capacitor project after `cap add android`.
 
 ## Release
-git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.exe + zip), Linux
+git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
 (tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
 - APP_VERSION in cartridge_calculator.py stays "dev" in the repo; CI sets it from the tag.
+- Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the user saves the
+  middle number (v1.6) for bigger releases.
 - Installers upgrade in place and clear old shipped data (ammo_*, loads_*, bullets.csv) first.
 - APK updates install over the old app only once the ANDROID_DEBUG_KEYSTORE secret is set
   (see README); until then testers must uninstall the old APK first.
