@@ -965,6 +965,37 @@ class App:
         b.bind("<Leave>", lambda e: b.config(bg=bg))
         return b
 
+    def fit_columns(self, tree, cols, rows, stretch_col, known=None):
+        """Size table columns from the real text width (fonts grow with screen DPI, pixel
+        counts don't). `rows` are lists of cell strings; `known` keeps widths from earlier
+        calls so columns never shrink while filtering. The stretch column takes spare room."""
+        head = tkfont.Font(font=self.f(10, True))
+        body = tkfont.Font(font=self.f(10))
+        pad = body.measure("00") + 14
+        known = {} if known is None else known
+        for i, col in enumerate(cols):
+            need = max([head.measure(col)] + [body.measure(str(r[i])) for r in rows]) + pad
+            if col == stretch_col:
+                # wide enough for most names; very long ones are cut rather than widening the table
+                need = min(need, body.measure("0" * 44))
+            known[col] = max(known.get(col, 0), need)
+            if col == stretch_col:
+                tree.column(col, width=known[col], minwidth=min(known[col], body.measure("0" * 24)),
+                            stretch=True)
+            else:
+                tree.column(col, width=known[col], minwidth=known[col], stretch=False)
+        return known
+
+    def grow_to_fit(self, extra):
+        """Widen the window by `extra` px (to fit a table), within the screen. Never shrinks."""
+        r = self.root
+        if extra <= 0 or r.state() == "zoomed":
+            return
+        w = min(r.winfo_width() + extra, r.winfo_screenwidth() - 20)
+        if w > r.winfo_width():
+            x = max(0, min(r.winfo_x(), r.winfo_screenwidth() - w - 10))
+            r.geometry(f"{w}x{r.winfo_height()}+{x}+{r.winfo_y()}")
+
     # ---- window + shell --------------------------------------------------- #
     def _place_window(self):
         """Comfortable default size, centred; the window can be resized from there."""
@@ -1000,7 +1031,7 @@ class App:
         self.shell = tk.Frame(self.root, bg=BG)
         self.shell.pack(fill="both", expand=True)
 
-        self.sidebar = tk.Frame(self.shell, bg=SURFACE, width=self.px(self.SIDEBAR_W))
+        self.sidebar = tk.Frame(self.shell, bg=SURFACE, width=self._sidebar_width())
         self.sidebar.pack(side="left", fill="y")
         self.sidebar.pack_propagate(False)
         tk.Frame(self.shell, bg=BORDER, width=1).pack(side="left", fill="y")
@@ -1027,6 +1058,13 @@ class App:
         for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
             self.root.bind_all(seq, self._on_wheel)
         self._draw_chrome()
+
+    def _sidebar_width(self):
+        """Wide enough for the longest menu entry at the current text size and screen DPI."""
+        main, sub = tkfont.Font(font=self.f(11, True)), tkfont.Font(font=self.f(10, True))
+        need = max([main.measure("Compare Cartridges")]
+                   + [sub.measure(cat.title) + 16 for cat in CATEGORIES])
+        return max(self.px(self.SIDEBAR_W), need + 2 * 12 + 2 * 12 + 10)   # label + nav padding
 
     def _on_wheel(self, e):
         """Scroll the page with the mouse wheel (tables and lists keep their own wheel)."""
@@ -1771,7 +1809,8 @@ class CalculatorView:
         scroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
         tree.configure(yscrollcommand=scroll.set)
         for c in spec:
-            tree.column(c[0], width=a.px(c[1]), anchor="w" if c[0] in cols[1:3] else "center")
+            tree.column(c[0], anchor="w" if c[0] in cols[1:3] else "center")
+        a.fit_columns(tree, cols, [[c[2](r) for c in spec] for r in rows], "Load")
         tree.pack(side="left", fill="both", expand=True)
         scroll.pack(side="right", fill="y")
         sort_state = {"col": "Score (%)", "desc": True}
@@ -1828,6 +1867,12 @@ class CalculatorView:
                            "current weights and each load's default price.",
                  bg=BG, fg=MUTED, font=a.f(9)).pack(pady=(0, 12))
         render()
+        win.update_idletasks()
+        sw, sh = win.winfo_screenwidth(), win.winfo_screenheight()
+        if win.winfo_reqwidth() > sw - 40 or win.winfo_reqheight() > sh - 90:
+            # keep it on small screens; the Load column gives up width first
+            w, h = min(win.winfo_reqwidth(), sw - 40), min(win.winfo_reqheight(), sh - 90)
+            win.geometry(f"{w}x{h}+{(sw - w) // 2}+20")
         entry.focus_set()
 
     def show_load(self, item):
@@ -2189,20 +2234,25 @@ class LoadsView:
                                  selectmode="browse")
         scroll = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scroll.set)
-        widths = {"#": 38, "Load": 250, cat.payload_col: 66, "Barrel": 58, "Use": 72, "Velocity": 70,
-                  "Energy": 62, "Recoil": 60, "Taylor": 58, "Price": 62, "Score": 54,
-                  "Grade": 56}
         for col in self.cols:
-            # the Load column absorbs spare width; everything else stays compact so
-            # no heading is ever cut off at the right-hand edge
-            self.tree.column(col, width=a.px(widths[col]), minwidth=a.px(widths[col] if col != "Load" else 180),
-                             stretch=(col == "Load"), anchor="w" if col in ("Load", "Use") else "center")
+            # widths are measured from the text in _render; the Load column takes spare room
+            self.tree.column(col, anchor="w" if col in ("Load", "Use") else "center")
             self.tree.heading(col, text=col, command=lambda c=col: self._sort_by(c))
+        self.col_widths, self.sized = {}, False
         hscroll = ttk.Scrollbar(frame, orient="horizontal", command=self.tree.xview)
-        self.tree.configure(xscrollcommand=hscroll.set)
+
+        def xset(first, last):
+            # only show the horizontal scrollbar when the table really is wider than the window
+            if float(first) <= 0.0 and float(last) >= 1.0:
+                hscroll.grid_remove()
+            else:
+                hscroll.grid()
+            hscroll.set(first, last)
+        self.tree.configure(xscrollcommand=xset)
         self.tree.grid(row=0, column=0, sticky="nsew")
         scroll.grid(row=0, column=1, sticky="ns")
         hscroll.grid(row=1, column=0, sticky="ew")
+        hscroll.grid_remove()
         self.tree.tag_configure("hand", foreground="#5fd1b4")
         self.tree.bind("<<TreeviewSelect>>", lambda e: self._on_select())
 
@@ -2530,6 +2580,7 @@ class LoadsView:
         self.tree.delete(*self.tree.get_children())
         self.iid_row = {}
         keep = None
+        cells = []
         for r in data:
             st = r["stats"]
             it = r["item"]
@@ -2543,6 +2594,7 @@ class LoadsView:
                 vals += [f"{st['taylor']:.1f}"]
             vals += [f"{st['cost']:.2f}" + (" ✎" if r["custom_price"] else ""),
                      f"{r['overall']:.0f}", r["grade"]]
+            cells.append(vals)
             iid = self.tree.insert("", "end", values=vals, tags=("hand",) if it.handload else ())
             self.iid_row[iid] = r
             if self.selected is r["item"]:
@@ -2557,6 +2609,12 @@ class LoadsView:
         elif self.selected is not None:
             self.selected = None
             self.detail.grid_remove()
+        self.app.fit_columns(self.tree, self.cols, cells, "Load", self.col_widths)
+        if not self.sized and cells:
+            # first time this table is shown: widen the window if every column doesn't fit
+            self.sized = True
+            self.app.root.update_idletasks()
+            self.app.grow_to_fit(sum(self.col_widths.values()) - self.tree.winfo_width())
         self.app.fit_window(self.app.LOADS_MIN_WIDTH, keep_position=True)
 
     def _on_select(self):
