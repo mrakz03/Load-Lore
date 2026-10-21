@@ -1,0 +1,539 @@
+cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,group,barrel_in,purpose
+.22 LR,Winchester Varmint LF Tin Hollow Point (handgun muzzle velocity),26,1455,0.070,2,0.10,,partial,,,Hunting
+.22 LR,Federal Personal Defense Punch Solid,29,1070,0.106,1.2,0.10,,catalog,,2,Target
+.22 LR,CCI Uppercut JHP,32,950,0.087,1.1,0.10,,partial,,,Hunting
+.22 LR,Winchester 222 Plated Hollow Point (handgun muzzle velocity),36,1085,0.097,1.6,0.10,,partial,,,Hunting
+.22 LR,Winchester 333 Plated Hollow Point (handgun muzzle velocity),36,1085,0.097,1.6,0.10,,partial,,,Hunting
+.22 LR,Winchester 525 Plated Hollow Point (handgun muzzle velocity),36,1085,0.097,1.6,0.10,,partial,,,Hunting
+.22 LR,Winchester 555 Plated Hollow Point (handgun muzzle velocity),36,1085,0.097,1.6,0.10,,partial,,,Hunting
+.22 LR,Winchester Silvertip Segmenting Hollow Point (handgun muzzle velocity),37,1060,0.100,1.5,0.13,,partial,,,Hunting
+.22 LR,Winchester Varmint HE Segmenting Hollow Point (handgun muzzle velocity),37,1215,0.100,2,0.13,,partial,,,Hunting
+.22 LR,ELEY bullseye pistol X Round-nose,40,919.5,0.108,1.2,0.12,,partial,,,Match
+.22 LR,ELEY tenex pistol Round-nose,40,924,0.108,1.3,0.12,,partial,,,Match
+.22 LR,ELEY tenex rapid fire pistol Round-nose,40,900.5,0.108,1.2,0.12,,partial,,,Match
+.22 LR,Winchester M22 RN Black Copper Plated (handgun muzzle velocity),40,1060,0.108,1.7,0.15,,partial,,,Hunting
+.22 LR,Winchester Super Suppressed Hollow Point (handgun muzzle velocity),40,1000,0.108,1.5,0.10,,partial,,,Subsonic
+.22 LR,Winchester Super-X Plated Power-Point (handgun muzzle velocity) (1085 fps),40,1085,0.108,1.7,0.10,,partial,,,Target
+.22 LR,Winchester Super-X Plated Power-Point (handgun muzzle velocity) (1305 fps),40,1305,0.108,2.5,0.10,yes,partial,,,Target
+.22 LR,Winchester Super-X Plated Round Nose (handgun muzzle velocity),40,1105,0.108,1.8,0.07,,partial,,,Target
+.22 LR,Winchester USA White Box Lead Round Nose (handgun muzzle velocity),40,1060,0.108,1.7,0.07,,partial,,,Target
+.22 LR,Winchester Wildcat Plated Dynapoint (handgun muzzle velocity),40,1060,0.108,1.7,0.10,,partial,,,Target
+.22 LR,Winchester Wildcat Super Speed Plated Dynapoint (handgun muzzle velocity),40,1105,0.108,1.8,0.10,,partial,,,Target
+.22 LR,Winchester Xpert HP Copper Plated (handgun muzzle velocity),42,1085,0.114,1.8,0.15,,partial,,,Hunting
+.22 LR,Winchester Super Suppressed RN Black Copper Plated (800 bulk) (handgun muzzle velocity),45,1000,0.122,1.7,0.15,,partial,,,Subsonic
+.22 LR,Winchester Super Suppressed RN Black Copper Plated (handgun muzzle velocity),45,1000,0.122,1.7,0.15,,partial,,,Subsonic
+.22 WMR,CCI Uppercut 22 WMR JHP,40,1050,0.121,2.1,0.28,yes,catalog,,,Hunting
+.22 WMR,Federal Personal Defense Punch JHP,45,1000,0.138,2.2,0.28,,catalog,,2,Hunting
+.22 WMR,"Hornady Critical Defense FTX 83200 1 7/8 V"" 1000 920 857 100 85 73 AG 40 S&W 180 gr. XTP",45,950,0.164,2,0.42,,catalog,,4,Target
+5.7x28,Hornady BLACK V-MAX,40,1810,0.146,4.1,0.80,yes,catalog,,4.8,Target
+5.7x28,Hornady Critical Defense FTX,40,1810,0.137,4.1,2.08,,catalog,,4.8,Defense
+.25 ACP,Hornady Critical Defense FTX,35,900,0.067,1,1.69,,catalog,,2,Defense
+.25 ACP,Hornady Custom XTP,35,900,0.074,1,1.69,,catalog,,2,Defense
+.25 ACP,Speer Gold Dot Personal Protection Hollow Point,35,900,0.075,1,1.69,,partial,,,Defense
+.25 ACP,Federal Personal Defense Punch Solid,45,825,0.093,1.1,1.69,,catalog,,2,Defense
+.25 ACP,CCI Blazer Aluminum FMJ,50,755,0.113,1,0.44,yes,catalog,,2,Target
+.25 ACP,Federal American Eagle FMJ,50,760,0.113,1,0.44,,catalog,,2,Target
+.25 ACP,Fiocchi Range Dynamics FMJ,50,800,0.108,1.1,0.44,,partial,,,Target
+.25 ACP,PMC Bronze Full Metal Jacket,50,750,0.086,1,0.44,,catalog,,,Target
+.25 ACP,Remington UMC Full Metal Jacket,50,760,0.088,1,0.44,,catalog,,2,Target
+.25 ACP,Winchester USA Full Metal Jacket,50,760,0.092,1,0.44,,catalog,,2,Target
+7.62x25 Tokarev,FMJ,85,1500,0.121,6.0,0.27,yes,typical,,5,Target
+7.62x25 Tokarev,FMJ,87,1400,0.124,5.4,0.27,,typical,,5,Target
+.32 ACP,Fiocchi Defense Dynamics SJHP,60,1100,0.084,2.2,1.82,,partial,,,Defense
+.32 ACP,Hornady Critical Defense FTX,60,1000,0.071,1.9,1.82,,catalog,,4,Defense
+.32 ACP,Hornady Custom XTP,60,1000,0.092,1.9,1.82,,catalog,,4,Defense
+.32 ACP,PMC Bronze Jacketed Hollow Point,60,980,0.063,1.8,1.82,,catalog,,,Defense
+.32 ACP,Winchester Silvertip Plated JHP,60,970,0.108,1.7,1.82,,catalog,,4,Defense
+.32 ACP,Federal Premium Personal Defense Hydra-Shok,65,925,0.113,1.7,1.82,,catalog,,4,Defense
+.32 ACP,Federal Premium Personal Defense Hydra-Shok Deep,68,1000,0.093,2.1,1.82,,catalog,,4,Defense
+.32 ACP,CCI Blazer Aluminum FMJ,71,900,0.114,1.8,0.48,yes,catalog,,4,Target
+.32 ACP,Federal American Eagle FMJ,71,900,0.123,1.8,0.48,,catalog,,4,Target
+.32 ACP,PMC Bronze Full Metal Jacket,71,900,0.104,1.8,0.48,,catalog,,,Target
+.32 ACP,Remington UMC Full Metal Jacket,71,905,0.131,1.8,0.48,,catalog,,4,Target
+.32 ACP,Winchester USA Full Metal Jacket,71,905,0.134,1.8,0.48,,catalog,,4,Target
+.32 ACP,Fiocchi Range Dynamics FMJ,73,1000,0.102,2.3,0.48,,partial,,,Target
+.32 H&R Magnum,Federal American Eagle JSP,85,975,0.123,3,0.65,yes,catalog,,4,Hunting
+.32 H&R Magnum,Federal Personal Defense Revolver JHP,85,1120,0.140,3.9,2.47,,catalog,,5,Defense
+.32 H&R Magnum,Federal Premium Personal Defense Hydra-Shok Deep,85,1025,0.148,3.3,2.47,,catalog,,4,Defense
+.32 H&R Magnum,Remington HTP Jacketed Hollow Point,85,1120,0.100,3.9,2.47,,catalog,,5,Hunting
+.32 H&R Magnum,Federal Champion LSW,95,980,0.103,3.4,0.95,,catalog,,4,Target
+.32 H&R Magnum,Remington Performance Wheelgun Lead Semi-Wadcutter,95,1020,0.140,3.6,0.95,,catalog,,5,Match
+.32 S&W Long,LRN,98,780,0.137,1.9,0.44,yes,typical,,4,Target
+.32 S&W Long,Wadcutter,98,700,0.137,1.5,0.65,,typical,,4,Match
+.327 Federal Magnum,Hornady Critical Defense FTX,80,1475,0.138,5.5,3.12,yes,catalog,,5,Defense
+.357 SIG,Hornady Critical Duty FlexLock,135,1225,0.173,6.4,2.08,yes,catalog,,4,Defense
+.357 SIG,Hornady Custom XTP,147,1225,0.214,7.0,2.08,,catalog,,4,Defense
+.38 Super,JHP +P,125,1250,0.135,6.2,1.82,,typical,,5,Defense
+.38 Super,FMJ,130,1200,0.140,5.9,0.48,yes,typical,,5,Target
+.380 ACP,Federal American Eagle IRT Lead Free RHT,70,1110,0.094,2.5,0.44,,catalog,,3.75,Target
+.380 ACP,Federal Personal Defense Punch JHP,85,1000,0.093,2.5,1.69,,catalog,,3.75,Defense
+.380 ACP,Federal Train+Protect JHP,85,1000,0.103,2.5,1.69,,catalog,,3.75,Defense
+.380 ACP,Winchester Silvertip Plated JHP,85,1000,0.115,2.5,1.69,,catalog,,3.75,Defense
+.380 ACP,Remington HTP Jacketed Hollow Point,88,990,0.128,2.5,1.69,,catalog,,4,Defense
+.380 ACP,Federal Premium Personal Defense Hydra-Shok,90,1000,0.103,2.6,1.69,,catalog,,3.75,Defense
+.380 ACP,Fiocchi Defense Dynamics JHP,90,975,0.097,2.5,1.69,,partial,,,Defense
+.380 ACP,Hornady American Gunner XTP,90,1000,0.101,2.6,1.69,,catalog,,4,Defense
+.380 ACP,Hornady Critical Defense FTX,90,1000,0.101,2.6,1.69,,catalog,,4,Defense
+.380 ACP,PMC Bronze Full Metal Jacket,90,961,0.131,2.4,0.44,,catalog,,,Target
+.380 ACP,Speer Gold Dot Personal Protection Hollow Point,90,1040,0.097,2.8,1.69,,partial,,,Defense
+.380 ACP,CCI Blazer Aluminum FMJ,95,945,0.134,2.5,0.44,yes,catalog,,3.75,Target
+.380 ACP,CCI Blazer Brass FMJ RN,95,945,0.134,2.5,0.44,,catalog,,3.75,Target
+.380 ACP,Federal American Eagle FMJ,95,980,0.103,2.7,0.44,,catalog,,3.75,Target
+.380 ACP,Federal Champion FMJ,95,990,0.103,2.7,0.44,,catalog,,3.75,Target
+.380 ACP,Fiocchi CovertX JHP,95,1015,0.102,2.9,1.69,,partial,,,Defense
+.380 ACP,Fiocchi Range Dynamics FMJ,95,960,0.102,2.6,0.44,,partial,,,Target
+.380 ACP,Remington Flat Nose Enclosed Base,95,955,0.077,2.5,0.65,,catalog,,4,Target
+.380 ACP,Remington UMC Full Metal Jacket,95,955,0.077,2.5,0.44,,catalog,,4,Target
+.380 ACP,Speer Lawman Training Total Metal Jacket,95,950,0.102,2.5,0.44,,partial,,,Target
+.380 ACP,Winchester Defender Bonded JHP,95,1000,0.121,2.8,1.69,,catalog,,3.75,Defense
+.380 ACP,Winchester USA (100 VP) Full Metal Jacket Flat Nose,95,955,0.084,2.5,0.44,,catalog,,3.75,Target
+.380 ACP,Winchester USA (200 RP) Full Metal Jacket Flat Nose,95,955,0.084,2.5,0.44,,catalog,,3.75,Target
+.380 ACP,Winchester USA Full Metal Jacket Flat Nose,95,955,0.084,2.5,0.44,,catalog,,3.75,Target
+.380 ACP,Winchester USA Jacketed Hollow Point,95,955,0.122,2.5,1.69,,catalog,,3.75,Defense
+.380 ACP,Winchester WinClean Brass Enclosed Base,95,955,0.105,2.5,0.65,,catalog,,3.75,Target
+.380 ACP,CCI Blazer Brass HP JHP,98,920,0.123,2.4,1.69,,catalog,,3.75,Defense
+.380 ACP,Federal Premium Personal Defense HST,99,1030,0.122,3.1,1.69,,catalog,,3.75,Defense
+.380 ACP,Federal Premium Personal Defense Hydra-Shok Deep,99,975,0.093,2.7,1.69,,catalog,,3.75,Defense
+.380 ACP,Remington Golden Saber Brass Jacketed Hollow Point,102,940,0.148,2.6,1.69,,catalog,,4,Defense
+9mm Luger,Federal American Eagle IRT Lead Free RHT,70,1625,0.096,5.4,0.26,,catalog,,4,Target
+9mm Luger,Winchester Super Clean Zinc FMJ,95,1225,0.138,4.2,0.26,,catalog,,4,Target
+9mm Luger,CCI Blazer Brass FMJ RN,100,1130,0.106,3.7,0.26,,catalog,,4,Target
+9mm Luger,Hornady Critical Defense Lite FTX,100,1125,0.111,3.7,0.99,,catalog,,4,Defense
+9mm Luger,CCI Blazer Aluminum FMJ,115,1145,0.155,4.4,0.26,,catalog,,4,Target
+9mm Luger,CCI Blazer Brass FMJ RN,115,1145,0.155,4.4,0.26,,catalog,,4,Target
+9mm Luger,CCI Blazer Brass HP JHP,115,1145,0.159,4.4,0.99,,catalog,,4,Defense
+9mm Luger,Federal American Eagle FMJ,115,1180,0.123,4.7,0.26,,catalog,,4,Target
+9mm Luger,Federal Champion FMJ,115,1125,0.124,4.3,0.26,,catalog,,4,Target
+9mm Luger,Federal Personal Defense Punch JHP,115,1180,0.154,4.7,0.99,,catalog,,4,Defense
+9mm Luger,Federal Train+Protect JHP,115,1180,0.123,4.7,0.99,,catalog,,4,Defense
+9mm Luger,Fiocchi Defense Dynamics JHP,115,1175,0.124,4.7,0.99,,partial,,,Defense
+9mm Luger,Fiocchi Range Dynamics FMJ,115,1200,0.124,4.9,0.26,,partial,,,Target
+9mm Luger,Hornady American Gunner XTP,115,1155,0.131,4.5,0.99,,catalog,,4,Defense
+9mm Luger,Hornady Critical Defense FTX,115,1135,0.131,4.3,0.99,,catalog,,4,Defense
+9mm Luger,Hornady Handgun Hunter MonoFlex +P,115,1100,0.137,4.1,0.57,,catalog,,4,Hunting
+9mm Luger,PMC Bronze Full Metal Jacket (9A),115,1150,0.167,4.5,0.26,,catalog,,,Target
+9mm Luger,PMC Bronze Jacketed Hollow Point (9B),115,1160,0.142,4.5,0.99,,catalog,,,Defense
+9mm Luger,Remington Flat Nose Enclosed Base,115,1145,0.155,4.4,0.38,,catalog,,4,Target
+9mm Luger,Remington Full Metal Jacket,115,1145,0.155,4.4,0.26,,catalog,,4,Target
+9mm Luger,Remington HTP Jacketed Hollow Point,115,1145,0.155,4.4,0.99,,catalog,,4,Defense
+9mm Luger,Remington HTP Jacketed Hollow Point +P,115,1250,0.143,5.3,0.99,,catalog,,4,Defense
+9mm Luger,Remington UMC Full Metal Jacket,115,1145,0.155,4.4,0.26,,catalog,,4,Target
+9mm Luger,Remington UMC Jacketed Hollow Point,115,1145,0.155,4.4,0.99,,catalog,,4,Defense
+9mm Luger,Speer Gold Dot Personal Protection Hollow Point,115,1210,0.124,4.9,0.99,,partial,,,Defense
+9mm Luger,Winchester Silvertip Plated JHP,115,1225,0.146,5.1,0.99,,catalog,,4,Defense
+9mm Luger,Winchester USA (100 VP) Full Metal Jacket,115,1190,0.146,4.8,0.26,,catalog,,4,Target
+9mm Luger,Winchester USA (200 RP) Full Metal Jacket,115,1190,0.146,4.8,0.26,,catalog,,4,Target
+9mm Luger,Winchester USA Forged Full Metal Jacket (150 rds),115,1190,0.146,4.8,0.26,,catalog,,4,Target
+9mm Luger,Winchester USA Forged Full Metal Jacket (50 rds),115,1190,0.146,4.8,0.26,,catalog,,4,Target
+9mm Luger,Winchester USA Full Metal Jacket,115,1190,0.146,4.8,0.26,,catalog,,4,Target
+9mm Luger,Winchester USA Jacketed Hollow Point,115,1165,0.148,4.6,0.99,,catalog,,4,Defense
+9mm Luger,Winchester USA Ready Full Metal Jacket,115,1190,0.139,4.8,0.26,,catalog,,4,Target
+9mm Luger,Winchester WinClean Brass Enclosed Base,115,1190,0.167,4.8,0.38,,catalog,,4,Target
+9mm Luger,CCI Blazer Brass FMJ RN,124,1090,0.170,4.3,0.26,,catalog,,4,Target
+9mm Luger,CCI Blazer Brass HP JHP,124,1100,0.180,4.4,0.99,,catalog,,4,Defense
+9mm Luger,Federal American Eagle FMJ,124,1150,0.154,4.8,0.26,,catalog,,4,Target
+9mm Luger,Federal American Eagle IRT TMJ,124,1120,0.154,4.6,0.26,,catalog,,4,Target
+9mm Luger,Federal Champion FMJ,124,1090,0.180,4.3,0.26,,catalog,,4,Target
+9mm Luger,Federal Military Grade FMJ,124,1260,0.154,5.8,0.26,,catalog,,4,Target
+9mm Luger,Federal Personal Defense Punch JHP,124,1150,0.154,4.8,0.99,,catalog,,4,Defense
+9mm Luger,Federal Premium Personal Defense HST,124,1150,0.154,4.8,0.99,,catalog,,4,Defense
+9mm Luger,Federal Premium Personal Defense HST +P,124,1200,0.154,5.2,0.99,,catalog,,4,Defense
+9mm Luger,Federal Premium Personal Defense Hydra-Shok,124,1120,0.154,4.6,0.99,,catalog,,4,Defense
+9mm Luger,Federal Syntech Range TSJ,124,1050,0.155,4,0.26,,catalog,,4,Target
+9mm Luger,Federal Syntech Training Match TSJ,124,1150,0.100,4.8,0.46,yes,catalog,,4,Match
+9mm Luger,Fiocchi CovertX JHP,124,1115,0.134,4.5,0.99,,partial,,,Defense
+9mm Luger,Fiocchi Defense Dynamics JHP,124,1100,0.134,4.4,0.99,,partial,,,Defense
+9mm Luger,Fiocchi Range Dynamics FMJ,124,1150,0.134,4.8,0.26,,partial,,,Target
+9mm Luger,Hornady American Gunner XTP +P,124,1175,0.169,5,0.99,,catalog,,4,Defense
+9mm Luger,Hornady Critical Duty FlexLock +P,124,1175,0.180,5,0.99,,catalog,,4,Defense
+9mm Luger,Hornady Custom XTP,124,1110,0.167,4.5,0.99,,catalog,,4,Defense
+9mm Luger,PMC Bronze Full Metal Jacket (9G),124,1110,0.146,4.5,0.26,,catalog,,,Target
+9mm Luger,PMC SFX Hollow Point,124,1126,0.122,4.6,0.99,,catalog,,,Defense
+9mm Luger,Remington Full Metal Jacket,124,1110,0.173,4.5,0.26,,catalog,,4,Target
+9mm Luger,Remington Golden Saber Bonded Brass Jacketed Hollow Point +P,124,1125,0.149,4.6,0.99,,catalog,,4,Defense
+9mm Luger,Remington Golden Saber Brass Jacketed Hollow Point,124,1125,0.149,4.6,0.99,,catalog,,4,Defense
+9mm Luger,Remington Golden Saber Brass Jacketed Hollow Point +P,124,1180,0.180,5.1,0.99,,catalog,,4,Defense
+9mm Luger,Remington UMC Full Metal Jacket,124,1110,0.173,4.5,0.26,,catalog,,4,Target
+9mm Luger,Speer Gold Dot Personal Protection Hollow Point,124,1150,0.134,4.8,0.99,,partial,,,Defense
+9mm Luger,Speer Gold Dot Personal Protection Hollow Point +P,124,1220,0.134,5.4,0.99,,partial,,4,Defense
+9mm Luger,Speer Gold Dot Short Barrel Hollow Point +P,124,1150,0.134,4.8,0.99,,partial,,3.5,Defense
+9mm Luger,Speer Lawman Clean-Fire Training Total Metal Jacket,124,1090,0.134,4.3,0.26,,partial,,,Target
+9mm Luger,Speer Lawman Training Total Metal Jacket,124,1090,0.134,4.3,0.26,,partial,,,Target
+9mm Luger,Winchester Defender Bonded JHP +P,124,1200,0.174,5.2,0.99,,catalog,,4,Defense
+9mm Luger,Winchester USA Full Metal Jacket,124,1140,0.170,4.7,0.26,,catalog,,4,Target
+9mm Luger,Winchester USA Ready Defense Hex-Vent JHP +P,124,1200,0.174,5.2,0.99,,catalog,,4,Defense
+9mm Luger,Winchester WinClean Brass Enclosed Base,124,1130,0.180,4.6,0.38,,catalog,,4,Target
+9mm Luger,Federal Syntech PCC TSJ,130,1130,0.155,4.9,0.26,,catalog,,16,Target
+9mm Luger,Federal Premium Personal Defense Hydra-Shok Deep,135,1060,0.185,4.4,0.99,,catalog,,4,Defense
+9mm Luger,Hornady Critical Duty FlexLock,135,1010,0.196,4,0.99,,catalog,,4,Defense
+9mm Luger,Hornady Critical Duty FlexLock +P,135,1110,0.196,4.9,0.99,,catalog,,4,Defense
+9mm Luger,Speer Gold Dot Carbine Hollow Point,135,1170,0.145,5.4,0.99,,partial,,,Defense
+9mm Luger,Speer Gold Dot Carry Gun Hollow Point,135,1120,0.145,5,0.99,,partial,,,Defense
+9mm Luger,Speer Lawman Training Total Metal Jacket,135,1120,0.145,5,0.26,,partial,,,Target
+9mm Luger,Federal Syntech Defense SHP,138,1050,0.111,4.5,0.99,,catalog,,4,Defense
+9mm Luger,Hornady Backcountry Defense DGH +P,138,1150,0.198,5.4,0.99,,catalog,,4,Defense
+9mm Luger,Remington CAST,145,1110,0.147,5.2,0.26,,catalog,,4,Target
+9mm Luger,CCI Blazer Brass Clean-Fire Suppressor TMJ,147,900,0.158,3.5,0.26,,partial,,4,Target
+9mm Luger,CCI Blazer Brass FMJ FN,147,950,0.169,3.9,0.26,,catalog,,4,Target
+9mm Luger,Federal American Eagle FMJ FP,147,1000,0.206,4.3,0.26,,catalog,,4,Target
+9mm Luger,Federal American Eagle IRT TMJ,147,1000,0.206,4.3,0.26,,catalog,,4,Target
+9mm Luger,Federal Premium Gold Medal Action Pistol FMJ Match,147,900,0.206,3.5,0.57,,catalog,,4,Match
+9mm Luger,Federal Premium Hunting Handgun Solid Core +P,147,1120,0.206,5.4,0.57,,catalog,,4,Hunting
+9mm Luger,Federal Premium Personal Defense HST,147,1000,0.206,4.3,0.99,,catalog,,4,Defense
+9mm Luger,Federal Syntech Training Match TSJ,147,1000,0.206,4.3,0.46,,catalog,,4,Match
+9mm Luger,Fiocchi Defense Dynamics JHP,147,975,0.158,4.1,0.99,,partial,,,Defense
+9mm Luger,Fiocchi Range Dynamics FMJ,147,975,0.158,4.1,0.26,,partial,,,Target
+9mm Luger,Hornady Custom XTP,147,975,0.214,4.1,0.99,,catalog,,4,Defense
+9mm Luger,Hornady Subsonic XTP,147,975,0.214,4.1,0.99,,catalog,,4,Defense
+9mm Luger,PMC Bronze Full Metal Jacket (9H),147,975,0.192,4.1,0.26,,catalog,,,Target
+9mm Luger,PMC SFX Hollow Point (9SFX 147gr),147,996,0.155,4.3,0.99,,catalog,,,Defense
+9mm Luger,Remington Flat Nose Enclosed Base,147,950,0.182,3.9,0.38,,catalog,,4,Target
+9mm Luger,Remington Golden Saber Bonded Brass Jacketed Hollow Point,147,990,0.182,4.2,0.99,,catalog,,4,Defense
+9mm Luger,Remington HTP Jacketed Hollow Point,147,990,0.182,4.2,0.99,,catalog,,4,Defense
+9mm Luger,Remington UMC Full Metal Jacket,147,990,0.182,4.2,0.26,,catalog,,4,Target
+9mm Luger,Speer Gold Dot G2,147,1020,0.158,4.5,0.99,,partial,,,Defense
+9mm Luger,Speer Lawman Clean-Fire Training Total Metal Jacket,147,985,0.158,4.2,0.26,,partial,,,Target
+9mm Luger,Speer Lawman Training Total Metal Jacket,147,985,0.158,4.2,0.26,,partial,,,Target
+9mm Luger,Winchester Defender Bonded JHP,147,1000,0.209,4.3,0.99,,catalog,,4,Defense
+9mm Luger,Winchester Defender Bonded JHP +P,147,1030,0.187,4.6,0.99,,catalog,,4,Defense
+9mm Luger,Winchester Silvertip Plated JHP,147,1010,0.208,4.4,0.99,,catalog,,4,Defense
+9mm Luger,Winchester Super Suppressed FMJ Brass Enclosed Base,147,990,0.210,4.2,0.26,,catalog,,4,Target
+9mm Luger,Winchester USA Full Metal Jacket-Flat Nose,147,990,0.210,4.2,0.26,,catalog,,4,Target
+9mm Luger,Winchester USA Jacketed Hollow Point,147,990,0.210,4.2,0.99,,catalog,,4,Defense
+9mm Luger,Winchester WinClean Brass Enclosed Base,147,990,0.210,4.2,0.38,,catalog,,4,Target
+9mm Luger,Federal Syntech Action Pistol TSJ,150,890,0.204,3.5,0.26,,catalog,,4,Target
+9mm Luger,Fiocchi Range Dynamics FMJ,158,850,0.170,3.3,0.26,,partial,,,Target
+.357 Magnum,Remington HTP Semi-Jacketed Hollow Point,110,1295,0.098,10.3,2.47,,catalog,,4,Defense
+.357 Magnum,Winchester USA Jacketed Hollow Point,110,1295,0.102,10.3,2.47,,catalog,,4,Defense
+.357 Magnum,Federal Train+Protect JHP,125,1440,0.133,14.5,2.47,,catalog,,4,Defense
+.357 Magnum,Fiocchi CovertX JHP,125,1425,0.133,14.2,2.47,,partial,,,Defense
+.357 Magnum,Fiocchi Defense Dynamics JHP,125,1450,0.133,14.7,2.47,,partial,,,Defense
+.357 Magnum,Hornady American Gunner XTP,125,1500,0.153,15.7,2.47,,catalog,,8,Hunting
+.357 Magnum,Hornady Critical Defense FTX,125,1500,0.152,15.7,2.47,,catalog,,8,Defense
+.357 Magnum,Remington Golden Saber Brass Jacketed Hollow Point,125,1220,0.100,10.4,2.47,,catalog,,4,Defense
+.357 Magnum,Remington HTP Semi-Jacketed Hollow Point,125,1450,0.125,14.7,2.47,,catalog,,4,Defense
+.357 Magnum,Remington UMC Jacketed Soft Point,125,1450,0.127,14.7,0.65,,catalog,,4,Hunting
+.357 Magnum,Speer Gold Dot Personal Protection Hollow Point,125,1450,0.133,14.7,2.47,,partial,,,Defense
+.357 Magnum,Winchester Defender Bonded JHP,125,1325,0.132,12.3,2.47,,catalog,,4,Defense
+.357 Magnum,Winchester WinClean Brass Enclosed Base,125,1370,0.129,13.1,0.95,,catalog,,4,Target
+.357 Magnum,Hornady Handgun Hunter MonoFlex,130,1250,0.143,11.4,1.42,,catalog,,8,Hunting
+.357 Magnum,Hornady Backcountry Defense DGH,135,1510,0.194,17.2,2.47,,catalog,,8,Defense
+.357 Magnum,Hornady Critical Duty FlexLock,135,1275,0.173,12.3,2.47,,catalog,,8,Defense
+.357 Magnum,Speer Gold Dot Short Barrel Hollow Point,135,990,0.144,7.4,2.47,,partial,,,Defense
+.357 Magnum,Federal Premium Hunting Handgun Barnes Expander,140,1400,0.184,15.3,1.42,,catalog,,6,Hunting
+.357 Magnum,Fiocchi Hyperformance Hunt Barnes XPB,140,1250,0.149,12.2,2.47,,partial,,,Defense
+.357 Magnum,Hornady LEVERevolution FTX,140,1440,0.172,16.2,1.09,,catalog,,8,Hunting
+.357 Magnum,Fiocchi Range Dynamics FMJTC,142,1420,0.151,16,0.65,,partial,,,Target
+.357 Magnum,Winchester Silvertip Plated JHP,145,1290,0.167,13.5,2.47,,catalog,,4,Defense
+.357 Magnum,Fiocchi Defense Dynamics JHP,148,1310,0.158,14.2,2.47,,partial,,,Defense
+.357 Magnum,Federal Premium Personal Defense HST,154,1340,0.123,15.5,2.47,,catalog,,4,Defense
+.357 Magnum,Federal Premium Hunting Handgun Terminal Ascent,157,1410,0.172,17.5,1.42,,catalog,,6,Hunting
+.357 Magnum,CCI Blazer Aluminum JHP [vented test barrel],158,1150,0.168,11.7,2.47,,catalog,,4,Hunting
+.357 Magnum,CCI Blazer Brass FMJ FN [vented test barrel],158,1200,0.177,12.7,0.65,,catalog,,4,Target
+.357 Magnum,CCI Blazer Brass HP JHP [vented test barrel],158,1250,0.172,13.8,2.47,,catalog,,4,Hunting
+.357 Magnum,Federal American Eagle JSP,158,1240,0.205,13.6,0.65,,catalog,,4,Hunting
+.357 Magnum,Federal Fusion SP,158,1240,0.205,13.6,0.95,,catalog,,4,Hunting
+.357 Magnum,Federal Premium Personal Defense Hydra-Shok,158,1240,0.205,13.6,2.47,,catalog,,4,Defense
+.357 Magnum,Fiocchi Defense Dynamics JHP,158,1220,0.168,13.1,2.47,,partial,,,Defense
+.357 Magnum,Fiocchi Range Dynamics CMJFP,158,1220,0.168,13.1,0.65,,partial,,,Target
+.357 Magnum,Hornady Custom XTP,158,1250,0.210,13.8,2.47,yes,catalog,,8,Hunting
+.357 Magnum,PMC Bronze Jacketed Soft Point,158,1471,0.186,19.1,0.65,,catalog,,,Hunting
+.357 Magnum,Remington HTP Lead Semi-Wadcutter,158,1235,0.145,13.5,0.95,,catalog,,4,Match
+.357 Magnum,Remington HTP Semi-Jacketed Hollow Point,158,1235,0.145,13.5,2.47,,catalog,,4,Hunting
+.357 Magnum,Remington HTP Soft Point (SP),158,1235,0.145,13.5,0.95,,catalog,,4,Hunting
+.357 Magnum,Speer Gold Dot Personal Protection Hollow Point,158,1235,0.168,13.5,2.47,,partial,,,Defense
+.357 Magnum,Winchester Big Bore Semi Jacketed Hollow Point (hunting),158,1460,0.170,18.8,2.47,,catalog,,8.5,Hunting
+.357 Magnum,Winchester Super-X Jacketed Hollow Point (hunting),158,1235,0.149,13.5,2.47,,catalog,,4,Hunting
+.357 Magnum,Winchester Super-X Jacketed Soft Point (hunting),158,1235,0.149,13.5,0.95,,catalog,,4,Hunting
+.357 Magnum,Federal Power-Shok JHP,180,1080,0.212,11.7,2.47,,catalog,,4,Hunting
+.357 Magnum,Federal Premium Hunting Handgun Solid Core,180,1400,0.204,19.7,1.42,,catalog,,6,Hunting
+.357 Magnum,Federal Premium Hunting Handgun Swift A-Frame,180,1130,0.186,12.9,1.42,,catalog,,6,Hunting
+.357 Magnum,Remington HTP Semi-Jacketed Hollow Point,180,1145,0.163,13.2,2.47,,catalog,,4,Hunting
+.357 Magnum,Remington Semi-Jacketed Hollow Point,180,1080,0.210,11.7,2.47,,catalog,,4,Hunting
+.38 Special,Hornady Critical Defense Lite FTX,90,1200,0.101,4.7,1.69,,catalog,,4,Defense
+.38 Special,Federal Premium Personal Defense Hydra-Shok,110,980,0.123,3.8,1.69,,catalog,,4,Defense
+.38 Special,Hornady Critical Defense FTX,110,1010,0.133,4.1,1.69,,catalog,,4,Defense
+.38 Special,Hornady Critical Defense FTX +P,110,1090,0.133,4.8,1.69,,catalog,,4,Defense
+.38 Special,Remington HTP Semi-Jacketed Hollow Point,110,950,0.126,3.6,1.69,,catalog,,4,Defense
+.38 Special,Remington HTP Semi-Jacketed Hollow Point +P,110,995,0.128,4,1.69,,catalog,,4,Defense
+.38 Special,Winchester Silvertip Plated JHP,110,945,0.150,3.6,1.69,,catalog,,4,Defense
+.38 Special,Federal Personal Defense Punch JHP +P,120,1000,0.096,4.4,1.69,,catalog,,4,Defense
+.38 Special,CCI Blazer Aluminum JHP +P [vented test barrel],125,945,0.132,4.1,1.69,,catalog,,4,Defense
+.38 Special,CCI Blazer Brass FMJ FN [vented test barrel],125,865,0.149,3.4,0.44,,catalog,,4,Target
+.38 Special,Fiocchi CovertX JHP +P,125,1100,0.133,5.5,1.69,,partial,,,Defense
+.38 Special,Fiocchi Defense Dynamics JHP,125,1000,0.133,4.5,1.69,,partial,,,Defense
+.38 Special,Hornady American Gunner XTP,125,900,0.155,3.7,1.69,,catalog,,4,Defense
+.38 Special,Remington Golden Saber Brass Jacketed Hollow Point +P,125,975,0.177,4.3,1.69,,catalog,,4,Defense
+.38 Special,Remington HTP Semi-Jacketed Hollow Point +P,125,945,0.162,4.1,1.69,,catalog,,4,Defense
+.38 Special,Remington UMC Jacketed Hollow Point +P,125,945,0.162,4.1,1.69,,catalog,,4,Defense
+.38 Special,Speer Lawman Training Total Metal Jacket,125,865,0.133,3.4,0.44,,partial,,,Target
+.38 Special,Winchester Silvertip Plated JHP +P,125,945,0.170,4.1,1.69,,catalog,,4,Defense
+.38 Special,Winchester Super-X Jacketed Hollow Point +P,125,945,0.170,4.1,1.69,,catalog,,4,Defense
+.38 Special,Winchester USA Jacketed Flat Point,125,850,0.127,3.3,0.44,,catalog,,4,Target
+.38 Special,Winchester USA Jacketed Hollow Point +P,125,945,0.170,4.1,1.69,,catalog,,4,Defense
+.38 Special,Winchester WinClean Brass Enclosed Base,125,775,0.151,2.7,0.65,,catalog,,4,Target
+.38 Special,Federal Premium Personal Defense Hydra-Shok +P,129,950,0.175,4.2,1.69,,catalog,,4,Defense
+.38 Special,Federal American Eagle FMJ,130,890,0.174,3.7,0.44,,catalog,,4,Target
+.38 Special,Federal Champion FMJ,130,890,0.174,3.7,0.44,,catalog,,4,Target
+.38 Special,Federal Premium Personal Defense Hydra-Shok JHP +P,130,900,0.153,3.8,1.69,,catalog,,4,Defense
+.38 Special,Fiocchi Range Dynamics FMJ,130,950,0.138,4.3,0.44,,partial,,,Target
+.38 Special,Remington UMC Full Metal Jacket,130,800,0.187,3,0.44,,catalog,,4,Target
+.38 Special,Winchester Defender Bonded JHP +P,130,950,0.187,4.3,1.69,,catalog,,4,Defense
+.38 Special,Winchester USA Full Metal Jacket,130,800,0.150,3,0.44,,catalog,,4,Target
+.38 Special,PMC Bronze Full Metal Jacket,132,917,0.188,4,0.44,,catalog,,,Target
+.38 Special,Speer Gold Dot Short Barrel Hollow Point +P,135,860,0.144,3.6,1.69,,partial,,,Defense
+.38 Special,Federal Premium Gold Medal LW Match,148,690,0.118,2.6,0.98,,catalog,,4,Match
+.38 Special,Fiocchi Defense Dynamics JHP,148,750,0.158,3,1.69,,partial,,,Defense
+.38 Special,Fiocchi Range Dynamics LWC,148,730,0.158,2.9,0.44,,partial,,,Target
+.38 Special,Remington Performance Wheelgun Target Master Wad Cutter,148,710,0.118,2.7,0.65,,catalog,,4,Match
+.38 Special,Winchester Super-X Lead-Wad Cutter,148,710,0.118,2.7,0.65,,catalog,,4,Target
+.38 Special,Winchester USA Lead Round Nose,150,845,0.178,3.9,0.44,,catalog,,4,Target
+.38 Special,CCI Blazer Aluminum FMJ +P [vented test barrel],158,850,0.177,4.2,0.44,,catalog,,4,Target
+.38 Special,CCI Blazer Aluminum LRN [vented test barrel],158,755,0.181,3.3,0.44,,catalog,,4,Target
+.38 Special,Federal American Eagle LRN,158,770,0.206,3.4,0.44,,catalog,,4,Target
+.38 Special,Federal Train+Protect SWHP,158,830,0.206,4,0.65,,catalog,,4,Target
+.38 Special,Fiocchi Defense Dynamics JHP,158,850,0.168,4.2,1.69,,partial,,,Defense
+.38 Special,Fiocchi Heritage Cowboy Action LFP,158,640,0.168,2.4,0.65,,partial,,,Target
+.38 Special,Fiocchi Range Dynamics FMJ,158,730,0.168,3.1,0.44,,partial,,,Target
+.38 Special,Fiocchi Range Dynamics LRN,158,880,0.168,4.5,0.44,,partial,,,Target
+.38 Special,Hornady Custom XTP,158,800,0.214,3.7,1.69,yes,catalog,,4,Defense
+.38 Special,Remington HTP Lead Hollow Point +P,158,890,0.187,4.6,1.69,,catalog,,4,Defense
+.38 Special,Remington Performance Wheelgun Lead Round Nose,158,755,0.148,3.3,0.44,,catalog,,4,Target
+.38 Special,Remington Performance Wheelgun Lead Semi-Wadcutter,158,755,0.148,3.3,0.65,,catalog,,4,Match
+.38 Special,Remington UMC Lead Round Nose,158,755,0.148,3.3,0.44,,catalog,,4,Target
+.38 Special,Speer Lawman Clean-Fire Training Total Metal Jacket +P,158,900,0.168,4.7,0.44,,partial,,,Target
+.38 Special,Speer Lawman Training Total Metal Jacket +P,158,900,0.168,4.7,0.44,,partial,,,Target
+.38 Special,Winchester USA Lead,158,800,0.135,3.7,0.44,,catalog,,4,Target
+9x18 Makarov,Hornady Critical Defense FTX,95,1000,0.102,3.0,1.17,yes,catalog,,4,Defense
+10mm Auto,Hornady Handgun Hunter MonoFlex,135,1315,0.103,7.8,1.27,,catalog,,5,Hunting
+10mm Auto,Hornady LEVERevolution FTX,150,1220,0.095,7.5,0.98,,catalog,,5,Hunting
+10mm Auto,Fiocchi Hyperformance Hunt Barnes XPB,155,1165,0.131,7.1,2.21,,partial,,,Defense
+10mm Auto,Hornady American Gunner XTP,155,1410,0.139,10.3,2.21,,catalog,,5,Hunting
+10mm Auto,Hornady Custom XTP,155,1410,0.139,10.3,2.21,,catalog,,5,Hunting
+10mm Auto,PMC Bronze Jacketed Hollow Point,170,1200,0.114,8.2,2.21,,catalog,,,Hunting
+10mm Auto,Winchester USA Ready Defense Hex-Vent JHP,170,1250,0.157,8.9,2.21,,catalog,,5,Defense
+10mm Auto,Hornady Critical Duty FlexLock,175,1160,0.164,7.9,2.21,,catalog,,5,Defense
+10mm Auto,Winchester Silvertip Plated JHP,175,1200,0.139,8.5,2.21,,catalog,,5,Hunting
+10mm Auto,CCI Blazer Brass FMJ,180,1200,0.146,8.7,0.58,,catalog,,5,Target
+10mm Auto,CCI Blazer Brass HP JHP,180,1175,0.175,8.3,2.21,,catalog,,5,Hunting
+10mm Auto,Federal American Eagle FMJ,180,1030,0.175,6.4,0.58,,catalog,,5,Target
+10mm Auto,Federal Champion FMJ,180,1200,0.134,8.7,0.58,,catalog,,5,Target
+10mm Auto,Federal Premium Hunting Handgun Trophy Bonded JSP,180,1275,0.137,9.8,2.21,,catalog,,5,Hunting
+10mm Auto,Federal Train+Protect JHP,180,1175,0.175,8.3,2.21,,catalog,,5,Hunting
+10mm Auto,Fiocchi Defense Dynamics JHP,180,1250,0.152,9.4,2.21,,partial,,,Defense
+10mm Auto,Fiocchi Range Dynamics FMJTC,180,1250,0.152,9.4,0.58,,partial,,,Target
+10mm Auto,Hornady Custom XTP,180,1275,0.167,9.8,2.21,yes,catalog,,5,Hunting
+10mm Auto,Remington Golden Saber Bonded Brass Jacketed Hollow Point,180,1160,0.177,8.1,2.21,,catalog,,5,Defense
+10mm Auto,Remington Golden Saber Brass Jacketed Hollow Point,180,1160,0.177,8.1,2.21,,catalog,,5,Defense
+10mm Auto,Remington UMC Full Metal Jacket,180,1160,0.180,8.1,0.58,,catalog,,5,Target
+10mm Auto,Winchester Defender Bonded JHP,180,1240,0.153,9.3,2.21,,catalog,,5,Defense
+10mm Auto,Winchester USA Full Metal Jacket,180,1080,0.195,7,0.58,,catalog,,5,Target
+10mm Auto,Winchester USA Jacketed Hollow Point,180,1235,0.179,9.2,2.21,,catalog,,5,Hunting
+10mm Auto,Winchester USA Ready,180,1250,0.170,9.4,0.58,,catalog,,5,Target
+10mm Auto,CCI Blazer Aluminum FMJ,200,1050,0.173,7.4,0.58,,catalog,,5,Target
+10mm Auto,Federal Fusion SP,200,1200,0.190,9.7,0.85,,catalog,,5,Hunting
+10mm Auto,Federal Personal Defense Punch JHP,200,1100,0.228,8.1,2.21,,catalog,,5,Defense
+10mm Auto,Federal Power-Shok JHP,200,1110,0.228,8.3,2.21,,catalog,,5,Hunting
+10mm Auto,Federal Premium Hunting Handgun Solid Core,200,1200,0.175,9.7,1.27,,catalog,,5,Hunting
+10mm Auto,Federal Premium Hunting Handgun Swift A-Frame,200,1100,0.195,8.1,1.27,,catalog,,5,Hunting
+10mm Auto,Federal Premium Personal Defense HST,200,1130,0.127,8.6,2.21,,catalog,,5,Defense
+10mm Auto,Hornady Backcountry Defense DGH,200,1160,0.202,9,2.21,,catalog,,5,Defense
+10mm Auto,PMC Bronze Full Metal Jacket Truncated Cone,200,1050,0.141,7.4,0.58,,catalog,,,Target
+10mm Auto,Remington Hard Cast,200,1200,0.228,9.7,0.58,,catalog,,5,Hunting
+10mm Auto,Remington Semi-Jacketed Hollow Point,200,1110,0.228,8.3,2.21,,catalog,,5,Hunting
+10mm Auto,Speer Gold Dot Personal Protection Hollow Point,200,1100,0.169,8.1,2.21,,partial,,,Defense
+10mm Auto,Winchester Big Bore Semi Jacketed Hollow Point (hunting),200,1175,0.182,9.3,2.21,,catalog,,5,Hunting
+10mm Auto,Federal Premium Hunting Handgun Terminal Ascent,203,1180,0.183,9.5,1.27,,catalog,,5,Hunting
+10mm Auto,Federal Syntech Range TSJ,205,1150,0.175,9.1,0.58,,catalog,,5,Target
+.40 S&W,Winchester Super Clean Zinc FMJ,120,1250,0.127,5.2,0.37,,catalog,,4,Target
+.40 S&W,Hornady Handgun Hunter MonoFlex,135,1130,0.114,4.8,0.83,,partial,,4,Hunting
+.40 S&W,Federal American Eagle FMJ,155,1160,0.134,5.8,0.37,,catalog,,4,Target
+.40 S&W,Hornady Custom XTP,155,1180,0.139,6,1.43,,catalog,,4,Defense
+.40 S&W,Remington HTP Jacketed Hollow Point,155,1205,0.163,6.3,1.43,,catalog,,4,Defense
+.40 S&W,Winchester Silvertip Plated JHP,155,1205,0.169,6.3,1.43,,catalog,,4,Defense
+.40 S&W,CCI Blazer Aluminum FMJ,165,1100,0.138,5.6,0.37,,catalog,,4,Target
+.40 S&W,CCI Blazer Brass FMJ FN,165,1050,0.139,5.1,0.37,,catalog,,4,Target
+.40 S&W,Federal American Eagle FMJ,165,1130,0.155,5.9,0.37,,catalog,,4,Target
+.40 S&W,Federal Personal Defense Punch JHP,165,1130,0.155,5.9,1.43,,catalog,,4,Defense
+.40 S&W,Federal Premium Personal Defense Hydra-Shok,165,980,0.154,4.4,1.43,,catalog,,4,Defense
+.40 S&W,Federal Syntech Range TSJ,165,1050,0.188,5.1,0.37,,catalog,,4,Target
+.40 S&W,Fiocchi Defense Dynamics JHP,165,1100,0.139,5.6,1.43,,partial,,,Defense
+.40 S&W,Hornady Critical Defense FTX,165,1045,0.147,5,1.43,,catalog,,4,Defense
+.40 S&W,PMC Bronze Full Metal Jacket Flat Point,165,989,0.188,4.5,0.37,,catalog,,,Target
+.40 S&W,PMC Bronze Jacketed Hollow Point,165,1040,0.153,5,1.43,,catalog,,,Defense
+.40 S&W,Remington Golden Saber Bonded Brass Jacketed Hollow Point,165,1150,0.135,6.1,1.43,,catalog,,4,Defense
+.40 S&W,Remington Golden Saber Brass Jacketed Hollow Point,165,1150,0.135,6.1,1.43,,catalog,,4,Defense
+.40 S&W,Remington UMC Full Metal Jacket,165,1150,0.104,6.1,0.37,,catalog,,4,Target
+.40 S&W,Speer Gold Dot Carry Gun Hollow Point,165,1150,0.139,6.1,1.43,,partial,,,Defense
+.40 S&W,Speer Gold Dot Personal Protection Hollow Point,165,1150,0.139,6.1,1.43,,partial,,,Defense
+.40 S&W,Speer Lawman Training Total Metal Jacket,165,1150,0.139,6.1,0.37,,partial,,,Target
+.40 S&W,Winchester Defender Bonded JHP,165,1140,0.170,6,1.43,,catalog,,4,Defense
+.40 S&W,Winchester USA (100 VP) Full Metal Jacket-Flat Nose,165,1060,0.188,5.2,0.37,,catalog,,4,Target
+.40 S&W,Winchester USA (200 RP) Full Metal Jacket-Flat Nose,165,1060,0.188,5.2,0.37,,catalog,,4,Target
+.40 S&W,Winchester USA Full Metal Jacket-Flat Nose,165,1060,0.188,5.2,0.37,,catalog,,4,Target
+.40 S&W,Winchester USA Ready Full Metal Jacket,165,1060,0.179,5.2,0.37,,catalog,,4,Target
+.40 S&W,Winchester WinClean Brass Enclosed Base,165,1130,0.188,5.9,0.55,,catalog,,4,Target
+.40 S&W,Fiocchi Range Dynamics FMJTC,170,1020,0.143,4.9,0.37,,partial,,,Target
+.40 S&W,Winchester USA Ready Defense Hex-Vent JHP,170,1170,0.180,6.5,1.43,,catalog,,4,Defense
+.40 S&W,Federal Syntech Defense SHP,175,1000,0.111,4.9,1.43,,catalog,,4,Defense
+.40 S&W,Hornady Critical Duty FlexLock,175,1010,0.158,5,1.43,,catalog,,4,Defense
+.40 S&W,CCI Blazer Brass Clean-Fire Suppressor TMJ,180,970,0.147,4.7,0.37,,catalog,,4,Target
+.40 S&W,CCI Blazer Brass FMJ FN,180,985,0.153,4.9,0.37,,catalog,,4,Target
+.40 S&W,CCI Blazer Brass HP JHP,180,1015,0.182,5.2,1.43,,catalog,,4,Defense
+.40 S&W,Federal American Eagle FMJ,180,1000,0.175,5,0.37,,catalog,,4,Target
+.40 S&W,Federal American Eagle IRT TMJ,180,1000,0.175,5,0.37,,catalog,,4,Target
+.40 S&W,Federal Champion FMJ,180,1000,0.175,5,0.37,,catalog,,4,Target
+.40 S&W,Federal Premium Gold Medal Action Pistol FMJ Match,180,950,0.175,4.5,0.83,,catalog,,4,Match
+.40 S&W,Federal Premium Personal Defense HST,180,1010,0.175,5.1,1.43,,catalog,,4,Defense
+.40 S&W,Federal Syntech Training Match TSJ,180,1010,0.114,5.1,0.66,yes,catalog,,4,Match
+.40 S&W,Federal Train+Protect JHP,180,1000,0.177,5,1.43,,catalog,,4,Defense
+.40 S&W,Fiocchi Defense Dynamics JHP,180,1000,0.152,5,1.43,,partial,,,Defense
+.40 S&W,Fiocchi Range Dynamics FMJTC,180,1000,0.152,5,0.37,,partial,,,Target
+.40 S&W,Hornady Subsonic XTP,180,950,0.169,4.5,1.43,,catalog,,4,Defense
+.40 S&W,PMC Bronze Full Metal Jacket Flat Point,180,985,0.164,4.9,0.37,,catalog,,,Target
+.40 S&W,Remington Flat Nose Enclosed Base,180,990,0.178,4.9,0.55,,catalog,,4,Target
+.40 S&W,Remington Full Metal Jacket,180,990,0.178,4.9,0.37,,catalog,,4,Target
+.40 S&W,Remington Golden Saber Bonded Brass Jacketed Hollow Point,180,1015,0.177,5.2,1.43,,catalog,,4,Defense
+.40 S&W,Remington Golden Saber Brass Jacketed Hollow Point,180,1015,0.177,5.2,1.43,,catalog,,4,Defense
+.40 S&W,Remington HTP Jacketed Hollow Point,180,1015,0.177,5.2,1.43,,catalog,,4,Defense
+.40 S&W,Remington UMC Full Metal Jacket,180,990,0.178,4.9,0.37,,catalog,,4,Target
+.40 S&W,Remington UMC Jacketed Hollow Point,180,1015,0.177,5.2,1.43,,catalog,,4,Defense
+.40 S&W,Speer Gold Dot G2,180,1015,0.152,5.2,1.43,,partial,,,Defense
+.40 S&W,Speer Gold Dot Personal Protection Hollow Point,180,1025,0.152,5.3,1.43,,partial,,,Defense
+.40 S&W,Speer Gold Dot Short Barrel Hollow Point,180,950,0.152,4.5,1.43,,partial,,,Defense
+.40 S&W,Speer Lawman Clean-Fire Training Total Metal Jacket,180,1000,0.152,5,0.37,,partial,,,Target
+.40 S&W,Speer Lawman Training Total Metal Jacket,180,1000,0.152,5,0.37,,partial,,,Target
+.40 S&W,Winchester Defender Bonded JHP,180,1025,0.183,5.3,1.43,,catalog,,4,Defense
+.40 S&W,Winchester USA Full Metal Jacket,180,1020,0.200,5.2,0.37,,catalog,,4,Target
+.40 S&W,Winchester USA Jacketed Hollow Point,180,1010,0.172,5.1,1.43,,catalog,,4,Defense
+.40 S&W,Winchester WinClean Brass Enclosed Base,180,990,0.192,4.9,0.55,,catalog,,4,Target
+.40 S&W,Federal Premium Hunting Handgun Solid Core,200,1000,0.206,5.6,0.83,,catalog,,4,Hunting
+.40 S&W,Federal Syntech Action Pistol TSJ,205,830,0.174,3.9,0.37,,catalog,,4,Target
+.41 Magnum,Hornady LEVERevolution FTX,190,1620,0.168,15.8,1.72,yes,catalog,,10,Hunting
+.41 Magnum,Hornady Custom XTP,210,1545,0.186,15.8,3.90,,catalog,,10,Defense
+.44-40 Winchester,Hornady Custom Cowboy,205,725,0.127,3.4,1.80,yes,catalog,,7,Target
+.44 Magnum,Federal Power-Shok JHP,180,1460,0.124,24.4,3.51,,catalog,,4,Hunting
+.44 Magnum,PMC Bronze Jacketed Hollow Point,180,1750,0.179,35.1,3.51,,catalog,,,Hunting
+.44 Magnum,Remington UMC Jacketed Soft Point,180,1610,0.123,29.7,0.92,,catalog,,4,Hunting
+.44 Magnum,Fiocchi Defense Dynamics SJHP,200,1475,0.147,27.7,3.51,,partial,,,Defense
+.44 Magnum,Hornady Custom XTP,200,1500,0.172,28.6,3.51,,catalog,,7,Hunting
+.44 Magnum,Hornady Handgun Hunter MonoFlex,200,1475,0.171,27.7,2.03,,catalog,,7,Hunting
+.44 Magnum,Winchester Silvertip Plated JHP (hunting),210,1250,0.138,20.9,3.51,,catalog,,4,Hunting
+.44 Magnum,Federal Premium Hunting Handgun Barnes Expander,225,1280,0.163,23.5,2.03,,catalog,,6,Hunting
+.44 Magnum,Fiocchi Hyperformance Hunt Barnes XPB,225,1240,0.166,22,3.51,,partial,,,Defense
+.44 Magnum,Hornady LEVERevolution FTX,225,1410,0.147,28.5,1.55,,catalog,,7,Hunting
+.44 Magnum,Federal Premium Personal Defense HST,230,1085,0.175,17.2,3.51,,catalog,,4,Defense
+.44 Magnum,Federal Premium Hunting Handgun Terminal Ascent,235,1380,0.160,28.5,2.03,,catalog,,6,Hunting
+.44 Magnum,CCI Blazer Aluminum JHP [vented test barrel],240,1200,0.169,22,3.51,,catalog,,6.5,Hunting
+.44 Magnum,CCI Blazer Brass FMJ [vented test barrel],240,1200,0.175,22,0.92,,catalog,,4,Target
+.44 Magnum,Federal American Eagle JHP,240,1230,0.175,23.1,3.51,,catalog,,4,Hunting
+.44 Magnum,Federal Fusion SP,240,1290,0.174,25.4,1.35,,catalog,,4,Hunting
+.44 Magnum,Federal Power-Shok JHP,240,1230,0.181,23.1,3.51,,catalog,,4,Hunting
+.44 Magnum,Federal Premium Personal Defense Hydra-Shok,240,1210,0.174,22.4,3.51,,catalog,,4,Defense
+.44 Magnum,Fiocchi Defense Dynamics JHP,240,1330,0.177,27,3.51,,partial,,,Defense
+.44 Magnum,Fiocchi Defense Dynamics JSP,240,1310,0.177,26.2,3.51,,partial,,,Defense
+.44 Magnum,Hornady Backcountry Defense DGH,240,1620,0.208,40.1,3.51,,catalog,,7,Defense
+.44 Magnum,Hornady Custom XTP,240,1350,0.208,27.8,3.51,yes,catalog,,7,Hunting
+.44 Magnum,PMC Bronze Truncated Soft Point,240,1497,0.186,34.2,0.92,,catalog,,,Hunting
+.44 Magnum,Remington HTP Jacketed Soft Point,240,1180,0.172,21.3,1.35,,catalog,,4,Hunting
+.44 Magnum,Remington HTP Semi-Jacketed Hollow Point,240,1180,0.172,21.3,3.51,,catalog,,4,Hunting
+.44 Magnum,Remington Semi-Jacketed Hollow Point,240,1220,0.170,22.7,3.51,,catalog,,4,Hunting
+.44 Magnum,Winchester Big Bore Semi Jacketed Hollow Point (hunting),240,1485,0.170,33.7,3.51,,catalog,,8.375,Hunting
+.44 Magnum,Winchester USA Jacketed Soft Point (hunting),240,1180,0.177,21.3,0.92,,catalog,,4,Hunting
+.44 Magnum,Federal Premium Hunting Handgun Swift A-Frame,280,1170,0.155,24.4,2.03,,catalog,,6,Hunting
+.44 Magnum,Federal Premium Hunting Handgun Solid Core,300,1150,0.170,25.3,2.03,,catalog,,6.5,Hunting
+.44 Magnum,Hornady Custom XTP,300,1150,0.250,25.3,3.51,,catalog,,7,Hunting
+.44 Special,Hornady Critical Defense FTX,165,900,0.128,4.2,2.86,yes,catalog,,2,Defense
+.45 ACP,Hornady Handgun Hunter MonoFlex +P,160,1110,0.128,6.2,0.98,,catalog,,5,Hunting
+.45 ACP,Winchester Super Clean Zinc FMJ,160,1100,0.143,6.1,0.44,,catalog,,5,Target
+.45 ACP,Federal Premium Gold Medal FMJ-SWC Match,185,770,0.093,3.5,0.98,,catalog,,5,Match
+.45 ACP,Hornady American Gunner XTP,185,970,0.142,5.5,1.69,,catalog,,5,Defense
+.45 ACP,Hornady Critical Defense FTX,185,900,0.143,4.7,1.69,,catalog,,3,Defense
+.45 ACP,PMC Bronze Jacketed Hollow Point,185,900,0.099,4.7,1.69,,catalog,,,Defense
+.45 ACP,Remington Golden Saber Bonded Brass Jacketed Hollow Point,185,1015,0.149,6,1.69,,catalog,,4,Defense
+.45 ACP,Remington Golden Saber Brass Jacketed Hollow Point,185,1015,0.149,6,1.69,,catalog,,4,Defense
+.45 ACP,Remington Golden Saber Brass Jacketed Hollow Point +P,185,1140,0.150,7.6,1.69,,catalog,,4,Defense
+.45 ACP,Remington HTP Jacketed Hollow Point,185,1000,0.149,5.8,1.69,,catalog,,4,Defense
+.45 ACP,Remington UMC Full Metal Jacket,185,1015,0.149,6,0.44,,catalog,,4,Target
+.45 ACP,Speer Gold Dot Personal Protection Hollow Point,185,1050,0.123,6.4,1.69,,partial,,,Defense
+.45 ACP,Speer Lawman Training Total Metal Jacket,185,1050,0.123,6.4,0.44,,partial,,,Target
+.45 ACP,Winchester Silvertip Plated JHP,185,1000,0.149,5.8,1.69,,catalog,,5,Defense
+.45 ACP,Winchester USA Full Metal Jacket-Flat Nose,185,910,0.144,4.8,0.44,,catalog,,5,Target
+.45 ACP,Winchester WinClean Brass Enclosed Base,185,910,0.093,4.8,0.65,,catalog,,5,Target
+.45 ACP,Fiocchi Defense Dynamics JHP,200,890,0.133,5,1.69,,partial,,,Defense
+.45 ACP,Hornady Custom XTP,200,900,0.155,5.1,1.69,,catalog,,5,Defense
+.45 ACP,Speer Gold Dot Carry Gun Hollow Point +P,200,1080,0.133,7.4,1.69,,partial,,,Defense
+.45 ACP,Winchester USA Ready Defense Hex-Vent JHP,200,1000,0.165,6.3,1.69,,catalog,,5,Defense
+.45 ACP,Federal Syntech Defense SHP,205,970,0.103,6.1,1.69,,catalog,,5,Defense
+.45 ACP,Federal Premium Personal Defense Hydra-Shok Deep,210,980,0.165,6.4,1.69,,catalog,,5,Defense
+.45 ACP,Federal Syntech Action Pistol TSJ,220,810,0.183,4.5,0.44,,catalog,,5,Target
+.45 ACP,Hornady Critical Duty FlexLock +P,220,975,0.183,6.6,1.69,,catalog,,5,Defense
+.45 ACP,CCI Blazer Aluminum FMJ,230,845,0.156,5.2,0.44,,catalog,,5,Target
+.45 ACP,CCI Blazer Brass Clean-Fire Suppressor TMJ,230,800,0.156,4.6,0.44,,catalog,,5,Target
+.45 ACP,CCI Blazer Brass FMJ RN,230,830,0.157,5,0.44,,catalog,,5,Target
+.45 ACP,CCI Blazer Brass HP JHP,230,850,0.194,5.2,1.69,,catalog,,5,Defense
+.45 ACP,Federal American Eagle FMJ,230,890,0.195,5.7,0.44,,catalog,,5,Target
+.45 ACP,Federal American Eagle IRT TMJ,230,850,0.194,5.2,0.44,,catalog,,5,Target
+.45 ACP,Federal Champion FMJ,230,845,0.194,5.2,0.44,,catalog,,5,Target
+.45 ACP,Federal Personal Defense Punch JHP,230,890,0.195,5.7,1.69,,catalog,,5,Defense
+.45 ACP,Federal Premium Gold Medal FMJ Match,230,860,0.200,5.4,0.98,,catalog,,5,Match
+.45 ACP,Federal Premium Personal Defense HST,230,890,0.195,5.7,1.69,,catalog,,5,Defense
+.45 ACP,Federal Premium Personal Defense HST +P,230,950,0.196,6.5,1.69,,catalog,,5,Defense
+.45 ACP,Federal Premium Personal Defense Hydra-Shok,230,900,0.194,5.9,1.69,,catalog,,5,Defense
+.45 ACP,Federal Syntech Range TSJ,230,830,0.207,5,0.44,,catalog,,5,Target
+.45 ACP,Federal Syntech Training Match TSJ,230,890,0.115,5.7,0.78,yes,catalog,,5,Match
+.45 ACP,Federal Train+Protect JHP,230,850,0.195,5.2,1.69,,catalog,,5,Defense
+.45 ACP,Fiocchi CovertX JHP,230,875,0.153,5.6,1.69,,partial,,,Defense
+.45 ACP,Fiocchi Defense Dynamics JHP,230,850,0.153,5.2,1.69,,partial,,,Defense
+.45 ACP,Fiocchi Range Dynamics FMJ,230,860,0.153,5.4,0.44,,partial,,,Target
+.45 ACP,Hornady Custom XTP +P,230,950,0.191,6.5,1.69,,catalog,,5,Defense
+.45 ACP,Hornady Subsonic XTP,230,925,0.192,6.2,1.69,,catalog,,5,Defense
+.45 ACP,PMC Bronze Full Metal Jacket,230,830,0.134,5,0.44,,catalog,,,Target
+.45 ACP,Remington Flat Nose Enclosed Base (830 fps),230,830,0.159,5,0.65,,catalog,,5,Target
+.45 ACP,Remington Flat Nose Enclosed Base (835 fps),230,835,0.161,5.1,0.65,,catalog,,5,Target
+.45 ACP,Remington Golden Saber Bonded Brass Jacketed Hollow Point,230,875,0.148,5.6,1.69,,catalog,,4,Defense
+.45 ACP,Remington Golden Saber Brass Jacketed Hollow Point,230,875,0.148,5.6,1.69,,catalog,,4,Defense
+.45 ACP,Remington HTP Jacketed Hollow Point,230,835,0.161,5.1,1.69,,catalog,,4,Defense
+.45 ACP,Remington UMC Full Metal Jacket,230,835,0.161,5.1,0.44,,catalog,,5,Target
+.45 ACP,Remington UMC Jacketed Hollow Point,230,835,0.161,5.1,1.69,,catalog,,5,Defense
+.45 ACP,Speer Gold Dot G2 +P,230,950,0.153,6.5,1.69,,partial,,,Defense
+.45 ACP,Speer Gold Dot Short Barrel Hollow Point,230,820,0.153,4.9,1.69,,partial,,,Defense
+.45 ACP,Speer Lawman Training Total Metal Jacket,230,830,0.153,5,0.44,,partial,,,Target
+.45 ACP,Winchester Defender Bonded JHP,230,920,0.188,6.1,1.69,,catalog,,5,Defense
+.45 ACP,Winchester Super Suppressed FMJ Brass Enclosed Base,230,850,0.192,5.2,0.44,,catalog,,5,Target
+.45 ACP,Winchester USA (100 VP) Full Metal Jacket,230,835,0.164,5.1,0.44,,catalog,,5,Target
+.45 ACP,Winchester USA (200 RP) Full Metal Jacket,230,835,0.164,5.1,0.44,,catalog,,5,Target
+.45 ACP,Winchester USA Full Metal Jacket,230,835,0.164,5.1,0.44,,catalog,,5,Target
+.45 ACP,Winchester USA Jacketed Hollow Point,230,880,0.166,5.6,1.69,,catalog,,5,Defense
+.45 ACP,Winchester USA Ready Flat Nose FMJ,230,880,0.166,5.6,0.44,,catalog,,5,Target
+.45 ACP,Winchester Win1911 Full Metal Jacket,230,880,0.166,5.6,0.44,,catalog,,5,Target
+.45 ACP,Winchester WinClean Brass Enclosed Base,230,835,0.184,5.1,0.65,,catalog,,5,Target
+.45 ACP,Federal Premium Hunting Handgun Solid Core +P,240,1000,0.186,7.6,0.98,,catalog,,5,Hunting
+.45 Colt,Hornady Critical Defense FTX,185,920,0.143,6.6,2.99,,catalog,,3,Defense
+.45 Colt,CCI Blazer Aluminum JHP,200,1000,0.142,8.5,2.99,,catalog,,7.26,Hunting
+.45 Colt,Fiocchi Hyperformance Hunt Barnes XPB,200,1010,0.133,8.7,2.99,,partial,,,Defense
+.45 Colt,Federal Premium Personal Defense Hydra-Shok Deep,210,913,0.133,7.4,2.99,,catalog,,6,Defense
+.45 Colt,Federal American Eagle JSP,225,860,0.194,7.1,0.78,,catalog,,4,Hunting
+.45 Colt,Federal Champion SWCHP,225,830,0.154,6.6,1.15,,catalog,,4,Target
+.45 Colt,Hornady LEVERevolution FTX,225,960,0.142,8.8,1.32,,catalog,,4,Hunting
+.45 Colt,Remington Performance Wheelgun Lead Semi-Wadcutter,225,830,0.113,6.6,1.15,,catalog,,4,Match
+.45 Colt,"Winchester Defender Bonded JHP (3in Judge, vented)",225,850,0.170,6.9,2.99,,catalog,,3,Defense
+.45 Colt,Winchester Silvertip Plated JHP,225,920,0.170,8.1,2.99,,catalog,,5.5,Hunting
+.45 Colt,Remington HTP Jacketed Hollow Point,230,850,0.149,7,2.99,,catalog,,4,Hunting
+.45 Colt,Federal Power-Shok JHP,235,850,0.194,7.2,2.99,,catalog,,6,Hunting
+.45 Colt,Fiocchi Heritage Cowboy Action LRNFP,250,750,0.167,6,1.15,,partial,,,Target
+.45 Colt,Remington Performance Wheelgun Lead Round Nose,250,750,0.142,6,0.78,,catalog,,4,Hunting
+.45 Colt,Winchester Big Bore Semi Jacketed Hollow Point (hunting),250,845,0.164,7.6,2.99,,catalog,,7.25,Hunting
+.45 Colt,Winchester USA Lead,250,750,0.164,6,0.78,,catalog,,5.5,Hunting
+.45 Colt,Fiocchi Range Dynamics CMJ,255,750,0.170,6.1,0.78,,partial,,,Target
+.45 Colt,Hornady Custom Cowboy,255,725,0.128,5.7,1.15,yes,catalog,,4,Target
+.454 Casull,Hornady Handgun Hunter MonoFlex,200,1950,0.169,24.0,3.60,,catalog,,7,Hunting
+.454 Casull,Hornady Custom XTP Mag,240,1900,0.163,27.4,6.24,yes,catalog,,7,Defense
+.454 Casull,Hornady Backcountry Defense DGH,300,1820,0.204,31.4,6.24,,catalog,,7,Defense
+.454 Casull,Hornady Custom XTP Mag,300,1650,0.203,25.8,6.24,,catalog,,7,Defense
+.460 S&W Magnum,Hornady Custom FTX,200,2200,0.158,30.6,3.68,yes,catalog,,8,Hunting
+.460 S&W Magnum,Hornady Handgun Hunter MonoFlex,200,2150,0.169,29.2,4.80,,catalog,,8,Hunting
+.480 Ruger,Hornady Custom XTP Mag,325,1350,0.152,18.7,5.72,yes,catalog,,7,Defense
+.50 AE,Hornady Custom XTP,300,1475,0.122,20.6,6.50,yes,catalog,,6,Defense
+.500 S&W Magnum,Hornady Custom FTX,300,1950,0.122,36.1,3.45,yes,catalog,,8,Hunting
+.500 S&W Magnum,Hornady Custom FP-XTP,500,1300,0.204,26.7,7.80,,catalog,,8,Defense

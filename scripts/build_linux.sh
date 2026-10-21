@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Builds and installs Cartridge Calculator as a normal app on Fedora (and most Linux).
-# Run from this folder:  bash build_linux.sh
+# Run from anywhere:  bash scripts/build_linux.sh
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 echo "==> Installing Tk and Python tools (asks for your password)..."
 sudo dnf install -y python3 python3-pip python3-tkinter binutils
@@ -10,12 +10,12 @@ sudo dnf install -y python3 python3-pip python3-tkinter binutils
 echo "==> Building the app..."
 python3 -m venv .buildenv
 .buildenv/bin/pip install --quiet pyinstaller
-.buildenv/bin/pyinstaller --onefile --windowed --name CartridgeCalculator cartridge_calculator.py
+.buildenv/bin/pyinstaller --onefile --windowed --name CartridgeCalculator src/cartridge_calculator.py
 
 APPDIR="$HOME/.local/share/cartridge-calculator"
 mkdir -p "$APPDIR" "$HOME/.local/share/applications"
 cp dist/CartridgeCalculator "$APPDIR/"
-cp ammo_*.csv "$APPDIR/"
+cp data/*.csv "$APPDIR/"
 
 cat > "$HOME/.local/share/applications/cartridge-calculator.desktop" <<DESK
 [Desktop Entry]

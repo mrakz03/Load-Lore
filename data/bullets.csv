@@ -1,0 +1,179 @@
+maker,name,diameter_in,weight_gr,bc_g1,type
+Hornady,V-MAX,0.172,17,0.125,Varmint
+Hornady,V-MAX,0.172,20,0.141,Varmint
+Hornady,V-MAX,0.172,25,0.175,Varmint
+Hornady,V-MAX,0.204,32,0.234,Varmint
+Hornady,V-MAX,0.204,40,0.275,Varmint
+Hornady,V-MAX,0.224,40,0.200,Varmint
+Hornady,V-MAX,0.224,50,0.242,Varmint
+Hornady,V-MAX,0.224,55,0.255,Varmint
+Hornady,V-MAX,0.224,60,0.290,Varmint
+Hornady,BTHP Match,0.224,68,0.355,Match
+Hornady,ELD Match,0.224,73,0.398,Match
+Hornady,ELD Match,0.224,75,0.435,Match
+Hornady,ELD Match,0.224,80,0.455,Match
+Hornady,FMJ-BT,0.224,55,0.243,Target
+Sierra,BlitzKing,0.224,40,0.185,Varmint
+Sierra,BlitzKing,0.224,50,0.222,Varmint
+Sierra,BlitzKing,0.224,55,0.258,Varmint
+Sierra,BlitzKing,0.224,60,0.280,Varmint
+Sierra,MatchKing,0.224,69,0.301,Match
+Sierra,MatchKing,0.224,77,0.372,Match
+Sierra,GameKing,0.224,55,0.267,Hunting
+Nosler,Ballistic Tip,0.224,50,0.238,Hunting
+Nosler,Ballistic Tip,0.224,55,0.267,Hunting
+Nosler,Custom Competition,0.224,77,0.372,Match
+Speer,TNT,0.224,50,0.220,Varmint
+Speer,Gold Dot,0.224,62,0.230,Defense
+Barnes,TSX,0.224,62,0.298,Hunting
+Berger,Match VLD Target,0.224,80,0.456,Match
+Hornady,SST,0.243,95,0.379,Hunting
+Hornady,SST,0.243,100,0.405,Hunting
+Hornady,ELD Match,0.243,103,0.512,Match
+Hornady,ELD Match,0.243,108,0.536,Match
+Hornady,V-MAX,0.243,58,0.185,Varmint
+Hornady,V-MAX,0.243,75,0.330,Varmint
+Hornady,V-MAX,0.243,87,0.360,Varmint
+Sierra,MatchKing,0.243,107,0.527,Match
+Sierra,GameKing,0.243,100,0.430,Hunting
+Nosler,Ballistic Tip,0.243,95,0.379,Hunting
+Nosler,Partition,0.243,100,0.384,Hunting
+Berger,Hybrid Target,0.243,105,0.536,Match
+Hornady,ELD Match,0.264,120,0.458,Match
+Hornady,ELD Match,0.264,130,0.560,Match
+Hornady,ELD Match,0.264,140,0.646,Match
+Hornady,ELD-X,0.264,143,0.625,Hunting
+Hornady,ELD-X,0.264,147,0.697,Hunting
+Hornady,SST,0.264,129,0.485,Hunting
+Hornady,InterLock,0.264,140,0.490,Hunting
+Sierra,MatchKing,0.264,123,0.510,Match
+Sierra,MatchKing,0.264,140,0.585,Match
+Sierra,MatchKing,0.264,142,0.595,Match
+Sierra,GameKing,0.264,140,0.535,Hunting
+Nosler,AccuBond,0.264,140,0.509,Hunting
+Nosler,Partition,0.264,140,0.432,Hunting
+Nosler,AccuBond Long Range,0.264,142,0.617,Hunting
+Berger,Hybrid Target,0.264,140,0.607,Match
+Berger,Elite Hunter,0.264,156,0.643,Hunting
+Barnes,TTSX,0.264,120,0.395,Hunting
+Hornady,InterLock,0.277,130,0.409,Hunting
+Hornady,SST,0.277,130,0.447,Hunting
+Hornady,ELD-X,0.277,145,0.536,Hunting
+Hornady,ELD-X,0.277,162,0.631,Hunting
+Sierra,GameKing,0.277,140,0.486,Hunting
+Sierra,GameKing,0.277,150,0.547,Hunting
+Sierra,MatchKing,0.277,135,0.480,Match
+Nosler,AccuBond,0.277,150,0.496,Hunting
+Nosler,Partition,0.277,150,0.465,Hunting
+Barnes,TTSX,0.277,130,0.395,Hunting
+Hornady,SST,0.284,139,0.486,Hunting
+Hornady,SST,0.284,150,0.526,Hunting
+Hornady,ELD-X,0.284,162,0.625,Hunting
+Hornady,ELD-X,0.284,175,0.689,Hunting
+Hornady,ELD Match,0.284,180,0.724,Match
+Hornady,InterLock,0.284,154,0.433,Hunting
+Sierra,MatchKing,0.284,168,0.617,Match
+Sierra,MatchKing,0.284,175,0.696,Match
+Sierra,GameKing,0.284,160,0.571,Hunting
+Nosler,AccuBond,0.284,160,0.531,Hunting
+Nosler,Partition,0.284,160,0.475,Hunting
+Berger,Hybrid Target,0.284,180,0.675,Match
+Barnes,TTSX,0.284,140,0.452,Hunting
+Hornady,InterLock,0.308,150,0.372,Hunting
+Hornady,InterLock,0.308,165,0.447,Hunting
+Hornady,InterLock,0.308,180,0.481,Hunting
+Hornady,SST,0.308,150,0.415,Hunting
+Hornady,SST,0.308,165,0.447,Hunting
+Hornady,SST,0.308,180,0.478,Hunting
+Hornady,ELD-X,0.308,178,0.552,Hunting
+Hornady,ELD-X,0.308,200,0.626,Hunting
+Hornady,ELD Match,0.308,168,0.523,Match
+Hornady,ELD Match,0.308,178,0.547,Match
+Hornady,BTHP Match,0.308,168,0.447,Match
+Hornady,A-MAX,0.308,155,0.439,Match
+Hornady,FMJ-BT,0.308,150,0.409,Target
+Sierra,MatchKing,0.308,155,0.450,Match
+Sierra,MatchKing,0.308,168,0.462,Match
+Sierra,MatchKing,0.308,175,0.505,Match
+Sierra,MatchKing,0.308,190,0.533,Match
+Sierra,GameKing,0.308,150,0.435,Hunting
+Sierra,GameKing,0.308,165,0.477,Hunting
+Sierra,GameKing,0.308,180,0.530,Hunting
+Sierra,Pro-Hunter,0.308,180,0.384,Hunting
+Nosler,Ballistic Tip,0.308,150,0.387,Hunting
+Nosler,Ballistic Tip,0.308,165,0.475,Hunting
+Nosler,AccuBond,0.308,180,0.507,Hunting
+Nosler,Partition,0.308,180,0.474,Hunting
+Nosler,Partition,0.308,200,0.481,Hunting
+Nosler,Custom Competition,0.308,168,0.462,Match
+Speer,Hot-Cor,0.308,150,0.321,Hunting
+Speer,Hot-Cor,0.308,180,0.376,Hunting
+Speer,Grand Slam,0.308,180,0.434,Hunting
+Berger,Hybrid Target,0.308,175,0.536,Match
+Berger,Elite Hunter,0.308,185,0.527,Hunting
+Barnes,TTSX,0.308,168,0.470,Hunting
+Barnes,TSX,0.308,180,0.472,Hunting
+Swift,Scirocco II,0.308,180,0.528,Hunting
+Hornady,SST,0.338,225,0.454,Hunting
+Hornady,ELD-X,0.338,230,0.590,Hunting
+Hornady,ELD Match,0.338,285,0.829,Match
+Sierra,MatchKing,0.338,250,0.675,Match
+Sierra,GameKing,0.338,250,0.557,Hunting
+Nosler,AccuBond,0.338,225,0.551,Hunting
+Nosler,Partition,0.338,250,0.473,Hunting
+Hornady,InterLock RN,0.358,200,0.254,Hunting
+Hornady,InterLock,0.358,225,0.355,Hunting
+Hornady,FTX,0.358,200,0.250,Hunting
+Hornady,FTX,0.375,235,0.231,Hunting
+Hornady,DGX,0.375,270,0.320,Hunting
+Hornady,DGS,0.375,300,0.275,Hunting
+Hornady,InterLock,0.375,270,0.343,Hunting
+Hornady,FTX,0.429,225,0.145,Hunting
+Hornady,XTP,0.429,240,0.152,Hunting
+Hornady,XTP,0.429,300,0.206,Hunting
+Hornady,FTX,0.451,250,0.140,Hunting
+Hornady,MonoFlex,0.458,250,0.178,Hunting
+Hornady,FTX,0.458,325,0.234,Hunting
+Hornady,InterLock RN,0.458,350,0.169,Hunting
+Hornady,InterLock FP,0.458,500,0.239,Hunting
+Hornady,DGX,0.458,500,0.296,Hunting
+Hornady,DGS,0.458,500,0.293,Hunting
+Speer,Hot-Cor,0.458,400,0.220,Hunting
+Speer,Gold Dot,0.355,115,0.123,Defense
+Speer,Gold Dot,0.355,124,0.133,Defense
+Speer,Gold Dot,0.355,147,0.158,Defense
+Speer,TMJ,0.355,115,0.109,Target
+Speer,TMJ,0.355,124,0.121,Target
+Speer,Gold Dot,0.400,155,0.150,Defense
+Speer,Gold Dot,0.400,180,0.152,Defense
+Speer,Gold Dot,0.451,200,0.131,Defense
+Speer,Gold Dot,0.451,230,0.165,Defense
+Speer,TMJ,0.451,230,0.150,Target
+Hornady,XTP,0.355,115,0.115,Defense
+Hornady,XTP,0.355,124,0.133,Defense
+Hornady,XTP,0.355,147,0.150,Defense
+Hornady,FMJ,0.355,115,0.115,Target
+Hornady,FMJ-RN,0.355,124,0.120,Target
+Hornady,XTP,0.357,125,0.150,Defense
+Hornady,XTP,0.357,158,0.200,Hunting
+Hornady,XTP,0.357,180,0.230,Hunting
+Hornady,XTP,0.400,155,0.130,Defense
+Hornady,XTP,0.400,180,0.153,Defense
+Hornady,XTP,0.451,185,0.115,Defense
+Hornady,XTP,0.451,230,0.183,Defense
+Hornady,XTP,0.429,240,0.170,Hunting
+Hornady,XTP,0.429,300,0.202,Hunting
+Sierra,JHC,0.355,115,0.130,Defense
+Sierra,JHP,0.355,125,0.140,Defense
+Sierra,JHP,0.451,230,0.165,Defense
+Sierra,JHC,0.429,240,0.150,Hunting
+Sierra,JSP,0.429,300,0.205,Hunting
+Nosler,JHP,0.355,115,0.115,Defense
+Nosler,JHP,0.451,230,0.165,Defense
+Berger,Hollow Point,0.355,124,0.130,Target
+Berger,Flat Point,0.451,200,0.115,Target
+Berger,Hollow Point Target,0.451,230,0.150,Match
+Hornady,Hollow Point,0.224,40,0.138,Target
+Hornady,Hollow Point,0.224,35,0.125,Varmint
+Speer,Hot-Cor Hunting,0.358,200,0.250,Hunting
+Sierra,GameKing,0.224,53,0.230,Hunting
