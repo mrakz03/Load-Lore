@@ -164,15 +164,50 @@ def metric_keys(cat):
     return [k for k in METRICS if cat.terminal or k not in TERMINAL_KEYS]
 
 
-# Dark theme palette
-BG = "#0e1014"
-SURFACE = "#171a21"
-SURFACE_2 = "#222732"
-BORDER = "#2d333f"
-TEXT = "#e8eaee"
-MUTED = "#8a93a3"
-ACCENT = "#4c8dff"
-ACCENT_HOVER = "#6aa0ff"
+# Colour themes (desktop and, via build_web.py, the phone/web version). "side" is the web
+# sidebar / bottom bar; "scheme" tells the browser whether form controls should be light or dark.
+THEMES = {
+    "Classic": dict(bg="#0e1014", surface="#171a21", surface_2="#222732", border="#2d333f",
+                    text="#e8eaee", muted="#8a93a3", accent="#4c8dff", accent_hover="#6aa0ff",
+                    on_accent="#ffffff", side="#12151b", danger="#e5534b", hand="#5fd1b4", scheme="dark"),
+    "Light": dict(bg="#f3f5f8", surface="#ffffff", surface_2="#e9edf3", border="#d3d9e2",
+                  text="#161b24", muted="#5b6576", accent="#2563eb", accent_hover="#3b82f6",
+                  on_accent="#ffffff", side="#ffffff", danger="#c62828", hand="#0f8a6c", scheme="light"),
+    "Graphite": dict(bg="#121212", surface="#1c1c1c", surface_2="#282828", border="#383838",
+                     text="#ededed", muted="#9e9e9e", accent="#d4d4d4", accent_hover="#ffffff",
+                     on_accent="#121212", side="#171717", danger="#ef6b62", hand="#9be0c9", scheme="dark"),
+    "Woodland camo": dict(bg="#0f120c", surface="#181d14", surface_2="#232a1c", border="#343e2a",
+                          text="#e7eadf", muted="#98a088", accent="#8aa155", accent_hover="#a3ba6a",
+                          on_accent="#10140b", side="#13170f", danger="#e0664f", hand="#c9b27c",
+                          scheme="dark"),
+    "Blaze": dict(bg="#121010", surface="#1c1917", surface_2="#28231f", border="#3a332c",
+                  text="#f0ebe5", muted="#a69b8f", accent="#ff7a1a", accent_hover="#ff944a",
+                  on_accent="#1a0d02", side="#161311", danger="#ff5a4f", hand="#5fd1b4", scheme="dark"),
+    "Desert": dict(bg="#f4efe6", surface="#fffaf2", surface_2="#ece3d4", border="#d8ccb8",
+                   text="#2b241b", muted="#74685a", accent="#9a6b2f", accent_hover="#b07d3a",
+                   on_accent="#ffffff", side="#fbf5ea", danger="#b3392f", hand="#2f7d62", scheme="light"),
+    "High contrast dark": dict(bg="#000000", surface="#000000", surface_2="#161616", border="#ffffff",
+                               text="#ffffff", muted="#e6e6e6", accent="#ffd60a", accent_hover="#ffe45c",
+                               on_accent="#000000", side="#000000", danger="#ff6b6b", hand="#7dfcc6",
+                               scheme="dark"),
+    "High contrast light": dict(bg="#ffffff", surface="#ffffff", surface_2="#ededed", border="#000000",
+                                text="#000000", muted="#1f1f1f", accent="#0040c0", accent_hover="#002f8f",
+                                on_accent="#ffffff", side="#ffffff", danger="#b00000", hand="#006b4f",
+                                scheme="light"),
+}
+DEFAULT_THEME = "Classic"
+
+
+def apply_theme(name):
+    """Point the palette globals at a theme; screens built afterwards use it."""
+    global BG, SURFACE, SURFACE_2, BORDER, TEXT, MUTED, ACCENT, ACCENT_HOVER, ON_ACCENT, DANGER, HAND_FG
+    t = THEMES.get(name) or THEMES[DEFAULT_THEME]
+    BG, SURFACE, SURFACE_2, BORDER = t["bg"], t["surface"], t["surface_2"], t["border"]
+    TEXT, MUTED, ACCENT, ACCENT_HOVER = t["text"], t["muted"], t["accent"], t["accent_hover"]
+    ON_ACCENT, DANGER, HAND_FG = t["on_accent"], t["danger"], t["hand"]
+
+
+apply_theme(DEFAULT_THEME)
 
 # grade -> (background, foreground)
 GRADE_COLORS = {
@@ -827,6 +862,8 @@ class App:
     def __init__(self, root):
         self.root = root
         self.settings = read_settings()
+        self.theme = self.settings.get("theme") if self.settings.get("theme") in THEMES else DEFAULT_THEME
+        apply_theme(self.theme)
         try:
             self.scale = min(1.6, max(0.85, float(self.settings.get("text_scale", 1.0))))
         except (TypeError, ValueError):
@@ -959,6 +996,20 @@ class App:
         self.scale = new_scale
         self.settings["text_scale"] = new_scale
         write_settings(self.settings)
+        self._rebuild()
+
+    def set_theme(self, name):
+        """Appearance picker. Rebuilds the current screen in the new colours."""
+        if name not in THEMES or name == self.theme:
+            return
+        self.theme = name
+        self.settings["theme"] = name
+        write_settings(self.settings)
+        apply_theme(name)
+        self.root.configure(bg=BG)
+        self._rebuild()
+
+    def _rebuild(self):
         snap = self.view.snapshot() if self.view is not None else None
         cat = self.view.cat if self.view is not None else None
         tab = getattr(self.view, "tab", "cartridges")
@@ -992,7 +1043,7 @@ class App:
         r.option_add("*TCombobox*Listbox.background", SURFACE_2)
         r.option_add("*TCombobox*Listbox.foreground", TEXT)
         r.option_add("*TCombobox*Listbox.selectBackground", ACCENT)
-        r.option_add("*TCombobox*Listbox.selectForeground", "#ffffff")
+        r.option_add("*TCombobox*Listbox.selectForeground", ON_ACCENT)
         r.option_add("*TCombobox*Listbox.font", self.f(11))
         field = dict(fieldbackground=SURFACE_2, background=SURFACE_2, foreground=TEXT,
                      bordercolor=BORDER, lightcolor=SURFACE_2, darkcolor=SURFACE_2,
@@ -1012,15 +1063,16 @@ class App:
                     bordercolor=BORDER, rowheight=self.px(28), font=self.f(10))
         s.configure("Treeview.Heading", background=SURFACE_2, foreground=TEXT,
                     relief="flat", font=self.f(10, True), padding=6)
-        s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", "#ffffff")])
+        s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", ON_ACCENT)])
         s.map("Treeview.Heading", background=[("active", BORDER)])
 
-    def label(self, parent, text="", size=11, color=TEXT, bold=False, bg=SURFACE, **kw):
-        return tk.Label(parent, text=text, bg=bg, fg=color, font=self.f(size, bold), **kw)
+    def label(self, parent, text="", size=11, color=None, bold=False, bg=None, **kw):
+        return tk.Label(parent, text=text, bg=SURFACE if bg is None else bg,
+                        fg=TEXT if color is None else color, font=self.f(size, bold), **kw)
 
     def button(self, parent, text, command, kind="secondary"):
         if kind == "primary":
-            bg, fg, hover = ACCENT, "#ffffff", ACCENT_HOVER
+            bg, fg, hover = ACCENT, ON_ACCENT, ACCENT_HOVER
         else:
             bg, fg, hover = SURFACE_2, TEXT, BORDER
         b = tk.Button(parent, text=text, command=command, bg=bg, fg=fg, activebackground=hover,
@@ -1149,7 +1201,7 @@ class App:
     def _nav_button(self, text, command, active, sub=False):
         bg = ACCENT if active else SURFACE
         hover = ACCENT if active else SURFACE_2
-        fg = "#ffffff" if active else (MUTED if sub else TEXT)
+        fg = ON_ACCENT if active else (MUTED if sub else TEXT)
         box = tk.Frame(self.nav, bg=bg, cursor="hand2")
         box.pack(fill="x", pady=(1 if sub else 3), padx=(16, 0) if sub else (0, 0))
         t = tk.Label(box, text=text, bg=bg, fg=fg, font=self.f(10 if sub else 11, not sub or active),
@@ -1223,6 +1275,14 @@ class App:
             for w in (card, t, d):
                 w.bind("<Button-1>", lambda e, k=key: self.show_picker(k))
             self._card_hover([card, t, d], SURFACE, SURFACE_2)
+        look = tk.Frame(wrap, bg=BG)
+        look.pack(anchor="w", pady=(28, 0))
+        self.label(look, "APPEARANCE", 9, MUTED, True, bg=BG).pack(side="left", padx=(0, 10))
+        theme_var = tk.StringVar(value=self.theme)
+        pick = ttk.Combobox(look, textvariable=theme_var, values=list(THEMES), state="readonly",
+                            width=max(len(n) for n in THEMES) + 2, font=self.f(11))
+        pick.pack(side="left")
+        pick.bind("<<ComboboxSelected>>", lambda e: self.set_theme(theme_var.get()))
         self._update_scroll()
 
     def show_picker(self, mode):
@@ -2265,7 +2325,7 @@ class LoadsView:
         self.chip_row.grid(row=5, column=0, sticky="w", pady=(12, 0), **pad)
         self.src_row = tk.Frame(card, bg=SURFACE)
         self.src_row.grid(row=6, column=0, sticky="w", pady=(8, 16), **pad)
-        self.status = a.label(card, "", 10, "#e5534b", anchor="w")
+        self.status = a.label(card, "", 10, DANGER, anchor="w")
         self.status.grid(row=1, column=0, sticky="w", pady=(8, 0), **pad)
         self.weights_toggle = tk.Label(card, text="▸  Scoring weights", bg=SURFACE, fg=MUTED,
                                        font=a.f(10, True), cursor="hand2")
@@ -2330,7 +2390,7 @@ class LoadsView:
         scroll.grid(row=0, column=1, sticky="ns")
         hscroll.grid(row=1, column=0, sticky="ew")
         hscroll.grid_remove()
-        self.tree.tag_configure("hand", foreground="#5fd1b4")
+        self.tree.tag_configure("hand", foreground=HAND_FG)
         self.tree.bind("<<TreeviewSelect>>", lambda e: self._on_select())
 
         # ---- selected load
@@ -2581,10 +2641,10 @@ class LoadsView:
     def _style_chips(self):
         for name, chip in self.chips.items():
             on = name == self.purpose
-            chip.config(bg=ACCENT if on else SURFACE_2, fg="#ffffff" if on else TEXT)
+            chip.config(bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
         for name, chip in self.src_chips.items():
             on = name == self.source
-            chip.config(bg=ACCENT if on else SURFACE_2, fg="#ffffff" if on else TEXT)
+            chip.config(bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
 
     def _pick_purpose(self, name):
         self.purpose = name

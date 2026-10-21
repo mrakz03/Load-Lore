@@ -19,6 +19,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
 - Metric cartridges are named with "mm" (7.62x51mm NATO, 7.62x54mmR). When renaming a
   cartridge, add old -> new to RENAMED_CARTRIDGES so users' saved files keep matching.
+- Colour themes live in THEMES (cartridge_calculator.py); build_web.py passes the same table to
+  the web version. Classic is the default and the original look. Use the palette globals
+  (BG, SURFACE, TEXT, ACCENT, ON_ACCENT, DANGER, HAND_FG...) / CSS variables, never hard-coded colours.
 - Desktop UI sizes come from measured text (App.fit_columns, _sidebar_width), not fixed pixel
   counts: fonts are in points and grow with screen DPI, so fixed widths cut text off on HiDPI.
 

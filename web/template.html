@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0e1014">
 <title>Cartridge Value Calculator</title>
 <style>
-:root{--bg:#0e1014;--surface:#171a21;--surface2:#222732;--border:#2d333f;--text:#e8eaee;--muted:#8a93a3;--accent:#4c8dff;--accent-h:#6aa0ff}
+:root{--bg:#0e1014;--surface:#171a21;--surface2:#222732;--border:#2d333f;--text:#e8eaee;--muted:#8a93a3;--accent:#4c8dff;--accent-h:#6aa0ff;--on-accent:#fff;--side:#12151b;--danger:#e5534b;--hand:#5fd1b4;color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{font-size:calc(16px * var(--ts,1))}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
@@ -24,11 +24,11 @@ body{padding:max(16px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inse
 .nav{display:flex;gap:4px}
 .nav>button{flex:1;background:none;border:0;color:var(--muted);font:inherit;font-weight:700;font-size:.74rem;padding:7px 4px 6px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:54px}
 .nav>button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.nav>button.on{color:#fff;background:var(--accent)}
+.nav>button.on{color:var(--on-accent);background:var(--accent)}
 .nav .sub{display:none}
 .cmp{display:none;font-style:normal}
 .side{display:contents}
-.side .nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:#12151b;border-top:1px solid var(--border);padding:6px 10px calc(6px + env(safe-area-inset-bottom));border-radius:14px 14px 0 0}
+.side .nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--side);border-top:1px solid var(--border);padding:6px 10px calc(6px + env(safe-area-inset-bottom));border-radius:14px 14px 0 0}
 body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .phead{margin-bottom:12px}
 .phead h2{margin:0}
@@ -40,14 +40,14 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .fcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px;text-align:left;color:var(--text);font:inherit;cursor:pointer}
 .fcard:hover{border-color:var(--accent);background:var(--surface2)}
 .fcard .ic{width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center}
-.fcard .ic svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.fcard .ic svg{width:22px;height:22px;stroke:var(--on-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fcard b{font-size:1.15rem}.fcard span{color:var(--muted);font-size:.92rem;line-height:1.45}
 .pick{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:560px){.feat,.pick{grid-template-columns:1fr 1fr}}
 @media(min-width:900px){
   body{padding:0}
   .shell{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:none;min-height:100vh}
-  .side{display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;padding:22px 14px;background:#12151b;border-right:1px solid var(--border);overflow:auto}
+  .side{display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;padding:22px 14px;background:var(--side);border-right:1px solid var(--border);overflow:auto}
   .side .brand{margin:0 6px}.side .brand .size{display:none}
   .side .nav{position:static;flex-direction:column;background:none;border:0;padding:0;gap:4px;border-radius:0}
   .nav>button{flex:none;flex-direction:row;justify-content:flex-start;align-items:center;gap:12px;font-size:.95rem;padding:11px 12px;min-height:0;text-align:left}
@@ -79,7 +79,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .prow .btn{padding:9px 12px;font-size:.85rem}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .chips button{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:99px;padding:8px 13px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;min-height:38px}
-.chips button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chips button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .chips button small{opacity:.75;font-weight:600;margin-left:3px}
 .sortrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 @media(max-width:480px){.sortrow{grid-template-columns:1fr}}
@@ -112,7 +112,7 @@ select:focus,input:focus{outline:none;border-color:var(--accent)}
 .btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 button.btn{background:var(--surface2);color:var(--text);border:0;border-radius:8px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}
 button.btn:hover{background:var(--border)}
-button.btn.p{background:var(--accent);color:#fff}button.btn.p:hover{background:var(--accent-h)}
+button.btn.p{background:var(--accent);color:var(--on-accent)}button.btn.p:hover{background:var(--accent-h)}
 .hidden{display:none!important}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .size{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted)}
@@ -154,7 +154,8 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .lc.hl{border-left:3px solid var(--accent)}
 .hbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .hbtns .btn{padding:9px 14px;font-size:.85rem}
-.hbtns .btn.d{color:#ff8a80}
+.hbtns .btn.d{color:var(--danger)}
+.look{display:flex;align-items:center;gap:10px;margin-top:22px}.look select{max-width:240px}
 .safety{font-size:.78rem;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:14px;line-height:1.4}
 .costlbl{font-weight:700;margin-top:10px}
 </style>
@@ -174,6 +175,21 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 "use strict";
 const DATA = __DATA__;
 const APP_TITLE = "Cartridge Value Calculator";
+// ---------- colour themes (same table as the desktop app) ----------
+const THEMES = DATA.themes || {}, THEME_KEY = "cartridge_calc_theme";
+const THEME_VARS = {bg:"--bg",surface:"--surface",surface_2:"--surface2",border:"--border",text:"--text",muted:"--muted",
+  accent:"--accent",accent_hover:"--accent-h",on_accent:"--on-accent",side:"--side",danger:"--danger",hand:"--hand"};
+let THEME = DATA.default_theme || "Classic";
+try{const t=localStorage.getItem(THEME_KEY);if(t&&THEMES[t])THEME=t;}catch(e){}
+function applyTheme(name){
+  const t=THEMES[name];if(!t)return;THEME=name;
+  const st=document.documentElement.style;
+  for(const [k,v] of Object.entries(THEME_VARS))st.setProperty(v,t[k]);
+  st.colorScheme=t.scheme;
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t.side;
+  try{localStorage.setItem(THEME_KEY,name);}catch(e){}
+}
+applyTheme(THEME);
 const VERSION_TEXT = DATA.version && DATA.version !== "dev" ? "Version " + DATA.version : "development build";
 const GRAINS_PER_OZ = 437.5;
 const GRADE_BANDS = [[72.5,"S"],[70.5,"A"],[66,"B"],[61,"C"],[55,"D"]];
@@ -390,8 +406,10 @@ function showHome(){
   <div class="feat">
     <button class="fcard" data-go="cartridges"><div class="ic">${ICON.cart}</div><b>Compare Cartridges</b><span>Which caliber gives the most for the money?</span></button>
     <button class="fcard" data-go="loads"><div class="ic">${ICON.loads}</div><b>Compare Loads</b><span>Which brand or load of one cartridge is best?</span></button>
-  </div>`;
+  </div>
+  <div class="look"><label class="l" for="theme" style="margin:0">APPEARANCE</label><select id="theme">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
+  $("#theme").onchange=e=>applyTheme(e.target.value);
 }
 function showPicker(mode){
   document.title=APP_TITLE;app.classList.remove("wide","home");
