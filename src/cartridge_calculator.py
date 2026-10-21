@@ -1232,8 +1232,9 @@ class App:
                 # count what this screen will show: the load list for Compare Loads,
                 # the cartridge list for Compare Cartridges
                 shown = info["detail"] if mode == "loads" and info["detail"] else info["loads"]
-                caption = (f"{len({x.cartridge for x in shown})} cartridges  ·  "
-                           f"{len(shown):,} loads")
+                caption = f"{len({x.cartridge for x in shown})} cartridges"
+                if mode == "loads":
+                    caption += f"  ·  {len(shown):,} loads"
             card = tk.Frame(grid, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
                             cursor="hand2")
             card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=6,
