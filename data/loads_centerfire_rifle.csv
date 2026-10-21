@@ -85,9 +85,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .223 Remington / 5.56x45mm NATO,Hornady Critical Defense FTX,55,3240,0.178,26.2,1.27,,catalog,,24,Defense
 .223 Remington / 5.56x45mm NATO,Hornady Custom FMJ,55,3240,0.248,26.2,0.58,,catalog,,24,Target
 .223 Remington / 5.56x45mm NATO,Hornady Custom SP,55,3240,0.239,26.2,0.85,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Hornady FMJ,55,3240,0.248,26.2,0.58,,catalog,,24,Target
 .223 Remington / 5.56x45mm NATO,Hornady Hollow Point Match,55,3240,0.259,26.2,1.02,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,Hornady Spire Point,55,3240,0.239,26.2,0.85,,catalog,,24,Hunting
 .223 Remington / 5.56x45mm NATO,"Hornady Superformance CX (24"" barrel)",55,3250,0.250,26.4,1.47,,catalog,,24,Hunting
 .223 Remington / 5.56x45mm NATO,"Hornady Superformance CX (20"" barrel)",55,3175,0.250,25.2,1.47,,catalog,,20,Hunting
 .223 Remington / 5.56x45mm NATO,Hornady V-MAX,55,3240,0.260,26.2,0.85,,catalog,,24,Varmint
@@ -106,12 +104,11 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .223 Remington / 5.56x45mm NATO,Federal American Eagle 5.56x45 NATO XM855 FMJ BT,62,3020,0.355,25.7,0.58,,catalog,,,Target
 .223 Remington / 5.56x45mm NATO,Federal American Eagle FMJ BT,62,3020,0.312,25.7,0.58,,catalog,,24,Target
 .223 Remington / 5.56x45mm NATO,Federal Fusion,62,3000,0.315,25.3,0.85,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Federal Fusion MSR Fusion,62,2750,0.315,21.3,0.85,,catalog,,16,Hunting
+.223 Remington / 5.56x45mm NATO,Federal Fusion MSR,62,2750,0.315,21.3,0.85,,catalog,,16,Hunting
 .223 Remington / 5.56x45mm NATO,Fiocchi Range Dynamics FMJBT,62,3000,0.304,25.3,0.58,,partial,,,Target
 .223 Remington / 5.56x45mm NATO,"Hornady BLACK FMJ (24"" barrel)",62,3100,0.279,27,0.58,,catalog,,24,Target
 .223 Remington / 5.56x45mm NATO,"Hornady BLACK FMJ (20"" barrel)",62,3060,0.279,26.3,0.58,,catalog,,20,Target
 .223 Remington / 5.56x45mm NATO,Hornady BTHP Match,62,3060,0.326,26.3,1.02,,catalog,,20,Match
-.223 Remington / 5.56x45mm NATO,Hornady FMJ,62,3060,0.279,26.3,0.58,,catalog,,20,Target
 .223 Remington / 5.56x45mm NATO,Hornady Spire Point,62,3060,0.269,26.3,0.85,,catalog,,20,Hunting
 .223 Remington / 5.56x45mm NATO,PMC X-TAC 5.56 NATO Light Armor Piercing,62,3100,0.304,27,1.02,,catalog,,20,Target
 .223 Remington / 5.56x45mm NATO,Remington Core-Lokt Ultra Bonded PSP,62,3100,0.234,27,1.27,,catalog,,,Hunting
@@ -158,8 +155,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .224 Valkyrie,Federal Premium Big Game Barnes Triple-Shock X,78,2850,0.383,28.6,2.40,,catalog,,24,Hunting
 .224 Valkyrie,Federal Premium Gold Medal Berger BT Target,80.5,2925,0.441,31.1,2.40,,catalog,,24,Match
 .224 Valkyrie,Hornady ELD Match,88,2675,0.555,28.4,1.92,,catalog,,24,Match
-.224 Valkyrie,Federal Fusion,90,2700,0.431,29.6,1.60,yes,catalog,,24,Hunting
-.224 Valkyrie,Federal Fusion MSR Fusion,90,2700,0.431,29.6,1.60,,catalog,,24,Hunting
+.224 Valkyrie,Federal Fusion MSR,90,2700,0.431,29.6,1.60,yes,catalog,,24,Hunting
 .224 Valkyrie,Federal Premium Gold Medal Sierra MatchKing BTHP,90,2700,0.563,29.6,2.40,,catalog,,24,Match
 .224 Valkyrie,Remington Premier MatchKing OTM,90,2700,0.274,29.6,1.92,,catalog,,,Match
 .243 Winchester,Hornady Superformance Varmint V-MAX,58,3925,0.255,42,1.90,,catalog,,24,Varmint
@@ -313,7 +309,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 6.5 Grendel,Hornady Custom CX,90,2910,0.363,26.1,2.62,,catalog,,24,Hunting
 6.5 Grendel,Hornady ELD-VT,100,2730,0.456,25.5,1.75,,catalog,,24,Hunting
 6.5 Grendel,Federal American Eagle OTM,120,2580,0.518,27.3,2.10,,catalog,,24,Match
-6.5 Grendel,Federal Fusion MSR Fusion,120,2600,0.346,27.7,1.75,,catalog,,24,Hunting
+6.5 Grendel,Federal Fusion MSR,120,2600,0.346,27.7,1.75,,catalog,,24,Hunting
 6.5 Grendel,Hornady BLACK ELD Match,123,2580,0.515,28,2.10,,catalog,,24,Match
 6.5 Grendel,Hornady Custom SST,123,2580,0.519,28,2.01,yes,catalog,,24,Hunting
 6.5 Grendel,Hornady FMJ,123,2580,0.427,28,1.19,,catalog,,24,Target
@@ -632,7 +628,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .300 Blackout,Hornady Custom FTX,135,2085,0.279,19.4,1.67,,catalog,,16,Hunting
 .300 Blackout,Winchester USA Full Metal Jacket,147,1920,0.415,17.9,0.99,,catalog,,16,Target
 .300 Blackout,Federal American Eagle FMJ BT,150,1900,0.415,17.9,0.99,,catalog,,16,Target
-.300 Blackout,Federal Fusion MSR Fusion,150,1900,0.337,17.9,1.45,,catalog,,16,Hunting
+.300 Blackout,Federal Fusion MSR,150,1900,0.337,17.9,1.45,,catalog,,16,Hunting
 .300 Blackout,Federal Power-Shok SP,150,1900,0.337,17.9,1.45,,catalog,,16,Hunting
 .300 Blackout,Fiocchi Range Dynamics FMJBT,150,1850,0.300,17,0.99,,partial,,,Target
 .300 Blackout,Remington UMC Full Metal Jacket,150,1905,0.390,18,0.99,,catalog,,,Target
@@ -765,7 +761,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .308 Winchester / 7.62x51mm NATO,Winchester 7.62x51 NATO M80 Full Metal Jacket,149,2790,0.456,40.7,1.09,,catalog,,24,Target
 .308 Winchester / 7.62x51mm NATO,Federal American Eagle FMJ BT,150,2820,0.415,41.9,1.09,,catalog,,24,Target
 .308 Winchester / 7.62x51mm NATO,Federal Fusion,150,2820,0.421,41.9,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Fusion MSR Fusion,150,2770,0.421,40.4,1.60,,catalog,,20,Hunting
+.308 Winchester / 7.62x51mm NATO,Federal Fusion MSR,150,2770,0.421,40.4,1.60,,catalog,,20,Hunting
 .308 Winchester / 7.62x51mm NATO,Federal Power-Shok Copper HP,150,2820,0.283,41.9,2.40,,catalog,,24,Hunting
 .308 Winchester / 7.62x51mm NATO,Federal Power-Shok SP,150,2820,0.318,41.9,1.60,,catalog,,24,Hunting
 .308 Winchester / 7.62x51mm NATO,Federal Premium Big Game Barnes Triple-Shock X,150,2820,0.369,41.9,2.40,,catalog,,24,Hunting

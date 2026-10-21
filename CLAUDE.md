@@ -40,6 +40,8 @@ git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.e
   Buffalo Bore, Sellier & Bellot and PPU loads from retailer listings. Every added row and its
   source is in research/added_loads_sources.tsv. Missing BCs were scaled from the nearest-weight
   published load of the same cartridge (source=partial); price is estimated by brand tier.
+- Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
+  boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. 8x57mm Mauser and .480 Ruger need PPU / S&B / Buffalo Bore data.
 

@@ -2,10 +2,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .22 LR,Winchester Varmint LF Tin Hollow Point (handgun muzzle velocity),26,1455,0.070,2,0.10,,partial,,,Hunting
 .22 LR,Federal Personal Defense Punch Solid,29,1070,0.106,1.2,0.10,,catalog,,2,Target
 .22 LR,CCI Uppercut JHP,32,950,0.087,1.1,0.10,,partial,,,Hunting
-.22 LR,Winchester 222 Plated Hollow Point (handgun muzzle velocity),36,1085,0.097,1.6,0.10,,partial,,,Hunting
-.22 LR,Winchester 333 Plated Hollow Point (handgun muzzle velocity),36,1085,0.097,1.6,0.10,,partial,,,Hunting
-.22 LR,Winchester 525 Plated Hollow Point (handgun muzzle velocity),36,1085,0.097,1.6,0.10,,partial,,,Hunting
-.22 LR,Winchester 555 Plated Hollow Point (handgun muzzle velocity),36,1085,0.097,1.6,0.10,,partial,,,Hunting
+.22 LR,Winchester Plated Hollow Point (222/333/525/555-round boxes) (handgun muzzle velocity),36,1085,0.097,1.6,0.10,,partial,,,Hunting
 .22 LR,Winchester Silvertip Segmenting Hollow Point (handgun muzzle velocity),37,1060,0.100,1.5,0.13,,partial,,,Hunting
 .22 LR,Winchester Varmint HE Segmenting Hollow Point (handgun muzzle velocity),37,1215,0.100,2,0.13,,partial,,,Hunting
 .22 LR,ELEY bullseye pistol X Round-nose,40,919.5,0.108,1.2,0.12,,partial,,,Match
@@ -20,7 +17,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .22 LR,Winchester Wildcat Plated Dynapoint (handgun muzzle velocity),40,1060,0.108,1.7,0.10,,partial,,,Target
 .22 LR,Winchester Wildcat Super Speed Plated Dynapoint (handgun muzzle velocity),40,1105,0.108,1.8,0.10,,partial,,,Target
 .22 LR,Winchester Xpert HP Copper Plated (handgun muzzle velocity),42,1085,0.114,1.8,0.15,,partial,,,Hunting
-.22 LR,Winchester Super Suppressed RN Black Copper Plated (800 bulk) (handgun muzzle velocity),45,1000,0.122,1.7,0.15,,partial,,,Subsonic
 .22 LR,Winchester Super Suppressed RN Black Copper Plated (handgun muzzle velocity),45,1000,0.122,1.7,0.15,,partial,,,Subsonic
 .22 WMR,CCI Uppercut 22 WMR JHP,40,1050,0.121,2.1,0.28,yes,catalog,,,Hunting
 .22 WMR,Federal Personal Defense Punch JHP,45,1000,0.138,2.2,0.28,,catalog,,2,Hunting
@@ -110,8 +106,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .380 ACP,Remington UMC Full Metal Jacket,95,955,0.077,2.5,0.44,,catalog,,4,Target
 .380 ACP,Speer Lawman Training Total Metal Jacket,95,950,0.102,2.5,0.44,,partial,,,Target
 .380 ACP,Winchester Defender Bonded JHP,95,1000,0.121,2.8,1.69,,catalog,,3.75,Defense
-.380 ACP,Winchester USA (100 VP) Full Metal Jacket Flat Nose,95,955,0.084,2.5,0.44,,catalog,,3.75,Target
-.380 ACP,Winchester USA (200 RP) Full Metal Jacket Flat Nose,95,955,0.084,2.5,0.44,,catalog,,3.75,Target
 .380 ACP,Winchester USA Full Metal Jacket Flat Nose,95,955,0.084,2.5,0.44,,catalog,,3.75,Target
 .380 ACP,Winchester USA Jacketed Hollow Point,95,955,0.122,2.5,1.69,,catalog,,3.75,Defense
 .380 ACP,Winchester WinClean Brass Enclosed Base,95,955,0.105,2.5,0.65,,catalog,,3.75,Target
@@ -145,10 +139,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 9mm Luger,Remington UMC Jacketed Hollow Point,115,1145,0.155,4.4,0.99,,catalog,,4,Defense
 9mm Luger,Speer Gold Dot Personal Protection Hollow Point,115,1210,0.124,4.9,0.99,,partial,,,Defense
 9mm Luger,Winchester Silvertip Plated JHP,115,1225,0.146,5.1,0.99,,catalog,,4,Defense
-9mm Luger,Winchester USA (100 VP) Full Metal Jacket,115,1190,0.146,4.8,0.26,,catalog,,4,Target
-9mm Luger,Winchester USA (200 RP) Full Metal Jacket,115,1190,0.146,4.8,0.26,,catalog,,4,Target
-9mm Luger,Winchester USA Forged Full Metal Jacket (150 rds),115,1190,0.146,4.8,0.26,,catalog,,4,Target
-9mm Luger,Winchester USA Forged Full Metal Jacket (50 rds),115,1190,0.146,4.8,0.26,,catalog,,4,Target
+9mm Luger,Winchester USA Forged Full Metal Jacket,115,1190,0.146,4.8,0.26,,catalog,,4,Target
 9mm Luger,Winchester USA Full Metal Jacket,115,1190,0.146,4.8,0.26,,catalog,,4,Target
 9mm Luger,Winchester USA Jacketed Hollow Point,115,1165,0.148,4.6,0.99,,catalog,,4,Defense
 9mm Luger,Winchester USA Ready Full Metal Jacket,115,1190,0.139,4.8,0.26,,catalog,,4,Target
@@ -394,8 +385,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .40 S&W,Speer Gold Dot Personal Protection Hollow Point,165,1150,0.139,6.1,1.43,,partial,,,Defense
 .40 S&W,Speer Lawman Training Total Metal Jacket,165,1150,0.139,6.1,0.37,,partial,,,Target
 .40 S&W,Winchester Defender Bonded JHP,165,1140,0.170,6,1.43,,catalog,,4,Defense
-.40 S&W,Winchester USA (100 VP) Full Metal Jacket-Flat Nose,165,1060,0.188,5.2,0.37,,catalog,,4,Target
-.40 S&W,Winchester USA (200 RP) Full Metal Jacket-Flat Nose,165,1060,0.188,5.2,0.37,,catalog,,4,Target
 .40 S&W,Winchester USA Full Metal Jacket-Flat Nose,165,1060,0.188,5.2,0.37,,catalog,,4,Target
 .40 S&W,Winchester USA Ready Full Metal Jacket,165,1060,0.179,5.2,0.37,,catalog,,4,Target
 .40 S&W,Winchester WinClean Brass Enclosed Base,165,1130,0.188,5.9,0.55,,catalog,,4,Target
@@ -540,8 +529,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 ACP,Speer Lawman Training Total Metal Jacket,230,830,0.153,5,0.44,,partial,,,Target
 .45 ACP,Winchester Defender Bonded JHP,230,920,0.188,6.1,1.69,,catalog,,5,Defense
 .45 ACP,Winchester Super Suppressed FMJ Brass Enclosed Base,230,850,0.192,5.2,0.44,,catalog,,5,Target
-.45 ACP,Winchester USA (100 VP) Full Metal Jacket,230,835,0.164,5.1,0.44,,catalog,,5,Target
-.45 ACP,Winchester USA (200 RP) Full Metal Jacket,230,835,0.164,5.1,0.44,,catalog,,5,Target
 .45 ACP,Winchester USA Full Metal Jacket,230,835,0.164,5.1,0.44,,catalog,,5,Target
 .45 ACP,Winchester USA Jacketed Hollow Point,230,880,0.166,5.6,1.69,,catalog,,5,Defense
 .45 ACP,Winchester USA Ready Flat Nose FMJ,230,880,0.166,5.6,0.44,,catalog,,5,Target
