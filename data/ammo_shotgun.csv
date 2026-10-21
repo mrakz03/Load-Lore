@@ -1,4 +1,8 @@
 cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,group
+10 Gauge,"3½"" BB Steel Goose · 1⅝ oz",710.9,1375,0.021,37,2.30,yes,partial,Waterfowl
+10 Gauge,"3½"" #4 Turkey · 2 oz",875,1300,0.022,41,3.00,,partial,Turkey
+10 Gauge,"3½"" 00 Buck · 18 pellets",942.2,1100,0.055,32,2.30,,partial,Buckshot
+10 Gauge,"3½"" Rifled Slug · 1¾ oz",765.6,1280,0.1,35,2.60,,partial,Slug
 12 Gauge,"2¾"" #8 Target · 1⅛ oz",492.2,1200,0.015,18,0.35,yes,approx,Target
 12 Gauge,"2¾"" #6 Game · 1¼ oz",546.9,1330,0.018,24,0.65,,approx,Game
 12 Gauge,"3"" #2 Steel Goose · 1¼ oz",546.9,1450,0.018,32,1.40,,partial,Waterfowl
@@ -8,6 +12,11 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 12 Gauge,"2¾"" 00 Buck · 9 pellets",486,1325,0.057,30,1.30,,partial,Buckshot
 12 Gauge,"2¾"" Low-Recoil 00 Buck · 8 pellets",432,1140,0.057,22,1.80,,partial,Buckshot
 12 Gauge,"2¾"" Rifled Slug · 1 oz",437.5,1600,0.09,36,1.75,,approx,Slug
+16 Gauge,"2¾"" #6 Game · 1⅛ oz",492.2,1295,0.018,23,0.80,yes,partial,Game
+16 Gauge,"2¾"" #7½ Game · 1 oz",437.5,1165,0.016,17,0.75,,partial,Game
+16 Gauge,"2¾"" #2 Steel Duck · ⅞ oz",382.8,1450,0.018,22,1.75,,partial,Waterfowl
+16 Gauge,"2¾"" #1 Buck · 12 pellets",471.6,1225,0.05,20,1.40,,partial,Buckshot
+16 Gauge,"2¾"" Rifled Slug · ⅘ oz",350,1600,0.085,25,2.00,,partial,Slug
 20 Gauge,"2¾"" #8 Target · ⅞ oz",382.8,1200,0.015,15,0.35,yes,approx,Target
 20 Gauge,"2¾"" #3 Buck · 20 pellets",470,1200,0.043,24,1.60,,approx,Buckshot
 20 Gauge,"2¾"" Rifled Slug · ⅝ oz",273.4,1600,0.079,28,1.60,,approx,Slug

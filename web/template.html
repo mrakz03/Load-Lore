@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0e1014">
 <title>Cartridge Value Calculator</title>
 <style>
-:root{--bg:#0e1014;--surface:#171a21;--surface2:#222732;--border:#2d333f;--text:#e8eaee;--muted:#8a93a3;--accent:#4c8dff;--accent-h:#6aa0ff}
+:root{--bg:#0e1014;--surface:#171a21;--surface2:#222732;--border:#2d333f;--text:#e8eaee;--muted:#8a93a3;--accent:#4c8dff;--accent-h:#6aa0ff;--on-accent:#fff;--side:#12151b;--danger:#e5534b;--hand:#5fd1b4;color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{font-size:calc(16px * var(--ts,1))}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
@@ -19,15 +19,16 @@ body{padding:max(16px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inse
 .shell{max-width:1240px;margin:0 auto}
 .brand{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
 .brand b{font-size:1.05rem;letter-spacing:.01em}
+.brand .ver{font-size:.72rem;color:var(--muted);margin-top:2px}
 .sizebox{display:none}
 .nav{display:flex;gap:4px}
 .nav>button{flex:1;background:none;border:0;color:var(--muted);font:inherit;font-weight:700;font-size:.74rem;padding:7px 4px 6px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:54px}
 .nav>button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.nav>button.on{color:#fff;background:var(--accent)}
+.nav>button.on{color:var(--on-accent);background:var(--accent)}
 .nav .sub{display:none}
 .cmp{display:none;font-style:normal}
 .side{display:contents}
-.side .nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:#12151b;border-top:1px solid var(--border);padding:6px 10px calc(6px + env(safe-area-inset-bottom));border-radius:14px 14px 0 0}
+.side .nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--side);border-top:1px solid var(--border);padding:6px 10px calc(6px + env(safe-area-inset-bottom));border-radius:14px 14px 0 0}
 body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .phead{margin-bottom:12px}
 .phead h2{margin:0}
@@ -39,14 +40,14 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .fcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px;text-align:left;color:var(--text);font:inherit;cursor:pointer}
 .fcard:hover{border-color:var(--accent);background:var(--surface2)}
 .fcard .ic{width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center}
-.fcard .ic svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.fcard .ic svg{width:22px;height:22px;stroke:var(--on-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fcard b{font-size:1.15rem}.fcard span{color:var(--muted);font-size:.92rem;line-height:1.45}
 .pick{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:560px){.feat,.pick{grid-template-columns:1fr 1fr}}
 @media(min-width:900px){
   body{padding:0}
   .shell{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:none;min-height:100vh}
-  .side{display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;padding:22px 14px;background:#12151b;border-right:1px solid var(--border);overflow:auto}
+  .side{display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;padding:22px 14px;background:var(--side);border-right:1px solid var(--border);overflow:auto}
   .side .brand{margin:0 6px}.side .brand .size{display:none}
   .side .nav{position:static;flex-direction:column;background:none;border:0;padding:0;gap:4px;border-radius:0}
   .nav>button{flex:none;flex-direction:row;justify-content:flex-start;align-items:center;gap:12px;font-size:.95rem;padding:11px 12px;min-height:0;text-align:left}
@@ -69,6 +70,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .lc .nm{flex:1;min-width:0;font-weight:700;line-height:1.3;word-break:break-word}
 .lc .st{display:flex;flex-wrap:wrap;gap:4px 14px;margin:6px 0 0 calc(2.2em + 10px);font-size:.85rem;color:var(--muted)}
 .lc .st b{color:var(--text);font-weight:600}
+.lc .nm .wt{white-space:nowrap}
 .lc .sc{text-align:right;white-space:nowrap}.lc .sc .n{font-size:.75rem;color:var(--muted);display:block;margin-top:2px}
 .lc .det{margin:10px 0 0;border-top:1px solid var(--border);padding-top:8px}
 .lc .det .row{padding:4px 0}
@@ -77,7 +79,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .prow .btn{padding:9px 12px;font-size:.85rem}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .chips button{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:99px;padding:8px 13px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;min-height:38px}
-.chips button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chips button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .chips button small{opacity:.75;font-weight:600;margin-left:3px}
 .sortrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 @media(max-width:480px){.sortrow{grid-template-columns:1fr}}
@@ -110,7 +112,7 @@ select:focus,input:focus{outline:none;border-color:var(--accent)}
 .btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 button.btn{background:var(--surface2);color:var(--text);border:0;border-radius:8px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}
 button.btn:hover{background:var(--border)}
-button.btn.p{background:var(--accent);color:#fff}button.btn.p:hover{background:var(--accent-h)}
+button.btn.p{background:var(--accent);color:var(--on-accent)}button.btn.p:hover{background:var(--accent-h)}
 .hidden{display:none!important}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .size{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted)}
@@ -133,6 +135,12 @@ hr{border:0;border-top:1px solid var(--border);margin:10px 0}
 .modal .card{width:100%;max-width:640px;margin:auto}
 .three{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
 .help{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.4}
+.tblwrap .pc{display:none}
+@media (max-width:600px){   /* phone: cartridge stacks over the load name; other figures are one tap away */
+  .tblwrap .mn{display:none}
+  .tblwrap .pc{display:block;font-size:.75rem;color:var(--muted)}
+  .tblwrap .ld{white-space:normal;text-align:left}
+}
 .tblwrap{overflow:auto;margin-top:12px;border:1px solid var(--border);border-radius:8px;max-height:65vh}
 table{border-collapse:collapse;width:100%;font-size:.85rem}
 th,td{padding:8px 10px;text-align:center;white-space:nowrap;border-bottom:1px solid var(--border)}
@@ -146,7 +154,8 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .lc.hl{border-left:3px solid var(--accent)}
 .hbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .hbtns .btn{padding:9px 14px;font-size:.85rem}
-.hbtns .btn.d{color:#ff8a80}
+.hbtns .btn.d{color:var(--danger)}
+.look{display:flex;align-items:center;gap:10px;margin-top:22px}.look select{max-width:240px}
 .safety{font-size:.78rem;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:14px;line-height:1.4}
 .costlbl{font-weight:700;margin-top:10px}
 </style>
@@ -154,7 +163,7 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 <body>
 <div class="shell">
   <aside class="side">
-    <div class="brand"><b>Cartridge Calculator</b><div id="size1"></div></div>
+    <div class="brand"><div><b>Cartridge Calculator</b><div class="ver" id="ver"></div></div><div id="size1"></div></div>
     <nav class="nav" id="nav" aria-label="Main"></nav>
     <div class="sizebox" id="size2"></div>
   </aside>
@@ -166,6 +175,22 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 "use strict";
 const DATA = __DATA__;
 const APP_TITLE = "Cartridge Value Calculator";
+// ---------- colour themes (same table as the desktop app) ----------
+const THEMES = DATA.themes || {}, THEME_KEY = "cartridge_calc_theme";
+const THEME_VARS = {bg:"--bg",surface:"--surface",surface_2:"--surface2",border:"--border",text:"--text",muted:"--muted",
+  accent:"--accent",accent_hover:"--accent-h",on_accent:"--on-accent",side:"--side",danger:"--danger",hand:"--hand"};
+let THEME = DATA.default_theme || "Classic";
+try{const t=localStorage.getItem(THEME_KEY);if(t&&THEMES[t])THEME=t;}catch(e){}
+function applyTheme(name){
+  const t=THEMES[name];if(!t)return;THEME=name;
+  const st=document.documentElement.style;
+  for(const [k,v] of Object.entries(THEME_VARS))st.setProperty(v,t[k]);
+  st.colorScheme=t.scheme;
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t.side;
+  try{localStorage.setItem(THEME_KEY,name);}catch(e){}
+}
+applyTheme(THEME);
+const VERSION_TEXT = DATA.version && DATA.version !== "dev" ? "Development Build v" + DATA.version : "Development Build";
 const GRAINS_PER_OZ = 437.5;
 const GRADE_BANDS = [[72.5,"S"],[70.5,"A"],[66,"B"],[61,"C"],[55,"D"]];
 const METRICS = {velocity:["Velocity",true],energy:["Energy",true],recoil:["Recoil",false],cost:["Cost",false],taylor:["Taylor KO",true],hits:["HITS",true]};
@@ -185,6 +210,10 @@ const SOURCE_NOTES = {
   handload:"Your own handload. Check every figure against a published load manual."};
 const DEFAULT_SOURCE_NOTE = "Load data is approximate. Check it against the box or the manufacturer.";
 const REL_CENTER=70, REL_SPREAD=10, REL_BANDS=[[85,"S"],[77,"A"],[66,"B"],[55,"C"],[45,"D"]];
+// saved data may use cartridge names from before a rename (e.g. "7.62x54R" -> "7.62x54mmR")
+const RENAMED = DATA.renamed || {};
+const canon = n => RENAMED[n] || n;
+const canonRows = a => (Array.isArray(a) ? a : []).map(r => r && typeof r === "object" && r.cartridge ? {...r, cartridge: canon(r.cartridge)} : r);
 const PRICE_KEY = "cartridge_calc_prices_v1";
 const CUSTOM_KEY = "cartridge_calc_custom_v1";
 
@@ -285,11 +314,11 @@ function relativeScores(statsList,weights){
 
 // ---------- data ----------
 function makeLabel(it,cat){
-  if(cat.grain_style){const b=g(it.bullet_gr)+" gr"; return it.load?`${b}  ·  ${it.load}`:b;}
+  if(cat.grain_style){const b=g(it.bullet_gr)+" gr"; return it.load?`${it.load}  ·  ${b}`:b;}
   if(it.group&&it.load)return `${it.group}  ·  ${it.load}`;
   return it.load||g(it.bullet_gr)+" gr";
 }
-function readCustom(){try{return JSON.parse(localStorage.getItem(CUSTOM_KEY)||"[]")||[];}catch(e){return [];}}
+function readCustom(){try{return canonRows(JSON.parse(localStorage.getItem(CUSTOM_KEY)||"[]"));}catch(e){return [];}}
 function writeCustom(rows){try{localStorage.setItem(CUSTOM_KEY,JSON.stringify(rows));return true;}catch(e){return false;}}
 const state = {loads:{}};     // title -> array of load objects
 for(const cat of CATEGORIES){
@@ -307,10 +336,20 @@ state.detail={};
 for(const cat of CATEGORIES){
   state.detail[cat.title]=(cat.detail||[]).map(x=>Object.assign({},x,{label:makeLabel(x,cat)}));
 }
-function readPrices(){try{return JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{};}catch(e){return {};}}
+// saved price keys: old cartridge names, and "150 gr  ·  Load" labels (weight first, before v1.5)
+function readPrices(){try{const o=JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{},out={};for(const [k,v] of Object.entries(o)){const p=k.split("|");if(p.length>=3){p[1]=canon(p[1]);const r=p.slice(2).join("|"),m=/^(\d+(?:\.\d+)?) gr  ·  (.+)$/.exec(r);p.length=2;p.push(m?`${m[2]}  ·  ${m[1]} gr`:r);}out[p.join("|")]=v;}return out;}catch(e){return {};}}
 function writePrices(o){try{localStorage.setItem(PRICE_KEY,JSON.stringify(o));return true;}catch(e){return false;}}
 const priceKey=(cat,it)=>`${cat.title}|${it.cartridge}|${it.label}`;
 const shared={};   // category title -> values carried between the two tabs
+// cartridges in Compare Cartridges with no factory loads (e.g. .32-40) still get an empty entry,
+// after the cartridge they follow there, so handloaders can use Compare Loads for them
+function withHandloadOnly(groups,cartLoads){
+  const order=[...new Set(cartLoads.map(x=>x.cartridge))];
+  if(order.every(c=>groups.has(c)))return groups;
+  let keys=[...groups.keys()];
+  order.forEach((c,i)=>{if(keys.includes(c))return;const prev=order.slice(0,i).reverse().find(p=>keys.includes(p));const at=prev?keys.indexOf(prev)+1:0;keys.splice(at,0,c);});
+  return new Map(keys.map(k=>[k,groups.get(k)||[]]));
+}
 function groupBy(loads,sort){
   const m=new Map();
   for(const it of loads){if(!m.has(it.cartridge))m.set(it.cartridge,[]);m.get(it.cartridge).push(it);}
@@ -368,16 +407,18 @@ function showHome(){
   <div class="feat">
     <button class="fcard" data-go="cartridges"><div class="ic">${ICON.cart}</div><b>Compare Cartridges</b><span>Which caliber gives the most for the money?</span></button>
     <button class="fcard" data-go="loads"><div class="ic">${ICON.loads}</div><b>Compare Loads</b><span>Which brand or load of one cartridge is best?</span></button>
-  </div>`;
+  </div>
+  <div class="look"><label class="l" for="theme" style="margin:0">APPEARANCE</label><select id="theme">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
+  $("#theme").onchange=e=>applyTheme(e.target.value);
 }
 function showPicker(mode){
   document.title=APP_TITLE;app.classList.remove("wide","home");
   const last=lastCat();
   app.innerHTML=`<div class="phead"><h2>${mode==="loads"?"Compare Loads":"Compare Cartridges"}</h2><p class="sub">Choose a category.</p></div><div class="pick">${
     CATEGORIES.filter(c=>mode==="cartridges"||hasDetail(c)).map(c=>{
-      const n=new Set(state.loads[c.title].map(x=>x.cartridge)).size,d=(state.detail[c.title]||[]).length;
-      return `<button class="cat" data-cat="${esc(c.title)}" ${c.title===last?'style="border-color:var(--accent)"':""}><b>${esc(c.title)}</b><span class="b">${esc(c.blurb)}</span><span class="c">${n} cartridges  ·  ${d.toLocaleString()} loads</span></button>`;}).join("")}</div>`;
+      const list=mode==="loads"&&(state.detail[c.title]||[]).length?state.detail[c.title]:state.loads[c.title],n=new Set(list.concat(mode==="loads"&&c.grain_style?state.loads[c.title]:[]).map(x=>x.cartridge)).size,d=list.length;
+      return `<button class="cat" data-cat="${esc(c.title)}" ${c.title===last?'style="border-color:var(--accent)"':""}><b>${esc(c.title)}</b><span class="b">${esc(c.blurb)}</span><span class="c">${n} cartridges${mode==="loads"?`  ·  ${d.toLocaleString()} loads`:""}</span></button>`;}).join("")}</div>`;
   app.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
 }
 
@@ -401,9 +442,9 @@ function openCartridges(cat,pane){
     <div class="field hidden" id="loadf"><label class="l">${esc(cat.load_label)}</label><select id="load"></select>
       <button class="link m hidden" id="rm" style="font-weight:400;font-size:.8rem">Remove this custom load</button></div>
     <div class="nums">
-      <div><label class="l">COST PER ROUND ($)</label><input id="cost" inputmode="decimal"></div>
+      <div><label class="l">COST ($)</label><input id="cost" inputmode="decimal"></div>
       <div><label class="l">DISTANCE (YD)</label><input id="dist" inputmode="decimal"></div>
-      <div><label class="l">${esc(cat.gun_label)}</label><input id="gun" inputmode="decimal"></div>
+      <div><label class="l">${esc(cat.gun_label.replace(" WEIGHT",""))}</label><input id="gun" inputmode="decimal"></div>
     </div>
     <div class="links"><button class="link m" id="wt">▸&nbsp; Scoring weights</button>${cat.allow_custom?'<button class="link" id="add">+&nbsp; Add your own caliber</button>':''}</div>
     <div class="weights hidden" id="wbox">
@@ -507,7 +548,7 @@ function openCartridges(cat,pane){
 const HAND_KEY="cartridge_calc_hand_v1";
 const POWDERS=DATA.powders||[], BULLETS=DATA.bullets||[];
 const PURPOSES=["Hunting","Varmint","Target","Match","Defense","Subsonic"];
-function readHand(){try{const a=JSON.parse(localStorage.getItem(HAND_KEY)||"[]");return Array.isArray(a)?a:[];}catch(e){return [];}}
+function readHand(){try{return canonRows(JSON.parse(localStorage.getItem(HAND_KEY)||"[]"));}catch(e){return [];}}
 function writeHand(a){try{localStorage.setItem(HAND_KEY,JSON.stringify(a));return true;}catch(e){return false;}}
 function handItem(r,cat){
   const it={cartridge:r.cartridge,load:r.name,bullet_gr:+r.bullet_gr,muzzle_fps:+r.muzzle_fps,bc_g1:+r.bc_g1,powder_gr:+r.powder_gr,
@@ -623,7 +664,7 @@ function handDialog(cat,rec,cartList,done){
 function openLoads(cat,pane){
   syncHand(cat);
   const all=state.detail[cat.title];
-  let groups,carts;const regroup=()=>{groups=groupBy(all,false);carts=[...groups.keys()];};regroup();
+  let groups,carts;const regroup=()=>{groups=groupBy(all,false);if(cat.grain_style)groups=withHandloadOnly(groups,state.loads[cat.title]);carts=[...groups.keys()];};regroup();
   const sh=shared[cat.title]||{};
   const L={open:null,sort:"score",weightsOpen:false,prices:readPrices(),purpose:sh.purpose||"All",src:"All"};
   const keyOf=it=>it.hid||it.label;
@@ -694,6 +735,7 @@ function openLoads(cat,pane){
   function render(){
     const out=compute(),box=$$("#lres");
     if(!out){box.innerHTML=`<div class="muted">Enter a distance, gun weight and weights (numbers) to see results.</div>`;$$("#lcnt").textContent="";return;}
+    if(!(groups.get($$("#lc").value)||[]).length){box.innerHTML=`<div class="muted">No factory loads listed for ${esc($$("#lc").value)}. Use “+ Add handload” to grade your own.</div>`;$$("#lcnt").textContent="";return;}
     const q=$$("#lf").value.trim().toLowerCase().split(/\s+/).filter(Boolean);
     let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>{const t=(r.it.load+" "+(r.it.group||"")+" "+r.it.bullet_gr).toLowerCase();return q.every(w=>t.includes(w));});
     const key=$$("#ls").value;
@@ -707,13 +749,12 @@ function openLoads(cat,pane){
       const fb=k=>badge(gradeRel(r.sc[k]));
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top"><span class="rk">#${r.rank}</span>
-        <div class="nm">${esc(it.load)}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}</div>
+        <div class="nm">${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}</div>
         <div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div></div>
-        <div class="st"><span><b>${payload}</b></span><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lb</span><span>recoil <b>${r.st.recoil.toFixed(1)}</b></span>${cat.terminal?`<span>KO <b>${r.st.taylor.toFixed(1)}</b></span><span>HITS <b>${r.st.hits.toFixed(0)}</b></span>`:""}<span><b>$${r.st.cost.toFixed(2)}</b>${edited?" ✎":""}</span>${it.barrel_in?`<span><b>${g(it.barrel_in)}″</b> barrel</span>`:""}</div>
         ${open?`<div class="det">
+          ${it.handload?"":`<div class="row"><span class="muted">${cat.grain_style?"Bullet weight":"Payload"}</span><span class="v">${payload}</span><span style="width:32px"></span></div>`}
           ${cat.grain_style?`<div class="row"><span class="muted">Test barrel</span><span class="v">${it.barrel_in?g(it.barrel_in)+" in":"not listed"}</span><span style="width:32px"></span></div>`:""}
           ${purposeOf(it)?`<div class="row"><span class="muted">Purpose</span><span class="v">${esc(purposeOf(it))}</span><span style="width:32px"></span></div>`:""}
-          ${out.multi?`<div class="row" hidden><span class="muted">Type</span><span class="v">${esc(it.group)}</span><span style="width:32px"></span></div>`:""}
           <div class="row"><span class="muted">Velocity</span><span class="v">${r.st.velocity.toFixed(0)} fps</span>${fb("velocity")}</div>
           <div class="row"><span class="muted">Energy</span><span class="v">${r.st.energy.toFixed(0)} ft-lbs</span>${fb("energy")}</div>
           <div class="row"><span class="muted">Recoil</span><span class="v">${r.st.recoil.toFixed(1)} ft-lbs</span>${fb("recoil")}</div>
@@ -721,7 +762,7 @@ function openLoads(cat,pane){
           <div class="row"><span class="muted">Powder</span><span class="v">${esc(r0.powder||"—")} ${g(it.powder_gr)} gr</span><span style="width:32px"></span></div>
           ${hasP?`<div class="row"><span class="muted">Cost breakdown</span><span class="v" style="font-size:.85rem;font-weight:600">bullet $${cp.b.toFixed(2)} · powder $${cp.p.toFixed(2)} · primer $${cp.pr.toFixed(2)} · brass $${cp.br.toFixed(2)}</span><span style="width:32px"></span></div>`:""}
           ${r0.notes?`<div class="row"><span class="muted">Notes</span><span class="v" style="font-weight:500">${esc(r0.notes)}</span><span style="width:32px"></span></div>`:""}`;})():""}
-          <div class="row"><span class="muted">Price</span><span class="v">$${r.st.cost.toFixed(2)}</span>${fb("cost")}</div>
+          <div class="row"><span class="muted">Price</span><span class="v">$${r.st.cost.toFixed(2)}${edited?" ✎":""}</span>${fb("cost")}</div>
           ${cat.terminal?`<div class="row"><span class="muted">Taylor KO</span><span class="v">${r.st.taylor.toFixed(1)}</span>${fb("taylor")}</div>
           <div class="row"><span class="muted">HITS</span><span class="v">${r.st.hits.toFixed(0)} <small class="muted">(${hitsClass(r.st.hits)})</small></span>${fb("hits")}</div>`:""}
           <div class="muted" style="font-size:.8rem;margin-top:4px">Ranks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}. Grades compare loads of this cartridge only.</div>
@@ -828,11 +869,12 @@ function compareAll(V,readInputs,show){
   const rows=scored.map(([it,s,o])=>[rankOf.get(it),it.cartridge,it.label,Math.round(s.weight),Math.round(s.velocity),Math.round(s.energy),+s.recoil.toFixed(1),+s.taylor.toFixed(1),Math.round(s.hits),s.cost,+o.toFixed(1),gradeFor(o),it]);
   const allCols=["Rank",cat.cartridge_label.charAt(0)+cat.cartridge_label.slice(1).toLowerCase(),"Load",cat.payload_col,"Velocity (fps)","Energy (ft-lbs)","Recoil (ft-lbs)","Taylor KO","HITS","Cost ($)","Score (%)","Grade"];
   const cols=allCols.filter(c=>cat.terminal||(c!=="Taylor KO"&&c!=="HITS"));
+  const keepCols=new Set(["Rank","Load","Score (%)","Grade"]);
   const bestFirst=new Set(["Rank",allCols[3],"Velocity (fps)","Energy (ft-lbs)","Taylor KO","HITS","Score (%)"]);
     const [m,close]=modal(`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="margin:0">${esc(cat.title)}: all loads at ${g(inp.dist)} yards</h3><button class="btn" id="x">Close</button></div>
     <div class="filters"><input id="flt" type="search" placeholder="Filter, e.g. federal 168" autocomplete="off"><select id="fc"><option value="">All ${esc(cat.cartridge_label.toLowerCase())}s</option>${V.cartridges.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select></div>
     <div class="cnt" id="cnt"></div>
-    <div class="tblwrap"><table><thead><tr>${cols.map((c,i)=>`<th data-i="${i}">${esc(c)}</th>`).join("")}</tr></thead><tbody></tbody></table></div>
+    <div class="tblwrap"><table><thead><tr>${cols.map((c,i)=>`<th data-i="${i}"${c==="Load"?' class="ld"':keepCols.has(c)?"":' class="mn"'}>${esc(c)}</th>`).join("")}</tr></thead><tbody></tbody></table></div>
     <div class="note">Tap a heading to sort and a row to open it in the calculator. Scores use your current weights and each load's default price.</div>`);
   $("#x",m).onclick=close;
   const st={col:"Score (%)",desc:true},tb=$("tbody",m);let shown=[];
@@ -840,8 +882,8 @@ function compareAll(V,readInputs,show){
     const terms=$("#flt",m).value.toLowerCase().split(/\s+/).filter(Boolean),want=$("#fc",m).value;
     shown=rows.filter(r=>(!want||r[1]===want)&&terms.every(t=>(r[1]+" "+r[2]).toLowerCase().includes(t)));
     const i=allCols.indexOf(st.col);
-    shown.sort((a,b)=>{const x=a[i],y=b[i],c=x<y?-1:x>y?1:0;return st.col==="Rank"?c:(st.desc?-c:c);});
-    tb.innerHTML=shown.map((r,n)=>`<tr data-n="${n}"><td>${r[0]}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td>${cat.terminal?`<td>${r[7]}</td><td>${r[8]}</td>`:""}<td>${r[9].toFixed(2)}</td><td>${r[10]}</td><td><span class="badge" style="background:${GRADE_COLORS[r[11]][0]};color:${GRADE_COLORS[r[11]][1]}">${r[11]}</span></td></tr>`).join("");
+    shown.sort((a,b)=>{const x=a[i],y=b[i],c=x<y?-1:x>y?1:0;return c?(st.col==="Rank"?c:(st.desc?-c:c)):a[0]-b[0];});
+    tb.innerHTML=shown.map((r,n)=>`<tr data-n="${n}"><td>${r[0]}</td><td class="mn">${esc(r[1])}</td><td class="ld"><span class="pc">${esc(r[1])}</span>${esc(r[2])}</td><td class="mn">${r[3]}</td><td class="mn">${r[4]}</td><td class="mn">${r[5]}</td><td class="mn">${r[6]}</td>${cat.terminal?`<td class="mn">${r[7]}</td><td class="mn">${r[8]}</td>`:""}<td class="mn">${r[9].toFixed(2)}</td><td>${r[10]}</td><td><span class="badge" style="background:${GRADE_COLORS[r[11]][0]};color:${GRADE_COLORS[r[11]][1]}">${r[11]}</span></td></tr>`).join("");
     $("#cnt",m).textContent=`Showing ${shown.length} of ${rows.length} loads`;
   };
   const sortBy=col=>{st.desc=st.col===col?!st.desc:bestFirst.has(col);st.col=col;render();};
@@ -851,7 +893,7 @@ function compareAll(V,readInputs,show){
   render();
 }
 
-$("#size1").innerHTML=sizeCtl();$("#size2").innerHTML=sizeCtl();wireSize(document.body);
+$("#ver").textContent=VERSION_TEXT;$("#size1").innerHTML=sizeCtl();$("#size2").innerHTML=sizeCtl();wireSize(document.body);
 navigate("home");
 </script>
 </body>

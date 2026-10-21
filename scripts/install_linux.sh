@@ -28,6 +28,8 @@ if [ ! -f "$SRC/CartridgeCalculator" ]; then
 fi
 
 mkdir -p "$APPDIR" "$(dirname "$DESKTOP")"
+# clear the data files an older version shipped, so ones a release drops don't linger
+rm -f "$APPDIR"/ammo_*.csv "$APPDIR"/loads_*.csv "$APPDIR"/bullets.csv
 cp "$SRC/CartridgeCalculator" "$APPDIR/"
 cp "$SRC"/*.csv "$APPDIR/"
 chmod +x "$APPDIR/CartridgeCalculator"

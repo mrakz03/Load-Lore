@@ -1,13 +1,11 @@
 cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,group,barrel_in,purpose
-.17 Mach 2,V-Max,17,2100,0.123,2.0,0.25,yes,approx,,,Varmint
-.17 Mach 2,Hornady V-MAX,17,2100,0.122,2,0.29,,catalog,,24,Varmint
+.17 Mach 2,Hornady V-MAX,17,2100,0.122,2,0.29,yes,catalog,,24,Varmint
 .17 Mach 2,CCI VNT,17,2010,0.122,1.8,0.22,,catalog,,,Target
 .17 HMR,Hornady NTX,15.5,2525,0.111,2.2,0.28,,catalog,,24,Varmint
 .17 HMR,Winchester Varmint LF Polymer Tip,15.5,2550,0.111,2.3,0.28,,catalog,,,Varmint
 .17 HMR,CCI 17 HMR TNT Green HP,16,2500,0.092,2.2,0.36,,catalog,,,Varmint
 .17 HMR,CCI 17 HMR TNT JHP,17,2550,0.102,2.5,0.36,,catalog,,,Varmint
 .17 HMR,CCI 17 HMR V-Max Poly-Tip V-Max,17,2550,0.122,2.5,0.36,,catalog,,,Varmint
-.17 HMR,CCI 17 HMR VNT Pour Pack VNT,17,2650,0.122,2.7,0.28,,catalog,,,Varmint
 .17 HMR,CCI A17 Varmint Tip,17,2650,0.122,2.7,0.28,,catalog,,,Varmint
 .17 HMR,CCI VNT,17,2650,0.122,2.7,0.28,,catalog,,,Varmint
 .17 HMR,Federal Premium Varmint Hornady V-Max,17,2530,0.122,2.4,0.42,yes,catalog,,,Varmint
@@ -28,29 +26,22 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .22 Short,CCI Short CPRN,29,1080,0.082,0.6,0.10,,catalog,,,Target
 .22 Short,Remington Round Nose (RN),29,1080,0.084,0.6,0.07,,catalog,,,Target
 .22 Short,Winchester Super-X Plated Round Nose,29,1095,0.084,0.7,0.07,yes,catalog,,,Target
-.22 Long,High Velocity LRN,29,1217,0.1,0.9,0.18,yes,partial,,,Target
-.22 Long,CCI Long CPRN,29,1215,0.082,0.9,0.12,,catalog,,,Target
+.22 Long,CCI Long CPRN,29,1215,0.082,0.9,0.12,yes,catalog,,,Target
 .22 Long,CCI CB Long LRN,29,710,0.081,0.3,0.08,,catalog,,,Target
 .22 LR,Winchester Varmint LF Tin Hollow Point,26,1650,0.062,2.1,0.10,,catalog,,,Varmint
 .22 LR,CCI Clean-22 Hyper Velocity Soft Point,31,1550,0.131,2.2,0.13,,catalog,,,Varmint
 .22 LR,CCI Stinger CPHP,32,1640,0.086,2.5,0.13,,catalog,,,Varmint
 .22 LR,Remington Plated Truncated Cone Hollow Point,33,740,0.095,0.5,0.10,,catalog,,,Hunting
 .22 LR,Remington Yellow Jacket Plated Truncated Cone Hollow Point,33,1500,0.095,2.2,0.10,,catalog,,,Varmint
-.22 LR,CCI Mini-Mag (bulk) CPHP,36,1260,0.128,1.7,0.07,,catalog,,,Hunting
 .22 LR,CCI Mini-Mag HP CPHP,36,1260,0.128,1.7,0.07,,catalog,,,Hunting
 .22 LR,Federal Champion CPHP,36,1260,0.128,1.7,0.10,,catalog,,,Hunting
 .22 LR,Remington Cyclone Lead Hollow Point,36,1280,0.104,1.7,0.10,,catalog,,,Varmint
 .22 LR,Remington Plated Hollow Point,36,1280,0.104,1.7,0.10,,catalog,,,Hunting
 .22 LR,Remington Viper Plated Truncated Cone Solid,36,1410,0.103,2.1,0.10,,catalog,,,Varmint
-.22 LR,Winchester 222 Plated Hollow Point,36,1280,0.085,1.7,0.10,,catalog,,,Hunting
-.22 LR,Winchester 333 Plated Hollow Point,36,1280,0.085,1.7,0.10,,catalog,,,Hunting
-.22 LR,Winchester 525 Plated Hollow Point,36,1280,0.085,1.7,0.10,,catalog,,,Hunting
-.22 LR,Winchester 555 Plated Hollow Point,36,1280,0.085,1.7,0.10,,catalog,,,Hunting
+.22 LR,Winchester Plated Hollow Point (222/333/525/555-round boxes),36,1280,0.085,1.7,0.10,,catalog,,,Hunting
 .22 LR,Winchester Silvertip Segmenting Hollow Point,37,1060,0.090,1.2,0.13,,catalog,,3.5,Hunting
 .22 LR,Winchester Varmint HE Segmenting Hollow Point,37,1400,0.090,2.1,0.13,,catalog,,,Varmint
 .22 LR,CCI Blazer 22 LR LRN High Velocity,38,1235,0.131,1.7,0.07,,catalog,,,Target
-.22 LR,CCI Blazer 22 LR LRN High Velocity (Pour Pack),38,1235,0.131,1.7,0.07,,catalog,,,Target
-.22 LR,CCI Blazer 22 LR LRN High Velocity (bucket),38,1235,0.131,1.7,0.07,,catalog,,,Target
 .22 LR,ELEY high velocity hollow-point,38,1190,0.119,1.6,0.12,,partial,,,Hunting
 .22 LR,ELEY subsonic hollow-point,38,1020,0.119,1.2,0.12,,partial,,,Subsonic
 .22 LR,Federal American Eagle CPHP,38,1260,0.134,1.8,0.07,,catalog,,,Hunting
@@ -66,7 +57,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .22 LR,CCI Green Tag LRN,40,1070,0.123,1.4,0.07,,catalog,,,Target
 .22 LR,CCI Hunter Series LFN,40,1235,0.130,1.8,0.10,,catalog,,,Target
 .22 LR,CCI Hunter Series Subsonic LFN,40,1070,0.116,1.4,0.10,,catalog,,,Subsonic
-.22 LR,CCI Mini-Mag 22LR CPRN,40,1235,0.134,1.8,0.07,,catalog,,,Target
 .22 LR,CCI Mini-Mag CPRN,40,1235,0.134,1.8,0.07,,catalog,,,Target
 .22 LR,CCI Mini-Mag Segmented HP SHP,40,1235,0.134,1.8,0.13,,catalog,,,Varmint
 .22 LR,CCI Pistol Match LRN,40,1070,0.123,1.4,0.12,,catalog,,,Match
@@ -115,21 +105,17 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .22 LR,CCI Suppressor Max SHP,45,970,0.128,1.3,0.10,,catalog,,,Target
 .22 LR,Federal American Eagle Suppressor CP Solid,45,970,0.133,1.3,0.07,,catalog,,,Target
 .22 LR,Winchester Super Suppressed RN Black Copper Plated,45,1090,0.141,1.6,0.15,,catalog,,,Subsonic
-.22 LR,Winchester Super Suppressed RN Black Copper Plated (800 bulk),45,1090,0.141,1.6,0.15,,catalog,,,Subsonic
 .22 WMR,Winchester Varmint LF Polymer Tip,25,2100,0.080,2.9,0.26,,catalog,,,Varmint
 .22 WMR,CCI 22 Mag TNT Green HP,30,2050,0.092,3.3,0.34,,catalog,,,Varmint
 .22 WMR,CCI 22 Mag V-Max Poly-Tip V-Max,30,2200,0.118,3.8,0.34,,catalog,,,Varmint
 .22 WMR,CCI 22 Maxi Mag TNT JHP,30,2200,0.089,3.8,0.34,,catalog,,,Varmint
-.22 WMR,CCI 22 WMR VNT Pour Pack VNT,30,2200,0.118,3.8,0.26,,catalog,,,Hunting
 .22 WMR,CCI VNT,30,2200,0.118,3.8,0.26,,catalog,,,Hunting
 .22 WMR,Hornady V-MAX,30,2200,0.097,3.8,0.34,,catalog,,24,Varmint
 .22 WMR,Winchester Varmint HV JHP,30,2250,0.089,4,0.26,,catalog,,,Varmint
 .22 WMR,Winchester Varmint HV VMax,30,2250,0.095,4,0.34,,catalog,,,Varmint
 .22 WMR,Winchester Varmint HE JHP,34,2120,0.102,4,0.26,,catalog,,,Varmint
 .22 WMR,CCI 22 Mag Gamepoint JSP,40,1875,0.135,3.7,0.26,,catalog,,,Hunting
-.22 WMR,CCI Maxi Mag (bulk) JHP,40,1875,0.116,3.7,0.26,,catalog,,,Hunting
 .22 WMR,CCI Maxi Mag HP JHP,40,1875,0.116,3.7,0.26,,catalog,,,Hunting
-.22 WMR,CCI Maxi-Mag Pour Pack JHP,40,1875,0.116,3.7,0.26,,catalog,,,Hunting
 .22 WMR,CCI Maxi-Mag TMJ,40,1875,0.129,3.7,0.18,yes,catalog,,,Target
 .22 WMR,Federal Champion FMJ,40,1880,0.113,3.7,0.18,,catalog,,,Target
 .22 WMR,Fiocchi Field Dynamics JHP,40,1910,0.125,3.8,0.26,,partial,,,Hunting

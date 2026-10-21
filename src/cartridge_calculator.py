@@ -31,6 +31,7 @@ import csv
 import json
 import math
 import os
+import re
 import statistics
 import sys
 from dataclasses import dataclass
@@ -46,6 +47,7 @@ except ImportError:  # lets the calculation code be imported/tested without a GU
 # Settings you may want to tweak
 # --------------------------------------------------------------------------- #
 APP_TITLE = "Cartridge Value Calculator"
+APP_VERSION = "dev"             # the release build sets this from the git tag (v1.5 -> "1.5")
 GRAINS_PER_OZ = 437.5
 CUSTOM_FILENAME = "my_calibers.csv"
 SETTINGS_FILENAME = "settings.json"
@@ -150,6 +152,10 @@ CATEGORIES = (
 )
 
 
+def version_text():
+    return "Development Build" if APP_VERSION == "dev" else f"Development Build v{APP_VERSION}"
+
+
 def default_weights(cat):
     return dict(zip(METRICS, cat.weights))
 
@@ -159,15 +165,50 @@ def metric_keys(cat):
     return [k for k in METRICS if cat.terminal or k not in TERMINAL_KEYS]
 
 
-# Dark theme palette
-BG = "#0e1014"
-SURFACE = "#171a21"
-SURFACE_2 = "#222732"
-BORDER = "#2d333f"
-TEXT = "#e8eaee"
-MUTED = "#8a93a3"
-ACCENT = "#4c8dff"
-ACCENT_HOVER = "#6aa0ff"
+# Colour themes (desktop and, via build_web.py, the phone/web version). "side" is the web
+# sidebar / bottom bar; "scheme" tells the browser whether form controls should be light or dark.
+THEMES = {
+    "Classic": dict(bg="#0e1014", surface="#171a21", surface_2="#222732", border="#2d333f",
+                    text="#e8eaee", muted="#8a93a3", accent="#4c8dff", accent_hover="#6aa0ff",
+                    on_accent="#ffffff", side="#12151b", danger="#e5534b", hand="#5fd1b4", scheme="dark"),
+    "Light": dict(bg="#f3f5f8", surface="#ffffff", surface_2="#e9edf3", border="#d3d9e2",
+                  text="#161b24", muted="#5b6576", accent="#2563eb", accent_hover="#3b82f6",
+                  on_accent="#ffffff", side="#ffffff", danger="#c62828", hand="#0f8a6c", scheme="light"),
+    "Graphite": dict(bg="#121212", surface="#1c1c1c", surface_2="#282828", border="#383838",
+                     text="#ededed", muted="#9e9e9e", accent="#d4d4d4", accent_hover="#ffffff",
+                     on_accent="#121212", side="#171717", danger="#ef6b62", hand="#9be0c9", scheme="dark"),
+    "Woodland camo": dict(bg="#0f120c", surface="#181d14", surface_2="#232a1c", border="#343e2a",
+                          text="#e7eadf", muted="#98a088", accent="#8aa155", accent_hover="#a3ba6a",
+                          on_accent="#10140b", side="#13170f", danger="#e0664f", hand="#c9b27c",
+                          scheme="dark"),
+    "Blaze": dict(bg="#121010", surface="#1c1917", surface_2="#28231f", border="#3a332c",
+                  text="#f0ebe5", muted="#a69b8f", accent="#ff7a1a", accent_hover="#ff944a",
+                  on_accent="#1a0d02", side="#161311", danger="#ff5a4f", hand="#5fd1b4", scheme="dark"),
+    "Desert": dict(bg="#f4efe6", surface="#fffaf2", surface_2="#ece3d4", border="#d8ccb8",
+                   text="#2b241b", muted="#74685a", accent="#9a6b2f", accent_hover="#b07d3a",
+                   on_accent="#ffffff", side="#fbf5ea", danger="#b3392f", hand="#2f7d62", scheme="light"),
+    "High contrast dark": dict(bg="#000000", surface="#000000", surface_2="#161616", border="#ffffff",
+                               text="#ffffff", muted="#e6e6e6", accent="#ffd60a", accent_hover="#ffe45c",
+                               on_accent="#000000", side="#000000", danger="#ff6b6b", hand="#7dfcc6",
+                               scheme="dark"),
+    "High contrast light": dict(bg="#ffffff", surface="#ffffff", surface_2="#ededed", border="#000000",
+                                text="#000000", muted="#1f1f1f", accent="#0040c0", accent_hover="#002f8f",
+                                on_accent="#ffffff", side="#ffffff", danger="#b00000", hand="#006b4f",
+                                scheme="light"),
+}
+DEFAULT_THEME = "Classic"
+
+
+def apply_theme(name):
+    """Point the palette globals at a theme; screens built afterwards use it."""
+    global BG, SURFACE, SURFACE_2, BORDER, TEXT, MUTED, ACCENT, ACCENT_HOVER, ON_ACCENT, DANGER, HAND_FG
+    t = THEMES.get(name) or THEMES[DEFAULT_THEME]
+    BG, SURFACE, SURFACE_2, BORDER = t["bg"], t["surface"], t["surface_2"], t["border"]
+    TEXT, MUTED, ACCENT, ACCENT_HOVER = t["text"], t["muted"], t["accent"], t["accent_hover"]
+    ON_ACCENT, DANGER, HAND_FG = t["on_accent"], t["danger"], t["hand"]
+
+
+apply_theme(DEFAULT_THEME)
 
 # grade -> (background, foreground)
 GRADE_COLORS = {
@@ -288,14 +329,29 @@ def estimate_powder(bullet_gr, muzzle_fps):
 # --------------------------------------------------------------------------- #
 # Data loading
 # --------------------------------------------------------------------------- #
+# Cartridges that were renamed (metric names gained "mm"). Saved handloads, custom calibers and
+# prices may still use the old names, so everything read from disk goes through canonical_name.
+RENAMED_CARTRIDGES = {
+    ".308 Winchester / 7.62x51 NATO": ".308 Winchester / 7.62x51mm NATO",
+    ".223 Remington / 5.56 NATO": ".223 Remington / 5.56x45mm NATO",
+    "5.45x39": "5.45x39mm", "5.7x28": "5.7x28mm", "6.5x55 Swedish": "6.5x55mm Swedish",
+    "7.62x25 Tokarev": "7.62x25mm Tokarev", "7.62x39": "7.62x39mm", "7.62x54R": "7.62x54mmR",
+    "8x57 Mauser": "8x57mm Mauser", "9.3x62": "9.3x62mm", "9x18 Makarov": "9x18mm Makarov",
+}
+
+
+def canonical_name(cartridge):
+    return RENAMED_CARTRIDGES.get(cartridge, cartridge)
+
+
 # Bullet diameter (inches) per cartridge, for Taylor KO and HITS. Shotshells aren't listed.
 DIAMETERS = {
-    ".22-250 Remington": .224, ".223 Remington": .224, ".223 Remington / 5.56 NATO": .224,
+    ".22-250 Remington": .224, ".223 Remington": .224, ".223 Remington / 5.56x45mm NATO": .224,
     ".224 Valkyrie": .224, ".243 Winchester": .243, ".25-35 Winchester": .257, "6mm ARC": .243,
     "6.5 Grendel": .264, ".260 Remington": .264, "6.5 Creedmoor": .264, "6.5 PRC": .264,
     ".270 Winchester": .277, "7mm-08 Remington": .284, ".277 Fury": .277, "6.8 Western": .277,
-    "7mm Remington Magnum": .284, ".300 Blackout": .308, "7.62x39": .310, ".30-30 Winchester": .308,
-    ".32-40 Winchester": .321, ".308 Winchester": .308, ".308 Winchester / 7.62x51 NATO": .308,
+    "7mm Remington Magnum": .284, ".300 Blackout": .308, "7.62x39mm": .310, ".30-30 Winchester": .308,
+    ".32-40 Winchester": .321, ".308 Winchester": .308, ".308 Winchester / 7.62x51mm NATO": .308,
     ".30-06 Springfield": .308, ".300 Winchester Magnum": .308, ".300 PRC": .308,
     ".35 Remington": .358, ".348 Winchester": .348, ".350 Legend": .357, ".357 Magnum": .357,
     ".38-55 Winchester": .376, ".44 Magnum": .429, ".444 Marlin": .429, ".450 Bushmaster": .452,
@@ -304,9 +360,9 @@ DIAMETERS = {
     ".38 Special": .357, ".45 Colt": .452, ".17 Mach 2": .172, ".17 HMR": .172, ".17 WSM": .172,
     ".22 Short": .224, ".22 Long": .224,
     # added later
-    "5.45x39": 0.221,
-    "6.5x55 Swedish": 0.264,
-    "8x57 Mauser": 0.323,
+    "5.45x39mm": 0.221,
+    "6.5x55mm Swedish": 0.264,
+    "8x57mm Mauser": 0.323,
     ".204 Ruger": 0.204,
     ".22 Hornet": 0.224,
     ".222 Remington": 0.224,
@@ -345,7 +401,7 @@ DIAMETERS = {
     ".28 Nosler": 0.284,
     ".30 Thompson/Center": 0.308,
     "6mm Remington": 0.243,
-    "9.3x62": 0.366,
+    "9.3x62mm": 0.366,
     ".30-40 Krag": 0.308,
     ".357 SIG": 0.355,
     ".41 Magnum": 0.41,
@@ -353,14 +409,14 @@ DIAMETERS = {
     ".454 Casull": 0.452,
     ".460 S&W Magnum": 0.452,
     ".480 Ruger": 0.475,
-    "5.7x28": 0.224,
+    "5.7x28mm": 0.224,
     ".50 AE": 0.5,
     ".500 S&W Magnum": 0.5,
-    "9x18 Makarov": 0.365,
+    "9x18mm Makarov": 0.365,
     ".327 Federal Magnum": 0.312,
     ".44-40 Winchester": 0.427,
-    "7.62x54R": 0.311,
-    "7.62x25 Tokarev": 0.309,
+    "7.62x54mmR": 0.311,
+    "7.62x25mm Tokarev": 0.309,
     ".38 Super": 0.355,
     ".32 S&W Long": 0.312,
 }
@@ -423,7 +479,7 @@ class Load:
 def make_label(item, grain_style):
     if grain_style:
         base = f"{item.bullet_gr:g} gr"
-        return f"{base}  ·  {item.load}" if item.load else base
+        return f"{item.load}  ·  {base}" if item.load else base
     if item.group and item.load:
         return f"{item.group}  ·  {item.load}"
     return item.load or f"{item.bullet_gr:g} gr"
@@ -451,7 +507,7 @@ def load_data(path, grain_style=True):
         reader = csv.DictReader(fh)
         for line_no, row in enumerate(reader, start=2):
             row = {(k or "").strip().lower(): (v or "").strip() for k, v in row.items()}
-            name = row.get("cartridge", "")
+            name = canonical_name(row.get("cartridge", ""))
             if not name or name.startswith("#"):
                 continue
             try:
@@ -490,13 +546,66 @@ def group_by_cartridge(loads, sort=True):
     return groups
 
 
+def with_handload_only(groups, cartridge_loads):
+    """Add an empty entry for every Compare Cartridges cartridge that has no factory loads (e.g.
+    .32-40 Winchester), placed after the cartridge it follows there, so handloaders can still
+    use Compare Loads for it."""
+    order = list(dict.fromkeys(x.cartridge for x in cartridge_loads))
+    if all(c in groups for c in order):
+        return groups
+    out = dict(groups)
+    for i, c in enumerate(order):
+        if c in out:
+            continue
+        prev = next((p for p in reversed(order[:i]) if p in out), None)
+        keys = list(out)
+        at = keys.index(prev) + 1 if prev else 0
+        out = {k: out[k] for k in keys[:at]} | {c: []} | {k: out[k] for k in keys[at:]}
+    return out
+
+
 def read_settings():
     try:
         with open(os.path.join(app_dir(), SETTINGS_FILENAME), encoding="utf-8") as fh:
             data = json.load(fh)
-        return data if isinstance(data, dict) else {}
+        if not isinstance(data, dict):
+            return {}
+        if isinstance(data.get("prices"), dict):        # keys are "category|cartridge|load"
+            data["prices"] = {_rename_price_key(k): v for k, v in data["prices"].items()}
+        return data
     except (OSError, ValueError):
         return {}
+
+
+_OLD_LABEL = re.compile(r"^(\d+(?:\.\d+)?) gr  ·  (.+)$")
+
+
+def _rename_price_key(key):
+    """Update a saved price's key: old cartridge names, and loads saved when the label put the
+    weight first ("150 gr  ·  Load", before v1.5) now read "Load  ·  150 gr"."""
+    parts = key.split("|", 2)
+    if len(parts) == 3:
+        parts[1] = canonical_name(parts[1])
+        m = _OLD_LABEL.match(parts[2])
+        if m:
+            parts[2] = f"{m.group(2)}  ·  {m.group(1)} gr"
+    return "|".join(parts)
+
+
+def _read_user_rows(path):
+    """Rows of one of the user's own CSVs (lower-case keys), with old cartridge names updated."""
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path, newline="", encoding="utf-8-sig") as fh:
+            rows = [{(k or "").strip().lower(): (v or "").strip() for k, v in row.items()}
+                    for row in csv.DictReader(fh)]
+    except (OSError, csv.Error, UnicodeDecodeError):
+        return []
+    for row in rows:
+        if "cartridge" in row:
+            row["cartridge"] = canonical_name(row["cartridge"])
+    return rows
 
 
 def write_settings(data):
@@ -513,15 +622,7 @@ def custom_path():
 
 
 def read_custom_rows():
-    path = custom_path()
-    if not os.path.exists(path):
-        return []
-    try:
-        with open(path, newline="", encoding="utf-8-sig") as fh:
-            return [{(k or "").strip().lower(): (v or "").strip() for k, v in row.items()}
-                    for row in csv.DictReader(fh)]
-    except (OSError, csv.Error, UnicodeDecodeError):
-        return []
+    return _read_user_rows(custom_path())
 
 
 def write_custom_rows(rows):
@@ -569,15 +670,7 @@ def read_bullets():
 
 
 def read_handload_rows():
-    path = os.path.join(app_dir(), HANDLOAD_FILENAME)
-    if not os.path.exists(path):
-        return []
-    try:
-        with open(path, newline="", encoding="utf-8-sig") as fh:
-            return [{(k or "").strip().lower(): (v or "").strip() for k, v in row.items()}
-                    for row in csv.DictReader(fh)]
-    except (OSError, csv.Error, UnicodeDecodeError):
-        return []
+    return _read_user_rows(os.path.join(app_dir(), HANDLOAD_FILENAME))
 
 
 def write_handload_rows(rows):
@@ -771,8 +864,6 @@ def score_stats(stats, refs, weights):
 class App:
     """Owns the window, the theme, and switching between the picker and calculators."""
 
-    CALC_MIN_WIDTH = 700          # (kept for compatibility)
-    LOADS_MIN_WIDTH = 960
     WIN_W, WIN_H = 1360, 860      # default window size (clamped to small screens); resizable
     MIN_W, MIN_H = 980, 600
     SIDEBAR_W = 210
@@ -780,11 +871,14 @@ class App:
     def __init__(self, root):
         self.root = root
         self.settings = read_settings()
+        self.theme = self.settings.get("theme") if self.settings.get("theme") in THEMES else DEFAULT_THEME
+        apply_theme(self.theme)
         try:
             self.scale = min(1.6, max(0.85, float(self.settings.get("text_scale", 1.0))))
         except (TypeError, ValueError):
             self.scale = 1.0
         self.view = None
+        self._base_w = self._auto_w = None   # window width before / after grow_to_fit
         families = set(tkfont.families(root))
         self.family = next((f for f in ("Segoe UI", "SF Pro Text", "Inter", "Noto Sans",
                                         "Cantarell", "Ubuntu", "Helvetica Neue", "Helvetica",
@@ -804,8 +898,6 @@ class App:
         self.mode = "home"                # home / cartridges / loads
         self.cat = None
         self.carry = {}                   # per category: what each tab knew when you left it
-        last = self.settings.get("last_category")
-        self.last_cat = next((c for c in CATEGORIES if c.title == last), CATEGORIES[0])
         self._place_window()
         self._build_shell()
         self.show_launcher()
@@ -914,6 +1006,20 @@ class App:
         self.scale = new_scale
         self.settings["text_scale"] = new_scale
         write_settings(self.settings)
+        self._rebuild()
+
+    def set_theme(self, name):
+        """Appearance picker. Rebuilds the current screen in the new colours."""
+        if name not in THEMES or name == self.theme:
+            return
+        self.theme = name
+        self.settings["theme"] = name
+        write_settings(self.settings)
+        apply_theme(name)
+        self.root.configure(bg=BG)
+        self._rebuild()
+
+    def _rebuild(self):
         snap = self.view.snapshot() if self.view is not None else None
         cat = self.view.cat if self.view is not None else None
         tab = getattr(self.view, "tab", "cartridges")
@@ -940,6 +1046,17 @@ class App:
             b.bind("<Button-1>", lambda e, d=delta: self.set_scale(self.scale + d))
         return box
 
+    def theme_controls(self, parent, bg):
+        """Small 'Theme  [Classic v]' picker, packed by the caller."""
+        box = tk.Frame(parent, bg=bg)
+        tk.Label(box, text="Theme", bg=bg, fg=MUTED, font=self.f(9)).pack(side="left", padx=(0, 6))
+        theme_var = tk.StringVar(value=self.theme)
+        pick = ttk.Combobox(box, textvariable=theme_var, values=list(THEMES), state="readonly",
+                            width=1, font=self.f(9))
+        pick.pack(side="left", fill="x", expand=True)
+        pick.bind("<<ComboboxSelected>>", lambda e: self.set_theme(theme_var.get()))
+        return box
+
     def _style(self):
         r = self.root
         s = ttk.Style(r)
@@ -947,7 +1064,7 @@ class App:
         r.option_add("*TCombobox*Listbox.background", SURFACE_2)
         r.option_add("*TCombobox*Listbox.foreground", TEXT)
         r.option_add("*TCombobox*Listbox.selectBackground", ACCENT)
-        r.option_add("*TCombobox*Listbox.selectForeground", "#ffffff")
+        r.option_add("*TCombobox*Listbox.selectForeground", ON_ACCENT)
         r.option_add("*TCombobox*Listbox.font", self.f(11))
         field = dict(fieldbackground=SURFACE_2, background=SURFACE_2, foreground=TEXT,
                      bordercolor=BORDER, lightcolor=SURFACE_2, darkcolor=SURFACE_2,
@@ -967,15 +1084,16 @@ class App:
                     bordercolor=BORDER, rowheight=self.px(28), font=self.f(10))
         s.configure("Treeview.Heading", background=SURFACE_2, foreground=TEXT,
                     relief="flat", font=self.f(10, True), padding=6)
-        s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", "#ffffff")])
+        s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", ON_ACCENT)])
         s.map("Treeview.Heading", background=[("active", BORDER)])
 
-    def label(self, parent, text="", size=11, color=TEXT, bold=False, bg=SURFACE, **kw):
-        return tk.Label(parent, text=text, bg=bg, fg=color, font=self.f(size, bold), **kw)
+    def label(self, parent, text="", size=11, color=None, bold=False, bg=None, **kw):
+        return tk.Label(parent, text=text, bg=SURFACE if bg is None else bg,
+                        fg=TEXT if color is None else color, font=self.f(size, bold), **kw)
 
     def button(self, parent, text, command, kind="secondary"):
         if kind == "primary":
-            bg, fg, hover = ACCENT, "#ffffff", ACCENT_HOVER
+            bg, fg, hover = ACCENT, ON_ACCENT, ACCENT_HOVER
         else:
             bg, fg, hover = SURFACE_2, TEXT, BORDER
         b = tk.Button(parent, text=text, command=command, bg=bg, fg=fg, activebackground=hover,
@@ -984,6 +1102,41 @@ class App:
         b.bind("<Enter>", lambda e: b.config(bg=hover))
         b.bind("<Leave>", lambda e: b.config(bg=bg))
         return b
+
+    def fit_columns(self, tree, cols, rows, stretch_col, known=None):
+        """Size table columns from the real text width (fonts grow with screen DPI, pixel
+        counts don't). `rows` are lists of cell strings; `known` keeps widths from earlier
+        calls so columns never shrink while filtering. The stretch column fits its longest
+        entry (full load names) and takes any spare room."""
+        head = tkfont.Font(font=self.f(10, True))
+        body = tkfont.Font(font=self.f(10))
+        pad = body.measure("00") + 14
+        known = {} if known is None else known
+        for i, col in enumerate(cols):
+            need = max([head.measure(col)] + [body.measure(str(r[i])) for r in rows]) + pad
+            known[col] = max(known.get(col, 0), need)
+            if col == stretch_col:
+                tree.column(col, width=known[col], minwidth=min(known[col], body.measure("0" * 24)),
+                            stretch=True)
+            else:
+                tree.column(col, width=known[col], minwidth=known[col], stretch=False)
+        return known
+
+    def grow_to_fit(self, extra):
+        """Resize the window by `extra` px so a table fits, within the screen. It widens for a
+        wide table and gives the room back for a narrower one later, but never goes below the
+        width the user last chose (a width this method didn't set counts as the user's)."""
+        r = self.root
+        if r.state() == "zoomed":
+            return
+        cur = r.winfo_width()
+        base = self._base_w if cur == self._auto_w else cur
+        w = max(base, min(cur + extra, r.winfo_screenwidth() - 20))
+        if w != cur:
+            x = max(0, min(r.winfo_x(), r.winfo_screenwidth() - w - 10))
+            r.geometry(f"{w}x{r.winfo_height()}+{x}+{r.winfo_y()}")
+            r.update_idletasks()
+        self._base_w, self._auto_w = base, r.winfo_width()
 
     # ---- window + shell --------------------------------------------------- #
     def _place_window(self):
@@ -996,9 +1149,22 @@ class App:
         r.resizable(True, True)
         r.title(APP_TITLE)
 
-    def fit_window(self, min_width=0, keep_position=False):
+    def fit_window(self):
         """The window keeps its size; the page scrolls if it is taller. Refresh the scroll area."""
         self._update_scroll()
+
+    def _refit_soon(self):
+        """After a window resize, let the open screen re-fit its table height (once, when idle)."""
+        if getattr(self, "_refit_pending", False):
+            return
+        self._refit_pending = True
+
+        def run():
+            self._refit_pending = False
+            fit = getattr(self.view, "fit_table_height", None)
+            if fit is not None:
+                fit()
+        self.root.after_idle(run)
 
     def _update_scroll(self):
         try:
@@ -1020,12 +1186,13 @@ class App:
         self.shell = tk.Frame(self.root, bg=BG)
         self.shell.pack(fill="both", expand=True)
 
-        self.sidebar = tk.Frame(self.shell, bg=SURFACE, width=self.px(self.SIDEBAR_W))
+        self.sidebar = tk.Frame(self.shell, bg=SURFACE, width=self._sidebar_width())
         self.sidebar.pack(side="left", fill="y")
         self.sidebar.pack_propagate(False)
         tk.Frame(self.shell, bg=BORDER, width=1).pack(side="left", fill="y")
         foot = tk.Frame(self.sidebar, bg=SURFACE)
         foot.pack(side="bottom", fill="x", padx=14, pady=14)
+        self.theme_controls(foot, SURFACE).pack(fill="x", pady=(0, 8))
         self.size_controls(foot, SURFACE).pack(anchor="w")
         self.nav = tk.Frame(self.sidebar, bg=SURFACE)
         self.nav.pack(fill="x", padx=12, pady=(22, 0))
@@ -1043,10 +1210,19 @@ class App:
         win_id = self.canvas.create_window((0, 0), window=self.stage, anchor="nw")
         self.stage.bind("<Configure>", lambda e: self._update_scroll())
         self.canvas.bind("<Configure>", lambda e: (self.canvas.itemconfigure(win_id, width=e.width),
-                                                   self._update_scroll()))
+                                                   self._update_scroll(), self._refit_soon()))
         for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
             self.root.bind_all(seq, self._on_wheel)
         self._draw_chrome()
+
+    def _sidebar_width(self):
+        """Wide enough for the longest menu entry at the current text size and screen DPI."""
+        main, sub = tkfont.Font(font=self.f(11, True)), tkfont.Font(font=self.f(10, True))
+        small = tkfont.Font(font=self.f(9))
+        theme = small.measure("Theme") + 6 + max(small.measure(n) for n in THEMES) + self.px(34)
+        need = max([main.measure("Compare Cartridges"), theme - 10]   # theme row in the footer
+                   + [sub.measure(cat.title) + 16 for cat in CATEGORIES])
+        return max(self.px(self.SIDEBAR_W), need + 2 * 12 + 2 * 12 + 10)   # label + nav padding
 
     def _on_wheel(self, e):
         """Scroll the page with the mouse wheel (tables and lists keep their own wheel)."""
@@ -1064,9 +1240,9 @@ class App:
         self.canvas.yview_scroll(step * 3, "units")
 
     def _nav_button(self, text, command, active, sub=False):
-        bg = ACCENT if active else (SURFACE_2 if sub and False else SURFACE)
+        bg = ACCENT if active else SURFACE
         hover = ACCENT if active else SURFACE_2
-        fg = "#ffffff" if active else (MUTED if sub else TEXT)
+        fg = ON_ACCENT if active else (MUTED if sub else TEXT)
         box = tk.Frame(self.nav, bg=bg, cursor="hand2")
         box.pack(fill="x", pady=(1 if sub else 3), padx=(16, 0) if sub else (0, 0))
         t = tk.Label(box, text=text, bg=bg, fg=fg, font=self.f(10 if sub else 11, not sub or active),
@@ -1083,7 +1259,9 @@ class App:
         for w in self.nav.winfo_children():
             w.destroy()
         self.label(self.nav, "Cartridge\nCalculator", 15, TEXT, True, bg=SURFACE,
-                   anchor="w", justify="left").pack(anchor="w", padx=6, pady=(0, 18))
+                   anchor="w", justify="left").pack(anchor="w", padx=6)
+        self.label(self.nav, version_text(), 9, MUTED, bg=SURFACE, anchor="w").pack(
+            anchor="w", padx=6, pady=(2, 18))
         self._nav_button("Home", self.show_launcher, self.mode == "home")
         for key, text in (("cartridges", "Compare Cartridges"), ("loads", "Compare Loads")):
             on_picker = self.mode == key and self.cat is None
@@ -1162,9 +1340,15 @@ class App:
             if info["error"]:
                 caption = "Data file missing" if "not found" in info["error"] else "Data problem"
             else:
-                n = len(info["detail"]) if mode == "loads" and info["detail"] else len(info["loads"])
-                caption = (f"{len({x.cartridge for x in info['loads']})} cartridges  ·  "
-                           f"{len(info['detail']) or len(info['loads'])} loads")
+                # count what this screen will show: the load list for Compare Loads,
+                # the cartridge list for Compare Cartridges
+                shown = info["detail"] if mode == "loads" and info["detail"] else info["loads"]
+                carts = {x.cartridge for x in shown}
+                if mode == "loads" and cat.grain_style:      # + cartridges open to handloads only
+                    carts |= {x.cartridge for x in info["loads"]}
+                caption = f"{len(carts)} cartridges"
+                if mode == "loads":
+                    caption += f"  ·  {len(shown):,} loads"
             card = tk.Frame(grid, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
                             cursor="hand2")
             card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=6,
@@ -1209,8 +1393,6 @@ class App:
     def go_mode(self, tab):
         self.show_picker(tab)
 
-    switch_tab = go
-
     def open_category(self, cat, tab="cartridges"):
         info = self.data[cat.title]
         if info["error"]:
@@ -1220,7 +1402,7 @@ class App:
         if info["problems"]:
             messagebox.showwarning("Some rows were skipped", "\n".join(info["problems"][:15]))
             info["problems"] = []                   # only warn once
-        self.cat, self.mode, self.last_cat = cat, tab, cat
+        self.cat, self.mode = cat, tab
         if self.settings.get("last_category") != cat.title:
             self.settings["last_category"] = cat.title
             write_settings(self.settings)
@@ -1430,7 +1612,7 @@ class CalculatorView:
         else:
             self.weights_frame.grid_remove()
             self.weights_toggle.config(text="▸  Scoring weights")
-        self.app.fit_window(self.app.CALC_MIN_WIDTH, keep_position=True)
+        self.app.fit_window()
 
     def _refresh_weight_note(self, *_):
         """Show what the current weights mean as percentages."""
@@ -1552,7 +1734,7 @@ class CalculatorView:
                     "game." if self.cat.terminal else ""))
         self.result.grid()
         self._last_overall = (overall, overall_grade)
-        self.app.fit_window(self.app.CALC_MIN_WIDTH, keep_position=True)
+        self.app.fit_window()
         self._draw_bar()
 
     def reset(self):
@@ -1569,7 +1751,7 @@ class CalculatorView:
             self._toggle_weights()
         self.result.grid_remove()
         self._last_overall = None
-        self.app.fit_window(self.app.CALC_MIN_WIDTH, keep_position=True)
+        self.app.fit_window()
 
     # ---- user-added calibers --------------------------------------------- #
     def _open_add_dialog(self):
@@ -1698,7 +1880,7 @@ class CalculatorView:
             self.grain_var.set(item.label)
             self._on_grain()
             win.destroy()
-            self.app.fit_window(self.app.CALC_MIN_WIDTH, keep_position=True)
+            self.app.fit_window()
 
         btns = tk.Frame(body, bg=SURFACE)
         btns.grid(row=7, column=0, columnspan=3, sticky="w", pady=(16, 18), **p)
@@ -1749,29 +1931,29 @@ class CalculatorView:
         rows = [dict(rank=rank_of[id(item)], item=item, stats=stats, score=overall,
                      grade=grade_for(overall)) for item, stats, overall in scored]
 
-        # (heading, width, value getter, sort key, best-first?)
-        spec = [("Rank", 52, lambda r: r["rank"], lambda r: r["rank"], False),
-                (cat.cartridge_label.title(), 150, lambda r: r["item"].cartridge,
+        # (heading, value getter, sort key, best-first?)
+        spec = [("Rank", lambda r: r["rank"], lambda r: r["rank"], False),
+                (cat.cartridge_label.title(), lambda r: r["item"].cartridge,
                  lambda r: r["item"].cartridge, False),
-                ("Load", 300 if not cat.grain_style else 270, lambda r: r["item"].label,
+                ("Load", lambda r: r["item"].label,
                  lambda r: r["item"].label.lower(), False),
-                (cat.payload_col, 80, lambda r: f"{r['stats']['weight']:.0f}",
+                (cat.payload_col, lambda r: f"{r['stats']['weight']:.0f}",
                  lambda r: r["stats"]["weight"], True),
-                ("Velocity (fps)", 104, lambda r: f"{r['stats']['velocity']:.0f}",
+                ("Velocity (fps)", lambda r: f"{r['stats']['velocity']:.0f}",
                  lambda r: r["stats"]["velocity"], True),
-                ("Energy (ft-lbs)", 112, lambda r: f"{r['stats']['energy']:.0f}",
+                ("Energy (ft-lbs)", lambda r: f"{r['stats']['energy']:.0f}",
                  lambda r: r["stats"]["energy"], True),
-                ("Recoil (ft-lbs)", 112, lambda r: f"{r['stats']['recoil']:.1f}",
+                ("Recoil (ft-lbs)", lambda r: f"{r['stats']['recoil']:.1f}",
                  lambda r: r["stats"]["recoil"], False)]
         if cat.terminal:
-            spec += [("Taylor KO", 84, lambda r: f"{r['stats']['taylor']:.1f}",
+            spec += [("Taylor KO", lambda r: f"{r['stats']['taylor']:.1f}",
                       lambda r: r["stats"]["taylor"], True),
-                     ("HITS", 70, lambda r: f"{r['stats']['hits']:.0f}",
+                     ("HITS", lambda r: f"{r['stats']['hits']:.0f}",
                       lambda r: r["stats"]["hits"], True)]
-        spec += [("Cost ($)", 70, lambda r: f"{r['stats']['cost']:.2f}",
+        spec += [("Cost ($)", lambda r: f"{r['stats']['cost']:.2f}",
                   lambda r: r["stats"]["cost"], False),
-                 ("Score (%)", 80, lambda r: f"{r['score']:.1f}", lambda r: r["score"], True),
-                 ("Grade", 60, lambda r: r["grade"], lambda r: r["score"], True)]
+                 ("Score (%)", lambda r: f"{r['score']:.1f}", lambda r: r["score"], True),
+                 ("Grade", lambda r: r["grade"], lambda r: r["score"], True)]
         cols = [c[0] for c in spec]
         by_col = {c[0]: c for c in spec}
 
@@ -1797,7 +1979,8 @@ class CalculatorView:
         scroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
         tree.configure(yscrollcommand=scroll.set)
         for c in spec:
-            tree.column(c[0], width=a.px(c[1]), anchor="w" if c[0] in cols[1:3] else "center")
+            tree.column(c[0], anchor="w" if c[0] in cols[1:3] else "center")
+        a.fit_columns(tree, cols, [[c[1](r) for c in spec] for r in rows], "Load")
         tree.pack(side="left", fill="both", expand=True)
         scroll.pack(side="right", fill="y")
         sort_state = {"col": "Score (%)", "desc": True}
@@ -1818,11 +2001,11 @@ class CalculatorView:
         def render():
             data = visible()
             c = by_col[sort_state["col"]]
-            data.sort(key=c[3], reverse=sort_state["desc"] and c[0] != "Rank")
+            data.sort(key=c[2], reverse=sort_state["desc"] and c[0] != "Rank")
             tree.delete(*tree.get_children())
             shown.clear()
             for r in data:
-                iid = tree.insert("", "end", values=[c[2](r) for c in spec])
+                iid = tree.insert("", "end", values=[c[1](r) for c in spec])
                 shown[iid] = r["item"]
             count_lbl.config(text=f"Showing {len(data)} of {len(rows)} loads")
 
@@ -1830,7 +2013,7 @@ class CalculatorView:
             if sort_state["col"] == col:
                 desc = not sort_state["desc"]
             else:                                  # first click: best-first for each column
-                desc = by_col[col][4]
+                desc = by_col[col][3]
             sort_state.update(col=col, desc=desc)
             render()
 
@@ -1854,6 +2037,12 @@ class CalculatorView:
                            "current weights and each load's default price.",
                  bg=BG, fg=MUTED, font=a.f(9)).pack(pady=(0, 12))
         render()
+        win.update_idletasks()
+        sw, sh = win.winfo_screenwidth(), win.winfo_screenheight()
+        if win.winfo_reqwidth() > sw - 40 or win.winfo_reqheight() > sh - 90:
+            # keep it on small screens; the Load column gives up width first
+            w, h = min(win.winfo_reqwidth(), sw - 40), min(win.winfo_reqheight(), sh - 90)
+            win.geometry(f"{w}x{h}+{(sw - w) // 2}+20")
         entry.focus_set()
 
     def show_load(self, item):
@@ -2097,7 +2286,7 @@ class LoadsView:
     def __init__(self, app, stage, cat, loads, error=""):
         self.app, self.root, self.cat = app, app.root, cat
         self.loads = loads
-        self.groups = group_by_cartridge(loads, True)
+        self.groups = self._group(loads)
         self.cartridges = list(self.groups)
         self.cart_var = tk.StringVar(value="")
         self.dist_var = tk.StringVar(value=f"{cat.default_distance:g}")
@@ -2169,7 +2358,7 @@ class LoadsView:
         self.chip_row.grid(row=5, column=0, sticky="w", pady=(12, 0), **pad)
         self.src_row = tk.Frame(card, bg=SURFACE)
         self.src_row.grid(row=6, column=0, sticky="w", pady=(8, 16), **pad)
-        self.status = a.label(card, "", 10, "#e5534b", anchor="w")
+        self.status = a.label(card, "", 10, DANGER, anchor="w")
         self.status.grid(row=1, column=0, sticky="w", pady=(8, 0), **pad)
         self.weights_toggle = tk.Label(card, text="▸  Scoring weights", bg=SURFACE, fg=MUTED,
                                        font=a.f(10, True), cursor="hand2")
@@ -2215,21 +2404,26 @@ class LoadsView:
                                  selectmode="browse")
         scroll = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scroll.set)
-        widths = {"#": 38, "Load": 250, cat.payload_col: 66, "Barrel": 58, "Use": 72, "Velocity": 70,
-                  "Energy": 62, "Recoil": 60, "Taylor": 58, "HITS": 54, "Price": 62, "Score": 54,
-                  "Grade": 56}
         for col in self.cols:
-            # the Load column absorbs spare width; everything else stays compact so
-            # no heading is ever cut off at the right-hand edge
-            self.tree.column(col, width=a.px(widths[col]), minwidth=a.px(widths[col] if col != "Load" else 180),
-                             stretch=(col == "Load"), anchor="w" if col in ("Load", "Use") else "center")
+            # widths are measured from the text in _render; the Load column takes spare room
+            self.tree.column(col, anchor="w" if col in ("Load", "Use") else "center")
             self.tree.heading(col, text=col, command=lambda c=col: self._sort_by(c))
+        self.col_widths, self.sized = {}, None     # sized = cartridge the widths were measured for
         hscroll = ttk.Scrollbar(frame, orient="horizontal", command=self.tree.xview)
-        self.tree.configure(xscrollcommand=hscroll.set)
+
+        def xset(first, last):
+            # only show the horizontal scrollbar when the table really is wider than the window
+            if float(first) <= 0.0 and float(last) >= 1.0:
+                hscroll.grid_remove()
+            else:
+                hscroll.grid()
+            hscroll.set(first, last)
+        self.tree.configure(xscrollcommand=xset)
         self.tree.grid(row=0, column=0, sticky="nsew")
         scroll.grid(row=0, column=1, sticky="ns")
         hscroll.grid(row=1, column=0, sticky="ew")
-        self.tree.tag_configure("hand", foreground="#5fd1b4")
+        hscroll.grid_remove()
+        self.tree.tag_configure("hand", foreground=HAND_FG)
         self.tree.bind("<<TreeviewSelect>>", lambda e: self._on_select())
 
         # ---- selected load
@@ -2276,11 +2470,12 @@ class LoadsView:
         self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 14))
         self.detail.grid(row=5, column=0, sticky="ew", pady=(14, 0))
         self.detail.grid_remove()
-        a.label(outer, f"Grades compare loads of the same cartridge with each other (the average "
-                       f"scores {REL_CENTER:.0f}); they can't be compared with Compare Cartridges "
-                       "grades. Prices are estimates: set your own.",
-                9, MUTED, bg=BG, anchor="w", justify="left", wraplength=a.px(880)).grid(
-            row=6, column=0, sticky="w", pady=(10, 0))
+        self.footnote = a.label(
+            outer, f"Grades compare loads of the same cartridge with each other (the average "
+                   f"scores {REL_CENTER:.0f}); they can't be compared with Compare Cartridges "
+                   "grades. Prices are estimates: set your own.",
+            9, MUTED, bg=BG, anchor="w", justify="left", wraplength=a.px(880))
+        self.footnote.grid(row=6, column=0, sticky="w", pady=(10, 0))
 
     # ---- state ------------------------------------------------------------ #
     def snapshot(self):
@@ -2314,7 +2509,7 @@ class LoadsView:
         else:
             self.weights_frame.grid_remove()
         self.weights_toggle.config(text=("▾" if self.weights_open else "▸") + "  Scoring weights")
-        self.app.fit_window(self.app.LOADS_MIN_WIDTH, keep_position=True)
+        self.fit_table_height()
 
     def weight_vars_note(self, *_):
         try:
@@ -2358,11 +2553,17 @@ class LoadsView:
         self.detail.grid_remove()
         self.refresh()
 
+    def _group(self, loads):
+        groups = group_by_cartridge(loads, True)
+        if self.cat.grain_style:                    # handloads only exist for bullet categories
+            groups = with_handload_only(groups, self.app.data[self.cat.title]["loads"])
+        return groups
+
     def _reload_loads(self, select=None):
         """After adding / editing / deleting a handload: rebuild the lists and redraw."""
         info = self.app.data[self.cat.title]
         self.loads = info["detail"] + self.app.hand_loads(self.cat)
-        self.groups = group_by_cartridge(self.loads, True)
+        self.groups = self._group(self.loads)
         self.cartridges = list(self.groups)
         self.cart_combo.config(values=self.cartridges,
                                width=max([16] + [len(c) for c in self.cartridges]))
@@ -2474,10 +2675,10 @@ class LoadsView:
     def _style_chips(self):
         for name, chip in self.chips.items():
             on = name == self.purpose
-            chip.config(bg=ACCENT if on else SURFACE_2, fg="#ffffff" if on else TEXT)
+            chip.config(bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
         for name, chip in self.src_chips.items():
             on = name == self.source
-            chip.config(bg=ACCENT if on else SURFACE_2, fg="#ffffff" if on else TEXT)
+            chip.config(bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
 
     def _pick_purpose(self, name):
         self.purpose = name
@@ -2494,7 +2695,14 @@ class LoadsView:
             return
         cart = self.cart_var.get()
         items = self.groups.get(cart)
-        if not items:
+        if items is None:
+            return
+        if not items:                                # a cartridge with no factory loads yet
+            self.tree.delete(*self.tree.get_children())
+            self.selected = None
+            self.detail.grid_remove()
+            self.count_lbl.config(text=f"No factory loads listed for {cart}. Use \"+ Add handload\" "
+                                       "to grade your own.")
             return
         if self.purpose != "All":
             items = [x for x in items if self._purpose_of(x) == self.purpose]
@@ -2542,7 +2750,7 @@ class LoadsView:
         terms = self.filter_var.get().lower().split()
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
                 and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))]
-        keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["stats"]["weight"], r["item"].label.lower()),
+        keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["item"].label.lower(), r["stats"]["weight"]),
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
                 "Barrel": lambda r: r["item"].barrel_in or 999,
                 "Use": lambda r: (r["item"].purpose, r["rank"]),
@@ -2556,6 +2764,7 @@ class LoadsView:
         self.tree.delete(*self.tree.get_children())
         self.iid_row = {}
         keep = None
+        cells = []
         for r in data:
             st = r["stats"]
             it = r["item"]
@@ -2569,6 +2778,7 @@ class LoadsView:
                 vals += [f"{st['taylor']:.1f}", f"{st['hits']:.0f}"]
             vals += [f"{st['cost']:.2f}" + (" ✎" if r["custom_price"] else ""),
                      f"{r['overall']:.0f}", r["grade"]]
+            cells.append(vals)
             iid = self.tree.insert("", "end", values=vals, tags=("hand",) if it.handload else ())
             self.iid_row[iid] = r
             if self.selected is r["item"]:
@@ -2583,7 +2793,17 @@ class LoadsView:
         elif self.selected is not None:
             self.selected = None
             self.detail.grid_remove()
-        self.app.fit_window(self.app.LOADS_MIN_WIDTH, keep_position=True)
+        if self.sized != self.cart_var.get():
+            # new cartridge: measure the columns afresh, so a list of short names isn't left
+            # as wide as the last cartridge's longest name (filtering within one keeps them)
+            self.col_widths.clear()
+        self.app.fit_columns(self.tree, self.cols, cells, "Load", self.col_widths)
+        if self.sized != self.cart_var.get() and cells:
+            # widen the window (never shrinks, stays on screen) if every column doesn't fit
+            self.sized = self.cart_var.get()
+            self.app.root.update_idletasks()
+            self.app.grow_to_fit(sum(self.col_widths.values()) - self.tree.winfo_width())
+        self.fit_table_height()
 
     def _on_select(self):
         sel = self.tree.selection()
@@ -2629,7 +2849,39 @@ class LoadsView:
                                 f"#{row['rank']} of {row['peers']}"
                                 f"{' ' + row['group'] + ' loads' if row['group'] else ''}.  {src}")
         self.detail.grid()
-        self.app.fit_window(self.app.LOADS_MIN_WIDTH, keep_position=True)
+        self.fit_table_height()
+
+    def fit_table_height(self):
+        """Give the table as many rows as fit in the window, so the selected load's scores
+        (below the table) show without scrolling at the default window size. With nothing
+        selected the table fills the window down to the footnote. Never fewer than 6 rows
+        (the page scrolls instead) and never more rows than loads."""
+        a = self.app
+        try:
+            a.root.update_idletasks()
+            last = self.detail if self.selected is not None else self.footnote
+            if not last.winfo_ismapped():
+                return a.fit_window()
+            rowh = a.px(28)
+            rows_now = int(self.tree.cget("height"))
+            bottom = last.winfo_rooty() + last.winfo_height() - a.stage.winfo_rooty()
+            spare = a.canvas.winfo_height() - a.px(22) - (bottom - rows_now * rowh)
+            n = len(self.tree.get_children())
+            rows = min(max(spare // rowh, 6), max(n, 1))
+        except tk.TclError:
+            return
+        if rows != rows_now:
+            self.tree.configure(height=rows)
+        a.fit_window()
+        sel = self.tree.selection()
+        if sel:
+            self.tree.see(sel[0])
+            a.root.update_idletasks()
+            # keep the scores panel in view if the page still has to scroll
+            bottom = last.winfo_rooty() + last.winfo_height() - a.stage.winfo_rooty()
+            page, view = a.stage.winfo_reqheight(), a.canvas.winfo_height()
+            if page > view:
+                a.canvas.yview_moveto(max(0.0, (bottom - view + a.px(22)) / page))
 
     def _set_price(self):
         if self.selected is None:

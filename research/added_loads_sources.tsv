@@ -1,0 +1,285 @@
+cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
+.204 Ruger	Federal Varmint & Predator Hornady V-MAX	32	4100	0.214	catalog	Federal 2026 catalog, load V204VM32
+.204 Ruger	Fiocchi Field Dynamics V-MAX	32	4125	0.214	catalog	Fiocchi 2026 catalog, item 204HVA20
+.204 Ruger	Winchester Varmint-X Polymer Tip Rapid Expansion	32	4000	0.210	catalog	Winchester 2026 catalog, symbol X204P
+.204 Ruger	Fiocchi Field Dynamics V-MAX	40	3700	0.280	catalog	Fiocchi 2026 catalog ballistics, item 204HVB
+.22 Creedmoor	Nosler Trophy Grade AccuBond	70	3400	0.437	partial	https://www.primaryarms.com/nosler-trophy-grade-70-gr-accubond-22-creedmoor-ammunition-20-rounds
+.22 Creedmoor	Nosler Match Grade RDF HPBT	85	3175	0.525	partial	https://www.primaryarms.com/nosler-match-grade-85-gr-rdf-hpbt-22-creedmoor-ammunition-20-rounds
+.22 Hornet	Federal Varmint & Predator Tipped Varmint	35	3000	0.111	catalog	Federal 2026 catalog, load AE22H35TVP
+.22 Hornet	Winchester Varmint-X Polymer Tip Rapid Expansion	35	3100	0.109	catalog	Winchester 2026 catalog, symbol X22P
+.22 Hornet	PPU Soft Point	45	2427	0.130	partial	https://ammo.com/rifle/22-hornet-ammo?dir=desc
+.22 Hornet	Sellier & Bellot FMJ	45	2346	0.130	partial	https://www.kygunco.com/product/sellier-bellot-sb22ha-22-hornet-45gr-fmj-2346-fps-20rd
+.22 Hornet	Sellier & Bellot Soft Point	45	2346	0.130	partial	https://www.luckygunner.com/22-hornet-45-gr-sp-sellier-bellot-20-rounds
+.22 Hornet	Winchester Super-X Soft Point	45	2690	0.130	catalog	Winchester 2026 catalog, symbol X22H1
+.22 Hornet	Winchester Super-X Hollow Point	46	2690	0.130	catalog	Winchester 2026 catalog, symbol X22H2
+.220 Swift	Winchester Super-X Pointed Soft Point	50	3870	0.200	catalog	Winchester 2026 catalog, symbol X220S
+.222 Remington	Federal Power-Shok SP	50	3140	0.187	catalog	Federal 2026 catalog, load 222A
+.222 Remington	Fiocchi Field Dynamics V-MAX	50	3200	0.247	partial	Fiocchi 2026 catalog, item 222HVA
+.222 Remington	PPU Soft Point	50	3133	0.247	partial	https://ammo.com/rifle/222-ammo?dir=desc
+.222 Remington	Sellier & Bellot Soft Point	50	3169	0.247	partial	https://www.sportsmanswarehouse.com/shooting-gear-gun-supplies/ammunition-ammo-for-hunting-shooting-sports/rifle-ammo-hunting-shooting-sports/sellier-bellot-222-remington-50gr-sp-rifle-ammo-20-rounds/p/1815641
+.222 Remington	Winchester Super-X Pointed Soft Point	50	3140	0.175	catalog	Winchester 2026 catalog, symbol X222R
+6mm Creedmoor	Fiocchi Hyperformance Hunt Barnes TTSX	80	3300	0.418	partial	Fiocchi 2026 catalog, item 6CMTT
+6mm Creedmoor	Federal Gold Medal Berger Hybrid	105	3025	0.536	catalog	Federal 2026 catalog, load GM6CRDBH1
+6mm Creedmoor	Fiocchi Hyperformance Match Nosler RDF	105	3025	0.541	partial	Fiocchi 2026 catalog, item 6CMRD
+6mm Creedmoor	Federal Gold Medal Sierra MatchKing BTHP	107	3000	0.547	catalog	Federal 2026 catalog, load GM6CRDM1
+6mm Creedmoor	Federal Gold Medal Berger Hybrid	109	2975	0.568	catalog	Federal 2026 catalog, load GM6CRDLRHT1
+6mm Creedmoor	Barnes Precision Match OTM BT	112	2960	0.584	partial	https://www.midwestgunworks.com/page/mgwi/prod/30814
+6mm Remington	PPU Soft Point Boat Tail	100	3100	0.356	partial	https://www.luckygunner.com/6mm-remington-100-grain-btsp-prvi-partizan-500-rounds
+6mm Remington	Winchester Power-Point	100	3100	0.356	catalog	Winchester 2026 catalog, symbol X6MMR2
+.25-06 Remington	Winchester Ballistic Silvertip	85	3470	0.329	catalog	Winchester 2026 catalog, symbol SBST2506A
+.25-06 Remington	Winchester Super-X Positive Exp. Point	90	3440	0.259	catalog	Winchester 2026 catalog, symbol X25061
+.25-06 Remington	Federal Premium Barnes Triple-Shock X	100	3210	0.336	catalog	Federal 2026 catalog, load P2506H
+.25-06 Remington	Federal Premium Trophy Copper	100	3210	0.409	catalog	Federal 2026 catalog, load P2506TC1
+.25-06 Remington	Nosler Trophy Grade Partition	100	3300	0.292	partial	https://www.brownells.com/ammunition/rifle-ammunition/trophy-grade-25-06-remington-ammo/
+.25-06 Remington	Remington Core-Lokt Pointed Soft Point	100	3230	0.292	catalog	Remington 2026 catalog, index R25062
+.25-06 Remington	Winchester Ballistic Silvertip	115	3060	0.453	catalog	Winchester 2026 catalog, symbol SBST2506
+.25-06 Remington	Federal Power-Shok SP	117	3030	0.367	catalog	Federal 2026 catalog, load 2506BS
+.25-06 Remington	Fiocchi Field Dynamics PSP	117	2975	0.399	partial	Fiocchi 2026 catalog, item 2506B
+.25-06 Remington	Winchester Deer Season XP Extreme Point	117	3100	0.453	catalog	Winchester 2026 catalog, symbol X2506DS
+.25-06 Remington	Federal Fusion	120	2980	0.476	catalog	Federal 2026 catalog, load F2506FS1
+.25-06 Remington	Remington Core-Lokt Pointed Soft Point	120	2990	0.362	catalog	Remington 2026 catalog, index R25063
+.25-06 Remington	Winchester Super-X Positive Exp. Point	120	2990	0.344	catalog	Winchester 2026 catalog, symbol X25062
+.250 Savage	Remington Core-Lokt Pointed Soft Point	100	2820	0.285	catalog	Remington 2026 catalog, index R250SV
+.257 Roberts	Remington Core-Lokt Pointed Soft Point	117	2650	0.240	catalog	Remington 2026 catalog, index R257
+.257 Roberts	Winchester Power-Point	117	2780	0.240	catalog	Winchester 2026 catalog, symbol X257P3
+6.5x55mm Swedish	Federal Premium Barnes Triple-Shock X	130	2550	0.365	catalog	Federal 2026 catalog, load P6555WTSX
+6.5x55mm Swedish	Federal Fusion	140	2530	0.447	catalog	Federal 2026 catalog, load F6555FS1
+6.5x55mm Swedish	Federal Power-Shok SP	140	2650	0.445	catalog	Federal 2026 catalog, load 6555B
+6.5x55mm Swedish	Remington Core-Lokt Pointed Soft Point	140	2550	0.435	catalog	Remington 2026 catalog, index R65SWE1
+6.5x55mm Swedish	Winchester Power-Point	140	2550	0.450	catalog	Winchester 2026 catalog, symbol X6555
+6.5x55mm Swedish	Winchester USA Full Metal Jacket	140	2550	0.513	catalog	Winchester 2026 catalog, symbol USA6555
+6.5x55mm Swedish	Federal Fusion	156	2500	0.497	catalog	Federal 2026 catalog, load F6555FS2
+.270 WSM	Federal Power-Shok SP	130	3250	0.373	catalog	Federal 2026 catalog, load 270WSME
+.270 WSM	Federal Premium Trophy Bonded Tip	130	3280	0.440	catalog	Federal 2026 catalog, load P270WSMTT1
+.270 WSM	Federal Premium Trophy Copper	130	3280	0.459	catalog	Federal 2026 catalog, load P270WSMTC1
+.270 WSM	Remington Core-Lokt Pointed Soft Point	130	3285	0.336	catalog	Remington 2026 catalog, index R270WSM1
+.270 WSM	Winchester Copper Impact Copper Extreme Point	130	3215	0.418	catalog	Winchester 2026 catalog, symbol X270SCLF
+.270 WSM	Winchester Deer Season XP Extreme Point	130	3275	0.450	catalog	Winchester 2026 catalog, symbol X270SDS
+.270 WSM	Federal Premium Terminal Ascent	136	3240	0.493	catalog	Federal 2026 catalog, load P270WSMTA1
+.270 WSM	Federal Premium Berger Hybrid Hunter	140	3200	0.528	catalog	Federal 2026 catalog, load P270WSMBCH1
+.270 WSM	Federal Premium Trophy Bonded Tip	140	3200	0.455	catalog	Federal 2026 catalog, load P270WSMTT3
+.270 WSM	Federal Fusion	150	3060	0.508	catalog	Federal 2026 catalog, load F270WSMFS1
+.270 WSM	Winchester Ballistic Silvertip	150	3120	0.496	catalog	Winchester 2026 catalog, symbol SBST2705A
+.270 WSM	Winchester Power-Point	150	3150	0.344	catalog	Winchester 2026 catalog, symbol X270WSM
+6.8mm SPC	Federal Fusion MSR	90	2850	0.282	catalog	Federal 2026 catalog, load F68MSR2
+6.8mm SPC	Federal Varmint & Predator Jacketed Hollow Point	90	2990	0.280	catalog	Federal 2026 catalog, load AE6890VP
+6.8mm SPC	Federal American Eagle FMJ	115	2675	0.384	catalog	Federal 2026 catalog, load AE68A
+6.8mm SPC	Federal Fusion MSR	115	2470	0.384	catalog	Federal 2026 catalog, load F68MSR1
+6.8mm SPC	Remington Premier MatchKing OTM	115	2625	0.292	partial	Remington 2026 catalog, index RM68R1
+6.8mm SPC	Remington UMC Full Metal Jacket	115	2625	0.292	catalog	Remington 2026 catalog, index L68R2
+6.8mm SPC	Winchester Deer Season XP Extreme Point	115	2625	0.312	catalog	Winchester 2026 catalog, symbol X68SPCDS
+6.8mm SPC	Winchester USA Ready Open Tip	115	2625	0.318	catalog	Winchester 2026 catalog, symbol RED68SPC
+.28 Nosler	Winchester Copper Impact Copper Extreme Point	150	3250	0.478	catalog	Winchester 2026 catalog, symbol X28NCLF
+.28 Nosler	Federal Premium Terminal Ascent	155	3200	0.586	catalog	Federal 2026 catalog, load P28NTA1
+.280 Remington	Barnes VOR-TX Tipped TSX BT	140	2985	0.486	partial	https://www.midwestgunworks.com/page/mgwi/prod/22011
+.280 Remington	Federal Fusion	140	2990	0.493	catalog	Federal 2026 catalog, load F280FS1
+.280 Remington	Federal Premium Trophy Bonded Tip	140	2950	0.430	catalog	Federal 2026 catalog, load P280TT2
+.280 Remington	Remington Core-Lokt Pointed Soft Point	140	3000	0.390	catalog	Remington 2026 catalog, index R280R3
+.280 Remington	Remington Core-Lokt Tipped	140	3020	0.486	catalog	Remington 2026 catalog, index RT280RA
+.280 Remington	Federal Power-Shok SP	150	2890	0.422	catalog	Federal 2026 catalog, load 280B
+.280 Remington	Remington Core-Lokt Pointed Soft Point	150	2890	0.346	catalog	Remington 2026 catalog, index R280R1
+.280 Remington	Remington Core-Lokt Soft Point	165	2820	0.290	catalog	Remington 2026 catalog, index R280R2
+7mm PRC	Fiocchi Hyperformance Hunt Barnes TTSX	150	3110	0.511	partial	Fiocchi 2026 catalog, item 7PRCTT
+7mm PRC	Federal Premium Terminal Ascent	155	3100	0.586	catalog	Federal 2026 catalog, load P7PRCTA1
+7mm PRC	Federal Premium Terminal Ascent	170	2950	0.645	catalog	Federal 2026 catalog, load P7PRCTA3
+7mm PRC	Federal Fusion Tipped	175	2925	0.585	catalog	Federal 2026 catalog, load F7PRCTFS2
+7mm PRC	Federal Premium ELD-X	175	3000	0.689	catalog	Federal 2026 catalog, load P7PRCELDX1
+7mm PRC	Fiocchi Hyperformance Match Nosler RDF	185	2750	0.833	partial	Fiocchi 2026 catalog, item 7PRCRD
+7mm PRC	Federal Premium Berger Elite Hunter	195	2760	0.755	catalog	Federal 2026 catalog, load P7PRCEH1
+7mm WSM	Winchester Ballistic Silvertip	140	3225	0.485	catalog	Winchester 2026 catalog, symbol SBST7MMS
+7mm WSM	Winchester Power-Point	150	3200	0.346	catalog	Winchester 2026 catalog, symbol X7MMWSM
+.30 Carbine	Federal American Eagle FMJ	110	1990	0.168	catalog	Federal 2026 catalog, load AE30CB
+.30 Carbine	Federal Power-Shok SPRN	110	1990	0.168	catalog	Federal 2026 catalog, load 30CA
+.30 Carbine	Remington Core-Lokt Soft Point	110	1990	0.166	catalog	Remington 2026 catalog, index R30CAR
+.30 Carbine	Remington UMC Full Metal Jacket	110	1990	0.166	catalog	Remington 2026 catalog, index L30CR1
+.30 Carbine	Winchester Super-X Hollow Soft Point	110	1790	0.181	partial	Winchester 2026 catalog, symbol X30M1
+.30 Carbine	Winchester USA Full Metal Jacket	110	1990	0.180	catalog	Winchester 2026 catalog, symbol Q3132
+.30-40 Krag	Remington Core-Lokt Pointed Soft Point	180	2430	0.383	catalog	Remington 2026 catalog, index R30402
+.30-40 Krag	Winchester Power-Point	180	2430	0.394	catalog	Winchester 2026 catalog, symbol X30401
+.300 Remington Ultra Mag	Remington Premier Swift Scirocco Bonded	150	3450	0.435	catalog	Remington 2026 catalog, index PR300UM5
+.300 Remington Ultra Mag	Remington Core-Lokt Pointed Soft Point	180	3270	0.339	catalog	Remington 2026 catalog, index R300RUM01
+.300 Remington Ultra Mag	Remington Core-Lokt Tipped	180	3150	0.480	catalog	Remington 2026 catalog, index RT300UM
+.300 Remington Ultra Mag	Remington Premier Swift Scirocco Bonded	180	3250	0.500	catalog	Remington 2026 catalog, index PR300UM3
+.300 Remington Ultra Mag	Remington Speer Impact	190	3100	0.596	catalog	Remington 2026 catalog, index RLR300UM
+.300 Savage	Federal Power-Shok SP	150	2630	0.318	catalog	Federal 2026 catalog, load 300A
+.300 Savage	Remington Core-Lokt Pointed Soft Point	150	2630	0.314	catalog	Remington 2026 catalog, index R30SV2
+.300 Savage	Winchester Power-Point	150	2630	0.294	catalog	Winchester 2026 catalog, symbol X3001
+.300 Savage	Federal Power-Shok SP	180	2350	0.389	catalog	Federal 2026 catalog, load 300B
+.300 Weatherby Magnum	Remington Core-Lokt Pointed Soft Point	180	3120	0.383	catalog	Remington 2026 catalog, index R300WB1
+.300 WSM	Federal Fusion	150	3250	0.417	catalog	Federal 2026 catalog, load F300WSMFS3
+.300 WSM	Remington Core-Lokt Pointed Soft Point	150	3320	0.294	catalog	Remington 2026 catalog, index R300WSM1
+.300 WSM	Remington Core-Lokt Tipped	150	3340	0.415	catalog	Remington 2026 catalog, index RT300WSM1
+.300 WSM	Winchester Copper Impact Copper Extreme Point	150	3200	0.387	catalog	Winchester 2026 catalog, symbol X300SCLF
+.300 WSM	Winchester Deer Season XP Extreme Point	150	3260	0.392	catalog	Winchester 2026 catalog, symbol X300SDS
+.300 WSM	Federal Fusion	165	3100	0.459	catalog	Federal 2026 catalog, load F300WSMFS1
+.300 WSM	Federal Premium Barnes Triple-Shock X	165	3130	0.398	catalog	Federal 2026 catalog, load P300WSMG
+.300 WSM	Federal Premium Trophy Bonded Tip	165	3130	0.450	catalog	Federal 2026 catalog, load P300WSMTT2
+.300 WSM	Federal Premium Trophy Copper	165	3120	0.503	catalog	Federal 2026 catalog, load P300WSMTC2
+.300 WSM	Federal Fusion	180	2950	0.492	catalog	Federal 2026 catalog, load F300WSMFS2
+.300 WSM	Federal Power-Shok Copper HP	180	2950	0.356	catalog	Federal 2026 catalog, load 300WSM180LFA
+.300 WSM	Federal Power-Shok SP	180	2980	0.392	catalog	Federal 2026 catalog, load 300WSMC
+.300 WSM	Federal Premium Swift Scirocco II	180	2960	0.520	catalog	Federal 2026 catalog, load P300WSMSS1
+.300 WSM	Federal Premium Trophy Bonded Tip	180	2960	0.500	catalog	Federal 2026 catalog, load P300WSMTT1
+.300 WSM	Federal Premium Trophy Copper	180	2960	0.523	catalog	Federal 2026 catalog, load P300WSMTC1
+.300 WSM	Remington Premier Swift Scirocco Bonded	180	2980	0.507	catalog	Remington 2026 catalog, index PRSC300WSMB
+.300 WSM	Winchester Ballistic Silvertip	180	3010	0.507	catalog	Winchester 2026 catalog, symbol SBST300SA
+.300 WSM	Winchester Copper Impact Copper Extreme Point	180	2900	0.470	catalog	Winchester 2026 catalog, symbol X300SCLF2
+.300 WSM	Winchester Deer Season XP Extreme Point	180	2900	0.422	catalog	Winchester 2026 catalog, symbol X300SDS2
+.300 WSM	Winchester Power-Point	180	2970	0.438	catalog	Winchester 2026 catalog, symbol X300WSM
+.300 WSM	Federal Premium Berger Hybrid Hunter	185	2950	0.533	catalog	Federal 2026 catalog, load P300WSMBCH1
+.300 WSM	Winchester Expedition Big Game Long Range AccuBond LR	190	2875	0.597	catalog	Winchester 2026 catalog, symbol S300SLR
+.300 WSM	Winchester Supreme Long Range BC MAX	195	2900	0.589	catalog	Winchester 2026 catalog, symbol S300SBC
+.300 WSM	Federal Premium ELD-X	200	2820	0.597	catalog	Federal 2026 catalog, load P300WSMELDX1
+.300 WSM	Federal Premium Terminal Ascent	200	2810	0.608	catalog	Federal 2026 catalog, load P300WSMTA1
+.303 British	Federal Power-Shok SP	150	2690	0.362	catalog	Federal 2026 catalog, load 303B
+.303 British	Remington UMC Full Metal Jacket	174	2475	0.315	catalog	Remington 2026 catalog, index L303B1
+.303 British	Federal Power-Shok SP	180	2460	0.334	catalog	Federal 2026 catalog, load 303AS
+.303 British	Remington Core-Lokt Soft Point	180	2460	0.247	catalog	Remington 2026 catalog, index R303B1
+.303 British	Winchester Power-Point	180	2460	0.369	catalog	Winchester 2026 catalog, symbol X303B1
+7.62x54mmR	Winchester USA Full Metal Jacket	180	2580	0.486	catalog	Winchester 2026 catalog, symbol MC76254R
+7.62x54mmR	Winchester USA Soft Point	180	2625	0.267	catalog	Winchester 2026 catalog, symbol MC54RSP
+.338 Lapua Magnum	Federal Gold Medal Sierra MatchKing BTHP	250	2950	0.587	catalog	Federal 2026 catalog, load GM338LM
+.338 Lapua Magnum	Federal Premium Trophy Copper	250	2850	0.625	catalog	Federal 2026 catalog, load P338LTC1
+.338 Lapua Magnum	Winchester Match BTHP	250	2900	0.587	catalog	Winchester 2026 catalog, symbol S338LM
+.338 Lapua Magnum	Winchester Match BTHP	285	2690	0.756	catalog	Winchester 2026 catalog, symbol S338LM2
+.338 Lapua Magnum	Federal Gold Medal Sierra MatchKing BTHP	300	2580	0.768	catalog	Federal 2026 catalog, load GM338LM2
+.338 Winchester Magnum	Winchester Power-Point	200	2960	0.308	catalog	Winchester 2026 catalog, symbol X3381
+.338 Winchester Magnum	Remington Core-Lokt Pointed Soft Point	225	2780	0.435	catalog	Remington 2026 catalog, index R338W1
+.338 Winchester Magnum	Remington Core-Lokt Pointed Soft Point	250	2660	0.431	catalog	Remington 2026 catalog, index R338W2
+.35 Whelen	Federal Fusion	200	2800	0.349	catalog	Federal 2026 catalog, load F35FS1
+.35 Whelen	Remington Core-Lokt Pointed Soft Point	200	2675	0.294	catalog	Remington 2026 catalog, index R35WH1
+.35 Whelen	Winchester Power-Point	200	2800	0.282	catalog	Winchester 2026 catalog, symbol X35W
+.35 Whelen	Remington Core-Lokt Pointed Soft Point	250	2400	0.409	catalog	Remington 2026 catalog, index R35WH3
+.358 Winchester	Winchester Power-Point	200	2490	0.282	catalog	Winchester 2026 catalog, symbol X3582
+9.3x62mm	Federal Premium Barnes Triple-Shock X	250	2400	0.361	catalog	Federal 2026 catalog, load P9362TSX
+9.3x62mm	Federal Premium Safari Swift A-Frame	286	2360	0.385	catalog	Federal 2026 catalog, load P9362SA
+9.3x62mm	Federal Premium Safari Woodleigh Hydro	286	2360	0.260	catalog	Federal 2026 catalog, load P9362WH
+.375 H&H Magnum	Federal Power-Shok SP	270	2690	0.328	catalog	Federal 2026 catalog, load 375A
+.375 H&H Magnum	Remington Core-Lokt Soft Point	270	2690	0.267	catalog	Remington 2026 catalog, index R375M1
+.375 H&H Magnum	Federal Power-Shok SP	300	2530	0.328	catalog	Federal 2026 catalog, load 375B
+.375 H&H Magnum	Federal Premium Safari Swift A-Frame	300	2450	0.325	catalog	Federal 2026 catalog, load P375SA
+.375 H&H Magnum	Federal Premium Safari Trophy Bonded Bear Claw	300	2400	0.342	catalog	Federal 2026 catalog, load P375T1
+.375 H&H Magnum	Federal Premium Safari Trophy Bonded Sledgehammer Solid	300	2440	0.253	catalog	Federal 2026 catalog, load P375T2
+.375 H&H Magnum	Federal Premium Safari Woodleigh Hydro	300	2500	0.260	catalog	Federal 2026 catalog, load P375WH
+.416 Remington Magnum	Federal Premium Safari Swift A-Frame	400	2400	0.367	catalog	Federal 2026 catalog, load P416RSA
+.416 Remington Magnum	Federal Premium Safari Trophy Bonded Bear Claw	400	2400	0.373	catalog	Federal 2026 catalog, load P416RT1
+.416 Remington Magnum	Federal Premium Safari Trophy Bonded Sledgehammer Solid	400	2400	0.273	catalog	Federal 2026 catalog, load P416RT2
+.45-70 Government	Barnes VOR-TX TSX FN	300	1925	0.188	partial	https://www.targetsportsusa.com/barnes-vortx-45-70-govt-ammo-300-grain-tsx-fn-bb4570g3-p-114303.aspx
+.45-70 Government	Buffalo Bore JHP (+P, modern rifles only)	300	2355	0.188	partial	https://www.kygunco.com/product/buffalo-bore-45-70-govt-300gr-jhp-2350fps-me-3678-ft-lbs-20rd
+.45-70 Government	Federal American Eagle HP	300	1850	0.295	catalog	Federal 2026 catalog, load AE4570USA
+.45-70 Government	Federal Fusion	300	1850	0.296	catalog	Federal 2026 catalog, load F4570FS1
+.45-70 Government	Federal HammerDown Bonded Hollow Point	300	1850	0.290	catalog	Federal 2026 catalog, load LG45701
+.45-70 Government	Federal Power-Shok HP	300	1850	0.295	catalog	Federal 2026 catalog, load 4570AS
+.45-70 Government	Federal Premium Trophy Bonded Bear Claw	300	1850	0.215	catalog	Federal 2026 catalog, load P4570T4
+.45-70 Government	Fiocchi Field Dynamics HPFN	300	1900	0.188	catalog	Fiocchi 2026 catalog, item 4570B
+.45-70 Government	Remington Core-Lokt Tipped	300	2100	0.197	catalog	Remington 2026 catalog, index RT45GA
+.45-70 Government	Remington Semi-Jacketed Hollow Point	300	1900	0.213	catalog	Remington 2026 catalog, index R4570L1
+.45-70 Government	Winchester Super-X Jacketed Hollow Point	300	1920	0.184	catalog	Winchester 2026 catalog, symbol X4570H
+.45-70 Government	Barnes Pioneer	400	1715	0.246	published	https://www.tractorsupply.com/tsc/product/barnes-bullets-barnes-pioneer-45-70-government-400-grain-handgun-ammunition-20-rounds
+.45-70 Government	Fiocchi Cowboy Action LRNFP	405	1185	0.281	partial	Fiocchi 2026 catalog, item 4570A
+.45-70 Government	Remington Core-Lokt Soft Point (full pressure)	405	1600	0.281	catalog	Remington 2026 catalog, index R4570G1
+.45-70 Government	Remington Core-Lokt Soft Point (reduced pressure)	405	1330	0.281	catalog	Remington 2026 catalog, index R4570G
+.45-70 Government	Sellier & Bellot Semi-Jacketed Soft Point	405	1509	0.281	partial	https://gunmagwarehouse.com/sellier-bellot-45-70-govt-ammo-405gr-soft-point-20-rounds.html
+.45-70 Government	Winchester Super-X Lead Flat Nose	405	1150	0.280	catalog	Winchester 2026 catalog, symbol X4570CB
+.45-70 Government	Buffalo Bore Hard Cast FN (+P, modern rifles only)	430	1920	0.304	partial	https://luckygunner.com/45-70-government-magnum-430-grain-hard-cast-buffalo-bore-20-rounds
+.45-70 Government	Buffalo Bore Hard Cast GC (black powder equivalent)	440	1300	0.311	partial	https://www.kygunco.com/product/buffalo-bore-45-70-govt-440gr-hard-cast-gc-1300fps-20rd
+.45-70 Government	Buffalo Bore FMJ FN (+P, modern rifles only)	500	1625	0.354	partial	https://palmettostatearmory.com/buffalo-bore-45-70-mag-500-grain-full-metal-jacket-flat-nose-lever-gun-rifle-ammo-20-box-8d-20.html
+.45-70 Government	Buffalo Bore Hard Cast Plain Base (black powder equivalent)	500	1250	0.354	partial	https://www.kygunco.com/product/buffalo-bore-45-70-govt-500gr-hard-cast-plain-base-1250fps-20rd
+.458 Lott	Federal Premium Safari Trophy Bonded Bear Claw	500	2300	0.282	catalog	Federal 2026 catalog, load P458LT1
+.458 Lott	Federal Premium Safari Trophy Bonded Sledgehammer Solid	500	2300	0.328	catalog	Federal 2026 catalog, load P458LT2
+.458 Winchester Magnum	Federal Premium Safari Trophy Bonded Bear Claw	400	2250	0.353	catalog	Federal 2026 catalog, load P458T1
+.458 Winchester Magnum	Federal Premium Safari Swift A-Frame	500	2090	0.361	catalog	Federal 2026 catalog, load P458SA
+.458 Winchester Magnum	Federal Premium Safari Trophy Bonded Bear Claw	500	2090	0.282	catalog	Federal 2026 catalog, load P458T2
+.458 Winchester Magnum	Federal Premium Safari Trophy Bonded Sledgehammer Solid	500	1950	0.328	catalog	Federal 2026 catalog, load P458T3
+.50 BMG	PMC Bronze FMJ BT	660	2950	0.617	catalog	PMC 2026 catalog, item 50A
+5.7x28mm	Fiocchi Jacketed Frangible	35	1750	0.128	partial	Fiocchi 2026 catalog, item 57JF35
+5.7x28mm	Fiocchi Range Dynamics FMJ	40	1700	0.146	partial	Fiocchi 2026 catalog, item 57FMJ40
+5.7x28mm	Fiocchi Tipped Hollow Point	40	1750	0.146	partial	Fiocchi 2026 catalog, item 57PT40
+5.7x28mm	Fiocchi Subsonic FMJ	62	1050	0.146	partial	Fiocchi 2026 catalog, item 57SUB62
+7.62x25mm Tokarev	Fiocchi Heritage FMJ	85	1525	0.121	partial	Fiocchi 2026 catalog, item 762TOK
+7.62x25mm Tokarev	Winchester USA Full Metal Jacket	85	1645	0.121	partial	Winchester 2026 catalog, symbol MC762TOK
+.32 S&W Long	Remington Performance Wheelgun Lead Round Nose	98	705	0.119	catalog	Remington 2026 catalog, index RPW32SWL
+.327 Federal Magnum	Federal American Eagle JSP	85	1400	0.143	catalog	Federal 2026 catalog, load AE327A
+.327 Federal Magnum	Federal American Eagle JSP	100	1500	0.163	catalog	Federal 2026 catalog, load AE327
+.327 Federal Magnum	Federal Premium Swift A-Frame	100	1500	0.168	catalog	Federal 2026 catalog, load P327SA
+.327 Federal Magnum	Remington UMC Jacketed Soft Point	100	1500	0.160	catalog	Remington 2026 catalog, index L327
+.357 SIG	Fiocchi Range Dynamics FMJ	124	1350	0.109	partial	Fiocchi 2026 catalog, item 357SIGAP
+.357 SIG	Federal American Eagle FMJ	125	1350	0.153	catalog	Federal 2026 catalog, load AE357S2
+.357 SIG	Federal Premium Personal Defense HST	125	1360	0.153	catalog	Federal 2026 catalog, load P357SHST1S
+.357 SIG	Remington Golden Saber Black Belt Bonded Brass Jacketed Hollow Point	125	1350	0.118	catalog	Remington 2026 catalog, index GSB357SBB
+.357 SIG	Remington UMC Full Metal Jacket	125	1350	0.110	catalog	Remington 2026 catalog, index L357S1
+.357 SIG	Remington UMC Jacketed Hollow Point	125	1350	0.118	catalog	Remington 2026 catalog, index L357S2
+.357 SIG	Winchester Defender Bonded JHP	125	1350	0.110	partial	Winchester 2026 catalog, symbol S357SPDB
+.357 SIG	Winchester USA Full Metal Jacket-Flat Nose	125	1370	0.110	partial	Winchester 2026 catalog, symbol Q4309
+.357 SIG	Winchester USA Jacketed Hollow Point	125	1370	0.110	partial	Winchester 2026 catalog, symbol USA357SJHP
+.38 Super	Federal American Eagle JHP	115	1130	0.123	catalog	Federal 2026 catalog, load AE38S3
+.38 Super	Winchester Silvertip Plated JHP	125	1240	0.152	partial	Winchester 2026 catalog, symbol X38ASHP
+.38 Super	Remington UMC Full Metal Jacket +P	130	1215	0.158	catalog	Remington 2026 catalog, index L38SUP
+.38 Super	Winchester USA Full Metal Jacket	130	1215	0.158	partial	Winchester 2026 catalog, symbol Q4205
+9x18mm Makarov	Fiocchi Heritage FMJ	95	1020	0.102	partial	Fiocchi 2026 catalog, item 9MAK
+9x18mm Makarov	Winchester USA Full Metal Jacket	95	1015	0.102	partial	Winchester 2026 catalog, symbol MC918M
+.41 Magnum	Federal Power-Shok JHP	210	1230	0.182	catalog	Federal 2026 catalog, load C41A
+.41 Magnum	Remington HTP Semi-Jacketed Hollow Point	210	1240	0.180	catalog	Remington 2026 catalog, index RHH41MG1
+.44-40 Winchester	Winchester Power-Point	200	1190	0.161	catalog	Winchester 2026 catalog, symbol X4440
+.44-40 Winchester	Fiocchi Cowboy Action LRNFP	210	725	0.130	partial	Fiocchi 2026 catalog, item 4440CA
+.44-40 Winchester	Winchester USA Lead	225	750	0.139	partial	Winchester 2026 catalog, symbol USA4440CB
+.44 Special	Federal Punch JHP	180	815	0.143	catalog	Federal 2026 catalog, load PD44SP1
+.44 Special	PMC Bronze JHP	180	980	0.143	partial	PMC 2026 catalog, item 44SB
+.44 Special	CCI Blazer Aluminum JHP	200	920	0.156	partial	CCI 2026 catalog, part 3556
+.44 Special	Federal Champion SWHP	200	870	0.156	catalog	Federal 2026 catalog, load C44SA
+.44 Special	Fiocchi Defense Dynamics SJHP	200	900	0.156	partial	Fiocchi 2026 catalog, item 44SA500
+.44 Special	Fiocchi Cowboy Action LFP	210	750	0.164	partial	Fiocchi 2026 catalog, item 44SCA
+.44 Special	Winchester USA Lead	240	750	0.154	partial	Winchester 2026 catalog, symbol USA44CB
+.44 Special	Remington Performance Wheelgun Lead Round Nose	246	755	0.158	catalog	Remington 2026 catalog, index RPW44SW
+.454 Casull	Federal Premium Barnes Expander	250	1530	0.143	catalog	Federal 2026 catalog, load P454XB1
+.454 Casull	Federal Fusion SP	260	1350	0.153	catalog	Federal 2026 catalog, load F454FS1
+.454 Casull	Federal Premium Swift A-Frame	300	1520	0.138	catalog	Federal 2026 catalog, load P454SA
+.454 Casull	Winchester Big Bore Semi Jacketed Hollow Point	300	1560	0.204	partial	Winchester 2026 catalog, symbol X454CBB
+.460 S&W Magnum	Federal Fusion SP	260	1600	0.153	catalog	Federal 2026 catalog, load F460FS1
+.460 S&W Magnum	Federal Premium Swift A-Frame	300	1750	0.137	catalog	Federal 2026 catalog, load P460SA
+.50 AE	Federal Fusion SP	300	1550	0.158	catalog	Federal 2026 catalog, load F50AEFS1
+.500 S&W Magnum	Federal Fusion SP	325	1450	0.153	catalog	Federal 2026 catalog, load F500FS2
+.500 S&W Magnum	Federal Premium Swift A-Frame	325	1800	0.143	catalog	Federal 2026 catalog, load P500SA
+.22 Creedmoor	Hornady Superformance CX	65	3660	0.406	partial	Hornady 2026 catalog, item 83413 (muzzle velocity only; BC scaled from the 69 gr ELD-VT)
+.22 WMR	Hornady Critical Defense FTX	45	1000	0.112	catalog	Hornady 2026 catalog, item 83200 (corrected: name was garbled and velocity was 950)
+10 Gauge	Federal Black Cloud FS Steel · 3½" BB/2 Steel · 1⅝ oz	710.9	1375	0.021	catalog	Federal 2026 catalog, item PWBX107 (BC estimated from shot size)
+10 Gauge	Federal Ultra Steel · 3½" BBB x #1/BB x #2 Steel · 1⅝ oz	710.9	1400	0.022	catalog	Federal 2026 catalog, item PWUX107 (BC estimated from shot size)
+10 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2 Steel · 1½ oz	656.2	1450	0.022	catalog	Federal 2026 catalog, item WF107 (BC estimated from shot size)
+10 Gauge	Winchester Drylok Super Steel · 3½" T/BBB/BB/2 Steel · 1⅝ oz	710.9	1350	0.022	catalog	Winchester 2026 catalog, item XSC10 (BC estimated from shot size)
+10 Gauge	Remington Hypersonic Steel · 3½" BBB Steel · 1½ oz	656.2	1500	0.022	catalog	Remington 2026 catalog, item HSS10C (BC estimated from shot size)
+10 Gauge	Remington Hypersonic Steel · 3½" BB Steel · 1½ oz	656.2	1500	0.021	catalog	Remington 2026 catalog, item HSS10B (BC estimated from shot size)
+10 Gauge	Remington Hypersonic Steel · 3½" #2 Steel · 1½ oz	656.2	1500	0.018	catalog	Remington 2026 catalog, item HSS102 (BC estimated from shot size)
+10 Gauge	Remington Nitro-Steel · 3½" #2 Steel · 1½ oz	656.2	1450	0.018	catalog	Remington 2026 catalog, item NSI10M2 (BC estimated from shot size)
+10 Gauge	Federal Premium Grand Slam · 3½" #4/5 · 2 oz	875	1200	0.022	catalog	Federal 2026 catalog, item PFCX101F (BC estimated from shot size)
+10 Gauge	Winchester Double-X Copper Plated Buffered · 3½" #4/5 · 2 oz	875	1300	0.022	catalog	Winchester 2026 catalog, item STH10 (BC estimated from shot size)
+10 Gauge	Remington Premier TSS · 3½" #9 TSS · 2½ oz	1093.8	1050	0.022	catalog	Remington 2026 catalog, item TSS10359 (BC estimated from shot size)
+10 Gauge	Federal Premium Buckshot · 3½" 00 Buck · 18 pellets	942.2	1100	0.055	catalog	Federal 2026 catalog, item P108F 00 (BC estimated from shot size)
+10 Gauge	Federal Power-Shok Rifled HP Slug · 3½" Slug · 1¾ oz	765.6	1280	0.1	catalog	Federal 2026 catalog, item F103F RS (BC estimated from shot size)
+16 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6 Steel · ¹⁵⁄₁₆ oz	410.2	1350	0.013	catalog	Winchester 2026 catalog, item WE16GT (BC estimated from shot size)
+16 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6 · 1⅛ oz	492.2	1425	0.022	catalog	Federal 2026 catalog, item PF163 (BC estimated from shot size)
+16 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1⅛ oz	492.2	1425	0.022	catalog	Federal 2026 catalog, item PFX164FS (BC estimated from shot size)
+16 Gauge	Federal Game Load Hi-Brass · 2¾" #4/6/7.5 · 1⅛ oz	492.2	1295	0.022	catalog	Federal 2026 catalog, item H163 (BC estimated from shot size)
+16 Gauge	Federal Game Load · 2¾" #6/7.5/8 · 1 oz	437.5	1165	0.018	catalog	Federal 2026 catalog, item H160 (BC estimated from shot size)
+16 Gauge	Winchester Super-X High Brass Game · 2¾" #4/6/7.5 · 1⅛ oz	492.2	1295	0.022	catalog	Winchester 2026 catalog, item X16H (BC estimated from shot size)
+16 Gauge	Winchester Super-X Game · 2¾" #6/8 · 1 oz	437.5	1165	0.018	catalog	Winchester 2026 catalog, item XU16 (BC estimated from shot size)
+16 Gauge	Remington Express XLR Extra Long Range · 2¾" #4 · 1⅛ oz	492.2	1295	0.022	catalog	Remington 2026 catalog, item SP164 (BC estimated from shot size)
+16 Gauge	Remington Express XLR Extra Long Range · 2¾" #6 · 1⅛ oz	492.2	1295	0.018	catalog	Remington 2026 catalog, item SP166 (BC estimated from shot size)
+16 Gauge	Remington Express XLR Extra Long Range · 2¾" #7.5 · 1⅛ oz	492.2	1295	0.016	catalog	Remington 2026 catalog, item SP1675 (BC estimated from shot size)
+16 Gauge	Remington Premier Royal Flush · 2¾" #5 · 1⅛ oz	492.2	1300	0.02	catalog	Remington 2026 catalog, item RF165 (BC estimated from shot size)
+16 Gauge	Remington Pheasant Loads · 2¾" #6 · 1⅛ oz	492.2	1295	0.018	catalog	Remington 2026 catalog, item PL166 (BC estimated from shot size)
+16 Gauge	Remington Game Loads · 2¾" #6 · 1 oz	437.5	1200	0.018	catalog	Remington 2026 catalog, item GL166 (BC estimated from shot size)
+16 Gauge	Remington Game Loads · 2¾" #7.5 · 1 oz	437.5	1200	0.016	catalog	Remington 2026 catalog, item GL167 (BC estimated from shot size)
+16 Gauge	Remington Game Loads · 2¾" #8 · 1 oz	437.5	1200	0.015	catalog	Remington 2026 catalog, item GL168 (BC estimated from shot size)
+16 Gauge	Fiocchi Golden Pheasant · 2¾" #5 · 1⅛ oz	492.2	1310	0.02	catalog	Fiocchi 2026 catalog, item 16GP (BC estimated from shot size)
+16 Gauge	Fiocchi Golden Pheasant · 2¾" #6 · 1⅛ oz	492.2	1310	0.018	catalog	Fiocchi 2026 catalog, item 16GP (BC estimated from shot size)
+16 Gauge	Fiocchi Field Dynamics High Velocity · 2¾" #5 · 1⅛ oz	492.2	1300	0.02	catalog	Fiocchi 2026 catalog, item 16HV (BC estimated from shot size)
+16 Gauge	Fiocchi Field Dynamics High Velocity · 2¾" #6 · 1⅛ oz	492.2	1300	0.018	catalog	Fiocchi 2026 catalog, item 16HV (BC estimated from shot size)
+16 Gauge	Fiocchi Field Dynamics High Velocity · 2¾" #7.5 · 1⅛ oz	492.2	1300	0.016	catalog	Fiocchi 2026 catalog, item 16HV (BC estimated from shot size)
+16 Gauge	Fiocchi Field Dynamics Dove & Quail · 2¾" #7.5 · 1 oz	437.5	1165	0.016	catalog	Fiocchi 2026 catalog, item 16GT (BC estimated from shot size)
+16 Gauge	Fiocchi Field Dynamics Dove & Quail · 2¾" #8 · 1 oz	437.5	1165	0.015	catalog	Fiocchi 2026 catalog, item 16GT (BC estimated from shot size)
+16 Gauge	Federal Black Cloud FS Steel · 2¾" #2/4 Steel · ⅞ oz	382.8	1450	0.018	catalog	Federal 2026 catalog, item PWBX167 (BC estimated from shot size)
+16 Gauge	Federal Speed-Shok Waterfowl · 2¾" #2/4 Steel · ¹⁵⁄₁₆ oz	410.2	1350	0.018	catalog	Federal 2026 catalog, item WF168 (BC estimated from shot size)
+16 Gauge	Federal Hevi-Bismuth · 2¾" #3/4/5 Bismuth · 1⅛ oz	492.2	1400	0.02	catalog	Federal 2026 catalog, item PHBX163 (BC estimated from shot size)
+16 Gauge	Federal Power-Shok Buckshot · 2¾" 1 Buck · 12 pellets	471.6	1225	0.05	catalog	Federal 2026 catalog, item F164 1B (BC estimated from shot size)
+16 Gauge	Federal Power-Shok Rifled HP Slug · 2¾" Slug · ⅘ oz	350	1600	0.085	catalog	Federal 2026 catalog, item F164 RS (BC estimated from shot size)
+16 Gauge	Remington Slugger Rifled Slug · 2¾" Slug · ⅘ oz	350	1600	0.085	catalog	Remington 2026 catalog, item SP16RS (BC estimated from shot size)

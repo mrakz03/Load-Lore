@@ -16,6 +16,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
+      - name: Set version from tag
+        shell: bash
+        run: |
+          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}"
+          sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/cartridge_calculator.py
+          grep -q "^APP_VERSION = \"$v\"" src/cartridge_calculator.py
       - run: pip install pyinstaller
       - run: pyinstaller --onefile --windowed --name CartridgeCalculator src/cartridge_calculator.py
       - run: |
@@ -47,6 +53,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
+      - name: Set version from tag
+        shell: bash
+        run: |
+          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}"
+          sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/cartridge_calculator.py
+          grep -q "^APP_VERSION = \"$v\"" src/cartridge_calculator.py
       - run: sudo apt-get update && sudo apt-get install -y python3-tk
       - run: pip install pyinstaller
       - run: pyinstaller --onefile --windowed --name CartridgeCalculator src/cartridge_calculator.py
@@ -60,10 +72,18 @@ jobs:
 
   android:
     runs-on: ubuntu-latest
+    env:
+      HAS_KEY: ${{ secrets.ANDROID_DEBUG_KEYSTORE != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
+      - name: Set version from tag
+        shell: bash
+        run: |
+          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}"
+          sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/cartridge_calculator.py
+          grep -q "^APP_VERSION = \"$v\"" src/cartridge_calculator.py
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - uses: actions/setup-java@v4
@@ -72,8 +92,35 @@ jobs:
       - run: npm install
       - run: npx cap add android
       - run: npx cap sync android
+      - name: Stamp version into the APK
+        shell: bash
+        run: |
+          v=$(sed -n 's/^APP_VERSION = "\(.*\)".*/\1/p' src/cartridge_calculator.py)
+          f=android/app/build.gradle
+          sed -i -E "s/versionCode [0-9]+/versionCode ${{ github.run_number }}/; s/versionName \"[^\"]*\"/versionName \"$v\"/" $f
+          grep -q "versionName \"$v\"" $f || echo "::warning::could not set the APK version in $f"
+      - name: Sign with the saved key (so updates install over the old app)
+        shell: bash
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_DEBUG_KEYSTORE }}
+        run: |
+          if [ -z "$KEYSTORE" ]; then
+            echo "::warning::No ANDROID_DEBUG_KEYSTORE secret, so this APK gets a new key and won't install over an older one."
+            exit 0
+          fi
+          for d in "${ANDROID_USER_HOME:-$HOME/.android}" "$HOME/.android"; do
+            mkdir -p "$d" && echo "$KEYSTORE" | base64 -d > "$d/debug.keystore"
+          done
       - run: ./gradlew assembleDebug
         working-directory: android
+      - name: Check the APK was signed with the saved key
+        if: ${{ env.HAS_KEY == 'true' }}
+        shell: bash
+        run: |
+          want=$(keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android | grep -m1 'SHA256:' | awk '{print $2}')
+          got=$(keytool -printcert -jarfile android/app/build/outputs/apk/debug/app-debug.apk | grep -m1 'SHA256:' | awk '{print $2}')
+          echo "keystore $want"; echo "apk      $got"
+          [ -n "$want" ] && [ "$want" = "$got" ]
       - run: cp android/app/build/outputs/apk/debug/app-debug.apk CartridgeCalculator.apk
       - uses: actions/upload-artifact@v4
         with: { name: android, path: CartridgeCalculator.apk }
