@@ -300,3 +300,33 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 20 Gauge	Hornady SST Shotgun Slug (FTX) · 2¾" Slug · 0.57 oz	250	1800	0.204	catalog	Hornady 2026 catalog, item 86232 (BC fitted to downrange velocities)
 20 Gauge	Hornady Superformance Shotgun Slug (MonoFlex) · 2¾" Slug · 0.57 oz	250	1800	0.204	catalog	Hornady 2026 catalog, item 86237 (BC fitted to downrange velocities)
 20 Gauge	Hornady Custom Lite Shotgun Slug (FTX) · 2¾" Slug · 0.57 oz	250	1600	0.213	catalog	Hornady 2026 catalog, item 86233 (BC fitted to downrange velocities)
+.204 Ruger	Remington Premier AccuTip-V	32	4225	0.210	catalog	Remington 2026 catalog, PRA204A (29218)
+.204 Ruger	Remington Premier AccuTip-V	40	3900	0.275	catalog	Remington 2026 catalog, PRA204B (29220)
+.22 Hornet	Remington Premier AccuTip-V	35	3100	0.109	catalog	Remington 2026 catalog, PRA22HNA (29154)
+.22 Hornet	Remington Pointed Soft Point	45	2690	0.130	catalog	Remington 2026 catalog, R22HN1 (28376)
+.220 Swift	Remington Pointed Soft Point	50	3780	0.175	catalog	Remington 2026 catalog
+6mm Remington	Remington Core-Lokt Pointed Soft Point	100	3100	0.356	catalog	Remington 2026 catalog, R6MM4 (29051)
+6mm Creedmoor	Remington Premier MatchKing OTM	107	3000	0.547	catalog	Remington 2026 catalog, RM6CRD (20001)
+6mm Creedmoor	Remington Core-Lokt Pointed Soft Point	100	3000	0.272	catalog	Remington 2026 catalog, R6CM01 (29049)
+7mm PRC	Remington Core-Lokt Tipped	175	2925	0.540	catalog	Remington 2026 catalog, RT7MMPRC (R20045)
+7mm PRC	Remington Speer Impact	175	2925	0.549	catalog	Remington 2026 catalog, RLR7MMPRC (R28829)
+7mm PRC	Remington Copper-tipped BT	160	2925	0.596	catalog	Remington 2026 catalog, RCT7MMPRC (R22342)
+.308 Winchester / 7.62x51mm NATO	Winchester Match BTHP (2755 fps)	168	2755	0.527	catalog	Winchester 2026 catalog, S308M2 (weight misprinted 652; 168 gr from 2850 ft-lb at 2755 fps)
+9mm Luger	Winchester USA 9mm NATO Full Metal Jacket	124	1200	0.170	partial	Winchester 2026 catalog, Q4318 (BC from USA FMJ 124 gr)
+.327 Federal Magnum	Federal Premium Hammerdown Revolver Carbine Bonded Hollow Point	127	1650	0.198	catalog	Federal 2026 catalog, LG327F1 (BC fitted to 100 yd velocity)
+.45 Colt	Federal Premium Hammerdown Revolver Carbine Bonded Hollow Point	250	1025	0.145	catalog	Federal 2026 catalog, LG45C1 (BC fitted to 100 yd velocity)
+.327 Federal Magnum	Federal Premium Personal Defense Hydra-Shok	85	1400	0.143	catalog	Federal 2026 catalog, PD327HS1 (BC fitted to 100 yd velocity)
+.327 Federal Magnum	Federal Premium Personal Defense HST	104	1525	0.160	partial	Federal 2026 catalog, P327HST1S (downrange figures misprinted; BC estimated)
+.40 S&W	Federal Premium Personal Defense Hydra-Shok Deep	165	1050	0.155	catalog	Federal 2026 catalog, P40HSD1 (muzzle misprinted 100; 1050 fps from 404 ft-lb)
+.460 S&W Magnum	Federal Premium Barnes Expander	275	1670	0.223	catalog	Federal 2026 catalog, P460XB1 (BC fitted to 100 yd velocity)
+.500 S&W Magnum	Federal Premium Barnes Expander	275	1660	0.142	catalog	Federal 2026 catalog, P500XB1 (BC fitted to 100 yd velocity)
+12 Gauge	Remington Nitro-Steel · 3½" #2 Steel · 1½ oz	656.2	1500	0.018	partial	Remington 2026 catalog p.11, 20839
+12 Gauge	Remington Nitro-Steel · 3½" BB Steel · 1½ oz	656.2	1500	0.021	partial	Remington 2026 catalog p.11, 20837
+16 Gauge	Remington Nitro-Steel · 2¾" #2 Steel · ¹⁵⁄₁₆ oz	410.2	1300	0.018	partial	Remington 2026 catalog p.11, 20941
+16 Gauge	Remington Nitro-Steel · 2¾" #4 Steel · ¹⁵⁄₁₆ oz	410.2	1300	0.015	partial	Remington 2026 catalog p.11, 20943
+20 Gauge	Remington Nitro-Steel · 3" #4 Steel · 1 oz	437.5	1400	0.015	partial	Remington 2026 catalog p.11, 20769
+20 Gauge	Winchester Last Call Double Shot · 3" 2.5+9 · 1 oz	437.5	1350	0.03	partial	Winchester 2026 catalog
+20 Gauge	Winchester Final Pass Steel Blend · 3" 2.5+4 · 1 oz	437.5	1300	0.03	partial	Winchester 2026 catalog
+12 Gauge	Winchester Defender Defense · 2¾" #2 · 1⅛ oz	492.2	1145	0.025	partial	Winchester 2026 catalog, S122PD25
+20 Gauge	Winchester Defender Defense · 2¾" #2 · ⅞ oz	382.8	1145	0.025	partial	Winchester 2026 catalog, S202PD25
+12 Gauge	Federal Premium Buckshot · 3½" 00 Buck · 18 pellets	942.2	1100	0.055	partial	Federal 2026 catalog, P135F 00
