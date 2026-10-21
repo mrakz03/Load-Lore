@@ -15,6 +15,7 @@ data/bullets.csv              common bullets (weight, diameter, approximate G1 B
 web/template.html             phone/web app (single page)
 web/build_web.py              embeds the CSV data into web/www/index.html
 scripts/build_linux.sh        build and install on Fedora/Linux
+scripts/install_linux.sh      installs a downloaded Linux release (shipped in the tar as install.sh)
 scripts/build_windows.bat     build the Windows .exe locally
 .github/workflows/release.yml builds Windows, Linux and Android in CI
 package.json, capacitor.config.json   Android wrapper (Capacitor)
@@ -32,6 +33,12 @@ Your own calibers (`my_calibers.csv`), handloads (`my_handloads.csv`) and settin
 git tag v1.0 && git push origin v1.0
 ```
 Download the Windows .zip, Linux .tar.gz and Android .apk from the repo's Releases page. Running the workflow by hand (Actions tab, Run workflow) builds them without releasing.
+
+To install the Linux release, unpack it and run the installer; it adds the app to your launcher. Run it again with a newer release to update (your own files are kept), or with `--uninstall` to remove it.
+```
+tar xzf CartridgeCalculator-Linux.tar.gz
+bash CartridgeCalculator/install.sh
+```
 
 ## Data notes
 - `loads_*.csv` columns: cartridge, load, bullet_gr, muzzle_fps, bc_g1, powder_gr, default_cost, default, source, group, barrel_in, purpose. `barrel_in` (test barrel length) and `purpose` (Hunting / Varmint / Target / Match / Defense / Subsonic; shotguns use their load type) are optional, as is `diameter_in`.
