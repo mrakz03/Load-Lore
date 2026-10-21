@@ -135,6 +135,12 @@ hr{border:0;border-top:1px solid var(--border);margin:10px 0}
 .modal .card{width:100%;max-width:640px;margin:auto}
 .three{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
 .help{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.4}
+.tblwrap .pc{display:none}
+@media (max-width:600px){   /* phone: cartridge stacks over the load name; other figures are one tap away */
+  .tblwrap .mn{display:none}
+  .tblwrap .pc{display:block;font-size:.75rem;color:var(--muted)}
+  .tblwrap .ld{white-space:normal;text-align:left}
+}
 .tblwrap{overflow:auto;margin-top:12px;border:1px solid var(--border);border-radius:8px;max-height:65vh}
 table{border-collapse:collapse;width:100%;font-size:.85rem}
 th,td{padding:8px 10px;text-align:center;white-space:nowrap;border-bottom:1px solid var(--border)}
@@ -408,9 +414,9 @@ function openCartridges(cat,pane){
     <div class="field hidden" id="loadf"><label class="l">${esc(cat.load_label)}</label><select id="load"></select>
       <button class="link m hidden" id="rm" style="font-weight:400;font-size:.8rem">Remove this custom load</button></div>
     <div class="nums">
-      <div><label class="l">COST PER ROUND ($)</label><input id="cost" inputmode="decimal"></div>
+      <div><label class="l">COST ($)</label><input id="cost" inputmode="decimal"></div>
       <div><label class="l">DISTANCE (YD)</label><input id="dist" inputmode="decimal"></div>
-      <div><label class="l">${esc(cat.gun_label)}</label><input id="gun" inputmode="decimal"></div>
+      <div><label class="l">${esc(cat.gun_label.replace(" WEIGHT",""))}</label><input id="gun" inputmode="decimal"></div>
     </div>
     <div class="links"><button class="link m" id="wt">▸&nbsp; Scoring weights</button>${cat.allow_custom?'<button class="link" id="add">+&nbsp; Add your own caliber</button>':''}</div>
     <div class="weights hidden" id="wbox">
@@ -834,11 +840,12 @@ function compareAll(V,readInputs,show){
   const rows=scored.map(([it,s,o])=>[rankOf.get(it),it.cartridge,it.label,Math.round(s.weight),Math.round(s.velocity),Math.round(s.energy),+s.recoil.toFixed(1),+s.taylor.toFixed(1),Math.round(s.hits),s.cost,+o.toFixed(1),gradeFor(o),it]);
   const allCols=["Rank",cat.cartridge_label.charAt(0)+cat.cartridge_label.slice(1).toLowerCase(),"Load",cat.payload_col,"Velocity (fps)","Energy (ft-lbs)","Recoil (ft-lbs)","Taylor KO","HITS","Cost ($)","Score (%)","Grade"];
   const cols=allCols.filter(c=>cat.terminal||(c!=="Taylor KO"&&c!=="HITS"));
+  const keepCols=new Set(["Rank","Load","Score (%)","Grade"]);
   const bestFirst=new Set(["Rank",allCols[3],"Velocity (fps)","Energy (ft-lbs)","Taylor KO","HITS","Score (%)"]);
     const [m,close]=modal(`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="margin:0">${esc(cat.title)}: all loads at ${g(inp.dist)} yards</h3><button class="btn" id="x">Close</button></div>
     <div class="filters"><input id="flt" type="search" placeholder="Filter, e.g. federal 168" autocomplete="off"><select id="fc"><option value="">All ${esc(cat.cartridge_label.toLowerCase())}s</option>${V.cartridges.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select></div>
     <div class="cnt" id="cnt"></div>
-    <div class="tblwrap"><table><thead><tr>${cols.map((c,i)=>`<th data-i="${i}">${esc(c)}</th>`).join("")}</tr></thead><tbody></tbody></table></div>
+    <div class="tblwrap"><table><thead><tr>${cols.map((c,i)=>`<th data-i="${i}"${c==="Load"?' class="ld"':keepCols.has(c)?"":' class="mn"'}>${esc(c)}</th>`).join("")}</tr></thead><tbody></tbody></table></div>
     <div class="note">Tap a heading to sort and a row to open it in the calculator. Scores use your current weights and each load's default price.</div>`);
   $("#x",m).onclick=close;
   const st={col:"Score (%)",desc:true},tb=$("tbody",m);let shown=[];
@@ -846,8 +853,8 @@ function compareAll(V,readInputs,show){
     const terms=$("#flt",m).value.toLowerCase().split(/\s+/).filter(Boolean),want=$("#fc",m).value;
     shown=rows.filter(r=>(!want||r[1]===want)&&terms.every(t=>(r[1]+" "+r[2]).toLowerCase().includes(t)));
     const i=allCols.indexOf(st.col);
-    shown.sort((a,b)=>{const x=a[i],y=b[i],c=x<y?-1:x>y?1:0;return st.col==="Rank"?c:(st.desc?-c:c);});
-    tb.innerHTML=shown.map((r,n)=>`<tr data-n="${n}"><td>${r[0]}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td>${cat.terminal?`<td>${r[7]}</td><td>${r[8]}</td>`:""}<td>${r[9].toFixed(2)}</td><td>${r[10]}</td><td><span class="badge" style="background:${GRADE_COLORS[r[11]][0]};color:${GRADE_COLORS[r[11]][1]}">${r[11]}</span></td></tr>`).join("");
+    shown.sort((a,b)=>{const x=a[i],y=b[i],c=x<y?-1:x>y?1:0;return c?(st.col==="Rank"?c:(st.desc?-c:c)):a[0]-b[0];});
+    tb.innerHTML=shown.map((r,n)=>`<tr data-n="${n}"><td>${r[0]}</td><td class="mn">${esc(r[1])}</td><td class="ld"><span class="pc">${esc(r[1])}</span>${esc(r[2])}</td><td class="mn">${r[3]}</td><td class="mn">${r[4]}</td><td class="mn">${r[5]}</td><td class="mn">${r[6]}</td>${cat.terminal?`<td class="mn">${r[7]}</td><td class="mn">${r[8]}</td>`:""}<td class="mn">${r[9].toFixed(2)}</td><td>${r[10]}</td><td><span class="badge" style="background:${GRADE_COLORS[r[11]][0]};color:${GRADE_COLORS[r[11]][1]}">${r[11]}</span></td></tr>`).join("");
     $("#cnt",m).textContent=`Showing ${shown.length} of ${rows.length} loads`;
   };
   const sortBy=col=>{st.desc=st.col===col?!st.desc:bestFirst.has(col);st.col=col;render();};
