@@ -715,6 +715,14 @@ function openLoads(cat,pane){
     box.innerHTML=[["All",items.length]].concat(names.map(n=>[n,cnt[n]])).map(([n,c])=>`<button data-p="${esc(n)}" class="${L.purpose===n?"on":""}" aria-pressed="${L.purpose===n}">${esc(n)}<small>${c}</small></button>`).join("");
     box.querySelectorAll("button").forEach(b=>b.onclick=()=>{L.purpose=b.dataset.p;L.open=null;buildChips();render();});
   }
+  // chip counts follow the brand/load filter (and the purpose chips the Show choice too)
+  const matchesFilter=x=>{const q=$$("#lf").value.trim().toLowerCase().split(/\s+/).filter(Boolean),t=(x.load+" "+(x.group||"")+" "+x.bullet_gr).toLowerCase();return q.every(w=>t.includes(w));};
+  function countChips(){
+    const items=(groups.get($$("#lc").value)||[]).filter(matchesFilter);
+    $$("#lsrc").querySelectorAll("button").forEach(b=>{const s=b.dataset.s;b.querySelector("small").textContent=items.filter(x=>s==="All"||!!x.handload===(s==="Handloads")).length;});
+    const shown=items.filter(x=>L.src==="All"||!!x.handload===(L.src==="Handloads"));
+    $$("#lp").querySelectorAll("button").forEach(b=>{const p=b.dataset.p;b.querySelector("small").textContent=p==="All"?shown.length:shown.filter(x=>purposeOf(x)===p).length;});
+  }
   function compute(){
     const dist=readNum("#ld",0,cat.max_distance), gun=readNum("#lg",.5,30);
     const weights={};let bad=false;
@@ -736,8 +744,8 @@ function openLoads(cat,pane){
     const out=compute(),box=$$("#lres");
     if(!out){box.innerHTML=`<div class="muted">Enter a distance, gun weight and weights (numbers) to see results.</div>`;$$("#lcnt").textContent="";return;}
     if(!(groups.get($$("#lc").value)||[]).length){box.innerHTML=`<div class="muted">No factory loads listed for ${esc($$("#lc").value)}. Use “+ Add handload” to grade your own.</div>`;$$("#lcnt").textContent="";return;}
-    const q=$$("#lf").value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>{const t=(r.it.load+" "+(r.it.group||"")+" "+r.it.bullet_gr).toLowerCase();return q.every(w=>t.includes(w));});
+    countChips();
+    let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>matchesFilter(r.it));
     const key=$$("#ls").value;
     const cmp={score:(a,b)=>(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
       cost:(a,b)=>a.st.cost-b.st.cost,velocity:(a,b)=>b.st.velocity-a.st.velocity,energy:(a,b)=>b.st.energy-a.st.energy,taylor:(a,b)=>b.st.taylor-a.st.taylor,hits:(a,b)=>b.st.hits-a.st.hits,recoil:(a,b)=>a.st.recoil-b.st.recoil}[key];

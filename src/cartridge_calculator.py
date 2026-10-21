@@ -2432,6 +2432,12 @@ class LoadsView:
         self.d_title = a.label(self.detail, "", 13, TEXT, True, anchor="w", justify="left",
                                wraplength=a.px(820))
         self.d_title.grid(row=0, column=0, sticky="w", padx=18, pady=(14, 2))
+        close = tk.Label(self.detail, text="✕", bg=SURFACE, fg=MUTED, font=a.f(13, True),
+                         padx=8, pady=2, cursor="hand2")
+        close.grid(row=0, column=1, sticky="ne", padx=(0, 10), pady=(10, 0))
+        close.bind("<Button-1>", lambda e: self._close_detail())
+        close.bind("<Enter>", lambda e: close.config(fg=TEXT, bg=SURFACE_2))
+        close.bind("<Leave>", lambda e: close.config(fg=MUTED, bg=SURFACE))
         self.d_info = a.label(self.detail, "", 10, MUTED, anchor="w", justify="left",
                               wraplength=a.px(820))
         self.d_info.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 10))
@@ -2672,6 +2678,19 @@ class LoadsView:
             self.chips[name] = chip
         self._style_chips()
 
+    def _count_chips(self):
+        """Chip counts follow the brand/load filter (and the purpose chips the Show choice too)."""
+        terms = self.filter_var.get().lower().split()
+        items = [x for x in self.groups.get(self.cart_var.get(), [])
+                 if all(t in x.label.lower() for t in terms)]
+        for name, chip in self.src_chips.items():
+            n = sum(name == "All" or x.handload == (name == "Handloads") for x in items)
+            chip.config(text=f"{name} ({n})")
+        shown = [x for x in items if self.source == "All" or x.handload == (self.source == "Handloads")]
+        for name, chip in self.chips.items():
+            n = len(shown) if name == "All" else sum(self._purpose_of(x) == name for x in shown)
+            chip.config(text=f"{name} ({n})")
+
     def _style_chips(self):
         for name, chip in self.chips.items():
             on = name == self.purpose
@@ -2747,6 +2766,7 @@ class LoadsView:
         self._render()
 
     def _render(self):
+        self._count_chips()
         terms = self.filter_var.get().lower().split()
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
                 and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))]
@@ -2849,6 +2869,13 @@ class LoadsView:
                                 f"#{row['rank']} of {row['peers']}"
                                 f"{' ' + row['group'] + ' loads' if row['group'] else ''}.  {src}")
         self.detail.grid()
+        self.fit_table_height()
+
+    def _close_detail(self):
+        """The panel's ✕: deselect the load and give the table its rows back."""
+        self.selected = None
+        self.detail.grid_remove()
+        self.tree.selection_remove(*self.tree.selection())
         self.fit_table_height()
 
     def fit_table_height(self):
