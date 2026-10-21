@@ -24,7 +24,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .22 LR,Winchester Super Suppressed RN Black Copper Plated (handgun muzzle velocity),45,1000,0.122,1.7,0.15,,partial,,,Subsonic
 .22 WMR,CCI Uppercut 22 WMR JHP,40,1050,0.121,2.1,0.28,yes,catalog,,,Hunting
 .22 WMR,Federal Personal Defense Punch JHP,45,1000,0.138,2.2,0.28,,catalog,,2,Hunting
-.22 WMR,"Hornady Critical Defense FTX 83200 1 7/8 V"" 1000 920 857 100 85 73 AG 40 S&W 180 gr. XTP",45,950,0.164,2,0.42,,catalog,,4,Target
+.22 WMR,Hornady Critical Defense FTX,45,1000,0.112,1.7,0.42,,catalog,,1.875,Defense
 5.7x28mm,Hornady BLACK V-MAX,40,1810,0.146,4.1,0.80,yes,catalog,,4.8,Target
 5.7x28mm,Hornady Critical Defense FTX,40,1810,0.137,4.1,2.08,,catalog,,4.8,Defense
 5.7x28mm,Fiocchi Jacketed Frangible,35,1750,0.128,4.0,1.44,,partial,,,Target

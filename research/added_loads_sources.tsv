@@ -240,3 +240,5 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 .50 AE	Federal Fusion SP	300	1550	0.158	catalog	Federal 2026 catalog, load F50AEFS1
 .500 S&W Magnum	Federal Fusion SP	325	1450	0.153	catalog	Federal 2026 catalog, load F500FS2
 .500 S&W Magnum	Federal Premium Swift A-Frame	325	1800	0.143	catalog	Federal 2026 catalog, load P500SA
+.22 Creedmoor	Hornady Superformance CX	65	3660	0.406	partial	Hornady 2026 catalog, item 83413 (muzzle velocity only; BC scaled from the 69 gr ELD-VT)
+.22 WMR	Hornady Critical Defense FTX	45	1000	0.112	catalog	Hornady 2026 catalog, item 83200 (corrected: name was garbled and velocity was 950)
