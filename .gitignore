@@ -1,0 +1,13 @@
+# User files (never commit)
+my_calibers.csv
+my_handloads.csv
+settings.json
+
+# Build output
+web/www/
+__pycache__/
+build/
+dist/
+*.spec
+node_modules/
+android/
