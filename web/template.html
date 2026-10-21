@@ -19,6 +19,7 @@ body{padding:max(16px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inse
 .shell{max-width:1240px;margin:0 auto}
 .brand{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
 .brand b{font-size:1.05rem;letter-spacing:.01em}
+.brand .ver{font-size:.72rem;color:var(--muted);margin-top:2px}
 .sizebox{display:none}
 .nav{display:flex;gap:4px}
 .nav>button{flex:1;background:none;border:0;color:var(--muted);font:inherit;font-weight:700;font-size:.74rem;padding:7px 4px 6px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:54px}
@@ -154,7 +155,7 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 <body>
 <div class="shell">
   <aside class="side">
-    <div class="brand"><b>Cartridge Calculator</b><div id="size1"></div></div>
+    <div class="brand"><div><b>Cartridge Calculator</b><div class="ver" id="ver"></div></div><div id="size1"></div></div>
     <nav class="nav" id="nav" aria-label="Main"></nav>
     <div class="sizebox" id="size2"></div>
   </aside>
@@ -166,6 +167,7 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 "use strict";
 const DATA = __DATA__;
 const APP_TITLE = "Cartridge Value Calculator";
+const VERSION_TEXT = DATA.version && DATA.version !== "dev" ? "Version " + DATA.version : "development build";
 const GRAINS_PER_OZ = 437.5;
 const GRADE_BANDS = [[72.5,"S"],[70.5,"A"],[66,"B"],[61,"C"],[55,"D"]];
 const METRICS = {velocity:["Velocity",true],energy:["Energy",true],recoil:["Recoil",false],cost:["Cost",false],taylor:["Taylor KO",true]};
@@ -847,7 +849,7 @@ function compareAll(V,readInputs,show){
   render();
 }
 
-$("#size1").innerHTML=sizeCtl();$("#size2").innerHTML=sizeCtl();wireSize(document.body);
+$("#ver").textContent=VERSION_TEXT;$("#size1").innerHTML=sizeCtl();$("#size2").innerHTML=sizeCtl();wireSize(document.body);
 navigate("home");
 </script>
 </body>

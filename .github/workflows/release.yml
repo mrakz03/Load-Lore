@@ -16,6 +16,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
+      - name: Set version from tag
+        shell: bash
+        run: |
+          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}"
+          sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/cartridge_calculator.py
+          grep -q "^APP_VERSION = \"$v\"" src/cartridge_calculator.py
       - run: pip install pyinstaller
       - run: pyinstaller --onefile --windowed --name CartridgeCalculator src/cartridge_calculator.py
       - run: |
@@ -47,6 +53,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
+      - name: Set version from tag
+        shell: bash
+        run: |
+          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}"
+          sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/cartridge_calculator.py
+          grep -q "^APP_VERSION = \"$v\"" src/cartridge_calculator.py
       - run: sudo apt-get update && sudo apt-get install -y python3-tk
       - run: pip install pyinstaller
       - run: pyinstaller --onefile --windowed --name CartridgeCalculator src/cartridge_calculator.py
@@ -64,6 +76,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
+      - name: Set version from tag
+        shell: bash
+        run: |
+          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}"
+          sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/cartridge_calculator.py
+          grep -q "^APP_VERSION = \"$v\"" src/cartridge_calculator.py
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - uses: actions/setup-java@v4
@@ -72,6 +90,13 @@ jobs:
       - run: npm install
       - run: npx cap add android
       - run: npx cap sync android
+      - name: Stamp version into the APK
+        shell: bash
+        run: |
+          v=$(sed -n 's/^APP_VERSION = "\(.*\)".*/\1/p' src/cartridge_calculator.py)
+          f=android/app/build.gradle
+          sed -i -E "s/versionCode [0-9]+/versionCode ${{ github.run_number }}/; s/versionName \"[^\"]*\"/versionName \"$v\"/" $f
+          grep -q "versionName \"$v\"" $f || echo "::warning::could not set the APK version in $f"
       - run: ./gradlew assembleDebug
         working-directory: android
       - run: cp android/app/build/outputs/apk/debug/app-debug.apk CartridgeCalculator.apk

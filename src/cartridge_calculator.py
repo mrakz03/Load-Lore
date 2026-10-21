@@ -46,6 +46,7 @@ except ImportError:  # lets the calculation code be imported/tested without a GU
 # Settings you may want to tweak
 # --------------------------------------------------------------------------- #
 APP_TITLE = "Cartridge Value Calculator"
+APP_VERSION = "dev"             # the release build sets this from the git tag (v1.5 -> "1.5")
 GRAINS_PER_OZ = 437.5
 CUSTOM_FILENAME = "my_calibers.csv"
 SETTINGS_FILENAME = "settings.json"
@@ -147,6 +148,10 @@ CATEGORIES = (
              allow_custom=False, sort_loads=False, terminal=False,
              loads_filename="loads_shotgun.csv"),
 )
+
+
+def version_text():
+    return "development build" if APP_VERSION == "dev" else f"Version {APP_VERSION}"
 
 
 def default_weights(cat):
@@ -1101,7 +1106,9 @@ class App:
         for w in self.nav.winfo_children():
             w.destroy()
         self.label(self.nav, "Cartridge\nCalculator", 15, TEXT, True, bg=SURFACE,
-                   anchor="w", justify="left").pack(anchor="w", padx=6, pady=(0, 18))
+                   anchor="w", justify="left").pack(anchor="w", padx=6)
+        self.label(self.nav, version_text(), 9, MUTED, bg=SURFACE, anchor="w").pack(
+            anchor="w", padx=6, pady=(2, 18))
         self._nav_button("Home", self.show_launcher, self.mode == "home")
         for key, text in (("cartridges", "Compare Cartridges"), ("loads", "Compare Loads")):
             on_picker = self.mode == key and self.cat is None
