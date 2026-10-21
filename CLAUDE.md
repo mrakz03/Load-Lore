@@ -48,6 +48,9 @@ git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.e
   Buffalo Bore, Sellier & Bellot and PPU loads from retailer listings. Every added row and its
   source is in research/added_loads_sources.tsv. Missing BCs were scaled from the nearest-weight
   published load of the same cartridge (source=partial); price is estimated by brand tier.
+- 10 and 16 Gauge (Oct 2026): 41 loads from the 2026 Federal, Winchester, Remington and Fiocchi
+  catalogs (rows in research/added_loads_sources.tsv). BC is set by shot size like the other gauges;
+  price is the same line's 12 ga price x1.25 (16 ga) or x1.6 (10 ga).
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
