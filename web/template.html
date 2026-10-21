@@ -168,8 +168,8 @@ const DATA = __DATA__;
 const APP_TITLE = "Cartridge Value Calculator";
 const GRAINS_PER_OZ = 437.5;
 const GRADE_BANDS = [[72.5,"S"],[70.5,"A"],[66,"B"],[61,"C"],[55,"D"]];
-const METRICS = {velocity:["Velocity",true],energy:["Energy",true],recoil:["Recoil",false],cost:["Cost",false],taylor:["Taylor KO",true],hits:["HITS",true]};
-const TERMINAL=["taylor","hits"];
+const METRICS = {velocity:["Velocity",true],energy:["Energy",true],recoil:["Recoil",false],cost:["Cost",false],taylor:["Taylor KO",true]};
+const TERMINAL=["taylor"];
 const keysOf=cat=>cat.terminal?MKEYS:MKEYS.filter(k=>!TERMINAL.includes(k));
 const DIAMETERS=DATA.diameters;
 const MKEYS = Object.keys(METRICS);
@@ -233,12 +233,10 @@ function bulletDiameter(it){
   return Math.min(.6,Math.max(.17,Math.sqrt(it.bullet_gr/7000/.25)));
 }
 const taylorKO=(gr,v,d)=>gr*v*d/7000;
-const hitsIndex=(gr,v,d)=>d<=0?0:(gr*gr/7000)*(v/(d*d))/100;
-const hitsClass=h=>h<500?"small game":h<=900?"medium game":h<=1500?"large game":"dangerous game";
 function computeStats(item,dist,gun,cost){
   const v=velocityAt(item.muzzle_fps,item.bc_g1,dist),d=bulletDiameter(item);
   return {weight:item.bullet_gr,velocity:v,energy:energy(item.bullet_gr,v),
-          taylor:taylorKO(item.bullet_gr,v,d),hits:hitsIndex(item.bullet_gr,v,d),
+          taylor:taylorKO(item.bullet_gr,v,d),
           recoil:recoil(item.bullet_gr,item.muzzle_fps,item.powder_gr,gun),
           cost:cost==null?item.default_cost:cost};
 }
@@ -408,7 +406,7 @@ function openCartridges(cat,pane){
     <div class="links"><button class="link m" id="wt">▸&nbsp; Scoring weights</button>${cat.allow_custom?'<button class="link" id="add">+&nbsp; Add your own caliber</button>':''}</div>
     <div class="weights hidden" id="wbox">
       <div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="w_${k}" inputmode="numeric"></div>`).join("")}</div>
-      <div class="wnote" id="wnote"></div><div class="help">Higher = matters more. 0 ignores that factor. ${cat.terminal?"Taylor KO and HITS are shown for every load but start at 0, so they only affect grades if you raise them.":""}</div>
+      <div class="wnote" id="wnote"></div><div class="help">Higher = matters more. 0 ignores that factor. ${cat.terminal?"Taylor KO is shown for every load but starts at 0, so it only affects grades if you raise it.":""}</div>
     </div>
     <div class="btns"><button class="btn p" id="calc">Calculate</button><button class="btn" id="cmp">Compare All</button><button class="btn" id="reset">Reset</button></div>
   </div>
@@ -465,12 +463,11 @@ function openCartridges(cat,pane){
       <div class="row"><span class="muted">Energy</span><span class="v">${stats.energy.toFixed(0)} ft-lbs</span>${badge("energy")}</div>
       <div class="row"><span class="muted">Recoil</span><span class="v">${stats.recoil.toFixed(1)} ft-lbs</span>${badge("recoil")}</div>
       <div class="row"><span class="muted">Cost</span><span class="v">$${stats.cost.toFixed(2)}</span>${badge("cost")}</div>
-      ${cat.terminal?`<div class="row"><span class="muted">Taylor KO</span><span class="v">${stats.taylor.toFixed(1)}</span>${badge("taylor")}</div>
-      <div class="row"><span class="muted">HITS</span><span class="v">${stats.hits.toFixed(0)} <small class="muted">(${hitsClass(stats.hits)})</small></span>${badge("hits")}</div>`:""}
+      ${cat.terminal?`<div class="row"><span class="muted">Taylor KO</span><span class="v">${stats.taylor.toFixed(1)}</span>${badge("taylor")}</div>`:""}
       <hr><div class="row"><span class="muted">Overall</span><span class="v" style="font-size:1.1rem">${og}  ·  ${overall.toFixed(1)}%</span></div>
       <div class="bar"><i style="width:${Math.max(0,Math.min(100,overall))}%;background:${GRADE_COLORS[og][0]}"></i></div>
       <div class="rank">Ranks #${rk[0]} of ${rk[1]} ${esc(it.cartridge)} loads  ·  #${rk[2]} of ${rk[3]} in ${esc(cat.title)}  <span class="muted">(others at their default price)</span></div>
-      <div class="note">${esc(src)} Recoil assumes a ${g(inp.gun)} lb gun.${cat.terminal?" Taylor KO and HITS start at weight 0 in the grade.":""}</div>`;
+      <div class="note">${esc(src)} Recoil assumes a ${g(inp.gun)} lb gun.${cat.terminal?" Taylor KO starts at weight 0 in the grade.":""}</div>`;
     res.classList.remove("hidden");res.scrollIntoView({behavior:"smooth",block:"nearest"});
   }
   function reset(){
@@ -638,7 +635,7 @@ function openLoads(cat,pane){
     <div class="chips" id="lp" role="group" aria-label="Purpose"></div>
     <div class="chips hidden" id="lsrc" role="group" aria-label="Source"></div>
     <div class="sortrow"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
-      <select id="ls"><option value="score">Sort: best value</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
+      <select id="ls"><option value="score">Sort: best value</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
     <div class="links"><button class="link m" id="lwt">▸&nbsp; Scoring weights</button>${cat.grain_style?'<button class="link" id="hadd">+&nbsp; Add handload</button>':""}</div>
     <div class="weights hidden" id="lwb"><div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="lw_${k}" inputmode="numeric"></div>`).join("")}</div>
       <div class="help">Higher = matters more. 0 ignores that factor.</div></div>
@@ -698,7 +695,7 @@ function openLoads(cat,pane){
     let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>{const t=(r.it.load+" "+(r.it.group||"")+" "+r.it.bullet_gr).toLowerCase();return q.every(w=>t.includes(w));});
     const key=$$("#ls").value;
     const cmp={score:(a,b)=>(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
-      cost:(a,b)=>a.st.cost-b.st.cost,velocity:(a,b)=>b.st.velocity-a.st.velocity,energy:(a,b)=>b.st.energy-a.st.energy,taylor:(a,b)=>b.st.taylor-a.st.taylor,hits:(a,b)=>b.st.hits-a.st.hits,recoil:(a,b)=>a.st.recoil-b.st.recoil}[key];
+      cost:(a,b)=>a.st.cost-b.st.cost,velocity:(a,b)=>b.st.velocity-a.st.velocity,energy:(a,b)=>b.st.energy-a.st.energy,taylor:(a,b)=>b.st.taylor-a.st.taylor,recoil:(a,b)=>a.st.recoil-b.st.recoil}[key];
     rows.sort(cmp);
     $$("#lcnt").textContent=`${rows.length} of ${out.rows.length} loads at ${g(out.dist)} yards`+(L.purpose!=="All"?` · ${L.purpose} only`:"")+(out.multi?" · ranked within each load type":"");
     box.innerHTML=rows.map((r,n)=>{
@@ -709,7 +706,7 @@ function openLoads(cat,pane){
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top"><span class="rk">#${r.rank}</span>
         <div class="nm">${esc(it.load)}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}</div>
         <div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div></div>
-        <div class="st"><span><b>${payload}</b></span><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lb</span><span>recoil <b>${r.st.recoil.toFixed(1)}</b></span>${cat.terminal?`<span>KO <b>${r.st.taylor.toFixed(1)}</b></span><span>HITS <b>${r.st.hits.toFixed(0)}</b></span>`:""}<span><b>$${r.st.cost.toFixed(2)}</b>${edited?" ✎":""}</span>${it.barrel_in?`<span><b>${g(it.barrel_in)}″</b> barrel</span>`:""}</div>
+        <div class="st"><span><b>${payload}</b></span><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lb</span><span>recoil <b>${r.st.recoil.toFixed(1)}</b></span>${cat.terminal?`<span>KO <b>${r.st.taylor.toFixed(1)}</b></span>`:""}<span><b>$${r.st.cost.toFixed(2)}</b>${edited?" ✎":""}</span>${it.barrel_in?`<span><b>${g(it.barrel_in)}″</b> barrel</span>`:""}</div>
         ${open?`<div class="det">
           ${cat.grain_style?`<div class="row"><span class="muted">Test barrel</span><span class="v">${it.barrel_in?g(it.barrel_in)+" in":"not listed"}</span><span style="width:32px"></span></div>`:""}
           ${purposeOf(it)?`<div class="row"><span class="muted">Purpose</span><span class="v">${esc(purposeOf(it))}</span><span style="width:32px"></span></div>`:""}
@@ -722,8 +719,7 @@ function openLoads(cat,pane){
           ${hasP?`<div class="row"><span class="muted">Cost breakdown</span><span class="v" style="font-size:.85rem;font-weight:600">bullet $${cp.b.toFixed(2)} · powder $${cp.p.toFixed(2)} · primer $${cp.pr.toFixed(2)} · brass $${cp.br.toFixed(2)}</span><span style="width:32px"></span></div>`:""}
           ${r0.notes?`<div class="row"><span class="muted">Notes</span><span class="v" style="font-weight:500">${esc(r0.notes)}</span><span style="width:32px"></span></div>`:""}`;})():""}
           <div class="row"><span class="muted">Price</span><span class="v">$${r.st.cost.toFixed(2)}</span>${fb("cost")}</div>
-          ${cat.terminal?`<div class="row"><span class="muted">Taylor KO</span><span class="v">${r.st.taylor.toFixed(1)}</span>${fb("taylor")}</div>
-          <div class="row"><span class="muted">HITS</span><span class="v">${r.st.hits.toFixed(0)} <small class="muted">(${hitsClass(r.st.hits)})</small></span>${fb("hits")}</div>`:""}
+          ${cat.terminal?`<div class="row"><span class="muted">Taylor KO</span><span class="v">${r.st.taylor.toFixed(1)}</span>${fb("taylor")}</div>`:""}
           <div class="muted" style="font-size:.8rem;margin-top:4px">Ranks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}. Grades compare loads of this cartridge only.</div>
           ${it.handload?`<div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn d hdel">Delete</button></div>
           <div class="note">${esc(SOURCE_NOTES.handload)}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
@@ -784,7 +780,7 @@ function addDialog(V,cat,regroup,done){
     <div id="more" class="hidden"><div class="three"><div><label class="l">LOAD NAME</label><input id="ln"></div>
       <div><label class="l">BC (G1)</label><input id="bc" inputmode="decimal"></div>
       <div><label class="l">POWDER (GR)</label><input id="pw" inputmode="decimal"></div></div>
-      ${cat.terminal?`<div class="three" style="grid-template-columns:1fr 2fr"><div><label class="l">DIAMETER (IN)</label><input id="dm" inputmode="decimal"></div><div class="help" style="align-self:end">Used for Taylor KO and HITS. Blank = guessed from the weight.</div></div>`:""}
+      ${cat.terminal?`<div class="three" style="grid-template-columns:1fr 2fr"><div><label class="l">DIAMETER (IN)</label><input id="dm" inputmode="decimal"></div><div class="help" style="align-self:end">Used for Taylor KO. Blank = guessed from the weight.</div></div>`:""}
       <div class="help">Leave blank to use typical values (BC ${g(cat.default_bc)}; powder estimated from the speed and weight). Filling these in makes the recoil and long-range numbers more accurate.</div></div>
     <div class="btns"><button class="btn p" id="save">Save caliber</button><button class="btn" id="cancel">Cancel</button></div>`);
   const q=s=>$(s,m);
@@ -825,10 +821,10 @@ function compareAll(V,readInputs,show){
   const cat=V.cat,refs=referenceLevels(V.loads,inp.dist,inp.gun);
   const scored=V.loads.map(it=>{const s=computeStats(it,inp.dist,inp.gun),[,o]=scoreStats(s,refs,inp.weights);return [it,s,o];});
   const rankOf=new Map([...scored].sort((a,b)=>b[2]-a[2]).map((t,n)=>[t[0],n+1]));
-  const rows=scored.map(([it,s,o])=>[rankOf.get(it),it.cartridge,it.label,Math.round(s.weight),Math.round(s.velocity),Math.round(s.energy),+s.recoil.toFixed(1),+s.taylor.toFixed(1),Math.round(s.hits),s.cost,+o.toFixed(1),gradeFor(o),it]);
-  const allCols=["Rank",cat.cartridge_label.charAt(0)+cat.cartridge_label.slice(1).toLowerCase(),"Load",cat.payload_col,"Velocity (fps)","Energy (ft-lbs)","Recoil (ft-lbs)","Taylor KO","HITS","Cost ($)","Score (%)","Grade"];
-  const cols=allCols.filter(c=>cat.terminal||(c!=="Taylor KO"&&c!=="HITS"));
-  const bestFirst=new Set(["Rank",allCols[3],"Velocity (fps)","Energy (ft-lbs)","Taylor KO","HITS","Score (%)"]);
+  const rows=scored.map(([it,s,o])=>[rankOf.get(it),it.cartridge,it.label,Math.round(s.weight),Math.round(s.velocity),Math.round(s.energy),+s.recoil.toFixed(1),+s.taylor.toFixed(1),s.cost,+o.toFixed(1),gradeFor(o),it]);
+  const allCols=["Rank",cat.cartridge_label.charAt(0)+cat.cartridge_label.slice(1).toLowerCase(),"Load",cat.payload_col,"Velocity (fps)","Energy (ft-lbs)","Recoil (ft-lbs)","Taylor KO","Cost ($)","Score (%)","Grade"];
+  const cols=allCols.filter(c=>cat.terminal||c!=="Taylor KO");
+  const bestFirst=new Set(["Rank",allCols[3],"Velocity (fps)","Energy (ft-lbs)","Taylor KO","Score (%)"]);
     const [m,close]=modal(`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="margin:0">${esc(cat.title)}: all loads at ${g(inp.dist)} yards</h3><button class="btn" id="x">Close</button></div>
     <div class="filters"><input id="flt" type="search" placeholder="Filter, e.g. federal 168" autocomplete="off"><select id="fc"><option value="">All ${esc(cat.cartridge_label.toLowerCase())}s</option>${V.cartridges.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select></div>
     <div class="cnt" id="cnt"></div>
@@ -841,12 +837,12 @@ function compareAll(V,readInputs,show){
     shown=rows.filter(r=>(!want||r[1]===want)&&terms.every(t=>(r[1]+" "+r[2]).toLowerCase().includes(t)));
     const i=allCols.indexOf(st.col);
     shown.sort((a,b)=>{const x=a[i],y=b[i],c=x<y?-1:x>y?1:0;return st.col==="Rank"?c:(st.desc?-c:c);});
-    tb.innerHTML=shown.map((r,n)=>`<tr data-n="${n}"><td>${r[0]}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td>${cat.terminal?`<td>${r[7]}</td><td>${r[8]}</td>`:""}<td>${r[9].toFixed(2)}</td><td>${r[10]}</td><td><span class="badge" style="background:${GRADE_COLORS[r[11]][0]};color:${GRADE_COLORS[r[11]][1]}">${r[11]}</span></td></tr>`).join("");
+    tb.innerHTML=shown.map((r,n)=>`<tr data-n="${n}"><td>${r[0]}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td>${cat.terminal?`<td>${r[7]}</td>`:""}<td>${r[8].toFixed(2)}</td><td>${r[9]}</td><td><span class="badge" style="background:${GRADE_COLORS[r[10]][0]};color:${GRADE_COLORS[r[10]][1]}">${r[10]}</span></td></tr>`).join("");
     $("#cnt",m).textContent=`Showing ${shown.length} of ${rows.length} loads`;
   };
   const sortBy=col=>{st.desc=st.col===col?!st.desc:bestFirst.has(col);st.col=col;render();};
   m.querySelectorAll("th").forEach(th=>th.onclick=()=>sortBy(cols[+th.dataset.i]));
-  tb.onclick=e=>{const tr=e.target.closest("tr");if(!tr)return;const r=shown[+tr.dataset.n];close();show(r[12]);};
+  tb.onclick=e=>{const tr=e.target.closest("tr");if(!tr)return;const r=shown[+tr.dataset.n];close();show(r[11]);};
   $("#flt",m).addEventListener("input",render);$("#fc",m).addEventListener("change",render);
   render();
 }

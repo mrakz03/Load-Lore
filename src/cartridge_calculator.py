@@ -89,13 +89,12 @@ METRICS = {
     "recoil": ("Recoil", False),
     "cost": ("Cost", False),
     "taylor": ("Taylor KO", True),      # Taylor Knock-Out factor (bullet weight x velocity x diameter)
-    "hits": ("HITS", True),             # Hornady Index of Terminal Standards
 }
-TERMINAL_KEYS = ("taylor", "hits")     # need a bullet diameter, so they don't apply to shotshells
-# Default scoring weights: velocity / energy / recoil / cost / Taylor KO / HITS.
-# 3 / 3 / 1 / 3 -> 30% / 30% / 10% / 30%.  Taylor KO and HITS are shown everywhere but only
-# change the grades once you give them a weight (open "Scoring weights").
-DEFAULT_WEIGHTS = (3, 3, 1, 3, 0, 0)
+TERMINAL_KEYS = ("taylor",)            # needs a bullet diameter, so it doesn't apply to shotshells
+# Default scoring weights: velocity / energy / recoil / cost / Taylor KO.
+# 3 / 3 / 1 / 3 -> 30% / 30% / 10% / 30%.  Taylor KO is shown everywhere but only
+# changes the grades once you give it a weight (open "Scoring weights").
+DEFAULT_WEIGHTS = (3, 3, 1, 3, 0)
 
 # Curve shape. A load that matches the category's typical (median) value for a
 # factor scores TYPICAL_SCORE on it. Higher-is-better factors climb toward 100
@@ -126,7 +125,7 @@ class Category:
     default_bc: float = 0.30     # used when a custom entry leaves BC blank
     sort_loads: bool = True      # sort the load dropdown by weight (False = keep file order)
     loads_filename: str = ""     # detailed manufacturer loads for the 'Compare Loads' tab
-    terminal: bool = True        # show Taylor KO / HITS (needs a bullet diameter; not for shot)
+    terminal: bool = True        # show Taylor KO (needs a bullet diameter; not for shot)
 
 
 CATEGORIES = (
@@ -139,7 +138,7 @@ CATEGORIES = (
              loads_filename="loads_handgun.csv"),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
              "ammo_rimfire_rifle.csv", 50, 500, 5.0, "RIFLE WEIGHT (LB)",
-             weights=(3, 3, 1, 6, 0, 0), default_bc=0.13,
+             weights=(3, 3, 1, 6, 0), default_bc=0.13,
              loads_filename="loads_rimfire_rifle.csv"),
     Category("Shotgun", "Birdshot, buckshot and slugs",
              "ammo_shotgun.csv", 25, 300, 7.5, "SHOTGUN WEIGHT (LB)",
@@ -288,7 +287,7 @@ def estimate_powder(bullet_gr, muzzle_fps):
 # --------------------------------------------------------------------------- #
 # Data loading
 # --------------------------------------------------------------------------- #
-# Bullet diameter (inches) per cartridge, for Taylor KO and HITS. Shotshells aren't listed.
+# Bullet diameter (inches) per cartridge, for Taylor KO. Shotshells aren't listed.
 DIAMETERS = {
     ".22-250 Remington": .224, ".223 Remington": .224, ".223 Remington / 5.56 NATO": .224,
     ".224 Valkyrie": .224, ".243 Winchester": .243, ".25-35 Winchester": .257, "6mm ARC": .243,
@@ -379,24 +378,6 @@ def bullet_diameter(cartridge, bullet_gr):
 def taylor_ko(bullet_gr, velocity_fps, diameter_in):
     """Taylor Knock-Out factor: bullet weight (gr) x velocity (fps) x diameter (in) / 7000."""
     return bullet_gr * velocity_fps * diameter_in / 7000.0
-
-
-def hits_index(bullet_gr, velocity_fps, diameter_in):
-    """Hornady Index of Terminal Standards: (W^2 / 7000) x (V / D^2) / 100."""
-    if diameter_in <= 0:
-        return 0.0
-    return (bullet_gr ** 2 / 7000.0) * (velocity_fps / diameter_in ** 2) / 100.0
-
-
-def hits_class(h):
-    """What size of animal a HITS number is meant for (Hornady's own bands)."""
-    if h < 500:
-        return "small game"
-    if h <= 900:
-        return "medium game"
-    if h <= 1500:
-        return "large game"
-    return "dangerous game"
 
 
 @dataclass
@@ -657,7 +638,6 @@ def compute_stats(item, distance_yd, gun_lb, cost=None):
         "recoil": recoil_ftlbs(item.bullet_gr, item.muzzle_fps, item.powder_gr, gun_lb),
         "cost": item.default_cost if cost is None else cost,
         "taylor": taylor_ko(item.bullet_gr, v, d),
-        "hits": hits_index(item.bullet_gr, v, d),
     }
 
 
@@ -1366,7 +1346,7 @@ class CalculatorView:
         self.weight_note = a.label(self.weights_frame, "", 9, TEXT, True)
         self.weight_note.grid(row=1, column=0, columnspan=12, sticky="w", pady=(8, 0))
         a.label(self.weights_frame, "Higher = matters more. 0 ignores that factor."
-                + ("  Taylor KO and HITS start at 0 (shown, but not graded)." if cat.terminal else ""),
+                + ("  Taylor KO starts at 0 (shown, but not graded)." if cat.terminal else ""),
                 9, MUTED).grid(row=2, column=0, columnspan=12, sticky="w", pady=(2, 0))
         self.weights_frame.grid(row=5, column=0, sticky="w", pady=(8, 0), **pad)
         self.weights_frame.grid_remove()
@@ -1390,7 +1370,7 @@ class CalculatorView:
         rows = [("weight", cat.payload_row), ("velocity", "Velocity"), ("energy", "Energy"),
                 ("recoil", "Recoil"), ("cost", "Cost")]
         if cat.terminal:
-            rows += [("taylor", "Taylor KO"), ("hits", "HITS")]
+            rows += [("taylor", "Taylor KO")]
         for i, (key, text) in enumerate(rows, start=2):
             a.label(self.result, text, 11, MUTED).grid(row=i, column=0, sticky="w",
                                                        padx=(18, 8), pady=3)
@@ -1534,8 +1514,6 @@ class CalculatorView:
         self.res_values["cost"].config(text=f"${stats['cost']:.2f}")
         if self.cat.terminal:
             self.res_values["taylor"].config(text=f"{stats['taylor']:.1f}")
-            self.res_values["hits"].config(
-                text=f"{stats['hits']:.0f}  ({hits_class(stats['hits'])})")
         for key, badge in self.res_badges.items():
             bg, fg = GRADE_COLORS[grades[key]]
             badge.config(text=grades[key], bg=bg, fg=fg)
@@ -1547,9 +1525,7 @@ class CalculatorView:
                  f"{self.cat.title}")
         src = SOURCE_NOTES.get(item.source, DEFAULT_SOURCE_NOTE)
         self.res_note.config(
-            text=f"{src} Recoil assumes a {gun:g} lb gun."
-                 + (" HITS: under 500 small game, to 900 medium, to 1500 large, above that dangerous "
-                    "game." if self.cat.terminal else ""))
+            text=f"{src} Recoil assumes a {gun:g} lb gun.")
         self.result.grid()
         self._last_overall = (overall, overall_grade)
         self.app.fit_window(self.app.CALC_MIN_WIDTH, keep_position=True)
@@ -1765,9 +1741,7 @@ class CalculatorView:
                  lambda r: r["stats"]["recoil"], False)]
         if cat.terminal:
             spec += [("Taylor KO", 84, lambda r: f"{r['stats']['taylor']:.1f}",
-                      lambda r: r["stats"]["taylor"], True),
-                     ("HITS", 70, lambda r: f"{r['stats']['hits']:.0f}",
-                      lambda r: r["stats"]["hits"], True)]
+                      lambda r: r["stats"]["taylor"], True)]
         spec += [("Cost ($)", 70, lambda r: f"{r['stats']['cost']:.2f}",
                   lambda r: r["stats"]["cost"], False),
                  ("Score (%)", 80, lambda r: f"{r['score']:.1f}", lambda r: r["score"], True),
@@ -2206,7 +2180,7 @@ class LoadsView:
             self.cols += ["Barrel", "Use"]
         self.cols += ["Velocity", "Energy", "Recoil"]
         if cat.terminal:
-            self.cols += ["Taylor", "HITS"]
+            self.cols += ["Taylor"]
         self.cols += ["Price", "Score", "Grade"]
         frame = tk.Frame(tbl, bg=BG)
         frame.grid(row=1, column=0, sticky="nsew")
@@ -2216,7 +2190,7 @@ class LoadsView:
         scroll = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scroll.set)
         widths = {"#": 38, "Load": 250, cat.payload_col: 66, "Barrel": 58, "Use": 72, "Velocity": 70,
-                  "Energy": 62, "Recoil": 60, "Taylor": 58, "HITS": 54, "Price": 62, "Score": 54,
+                  "Energy": 62, "Recoil": 60, "Taylor": 58, "Price": 62, "Score": 54,
                   "Grade": 56}
         for col in self.cols:
             # the Load column absorbs spare width; everything else stays compact so
@@ -2533,7 +2507,7 @@ class LoadsView:
             self.sort["desc"] = not self.sort["desc"]
         else:
             self.sort = {"col": col, "desc": col in (self.cat.payload_col, "Velocity", "Energy",
-                                                    "Taylor", "HITS", "Score")}
+                                                    "Taylor", "Score")}
         if col == "#":
             self.sort["desc"] = False
         self._render()
@@ -2549,7 +2523,7 @@ class LoadsView:
                 "Velocity": lambda r: r["stats"]["velocity"],
                 "Energy": lambda r: r["stats"]["energy"],
                 "Recoil": lambda r: r["stats"]["recoil"],
-                "Taylor": lambda r: r["stats"]["taylor"], "HITS": lambda r: r["stats"]["hits"],
+                "Taylor": lambda r: r["stats"]["taylor"],
                 "Price": lambda r: r["stats"]["cost"], "Score": lambda r: r["overall"],
                 "Grade": lambda r: r["overall"]}
         data.sort(key=keys[self.sort["col"]], reverse=self.sort["desc"])
@@ -2566,7 +2540,7 @@ class LoadsView:
                 vals += [f"{st['weight']:g}"]
             vals += [f"{st['velocity']:.0f}", f"{st['energy']:.0f}", f"{st['recoil']:.1f}"]
             if self.cat.terminal:
-                vals += [f"{st['taylor']:.1f}", f"{st['hits']:.0f}"]
+                vals += [f"{st['taylor']:.1f}"]
             vals += [f"{st['cost']:.2f}" + (" ✎" if r["custom_price"] else ""),
                      f"{r['overall']:.0f}", r["grade"]]
             iid = self.tree.insert("", "end", values=vals, tags=("hand",) if it.handload else ())
@@ -2608,8 +2582,7 @@ class LoadsView:
         self.d_info.config(text="  ·  ".join(info))
         vals = {"velocity": f"{st['velocity']:.0f} fps", "energy": f"{st['energy']:.0f} ft-lbs",
                 "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": f"${st['cost']:.2f}",
-                "taylor": f"{st['taylor']:.1f}",
-                "hits": f"{st['hits']:.0f} ({hits_class(st['hits'])})"}
+                "taylor": f"{st['taylor']:.1f}"}
         for key, (val, badge) in self.d_badges.items():
             grade = grade_relative(row["scores"][key])
             bg, fg = GRADE_COLORS[grade]
