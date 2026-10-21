@@ -6,9 +6,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .204 Ruger,Fiocchi Field Dynamics V-MAX,32,4125,0.214,20.2,1.55,,catalog,,,Varmint
 .204 Ruger,Winchester Varmint-X Polymer Tip Rapid Expansion,32,4000,0.210,19.0,1.55,,catalog,,24,Varmint
 .204 Ruger,Fiocchi Field Dynamics V-MAX,40,3700,0.280,20.3,1.55,,catalog,,,Varmint
-5.45x39mm,FMJ (steel case),53,2950,0.264,19.4,0.31,,typical,,16,Target
 5.45x39mm,Hornady BLACK V-MAX,60,2810,0.290,19.9,0.45,yes,catalog,,16,Varmint
-5.45x39mm,Soft Point,60,2800,0.298,19.8,0.45,,typical,,16,Hunting
 .22 ARC,Hornady ELD-VT,62,3300,0.403,28.4,1.75,,catalog,,24,Hunting
 .22 ARC,Hornady Superformance CX,70,3125,0.399,28.8,3.02,,catalog,,24,Hunting
 .22 ARC,Hornady BLACK ELD Match,75,3075,0.476,29.8,2.10,yes,catalog,,24,Match
@@ -238,8 +236,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .25-06 Remington,Federal Fusion,120,2980,0.476,39.4,2.68,,catalog,,24,Hunting
 .25-06 Remington,Remington Core-Lokt Pointed Soft Point,120,2990,0.362,39.7,2.01,,catalog,,24,Hunting
 .25-06 Remington,Winchester Super-X Positive Exp. Point,120,2990,0.344,39.7,2.01,,catalog,,24,Hunting
-.25-35 Winchester,Soft Point RN,117,2230,0.253,27,2.00,yes,partial,,,Hunting
-.25-35 Winchester,LEVERevolution FTX,110,2425,0.404,27,2.40,,partial,,,Hunting
+.25-35 Winchester,Winchester Super-X Power-Point,117,2230,0.253,27,2.00,yes,catalog,,,Hunting
+.25-35 Winchester,Hornady LEVERevolution FTX,110,2425,0.404,27,2.40,,partial,,,Hunting
 .25-35 Winchester,Hornady LEVERevolution FTX,110,2425,0.346,28.5,2.76,,catalog,,24,Hunting
 .25-35 Winchester,Winchester Power-Point,117,2230,0.213,25.6,2.40,,catalog,,24,Hunting
 .250 Savage,Hornady Custom InterLock SP,100,2800,0.356,33.0,2.50,yes,catalog,,24,Hunting
@@ -399,9 +397,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .270 WSM,Federal Fusion,150,3060,0.508,52.0,4.20,,catalog,,24,Hunting
 .270 WSM,Winchester Ballistic Silvertip,150,3120,0.496,54.1,5.67,,catalog,,24,Hunting
 .270 WSM,Winchester Power-Point,150,3150,0.344,55.1,3.15,,catalog,,24,Hunting
-.277 Fury,Elite Ball FMJ,135,3000,0.475,62,3.00,,published,,,Target
-.277 Fury,AccuBond Hybrid,150,3120,0.500,63,4.00,yes,published,,,Hunting
-.277 Fury,Hybrid Match HPBT,155,3000,0.549,64,4.00,,published,,,Match
+.277 Fury,SIG Sauer Elite Ball FMJ,135,3000,0.475,62,3.00,,published,,,Target
+.277 Fury,SIG Sauer AccuBond Hybrid,150,3120,0.500,63,4.00,yes,published,,,Hunting
+.277 Fury,SIG Sauer Hybrid Match HPBT,155,3000,0.549,64,4.00,,published,,,Match
 6.8 Western,Winchester Copper Impact Copper Extreme Point,162,2875,0.564,59,4.65,,catalog,,24,Hunting
 6.8 Western,Winchester Expedition Big Game Long Range Accubond LR,165,2970,0.620,64.1,4.65,yes,catalog,,24,Hunting
 6.8 Western,Winchester Ballistic Silvertip,170,2920,0.550,63.8,3.56,,catalog,,24,Hunting
@@ -865,13 +863,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .303 British,Federal Power-Shok SP,180,2460,0.334,40.3,1.20,,catalog,,24,Hunting
 .303 British,Remington Core-Lokt Soft Point,180,2460,0.247,40.3,1.20,,catalog,,24,Hunting
 .303 British,Winchester Power-Point,180,2460,0.369,40.3,1.20,,catalog,,24,Hunting
-7.62x54mmR,FMJ (steel case),148,2600,0.372,42.1,0.48,,typical,,24,Target
-7.62x54mmR,FMJ boat-tail,174,2500,0.437,45.8,0.48,yes,typical,,24,Target
-7.62x54mmR,Soft Point,180,2600,0.452,51.2,0.70,,typical,,24,Hunting
-7.62x54mmR,Hunting SP,200,2400,0.502,48.5,0.70,,typical,,24,Hunting
 7.62x54mmR,Winchester USA Full Metal Jacket,180,2580,0.486,44.4,0.44,,catalog,,24,Target
 7.62x54mmR,Winchester USA Soft Point,180,2625,0.267,45.9,0.44,,catalog,,24,Hunting
-.32-40 Winchester,Soft Point,165,1440,0.203,14,3.50,yes,partial,,,Hunting
 8x57mm Mauser,Hornady BTHP,196,2500,0.535,51.6,2.64,yes,catalog,,24,Match
 .338 ARC,Hornady BLACK MonoFlex,170,2075,0.314,30.8,3.45,,catalog,,16,Hunting
 .338 ARC,Hornady BLACK HP Match,175,2075,0.392,31.7,2.76,,catalog,,16,Match
@@ -894,7 +887,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .338 Winchester Magnum,Winchester Power-Point,200,2960,0.308,64.9,3.28,,catalog,,24,Hunting
 .338 Winchester Magnum,Remington Core-Lokt Pointed Soft Point,225,2780,0.435,64.4,3.28,,catalog,,24,Hunting
 .338 Winchester Magnum,Remington Core-Lokt Pointed Soft Point,250,2660,0.431,65.5,3.28,,catalog,,24,Hunting
-.348 Winchester,Silvertip,200,2500,0.236,52,3.20,yes,approx,,,Hunting
 .348 Winchester,Hornady LEVERevolution FTX,200,2560,0.326,54.5,4.83,,catalog,,24,Hunting
 .348 Winchester,Winchester Power-Point,200,2520,0.246,52.8,4.20,,catalog,,24,Hunting
 .350 Legend,Winchester USA Full Metal Jacket,145,2350,0.183,35.3,1.29,,catalog,,20,Target
@@ -947,16 +939,15 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .375 Ruger,Hornady Dangerous Game InterLock SP-RP,270,2840,0.386,91.7,4.60,yes,catalog,,24,Hunting
 .375 Ruger,Hornady Dangerous Game DGS,300,2660,0.279,89.3,4.60,,catalog,,24,Hunting
 .375 Ruger,Hornady Dangerous Game DGX Bonded,300,2660,0.279,89.3,6.90,,catalog,,24,Hunting
-.38-55 Winchester,Soft Point,255,1320,0.256,16,3.20,yes,published,,,Hunting
+.38-55 Winchester,Winchester Super-X Power-Point,255,1320,0.354,16,3.20,yes,catalog,,,Hunting
 .416 Remington Magnum,Hornady Dangerous Game DGS,400,2400,0.324,97.0,7.50,,catalog,,24,Hunting
 .416 Remington Magnum,Hornady Dangerous Game DGX Bonded,400,2400,0.324,97.0,11.25,yes,catalog,,24,Hunting
 .416 Remington Magnum,Federal Premium Safari Swift A-Frame,400,2400,0.367,85.3,12.66,,catalog,,24,Hunting
 .416 Remington Magnum,Federal Premium Safari Trophy Bonded Bear Claw,400,2400,0.373,85.3,12.66,,catalog,,24,Hunting
 .416 Remington Magnum,Federal Premium Safari Trophy Bonded Sledgehammer Solid,400,2400,0.273,85.3,12.66,,catalog,,24,Hunting
-.44 Magnum,JSP,240,1750,0.186,22,1.30,yes,approx,,,Hunting
-.44 Magnum,LEVERevolution FTX,225,1850,0.279,22,2.00,,approx,,,Hunting
+.44 Magnum,Hornady LEVERevolution FTX (rifle barrel),225,1850,0.279,22,2.00,,approx,,,Hunting
 .44 Magnum,Federal Premium Hammerdown Revolver Carbine Bonded Soft Point,270,1715,0.196,23.2,2.85,,catalog,,20,Hunting
-.44 Magnum,Winchester Big Bore Jacketed Soft Point,240,1765,0.167,21.9,1.90,,catalog,,20,Hunting
+.44 Magnum,Winchester Big Bore Jacketed Soft Point,240,1765,0.167,21.9,1.90,yes,catalog,,20,Hunting
 .444 Marlin,Remington Soft Point,240,2350,0.146,45,2.80,,catalog,,,Hunting
 .444 Marlin,Hornady LEVERevolution FTX,265,2325,0.229,48.6,3.22,yes,catalog,,24,Hunting
 .444 Marlin,Hornady Superformance InterLock FP,265,2400,0.192,51.8,3.22,,catalog,,24,Hunting

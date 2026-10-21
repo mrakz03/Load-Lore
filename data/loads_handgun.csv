@@ -37,8 +37,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .25 ACP,PMC Bronze Full Metal Jacket,50,750,0.086,1,0.44,,catalog,,,Target
 .25 ACP,Remington UMC Full Metal Jacket,50,760,0.088,1,0.44,,catalog,,2,Target
 .25 ACP,Winchester USA Full Metal Jacket,50,760,0.092,1,0.44,,catalog,,2,Target
-7.62x25mm Tokarev,FMJ,85,1500,0.121,6.0,0.27,yes,typical,,5,Target
-7.62x25mm Tokarev,FMJ,87,1400,0.124,5.4,0.27,,typical,,5,Target
 7.62x25mm Tokarev,Fiocchi Heritage FMJ,85,1525,0.121,7.3,0.20,,partial,,,Target
 7.62x25mm Tokarev,Winchester USA Full Metal Jacket,85,1645,0.121,8.5,0.20,,partial,,,Target
 .32 ACP,Fiocchi Defense Dynamics SJHP,60,1100,0.084,2.2,1.82,,partial,,,Defense
@@ -60,8 +58,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .32 H&R Magnum,Remington HTP Jacketed Hollow Point,85,1120,0.100,3.9,2.47,,catalog,,5,Hunting
 .32 H&R Magnum,Federal Champion LSW,95,980,0.103,3.4,0.95,,catalog,,4,Target
 .32 H&R Magnum,Remington Performance Wheelgun Lead Semi-Wadcutter,95,1020,0.140,3.6,0.95,,catalog,,5,Match
-.32 S&W Long,LRN,98,780,0.137,1.9,0.44,yes,typical,,4,Target
-.32 S&W Long,Wadcutter,98,700,0.137,1.5,0.65,,typical,,4,Match
 .32 S&W Long,Remington Performance Wheelgun Lead Round Nose,98,705,0.119,1.8,0.41,,catalog,,4,Target
 .327 Federal Magnum,Hornady Critical Defense FTX,80,1475,0.138,5.5,3.12,yes,catalog,,5,Defense
 .327 Federal Magnum,Federal American Eagle JSP,85,1400,0.143,6.2,2.34,,catalog,,4,Target
@@ -79,8 +75,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 SIG,Winchester Defender Bonded JHP,125,1350,0.110,8.4,2.81,,partial,,,Defense
 .357 SIG,Winchester USA Full Metal Jacket-Flat Nose,125,1370,0.110,8.7,1.56,,partial,,,Target
 .357 SIG,Winchester USA Jacketed Hollow Point,125,1370,0.110,8.7,1.56,,partial,,,Defense
-.38 Super,JHP +P,125,1250,0.135,6.2,1.82,,typical,,5,Defense
-.38 Super,FMJ,130,1200,0.140,5.9,0.48,yes,typical,,5,Target
 .38 Super,Federal American Eagle JHP,115,1130,0.123,5.4,0.86,,catalog,,5,Defense
 .38 Super,Winchester Silvertip Plated JHP,125,1240,0.152,7.1,1.55,,partial,,,Defense
 .38 Super,Remington UMC Full Metal Jacket +P,130,1215,0.158,7.1,0.86,,catalog,,4,Target

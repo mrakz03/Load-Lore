@@ -7,6 +7,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 ## Rules
 - Desktop and web scoring must stay in parity (same formulas, same data).
 - Data lives in data/*.csv. After editing any CSV or the template, rebuild the web version.
+- Compare Cartridges uses data/ammo_*.csv: generic loads, no brand names. Compare Loads uses
+  data/loads_*.csv: every load name starts with its brand (Federal, Hornady, SIG Sauer...).
+  Generic rows never go in loads_*.csv, branded rows never in ammo_*.csv.
 - Compare Cartridges grades on an absolute curve; Compare Loads grades relative to the
   same cartridge and purpose (median/MAD, centre 70).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
@@ -48,5 +51,7 @@ git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.e
 ## Known to-dos
 - Desktop layout fixed for HiDPI and checked under Xvfb; confirm on the real Fedora and
   Windows machines.
-- Typical-figure cartridges (7.62x54mmR, 5.45x39mm, 7.62x25mm Tokarev, .38 Super, .32 S&W Long)
-  now have catalog loads beside them (not 5.45x39mm); compare, then drop or correct the typical rows.
+- The generic "typical" rows (7.62x54mmR, 5.45x39mm, 7.62x25mm Tokarev, .38 Super, .32 S&W Long)
+  were taken out of Compare Loads (Oct 2026); they remain in Compare Cartridges and could be
+  checked against real steel-case import data (Wolf, Tula, PPU) some day.
+- .32-40 Winchester has no current branded load, so it only appears in Compare Cartridges.
