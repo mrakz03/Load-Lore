@@ -35,10 +35,17 @@ git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.e
 ## Data notes
 - No loads were ever deleted (checked against the user's older load files, Oct 2026). The
   cartridges added with the reorganize commit (e84117b) came almost entirely from Hornady's
-  catalogue, so many small cartridges list only Hornady loads. Other brands could be added.
+  catalogue.
+- Oct 2026: 241 loads added for those cartridges from the 2026 Federal, Winchester, Remington,
+  Fiocchi, PMC and CCI catalogs (user-supplied PDFs, not in the repo), plus a few Barnes, Nosler,
+  Buffalo Bore, Sellier & Bellot and PPU loads from retailer listings. Every added row and its
+  source is in research/added_loads_sources.tsv. Missing BCs were scaled from the nearest-weight
+  published load of the same cartridge (source=partial); price is estimated by brand tier.
+- Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
+  7mm STW. 8x57mm Mauser and .480 Ruger need PPU / S&B / Buffalo Bore data.
 
 ## Known to-dos
 - Desktop layout fixed for HiDPI and checked under Xvfb; confirm on the real Fedora and
   Windows machines.
 - Typical-figure cartridges (7.62x54mmR, 5.45x39mm, 7.62x25mm Tokarev, .38 Super, .32 S&W Long)
-  need verification.
+  now have catalog loads beside them (not 5.45x39mm); compare, then drop or correct the typical rows.
