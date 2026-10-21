@@ -1,0 +1,63 @@
+# cartridge	load	bullet_gr	muzzle_fps	bc_g1(blank=estimate)	purpose	barrel_in	tier(budget/std/premium)	source_url
+.45-70 Government	Remington Core-Lokt Soft Point (reduced pressure)	405	1330		Hunting	24	budget	https://remington.com/rifle/core-lokt/29-29473.html
+.45-70 Government	Remington Core-Lokt Soft Point (full pressure)	405	1600	0.281	Hunting	24	budget	https://remington.com/rifle/core-lokt/29-21459.html
+.45-70 Government	Winchester Super-X Jacketed Hollow Point	300	1880	0.283	Hunting	24	budget	https://www.kygunco.com/product/winchester-ammo-x4570h-45-70-govt-300gr-jhp-20rd
+.45-70 Government	Federal Power-Shok Soft Point	300	1850	0.289	Hunting	24	budget	https://www.midwestgunworks.com/page/mgwi/prod/4570as
+.45-70 Government	Federal HammerDown Bonded Soft Point	300	1850	0.290	Hunting	24	std	https://luckygunner.com/45-70-government-300-grain-bonded-sp-federal-hammerdown-20-rounds
+.45-70 Government	Barnes VOR-TX TSX FN	300	1925		Hunting	24	premium	https://www.targetsportsusa.com/barnes-vortx-45-70-govt-ammo-300-grain-tsx-fn-bb4570g3-p-114303.aspx
+.45-70 Government	Barnes Pioneer	400	1715	0.246	Hunting	24	premium	https://www.tractorsupply.com/tsc/product/barnes-bullets-barnes-pioneer-45-70-government-400-grain-handgun-ammunition-20-rounds
+.45-70 Government	Sellier & Bellot Semi-Jacketed Soft Point	405	1509		Hunting		budget	https://gunmagwarehouse.com/sellier-bellot-45-70-govt-ammo-405gr-soft-point-20-rounds.html
+.45-70 Government	Buffalo Bore Hard Cast FN (+P, modern rifles only)	430	1920		Hunting	22	premium	https://luckygunner.com/45-70-government-magnum-430-grain-hard-cast-buffalo-bore-20-rounds
+.45-70 Government	Buffalo Bore JHP (+P, modern rifles only)	300	2355		Hunting	22	premium	https://www.kygunco.com/product/buffalo-bore-45-70-govt-300gr-jhp-2350fps-me-3678-ft-lbs-20rd
+.45-70 Government	Buffalo Bore FMJ FN (+P, modern rifles only)	500	1625		Hunting		premium	https://palmettostatearmory.com/buffalo-bore-45-70-mag-500-grain-full-metal-jacket-flat-nose-lever-gun-rifle-ammo-20-box-8d-20.html
+.45-70 Government	Buffalo Bore Hard Cast GC (black powder equivalent)	440	1300		Hunting		premium	https://www.kygunco.com/product/buffalo-bore-45-70-govt-440gr-hard-cast-gc-1300fps-20rd
+.45-70 Government	Buffalo Bore Hard Cast Plain Base (black powder equivalent)	500	1250		Hunting		premium	https://www.kygunco.com/product/buffalo-bore-45-70-govt-500gr-hard-cast-plain-base-1250fps-20rd
+.300 WSM	Federal Premium Barnes TSX	180	2980	0.453	Hunting	24	premium	https://www.federalpremium.com/rifle/shop-by-caliber/300-win-short-magnum/
+.300 WSM	Federal Premium Barnes TSX	165	3130		Hunting	24	premium	https://www.federalpremium.com/rifle/shop-by-caliber/300-win-short-magnum/
+.300 WSM	Federal Premium Nosler AccuBond	180	2960	0.507	Hunting	24	premium	https://palmettostatearmory.com/federal-premium-180-gr-nosler-accubond-300-wsm-ammo-20-box-p300wsma1.html
+.300 WSM	Federal Premium ELD-X	200	2820	0.597	Hunting	24	premium	https://www.pyramydair.com/product/federal-premium-300-wsm-eld-x-200gr-20ct?p=3659
+.300 WSM	Federal Premium Berger Hybrid Hunter	185	2950		Hunting	24	premium	https://www.federalpremium.com/rifle/shop-by-caliber/300-win-short-magnum/
+.300 WSM	Federal Premium Swift Scirocco II	180	2960		Hunting	24	premium	https://blackstoneshooting.com/federal-p300wsmss1-premium-300wsm-180-grain-swift-scirocco-ii-20-rds
+.25-06 Remington	Remington Core-Lokt Pointed Soft Point	100	3230	0.292	Hunting	24	budget	https://remington.com/rifle/core-lokt/29-21507.html
+.25-06 Remington	Remington Core-Lokt Pointed Soft Point	120	2990		Hunting	24	budget	https://www.remington.com/rifle/core-lokt/29-21515.html
+.25-06 Remington	Federal Power-Shok Soft Point	117	3030	0.361	Hunting	24	budget	https://www.federalpremium.com/rifle/power-shok/11-2506BS.html
+.25-06 Remington	Winchester Deer Season XP Extreme Point	117	3100	0.453	Hunting	24	std	https://palmettostatearmory.com/winchester-ammunition-deer-season-xp-117-gr-extreme-point-25-06-rem-ammo-20-box-x2506ds.html
+.25-06 Remington	Nosler Trophy Grade Partition	100	3300		Hunting	24	premium	https://www.brownells.com/ammunition/rifle-ammunition/trophy-grade-25-06-remington-ammo/
+.25-06 Remington	Federal Premium Nosler AccuBond	110	3100		Hunting	24	premium	https://palmettostatearmory.com/federal-premium-110-gr-nosler-accubond-25-06-rem-ammo-20-box-p2506a1.html
+.280 Remington	Remington Core-Lokt Tipped	140	3020	0.486	Hunting	24	std	https://remington.com/rifle/core-lokt-tipped/29-29020.html
+.280 Remington	Remington Core-Lokt Pointed Soft Point	140	3000	0.390	Hunting	24	budget	https://www.remington.com/rifle/core-lokt/29-28313.html
+.280 Remington	Remington Core-Lokt Pointed Soft Point	150	2890	0.346	Hunting	24	budget	https://www.remington.com/rifle/core-lokt/29-29069.html
+.280 Remington	Remington Core-Lokt Soft Point	165	2820	0.290	Hunting	24	budget	https://www.jayssportinggoods.com/remington-ammunition/280-165gr-core-lokt-sp-20-rd-60156
+.280 Remington	Federal Power-Shok Soft Point	150	2890		Hunting	24	budget	https://www.federalpremium.com/rifle/power-shok/11-280B.html
+.280 Remington	Federal Premium Nosler Partition	150	2890		Hunting	24	premium	https://www.midwestgunworks.com/page/mgwi/prod/P280A
+.280 Remington	Federal Fusion	140	2990		Hunting	24	std	https://www.federalpremium.com/rifle/fusion/11-F280FS1.html
+.280 Remington	Barnes VOR-TX Tipped TSX BT	140	2985		Hunting	24	premium	https://www.midwestgunworks.com/page/mgwi/prod/22011
+.300 WSM	Winchester Super-X Power-Point	150	3270		Hunting	24	budget	https://broncos.co.nz/product/winchester-super-x-300-wsm-150gr-power-point-20-rounds
+.300 WSM	Winchester Super-X Power-Point	180	2970		Hunting	24	budget	https://www.luckygunner.com/300-wsm-180-grain-power-point-winchester-super-x-20
+.300 WSM	Winchester Deer Season XP Extreme Point	150	3260	0.392	Hunting	24	std	https://academy.com/p/winchester-deer-season-xp-300-wsm-150-grain-rifle-ammunition
+.204 Ruger	Remington AccuTip-V	32	4225		Varmint	24	std	https://ammodotcom.substack.com/p/204-ruger-ballistics-tables-from
+.204 Ruger	Federal V-MAX	32	4100		Varmint	24	std	https://ammodotcom.substack.com/p/204-ruger-ballistics-tables-from
+.204 Ruger	Winchester Varmint X Polymer Tip	32	4000		Varmint	24	budget	https://ammodotcom.substack.com/p/204-ruger-ballistics-tables-from
+.22 Hornet	Federal American Eagle Varmint & Predator Tipped	35	3000		Varmint	24	budget	https://ammo.com/rifle/22-hornet-ammo?dir=desc
+.22 Hornet	Remington High Performance Pointed Soft Point	45	2690		Varmint	24	std	https://ammo.com/rifle/22-hornet-ammo?dir=desc
+.22 Hornet	Sellier & Bellot FMJ	45	2346		Target		budget	https://www.kygunco.com/product/sellier-bellot-sb22ha-22-hornet-45gr-fmj-2346-fps-20rd
+.22 Hornet	Sellier & Bellot Soft Point	45	2346		Varmint		budget	https://www.luckygunner.com/22-hornet-45-gr-sp-sellier-bellot-20-rounds
+.22 Hornet	PPU Soft Point	45	2427		Varmint		budget	https://ammo.com/rifle/22-hornet-ammo?dir=desc
+.220 Swift	Winchester Super-X Pointed Soft Point	50	3870		Varmint	24	budget	https://www.outdoorlife.com/story/guns/the-fall-of-the-220-swift/
+.220 Swift	Remington Pointed Soft Point	50	3780		Varmint	24	budget	https://www.outdoorlife.com/story/guns/the-fall-of-the-220-swift/
+.222 Remington	Sellier & Bellot Soft Point	50	3169		Varmint		budget	https://www.sportsmanswarehouse.com/shooting-gear-gun-supplies/ammunition-ammo-for-hunting-shooting-sports/rifle-ammo-hunting-shooting-sports/sellier-bellot-222-remington-50gr-sp-rifle-ammo-20-rounds/p/1815641
+.222 Remington	PPU Soft Point	50	3133		Varmint		budget	https://ammo.com/rifle/222-ammo?dir=desc
+.222 Remington	Remington Pointed Soft Point	50	3140		Varmint	24	budget	https://ammo.com/rifle/222-ammo?dir=desc
+.222 Remington	Federal Soft Point	50	3140		Varmint	24	budget	https://ammo.com/rifle/222-ammo?dir=desc
+.222 Remington	Winchester Super-X Jacketed Soft Point	50	3140		Varmint	24	budget	https://ammo.com/rifle/222-ammo?dir=desc
+.22 Creedmoor	Nosler Match Grade RDF HPBT	85	3175		Match	24	premium	https://www.primaryarms.com/nosler-match-grade-85-gr-rdf-hpbt-22-creedmoor-ammunition-20-rounds
+.22 Creedmoor	Nosler Trophy Grade AccuBond	70	3400		Hunting	24	premium	https://www.primaryarms.com/nosler-trophy-grade-70-gr-accubond-22-creedmoor-ammunition-20-rounds
+6mm Remington	Remington Core-Lokt Pointed Soft Point	100	3100	0.356	Hunting	24	budget	https://www.remington.com/rifle/core-lokt/29-29051.html
+6mm Remington	Federal Power-Shok Soft Point	100	3100		Hunting	24	budget	https://www.luckygunner.com/6mm-remington-100-gr-sp-federal-power-shok-20-rounds
+6mm Remington	Winchester Super-X Power-Point	100	3100		Hunting	24	budget	https://www.midwestgunworks.com/page/mgwi/prod/x6mmr2
+6mm Remington	PPU Soft Point Boat Tail	100	3100		Hunting		budget	https://www.luckygunner.com/6mm-remington-100-grain-btsp-prvi-partizan-500-rounds
+.250 Savage	Remington Core-Lokt Pointed Soft Point	100	2820		Hunting	24	budget	https://remington.com/rifle/core-lokt/29-29077.html
+6mm Creedmoor	Federal Gold Medal Berger Hybrid OTM	105	3025		Match	24	premium	https://www.sportsmanswarehouse.com/shooting-gear-gun-supplies/ammunition-ammo-for-hunting-shooting-sports/rifle-ammo-hunting-shooting-sports/federal-gold-medal-6mm-creedmoor-105gr-berger-hybrid-rifle-ammo-20-rounds/p/1537748
+6mm Creedmoor	Barnes Precision Match OTM BT	112	2960		Match	24	premium	https://www.midwestgunworks.com/page/mgwi/prod/30814
+6mm Creedmoor	Remington Core-Lokt Pointed Soft Point	100	2960		Hunting	24	budget	https://www.sportsmans.com/shooting-gear-gun-supplies/ammunition-ammo-for-hunting-shooting-sports/rifle-ammo-hunting-shooting-sports/remington-core-lokt-6mm-creedmoor-100gr-psp-rifle-ammo-20-rounds/p/1689769
+.257 Roberts	Remington Core-Lokt Soft Point	117	2650		Hunting	24	budget	https://www.tractorsupply.com/tsc/product/remington-ammunition-257-roberts-117-grain-core-lokt-soft-point-rifle-ammunition-20-rounds
