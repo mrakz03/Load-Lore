@@ -39,6 +39,7 @@ jobs:
       - run: |
           mkdir CartridgeCalculator
           cp dist/CartridgeCalculator data/*.csv CartridgeCalculator/
+          cp scripts/install_linux.sh CartridgeCalculator/install.sh
           tar czf CartridgeCalculator-Linux.tar.gz CartridgeCalculator
       - uses: actions/upload-artifact@v4
         with: { name: linux, path: CartridgeCalculator-Linux.tar.gz }
