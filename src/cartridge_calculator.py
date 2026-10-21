@@ -31,6 +31,7 @@ import csv
 import json
 import math
 import os
+import re
 import statistics
 import sys
 from dataclasses import dataclass
@@ -478,7 +479,7 @@ class Load:
 def make_label(item, grain_style):
     if grain_style:
         base = f"{item.bullet_gr:g} gr"
-        return f"{base}  ·  {item.load}" if item.load else base
+        return f"{item.load}  ·  {base}" if item.load else base
     if item.group and item.load:
         return f"{item.group}  ·  {item.load}"
     return item.load or f"{item.bullet_gr:g} gr"
@@ -576,10 +577,18 @@ def read_settings():
         return {}
 
 
+_OLD_LABEL = re.compile(r"^(\d+(?:\.\d+)?) gr  ·  (.+)$")
+
+
 def _rename_price_key(key):
+    """Update a saved price's key: old cartridge names, and loads saved when the label put the
+    weight first ("150 gr  ·  Load", before v1.5) now read "Load  ·  150 gr"."""
     parts = key.split("|", 2)
     if len(parts) == 3:
         parts[1] = canonical_name(parts[1])
+        m = _OLD_LABEL.match(parts[2])
+        if m:
+            parts[2] = f"{m.group(2)}  ·  {m.group(1)} gr"
     return "|".join(parts)
 
 
@@ -2741,7 +2750,7 @@ class LoadsView:
         terms = self.filter_var.get().lower().split()
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
                 and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))]
-        keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["stats"]["weight"], r["item"].label.lower()),
+        keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["item"].label.lower(), r["stats"]["weight"]),
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
                 "Barrel": lambda r: r["item"].barrel_in or 999,
                 "Use": lambda r: (r["item"].purpose, r["rank"]),

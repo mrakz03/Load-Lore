@@ -14,6 +14,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   Copper (lead-free)...), no product lines; it covers the common bases per cartridge, not every load.
 - Compare Cartridges grades on an absolute curve; Compare Loads grades relative to the
   same cartridge and purpose (median/MAD, centre 70).
+- Load labels read "Load  ·  150 gr" (make_label / makeLabel). Saved prices are keyed by label;
+  keys from the old weight-first format are converted on read (_rename_price_key / readPrices).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
   (my_calibers.csv, my_handloads.csv, settings.json).
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
