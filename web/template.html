@@ -190,7 +190,7 @@ function applyTheme(name){
   try{localStorage.setItem(THEME_KEY,name);}catch(e){}
 }
 applyTheme(THEME);
-const VERSION_TEXT = DATA.version && DATA.version !== "dev" ? "Version " + DATA.version : "development build";
+const VERSION_TEXT = DATA.version && DATA.version !== "dev" ? "Development Build v" + DATA.version : "Development Build";
 const GRAINS_PER_OZ = 437.5;
 const GRADE_BANDS = [[72.5,"S"],[70.5,"A"],[66,"B"],[61,"C"],[55,"D"]];
 const METRICS = {velocity:["Velocity",true],energy:["Energy",true],recoil:["Recoil",false],cost:["Cost",false],taylor:["Taylor KO",true],hits:["HITS",true]};

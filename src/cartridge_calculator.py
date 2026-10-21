@@ -152,7 +152,7 @@ CATEGORIES = (
 
 
 def version_text():
-    return "development build" if APP_VERSION == "dev" else f"Version {APP_VERSION}"
+    return "Development Build" if APP_VERSION == "dev" else f"Development Build v{APP_VERSION}"
 
 
 def default_weights(cat):

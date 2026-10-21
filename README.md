@@ -33,7 +33,7 @@ Your own calibers (`my_calibers.csv`), handloads (`my_handloads.csv`) and settin
 ```
 git tag v1.0 && git push origin v1.0
 ```
-The tag sets the version number the apps show (`v1.5` shows as "Version 1.5"; builds from source show "development build").
+The tag sets the version number the apps show (`v1.5` shows as "Development Build v1.5"; builds from source show "Development Build").
 
 Download the Windows installer (`CartridgeCalculator-Setup.exe`) or .zip, Linux .tar.gz and Android .apk from the repo's Releases page. Running the workflow by hand (Actions tab, Run workflow) builds them without releasing.
 
