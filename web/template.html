@@ -720,7 +720,7 @@ function openLoads(cat,pane){
       const fb=k=>badge(gradeRel(r.sc[k]));
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top"><span class="rk">#${r.rank}</span>
-        <div class="nm">${cat.grain_style?`<span class="wt">${g(it.bullet_gr)} gr</span> · `:""}${esc(it.load)}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}</div>
+        <div class="nm">${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}</div>
         <div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div></div>
         ${open?`<div class="det">
           ${it.handload?"":`<div class="row"><span class="muted">${cat.grain_style?"Bullet weight":"Payload"}</span><span class="v">${payload}</span><span style="width:32px"></span></div>`}
