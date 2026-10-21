@@ -17,6 +17,7 @@ web/build_web.py              embeds the CSV data into web/www/index.html
 scripts/build_linux.sh        build and install on Fedora/Linux
 scripts/install_linux.sh      installs a downloaded Linux release (shipped in the tar as install.sh)
 scripts/build_windows.bat     build the Windows .exe locally
+scripts/windows_installer.iss Inno Setup script for the Windows installer (built in CI)
 .github/workflows/release.yml builds Windows, Linux and Android in CI
 package.json, capacitor.config.json   Android wrapper (Capacitor)
 ```
@@ -32,7 +33,9 @@ Your own calibers (`my_calibers.csv`), handloads (`my_handloads.csv`) and settin
 ```
 git tag v1.0 && git push origin v1.0
 ```
-Download the Windows .zip, Linux .tar.gz and Android .apk from the repo's Releases page. Running the workflow by hand (Actions tab, Run workflow) builds them without releasing.
+Download the Windows installer (`CartridgeCalculator-Setup.exe`) or .zip, Linux .tar.gz and Android .apk from the repo's Releases page. Running the workflow by hand (Actions tab, Run workflow) builds them without releasing.
+
+On Windows, double-click `CartridgeCalculator-Setup.exe`. It installs for the current user (no admin password), adds Start menu and desktop shortcuts, and can be removed from Settings > Apps. Running a newer installer upgrades in place and keeps your handloads and settings. The installer isn't code-signed, so Windows SmartScreen may say "Windows protected your PC": click More info, then Run anyway.
 
 To install the Linux release, unpack it and run the installer; it adds the app to your launcher. Run it again with a newer release to update (your own files are kept), or with `--uninstall` to remove it.
 ```

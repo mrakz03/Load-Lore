@@ -24,8 +24,22 @@ jobs:
           copy data\*.csv CartridgeCalculator\
           powershell Compress-Archive -Path CartridgeCalculator -DestinationPath CartridgeCalculator-Windows.zip
         shell: cmd
+      - run: choco install innosetup -y --no-progress
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $v = if ($env:GITHUB_REF_NAME -like 'v*') { $env:GITHUB_REF_NAME.Substring(1) } else { '0.0-dev' }
+          $iscc = Get-ChildItem "${env:ProgramFiles(x86)}", "$env:ProgramFiles" -Filter ISCC.exe -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $iscc) { throw "ISCC.exe not found" }
+          & $iscc.FullName "/DAppVersion=$v" scripts\windows_installer.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Copy-Item dist\CartridgeCalculator-Setup.exe .
       - uses: actions/upload-artifact@v4
-        with: { name: windows, path: CartridgeCalculator-Windows.zip }
+        with:
+          name: windows
+          path: |
+            CartridgeCalculator-Windows.zip
+            CartridgeCalculator-Setup.exe
 
   linux:
     runs-on: ubuntu-latest
@@ -74,6 +88,7 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: |
+            out/CartridgeCalculator-Setup.exe
             out/CartridgeCalculator-Windows.zip
             out/CartridgeCalculator-Linux.tar.gz
             out/CartridgeCalculator.apk
