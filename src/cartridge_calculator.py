@@ -877,6 +877,11 @@ class App:
             self.scale = min(1.6, max(0.85, float(self.settings.get("text_scale", 1.0))))
         except (TypeError, ValueError):
             self.scale = 1.0
+        # pixel sizes grow with the screen DPI like the point-sized fonts do (96 dpi = 1.0)
+        try:
+            self.dpi = max(1.0, float(root.tk.call("tk", "scaling")) * 72 / 96)
+        except (tk.TclError, ValueError):
+            self.dpi = 1.0
         self.view = None
         self._base_w = self._auto_w = None   # window width before / after grow_to_fit
         families = set(tkfont.families(root))
@@ -995,8 +1000,8 @@ class App:
         return (self.family, max(7, int(round(size * self.scale))), "bold" if bold else "normal")
 
     def px(self, n):
-        """Scale a pixel measurement with the text size."""
-        return int(round(n * self.scale))
+        """Scale a pixel measurement with the text size and the screen DPI."""
+        return int(round(n * self.scale * self.dpi))
 
     def set_scale(self, new_scale):
         """Text size A- / A+. Rebuilds the current screen and keeps what was entered."""
@@ -1143,9 +1148,10 @@ class App:
         """Comfortable default size, centred; the window can be resized from there."""
         r = self.root
         sw, sh = r.winfo_screenwidth(), r.winfo_screenheight()
-        w, h = min(self.WIN_W, sw - 40), min(self.WIN_H, sh - 90)
+        w = min(int(self.WIN_W * self.dpi), sw - 40)
+        h = min(int(self.WIN_H * self.dpi), sh - 90)
         r.geometry(f"{w}x{h}+{max(0, (sw - w) // 2)}+{max(0, (sh - h) // 3)}")
-        r.minsize(min(self.MIN_W, w), min(self.MIN_H, h))
+        r.minsize(min(int(self.MIN_W * self.dpi), w), min(int(self.MIN_H * self.dpi), h))
         r.resizable(True, True)
         r.title(APP_TITLE)
 
@@ -2937,10 +2943,27 @@ class LoadsView:
                 break
 
 
+def sharp_on_windows():
+    """Tell Windows this app draws at the screen's real DPI. Without it Windows renders the
+    window at 100% and stretches it to the display scaling (125%, 150%...), which looks blurry.
+    Must run before the first Tk window exists."""
+    if sys.platform != "win32":
+        return
+    try:
+        import ctypes
+        try:
+            ctypes.windll.shcore.SetProcessDpiAwareness(1)     # Windows 8.1+: system DPI aware
+        except (AttributeError, OSError):
+            ctypes.windll.user32.SetProcessDPIAware()          # Windows 7 / Vista
+    except Exception:
+        pass                                                   # blurry is better than not starting
+
+
 def main():
     if tk is None:
         sys.exit("Tkinter is not available. On Linux, install it with your package manager "
                  "(for example: sudo apt install python3-tk).")
+    sharp_on_windows()
     root = tk.Tk()
     App(root)
     root.mainloop()

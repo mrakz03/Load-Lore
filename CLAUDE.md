@@ -31,6 +31,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the window for it and gives the room back later, never below the width the user chose.
   LoadsView.fit_table_height sets the table's row count from the window height so the
   selected load's scores panel fits without scrolling (min 6 rows, then the page scrolls).
+  App.px() scales by text size AND screen DPI (self.dpi, 96 dpi = 1.0). On Windows,
+  sharp_on_windows() declares DPI awareness before Tk starts, otherwise Windows stretches the
+  window and it looks blurry (issue #5).
 
 ## Release
 git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.exe + zip), Linux
