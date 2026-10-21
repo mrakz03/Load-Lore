@@ -56,4 +56,5 @@ git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.e
 - The generic "typical" rows (7.62x54mmR, 5.45x39mm, 7.62x25mm Tokarev, .38 Super, .32 S&W Long)
   were taken out of Compare Loads (Oct 2026); they remain in Compare Cartridges and could be
   checked against real steel-case import data (Wolf, Tula, PPU) some day.
-- .32-40 Winchester has no current branded load, so it only appears in Compare Cartridges.
+- Compare Loads (rifle/handgun) also lists every Compare Cartridges cartridge that has no factory
+  loads (with_handload_only / withHandloadOnly), e.g. .32-40 Winchester, so it can hold handloads.

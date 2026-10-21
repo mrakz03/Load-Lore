@@ -510,6 +510,24 @@ def group_by_cartridge(loads, sort=True):
     return groups
 
 
+def with_handload_only(groups, cartridge_loads):
+    """Add an empty entry for every Compare Cartridges cartridge that has no factory loads (e.g.
+    .32-40 Winchester), placed after the cartridge it follows there, so handloaders can still
+    use Compare Loads for it."""
+    order = list(dict.fromkeys(x.cartridge for x in cartridge_loads))
+    if all(c in groups for c in order):
+        return groups
+    out = dict(groups)
+    for i, c in enumerate(order):
+        if c in out:
+            continue
+        prev = next((p for p in reversed(order[:i]) if p in out), None)
+        keys = list(out)
+        at = keys.index(prev) + 1 if prev else 0
+        out = {k: out[k] for k in keys[:at]} | {c: []} | {k: out[k] for k in keys[at:]}
+    return out
+
+
 def read_settings():
     try:
         with open(os.path.join(app_dir(), SETTINGS_FILENAME), encoding="utf-8") as fh:
@@ -1232,7 +1250,10 @@ class App:
                 # count what this screen will show: the load list for Compare Loads,
                 # the cartridge list for Compare Cartridges
                 shown = info["detail"] if mode == "loads" and info["detail"] else info["loads"]
-                caption = f"{len({x.cartridge for x in shown})} cartridges"
+                carts = {x.cartridge for x in shown}
+                if mode == "loads" and cat.grain_style:      # + cartridges open to handloads only
+                    carts |= {x.cartridge for x in info["loads"]}
+                caption = f"{len(carts)} cartridges"
                 if mode == "loads":
                     caption += f"  ·  {len(shown):,} loads"
             card = tk.Frame(grid, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
@@ -2172,7 +2193,7 @@ class LoadsView:
     def __init__(self, app, stage, cat, loads, error=""):
         self.app, self.root, self.cat = app, app.root, cat
         self.loads = loads
-        self.groups = group_by_cartridge(loads, True)
+        self.groups = self._group(loads)
         self.cartridges = list(self.groups)
         self.cart_var = tk.StringVar(value="")
         self.dist_var = tk.StringVar(value=f"{cat.default_distance:g}")
@@ -2438,11 +2459,17 @@ class LoadsView:
         self.detail.grid_remove()
         self.refresh()
 
+    def _group(self, loads):
+        groups = group_by_cartridge(loads, True)
+        if self.cat.grain_style:                    # handloads only exist for bullet categories
+            groups = with_handload_only(groups, self.app.data[self.cat.title]["loads"])
+        return groups
+
     def _reload_loads(self, select=None):
         """After adding / editing / deleting a handload: rebuild the lists and redraw."""
         info = self.app.data[self.cat.title]
         self.loads = info["detail"] + self.app.hand_loads(self.cat)
-        self.groups = group_by_cartridge(self.loads, True)
+        self.groups = self._group(self.loads)
         self.cartridges = list(self.groups)
         self.cart_combo.config(values=self.cartridges,
                                width=max([16] + [len(c) for c in self.cartridges]))
@@ -2574,7 +2601,14 @@ class LoadsView:
             return
         cart = self.cart_var.get()
         items = self.groups.get(cart)
-        if not items:
+        if items is None:
+            return
+        if not items:                                # a cartridge with no factory loads yet
+            self.tree.delete(*self.tree.get_children())
+            self.selected = None
+            self.detail.grid_remove()
+            self.count_lbl.config(text=f"No factory loads listed for {cart}. Use \"+ Add handload\" "
+                                       "to grade your own.")
             return
         if self.purpose != "All":
             items = [x for x in items if self._purpose_of(x) == self.purpose]
