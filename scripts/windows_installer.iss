@@ -2,8 +2,9 @@
 ; Built in CI after PyInstaller has made dist\CartridgeCalculator.exe:
 ;   ISCC.exe /DAppVersion=1.4 scripts\windows_installer.iss
 ; Installs per user (no admin prompt) so the app can save handloads and settings next to the .exe.
-; Reinstalling a newer version upgrades in place; my_calibers.csv, my_handloads.csv and
-; settings.json are never installed, so upgrades and uninstalls leave them alone.
+; Reinstalling a newer version upgrades in place: it first removes the data files the old
+; version shipped (ammo_*, loads_*, bullets.csv), so files a release drops don't linger.
+; my_calibers.csv, my_handloads.csv and settings.json are never touched.
 
 #ifndef AppVersion
   #define AppVersion "0.0-dev"
@@ -30,6 +31,11 @@ WizardStyle=modern
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+
+[InstallDelete]
+Type: files; Name: "{app}\ammo_*.csv"
+Type: files; Name: "{app}\loads_*.csv"
+Type: files; Name: "{app}\bullets.csv"
 
 [Files]
 Source: "dist\CartridgeCalculator.exe"; DestDir: "{app}"; Flags: ignoreversion

@@ -37,6 +37,13 @@ The tag sets the version number the apps show (`v1.5` shows as "Version 1.5"; bu
 
 Download the Windows installer (`CartridgeCalculator-Setup.exe`) or .zip, Linux .tar.gz and Android .apk from the repo's Releases page. Running the workflow by hand (Actions tab, Run workflow) builds them without releasing.
 
+On Android, a new APK installs over the old one only if every release is signed with the same key. Make one once (needs Java's `keytool`) and save it as a repository secret named `ANDROID_DEBUG_KEYSTORE` (Settings > Secrets and variables > Actions):
+```
+keytool -genkeypair -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+base64 -w0 debug.keystore      # paste this output as the secret's value
+```
+Keep `debug.keystore` somewhere safe and out of the repo. Without the secret, each APK gets a new key, so testers have to uninstall the old app before installing a new one.
+
 On Windows, double-click `CartridgeCalculator-Setup.exe`. It installs for the current user (no admin password), adds Start menu and desktop shortcuts, and can be removed from Settings > Apps. Running a newer installer upgrades in place and keeps your handloads and settings. The installer isn't code-signed, so Windows SmartScreen may say "Windows protected your PC": click More info, then Run anyway.
 
 To install the Linux release, unpack it and run the installer; it adds the app to your launcher. Run it again with a newer release to update (your own files are kept), or with `--uninstall` to remove it.
