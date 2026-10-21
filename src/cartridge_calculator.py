@@ -1036,6 +1036,17 @@ class App:
             b.bind("<Button-1>", lambda e, d=delta: self.set_scale(self.scale + d))
         return box
 
+    def theme_controls(self, parent, bg):
+        """Small 'Theme  [Classic v]' picker, packed by the caller."""
+        box = tk.Frame(parent, bg=bg)
+        tk.Label(box, text="Theme", bg=bg, fg=MUTED, font=self.f(9)).pack(side="left", padx=(0, 6))
+        theme_var = tk.StringVar(value=self.theme)
+        pick = ttk.Combobox(box, textvariable=theme_var, values=list(THEMES), state="readonly",
+                            width=1, font=self.f(9))
+        pick.pack(side="left", fill="x", expand=True)
+        pick.bind("<<ComboboxSelected>>", lambda e: self.set_theme(theme_var.get()))
+        return box
+
     def _style(self):
         r = self.root
         s = ttk.Style(r)
@@ -1154,6 +1165,7 @@ class App:
         tk.Frame(self.shell, bg=BORDER, width=1).pack(side="left", fill="y")
         foot = tk.Frame(self.sidebar, bg=SURFACE)
         foot.pack(side="bottom", fill="x", padx=14, pady=14)
+        self.theme_controls(foot, SURFACE).pack(fill="x", pady=(0, 8))
         self.size_controls(foot, SURFACE).pack(anchor="w")
         self.nav = tk.Frame(self.sidebar, bg=SURFACE)
         self.nav.pack(fill="x", padx=12, pady=(22, 0))
@@ -1179,7 +1191,9 @@ class App:
     def _sidebar_width(self):
         """Wide enough for the longest menu entry at the current text size and screen DPI."""
         main, sub = tkfont.Font(font=self.f(11, True)), tkfont.Font(font=self.f(10, True))
-        need = max([main.measure("Compare Cartridges")]
+        small = tkfont.Font(font=self.f(9))
+        theme = small.measure("Theme") + 6 + max(small.measure(n) for n in THEMES) + self.px(34)
+        need = max([main.measure("Compare Cartridges"), theme - 10]   # theme row in the footer
                    + [sub.measure(cat.title) + 16 for cat in CATEGORIES])
         return max(self.px(self.SIDEBAR_W), need + 2 * 12 + 2 * 12 + 10)   # label + nav padding
 
@@ -1275,14 +1289,6 @@ class App:
             for w in (card, t, d):
                 w.bind("<Button-1>", lambda e, k=key: self.show_picker(k))
             self._card_hover([card, t, d], SURFACE, SURFACE_2)
-        look = tk.Frame(wrap, bg=BG)
-        look.pack(anchor="w", pady=(28, 0))
-        self.label(look, "APPEARANCE", 9, MUTED, True, bg=BG).pack(side="left", padx=(0, 10))
-        theme_var = tk.StringVar(value=self.theme)
-        pick = ttk.Combobox(look, textvariable=theme_var, values=list(THEMES), state="readonly",
-                            width=max(len(n) for n in THEMES) + 2, font=self.f(11))
-        pick.pack(side="left")
-        pick.bind("<<ComboboxSelected>>", lambda e: self.set_theme(theme_var.get()))
         self._update_scroll()
 
     def show_picker(self, mode):
