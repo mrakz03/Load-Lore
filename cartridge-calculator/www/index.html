@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<title>Cartridge Value Calculator</title>
+<style>
+:root{--bg:#0e1014;--surface:#171a21;--surface2:#222732;--border:#2d333f;--text:#e8eaee;--muted:#8a93a3;--accent:#4c8dff;--accent-h:#6aa0ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px}
+body{padding:max(22px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom))}
+.wrap{max-width:640px;margin:0 auto}
+h1{font-size:1.45rem;margin:0}
+h2{font-size:1.45rem;margin:6px 0 0}
+.muted{color:var(--muted)}
+.sub{color:var(--muted);margin:4px 0 18px;font-size:.95rem}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
+.cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;color:var(--text);cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:6px;min-height:118px}
+.cat:hover,.cat:active{background:var(--surface2);border-color:var(--accent)}
+.cat b{font-size:1.1rem}.cat span.b{color:var(--muted);font-size:.85rem}.cat span.c{color:var(--accent);font-size:.78rem;font-weight:700;margin-top:auto}
+.link{background:none;border:0;color:var(--accent);font:inherit;font-weight:700;font-size:.9rem;padding:6px 0;cursor:pointer}
+.link.m{color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+label.l{display:block;font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.04em;margin:0 0 5px}
+select,input{width:100%;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:11px 10px;font:inherit;font-size:1rem;appearance:none;-webkit-appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+select:focus,input:focus{outline:none;border-color:var(--accent)}
+.field{margin-top:14px}.field:first-child{margin-top:0}
+.nums>div,.three>div,.wrow>div{min-width:0}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.nums label.l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.links{display:flex;justify-content:space-between;margin-top:10px}
+.weights{margin-top:8px}
+.wrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.wrow label{font-size:.8rem;color:var(--muted)}
+.wnote{font-size:.8rem;font-weight:700;margin-top:8px}
+.btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+button.btn{background:var(--surface2);color:var(--text);border:0;border-radius:8px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}
+button.btn:hover{background:var(--border)}
+button.btn.p{background:var(--accent);color:#fff}button.btn.p:hover{background:var(--accent-h)}
+.hidden{display:none!important}
+.res{margin-top:16px}
+.res h3{margin:0;font-size:1.05rem}
+.row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;gap:10px}
+.row .v{font-weight:700;margin-left:auto}
+.badge{min-width:32px;text-align:center;border-radius:6px;font-weight:800;font-size:.85rem;padding:3px 6px}
+hr{border:0;border-top:1px solid var(--border);margin:10px 0}
+.bar{height:12px;background:var(--surface2);border-radius:6px;overflow:hidden;margin:10px 0 6px}
+.bar i{display:block;height:100%;border-radius:6px;transition:width .3s}
+.note{font-size:.78rem;color:var(--muted);line-height:1.45;margin-top:8px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:16px;z-index:10}
+.modal .card{width:100%;max-width:640px;margin:auto}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.help{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.4}
+.tblwrap{overflow:auto;margin-top:12px;border:1px solid var(--border);border-radius:8px;max-height:65vh}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+th,td{padding:8px 10px;text-align:center;white-space:nowrap;border-bottom:1px solid var(--border)}
+th{position:sticky;top:0;background:var(--surface2);cursor:pointer;font-size:.78rem}
+td:nth-child(-n+2),th:nth-child(-n+2){text-align:left}
+td:nth-child(1),th:nth-child(1){position:sticky;left:0;background:var(--surface)}
+th:nth-child(1){background:var(--surface2);z-index:2}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+"use strict";
+const DATA = {"categories": [{"title": "Centerfire Rifle", "blurb": "Hunting, precision, AR/AK and lever-action rounds", "default_distance": 100, "max_distance": 2000, "default_gun_lb": 8.0, "gun_label": "RIFLE WEIGHT (LB)", "cartridge_label": "CARTRIDGE", "load_label": "BULLET WEIGHT", "payload_row": "Bullet weight", "payload_col": "Grains", "grain_style": true, "show_oz": false, "weights": [3, 3, 1, 3], "allow_custom": true, "default_bc": 0.3, "sort_loads": true, "loads": [{"cartridge": ".22-250 Remington", "load": "V-Max", "bullet_gr": 40.0, "muzzle_fps": 4150.0, "bc_g1": 0.182, "powder_gr": 36.0, "default_cost": 1.15, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".22-250 Remington", "load": "V-Max", "bullet_gr": 55.0, "muzzle_fps": 3680.0, "bc_g1": 0.266, "powder_gr": 36.0, "default_cost": 1.15, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".223 Remington", "load": "XM193 FMJ", "bullet_gr": 55.0, "muzzle_fps": 3165.0, "bc_g1": 0.243, "powder_gr": 25.0, "default_cost": 0.45, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".223 Remington", "load": "M855 FMJ", "bullet_gr": 62.0, "muzzle_fps": 3020.0, "bc_g1": 0.304, "powder_gr": 26.0, "default_cost": 0.6, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".223 Remington", "load": "OTM Match", "bullet_gr": 77.0, "muzzle_fps": 2750.0, "bc_g1": 0.372, "powder_gr": 24.5, "default_cost": 1.1, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".224 Valkyrie", "load": "ELD-M", "bullet_gr": 88.0, "muzzle_fps": 2675.0, "bc_g1": 0.55, "powder_gr": 29.0, "default_cost": 1.75, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".224 Valkyrie", "load": "Sierra MatchKing", "bullet_gr": 90.0, "muzzle_fps": 2700.0, "bc_g1": 0.563, "powder_gr": 29.0, "default_cost": 1.75, "is_default": true, "source": "published", "group": ""}, {"cartridge": ".243 Winchester", "load": "SST", "bullet_gr": 95.0, "muzzle_fps": 3100.0, "bc_g1": 0.355, "powder_gr": 42.0, "default_cost": 1.6, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".243 Winchester", "load": "Soft Point", "bullet_gr": 100.0, "muzzle_fps": 2960.0, "bc_g1": 0.405, "powder_gr": 42.0, "default_cost": 1.4, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".25-35 Winchester", "load": "Soft Point RN", "bullet_gr": 117.0, "muzzle_fps": 2230.0, "bc_g1": 0.253, "powder_gr": 27.0, "default_cost": 2.0, "is_default": true, "source": "partial", "group": ""}, {"cartridge": ".25-35 Winchester", "load": "LEVERevolution FTX", "bullet_gr": 110.0, "muzzle_fps": 2425.0, "bc_g1": 0.404, "powder_gr": 27.0, "default_cost": 2.4, "is_default": false, "source": "partial", "group": ""}, {"cartridge": "6mm ARC", "load": "ELD-X", "bullet_gr": 103.0, "muzzle_fps": 2800.0, "bc_g1": 0.512, "powder_gr": 31.0, "default_cost": 1.65, "is_default": false, "source": "published", "group": ""}, {"cartridge": "6mm ARC", "load": "ELD-M", "bullet_gr": 108.0, "muzzle_fps": 2750.0, "bc_g1": 0.536, "powder_gr": 31.0, "default_cost": 1.75, "is_default": true, "source": "published", "group": ""}, {"cartridge": "6.5 Grendel", "load": "ELD-M", "bullet_gr": 123.0, "muzzle_fps": 2580.0, "bc_g1": 0.547, "powder_gr": 28.0, "default_cost": 1.35, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".260 Remington", "load": "Core-Lokt SP", "bullet_gr": 140.0, "muzzle_fps": 2750.0, "bc_g1": 0.402, "powder_gr": 42.0, "default_cost": 1.45, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".260 Remington", "load": "ELD-M", "bullet_gr": 140.0, "muzzle_fps": 2700.0, "bc_g1": 0.646, "powder_gr": 42.0, "default_cost": 1.55, "is_default": true, "source": "approx", "group": ""}, {"cartridge": "6.5 Creedmoor", "load": "SST", "bullet_gr": 129.0, "muzzle_fps": 2950.0, "bc_g1": 0.485, "powder_gr": 43.0, "default_cost": 1.55, "is_default": false, "source": "approx", "group": ""}, {"cartridge": "6.5 Creedmoor", "load": "ELD-M", "bullet_gr": 140.0, "muzzle_fps": 2710.0, "bc_g1": 0.646, "powder_gr": 41.0, "default_cost": 1.5, "is_default": true, "source": "approx", "group": ""}, {"cartridge": "6.5 Creedmoor", "load": "ELD-X", "bullet_gr": 143.0, "muzzle_fps": 2700.0, "bc_g1": 0.625, "powder_gr": 41.0, "default_cost": 1.65, "is_default": false, "source": "approx", "group": ""}, {"cartridge": "6.5 PRC", "load": "ELD-X", "bullet_gr": 143.0, "muzzle_fps": 2960.0, "bc_g1": 0.625, "powder_gr": 54.0, "default_cost": 2.6, "is_default": true, "source": "published", "group": ""}, {"cartridge": "6.5 PRC", "load": "ELD-M", "bullet_gr": 147.0, "muzzle_fps": 2910.0, "bc_g1": 0.697, "powder_gr": 53.0, "default_cost": 2.5, "is_default": false, "source": "published", "group": ""}, {"cartridge": ".270 Winchester", "load": "Soft Point", "bullet_gr": 130.0, "muzzle_fps": 3060.0, "bc_g1": 0.4, "powder_gr": 55.0, "default_cost": 1.8, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".270 Winchester", "load": "SST", "bullet_gr": 140.0, "muzzle_fps": 2940.0, "bc_g1": 0.496, "powder_gr": 55.0, "default_cost": 1.9, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".270 Winchester", "load": "Soft Point", "bullet_gr": 150.0, "muzzle_fps": 2850.0, "bc_g1": 0.43, "powder_gr": 56.0, "default_cost": 1.8, "is_default": false, "source": "approx", "group": ""}, {"cartridge": "7mm-08 Remington", "load": "SST Superformance", "bullet_gr": 139.0, "muzzle_fps": 2950.0, "bc_g1": 0.468, "powder_gr": 45.0, "default_cost": 1.85, "is_default": false, "source": "partial", "group": ""}, {"cartridge": "7mm-08 Remington", "load": "Ballistic Tip", "bullet_gr": 140.0, "muzzle_fps": 2800.0, "bc_g1": 0.485, "powder_gr": 45.0, "default_cost": 1.75, "is_default": true, "source": "published", "group": ""}, {"cartridge": "7mm-08 Remington", "load": "Speer Hot-Cor SP", "bullet_gr": 150.0, "muzzle_fps": 2650.0, "bc_g1": 0.413, "powder_gr": 45.0, "default_cost": 1.55, "is_default": false, "source": "published", "group": ""}, {"cartridge": ".277 Fury", "load": "Elite Ball FMJ", "bullet_gr": 135.0, "muzzle_fps": 3000.0, "bc_g1": 0.475, "powder_gr": 62.0, "default_cost": 3.0, "is_default": false, "source": "published", "group": ""}, {"cartridge": ".277 Fury", "load": "AccuBond Hybrid", "bullet_gr": 150.0, "muzzle_fps": 3120.0, "bc_g1": 0.5, "powder_gr": 63.0, "default_cost": 4.0, "is_default": true, "source": "published", "group": ""}, {"cartridge": ".277 Fury", "load": "Hybrid Match HPBT", "bullet_gr": 155.0, "muzzle_fps": 3000.0, "bc_g1": 0.549, "powder_gr": 64.0, "default_cost": 4.0, "is_default": false, "source": "published", "group": ""}, {"cartridge": "6.8 Western", "load": "AccuBond LR", "bullet_gr": 165.0, "muzzle_fps": 2970.0, "bc_g1": 0.62, "powder_gr": 63.0, "default_cost": 3.2, "is_default": true, "source": "published", "group": ""}, {"cartridge": "6.8 Western", "load": "Tipped GameKing", "bullet_gr": 175.0, "muzzle_fps": 2835.0, "bc_g1": 0.617, "powder_gr": 63.0, "default_cost": 3.5, "is_default": false, "source": "published", "group": ""}, {"cartridge": "7mm Remington Magnum", "load": "ELD-X", "bullet_gr": 162.0, "muzzle_fps": 2940.0, "bc_g1": 0.631, "powder_gr": 68.0, "default_cost": 2.2, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".300 Blackout", "load": "OTM", "bullet_gr": 125.0, "muzzle_fps": 2215.0, "bc_g1": 0.3, "powder_gr": 15.0, "default_cost": 1.0, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".300 Blackout", "load": "Subsonic A-MAX", "bullet_gr": 208.0, "muzzle_fps": 1020.0, "bc_g1": 0.626, "powder_gr": 9.0, "default_cost": 1.3, "is_default": false, "source": "approx", "group": ""}, {"cartridge": "7.62x39", "load": "FMJ", "bullet_gr": 123.0, "muzzle_fps": 2350.0, "bc_g1": 0.275, "powder_gr": 26.0, "default_cost": 0.55, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".30-30 Winchester", "load": "Power-Point", "bullet_gr": 150.0, "muzzle_fps": 2390.0, "bc_g1": 0.26, "powder_gr": 30.0, "default_cost": 1.6, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".30-30 Winchester", "load": "Flat Nose", "bullet_gr": 170.0, "muzzle_fps": 2200.0, "bc_g1": 0.25, "powder_gr": 31.0, "default_cost": 1.75, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".32-40 Winchester", "load": "Soft Point", "bullet_gr": 165.0, "muzzle_fps": 1440.0, "bc_g1": 0.203, "powder_gr": 14.0, "default_cost": 3.5, "is_default": true, "source": "partial", "group": ""}, {"cartridge": ".308 Winchester", "load": "Soft Point", "bullet_gr": 150.0, "muzzle_fps": 2820.0, "bc_g1": 0.39, "powder_gr": 44.0, "default_cost": 1.4, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".308 Winchester", "load": "ELD-M", "bullet_gr": 168.0, "muzzle_fps": 2700.0, "bc_g1": 0.523, "powder_gr": 43.0, "default_cost": 1.6, "is_default": true, "source": "published", "group": ""}, {"cartridge": ".308 Winchester", "load": "Soft Point", "bullet_gr": 180.0, "muzzle_fps": 2620.0, "bc_g1": 0.42, "powder_gr": 42.0, "default_cost": 1.5, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".30-06 Springfield", "load": "Soft Point", "bullet_gr": 150.0, "muzzle_fps": 2910.0, "bc_g1": 0.39, "powder_gr": 56.0, "default_cost": 1.5, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".30-06 Springfield", "load": "ELD-M", "bullet_gr": 168.0, "muzzle_fps": 2790.0, "bc_g1": 0.523, "powder_gr": 55.0, "default_cost": 1.8, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".30-06 Springfield", "load": "Soft Point", "bullet_gr": 180.0, "muzzle_fps": 2700.0, "bc_g1": 0.42, "powder_gr": 54.0, "default_cost": 1.6, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".300 Winchester Magnum", "load": "ELD-X", "bullet_gr": 200.0, "muzzle_fps": 2800.0, "bc_g1": 0.597, "powder_gr": 76.0, "default_cost": 3.0, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".300 PRC", "load": "ELD-X", "bullet_gr": 212.0, "muzzle_fps": 2860.0, "bc_g1": 0.673, "powder_gr": 85.0, "default_cost": 3.5, "is_default": false, "source": "published", "group": ""}, {"cartridge": ".300 PRC", "load": "ELD-M", "bullet_gr": 225.0, "muzzle_fps": 2810.0, "bc_g1": 0.777, "powder_gr": 85.0, "default_cost": 3.5, "is_default": true, "source": "published", "group": ""}, {"cartridge": ".35 Remington", "load": "Core-Lokt SP", "bullet_gr": 200.0, "muzzle_fps": 2080.0, "bc_g1": 0.223, "powder_gr": 34.0, "default_cost": 1.6, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".35 Remington", "load": "LEVERevolution FTX", "bullet_gr": 200.0, "muzzle_fps": 2225.0, "bc_g1": 0.357, "powder_gr": 34.0, "default_cost": 2.4, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".348 Winchester", "load": "Silvertip", "bullet_gr": 200.0, "muzzle_fps": 2500.0, "bc_g1": 0.236, "powder_gr": 52.0, "default_cost": 3.2, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".350 Legend", "load": "Extreme Point", "bullet_gr": 150.0, "muzzle_fps": 2325.0, "bc_g1": 0.22, "powder_gr": 36.0, "default_cost": 1.25, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".350 Legend", "load": "InterLock", "bullet_gr": 170.0, "muzzle_fps": 2200.0, "bc_g1": 0.215, "powder_gr": 36.0, "default_cost": 1.45, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".357 Magnum", "load": "JHP", "bullet_gr": 125.0, "muzzle_fps": 1900.0, "bc_g1": 0.154, "powder_gr": 14.0, "default_cost": 0.9, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".357 Magnum", "load": "LEVERevolution FTX", "bullet_gr": 140.0, "muzzle_fps": 1750.0, "bc_g1": 0.251, "powder_gr": 15.0, "default_cost": 1.8, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".357 Magnum", "load": "JSP", "bullet_gr": 158.0, "muzzle_fps": 1650.0, "bc_g1": 0.177, "powder_gr": 14.0, "default_cost": 0.95, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".38-55 Winchester", "load": "Soft Point", "bullet_gr": 255.0, "muzzle_fps": 1320.0, "bc_g1": 0.256, "powder_gr": 16.0, "default_cost": 3.2, "is_default": true, "source": "published", "group": ""}, {"cartridge": ".44 Magnum", "load": "JSP", "bullet_gr": 240.0, "muzzle_fps": 1750.0, "bc_g1": 0.186, "powder_gr": 22.0, "default_cost": 1.3, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".44 Magnum", "load": "LEVERevolution FTX", "bullet_gr": 225.0, "muzzle_fps": 1850.0, "bc_g1": 0.279, "powder_gr": 22.0, "default_cost": 2.0, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".444 Marlin", "load": "Soft Point", "bullet_gr": 240.0, "muzzle_fps": 2350.0, "bc_g1": 0.186, "powder_gr": 45.0, "default_cost": 2.4, "is_default": false, "source": "partial", "group": ""}, {"cartridge": ".444 Marlin", "load": "LEVERevolution FTX", "bullet_gr": 265.0, "muzzle_fps": 2325.0, "bc_g1": 0.329, "powder_gr": 45.0, "default_cost": 2.8, "is_default": true, "source": "partial", "group": ""}, {"cartridge": ".444 Marlin", "load": "JHP", "bullet_gr": 300.0, "muzzle_fps": 2000.0, "bc_g1": 0.233, "powder_gr": 45.0, "default_cost": 2.0, "is_default": false, "source": "partial", "group": ""}, {"cartridge": ".450 Bushmaster", "load": "FN", "bullet_gr": 250.0, "muzzle_fps": 2200.0, "bc_g1": 0.24, "powder_gr": 45.0, "default_cost": 2.0, "is_default": true, "source": "approx", "group": ""}]}, {"title": "Handgun", "blurb": "Pistol and revolver rounds, including .22 LR and .22 WMR", "default_distance": 10, "max_distance": 500, "default_gun_lb": 2.0, "gun_label": "HANDGUN WEIGHT (LB)", "cartridge_label": "CARTRIDGE", "load_label": "BULLET WEIGHT", "payload_row": "Bullet weight", "payload_col": "Grains", "grain_style": true, "show_oz": false, "weights": [3, 3, 1, 3], "allow_custom": true, "default_bc": 0.15, "sort_loads": true, "loads": [{"cartridge": ".22 LR", "load": "Standard Velocity LRN", "bullet_gr": 40.0, "muzzle_fps": 900.0, "bc_g1": 0.138, "powder_gr": 1.4, "default_cost": 0.1, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".22 LR", "load": "High Velocity LRN", "bullet_gr": 40.0, "muzzle_fps": 1050.0, "bc_g1": 0.138, "powder_gr": 1.6, "default_cost": 0.11, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".22 LR", "load": "High Velocity HP", "bullet_gr": 36.0, "muzzle_fps": 1100.0, "bc_g1": 0.125, "powder_gr": 1.6, "default_cost": 0.12, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".22 WMR", "load": "V-Max +V", "bullet_gr": 30.0, "muzzle_fps": 1600.0, "bc_g1": 0.128, "powder_gr": 3.5, "default_cost": 0.35, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".22 WMR", "load": "JHP", "bullet_gr": 40.0, "muzzle_fps": 1400.0, "bc_g1": 0.159, "powder_gr": 4.0, "default_cost": 0.3, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".25 ACP", "load": "FMJ", "bullet_gr": 50.0, "muzzle_fps": 760.0, "bc_g1": 0.113, "powder_gr": 1.0, "default_cost": 0.55, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".32 ACP", "load": "FMJ", "bullet_gr": 71.0, "muzzle_fps": 905.0, "bc_g1": 0.104, "powder_gr": 1.8, "default_cost": 0.5, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".32 H&R Magnum", "load": "Cast LFP", "bullet_gr": 77.0, "muzzle_fps": 998.0, "bc_g1": 0.113, "powder_gr": 3.5, "default_cost": 0.8, "is_default": false, "source": "partial", "group": ""}, {"cartridge": ".32 H&R Magnum", "load": "JHP", "bullet_gr": 85.0, "muzzle_fps": 1263.0, "bc_g1": 0.125, "powder_gr": 3.8, "default_cost": 0.85, "is_default": true, "source": "partial", "group": ""}, {"cartridge": ".380 ACP", "load": "FMJ", "bullet_gr": 95.0, "muzzle_fps": 950.0, "bc_g1": 0.11, "powder_gr": 2.5, "default_cost": 0.45, "is_default": true, "source": "approx", "group": ""}, {"cartridge": "9mm Luger", "load": "FMJ", "bullet_gr": 115.0, "muzzle_fps": 1150.0, "bc_g1": 0.13, "powder_gr": 4.5, "default_cost": 0.3, "is_default": false, "source": "approx", "group": ""}, {"cartridge": "9mm Luger", "load": "FMJ", "bullet_gr": 124.0, "muzzle_fps": 1100.0, "bc_g1": 0.14, "powder_gr": 4.4, "default_cost": 0.32, "is_default": true, "source": "approx", "group": ""}, {"cartridge": "9mm Luger", "load": "FMJ", "bullet_gr": 147.0, "muzzle_fps": 980.0, "bc_g1": 0.17, "powder_gr": 4.0, "default_cost": 0.36, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".40 S&W", "load": "FMJ", "bullet_gr": 165.0, "muzzle_fps": 1100.0, "bc_g1": 0.15, "powder_gr": 5.5, "default_cost": 0.4, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".40 S&W", "load": "FMJ", "bullet_gr": 180.0, "muzzle_fps": 990.0, "bc_g1": 0.16, "powder_gr": 5.0, "default_cost": 0.42, "is_default": true, "source": "approx", "group": ""}, {"cartridge": "10mm Auto", "load": "FMJ", "bullet_gr": 200.0, "muzzle_fps": 1100.0, "bc_g1": 0.18, "powder_gr": 8.5, "default_cost": 0.85, "is_default": false, "source": "approx", "group": ""}, {"cartridge": "10mm Auto", "load": "JHP", "bullet_gr": 180.0, "muzzle_fps": 1250.0, "bc_g1": 0.16, "powder_gr": 9.0, "default_cost": 0.8, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".45 ACP", "load": "FMJ", "bullet_gr": 185.0, "muzzle_fps": 950.0, "bc_g1": 0.13, "powder_gr": 5.0, "default_cost": 0.5, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".45 ACP", "load": "FMJ", "bullet_gr": 230.0, "muzzle_fps": 850.0, "bc_g1": 0.16, "powder_gr": 5.5, "default_cost": 0.5, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".38 Special", "load": "LRN", "bullet_gr": 158.0, "muzzle_fps": 760.0, "bc_g1": 0.18, "powder_gr": 3.0, "default_cost": 0.45, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".38 Special", "load": "+P JHP", "bullet_gr": 125.0, "muzzle_fps": 950.0, "bc_g1": 0.14, "powder_gr": 4.5, "default_cost": 0.8, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".357 Magnum", "load": "JHP", "bullet_gr": 125.0, "muzzle_fps": 1400.0, "bc_g1": 0.14, "powder_gr": 14.0, "default_cost": 0.9, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".357 Magnum", "load": "JSP", "bullet_gr": 158.0, "muzzle_fps": 1250.0, "bc_g1": 0.18, "powder_gr": 13.5, "default_cost": 0.95, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".44 Magnum", "load": "JSP", "bullet_gr": 240.0, "muzzle_fps": 1200.0, "bc_g1": 0.19, "powder_gr": 22.0, "default_cost": 1.3, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".45 Colt", "load": "LRN", "bullet_gr": 255.0, "muzzle_fps": 860.0, "bc_g1": 0.178, "powder_gr": 8.0, "default_cost": 1.1, "is_default": true, "source": "approx", "group": ""}]}, {"title": "Rimfire Rifle", "blurb": ".17 and .22 rimfire rifle rounds", "default_distance": 50, "max_distance": 500, "default_gun_lb": 5.0, "gun_label": "RIFLE WEIGHT (LB)", "cartridge_label": "CARTRIDGE", "load_label": "BULLET WEIGHT", "payload_row": "Bullet weight", "payload_col": "Grains", "grain_style": true, "show_oz": false, "weights": [3, 3, 1, 6], "allow_custom": true, "default_bc": 0.13, "sort_loads": true, "loads": [{"cartridge": ".17 Mach 2", "load": "V-Max", "bullet_gr": 17.0, "muzzle_fps": 2100.0, "bc_g1": 0.123, "powder_gr": 2.0, "default_cost": 0.25, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".17 HMR", "load": "V-Max", "bullet_gr": 17.0, "muzzle_fps": 2550.0, "bc_g1": 0.123, "powder_gr": 2.4, "default_cost": 0.4, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".17 HMR", "load": "XTP", "bullet_gr": 20.0, "muzzle_fps": 2375.0, "bc_g1": 0.145, "powder_gr": 2.6, "default_cost": 0.42, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".17 WSM", "load": "V-Max", "bullet_gr": 20.0, "muzzle_fps": 3000.0, "bc_g1": 0.145, "powder_gr": 6.0, "default_cost": 0.6, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".17 WSM", "load": "V-Max", "bullet_gr": 25.0, "muzzle_fps": 2600.0, "bc_g1": 0.18, "powder_gr": 6.2, "default_cost": 0.6, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".22 Short", "load": "Standard LRN", "bullet_gr": 29.0, "muzzle_fps": 1045.0, "bc_g1": 0.1, "powder_gr": 0.6, "default_cost": 0.15, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".22 Long", "load": "High Velocity LRN", "bullet_gr": 29.0, "muzzle_fps": 1217.0, "bc_g1": 0.1, "powder_gr": 0.9, "default_cost": 0.18, "is_default": true, "source": "partial", "group": ""}, {"cartridge": ".22 LR", "load": "Standard Velocity LRN", "bullet_gr": 40.0, "muzzle_fps": 1070.0, "bc_g1": 0.138, "powder_gr": 1.5, "default_cost": 0.1, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".22 LR", "load": "High Velocity LRN", "bullet_gr": 40.0, "muzzle_fps": 1255.0, "bc_g1": 0.138, "powder_gr": 1.8, "default_cost": 0.11, "is_default": true, "source": "approx", "group": ""}, {"cartridge": ".22 LR", "load": "High Velocity HP", "bullet_gr": 36.0, "muzzle_fps": 1280.0, "bc_g1": 0.125, "powder_gr": 1.8, "default_cost": 0.12, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".22 LR", "load": "Stinger", "bullet_gr": 32.0, "muzzle_fps": 1640.0, "bc_g1": 0.1, "powder_gr": 2.0, "default_cost": 0.2, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".22 WMR", "load": "V-Max", "bullet_gr": 30.0, "muzzle_fps": 2200.0, "bc_g1": 0.128, "powder_gr": 3.5, "default_cost": 0.35, "is_default": false, "source": "approx", "group": ""}, {"cartridge": ".22 WMR", "load": "JHP", "bullet_gr": 40.0, "muzzle_fps": 1875.0, "bc_g1": 0.159, "powder_gr": 4.0, "default_cost": 0.3, "is_default": true, "source": "approx", "group": ""}]}, {"title": "Shotgun", "blurb": "Birdshot, buckshot and slugs", "default_distance": 25, "max_distance": 300, "default_gun_lb": 7.5, "gun_label": "SHOTGUN WEIGHT (LB)", "cartridge_label": "GAUGE", "load_label": "LOAD", "payload_row": "Payload", "payload_col": "Payload (gr)", "grain_style": false, "show_oz": true, "weights": [3, 3, 1, 3], "allow_custom": false, "default_bc": 0.3, "sort_loads": false, "loads": [{"cartridge": "12 Gauge", "load": "2¾\" #8 Target · 1⅛ oz", "bullet_gr": 492.2, "muzzle_fps": 1200.0, "bc_g1": 0.015, "powder_gr": 18.0, "default_cost": 0.35, "is_default": true, "source": "approx", "group": "Target"}, {"cartridge": "12 Gauge", "load": "2¾\" #6 Game · 1¼ oz", "bullet_gr": 546.9, "muzzle_fps": 1330.0, "bc_g1": 0.018, "powder_gr": 24.0, "default_cost": 0.65, "is_default": false, "source": "approx", "group": "Game"}, {"cartridge": "12 Gauge", "load": "3\" #2 Steel Goose · 1¼ oz", "bullet_gr": 546.9, "muzzle_fps": 1450.0, "bc_g1": 0.018, "powder_gr": 32.0, "default_cost": 1.4, "is_default": false, "source": "partial", "group": "Waterfowl"}, {"cartridge": "12 Gauge", "load": "3\" #5 Turkey · 1¾ oz", "bullet_gr": 765.6, "muzzle_fps": 1250.0, "bc_g1": 0.02, "powder_gr": 30.0, "default_cost": 2.0, "is_default": false, "source": "approx", "group": "Turkey"}, {"cartridge": "12 Gauge", "load": "2¾\" #4 Buck · 27 pellets", "bullet_gr": 561.6, "muzzle_fps": 1325.0, "bc_g1": 0.041, "powder_gr": 28.0, "default_cost": 1.2, "is_default": false, "source": "partial", "group": "Buckshot"}, {"cartridge": "12 Gauge", "load": "2¾\" #1 Buck · 16 pellets", "bullet_gr": 648.0, "muzzle_fps": 1325.0, "bc_g1": 0.051, "powder_gr": 30.0, "default_cost": 1.3, "is_default": false, "source": "partial", "group": "Buckshot"}, {"cartridge": "12 Gauge", "load": "2¾\" 00 Buck · 9 pellets", "bullet_gr": 486.0, "muzzle_fps": 1325.0, "bc_g1": 0.057, "powder_gr": 30.0, "default_cost": 1.3, "is_default": false, "source": "partial", "group": "Buckshot"}, {"cartridge": "12 Gauge", "load": "2¾\" Low-Recoil 00 Buck · 8 pellets", "bullet_gr": 432.0, "muzzle_fps": 1140.0, "bc_g1": 0.057, "powder_gr": 22.0, "default_cost": 1.8, "is_default": false, "source": "partial", "group": "Buckshot"}, {"cartridge": "12 Gauge", "load": "2¾\" Rifled Slug · 1 oz", "bullet_gr": 437.5, "muzzle_fps": 1600.0, "bc_g1": 0.09, "powder_gr": 36.0, "default_cost": 1.75, "is_default": false, "source": "approx", "group": "Slug"}, {"cartridge": "20 Gauge", "load": "2¾\" #8 Target · ⅞ oz", "bullet_gr": 382.8, "muzzle_fps": 1200.0, "bc_g1": 0.015, "powder_gr": 15.0, "default_cost": 0.35, "is_default": true, "source": "approx", "group": "Target"}, {"cartridge": "20 Gauge", "load": "2¾\" #3 Buck · 20 pellets", "bullet_gr": 470.0, "muzzle_fps": 1200.0, "bc_g1": 0.043, "powder_gr": 24.0, "default_cost": 1.6, "is_default": false, "source": "approx", "group": "Buckshot"}, {"cartridge": "20 Gauge", "load": "2¾\" Rifled Slug · ⅝ oz", "bullet_gr": 273.4, "muzzle_fps": 1600.0, "bc_g1": 0.079, "powder_gr": 28.0, "default_cost": 1.6, "is_default": false, "source": "approx", "group": "Slug"}, {"cartridge": "28 Gauge", "load": "2¾\" #8 Target · ¾ oz", "bullet_gr": 328.1, "muzzle_fps": 1330.0, "bc_g1": 0.015, "powder_gr": 14.0, "default_cost": 0.6, "is_default": true, "source": "partial", "group": "Target"}, {"cartridge": "28 Gauge", "load": "2¾\" #9 Target · ¾ oz", "bullet_gr": 328.1, "muzzle_fps": 1250.0, "bc_g1": 0.013, "powder_gr": 13.0, "default_cost": 0.55, "is_default": false, "source": "partial", "group": "Target"}, {"cartridge": "28 Gauge", "load": "2¾\" #6 Upland · ¾ oz", "bullet_gr": 328.1, "muzzle_fps": 1295.0, "bc_g1": 0.018, "powder_gr": 14.0, "default_cost": 0.85, "is_default": false, "source": "partial", "group": "Game"}, {"cartridge": "28 Gauge", "load": "2¾\" #7½ Game · 1 oz", "bullet_gr": 437.5, "muzzle_fps": 1220.0, "bc_g1": 0.016, "powder_gr": 17.0, "default_cost": 0.9, "is_default": false, "source": "partial", "group": "Game"}, {"cartridge": "28 Gauge", "load": "2¾\" #6 Steel Upland · ⅝ oz", "bullet_gr": 273.4, "muzzle_fps": 1350.0, "bc_g1": 0.013, "powder_gr": 15.0, "default_cost": 1.1, "is_default": false, "source": "partial", "group": "Game"}, {"cartridge": "28 Gauge", "load": "3\" #3 Steel · ¾ oz", "bullet_gr": 328.1, "muzzle_fps": 1400.0, "bc_g1": 0.017, "powder_gr": 18.0, "default_cost": 1.6, "is_default": false, "source": "partial", "group": "Waterfowl"}, {"cartridge": "28 Gauge", "load": "3\" #9 TSS Turkey · 1½ oz", "bullet_gr": 656.2, "muzzle_fps": 1050.0, "bc_g1": 0.022, "powder_gr": 24.0, "default_cost": 5.5, "is_default": false, "source": "partial", "group": "Turkey"}, {"cartridge": ".410 Bore", "load": "2½\" #8 Target · ½ oz", "bullet_gr": 218.8, "muzzle_fps": 1200.0, "bc_g1": 0.015, "powder_gr": 8.5, "default_cost": 0.45, "is_default": true, "source": "approx", "group": "Target"}, {"cartridge": ".410 Bore", "load": "3\" 000 Buck · 5 pellets", "bullet_gr": 350.0, "muzzle_fps": 1135.0, "bc_g1": 0.062, "powder_gr": 12.0, "default_cost": 1.4, "is_default": false, "source": "approx", "group": "Buckshot"}, {"cartridge": ".410 Bore", "load": "2½\" Rifled Slug · ⅕ oz", "bullet_gr": 87.5, "muzzle_fps": 1800.0, "bc_g1": 0.057, "powder_gr": 14.0, "default_cost": 1.5, "is_default": false, "source": "approx", "group": "Slug"}]}]};
+const APP_TITLE = "Cartridge Value Calculator";
+const GRAINS_PER_OZ = 437.5;
+const GRADE_BANDS = [[72.5,"S"],[70.5,"A"],[66,"B"],[61,"C"],[55,"D"]];
+const METRICS = {velocity:["Velocity",true],energy:["Energy",true],recoil:["Recoil",false],cost:["Cost",false]};
+const MKEYS = Object.keys(METRICS);
+const TYPICAL_SCORE = 70.0;
+const HIGH_K = -Math.log(1 - TYPICAL_SCORE/100), LOW_K = -Math.log(TYPICAL_SCORE/100);
+const GRADE_COLORS = {S:["#a98bff","#1b0a40"],A:["#2fbf71","#06210f"],B:["#4c8dff","#06152e"],C:["#e5b93c","#2b2005"],D:["#e98a3c","#2e1704"],F:["#e5534b","#2e0a08"]};
+const SOURCE_NOTES = {
+  published:"Weight, velocity and ballistic coefficient are manufacturer-published; powder charge (used for recoil) is estimated.",
+  partial:"Weight and velocity are manufacturer-published; ballistic coefficient and powder charge are estimated.",
+  custom:"Your own entry. Anything you left blank was estimated."};
+const DEFAULT_SOURCE_NOTE = "Load data is approximate. Check it against the box or the manufacturer.";
+const CUSTOM_KEY = "cartridge_calc_custom_v1";
+
+const CATEGORIES = DATA.categories;   // title, blurb, distances, labels, flags, weights, loads
+const G1 = [[0,.2629],[.05,.2558],[.1,.2487],[.15,.2413],[.2,.2344],[.25,.2278],[.3,.2214],[.35,.2155],[.4,.2104],[.45,.2061],[.5,.2032],[.55,.202],[.6,.2034],[.7,.2165],[.725,.223],[.75,.2313],[.775,.2417],[.8,.2546],[.825,.2706],[.85,.2901],[.875,.3136],[.9,.3415],[.925,.3734],[.95,.4084],[.975,.4448],[1,.4805],[1.025,.5136],[1.05,.5427],[1.075,.5677],[1.1,.5883],[1.125,.6053],[1.15,.6191],[1.2,.6393],[1.25,.6518],[1.3,.6589],[1.35,.6621],[1.4,.6625],[1.45,.6607],[1.5,.6573],[1.55,.6528],[1.6,.6474],[1.65,.6413],[1.7,.6347],[1.75,.628],[1.8,.621],[1.85,.6141],[1.9,.6072],[1.95,.6003],[2,.5934],[2.05,.5867],[2.1,.5804],[2.15,.5743],[2.2,.5685],[2.25,.563],[2.3,.5577],[2.35,.5527],[2.4,.5481],[2.45,.5438],[2.5,.5397],[2.6,.5325],[2.7,.5264],[2.8,.5211],[2.9,.5168],[3,.5133],[3.1,.5105],[3.2,.5084],[3.3,.5067],[3.4,.5054],[3.5,.504],[3.6,.503],[3.7,.5022],[3.8,.5016],[3.9,.501],[4,.5006],[4.2,.4998],[4.4,.4995],[4.6,.4992],[4.8,.499],[5,.4988]];
+const FT_PER_M=3.280839895, YD_PER_M=1.093613298, SOS=340.3, RHO=1.225, LBIN2=703.0696;
+const KDRAG = RHO*Math.PI/(8*LBIN2);
+
+// ---------- helpers ----------
+const $ = (s,r=document)=>r.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function g(n){return String(+(+n).toPrecision(6));}          // like Python's :g
+function el(html){const t=document.createElement("template");t.innerHTML=html.trim();return t.content.firstChild;}
+
+// ---------- ballistics ----------
+function g1cd(m){
+  if(m<=G1[0][0])return G1[0][1];
+  const last=G1[G1.length-1]; if(m>=last[0])return last[1];
+  let lo=0,hi=G1.length;                       // bisect_right
+  while(lo<hi){const mid=(lo+hi)>>1; if(m<G1[mid][0])hi=mid; else lo=mid+1;}
+  const [m0,c0]=G1[lo-1],[m1,c1]=G1[lo];
+  return c0+(c1-c0)*(m-m0)/(m1-m0);
+}
+function velocityAt(fps,bc,distYd){
+  if(distYd<=0)return +fps;
+  let v=fps/FT_PER_M; const total=distYd/YD_PER_M, step=0.5; let x=0;
+  const dvdx=s=>-KDRAG*g1cd(s/SOS)*s/bc;
+  while(x<total && v>1){
+    const h=Math.min(step,total-x), k1=dvdx(v), k2=dvdx(v+0.5*h*k1);
+    v+=h*k2; x+=h;
+  }
+  return Math.max(v,0)*FT_PER_M;
+}
+const energy=(gr,v)=>gr*v*v/450240;
+function recoil(gr,fps,powder,gun){
+  const mom=(gr*fps+1.75*powder*4000)/7000, gv=mom/gun;
+  return 0.5*(gun/32.174)*gv*gv;
+}
+const estimatePowder=(gr,fps)=>Math.max(0.3,energy(gr,fps)/60);
+
+// ---------- scoring ----------
+function computeStats(item,dist,gun,cost){
+  const v=velocityAt(item.muzzle_fps,item.bc_g1,dist);
+  return {weight:item.bullet_gr,velocity:v,energy:energy(item.bullet_gr,v),
+          recoil:recoil(item.bullet_gr,item.muzzle_fps,item.powder_gr,gun),
+          cost:cost==null?item.default_cost:cost};
+}
+function median(a){const s=[...a].sort((x,y)=>x-y),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2;}
+function referenceLevels(loads,dist,gun){
+  const st=loads.map(x=>computeStats(x,dist,gun)); const r={};
+  for(const k of MKEYS)r[k]=median(st.map(s=>s[k])); return r;
+}
+function gradeFor(score){for(const [t,l] of GRADE_BANDS)if(score>=t)return l;return "F";}
+function metricScore(value,ref,hi){
+  if(ref<=0)return 50;
+  const x=Math.max(value,0)/ref;
+  return hi?100*(1-Math.exp(-HIGH_K*x)):100*Math.exp(-LOW_K*x);
+}
+function scoreStats(stats,refs,weights){
+  const scores={}; for(const k of MKEYS)scores[k]=metricScore(stats[k],refs[k],METRICS[k][1]);
+  let tot=MKEYS.reduce((a,k)=>a+weights[k],0), w=weights;
+  if(tot<=0){w={velocity:1,energy:1,recoil:1,cost:1};tot=4;}
+  return [scores, MKEYS.reduce((a,k)=>a+scores[k]*w[k],0)/tot];
+}
+
+// ---------- data ----------
+function makeLabel(it,cat){
+  if(cat.grain_style){const b=g(it.bullet_gr)+" gr"; return it.load?`${b}  ·  ${it.load}`:b;}
+  if(it.group&&it.load)return `${it.group}  ·  ${it.load}`;
+  return it.load||g(it.bullet_gr)+" gr";
+}
+function readCustom(){try{return JSON.parse(localStorage.getItem(CUSTOM_KEY)||"[]")||[];}catch(e){return [];}}
+function writeCustom(rows){try{localStorage.setItem(CUSTOM_KEY,JSON.stringify(rows));return true;}catch(e){return false;}}
+const state = {loads:{}};     // title -> array of load objects
+for(const cat of CATEGORIES){
+  state.loads[cat.title]=cat.loads.map(x=>Object.assign({},x,{label:makeLabel(x,cat)}));
+  if(cat.allow_custom){
+    for(const r of readCustom()){
+      if(r.category!==cat.title)continue;
+      const it={cartridge:r.cartridge,load:r.load||"Custom",bullet_gr:+r.bullet_gr,muzzle_fps:+r.muzzle_fps,bc_g1:+r.bc_g1,powder_gr:+r.powder_gr,default_cost:+r.default_cost,source:"custom",group:"",is_default:false};
+      if(![it.bullet_gr,it.muzzle_fps,it.bc_g1,it.powder_gr].every(v=>v>0))continue;
+      it.label=makeLabel(it,cat); state.loads[cat.title].push(it);
+    }
+  }
+}
+function groupBy(loads,sort){
+  const m=new Map();
+  for(const it of loads){if(!m.has(it.cartridge))m.set(it.cartridge,[]);m.get(it.cartridge).push(it);}
+  if(sort)for(const a of m.values())a.sort((x,y)=>x.bullet_gr-y.bullet_gr||(x.load<y.load?-1:x.load>y.load?1:0));
+  return m;
+}
+function sameCustom(r,it){return r.cartridge===it.cartridge&&(r.load||"Custom")===it.load&&Math.abs((+r.bullet_gr||0)-it.bullet_gr)<1e-6&&Math.abs((+r.muzzle_fps||0)-it.muzzle_fps)<1e-6;}
+
+// ---------- views ----------
+const app=$("#app");
+function showLauncher(){
+  document.title=APP_TITLE;
+  app.innerHTML=`<h1>${APP_TITLE}</h1><p class="sub">Choose a category to get started.</p><div class="grid"></div>`;
+  const grid=$(".grid",app);
+  for(const cat of CATEGORIES){
+    const loads=state.loads[cat.title], nc=new Set(loads.map(x=>x.cartridge)).size;
+    const b=el(`<button class="cat"><b>${esc(cat.title)}</b><span class="b">${esc(cat.blurb)}</span><span class="c">${nc} cartridges  ·  ${loads.length} loads</span></button>`);
+    b.onclick=()=>openCategory(cat); grid.appendChild(b);
+  }
+  window.scrollTo(0,0);
+}
+
+function openCategory(cat){
+  document.title=`${APP_TITLE} — ${cat.title}`;
+  const V={cat,loads:state.loads[cat.title],weightsOpen:false,last:null};
+  const regroup=()=>{V.groups=groupBy(V.loads,cat.sort_loads);V.cartridges=[...V.groups.keys()];};
+  regroup();
+  app.innerHTML=`
+  <button class="link" id="back">‹&nbsp; All categories</button>
+  <h2>${esc(cat.title)}</h2>
+  <p class="sub">Compare loads by performance per dollar.</p>
+  <div class="card">
+    <div class="field"><label class="l">${esc(cat.cartridge_label)}</label><select id="cart"></select></div>
+    <div class="field hidden" id="loadf"><label class="l">${esc(cat.load_label)}</label><select id="load"></select>
+      <button class="link m hidden" id="rm" style="font-weight:400;font-size:.8rem">Remove this custom load</button></div>
+    <div class="nums">
+      <div><label class="l">COST PER ROUND ($)</label><input id="cost" inputmode="decimal"></div>
+      <div><label class="l">DISTANCE (YD)</label><input id="dist" inputmode="decimal"></div>
+      <div><label class="l">${esc(cat.gun_label)}</label><input id="gun" inputmode="decimal"></div>
+    </div>
+    <div class="links"><button class="link m" id="wt">▸&nbsp; Scoring weights</button>${cat.allow_custom?'<button class="link" id="add">+&nbsp; Add your own caliber</button>':''}</div>
+    <div class="weights hidden" id="wbox">
+      <div class="wrow">${MKEYS.map(k=>`<div><label>${METRICS[k][0]}</label><input id="w_${k}" inputmode="numeric"></div>`).join("")}</div>
+      <div class="wnote" id="wnote"></div><div class="help">Higher = matters more. 0 ignores that factor.</div>
+    </div>
+    <div class="btns"><button class="btn p" id="calc">Calculate</button><button class="btn" id="cmp">Compare All</button><button class="btn" id="reset">Reset</button></div>
+  </div>
+  <div class="card res hidden" id="res"></div>`;
+  const $$=s=>$(s,app);
+  const cart=$$("#cart"),loadSel=$$("#load");
+  const fillCart=()=>{cart.innerHTML=`<option value="" disabled selected hidden>Select…</option>`+V.cartridges.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");};
+  const setDefaults=()=>{
+    $$("#dist").value=g(cat.default_distance);$$("#gun").value=g(cat.default_gun_lb);
+    MKEYS.forEach((k,i)=>$$("#w_"+k).value=cat.weights[i]);
+  };
+  const selected=()=>V.byLabel&&V.byLabel[loadSel.value];
+  const onGrain=()=>{const it=selected();if(!it)return;$$("#cost").value=it.default_cost.toFixed(2);$$("#rm").classList.toggle("hidden",it.source!=="custom");};
+  const onCart=()=>{
+    const items=V.groups.get(cart.value);if(!items)return;
+    V.byLabel={};items.forEach(x=>V.byLabel[x.label]=x);
+    loadSel.innerHTML=items.map(x=>`<option value="${esc(x.label)}">${esc(x.label)}</option>`).join("");
+    loadSel.value=(items.find(x=>x.is_default)||items[0]).label;
+    $$("#loadf").classList.remove("hidden");onGrain();
+  };
+  const wnote=()=>{
+    const vals={};for(const k of MKEYS){const v=parseFloat($$("#w_"+k).value);if(isNaN(v)){$$("#wnote").textContent="";return;}vals[k]=v;}
+    const t=MKEYS.reduce((a,k)=>a+vals[k],0);
+    $$("#wnote").textContent=t<=0?"All weights are 0, so every factor counts equally.":MKEYS.map(k=>`${METRICS[k][0]} ${(100*vals[k]/t).toFixed(0)}%`).join("  ·  ");
+  };
+  const num=(id,name,min,max)=>{
+    const v=Number(String($$("#"+id).value).trim().replace("$",""));
+    if($$("#"+id).value.trim()===""||!isFinite(v))throw new Error(`${name} must be a number.`);
+    if(v<min||(max!=null&&v>max))throw new Error(max==null?`${name} must be ${g(min)} or more.`:`${name} must be between ${g(min)} and ${g(max)}.`);
+    return v;
+  };
+  const readInputs=(needCost=true)=>{
+    const dist=num("dist","Distance",0,cat.max_distance),gun=num("gun","Gun weight",0.5,30);
+    const cost=needCost?num("cost","Cost per round",0):null;
+    const weights={};for(const k of MKEYS)weights[k]=num("w_"+k,METRICS[k][0]+" weight",0,10);
+    return {dist,gun,cost,weights};
+  };
+  const payload=gr=>cat.show_oz?`${gr.toFixed(0)} gr  (${(gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(gr)} gr`;
+
+  function calculate(){
+    const it=selected(); if(!it){alert("Choose a cartridge and load first.");return;}
+    let inp;try{inp=readInputs();}catch(e){alert(e.message);return;}
+    const stats=computeStats(it,inp.dist,inp.gun,inp.cost),refs=referenceLevels(V.loads,inp.dist,inp.gun);
+    const [scores,overall]=scoreStats(stats,refs,inp.weights);
+    const gr={};for(const k of MKEYS)gr[k]=gradeFor(scores[k]);
+    const og=gradeFor(overall),src=SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE;
+    const badge=k=>`<span class="badge" style="background:${GRADE_COLORS[gr[k]][0]};color:${GRADE_COLORS[gr[k]][1]}">${gr[k]}</span>`;
+    const res=$$("#res");
+    res.innerHTML=`<h3>${esc(it.cartridge)}  ·  ${esc(it.label)}</h3>
+      <div class="muted" style="font-size:.85rem;margin:2px 0 8px">Velocity and energy at ${g(inp.dist)} yards</div>
+      <div class="row"><span class="muted">${esc(cat.payload_row)}</span><span class="v">${payload(stats.weight)}</span><span style="width:32px"></span></div>
+      <div class="row"><span class="muted">Velocity</span><span class="v">${stats.velocity.toFixed(0)} fps</span>${badge("velocity")}</div>
+      <div class="row"><span class="muted">Energy</span><span class="v">${stats.energy.toFixed(0)} ft-lbs</span>${badge("energy")}</div>
+      <div class="row"><span class="muted">Recoil</span><span class="v">${stats.recoil.toFixed(1)} ft-lbs</span>${badge("recoil")}</div>
+      <div class="row"><span class="muted">Cost</span><span class="v">$${stats.cost.toFixed(2)}</span>${badge("cost")}</div>
+      <hr><div class="row"><span class="muted">Overall</span><span class="v" style="font-size:1.1rem">${og}  ·  ${overall.toFixed(1)}%</span></div>
+      <div class="bar"><i style="width:${Math.max(0,Math.min(100,overall))}%;background:${GRADE_COLORS[og][0]}"></i></div>
+      <div class="note">${esc(src)} Each factor is scored on a curve against a typical load in this category (a typical load scores ${TYPICAL_SCORE.toFixed(0)}), so extra speed or energy past a point earns less. Recoil assumes a ${g(inp.gun)} lb gun.</div>`;
+    res.classList.remove("hidden");res.scrollIntoView({behavior:"smooth",block:"nearest"});
+  }
+  function reset(){
+    cart.value="";fillCart();loadSel.innerHTML="";V.byLabel={};$$("#loadf").classList.add("hidden");$$("#cost").value="";
+    setDefaults();if(V.weightsOpen)toggleW();$$("#res").classList.add("hidden");wnote();
+  }
+  function toggleW(){V.weightsOpen=!V.weightsOpen;$$("#wbox").classList.toggle("hidden",!V.weightsOpen);$$("#wt").innerHTML=(V.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";}
+
+  fillCart();setDefaults();wnote();
+  $$("#back").onclick=showLauncher;
+  cart.onchange=onCart;loadSel.onchange=onGrain;
+  $$("#wt").onclick=toggleW;
+  MKEYS.forEach(k=>$$("#w_"+k).addEventListener("input",wnote));
+  $$("#calc").onclick=calculate;$$("#reset").onclick=reset;$$("#cmp").onclick=()=>compareAll(V,readInputs);
+  app.onkeydown=e=>{if(e.key==="Enter"&&e.target.tagName==="INPUT")calculate();};
+  $$("#rm").onclick=()=>{
+    const it=selected();if(!it||it.source!=="custom")return;
+    if(!confirm(`Remove ${it.cartridge} ${it.label.trim()} from your list?`))return;
+    const rows=readCustom().filter(r=>!(r.category===cat.title&&sameCustom(r,it)));
+    if(!writeCustom(rows)){alert("Couldn't update saved calibers.");return;}
+    V.loads.splice(V.loads.indexOf(it),1);regroup();
+    const keep=V.groups.has(it.cartridge);const c=it.cartridge;fillCart();
+    if(keep){cart.value=c;onCart();}else reset();
+  };
+  if(cat.allow_custom)$$("#add").onclick=()=>addDialog(V,cat,regroup,c=>{fillCart();cart.value=c.cartridge;onCart();loadSel.value=c.label;onGrain();});
+  window.scrollTo(0,0);
+}
+
+function modal(inner){
+  const m=el(`<div class="modal"><div class="card">${inner}</div></div>`);
+  document.body.appendChild(m);document.body.style.overflow="hidden";
+  const close=()=>{m.remove();document.body.style.overflow="";};
+  m.addEventListener("mousedown",e=>{if(e.target===m)close();});
+  return [m,close];
+}
+
+function addDialog(V,cat,regroup,done){
+  const [m,close]=modal(`
+    <h3 style="margin:0 0 12px">Add your own caliber — ${esc(cat.title)}</h3>
+    <label class="l">CARTRIDGE NAME</label><input id="n" list="dl" autocomplete="off"><datalist id="dl">${V.cartridges.map(c=>`<option value="${esc(c)}">`).join("")}</datalist>
+    <div class="help">Pick an existing one to add another load to it, or type a new name.</div>
+    <div class="three"><div><label class="l">BULLET WEIGHT (GR)</label><input id="gr" inputmode="decimal"></div>
+      <div><label class="l">MUZZLE VEL. (FPS)</label><input id="fps" inputmode="decimal"></div>
+      <div><label class="l">PRICE / ROUND ($)</label><input id="pc" inputmode="decimal"></div></div>
+    <button class="link m" id="mt" style="margin-top:12px">▸&nbsp; More details (optional)</button>
+    <div id="more" class="hidden"><div class="three"><div><label class="l">LOAD NAME</label><input id="ln"></div>
+      <div><label class="l">BC (G1)</label><input id="bc" inputmode="decimal"></div>
+      <div><label class="l">POWDER (GR)</label><input id="pw" inputmode="decimal"></div></div>
+      <div class="help">Leave blank to use typical values (BC ${g(cat.default_bc)}; powder estimated from the speed and weight). Filling these in makes the recoil and long-range numbers more accurate.</div></div>
+    <div class="btns"><button class="btn p" id="save">Save caliber</button><button class="btn" id="cancel">Cancel</button></div>`);
+  const q=s=>$(s,m);
+  q("#mt").onclick=()=>{const o=q("#more").classList.toggle("hidden");q("#mt").innerHTML=(o?"▸":"▾")+"&nbsp; More details (optional)";};
+  q("#cancel").onclick=close;
+  const num=(id,label,lo,hi,blank)=>{
+    const t=q("#"+id).value.trim().replace("$","");
+    if(!t){if(blank)return null;throw new Error(`${label} is required.`);}
+    const v=Number(t);if(!isFinite(v))throw new Error(`${label} must be a number.`);
+    if(v<lo||(hi!=null&&v>hi))throw new Error(`${label} must be ${hi!=null?`between ${g(lo)} and ${g(hi)}`:`${g(lo)} or more`}.`);
+    return v;
+  };
+  q("#save").onclick=()=>{
+    let row;
+    try{
+      const name=q("#n").value.trim();if(!name)throw new Error("Enter a cartridge name.");
+      const gr=num("gr","Bullet weight",1,2000),fps=num("fps","Muzzle velocity",100,5500),cost=num("pc","Price per round",0);
+      const bc=num("bc","Ballistic coefficient",0.01,1.5,true),pw=num("pw","Powder charge",0.1,300,true);
+      row={category:cat.title,cartridge:name,load:q("#ln").value.trim()||"Custom",bullet_gr:gr,muzzle_fps:fps,
+           bc_g1:bc!=null?bc:cat.default_bc,powder_gr:+(pw!=null?pw:estimatePowder(gr,fps)).toFixed(1),default_cost:+cost.toFixed(2)};
+    }catch(e){alert(e.message);return;}
+    const it={cartridge:row.cartridge,load:row.load,bullet_gr:row.bullet_gr,muzzle_fps:row.muzzle_fps,bc_g1:row.bc_g1,powder_gr:row.powder_gr,default_cost:row.default_cost,source:"custom",group:"",is_default:false};
+    it.label=makeLabel(it,cat);
+    const taken=new Set(V.loads.filter(x=>x.cartridge===it.cartridge).map(x=>x.label));
+    const base=it.label;let n=1;
+    while(taken.has(it.label)){n++;it.label=`${base} (custom${n===2?"":" "+(n-1)})`;}
+    const rows=readCustom();rows.push(row);
+    if(!writeCustom(rows)){alert("Couldn't save: browser storage isn't available.");return;}
+    V.loads.push(it);regroup();close();done(it);
+  };
+  q("#n").focus();
+}
+
+function compareAll(V,readInputs){
+  let inp;try{inp=readInputs(false);}catch(e){alert(e.message);return;}
+  const cat=V.cat,refs=referenceLevels(V.loads,inp.dist,inp.gun);
+  const rows=V.loads.map(it=>{const s=computeStats(it,inp.dist,inp.gun),[,o]=scoreStats(s,refs,inp.weights);
+    return [it.cartridge,it.label,Math.round(s.weight),Math.round(s.velocity),Math.round(s.energy),+s.recoil.toFixed(1),s.cost,+o.toFixed(1),gradeFor(o)];});
+  const cols=[cat.cartridge_label.charAt(0)+cat.cartridge_label.slice(1).toLowerCase(),"Load",cat.payload_col,"Velocity (fps)","Energy (ft-lbs)","Recoil (ft-lbs)","Cost ($)","Score (%)","Grade"];
+  const bestFirst=new Set([cols[2],"Velocity (fps)","Energy (ft-lbs)","Score (%)"]);
+  const [m,close]=modal(`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="margin:0">${esc(cat.title)}: all loads at ${g(inp.dist)} yards</h3><button class="btn" id="x">Close</button></div>
+    <div class="tblwrap"><table><thead><tr>${cols.map((c,i)=>`<th data-i="${i}">${esc(c)}</th>`).join("")}</tr></thead><tbody></tbody></table></div>
+    <div class="note">Tap a heading to sort. Scores use your current weights and each load's default price.</div>`);
+  $("#x",m).onclick=close;
+  const st={col:null,desc:true},tb=$("tbody",m);
+  const render=data=>{tb.innerHTML=data.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6].toFixed(2)}</td><td>${r[7]}</td><td><span class="badge" style="background:${GRADE_COLORS[r[8]][0]};color:${GRADE_COLORS[r[8]][1]}">${r[8]}</span></td></tr>`).join("");};
+  const sortBy=(i,col)=>{
+    const desc=st.col===col?!st.desc:bestFirst.has(col);st.col=col;st.desc=desc;
+    render([...rows].sort((a,b)=>{const x=a[i],y=b[i];const c=x<y?-1:x>y?1:0;return desc?-c:c;}));
+  };
+  m.querySelectorAll("th").forEach(th=>th.onclick=()=>sortBy(+th.dataset.i,cols[+th.dataset.i]));
+  sortBy(7,"Score (%)");
+}
+
+showLauncher();
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+node_modules
+android
+dist
+build
+*.spec
+__pycache__
+.buildenv
+my_calibers.csv
