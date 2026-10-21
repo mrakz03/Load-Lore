@@ -475,8 +475,14 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 12 Gauge,"Federal Premium Freight Train Copper Sabot · 3"" Slug · 0.69 oz",301.9,2000,0.09,33.6,2.08,,partial,Slug,,Slug
 12 Gauge,"Remington Slugger High Velocity Rifled Slug · 3"" Slug · ⅞ oz",382.8,1875,0.09,37.5,1.60,,partial,Slug,,Slug
 12 Gauge,"Remington Premier AccuTip Slug · 3"" Slug · ⅞ oz",385,1900,0.09,38.7,1.60,,partial,Slug,,Slug
+12 Gauge,"Hornady BLACK · 2¾"" 00 Buck · 8 pellets",418.7,1600,0.055,29.8,1.10,,partial,Buckshot,,Buckshot
+12 Gauge,"Hornady Critical Defense · 2¾"" 00 Buck · 8 pellets",418.7,1600,0.055,29.8,1.10,,partial,Buckshot,,Buckshot
+12 Gauge,"Hornady American Gunner · 2¾"" 00 Buck · 8 pellets",418.7,1350,0.055,21.2,1.10,,partial,Buckshot,,Buckshot
 12 Gauge,"Federal Premium TruBall Rifled Slug · 3"" Slug · 1 oz",437.5,1700,0.09,35.2,2.08,,partial,Slug,,Slug
 12 Gauge,"Remington Slugger Rifled Slug · 3"" Slug · 1 oz",437.5,1760,0.09,37.7,1.60,,partial,Slug,,Slug
+12 Gauge,"Hornady American Whitetail Rifled Slug · 2¾"" Slug · 1 oz",437.5,1600,0.072,31.2,1.60,,catalog,Slug,,Slug
+12 Gauge,"Hornady American Gunner Reduced Recoil Rifled Slug · 2¾"" Slug · 1 oz",437.5,1300,0.071,20.6,1.60,,catalog,Slug,,Slug
+12 Gauge,"Fiocchi Texas White Wing · 2¾"" #7.5 · 1⅛ oz",492.2,1250,0.016,21.4,0.60,,partial,Game,,Game
 12 Gauge,"Federal Power-Shok Rifled HP Slug · 3"" Slug · 1¼ oz",546.9,1600,0.09,39,1.60,,partial,Slug,,Slug
 16 Gauge,"Winchester Xpert Game & Target Hi-Velocity Steel · 2¾"" #6 Steel · ¹⁵⁄₁₆ oz",410.2,1350,0.013,20.9,0.44,,partial,Target,,Target
 16 Gauge,"Federal Premium Upland Pheasants Forever High Velocity · 2¾"" #4/5/6 · 1⅛ oz",492.2,1425,0.022,27.9,0.98,,partial,Game,,Game
@@ -650,6 +656,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 20 Gauge,"Winchester Super-X (smooth bore) · 2¾"" Slug · ¾ oz",328.1,1600,0.079,29.8,1.76,,partial,Slug,,Slug
 20 Gauge,"Winchester Defender Defense · 2¾"" Slug · ¾ oz",328.1,1600,0.079,29.8,1.76,,partial,Slug,,Slug
 20 Gauge,"Remington Slugger High Velocity Rifled Slug · 2¾"" Slug · ½ oz",218.8,1800,0.079,25.1,1.76,,partial,Slug,,Slug
+20 Gauge,"Hornady SST Shotgun Slug (FTX) · 2¾"" Slug · 0.57 oz",250,1800,0.204,22.5,1.76,,catalog,Slug,,Slug
+20 Gauge,"Hornady Superformance Shotgun Slug (MonoFlex) · 2¾"" Slug · 0.57 oz",250,1800,0.204,22.5,1.76,,catalog,Slug,,Slug
+20 Gauge,"Hornady Custom Lite Shotgun Slug (FTX) · 2¾"" Slug · 0.57 oz",250,1600,0.213,17.8,1.76,,catalog,Slug,,Slug
 20 Gauge,"Remington Premier AccuTip Slug · 2¾"" Slug · 0.59 oz",259.9,1750,0.079,28.2,1.76,,partial,Slug,,Slug
 20 Gauge,"Remington Slugger Rifled Slug · 2¾"" Slug · ⅝ oz",273.4,1580,0.079,24.2,1.76,,partial,Slug,,Slug
 20 Gauge,"Federal Premium Freight Train Copper Sabot · 2¾"" Slug · ⅝ oz",275.6,1700,0.079,28.2,2.29,,partial,Slug,,Slug

@@ -113,6 +113,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .22 WMR,Hornady V-MAX,30,2200,0.097,3.8,0.34,,catalog,,24,Varmint
 .22 WMR,Winchester Varmint HV JHP,30,2250,0.089,4,0.26,,catalog,,,Varmint
 .22 WMR,Winchester Varmint HV VMax,30,2250,0.095,4,0.34,,catalog,,,Varmint
+.22 WMR,CCI Maxi-Mag HP+V JHP,30,2200,0.089,3.8,0.34,,partial,,,Varmint
 .22 WMR,Winchester Varmint HE JHP,34,2120,0.102,4,0.26,,catalog,,,Varmint
 .22 WMR,CCI 22 Mag Gamepoint JSP,40,1875,0.135,3.7,0.26,,catalog,,,Hunting
 .22 WMR,CCI Maxi Mag HP JHP,40,1875,0.116,3.7,0.26,,catalog,,,Hunting

@@ -68,6 +68,12 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
 - 10 and 16 Gauge (Oct 2026): 41 loads from the 2026 Federal, Winchester, Remington and Fiocchi
   catalogs (rows in research/added_loads_sources.tsv). BC is set by shot size like the other gauges;
   price is the same line's 12 ga price x1.25 (16 ga) or x1.6 (10 ga).
+- Full catalog check (Oct 2026): every load in the 2026 Hornady (ballistics pages), Fiocchi, CCI/Blazer,
+  PMC and ELEY catalogs was matched against the data; the 17 missing ones were added (in
+  research/added_loads_sources.tsv). Left out on purpose: cartridges the app doesn't have (Hornady
+  Dangerous Game / Weatherby / Marlin Express etc., 30 Super Carry, 360 Buckhammer, Fiocchi Heritage
+  oddities), rimfire/handgun shotshells, less-lethal rounds, and Hornady #4 Buck / Heavy Magnum Coyote /
+  .410 Triple Defense (catalog gives no payload).
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,

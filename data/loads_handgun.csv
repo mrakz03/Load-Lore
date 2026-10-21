@@ -58,7 +58,10 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .32 H&R Magnum,Remington HTP Jacketed Hollow Point,85,1120,0.100,3.9,2.47,,catalog,,5,Hunting
 .32 H&R Magnum,Federal Champion LSW,95,980,0.103,3.4,0.95,,catalog,,4,Target
 .32 H&R Magnum,Remington Performance Wheelgun Lead Semi-Wadcutter,95,1020,0.140,3.6,0.95,,catalog,,5,Match
+.32 S&W Long,Fiocchi Range Dynamics FMJ,97,800,0.118,2.3,0.41,,partial,,,Target
+.32 S&W Long,Fiocchi Heritage LFP,97,800,0.118,2.3,0.41,,partial,,,Target
 .32 S&W Long,Remington Performance Wheelgun Lead Round Nose,98,705,0.119,1.8,0.41,,catalog,,4,Target
+.32 S&W Long,Fiocchi Heritage LWC,100,730,0.121,2.0,0.41,,partial,,,Target
 .327 Federal Magnum,Hornady Critical Defense FTX,80,1475,0.138,5.5,3.12,yes,catalog,,5,Defense
 .327 Federal Magnum,Federal American Eagle JSP,85,1400,0.143,6.2,2.34,,catalog,,4,Target
 .327 Federal Magnum,Federal American Eagle JSP,100,1500,0.163,8.3,2.34,,catalog,,4,Target
@@ -77,8 +80,10 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 SIG,Winchester USA Jacketed Hollow Point,125,1370,0.110,8.7,1.56,,partial,,,Defense
 .38 Super,Federal American Eagle JHP,115,1130,0.123,5.4,0.86,,catalog,,5,Defense
 .38 Super,Winchester Silvertip Plated JHP,125,1240,0.152,7.1,1.55,,partial,,,Defense
+.38 Super,Fiocchi Range Dynamics FMJ,129,1150,0.157,6.3,0.86,,partial,,,Target
 .38 Super,Remington UMC Full Metal Jacket +P,130,1215,0.158,7.1,0.86,,catalog,,4,Target
 .38 Super,Winchester USA Full Metal Jacket,130,1215,0.158,7.1,0.86,,partial,,,Target
+.38 Super,PMC Bronze Full Metal Jacket +P,130,1100,0.158,5.8,0.86,,partial,,,Target
 .380 ACP,Federal American Eagle IRT Lead Free RHT,70,1110,0.094,2.5,0.44,,catalog,,3.75,Target
 .380 ACP,Federal Personal Defense Punch JHP,85,1000,0.093,2.5,1.69,,catalog,,3.75,Defense
 .380 ACP,Federal Train+Protect JHP,85,1000,0.103,2.5,1.69,,catalog,,3.75,Defense
@@ -382,6 +387,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .40 S&W,Winchester USA Full Metal Jacket-Flat Nose,165,1060,0.188,5.2,0.37,,catalog,,4,Target
 .40 S&W,Winchester USA Ready Full Metal Jacket,165,1060,0.179,5.2,0.37,,catalog,,4,Target
 .40 S&W,Winchester WinClean Brass Enclosed Base,165,1130,0.188,5.9,0.55,,catalog,,4,Target
+.40 S&W,Fiocchi Range Dynamics FMJTC,165,1020,0.139,4.8,0.37,,partial,,,Target
 .40 S&W,Fiocchi Range Dynamics FMJTC,170,1020,0.143,4.9,0.37,,partial,,,Target
 .40 S&W,Winchester USA Ready Defense Hex-Vent JHP,170,1170,0.180,6.5,1.43,,catalog,,4,Defense
 .40 S&W,Federal Syntech Defense SHP,175,1000,0.111,4.9,1.43,,catalog,,4,Defense
