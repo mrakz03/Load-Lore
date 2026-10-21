@@ -70,6 +70,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .lc .nm{flex:1;min-width:0;font-weight:700;line-height:1.3;word-break:break-word}
 .lc .st{display:flex;flex-wrap:wrap;gap:4px 14px;margin:6px 0 0 calc(2.2em + 10px);font-size:.85rem;color:var(--muted)}
 .lc .st b{color:var(--text);font-weight:600}
+.lc .nm .wt{white-space:nowrap}
 .lc .sc{text-align:right;white-space:nowrap}.lc .sc .n{font-size:.75rem;color:var(--muted);display:block;margin-top:2px}
 .lc .det{margin:10px 0 0;border-top:1px solid var(--border);padding-top:8px}
 .lc .det .row{padding:4px 0}
@@ -713,13 +714,12 @@ function openLoads(cat,pane){
       const fb=k=>badge(gradeRel(r.sc[k]));
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top"><span class="rk">#${r.rank}</span>
-        <div class="nm">${esc(it.load)}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}</div>
+        <div class="nm">${cat.grain_style?`<span class="wt">${g(it.bullet_gr)} gr</span> · `:""}${esc(it.load)}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}</div>
         <div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div></div>
-        <div class="st"><span><b>${payload}</b></span><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lb</span><span>recoil <b>${r.st.recoil.toFixed(1)}</b></span>${cat.terminal?`<span>KO <b>${r.st.taylor.toFixed(1)}</b></span><span>HITS <b>${r.st.hits.toFixed(0)}</b></span>`:""}<span><b>$${r.st.cost.toFixed(2)}</b>${edited?" ✎":""}</span>${it.barrel_in?`<span><b>${g(it.barrel_in)}″</b> barrel</span>`:""}</div>
         ${open?`<div class="det">
+          ${it.handload?"":`<div class="row"><span class="muted">${cat.grain_style?"Bullet weight":"Payload"}</span><span class="v">${payload}</span><span style="width:32px"></span></div>`}
           ${cat.grain_style?`<div class="row"><span class="muted">Test barrel</span><span class="v">${it.barrel_in?g(it.barrel_in)+" in":"not listed"}</span><span style="width:32px"></span></div>`:""}
           ${purposeOf(it)?`<div class="row"><span class="muted">Purpose</span><span class="v">${esc(purposeOf(it))}</span><span style="width:32px"></span></div>`:""}
-          ${out.multi?`<div class="row" hidden><span class="muted">Type</span><span class="v">${esc(it.group)}</span><span style="width:32px"></span></div>`:""}
           <div class="row"><span class="muted">Velocity</span><span class="v">${r.st.velocity.toFixed(0)} fps</span>${fb("velocity")}</div>
           <div class="row"><span class="muted">Energy</span><span class="v">${r.st.energy.toFixed(0)} ft-lbs</span>${fb("energy")}</div>
           <div class="row"><span class="muted">Recoil</span><span class="v">${r.st.recoil.toFixed(1)} ft-lbs</span>${fb("recoil")}</div>
@@ -727,7 +727,7 @@ function openLoads(cat,pane){
           <div class="row"><span class="muted">Powder</span><span class="v">${esc(r0.powder||"—")} ${g(it.powder_gr)} gr</span><span style="width:32px"></span></div>
           ${hasP?`<div class="row"><span class="muted">Cost breakdown</span><span class="v" style="font-size:.85rem;font-weight:600">bullet $${cp.b.toFixed(2)} · powder $${cp.p.toFixed(2)} · primer $${cp.pr.toFixed(2)} · brass $${cp.br.toFixed(2)}</span><span style="width:32px"></span></div>`:""}
           ${r0.notes?`<div class="row"><span class="muted">Notes</span><span class="v" style="font-weight:500">${esc(r0.notes)}</span><span style="width:32px"></span></div>`:""}`;})():""}
-          <div class="row"><span class="muted">Price</span><span class="v">$${r.st.cost.toFixed(2)}</span>${fb("cost")}</div>
+          <div class="row"><span class="muted">Price</span><span class="v">$${r.st.cost.toFixed(2)}${edited?" ✎":""}</span>${fb("cost")}</div>
           ${cat.terminal?`<div class="row"><span class="muted">Taylor KO</span><span class="v">${r.st.taylor.toFixed(1)}</span>${fb("taylor")}</div>
           <div class="row"><span class="muted">HITS</span><span class="v">${r.st.hits.toFixed(0)} <small class="muted">(${hitsClass(r.st.hits)})</small></span>${fb("hits")}</div>`:""}
           <div class="muted" style="font-size:.8rem;margin-top:4px">Ranks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}. Grades compare loads of this cartridge only.</div>
