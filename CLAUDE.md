@@ -1,6 +1,7 @@
 # Cartridge Calculator
 
-Grades ammo S–F on velocity, energy, recoil, cost (plus Taylor KO and HITS, weight 0 by default).
+Grades ammo S–F on velocity, energy, recoil, cost (plus Taylor KO and HITS;
+default weights 3/3/1/3/3/3, Shotgun keeps Taylor KO and HITS at 0: no bullet diameter).
 Desktop app: src/cartridge_calculator.py (Tkinter, stdlib only). Phone/web: web/template.html,
 built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK in CI).
 

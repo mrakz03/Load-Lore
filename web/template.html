@@ -511,7 +511,7 @@ function openCartridges(cat,pane){
       <hr><div class="row"><span class="muted">Overall</span><span class="v" style="font-size:1.1rem">${og}  ·  ${overall.toFixed(1)}%</span></div>
       <div class="bar"><i style="width:${Math.max(0,Math.min(100,overall))}%;background:${GRADE_COLORS[og][0]}"></i></div>
       <div class="rank">Ranks #${rk[0]} of ${rk[1]} ${esc(it.cartridge)} loads  ·  #${rk[2]} of ${rk[3]} in ${esc(cat.title)}  <span class="muted">(others at their default price)</span></div>
-      <div class="note">${esc(src)} Recoil assumes a ${g(inp.gun)} lb gun.${cat.terminal?" Taylor KO and HITS start at weight 0 in the grade.":""}</div>`;
+      <div class="note">${esc(src)} Recoil assumes a ${g(inp.gun)} lb gun.</div>`;
     res.classList.remove("hidden");res.scrollIntoView({behavior:"smooth",block:"nearest"});
   }
   function reset(){

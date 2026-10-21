@@ -95,9 +95,9 @@ METRICS = {
 }
 TERMINAL_KEYS = ("taylor", "hits")     # need a bullet diameter, so they don't apply to shotshells
 # Default scoring weights: velocity / energy / recoil / cost / Taylor KO / HITS.
-# 3 / 3 / 1 / 3 -> 30% / 30% / 10% / 30%.  Taylor KO and HITS are shown everywhere but only
-# change the grades once you give them a weight (open "Scoring weights").
-DEFAULT_WEIGHTS = (3, 3, 1, 3, 0, 0)
+# 3 / 3 / 1 / 3 / 3 / 3 -> about 19% each, recoil 6%. Shotshells have no Taylor KO / HITS
+# (no bullet diameter), so the Shotgun category keeps those two at 0.
+DEFAULT_WEIGHTS = (3, 3, 1, 3, 3, 3)
 
 # Curve shape. A load that matches the category's typical (median) value for a
 # factor scores TYPICAL_SCORE on it. Higher-is-better factors climb toward 100
@@ -123,7 +123,7 @@ class Category:
     grain_style: bool = True     # dropdown reads "168 gr  ·  ELD-M"; False = group + load text
     show_oz: bool = False        # also show payload in ounces (shotgun)
     legacy_filename: str = ""    # older file name to fall back to
-    weights: tuple = DEFAULT_WEIGHTS   # velocity, energy, recoil, cost
+    weights: tuple = DEFAULT_WEIGHTS   # velocity, energy, recoil, cost, Taylor KO, HITS
     allow_custom: bool = True    # show "Add your own caliber"
     default_bc: float = 0.30     # used when a custom entry leaves BC blank
     sort_loads: bool = True      # sort the load dropdown by weight (False = keep file order)
@@ -141,13 +141,13 @@ CATEGORIES = (
              loads_filename="loads_handgun.csv"),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
              "ammo_rimfire_rifle.csv", 50, 500, 5.0, "RIFLE WEIGHT (LB)",
-             weights=(3, 3, 1, 6, 0, 0), default_bc=0.13,
+             weights=(3, 3, 1, 6, 3, 3), default_bc=0.13,
              loads_filename="loads_rimfire_rifle.csv"),
     Category("Shotgun", "Birdshot, buckshot and slugs",
              "ammo_shotgun.csv", 25, 300, 7.5, "SHOTGUN WEIGHT (LB)",
              cartridge_label="GAUGE", load_label="LOAD", payload_row="Payload",
              payload_col="Payload (gr)", grain_style=False, show_oz=True,
-             allow_custom=False, sort_loads=False, terminal=False,
+             allow_custom=False, sort_loads=False, terminal=False, weights=(3, 3, 1, 3, 0, 0),
              loads_filename="loads_shotgun.csv"),
 )
 
