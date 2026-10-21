@@ -18,6 +18,11 @@ git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows, Linux, 
 
 ## Known to-dos
 - Desktop layout was only tested with a sandbox Tk build; check real Fedora/Windows rendering.
+  Fedora (KDE) checked with v1.4: works, but see the next item.
+- Default desktop window size should fit all the results data. On Fedora the Compare Loads table
+  truncates column headers (Barrel, Velocity, Energy, Taylor KO, Grade) and needs a horizontal
+  scrollbar, while the Load column takes up a lot of empty space. Size the default window and
+  column widths so every column fits without scrolling.
 - Typical-figure cartridges (7.62x54R, 5.45x39, 7.62x25, .38 Super, .32 S&W Long) need verification.
 
 Notes from Claude Sonnet 5.5
