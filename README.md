@@ -56,8 +56,9 @@ bash CartridgeCalculator/install.sh
 - `loads_*.csv` columns: cartridge, load, bullet_gr, muzzle_fps, bc_g1, powder_gr, default_cost, default, source, group, barrel_in, purpose. `barrel_in` (test barrel length) and `purpose` (Hunting / Varmint / Target / Match / Defense / Subsonic; shotguns use their load type) are optional, as is `diameter_in`.
 - Loads come from the 2026 Hornady, ELEY, Fiocchi, Winchester, Remington, PMC, Federal and CCI catalogs, plus Speer Gold Dot / Lawman from speer.com. Prices and powder charges are estimates.
 - `bullets.csv` BCs are approximate published G1 figures; edit them (or type your own in the form) if you know better. Handload figures are only as good as your data: always follow published load manuals.
-- Cartridges beyond the core list come from the Hornady catalog; a few popular ones with no catalog data (7.62x54R, 5.45x39, 7.62x25, .38 Super, .32 S&W Long) use typical factory figures, marked as such.
-- 5.56 NATO loads are listed under .223 Remington and 7.62x51 NATO under .308 Winchester.
+- Cartridges beyond the core list come from the Hornady catalog; a few popular ones with no catalog data (7.62x54mmR, 5.45x39mm, 7.62x25mm Tokarev, .38 Super, .32 S&W Long) use typical factory figures, marked as such.
+- 5.56x45mm NATO loads are listed under .223 Remington and 7.62x51mm NATO under .308 Winchester.
+- Metric cartridges are named with "mm" (7.62x39mm, 7.62x54mmR). Saved handloads, calibers and prices that use the older names (7.62x39, 7.62x54R) are matched up automatically; the old-to-new list is `RENAMED_CARTRIDGES` in `src/cartridge_calculator.py`.
 - After editing any CSV or `web/template.html`, run `python3 web/build_web.py`.
 
 ## Taylor KO

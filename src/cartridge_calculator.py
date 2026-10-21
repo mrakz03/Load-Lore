@@ -292,14 +292,29 @@ def estimate_powder(bullet_gr, muzzle_fps):
 # --------------------------------------------------------------------------- #
 # Data loading
 # --------------------------------------------------------------------------- #
+# Cartridges that were renamed (metric names gained "mm"). Saved handloads, custom calibers and
+# prices may still use the old names, so everything read from disk goes through canonical_name.
+RENAMED_CARTRIDGES = {
+    ".308 Winchester / 7.62x51 NATO": ".308 Winchester / 7.62x51mm NATO",
+    ".223 Remington / 5.56 NATO": ".223 Remington / 5.56x45mm NATO",
+    "5.45x39": "5.45x39mm", "5.7x28": "5.7x28mm", "6.5x55 Swedish": "6.5x55mm Swedish",
+    "7.62x25 Tokarev": "7.62x25mm Tokarev", "7.62x39": "7.62x39mm", "7.62x54R": "7.62x54mmR",
+    "8x57 Mauser": "8x57mm Mauser", "9.3x62": "9.3x62mm", "9x18 Makarov": "9x18mm Makarov",
+}
+
+
+def canonical_name(cartridge):
+    return RENAMED_CARTRIDGES.get(cartridge, cartridge)
+
+
 # Bullet diameter (inches) per cartridge, for Taylor KO. Shotshells aren't listed.
 DIAMETERS = {
-    ".22-250 Remington": .224, ".223 Remington": .224, ".223 Remington / 5.56 NATO": .224,
+    ".22-250 Remington": .224, ".223 Remington": .224, ".223 Remington / 5.56x45mm NATO": .224,
     ".224 Valkyrie": .224, ".243 Winchester": .243, ".25-35 Winchester": .257, "6mm ARC": .243,
     "6.5 Grendel": .264, ".260 Remington": .264, "6.5 Creedmoor": .264, "6.5 PRC": .264,
     ".270 Winchester": .277, "7mm-08 Remington": .284, ".277 Fury": .277, "6.8 Western": .277,
-    "7mm Remington Magnum": .284, ".300 Blackout": .308, "7.62x39": .310, ".30-30 Winchester": .308,
-    ".32-40 Winchester": .321, ".308 Winchester": .308, ".308 Winchester / 7.62x51 NATO": .308,
+    "7mm Remington Magnum": .284, ".300 Blackout": .308, "7.62x39mm": .310, ".30-30 Winchester": .308,
+    ".32-40 Winchester": .321, ".308 Winchester": .308, ".308 Winchester / 7.62x51mm NATO": .308,
     ".30-06 Springfield": .308, ".300 Winchester Magnum": .308, ".300 PRC": .308,
     ".35 Remington": .358, ".348 Winchester": .348, ".350 Legend": .357, ".357 Magnum": .357,
     ".38-55 Winchester": .376, ".44 Magnum": .429, ".444 Marlin": .429, ".450 Bushmaster": .452,
@@ -308,9 +323,9 @@ DIAMETERS = {
     ".38 Special": .357, ".45 Colt": .452, ".17 Mach 2": .172, ".17 HMR": .172, ".17 WSM": .172,
     ".22 Short": .224, ".22 Long": .224,
     # added later
-    "5.45x39": 0.221,
-    "6.5x55 Swedish": 0.264,
-    "8x57 Mauser": 0.323,
+    "5.45x39mm": 0.221,
+    "6.5x55mm Swedish": 0.264,
+    "8x57mm Mauser": 0.323,
     ".204 Ruger": 0.204,
     ".22 Hornet": 0.224,
     ".222 Remington": 0.224,
@@ -349,7 +364,7 @@ DIAMETERS = {
     ".28 Nosler": 0.284,
     ".30 Thompson/Center": 0.308,
     "6mm Remington": 0.243,
-    "9.3x62": 0.366,
+    "9.3x62mm": 0.366,
     ".30-40 Krag": 0.308,
     ".357 SIG": 0.355,
     ".41 Magnum": 0.41,
@@ -357,14 +372,14 @@ DIAMETERS = {
     ".454 Casull": 0.452,
     ".460 S&W Magnum": 0.452,
     ".480 Ruger": 0.475,
-    "5.7x28": 0.224,
+    "5.7x28mm": 0.224,
     ".50 AE": 0.5,
     ".500 S&W Magnum": 0.5,
-    "9x18 Makarov": 0.365,
+    "9x18mm Makarov": 0.365,
     ".327 Federal Magnum": 0.312,
     ".44-40 Winchester": 0.427,
-    "7.62x54R": 0.311,
-    "7.62x25 Tokarev": 0.309,
+    "7.62x54mmR": 0.311,
+    "7.62x25mm Tokarev": 0.309,
     ".38 Super": 0.355,
     ".32 S&W Long": 0.312,
 }
@@ -437,7 +452,7 @@ def load_data(path, grain_style=True):
         reader = csv.DictReader(fh)
         for line_no, row in enumerate(reader, start=2):
             row = {(k or "").strip().lower(): (v or "").strip() for k, v in row.items()}
-            name = row.get("cartridge", "")
+            name = canonical_name(row.get("cartridge", ""))
             if not name or name.startswith("#"):
                 continue
             try:
@@ -480,9 +495,36 @@ def read_settings():
     try:
         with open(os.path.join(app_dir(), SETTINGS_FILENAME), encoding="utf-8") as fh:
             data = json.load(fh)
-        return data if isinstance(data, dict) else {}
+        if not isinstance(data, dict):
+            return {}
+        if isinstance(data.get("prices"), dict):        # keys are "category|cartridge|load"
+            data["prices"] = {_rename_price_key(k): v for k, v in data["prices"].items()}
+        return data
     except (OSError, ValueError):
         return {}
+
+
+def _rename_price_key(key):
+    parts = key.split("|", 2)
+    if len(parts) == 3:
+        parts[1] = canonical_name(parts[1])
+    return "|".join(parts)
+
+
+def _read_user_rows(path):
+    """Rows of one of the user's own CSVs (lower-case keys), with old cartridge names updated."""
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path, newline="", encoding="utf-8-sig") as fh:
+            rows = [{(k or "").strip().lower(): (v or "").strip() for k, v in row.items()}
+                    for row in csv.DictReader(fh)]
+    except (OSError, csv.Error, UnicodeDecodeError):
+        return []
+    for row in rows:
+        if "cartridge" in row:
+            row["cartridge"] = canonical_name(row["cartridge"])
+    return rows
 
 
 def write_settings(data):
@@ -499,15 +541,7 @@ def custom_path():
 
 
 def read_custom_rows():
-    path = custom_path()
-    if not os.path.exists(path):
-        return []
-    try:
-        with open(path, newline="", encoding="utf-8-sig") as fh:
-            return [{(k or "").strip().lower(): (v or "").strip() for k, v in row.items()}
-                    for row in csv.DictReader(fh)]
-    except (OSError, csv.Error, UnicodeDecodeError):
-        return []
+    return _read_user_rows(custom_path())
 
 
 def write_custom_rows(rows):
@@ -555,15 +589,7 @@ def read_bullets():
 
 
 def read_handload_rows():
-    path = os.path.join(app_dir(), HANDLOAD_FILENAME)
-    if not os.path.exists(path):
-        return []
-    try:
-        with open(path, newline="", encoding="utf-8-sig") as fh:
-            return [{(k or "").strip().lower(): (v or "").strip() for k, v in row.items()}
-                    for row in csv.DictReader(fh)]
-    except (OSError, csv.Error, UnicodeDecodeError):
-        return []
+    return _read_user_rows(os.path.join(app_dir(), HANDLOAD_FILENAME))
 
 
 def write_handload_rows(rows):

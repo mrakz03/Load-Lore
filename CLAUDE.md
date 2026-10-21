@@ -13,6 +13,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
   (my_calibers.csv, my_handloads.csv, settings.json).
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
+- Metric cartridges are named with "mm" (7.62x51mm NATO, 7.62x54mmR). When renaming a
+  cartridge, add old -> new to RENAMED_CARTRIDGES so users' saved files keep matching.
 - Desktop UI sizes come from measured text (App.fit_columns, _sidebar_width), not fixed pixel
   counts: fonts are in points and grow with screen DPI, so fixed widths cut text off on HiDPI.
 
@@ -38,4 +40,5 @@ git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.e
 ## Known to-dos
 - Desktop layout fixed for HiDPI and checked under Xvfb; confirm on the real Fedora and
   Windows machines.
-- Typical-figure cartridges (7.62x54R, 5.45x39, 7.62x25, .38 Super, .32 S&W Long) need verification.
+- Typical-figure cartridges (7.62x54mmR, 5.45x39mm, 7.62x25mm Tokarev, .38 Super, .32 S&W Long)
+  need verification.

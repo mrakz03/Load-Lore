@@ -187,6 +187,10 @@ const SOURCE_NOTES = {
   handload:"Your own handload. Check every figure against a published load manual."};
 const DEFAULT_SOURCE_NOTE = "Load data is approximate. Check it against the box or the manufacturer.";
 const REL_CENTER=70, REL_SPREAD=10, REL_BANDS=[[85,"S"],[77,"A"],[66,"B"],[55,"C"],[45,"D"]];
+// saved data may use cartridge names from before a rename (e.g. "7.62x54R" -> "7.62x54mmR")
+const RENAMED = DATA.renamed || {};
+const canon = n => RENAMED[n] || n;
+const canonRows = a => (Array.isArray(a) ? a : []).map(r => r && typeof r === "object" && r.cartridge ? {...r, cartridge: canon(r.cartridge)} : r);
 const PRICE_KEY = "cartridge_calc_prices_v1";
 const CUSTOM_KEY = "cartridge_calc_custom_v1";
 
@@ -289,7 +293,7 @@ function makeLabel(it,cat){
   if(it.group&&it.load)return `${it.group}  ·  ${it.load}`;
   return it.load||g(it.bullet_gr)+" gr";
 }
-function readCustom(){try{return JSON.parse(localStorage.getItem(CUSTOM_KEY)||"[]")||[];}catch(e){return [];}}
+function readCustom(){try{return canonRows(JSON.parse(localStorage.getItem(CUSTOM_KEY)||"[]"));}catch(e){return [];}}
 function writeCustom(rows){try{localStorage.setItem(CUSTOM_KEY,JSON.stringify(rows));return true;}catch(e){return false;}}
 const state = {loads:{}};     // title -> array of load objects
 for(const cat of CATEGORIES){
@@ -307,7 +311,7 @@ state.detail={};
 for(const cat of CATEGORIES){
   state.detail[cat.title]=(cat.detail||[]).map(x=>Object.assign({},x,{label:makeLabel(x,cat)}));
 }
-function readPrices(){try{return JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{};}catch(e){return {};}}
+function readPrices(){try{const o=JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{},out={};for(const [k,v] of Object.entries(o)){const p=k.split("|");if(p.length>=3)p[1]=canon(p[1]);out[p.join("|")]=v;}return out;}catch(e){return {};}}
 function writePrices(o){try{localStorage.setItem(PRICE_KEY,JSON.stringify(o));return true;}catch(e){return false;}}
 const priceKey=(cat,it)=>`${cat.title}|${it.cartridge}|${it.label}`;
 const shared={};   // category title -> values carried between the two tabs
@@ -506,7 +510,7 @@ function openCartridges(cat,pane){
 const HAND_KEY="cartridge_calc_hand_v1";
 const POWDERS=DATA.powders||[], BULLETS=DATA.bullets||[];
 const PURPOSES=["Hunting","Varmint","Target","Match","Defense","Subsonic"];
-function readHand(){try{const a=JSON.parse(localStorage.getItem(HAND_KEY)||"[]");return Array.isArray(a)?a:[];}catch(e){return [];}}
+function readHand(){try{return canonRows(JSON.parse(localStorage.getItem(HAND_KEY)||"[]"));}catch(e){return [];}}
 function writeHand(a){try{localStorage.setItem(HAND_KEY,JSON.stringify(a));return true;}catch(e){return false;}}
 function handItem(r,cat){
   const it={cartridge:r.cartridge,load:r.name,bullet_gr:+r.bullet_gr,muzzle_fps:+r.muzzle_fps,bc_g1:+r.bc_g1,powder_gr:+r.powder_gr,
