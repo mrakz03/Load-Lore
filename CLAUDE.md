@@ -26,6 +26,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   counts: fonts are in points and grow with screen DPI, so fixed widths cut text off on HiDPI.
   The Load column fits the longest full name, re-measured per cartridge; grow_to_fit widens
   the window for it and gives the room back later, never below the width the user chose.
+  LoadsView.fit_table_height sets the table's row count from the window height so the
+  selected load's scores panel fits without scrolling (min 6 rows, then the page scrolls).
 
 ## Release
 git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.exe + zip), Linux

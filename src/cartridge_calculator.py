@@ -1144,6 +1144,19 @@ class App:
         """The window keeps its size; the page scrolls if it is taller. Refresh the scroll area."""
         self._update_scroll()
 
+    def _refit_soon(self):
+        """After a window resize, let the open screen re-fit its table height (once, when idle)."""
+        if getattr(self, "_refit_pending", False):
+            return
+        self._refit_pending = True
+
+        def run():
+            self._refit_pending = False
+            fit = getattr(self.view, "fit_table_height", None)
+            if fit is not None:
+                fit()
+        self.root.after_idle(run)
+
     def _update_scroll(self):
         try:
             self.root.update_idletasks()
@@ -1188,7 +1201,7 @@ class App:
         win_id = self.canvas.create_window((0, 0), window=self.stage, anchor="nw")
         self.stage.bind("<Configure>", lambda e: self._update_scroll())
         self.canvas.bind("<Configure>", lambda e: (self.canvas.itemconfigure(win_id, width=e.width),
-                                                   self._update_scroll()))
+                                                   self._update_scroll(), self._refit_soon()))
         for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
             self.root.bind_all(seq, self._on_wheel)
         self._draw_chrome()
@@ -2448,11 +2461,12 @@ class LoadsView:
         self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 14))
         self.detail.grid(row=5, column=0, sticky="ew", pady=(14, 0))
         self.detail.grid_remove()
-        a.label(outer, f"Grades compare loads of the same cartridge with each other (the average "
-                       f"scores {REL_CENTER:.0f}); they can't be compared with Compare Cartridges "
-                       "grades. Prices are estimates: set your own.",
-                9, MUTED, bg=BG, anchor="w", justify="left", wraplength=a.px(880)).grid(
-            row=6, column=0, sticky="w", pady=(10, 0))
+        self.footnote = a.label(
+            outer, f"Grades compare loads of the same cartridge with each other (the average "
+                   f"scores {REL_CENTER:.0f}); they can't be compared with Compare Cartridges "
+                   "grades. Prices are estimates: set your own.",
+            9, MUTED, bg=BG, anchor="w", justify="left", wraplength=a.px(880))
+        self.footnote.grid(row=6, column=0, sticky="w", pady=(10, 0))
 
     # ---- state ------------------------------------------------------------ #
     def snapshot(self):
@@ -2486,7 +2500,7 @@ class LoadsView:
         else:
             self.weights_frame.grid_remove()
         self.weights_toggle.config(text=("▾" if self.weights_open else "▸") + "  Scoring weights")
-        self.app.fit_window()
+        self.fit_table_height()
 
     def weight_vars_note(self, *_):
         try:
@@ -2780,7 +2794,7 @@ class LoadsView:
             self.sized = self.cart_var.get()
             self.app.root.update_idletasks()
             self.app.grow_to_fit(sum(self.col_widths.values()) - self.tree.winfo_width())
-        self.app.fit_window()
+        self.fit_table_height()
 
     def _on_select(self):
         sel = self.tree.selection()
@@ -2826,7 +2840,39 @@ class LoadsView:
                                 f"#{row['rank']} of {row['peers']}"
                                 f"{' ' + row['group'] + ' loads' if row['group'] else ''}.  {src}")
         self.detail.grid()
-        self.app.fit_window()
+        self.fit_table_height()
+
+    def fit_table_height(self):
+        """Give the table as many rows as fit in the window, so the selected load's scores
+        (below the table) show without scrolling at the default window size. With nothing
+        selected the table fills the window down to the footnote. Never fewer than 6 rows
+        (the page scrolls instead) and never more rows than loads."""
+        a = self.app
+        try:
+            a.root.update_idletasks()
+            last = self.detail if self.selected is not None else self.footnote
+            if not last.winfo_ismapped():
+                return a.fit_window()
+            rowh = a.px(28)
+            rows_now = int(self.tree.cget("height"))
+            bottom = last.winfo_rooty() + last.winfo_height() - a.stage.winfo_rooty()
+            spare = a.canvas.winfo_height() - a.px(22) - (bottom - rows_now * rowh)
+            n = len(self.tree.get_children())
+            rows = min(max(spare // rowh, 6), max(n, 1))
+        except tk.TclError:
+            return
+        if rows != rows_now:
+            self.tree.configure(height=rows)
+        a.fit_window()
+        sel = self.tree.selection()
+        if sel:
+            self.tree.see(sel[0])
+            a.root.update_idletasks()
+            # keep the scores panel in view if the page still has to scroll
+            bottom = last.winfo_rooty() + last.winfo_height() - a.stage.winfo_rooty()
+            page, view = a.stage.winfo_reqheight(), a.canvas.winfo_height()
+            if page > view:
+                a.canvas.yview_moveto(max(0.0, (bottom - view + a.px(22)) / page))
 
     def _set_price(self):
         if self.selected is None:
