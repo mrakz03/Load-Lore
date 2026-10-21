@@ -1,6 +1,6 @@
 # Cartridge Value Calculator
 
-Grades ammo from S to F on velocity, energy, recoil and price, with Taylor KO shown for rifle and handgun loads. There is a desktop app (Python/Tkinter, Windows and Linux) and a phone/web version (installable as an Android APK).
+Grades ammo from S to F on velocity, energy, recoil and price, with Taylor KO and HITS shown for rifle and handgun loads. There is a desktop app (Python/Tkinter, Windows and Linux) and a phone/web version (installable as an Android APK).
 
 Two ways to compare (both in the sidebar):
 - **Compare Cartridges**: which caliber is the best value, graded against the whole category.
@@ -61,5 +61,5 @@ bash CartridgeCalculator/install.sh
 - Metric cartridges are named with "mm" (7.62x39mm, 7.62x54mmR). Saved handloads, calibers and prices that use the older names (7.62x39, 7.62x54R) are matched up automatically; the old-to-new list is `RENAMED_CARTRIDGES` in `src/cartridge_calculator.py`.
 - After editing any CSV or `web/template.html`, run `python3 web/build_web.py`.
 
-## Taylor KO
-Every rifle and handgun result shows the Taylor Knock-Out factor (bullet weight × velocity × diameter ÷ 7000), calculated at the distance you pick. It starts at weight 0 in the grade, so raise it under "Scoring weights" if you want it to count. Bullet diameters come from the `DIAMETERS` table in `src/cartridge_calculator.py`; custom calibers can supply their own. Shotshells don't show it.
+## Taylor KO and HITS
+Every rifle and handgun result shows the Taylor Knock-Out factor (bullet weight × velocity × diameter ÷ 7000) and Hornady's HITS index ((weight² ÷ 7000) × (velocity ÷ diameter²) ÷ 100), calculated at the distance you pick. Both start at weight 0 in the grade, so raise them under "Scoring weights" if you want them to count. Bullet diameters come from the `DIAMETERS` table in `src/cartridge_calculator.py`; custom calibers can supply their own. Shotshells don't show them.
