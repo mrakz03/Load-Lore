@@ -869,6 +869,7 @@ class App:
         except (TypeError, ValueError):
             self.scale = 1.0
         self.view = None
+        self._base_w = self._auto_w = None   # window width before / after grow_to_fit
         families = set(tkfont.families(root))
         self.family = next((f for f in ("Segoe UI", "SF Pro Text", "Inter", "Noto Sans",
                                         "Cantarell", "Ubuntu", "Helvetica Neue", "Helvetica",
@@ -1096,16 +1097,14 @@ class App:
     def fit_columns(self, tree, cols, rows, stretch_col, known=None):
         """Size table columns from the real text width (fonts grow with screen DPI, pixel
         counts don't). `rows` are lists of cell strings; `known` keeps widths from earlier
-        calls so columns never shrink while filtering. The stretch column takes spare room."""
+        calls so columns never shrink while filtering. The stretch column fits its longest
+        entry (full load names) and takes any spare room."""
         head = tkfont.Font(font=self.f(10, True))
         body = tkfont.Font(font=self.f(10))
         pad = body.measure("00") + 14
         known = {} if known is None else known
         for i, col in enumerate(cols):
             need = max([head.measure(col)] + [body.measure(str(r[i])) for r in rows]) + pad
-            if col == stretch_col:
-                # wide enough for most names; very long ones are cut rather than widening the table
-                need = min(need, body.measure("0" * 44))
             known[col] = max(known.get(col, 0), need)
             if col == stretch_col:
                 tree.column(col, width=known[col], minwidth=min(known[col], body.measure("0" * 24)),
@@ -1115,14 +1114,20 @@ class App:
         return known
 
     def grow_to_fit(self, extra):
-        """Widen the window by `extra` px (to fit a table), within the screen. Never shrinks."""
+        """Resize the window by `extra` px so a table fits, within the screen. It widens for a
+        wide table and gives the room back for a narrower one later, but never goes below the
+        width the user last chose (a width this method didn't set counts as the user's)."""
         r = self.root
-        if extra <= 0 or r.state() == "zoomed":
+        if r.state() == "zoomed":
             return
-        w = min(r.winfo_width() + extra, r.winfo_screenwidth() - 20)
-        if w > r.winfo_width():
+        cur = r.winfo_width()
+        base = self._base_w if cur == self._auto_w else cur
+        w = max(base, min(cur + extra, r.winfo_screenwidth() - 20))
+        if w != cur:
             x = max(0, min(r.winfo_x(), r.winfo_screenwidth() - w - 10))
             r.geometry(f"{w}x{r.winfo_height()}+{x}+{r.winfo_y()}")
+            r.update_idletasks()
+        self._base_w, self._auto_w = base, r.winfo_width()
 
     # ---- window + shell --------------------------------------------------- #
     def _place_window(self):
@@ -2381,7 +2386,7 @@ class LoadsView:
             # widths are measured from the text in _render; the Load column takes spare room
             self.tree.column(col, anchor="w" if col in ("Load", "Use") else "center")
             self.tree.heading(col, text=col, command=lambda c=col: self._sort_by(c))
-        self.col_widths, self.sized = {}, False
+        self.col_widths, self.sized = {}, None     # sized = cartridge the widths were measured for
         hscroll = ttk.Scrollbar(frame, orient="horizontal", command=self.tree.xview)
 
         def xset(first, last):
@@ -2765,10 +2770,14 @@ class LoadsView:
         elif self.selected is not None:
             self.selected = None
             self.detail.grid_remove()
+        if self.sized != self.cart_var.get():
+            # new cartridge: measure the columns afresh, so a list of short names isn't left
+            # as wide as the last cartridge's longest name (filtering within one keeps them)
+            self.col_widths.clear()
         self.app.fit_columns(self.tree, self.cols, cells, "Load", self.col_widths)
-        if not self.sized and cells:
-            # first time this table is shown: widen the window if every column doesn't fit
-            self.sized = True
+        if self.sized != self.cart_var.get() and cells:
+            # widen the window (never shrinks, stays on screen) if every column doesn't fit
+            self.sized = self.cart_var.get()
             self.app.root.update_idletasks()
             self.app.grow_to_fit(sum(self.col_widths.values()) - self.tree.winfo_width())
         self.app.fit_window()

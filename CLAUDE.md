@@ -24,6 +24,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (BG, SURFACE, TEXT, ACCENT, ON_ACCENT, DANGER, HAND_FG...) / CSS variables, never hard-coded colours.
 - Desktop UI sizes come from measured text (App.fit_columns, _sidebar_width), not fixed pixel
   counts: fonts are in points and grow with screen DPI, so fixed widths cut text off on HiDPI.
+  The Load column fits the longest full name, re-measured per cartridge; grow_to_fit widens
+  the window for it and gives the room back later, never below the width the user chose.
 
 ## Release
 git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.exe + zip), Linux
