@@ -376,7 +376,7 @@ function showPicker(mode){
   const last=lastCat();
   app.innerHTML=`<div class="phead"><h2>${mode==="loads"?"Compare Loads":"Compare Cartridges"}</h2><p class="sub">Choose a category.</p></div><div class="pick">${
     CATEGORIES.filter(c=>mode==="cartridges"||hasDetail(c)).map(c=>{
-      const n=new Set(state.loads[c.title].map(x=>x.cartridge)).size,d=(state.detail[c.title]||[]).length;
+      const list=mode==="loads"&&(state.detail[c.title]||[]).length?state.detail[c.title]:state.loads[c.title],n=new Set(list.map(x=>x.cartridge)).size,d=list.length;
       return `<button class="cat" data-cat="${esc(c.title)}" ${c.title===last?'style="border-color:var(--accent)"':""}><b>${esc(c.title)}</b><span class="b">${esc(c.blurb)}</span><span class="c">${n} cartridges  ·  ${d.toLocaleString()} loads</span></button>`;}).join("")}</div>`;
   app.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
 }

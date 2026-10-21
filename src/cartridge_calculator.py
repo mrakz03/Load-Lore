@@ -756,8 +756,6 @@ def score_stats(stats, refs, weights):
 class App:
     """Owns the window, the theme, and switching between the picker and calculators."""
 
-    CALC_MIN_WIDTH = 700          # (kept for compatibility)
-    LOADS_MIN_WIDTH = 960
     WIN_W, WIN_H = 1360, 860      # default window size (clamped to small screens); resizable
     MIN_W, MIN_H = 980, 600
     SIDEBAR_W = 210
@@ -789,8 +787,6 @@ class App:
         self.mode = "home"                # home / cartridges / loads
         self.cat = None
         self.carry = {}                   # per category: what each tab knew when you left it
-        last = self.settings.get("last_category")
-        self.last_cat = next((c for c in CATEGORIES if c.title == last), CATEGORIES[0])
         self._place_window()
         self._build_shell()
         self.show_launcher()
@@ -1012,7 +1008,7 @@ class App:
         r.resizable(True, True)
         r.title(APP_TITLE)
 
-    def fit_window(self, min_width=0, keep_position=False):
+    def fit_window(self):
         """The window keeps its size; the page scrolls if it is taller. Refresh the scroll area."""
         self._update_scroll()
 
@@ -1087,7 +1083,7 @@ class App:
         self.canvas.yview_scroll(step * 3, "units")
 
     def _nav_button(self, text, command, active, sub=False):
-        bg = ACCENT if active else (SURFACE_2 if sub and False else SURFACE)
+        bg = ACCENT if active else SURFACE
         hover = ACCENT if active else SURFACE_2
         fg = "#ffffff" if active else (MUTED if sub else TEXT)
         box = tk.Frame(self.nav, bg=bg, cursor="hand2")
@@ -1187,9 +1183,11 @@ class App:
             if info["error"]:
                 caption = "Data file missing" if "not found" in info["error"] else "Data problem"
             else:
-                n = len(info["detail"]) if mode == "loads" and info["detail"] else len(info["loads"])
-                caption = (f"{len({x.cartridge for x in info['loads']})} cartridges  ·  "
-                           f"{len(info['detail']) or len(info['loads'])} loads")
+                # count what this screen will show: the load list for Compare Loads,
+                # the cartridge list for Compare Cartridges
+                shown = info["detail"] if mode == "loads" and info["detail"] else info["loads"]
+                caption = (f"{len({x.cartridge for x in shown})} cartridges  ·  "
+                           f"{len(shown):,} loads")
             card = tk.Frame(grid, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
                             cursor="hand2")
             card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=6,
@@ -1234,8 +1232,6 @@ class App:
     def go_mode(self, tab):
         self.show_picker(tab)
 
-    switch_tab = go
-
     def open_category(self, cat, tab="cartridges"):
         info = self.data[cat.title]
         if info["error"]:
@@ -1245,7 +1241,7 @@ class App:
         if info["problems"]:
             messagebox.showwarning("Some rows were skipped", "\n".join(info["problems"][:15]))
             info["problems"] = []                   # only warn once
-        self.cat, self.mode, self.last_cat = cat, tab, cat
+        self.cat, self.mode = cat, tab
         if self.settings.get("last_category") != cat.title:
             self.settings["last_category"] = cat.title
             write_settings(self.settings)
@@ -1455,7 +1451,7 @@ class CalculatorView:
         else:
             self.weights_frame.grid_remove()
             self.weights_toggle.config(text="▸  Scoring weights")
-        self.app.fit_window(self.app.CALC_MIN_WIDTH, keep_position=True)
+        self.app.fit_window()
 
     def _refresh_weight_note(self, *_):
         """Show what the current weights mean as percentages."""
@@ -1573,7 +1569,7 @@ class CalculatorView:
             text=f"{src} Recoil assumes a {gun:g} lb gun.")
         self.result.grid()
         self._last_overall = (overall, overall_grade)
-        self.app.fit_window(self.app.CALC_MIN_WIDTH, keep_position=True)
+        self.app.fit_window()
         self._draw_bar()
 
     def reset(self):
@@ -1590,7 +1586,7 @@ class CalculatorView:
             self._toggle_weights()
         self.result.grid_remove()
         self._last_overall = None
-        self.app.fit_window(self.app.CALC_MIN_WIDTH, keep_position=True)
+        self.app.fit_window()
 
     # ---- user-added calibers --------------------------------------------- #
     def _open_add_dialog(self):
@@ -1719,7 +1715,7 @@ class CalculatorView:
             self.grain_var.set(item.label)
             self._on_grain()
             win.destroy()
-            self.app.fit_window(self.app.CALC_MIN_WIDTH, keep_position=True)
+            self.app.fit_window()
 
         btns = tk.Frame(body, bg=SURFACE)
         btns.grid(row=7, column=0, columnspan=3, sticky="w", pady=(16, 18), **p)
@@ -1770,27 +1766,27 @@ class CalculatorView:
         rows = [dict(rank=rank_of[id(item)], item=item, stats=stats, score=overall,
                      grade=grade_for(overall)) for item, stats, overall in scored]
 
-        # (heading, width, value getter, sort key, best-first?)
-        spec = [("Rank", 52, lambda r: r["rank"], lambda r: r["rank"], False),
-                (cat.cartridge_label.title(), 150, lambda r: r["item"].cartridge,
+        # (heading, value getter, sort key, best-first?)
+        spec = [("Rank", lambda r: r["rank"], lambda r: r["rank"], False),
+                (cat.cartridge_label.title(), lambda r: r["item"].cartridge,
                  lambda r: r["item"].cartridge, False),
-                ("Load", 300 if not cat.grain_style else 270, lambda r: r["item"].label,
+                ("Load", lambda r: r["item"].label,
                  lambda r: r["item"].label.lower(), False),
-                (cat.payload_col, 80, lambda r: f"{r['stats']['weight']:.0f}",
+                (cat.payload_col, lambda r: f"{r['stats']['weight']:.0f}",
                  lambda r: r["stats"]["weight"], True),
-                ("Velocity (fps)", 104, lambda r: f"{r['stats']['velocity']:.0f}",
+                ("Velocity (fps)", lambda r: f"{r['stats']['velocity']:.0f}",
                  lambda r: r["stats"]["velocity"], True),
-                ("Energy (ft-lbs)", 112, lambda r: f"{r['stats']['energy']:.0f}",
+                ("Energy (ft-lbs)", lambda r: f"{r['stats']['energy']:.0f}",
                  lambda r: r["stats"]["energy"], True),
-                ("Recoil (ft-lbs)", 112, lambda r: f"{r['stats']['recoil']:.1f}",
+                ("Recoil (ft-lbs)", lambda r: f"{r['stats']['recoil']:.1f}",
                  lambda r: r["stats"]["recoil"], False)]
         if cat.terminal:
-            spec += [("Taylor KO", 84, lambda r: f"{r['stats']['taylor']:.1f}",
+            spec += [("Taylor KO", lambda r: f"{r['stats']['taylor']:.1f}",
                       lambda r: r["stats"]["taylor"], True)]
-        spec += [("Cost ($)", 70, lambda r: f"{r['stats']['cost']:.2f}",
+        spec += [("Cost ($)", lambda r: f"{r['stats']['cost']:.2f}",
                   lambda r: r["stats"]["cost"], False),
-                 ("Score (%)", 80, lambda r: f"{r['score']:.1f}", lambda r: r["score"], True),
-                 ("Grade", 60, lambda r: r["grade"], lambda r: r["score"], True)]
+                 ("Score (%)", lambda r: f"{r['score']:.1f}", lambda r: r["score"], True),
+                 ("Grade", lambda r: r["grade"], lambda r: r["score"], True)]
         cols = [c[0] for c in spec]
         by_col = {c[0]: c for c in spec}
 
@@ -1817,7 +1813,7 @@ class CalculatorView:
         tree.configure(yscrollcommand=scroll.set)
         for c in spec:
             tree.column(c[0], anchor="w" if c[0] in cols[1:3] else "center")
-        a.fit_columns(tree, cols, [[c[2](r) for c in spec] for r in rows], "Load")
+        a.fit_columns(tree, cols, [[c[1](r) for c in spec] for r in rows], "Load")
         tree.pack(side="left", fill="both", expand=True)
         scroll.pack(side="right", fill="y")
         sort_state = {"col": "Score (%)", "desc": True}
@@ -1838,11 +1834,11 @@ class CalculatorView:
         def render():
             data = visible()
             c = by_col[sort_state["col"]]
-            data.sort(key=c[3], reverse=sort_state["desc"] and c[0] != "Rank")
+            data.sort(key=c[2], reverse=sort_state["desc"] and c[0] != "Rank")
             tree.delete(*tree.get_children())
             shown.clear()
             for r in data:
-                iid = tree.insert("", "end", values=[c[2](r) for c in spec])
+                iid = tree.insert("", "end", values=[c[1](r) for c in spec])
                 shown[iid] = r["item"]
             count_lbl.config(text=f"Showing {len(data)} of {len(rows)} loads")
 
@@ -1850,7 +1846,7 @@ class CalculatorView:
             if sort_state["col"] == col:
                 desc = not sort_state["desc"]
             else:                                  # first click: best-first for each column
-                desc = by_col[col][4]
+                desc = by_col[col][3]
             sort_state.update(col=col, desc=desc)
             render()
 
@@ -2345,7 +2341,7 @@ class LoadsView:
         else:
             self.weights_frame.grid_remove()
         self.weights_toggle.config(text=("▾" if self.weights_open else "▸") + "  Scoring weights")
-        self.app.fit_window(self.app.LOADS_MIN_WIDTH, keep_position=True)
+        self.app.fit_window()
 
     def weight_vars_note(self, *_):
         try:
@@ -2622,7 +2618,7 @@ class LoadsView:
             self.sized = True
             self.app.root.update_idletasks()
             self.app.grow_to_fit(sum(self.col_widths.values()) - self.tree.winfo_width())
-        self.app.fit_window(self.app.LOADS_MIN_WIDTH, keep_position=True)
+        self.app.fit_window()
 
     def _on_select(self):
         sel = self.tree.selection()
@@ -2667,7 +2663,7 @@ class LoadsView:
                                 f"#{row['rank']} of {row['peers']}"
                                 f"{' ' + row['group'] + ' loads' if row['group'] else ''}.  {src}")
         self.detail.grid()
-        self.app.fit_window(self.app.LOADS_MIN_WIDTH, keep_position=True)
+        self.app.fit_window()
 
     def _set_price(self):
         if self.selected is None:
