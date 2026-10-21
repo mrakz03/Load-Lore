@@ -35,10 +35,17 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   sharp_on_windows() declares DPI awareness before Tk starts, otherwise Windows stretches the
   window and it looks blurry (issue #5).
 
+- App icon: scripts/make_icons.py (needs Pillow) draws assets/icon.png, icon.ico and the Android
+  launcher icons in assets/android/res. CI bakes icon.ico into the .exe/installer, bundles
+  icon.png for the window icon (icon_path), ships it in the Linux tar for the .desktop entry,
+  and copies assets/android/res over the Capacitor project after `cap add android`.
+
 ## Release
-git tag vX.Y && git push origin vX.Y  → GitHub Actions builds Windows (Setup.exe + zip), Linux
+git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
 (tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
 - APP_VERSION in cartridge_calculator.py stays "dev" in the repo; CI sets it from the tag.
+- Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the user saves the
+  middle number (v1.6) for bigger releases.
 - Installers upgrade in place and clear old shipped data (ammo_*, loads_*, bullets.csv) first.
 - APK updates install over the old app only once the ANDROID_DEBUG_KEYSTORE secret is set
   (see README); until then testers must uninstall the old APK first.

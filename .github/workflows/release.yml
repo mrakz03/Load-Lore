@@ -23,7 +23,7 @@ jobs:
           sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/cartridge_calculator.py
           grep -q "^APP_VERSION = \"$v\"" src/cartridge_calculator.py
       - run: pip install pyinstaller
-      - run: pyinstaller --onefile --windowed --name CartridgeCalculator src/cartridge_calculator.py
+      - run: pyinstaller --onefile --windowed --name CartridgeCalculator --icon assets/icon.ico --add-data "assets/icon.png:." src/cartridge_calculator.py
       - run: |
           mkdir CartridgeCalculator
           copy dist\CartridgeCalculator.exe CartridgeCalculator\
@@ -61,10 +61,10 @@ jobs:
           grep -q "^APP_VERSION = \"$v\"" src/cartridge_calculator.py
       - run: sudo apt-get update && sudo apt-get install -y python3-tk
       - run: pip install pyinstaller
-      - run: pyinstaller --onefile --windowed --name CartridgeCalculator src/cartridge_calculator.py
+      - run: pyinstaller --onefile --windowed --name CartridgeCalculator --add-data "assets/icon.png:." src/cartridge_calculator.py
       - run: |
           mkdir CartridgeCalculator
-          cp dist/CartridgeCalculator data/*.csv CartridgeCalculator/
+          cp dist/CartridgeCalculator data/*.csv assets/icon.png CartridgeCalculator/
           cp scripts/install_linux.sh CartridgeCalculator/install.sh
           tar czf CartridgeCalculator-Linux.tar.gz CartridgeCalculator
       - uses: actions/upload-artifact@v4
@@ -91,6 +91,8 @@ jobs:
       - run: python web/build_web.py
       - run: npm install
       - run: npx cap add android
+      - name: App icon (made by scripts/make_icons.py)
+        run: cp -r assets/android/res/. android/app/src/main/res/
       - run: npx cap sync android
       - name: Stamp version into the APK
         shell: bash

@@ -485,6 +485,16 @@ def make_label(item, grain_style):
     return item.load or f"{item.bullet_gr:g} gr"
 
 
+def icon_path():
+    """assets/icon.png: bundled into the packaged app by PyInstaller (--add-data), or the
+    repo's copy when running from a git checkout. None if it isn't there."""
+    here = getattr(sys, "_MEIPASS", None)
+    if here is None:
+        here = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets")
+    path = os.path.join(here, "icon.png")
+    return path if os.path.exists(path) else None
+
+
 def app_dir():
     if getattr(sys, "frozen", False):              # packaged with PyInstaller
         return os.path.dirname(sys.executable)
@@ -889,6 +899,12 @@ class App:
                                         "Cantarell", "Ubuntu", "Helvetica Neue", "Helvetica",
                                         "Arial", "DejaVu Sans") if f in families), "TkDefaultFont")
         root.configure(bg=BG)
+        try:                                   # window / taskbar icon instead of Tk's feather
+            big = tk.PhotoImage(file=icon_path())                    # 1024 px master
+            self._icons = (big.subsample(4), big.subsample(16))       # 256 and 64 px
+            root.iconphoto(True, *self._icons)
+        except (tk.TclError, TypeError):
+            pass
         self._style()
 
         # load every category's data up front so the picker can show counts

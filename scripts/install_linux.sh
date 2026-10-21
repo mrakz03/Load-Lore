@@ -32,6 +32,7 @@ mkdir -p "$APPDIR" "$(dirname "$DESKTOP")"
 rm -f "$APPDIR"/ammo_*.csv "$APPDIR"/loads_*.csv "$APPDIR"/bullets.csv
 cp "$SRC/CartridgeCalculator" "$APPDIR/"
 cp "$SRC"/*.csv "$APPDIR/"
+[ -f "$SRC/icon.png" ] && cp "$SRC/icon.png" "$APPDIR/"
 chmod +x "$APPDIR/CartridgeCalculator"
 
 cat > "$DESKTOP" <<DESK
@@ -41,6 +42,7 @@ Name=Cartridge Calculator
 Comment=Best-value ammo calculator
 Exec=$APPDIR/CartridgeCalculator
 Path=$APPDIR
+Icon=$APPDIR/icon.png
 Terminal=false
 Categories=Utility;
 DESK
