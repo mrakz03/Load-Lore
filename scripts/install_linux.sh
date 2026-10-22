@@ -42,7 +42,7 @@ if [ -f "$SRC/icon.png" ]; then cp "$SRC/icon.png" "$APPDIR/"; fi
 cat > "$DESKTOP" <<DESK
 [Desktop Entry]
 Type=Application
-Name=In Like Flint - Load Lore
+Name=Load Lore
 Comment=Best-value ammo calculator
 Exec=$APPDIR/CartridgeCalculator
 Path=$APPDIR
@@ -55,5 +55,5 @@ update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
 if pgrep -f "$APPDIR/CartridgeCalculator" >/dev/null 2>&1; then
     echo "The app is open: close it and start it again to use the new version."
 fi
-echo "Done! Search for 'In Like Flint - Load Lore' in your app launcher."
+echo "Done! Search for 'Load Lore' in your app launcher."
 echo "Data files (editable) live in: $APPDIR"

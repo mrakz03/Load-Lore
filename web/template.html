@@ -181,6 +181,16 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .slot .x:hover{color:var(--text);background:var(--surface2)}
 .slot .x{border-radius:8px;min-width:40px}.slot .x.gone{visibility:hidden}
 @media(max-width:600px){.slot{grid-template-columns:1.4em minmax(0,1fr) 2.2em}.slot .ls{grid-column:2}}
+.lsearch{position:relative;min-width:0}
+.lsearch .lq{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px;text-overflow:ellipsis}
+.lsearch .lq::-webkit-search-cancel-button{display:none}
+.lsearch .lq:disabled{opacity:.6}
+.lopts{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:30;max-height:min(50vh,360px);overflow-y:auto;background:var(--surface2);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.lopts [role=option]{padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border)}
+.lopts [role=option]:last-child{border-bottom:0}
+.lopts [role=option].cur{font-weight:700}
+.lopts [role=option].on,.lopts [role=option]:hover{background:var(--accent);color:var(--on-accent)}
+.lopts .none{padding:10px 12px;color:var(--muted)}
 .h2h{overflow:auto;margin-top:12px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
 .h2h table{font-size:.9rem}
 .h2h th,.h2h td{text-align:left;vertical-align:top;white-space:normal;padding:8px 12px}
@@ -275,16 +285,10 @@ const DEFAULT_SOURCE_NOTE = "Load data is approximate. Check it against the box 
 const REL_CENTER=70, REL_SPREAD=10, REL_BANDS=[[85,"S"],[77,"A"],[66,"B"],[55,"C"],[45,"D"]];
 // saved data may use cartridge names from before a rename (e.g. "7.62x54R" -> "7.62x54mmR")
 const RENAMED = DATA.renamed || {};
-const canon = n => RENAMED[n] || n;
-// the one cartridge a load is made for, where two share a list (SHARED_CHAMBERS / chambered)
-const CHAMBERS = DATA.chambers || {};
-function chambered(it){
-  const rule=CHAMBERS[it.cartridge];
-  if(!rule||it.handload)return it.cartridge;
-  const name=it.load.toLowerCase()+" ";
-  const nato=rule.marks.some(m=>name.includes(m))||(rule.hornady_20in&&name.startsWith("hornady")&&it.barrel_in===20);
-  return nato?rule.nato:rule.civil;
-}
+// .223 Rem / 5.56 NATO and .308 Win / 7.62x51mm NATO were one list each until issue #28 (SPLIT_CARTRIDGES):
+// old saved handloads go to the commercial cartridge, an old saved price is kept for both
+const SPLIT = DATA.split || {};
+const canon = n => {n=RENAMED[n]||n;return SPLIT[n]?SPLIT[n][0]:n;};
 const canonRows = a => (Array.isArray(a) ? a : []).map(r => r && typeof r === "object" && r.cartridge ? {...r, cartridge: canon(r.cartridge)} : r);
 const PRICE_KEY = "cartridge_calc_prices_v1";
 const GRADES_KEY = "cartridge_calc_grades";
@@ -427,7 +431,7 @@ for(const cat of CATEGORIES){
   state.detail[cat.title]=(cat.detail||[]).map(x=>Object.assign({},x,{label:makeLabel(x,cat)}));
 }
 // saved price keys: old cartridge names, and "150 gr  ·  Load" labels (weight first, before v1.5)
-function readPrices(){try{const o=JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{},out={};for(const [k,v] of Object.entries(o)){const p=k.split("|");if(p.length>=3){p[1]=canon(p[1]);const r=p.slice(2).join("|"),m=/^(\d+(?:\.\d+)?) gr  ·  (.+)$/.exec(r);p.length=2;p.push(m?`${m[2]}  ·  ${m[1]} gr`:r);}out[p.join("|")]=v;}return out;}catch(e){return {};}}
+function readPrices(){try{const o=JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{},out={};for(const [k,v] of Object.entries(o)){const p=k.split("|");if(p.length<3){out[k]=v;continue;}const r=p.slice(2).join("|"),m=/^(\d+(?:\.\d+)?) gr  ·  (.+)$/.exec(r),n=RENAMED[p[1]]||p[1];for(const c of SPLIT[n]||[n])out[`${p[0]}|${c}|${m?`${m[2]}  ·  ${m[1]} gr`:r}`]=v;}return out;}catch(e){return {};}}
 function writePrices(o){try{localStorage.setItem(PRICE_KEY,JSON.stringify(o));return true;}catch(e){return false;}}
 const priceKey=(cat,it)=>`${cat.title}|${it.cartridge}|${it.label}`;
 const shared={};   // category title -> values carried between the two tabs
@@ -677,12 +681,13 @@ function openLoads(cat,pane){
     </div>
     <div class="chips" id="lp" role="group" aria-label="Purpose"></div>
     <div class="chips hidden" id="lsrc" role="group" aria-label="Source"></div>
-    <div class="sortrow"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
-      <select id="ls"><option value="score">Sort: best value</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
     <div class="links"><button class="link m" id="lwt">▸&nbsp; Scoring weights</button><span class="lright">${cat.grain_style?'<button class="link" id="hadd">+&nbsp; Add handload</button>':""}</span></div>
     <div class="weights hidden" id="lwb"><div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="lw_${k}" inputmode="numeric"></div>`).join("")}</div>
       <div class="help">Higher = matters more. 0 ignores that factor.</div></div>
   </div>
+  <!-- the brand / load filter and sort sit right above the list (issue #26) -->
+  <div class="sortrow above"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
+      <select id="ls"><option value="score">Sort: best value</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
   <div class="cnt" id="lcnt"></div><div class="lgrid" id="lres"></div>
   <div class="note" id="lnote"></div>`;
   const $$=s=>$(s,pane);
@@ -753,7 +758,6 @@ function openLoads(cat,pane){
         <div class="nm">${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}</div>
         ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}</div>
         ${open?`<div class="det">
-          ${CHAMBERS[it.cartridge]&&!it.handload?`<div class="row"><span class="muted">Cartridge</span><span class="v">${esc(chambered(it))}</span><span style="width:32px"></span></div>`:""}
           ${it.handload?"":`<div class="row"><span class="muted">${cat.grain_style?"Bullet weight":"Payload"}</span><span class="v">${payload}</span><span style="width:32px"></span></div>`}
           ${cat.grain_style?`<div class="row"><span class="muted">Test barrel</span><span class="v">${it.barrel_in?g(it.barrel_in)+" in":"not listed"}</span><span style="width:32px"></span></div>`:""}
           ${purposeOf(it)?`<div class="row"><span class="muted">Purpose</span><span class="v">${esc(purposeOf(it))}</span><span style="width:32px"></span></div>`:""}
@@ -872,15 +876,43 @@ function openH2H(cat,pane){
   app._leave=()=>{shared[cat.title]=Object.assign({},shared[cat.title],{dist:$$("#hd").value,gun:$$("#hg").value,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#hw_"+k).value]))});};
   const picked=()=>{const out=[];for(const s of slots){const it=choice(s.cart,s.key);if(it&&!out.includes(it))out.push(it);}return out;};
   const save=()=>{H2H[cat.title]=picked().map(pickKey);};
+  // the load box is a search (issue #24): every typed word must be in the name, the list
+  // shows the matches, arrows + Enter or a tap pick one; leaving the box keeps the old pick
+  const optText=x=>x?x.label+(x.handload?" (handload)":""):"";
+  function loadSearch(box,items,key,pick){
+    const q=box.querySelector(".lq"),list=box.querySelector(".lopts"),cur=items.find(x=>(x.hid||x.label)===key);
+    let shown=[],at=0;
+    const open=all=>{
+      const words=all?[]:q.value.toLowerCase().split(/\s+/).filter(Boolean);
+      shown=items.filter(x=>{const t=optText(x).toLowerCase();return words.every(w=>t.includes(w));});
+      at=Math.max(0,shown.indexOf(cur));
+      list.innerHTML=shown.length?shown.map((x,i)=>`<div role="option" class="${i===at?"on":""}${x===cur?" cur":""}" data-i="${i}">${esc(optText(x))}</div>`).join(""):`<div class="none">No load matches “${esc(q.value.trim())}”</div>`;
+      list.classList.remove("hidden");q.setAttribute("aria-expanded","true");
+      const on=list.querySelector(".on");if(on)on.scrollIntoView({block:"nearest"});
+    };
+    const close=()=>{list.classList.add("hidden");q.setAttribute("aria-expanded","false");};
+    const move=d=>{if(!shown.length)return;at=(at+d+shown.length)%shown.length;list.querySelectorAll("[role=option]").forEach((o,i)=>o.classList.toggle("on",i===at));list.querySelector(".on").scrollIntoView({block:"nearest"});};
+    const choose=i=>{const x=shown[i];if(!x)return;close();q.value=optText(x);pick(x.hid||x.label);};
+    q.onfocus=()=>{q.select();open(true);};
+    q.oninput=()=>open(!q.value.trim());
+    q.onkeydown=e=>{
+      if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();if(list.classList.contains("hidden"))open(q.value===optText(cur));else move(e.key==="ArrowDown"?1:-1);}
+      else if(e.key==="Enter"){e.preventDefault();if(!list.classList.contains("hidden"))choose(at);}
+      else if(e.key==="Escape"){if(!list.classList.contains("hidden")){e.preventDefault();e.stopPropagation();}close();q.value=optText(cur);}
+    };
+    q.onblur=()=>{close();q.value=optText(cur);};
+    // mousedown, not click: the box must keep focus until the pick is made
+    list.onmousedown=e=>{e.preventDefault();const o=e.target.closest("[role=option]");if(o)choose(+o.dataset.i);};
+  }
   function drawSlots(){
     $$("#hs").innerHTML=slots.map((s,i)=>`<div class="slot" data-i="${i}"><span class="n">${i+1}</span>
       <select class="cs" aria-label="Cartridge ${i+1}"><option value="" disabled ${s.cart?"":"selected"} hidden>Cartridge…</option>${carts.map(c=>`<option value="${esc(c)}" ${c===s.cart?"selected":""}>${esc(c)}</option>`).join("")}</select>
-      <select class="ls" aria-label="Load ${i+1}"><option value="" disabled ${s.key?"":"selected"} hidden>Load…</option>${(groups.get(s.cart)||[]).map(x=>{const k=x.hid||x.label;return `<option value="${esc(k)}" ${k===s.key?"selected":""}>${esc(x.label)}${x.handload?" (handload)":""}</option>`;}).join("")}</select>
+      <div class="ls lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Load ${i+1}: type to search" placeholder="${s.cart?"Load… type to search":"Pick a cartridge first"}" autocomplete="off" value="${esc(optText(choice(s.cart,s.key)))}"${s.cart?"":" disabled"}><div class="lopts hidden" role="listbox"></div></div>
       <button class="x${slots.length<=H2H_MIN&&!s.key?" gone":""}" aria-label="Remove load ${i+1}">✕</button></div>`).join("");
     $$("#hs").querySelectorAll(".slot").forEach(row=>{
       const s=slots[+row.dataset.i];
       row.querySelector(".cs").onchange=e=>{s.cart=e.target.value;s.key="";drawSlots();changed();};
-      row.querySelector(".ls").onchange=e=>{s.key=e.target.value;drawSlots();changed();};
+      loadSearch(row.querySelector(".lsearch"),groups.get(s.cart)||[],s.key,k=>{s.key=k;drawSlots();changed();});
       // ✕ removes the row; with only the 2 rows left it clears the load instead (issue #16)
       row.querySelector(".x").onclick=()=>{if(slots.length<=H2H_MIN)s.key="";else slots.splice(slots.indexOf(s),1);drawSlots();changed();};
     });
@@ -892,7 +924,7 @@ function openH2H(cat,pane){
   function phoneView(rows,dist,keys,most,badge,payload){
     const name=r=>`<div class="mname${r.it.handload?" hl":""}">${esc(r.it.label)}${r.it.handload?" (handload)":""}</div>`;
     let h=`<div class="h2hm">`+rows.map(r=>`<div class="mload${r.it.handload?" hl":""}"><div class="mi">
-      <small>${esc(chambered(r.it))}</small><b>${esc(r.it.label)}</b>${r.it.handload?' <span class="chip">Handload</span>':""}
+      <small>${esc(r.it.cartridge)}</small><b>${esc(r.it.label)}</b>${r.it.handload?' <span class="chip">Handload</span>':""}
       <div class="mf">${esc([payload(r.it),cat.grain_style&&r.it.barrel_in?g(r.it.barrel_in)+" in barrel":"",r.it.purpose||r.it.group||""].filter(Boolean).join(" · "))}</div>
       <div class="mf">Rank #${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads · <span class="${r.best.size===most&&most?"best":""}">best in ${r.best.size} of ${keys.length}</span></div></div>
       ${GRADES?`<div class="mo">${badge(r.grade,true)}<span>${r.overall.toFixed(0)}</span></div>`:""}</div>`).join("");
@@ -926,7 +958,7 @@ function openH2H(cat,pane){
     const line=(name,cells,cls)=>`<tr${cls?` class="${cls}"`:""}><td>${name}</td>${cells.map(c=>`<td class="c">${c}</td>`).join("")}</tr>`;
     const payload=it=>cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
     const most=Math.max(...rows.map(r=>r.best.size));
-    let h=`<div class="h2hw"><div class="h2h"><table><thead><tr><th></th>${rows.map(r=>`<th class="${r.it.handload?"hl":""}"><small>${esc(chambered(r.it))}</small>${esc(r.it.label)}${r.it.handload?" <small>handload</small>":""}</th>`).join("")}</tr></thead><tbody>`;
+    let h=`<div class="h2hw"><div class="h2h"><table><thead><tr><th></th>${rows.map(r=>`<th class="${r.it.handload?"hl":""}"><small>${esc(r.it.cartridge)}</small>${esc(r.it.label)}${r.it.handload?" <small>handload</small>":""}</th>`).join("")}</tr></thead><tbody>`;
     if(GRADES)h+=line("Overall",rows.map(r=>`${badge(r.grade,true)} <span class="v" style="margin-left:6px">${r.overall.toFixed(0)}</span>`));
     h+=line("Rank in its cartridge",rows.map(r=>`#${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads`),"sep");
     h+=line(esc(cat.payload_row),rows.map(r=>payload(r.it)));

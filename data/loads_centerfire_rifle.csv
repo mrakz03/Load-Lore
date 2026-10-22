@@ -71,134 +71,134 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .222 Remington,Sellier & Bellot Soft Point,50,3169,0.247,18.6,1.12,,partial,,,Varmint
 .222 Remington,Winchester Super-X Pointed Soft Point,50,3140,0.175,18.2,1.12,,catalog,,24,Varmint
 .222 Remington,PPU FMJ Boat Tail,55,3018,0.266,21.0,0.90,,partial,,24,Target
-.223 Remington / 5.56x45mm NATO,Hornady Superformance Varmint NTX,35,4000,0.180,25.4,0.98,,catalog,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Black Hills Varmint Grenade,36,3750,0.247,23.0,0.94,,partial,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Fiocchi Field Dynamics V-MAX,40,3650,0.275,24.2,0.85,,catalog,,,Varmint
-.223 Remington / 5.56x45mm NATO,Black Hills Hornady V-MAX,40,3600,0.200,23.5,0.94,,partial,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Fiocchi Range Dynamics Frangible,45,3200,0.243,20.9,0.58,,partial,,,Target
-.223 Remington / 5.56x45mm NATO,Remington UMC Jacketed Hollow Point,45,3550,0.173,25.7,0.58,,catalog,,,Hunting
-.223 Remington / 5.56x45mm NATO,Winchester USA Jacketed H.P.,45,3600,0.185,26.5,0.58,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Federal American Eagle JHP,50,3325,0.207,25.1,0.58,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Federal Varmint & Predator JHP,50,3325,0.207,25.1,0.85,,catalog,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Fiocchi Field Dynamics V-MAX,50,3300,0.240,24.7,0.85,,catalog,,,Varmint
-.223 Remington / 5.56x45mm NATO,Fiocchi Hyperformance Hunt Varmint Grenade,50,3300,0.243,24.7,0.85,,partial,,,Varmint
-.223 Remington / 5.56x45mm NATO,Hornady Superformance CX,50,3300,0.167,24.7,1.47,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Remington Premier AccuTip-V,50,3410,0.242,26.4,0.85,,catalog,,,Hunting
-.223 Remington / 5.56x45mm NATO,Remington UMC Jacketed Hollow Point,50,3425,0.192,26.6,0.58,,catalog,,,Hunting
-.223 Remington / 5.56x45mm NATO,Black Hills Barnes TSX 5.56mm,50,3275,0.190,24.4,0.94,,partial,,20,Hunting
-.223 Remington / 5.56x45mm NATO,Black Hills Hornady V-MAX,50,3300,0.242,24.7,0.94,,partial,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Lapua Naturalis (lead-free),50,3330,0.197,25.2,1.36,,published,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Remington Premier Hollow Point Match,52,3200,0.253,24.2,1.02,,catalog,,,Match
-.223 Remington / 5.56x45mm NATO,Black Hills Match HP,52,3250,0.253,25.0,1.12,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,Sellier & Bellot HPBT Match,52,3412,0.253,27.5,0.91,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,Federal Varmint & Predator Hornady V-Max,53,3400,0.295,27.8,0.85,,catalog,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Hornady Superformance Varmint V-MAX,53,3465,0.295,28.9,0.98,,catalog,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Federal American Eagle 5.56x45 NATO XM193 FMJ BT,55,3165,0.250,25,0.58,yes,catalog,,,Target
-.223 Remington / 5.56x45mm NATO,Federal American Eagle FMJ BT,55,3240,0.274,26.2,0.58,,catalog,,24,Target
-.223 Remington / 5.56x45mm NATO,Federal Power-Shok SP,55,3240,0.226,26.2,0.85,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Federal Premium Big Game Barnes Triple-Shock X,55,3200,0.209,25.6,1.27,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Federal Premium Big Game Trophy Copper,55,3240,0.305,26.2,1.27,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Fiocchi Field Dynamics PSP,55,3230,0.235,26,0.85,,catalog,,,Hunting
-.223 Remington / 5.56x45mm NATO,Fiocchi Field Dynamics V-MAX,55,3240,0.255,26.2,0.85,,catalog,,,Varmint
-.223 Remington / 5.56x45mm NATO,Fiocchi Range Dynamics FMJBT,55,3240,0.243,26.2,0.58,,partial,,,Target
-.223 Remington / 5.56x45mm NATO,Hornady American Gunner HP Match,55,3240,0.227,26.2,1.02,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,Hornady Critical Defense FTX,55,3240,0.178,26.2,1.27,,catalog,,24,Defense
-.223 Remington / 5.56x45mm NATO,Hornady Custom FMJ,55,3240,0.248,26.2,0.58,,catalog,,24,Target
-.223 Remington / 5.56x45mm NATO,Hornady Custom SP,55,3240,0.239,26.2,0.85,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Hornady Hollow Point Match,55,3240,0.259,26.2,1.02,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,"Hornady Superformance CX (24"" barrel)",55,3250,0.250,26.4,1.47,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,"Hornady Superformance CX (20"" barrel)",55,3175,0.250,25.2,1.47,,catalog,,20,Hunting
-.223 Remington / 5.56x45mm NATO,Hornady V-MAX,55,3240,0.260,26.2,0.85,,catalog,,24,Varmint
-.223 Remington / 5.56x45mm NATO,"PMC Bronze Full Metal Jacket Boat Tail (16"" barrel)",55,2900,0.243,21,0.58,,catalog,,16,Target
-.223 Remington / 5.56x45mm NATO,"PMC Bronze Full Metal Jacket Boat Tail (24"" barrel)",55,3200,0.243,25.6,0.58,,catalog,,24,Target
-.223 Remington / 5.56x45mm NATO,PMC Bronze Hunting Pointed Soft Point,55,3200,0.222,25.6,0.58,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,PMC X-TAC 5.56 NATO Full Metal Jacket Boat Tail,55,3270,0.243,26.7,1.02,,catalog,,20,Target
-.223 Remington / 5.56x45mm NATO,Remington Pointed Soft Point,55,3240,0.197,26.2,0.85,,catalog,,,Hunting
-.223 Remington / 5.56x45mm NATO,Remington Premier AccuTip-V,55,3240,0.255,26.2,0.85,,catalog,,,Hunting
-.223 Remington / 5.56x45mm NATO,Remington UMC Full Metal Jacket,55,3240,0.202,26.2,0.58,,catalog,,,Target
-.223 Remington / 5.56x45mm NATO,Speer Gold Dot Rifle Personal Protection Soft Point,55,3220,0.243,25.9,1.27,,partial,,,Defense
-.223 Remington / 5.56x45mm NATO,Winchester Ballistic Silvertip,55,3240,0.267,26.2,0.98,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Winchester Super-X Pointed Soft Point,55,3240,0.197,26.2,0.85,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Winchester USA Full Metal Jacket,55,3240,0.269,26.2,0.58,,catalog,,24,Target
-.223 Remington / 5.56x45mm NATO,Winchester Varmint-X Extreme Point,55,3240,0.246,26.2,0.85,,catalog,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Black Hills Full Metal Jacket,55,3200,0.250,25.6,0.64,,partial,,24,Target
-.223 Remington / 5.56x45mm NATO,Black Hills Soft Point,55,3200,0.222,25.6,0.94,,partial,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Black Hills Barnes MPG,55,3100,0.209,24.0,0.94,,partial,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Black Hills Barnes TSX,55,3200,0.209,25.6,0.94,,partial,,24,Hunting
-.223 Remington / 5.56x45mm NATO,IMI M193 FMJ,55,3166,0.250,25.0,0.63,,partial,,20,Target
-.223 Remington / 5.56x45mm NATO,Norma Tipstrike Varmint,55,3215,0.255,25.8,1.80,,partial,,,Varmint
-.223 Remington / 5.56x45mm NATO,Sellier & Bellot Soft Point,55,3301,0.222,27.2,0.76,,partial,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Sellier & Bellot 5.56mm M193 FMJ,55,3301,0.250,27.2,0.49,,partial,,24,Target
-.223 Remington / 5.56x45mm NATO,PPU Soft Point,55,3248,0.222,26.3,0.68,,partial,,24,Varmint
-.223 Remington / 5.56x45mm NATO,PPU HPBT,55,3248,0.228,26.3,0.82,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,PPU FMJ Boat Tail,55,3248,0.250,26.3,0.46,,partial,,24,Target
-.223 Remington / 5.56x45mm NATO,Black Hills Soft Point,60,3075,0.226,25.8,0.94,,partial,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Black Hills Hornady V-MAX,60,3050,0.290,25.4,0.94,,partial,,24,Varmint
-.223 Remington / 5.56x45mm NATO,Federal American Eagle 5.56x45 NATO XM855 FMJ BT,62,3020,0.355,25.7,0.58,,catalog,,,Target
-.223 Remington / 5.56x45mm NATO,Federal American Eagle FMJ BT,62,3020,0.312,25.7,0.58,,catalog,,24,Target
-.223 Remington / 5.56x45mm NATO,Federal Fusion,62,3000,0.315,25.3,0.85,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Federal Fusion MSR,62,2750,0.315,21.3,0.85,,catalog,,16,Hunting
-.223 Remington / 5.56x45mm NATO,Fiocchi Range Dynamics FMJBT,62,3000,0.304,25.3,0.58,,partial,,,Target
-.223 Remington / 5.56x45mm NATO,"Hornady BLACK FMJ (24"" barrel)",62,3100,0.279,27,0.58,,catalog,,24,Target
-.223 Remington / 5.56x45mm NATO,"Hornady BLACK FMJ (20"" barrel)",62,3060,0.279,26.3,0.58,,catalog,,20,Target
-.223 Remington / 5.56x45mm NATO,Hornady BTHP Match,62,3060,0.326,26.3,1.02,,catalog,,20,Match
-.223 Remington / 5.56x45mm NATO,Hornady Spire Point,62,3060,0.269,26.3,0.85,,catalog,,20,Hunting
-.223 Remington / 5.56x45mm NATO,PMC X-TAC 5.56 NATO Light Armor Piercing,62,3100,0.304,27,1.02,,catalog,,20,Target
-.223 Remington / 5.56x45mm NATO,Remington Core-Lokt Ultra Bonded PSP,62,3100,0.234,27,1.27,,catalog,,,Hunting
-.223 Remington / 5.56x45mm NATO,Remington Hollow Point Match,62,3025,0.205,25.7,1.02,,catalog,,,Match
-.223 Remington / 5.56x45mm NATO,Speer Gold Dot Rifle Personal Protection Soft Point,62,3000,0.304,25.3,1.27,,partial,,,Defense
-.223 Remington / 5.56x45mm NATO,Winchester 5.56 NATO M855 FMJ Green Tip,62,3060,0.349,26.3,0.58,,catalog,,20,Hunting
-.223 Remington / 5.56x45mm NATO,Winchester USA Full Metal Jacket,62,3100,0.283,27,0.58,,catalog,,24,Target
-.223 Remington / 5.56x45mm NATO,Winchester USA Ready Open Tip,62,3065,0.216,26.4,0.58,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Black Hills Barnes TSX 5.56mm,62,3000,0.298,25.4,0.94,,partial,,20,Hunting
-.223 Remington / 5.56x45mm NATO,Black Hills Dual Performance 5.56mm,62,3000,0.287,25.4,1.40,,partial,,20,Defense
-.223 Remington / 5.56x45mm NATO,Black Hills Barnes TSX,62,3025,0.298,25.8,0.94,,partial,,24,Hunting
-.223 Remington / 5.56x45mm NATO,PPU FMJ Boat Tail,62,3051,0.355,26.2,0.46,,partial,,24,Target
-.223 Remington / 5.56x45mm NATO,PPU HPBT,62,3051,0.300,26.2,0.82,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,Federal Power-Shok SP,64,3050,0.260,27,0.85,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Winchester 5.56 NATO Defender,64,2800,0.177,22.8,0.85,,catalog,,16,Defense
-.223 Remington / 5.56x45mm NATO,Winchester Deer Season XP Extreme Point,64,3020,0.282,26.5,0.85,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Winchester Power-Point,64,3020,0.257,26.5,0.85,,catalog,,24,Hunting
-.223 Remington / 5.56x45mm NATO,Winchester Silvertip Defense Tip,64,2700,0.282,21.2,0.85,,catalog,,16,Defense
-.223 Remington / 5.56x45mm NATO,Hornady BTHP Match,68,2960,0.362,27,1.02,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,Black Hills Heavy Match HP,68,2850,0.362,25.0,1.12,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,Federal Premium Gold Medal Sierra MatchKing BTHP,69,2950,0.301,27.2,1.27,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,Fiocchi Hyperformance Match HPBT MK,69,2850,0.301,25.4,1.02,,catalog,,,Match
-.223 Remington / 5.56x45mm NATO,Remington Premier MatchKing OTM,69,3000,0.336,28.2,1.02,,catalog,,,Match
-.223 Remington / 5.56x45mm NATO,Winchester Match BTHP,69,3000,0.297,28.2,1.02,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,Black Hills Open Tip Match 5.56mm,69,2875,0.301,25.8,1.12,,partial,,20,Match
-.223 Remington / 5.56x45mm NATO,Black Hills Sierra TMK 5.56mm,69,2875,0.301,25.8,1.12,,partial,,20,Match
-.223 Remington / 5.56x45mm NATO,Black Hills Sierra MatchKing,69,2850,0.301,25.4,1.12,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,Lapua Scenar-L OTM,69,2723,0.341,23.2,1.63,,published,,20,Match
-.223 Remington / 5.56x45mm NATO,Sellier & Bellot HPBT Match,69,3018,0.301,28.5,0.91,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,PPU HPBT,69,2838,0.329,25.2,0.82,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,Black Hills Hornady GMX 5.56mm,70,2800,0.254,24.9,0.94,,partial,,20,Hunting
-.223 Remington / 5.56x45mm NATO,Federal Premium Gold Medal Berger BT Target,73,2800,0.348,26,1.27,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,Hornady Critical Defense FTX,73,2790,0.265,25.8,1.27,,catalog,,24,Defense
-.223 Remington / 5.56x45mm NATO,Hornady Match ELD Match,73,2790,0.405,25.8,1.02,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,Federal American Eagle TMJ,75,2775,0.407,26.2,0.58,,catalog,,24,Target
-.223 Remington / 5.56x45mm NATO,Hornady BLACK BTHP,75,2790,0.403,26.5,1.02,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,Hornady BTHP Match,75,2860,0.362,27.8,1.02,,catalog,,20,Match
-.223 Remington / 5.56x45mm NATO,Hornady Match BTHP Match,75,2790,0.403,26.5,1.02,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,"Hornady Superformance Match BTHP (24"" barrel)",75,2930,0.402,29.2,1.17,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,"Hornady Superformance Match BTHP (20"" barrel)",75,2910,0.402,28.8,1.17,,catalog,,20,Match
-.223 Remington / 5.56x45mm NATO,Speer Gold Dot Rifle Personal Protection Soft Point,75,2775,0.372,26.2,1.27,,partial,,,Defense
-.223 Remington / 5.56x45mm NATO,Black Hills Heavy Match HP,75,2750,0.403,25.7,1.12,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,PPU HPBT,75,2723,0.358,25.2,0.82,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,Federal Premium Gold Medal Centerstrike OTM,77,2720,0.356,25.8,1.27,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,Federal Premium Gold Medal Sierra MatchKing BTHP,77,2720,0.372,25.8,1.27,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,Fiocchi Hyperformance Defense SBR Polymer Tip Boat Tail,77,2750,0.372,26.4,0.85,,partial,,,Defense
-.223 Remington / 5.56x45mm NATO,Fiocchi Hyperformance Match HPBT MK,77,2725,0.362,25.9,1.02,,catalog,,,Match
-.223 Remington / 5.56x45mm NATO,"PMC X-TAC Match Open Tip Match (16"" barrel)",77,2420,0.372,20.5,1.02,,catalog,,16,Match
-.223 Remington / 5.56x45mm NATO,"PMC X-TAC Match Open Tip Match (20"" barrel)",77,2790,0.372,27.2,1.02,,catalog,,20,Match
-.223 Remington / 5.56x45mm NATO,Remington Premier MatchKing OTM,77,2790,0.362,27.2,1.02,,catalog,,,Match
-.223 Remington / 5.56x45mm NATO,Winchester 5.56 NATO Match BTHP,77,2750,0.340,26.4,1.02,,catalog,,24,Match
-.223 Remington / 5.56x45mm NATO,SIG Sauer Elite Match Grade OTM,77,2750,0.362,26.4,1.65,,published,,24,Match
-.223 Remington / 5.56x45mm NATO,Black Hills Open Tip Match 5.56mm,77,2750,0.356,26.4,1.12,,partial,,20,Match
-.223 Remington / 5.56x45mm NATO,Black Hills Sierra TMK 5.56mm,77,2750,0.372,26.4,1.12,,partial,,20,Match
-.223 Remington / 5.56x45mm NATO,Black Hills Open Tip Match,77,2750,0.356,26.4,1.12,,partial,,24,Match
-.223 Remington / 5.56x45mm NATO,IMI Razor Core Sierra MatchKing HP,77,2740,0.372,26.2,1.25,,partial,,16,Match
-.223 Remington / 5.56x45mm NATO,Sellier & Bellot HPBT Match,77,2825,0.356,27.8,0.91,,partial,,24,Match
+.223 Remington,Hornady Superformance Varmint NTX,35,4000,0.180,25.4,0.98,,catalog,,24,Varmint
+.223 Remington,Black Hills Varmint Grenade,36,3750,0.247,23.0,0.94,,partial,,24,Varmint
+.223 Remington,Fiocchi Field Dynamics V-MAX,40,3650,0.275,24.2,0.85,,catalog,,,Varmint
+.223 Remington,Black Hills Hornady V-MAX,40,3600,0.200,23.5,0.94,,partial,,24,Varmint
+.223 Remington,Fiocchi Range Dynamics Frangible,45,3200,0.243,20.9,0.58,,partial,,,Target
+.223 Remington,Remington UMC Jacketed Hollow Point,45,3550,0.173,25.7,0.58,,catalog,,,Hunting
+.223 Remington,Winchester USA Jacketed H.P.,45,3600,0.185,26.5,0.58,,catalog,,24,Hunting
+.223 Remington,Federal American Eagle JHP,50,3325,0.207,25.1,0.58,,catalog,,24,Hunting
+.223 Remington,Federal Varmint & Predator JHP,50,3325,0.207,25.1,0.85,,catalog,,24,Varmint
+.223 Remington,Fiocchi Field Dynamics V-MAX,50,3300,0.240,24.7,0.85,,catalog,,,Varmint
+.223 Remington,Fiocchi Hyperformance Hunt Varmint Grenade,50,3300,0.243,24.7,0.85,,partial,,,Varmint
+.223 Remington,Hornady Superformance CX,50,3300,0.167,24.7,1.47,,catalog,,24,Hunting
+.223 Remington,Remington Premier AccuTip-V,50,3410,0.242,26.4,0.85,,catalog,,,Hunting
+.223 Remington,Remington UMC Jacketed Hollow Point,50,3425,0.192,26.6,0.58,,catalog,,,Hunting
+5.56x45mm NATO,Black Hills Barnes TSX 5.56mm,50,3275,0.190,24.4,0.94,,partial,,20,Hunting
+.223 Remington,Black Hills Hornady V-MAX,50,3300,0.242,24.7,0.94,,partial,,24,Varmint
+.223 Remington,Lapua Naturalis (lead-free),50,3330,0.197,25.2,1.36,,published,,24,Hunting
+.223 Remington,Remington Premier Hollow Point Match,52,3200,0.253,24.2,1.02,,catalog,,,Match
+.223 Remington,Black Hills Match HP,52,3250,0.253,25.0,1.12,,partial,,24,Match
+.223 Remington,Sellier & Bellot HPBT Match,52,3412,0.253,27.5,0.91,,partial,,24,Match
+.223 Remington,Federal Varmint & Predator Hornady V-Max,53,3400,0.295,27.8,0.85,,catalog,,24,Varmint
+.223 Remington,Hornady Superformance Varmint V-MAX,53,3465,0.295,28.9,0.98,,catalog,,24,Varmint
+5.56x45mm NATO,Federal American Eagle 5.56x45 NATO XM193 FMJ BT,55,3165,0.250,25,0.58,yes,catalog,,,Target
+.223 Remington,Federal American Eagle FMJ BT,55,3240,0.274,26.2,0.58,,catalog,,24,Target
+.223 Remington,Federal Power-Shok SP,55,3240,0.226,26.2,0.85,,catalog,,24,Hunting
+.223 Remington,Federal Premium Big Game Barnes Triple-Shock X,55,3200,0.209,25.6,1.27,,catalog,,24,Hunting
+.223 Remington,Federal Premium Big Game Trophy Copper,55,3240,0.305,26.2,1.27,,catalog,,24,Hunting
+.223 Remington,Fiocchi Field Dynamics PSP,55,3230,0.235,26,0.85,,catalog,,,Hunting
+.223 Remington,Fiocchi Field Dynamics V-MAX,55,3240,0.255,26.2,0.85,,catalog,,,Varmint
+.223 Remington,Fiocchi Range Dynamics FMJBT,55,3240,0.243,26.2,0.58,,partial,,,Target
+.223 Remington,Hornady American Gunner HP Match,55,3240,0.227,26.2,1.02,,catalog,,24,Match
+.223 Remington,Hornady Critical Defense FTX,55,3240,0.178,26.2,1.27,,catalog,,24,Defense
+.223 Remington,Hornady Custom FMJ,55,3240,0.248,26.2,0.58,,catalog,,24,Target
+.223 Remington,Hornady Custom SP,55,3240,0.239,26.2,0.85,,catalog,,24,Hunting
+.223 Remington,Hornady Hollow Point Match,55,3240,0.259,26.2,1.02,,catalog,,24,Match
+.223 Remington,"Hornady Superformance CX (24"" barrel)",55,3250,0.250,26.4,1.47,,catalog,,24,Hunting
+5.56x45mm NATO,"Hornady Superformance CX (20"" barrel)",55,3175,0.250,25.2,1.47,,catalog,,20,Hunting
+.223 Remington,Hornady V-MAX,55,3240,0.260,26.2,0.85,,catalog,,24,Varmint
+.223 Remington,"PMC Bronze Full Metal Jacket Boat Tail (16"" barrel)",55,2900,0.243,21,0.58,,catalog,,16,Target
+.223 Remington,"PMC Bronze Full Metal Jacket Boat Tail (24"" barrel)",55,3200,0.243,25.6,0.58,,catalog,,24,Target
+.223 Remington,PMC Bronze Hunting Pointed Soft Point,55,3200,0.222,25.6,0.58,,catalog,,24,Hunting
+5.56x45mm NATO,PMC X-TAC 5.56 NATO Full Metal Jacket Boat Tail,55,3270,0.243,26.7,1.02,,catalog,,20,Target
+.223 Remington,Remington Pointed Soft Point,55,3240,0.197,26.2,0.85,,catalog,,,Hunting
+.223 Remington,Remington Premier AccuTip-V,55,3240,0.255,26.2,0.85,,catalog,,,Hunting
+.223 Remington,Remington UMC Full Metal Jacket,55,3240,0.202,26.2,0.58,,catalog,,,Target
+.223 Remington,Speer Gold Dot Rifle Personal Protection Soft Point,55,3220,0.243,25.9,1.27,,partial,,,Defense
+.223 Remington,Winchester Ballistic Silvertip,55,3240,0.267,26.2,0.98,,catalog,,24,Hunting
+.223 Remington,Winchester Super-X Pointed Soft Point,55,3240,0.197,26.2,0.85,,catalog,,24,Hunting
+.223 Remington,Winchester USA Full Metal Jacket,55,3240,0.269,26.2,0.58,,catalog,,24,Target
+.223 Remington,Winchester Varmint-X Extreme Point,55,3240,0.246,26.2,0.85,,catalog,,24,Varmint
+.223 Remington,Black Hills Full Metal Jacket,55,3200,0.250,25.6,0.64,,partial,,24,Target
+.223 Remington,Black Hills Soft Point,55,3200,0.222,25.6,0.94,,partial,,24,Hunting
+.223 Remington,Black Hills Barnes MPG,55,3100,0.209,24.0,0.94,,partial,,24,Varmint
+.223 Remington,Black Hills Barnes TSX,55,3200,0.209,25.6,0.94,,partial,,24,Hunting
+5.56x45mm NATO,IMI M193 FMJ,55,3166,0.250,25.0,0.63,,partial,,20,Target
+.223 Remington,Norma Tipstrike Varmint,55,3215,0.255,25.8,1.80,,partial,,,Varmint
+.223 Remington,Sellier & Bellot Soft Point,55,3301,0.222,27.2,0.76,,partial,,24,Varmint
+5.56x45mm NATO,Sellier & Bellot 5.56mm M193 FMJ,55,3301,0.250,27.2,0.49,,partial,,24,Target
+.223 Remington,PPU Soft Point,55,3248,0.222,26.3,0.68,,partial,,24,Varmint
+.223 Remington,PPU HPBT,55,3248,0.228,26.3,0.82,,partial,,24,Match
+.223 Remington,PPU FMJ Boat Tail,55,3248,0.250,26.3,0.46,,partial,,24,Target
+.223 Remington,Black Hills Soft Point,60,3075,0.226,25.8,0.94,,partial,,24,Hunting
+.223 Remington,Black Hills Hornady V-MAX,60,3050,0.290,25.4,0.94,,partial,,24,Varmint
+5.56x45mm NATO,Federal American Eagle 5.56x45 NATO XM855 FMJ BT,62,3020,0.355,25.7,0.58,,catalog,,,Target
+.223 Remington,Federal American Eagle FMJ BT,62,3020,0.312,25.7,0.58,,catalog,,24,Target
+.223 Remington,Federal Fusion,62,3000,0.315,25.3,0.85,,catalog,,24,Hunting
+.223 Remington,Federal Fusion MSR,62,2750,0.315,21.3,0.85,,catalog,,16,Hunting
+.223 Remington,Fiocchi Range Dynamics FMJBT,62,3000,0.304,25.3,0.58,,partial,,,Target
+.223 Remington,"Hornady BLACK FMJ (24"" barrel)",62,3100,0.279,27,0.58,,catalog,,24,Target
+5.56x45mm NATO,"Hornady BLACK FMJ (20"" barrel)",62,3060,0.279,26.3,0.58,,catalog,,20,Target
+5.56x45mm NATO,Hornady BTHP Match,62,3060,0.326,26.3,1.02,,catalog,,20,Match
+5.56x45mm NATO,Hornady Spire Point,62,3060,0.269,26.3,0.85,,catalog,,20,Hunting
+5.56x45mm NATO,PMC X-TAC 5.56 NATO Light Armor Piercing,62,3100,0.304,27,1.02,,catalog,,20,Target
+.223 Remington,Remington Core-Lokt Ultra Bonded PSP,62,3100,0.234,27,1.27,,catalog,,,Hunting
+.223 Remington,Remington Hollow Point Match,62,3025,0.205,25.7,1.02,,catalog,,,Match
+.223 Remington,Speer Gold Dot Rifle Personal Protection Soft Point,62,3000,0.304,25.3,1.27,,partial,,,Defense
+5.56x45mm NATO,Winchester 5.56 NATO M855 FMJ Green Tip,62,3060,0.349,26.3,0.58,,catalog,,20,Hunting
+.223 Remington,Winchester USA Full Metal Jacket,62,3100,0.283,27,0.58,,catalog,,24,Target
+.223 Remington,Winchester USA Ready Open Tip,62,3065,0.216,26.4,0.58,,catalog,,24,Hunting
+5.56x45mm NATO,Black Hills Barnes TSX 5.56mm,62,3000,0.298,25.4,0.94,,partial,,20,Hunting
+5.56x45mm NATO,Black Hills Dual Performance 5.56mm,62,3000,0.287,25.4,1.40,,partial,,20,Defense
+.223 Remington,Black Hills Barnes TSX,62,3025,0.298,25.8,0.94,,partial,,24,Hunting
+.223 Remington,PPU FMJ Boat Tail,62,3051,0.355,26.2,0.46,,partial,,24,Target
+.223 Remington,PPU HPBT,62,3051,0.300,26.2,0.82,,partial,,24,Match
+.223 Remington,Federal Power-Shok SP,64,3050,0.260,27,0.85,,catalog,,24,Hunting
+5.56x45mm NATO,Winchester 5.56 NATO Defender,64,2800,0.177,22.8,0.85,,catalog,,16,Defense
+.223 Remington,Winchester Deer Season XP Extreme Point,64,3020,0.282,26.5,0.85,,catalog,,24,Hunting
+.223 Remington,Winchester Power-Point,64,3020,0.257,26.5,0.85,,catalog,,24,Hunting
+.223 Remington,Winchester Silvertip Defense Tip,64,2700,0.282,21.2,0.85,,catalog,,16,Defense
+.223 Remington,Hornady BTHP Match,68,2960,0.362,27,1.02,,catalog,,24,Match
+.223 Remington,Black Hills Heavy Match HP,68,2850,0.362,25.0,1.12,,partial,,24,Match
+.223 Remington,Federal Premium Gold Medal Sierra MatchKing BTHP,69,2950,0.301,27.2,1.27,,catalog,,24,Match
+.223 Remington,Fiocchi Hyperformance Match HPBT MK,69,2850,0.301,25.4,1.02,,catalog,,,Match
+.223 Remington,Remington Premier MatchKing OTM,69,3000,0.336,28.2,1.02,,catalog,,,Match
+.223 Remington,Winchester Match BTHP,69,3000,0.297,28.2,1.02,,catalog,,24,Match
+5.56x45mm NATO,Black Hills Open Tip Match 5.56mm,69,2875,0.301,25.8,1.12,,partial,,20,Match
+5.56x45mm NATO,Black Hills Sierra TMK 5.56mm,69,2875,0.301,25.8,1.12,,partial,,20,Match
+.223 Remington,Black Hills Sierra MatchKing,69,2850,0.301,25.4,1.12,,partial,,24,Match
+.223 Remington,Lapua Scenar-L OTM,69,2723,0.341,23.2,1.63,,published,,20,Match
+.223 Remington,Sellier & Bellot HPBT Match,69,3018,0.301,28.5,0.91,,partial,,24,Match
+.223 Remington,PPU HPBT,69,2838,0.329,25.2,0.82,,partial,,24,Match
+5.56x45mm NATO,Black Hills Hornady GMX 5.56mm,70,2800,0.254,24.9,0.94,,partial,,20,Hunting
+.223 Remington,Federal Premium Gold Medal Berger BT Target,73,2800,0.348,26,1.27,,catalog,,24,Match
+.223 Remington,Hornady Critical Defense FTX,73,2790,0.265,25.8,1.27,,catalog,,24,Defense
+.223 Remington,Hornady Match ELD Match,73,2790,0.405,25.8,1.02,,catalog,,24,Match
+.223 Remington,Federal American Eagle TMJ,75,2775,0.407,26.2,0.58,,catalog,,24,Target
+.223 Remington,Hornady BLACK BTHP,75,2790,0.403,26.5,1.02,,catalog,,24,Match
+5.56x45mm NATO,Hornady BTHP Match,75,2860,0.362,27.8,1.02,,catalog,,20,Match
+.223 Remington,Hornady Match BTHP Match,75,2790,0.403,26.5,1.02,,catalog,,24,Match
+.223 Remington,"Hornady Superformance Match BTHP (24"" barrel)",75,2930,0.402,29.2,1.17,,catalog,,24,Match
+5.56x45mm NATO,"Hornady Superformance Match BTHP (20"" barrel)",75,2910,0.402,28.8,1.17,,catalog,,20,Match
+.223 Remington,Speer Gold Dot Rifle Personal Protection Soft Point,75,2775,0.372,26.2,1.27,,partial,,,Defense
+.223 Remington,Black Hills Heavy Match HP,75,2750,0.403,25.7,1.12,,partial,,24,Match
+.223 Remington,PPU HPBT,75,2723,0.358,25.2,0.82,,partial,,24,Match
+.223 Remington,Federal Premium Gold Medal Centerstrike OTM,77,2720,0.356,25.8,1.27,,catalog,,24,Match
+.223 Remington,Federal Premium Gold Medal Sierra MatchKing BTHP,77,2720,0.372,25.8,1.27,,catalog,,24,Match
+.223 Remington,Fiocchi Hyperformance Defense SBR Polymer Tip Boat Tail,77,2750,0.372,26.4,0.85,,partial,,,Defense
+.223 Remington,Fiocchi Hyperformance Match HPBT MK,77,2725,0.362,25.9,1.02,,catalog,,,Match
+.223 Remington,"PMC X-TAC Match Open Tip Match (16"" barrel)",77,2420,0.372,20.5,1.02,,catalog,,16,Match
+.223 Remington,"PMC X-TAC Match Open Tip Match (20"" barrel)",77,2790,0.372,27.2,1.02,,catalog,,20,Match
+.223 Remington,Remington Premier MatchKing OTM,77,2790,0.362,27.2,1.02,,catalog,,,Match
+5.56x45mm NATO,Winchester 5.56 NATO Match BTHP,77,2750,0.340,26.4,1.02,,catalog,,24,Match
+.223 Remington,SIG Sauer Elite Match Grade OTM,77,2750,0.362,26.4,1.65,,published,,24,Match
+5.56x45mm NATO,Black Hills Open Tip Match 5.56mm,77,2750,0.356,26.4,1.12,,partial,,20,Match
+5.56x45mm NATO,Black Hills Sierra TMK 5.56mm,77,2750,0.372,26.4,1.12,,partial,,20,Match
+.223 Remington,Black Hills Open Tip Match,77,2750,0.356,26.4,1.12,,partial,,24,Match
+.223 Remington,IMI Razor Core Sierra MatchKing HP,77,2740,0.372,26.2,1.25,,partial,,16,Match
+.223 Remington,Sellier & Bellot HPBT Match,77,2825,0.356,27.8,0.91,,partial,,24,Match
 .224 Valkyrie,Federal Varmint & Predator Hornady V-Max,60,3300,0.270,29.5,1.60,,catalog,,24,Varmint
 .224 Valkyrie,Hornady V-MAX,60,3300,0.270,29.5,1.60,,catalog,,24,Varmint
 .224 Valkyrie,Remington Premier AccuTip-V,60,3300,0.265,29.5,1.60,,catalog,,,Hunting
@@ -1040,164 +1040,164 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .300 WSM,Winchester Supreme Long Range BC MAX,195,2900,0.589,60.7,5.87,,catalog,,24,Hunting
 .300 WSM,Federal Premium ELD-X,200,2820,0.597,58.9,5.87,,catalog,,24,Hunting
 .300 WSM,Federal Premium Terminal Ascent,200,2810,0.608,58.5,5.87,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Varmint & Predator Hornady V-Max,110,3300,0.295,42.1,1.60,,catalog,,24,Varmint
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot eXergy Blue TXRG,110,2766,0.343,29.6,1.72,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot eXergy Edge,110,2766,0.343,29.6,1.72,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,PPU FMJ,123,3035,0.315,39.8,0.87,,partial,,24,Target
-.308 Winchester / 7.62x51mm NATO,Fiocchi Hyperformance Defense SBR Polymer Tip Boat Tail,125,3250,0.390,46.4,1.60,,partial,,,Defense
-.308 Winchester / 7.62x51mm NATO,Hornady Custom Lite SST,125,2675,0.311,31.4,1.84,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Hornady CX,125,3000,0.311,39.5,2.02,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Varmint & Predator JHP,130,3050,0.267,42.5,1.60,,catalog,,24,Varmint
-.308 Winchester / 7.62x51mm NATO,PPU FMJ Boat Tail,145,2838,0.393,41.0,0.87,,partial,,24,Target
-.308 Winchester / 7.62x51mm NATO,PMC Bronze Full Metal Jacket Boat Tail,147,2780,0.398,39.9,1.09,,catalog,,24,Target
-.308 Winchester / 7.62x51mm NATO,PMC X-TAC 7.62x51 NATO Full Metal Jacket Boat Tail,147,2800,0.398,40.5,1.92,,catalog,,24,Target
-.308 Winchester / 7.62x51mm NATO,Winchester USA Full Metal Jacket,147,2800,0.415,40.5,1.09,,catalog,,24,Target
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot FMJ,147,2789,0.398,40.2,0.93,,partial,,24,Target
-.308 Winchester / 7.62x51mm NATO,Winchester 7.62x51 NATO M80 Full Metal Jacket,149,2790,0.456,40.7,1.09,,catalog,,24,Target
-.308 Winchester / 7.62x51mm NATO,Federal American Eagle FMJ BT,150,2820,0.415,41.9,1.09,,catalog,,24,Target
-.308 Winchester / 7.62x51mm NATO,Federal Fusion,150,2820,0.421,41.9,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Fusion MSR,150,2770,0.421,40.4,1.60,,catalog,,20,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Power-Shok Copper HP,150,2820,0.283,41.9,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Power-Shok SP,150,2820,0.318,41.9,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Big Game Barnes Triple-Shock X,150,2820,0.369,41.9,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Big Game Trophy Copper,150,2820,0.469,41.9,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Fiocchi Backwoods Hunter COPPER HP,150,2900,0.400,44.3,2.40,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Fiocchi Field Dynamics PSP,150,2820,0.380,41.9,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Fiocchi Hyperformance Hunt SCIROCCO,150,2875,0.430,43.5,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Fiocchi Hyperformance Hunt SST,150,2860,0.415,43.1,1.84,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Fiocchi Range Dynamics FMJBT,150,2890,0.390,44,1.09,,partial,,,Target
-.308 Winchester / 7.62x51mm NATO,Hornady American Whitetail InterLock SP,150,2820,0.355,41.9,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady American Whitetail SST,150,2810,0.416,41.6,1.84,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady Custom SST,150,2820,0.423,41.9,1.84,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady Outfitter CX,150,2800,0.426,41.3,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady Superformance CX,150,2900,0.426,44.3,2.76,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady Superformance SST,150,3000,0.423,47.4,2.12,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,PMC Bronze Hunting Pointed Soft Point,150,2820,0.336,41.9,1.09,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington Core-Lokt Copper,150,2820,0.278,41.9,2.40,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington Core-Lokt Pointed Soft Point,150,2820,0.314,41.9,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington Core-Lokt Tipped,150,2840,0.415,42.5,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington UMC Full Metal Jacket,150,2810,0.422,41.6,1.09,,catalog,,,Target
-.308 Winchester / 7.62x51mm NATO,Speer Gold Dot Rifle Personal Protection Soft Point,150,2820,0.390,41.9,2.40,,partial,,,Defense
-.308 Winchester / 7.62x51mm NATO,Winchester Ballistic Silvertip,150,2810,0.435,41.6,1.84,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Winchester Copper Impact Copper Extreme Point,150,2810,0.387,41.6,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Winchester Deer Season XP Extreme Point,150,2820,0.392,41.9,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Winchester Power-Point,150,2820,0.294,41.9,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Winchester Silvertip Defense Tip,150,2620,0.392,36.2,1.60,,catalog,,16,Defense
-.308 Winchester / 7.62x51mm NATO,SIG Sauer Elite Ball FMJ,150,2900,0.415,44.3,1.65,,partial,,24,Target
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Hornady CX,150,2750,0.415,39.8,2.02,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Hornady SST,150,2800,0.415,41.3,2.02,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Norma Whitetail,150,2822,0.274,42.0,1.59,,published,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Nosler Trophy Grade AccuBond,150,2875,0.415,43.6,4.40,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Lapua Mega Soft Point,150,2790,0.330,41.0,3.23,,published,,26,Hunting
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot SPCE,150,2789,0.421,41.0,1.72,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,PPU Soft Point,150,2805,0.355,41.5,1.31,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Dual Performance,152,2800,0.421,41.9,2.02,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady American Gunner BTHP Match,155,2700,0.413,39.7,1.92,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Hornady BLACK A-MAX,155,2850,0.442,44.2,1.60,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Hornady Critical Defense FTX,155,2785,0.319,42.2,2.40,,catalog,,24,Defense
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Hornady ELD Match,155,2800,0.413,42.7,2.11,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Sierra TMK,155,2750,0.450,41.2,2.11,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Lapua Scenar-L OTM,155,2820,0.460,43.3,3.07,,published,,26,Match
-.308 Winchester / 7.62x51mm NATO,PPU Match HPBT,155,2789,0.413,42.4,1.34,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,PPU Match Solid,156,2740,0.416,41.1,1.34,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Federal Fusion,165,2700,0.453,42.2,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Big Game Barnes Triple-Shock X,165,2650,0.398,40.7,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Big Game Swift Scirocco II,165,2700,0.470,42.2,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Big Game Trophy Bonded Tip,165,2700,0.450,42.2,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Big Game Trophy Copper,165,2700,0.503,42.2,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Fiocchi Field Dynamics PSP,165,2700,0.435,42.2,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady American Whitetail InterLock SP,165,2700,0.443,42.2,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady Outfitter CX,165,2610,0.448,39.5,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady Superformance CX,165,2750,0.448,43.8,2.76,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady Superformance SST,165,2840,0.455,46.7,2.12,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington Core-Lokt Tipped,165,2700,0.447,42.2,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington Premier Swift Scirocco Bonded,165,2680,0.475,41.6,2.40,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,SIG Sauer Platinum Hunter AccuBond,165,2700,0.475,42.2,3.25,,published,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,SIG Sauer Marksman Hunter GameKing,165,2700,0.363,42.2,2.25,,published,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Hornady CX,165,2675,0.448,41.4,2.02,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Nosler Trophy Grade AccuBond,165,2800,0.448,45.4,4.40,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Nosler Trophy Grade Partition,165,2800,0.443,45.4,4.40,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot eXergy Blue TXRG,165,2720,0.453,42.8,1.72,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot eXergy Edge,165,2720,0.453,42.8,1.72,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,PPU Pointed Soft Point Boat Tail,165,2674,0.443,41.4,1.31,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Big Game Berger Hybrid Hunter,168,2700,0.489,43,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Gold Medal Centerstrike OTM,168,2650,0.450,41.4,2.40,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Federal Premium Gold Medal Sierra MatchKing BTHP,168,2650,0.462,41.4,2.40,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Fiocchi Hyperformance Hunt Barnes TTSX,168,2670,0.523,42,2.40,,partial,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Fiocchi Hyperformance Match HPBT MK,168,2650,0.462,41.4,1.92,,catalog,,,Match
-.308 Winchester / 7.62x51mm NATO,Hornady BLACK A-MAX,168,2700,0.483,43,1.60,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Hornady Match BTHP,168,2700,0.459,43,1.92,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Hornady Match ELD Match,168,2700,0.532,43,1.92,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Hornady Superformance Match ELD Match,168,2840,0.533,47.6,2.21,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,PMC X-TAC Match Open Tip Match,168,2700,0.402,43,1.92,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Remington Premier MatchKing OTM,168,2680,0.475,42.4,1.92,,catalog,,,Match
-.308 Winchester / 7.62x51mm NATO,Winchester Ballistic Silvertip,168,2670,0.490,42,1.84,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Winchester Deer Season XP Extreme Point,168,2670,0.396,42,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Winchester Expedition Big Game Long Range Accubond LR,168,2680,0.525,42.4,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Winchester Match BTHP,168,2680,0.453,42.4,1.92,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Winchester Super Suppressed Open Tip (subsonic),168,1060,0.357,6.6,1.60,,catalog,,24,Subsonic
-.308 Winchester / 7.62x51mm NATO,Winchester USA Ready Open Tip,168,2680,0.327,42.4,1.09,yes,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Winchester Match BTHP (2755 fps),168,2755,0.527,44.8,1.92,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,SIG Sauer Elite Match Grade OTM,168,2700,0.462,43.0,1.90,,published,,24,Match
-.308 Winchester / 7.62x51mm NATO,Black Hills Match Hollow Point,168,2650,0.450,41.4,2.11,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Hornady ELD Match,168,2650,0.523,41.4,2.11,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Barnes TSX,168,2650,0.523,41.4,2.02,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Sierra TMK,168,2650,0.462,41.4,2.11,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot HPBT Match,168,2628,0.450,40.7,1.71,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,PPU HPBT,168,2608,0.257,40.1,1.34,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Lapua Naturalis (lead-free),170,2625,0.354,41.1,3.23,,published,,26,Hunting
-.308 Winchester / 7.62x51mm NATO,PPU GROM,170,2510,0.354,37.6,1.31,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,PPU Z-GROM,170,2510,0.354,37.6,1.31,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington Speer Impact,172,2635,0.522,41.9,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Big Game Terminal Ascent,175,2600,0.520,41.5,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Gold Medal Centerstrike OTM,175,2600,0.505,41.5,2.40,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Federal Premium Gold Medal Sierra MatchKing BTHP,175,2600,0.505,41.5,2.40,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Fiocchi Hyperformance Match HPBT MK,175,2595,0.496,41.4,1.92,,catalog,,,Match
-.308 Winchester / 7.62x51mm NATO,Remington Premier MatchKing OTM,175,2610,0.496,41.9,1.92,,catalog,,,Match
-.308 Winchester / 7.62x51mm NATO,Winchester 7.62x51 NATO Match HPBT,175,2620,0.496,42.2,1.92,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,SIG Sauer Marksman Elite OTM,175,2600,0.496,41.5,1.90,,published,,24,Match
-.308 Winchester / 7.62x51mm NATO,Black Hills Match Hollow Point,175,2600,0.505,41.5,2.11,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Sierra TMK,175,2600,0.505,41.5,2.11,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,IMI Match OTM,175,2600,0.505,41.5,1.35,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Lapua Scenar-L OTM,175,2602,0.490,41.6,3.07,,published,,26,Match
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot HPBT Match,175,2625,0.505,42.3,1.71,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,PPU FMJ Boat Tail,175,2592,0.510,41.2,0.87,,partial,,24,Target
-.308 Winchester / 7.62x51mm NATO,PPU HPBT,175,2592,0.267,41.2,1.34,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Federal Premium Big Game ELD-X,178,2610,0.552,42.6,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady Match BTHP,178,2600,0.540,42.2,1.92,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Hornady Precision Hunter ELD-X,178,2600,0.564,42.2,2.40,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Black Hills Gold Hornady ELD-X,178,2600,0.552,42.3,2.02,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Fusion,180,2600,0.511,42.7,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Fusion Tipped,180,2600,0.509,42.7,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Power-Shok SP,180,2570,0.388,41.7,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Big Game Trophy Bonded Tip,180,2620,0.500,43.4,2.40,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Fiocchi Hyperformance Hunt SST,180,2570,0.480,41.7,1.84,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Hornady Superformance SST,180,2650,0.489,44.4,2.12,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington Core-Lokt Pointed Soft Point,180,2620,0.383,43.4,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington Core-Lokt Soft Point,180,2620,0.248,43.4,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington Core-Lokt Tipped,180,2640,0.480,44,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Remington Pointed Soft Point Boattail,180,2615,0.393,43.2,1.60,,catalog,,,Hunting
-.308 Winchester / 7.62x51mm NATO,Winchester Power-Point,180,2620,0.382,43.4,1.60,,catalog,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Norma Oryx,180,2612,0.354,43.1,2.28,,published,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot Sierra GameKing SBT,180,2474,0.530,38.7,1.72,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot HPC,180,2493,0.275,39.3,1.72,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot SPCE,180,2510,0.511,39.8,1.72,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot Soft Point,180,2454,0.383,38.0,1.72,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot FMJ,180,2411,0.525,36.7,0.93,,partial,,24,Target
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot HPBT Match,180,2625,0.546,43.5,1.71,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot PTS,180,2510,0.511,39.8,1.72,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,PPU Soft Point,180,2543,0.383,40.8,1.31,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Buffalo Bore Premium Supercharged Sierra Spitzer,180,2650,0.511,44.4,2.41,,partial,,24,Hunting
-.308 Winchester / 7.62x51mm NATO,Federal Premium Gold Medal Berger Juggernaut OTM,185,2600,0.552,43.9,2.40,,catalog,,24,Match
-.308 Winchester / 7.62x51mm NATO,Winchester Power-Point JHP (subsonic),185,1060,0.283,7.3,1.60,,catalog,,24,Subsonic
-.308 Winchester / 7.62x51mm NATO,Lapua Scenar OTM,185,2475,0.482,39.8,3.07,,published,,26,Match
-.308 Winchester / 7.62x51mm NATO,Federal Subsonic Fusion Tipped,190,1000,0.494,6.7,2.60,,published,,24,Subsonic
-.308 Winchester / 7.62x51mm NATO,Sellier & Bellot HPBT Match,190,2625,0.567,46.2,1.71,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,PPU HPBT,190,2477,0.291,41.1,1.34,,partial,,24,Match
-.308 Winchester / 7.62x51mm NATO,Lapua Subsonic FMJBT,200,1066,0.518,8.0,3.24,,published,,16,Subsonic
-.308 Winchester / 7.62x51mm NATO,PPU 7.62x51mm Subsonic FMJ Boat Tail,200,1050,0.518,7.8,1.50,,partial,,24,Subsonic
-.308 Winchester / 7.62x51mm NATO,Federal Subsonic Target Hollow Point,205,1000,0.480,7.2,2.45,,published,,24,Subsonic
-.308 Winchester / 7.62x51mm NATO,PPU FMJ Boat Tail,220,2362,0.570,43.1,0.87,,partial,,24,Target
+.308 Winchester,Federal Varmint & Predator Hornady V-Max,110,3300,0.295,42.1,1.60,,catalog,,24,Varmint
+.308 Winchester,Sellier & Bellot eXergy Blue TXRG,110,2766,0.343,29.6,1.72,,partial,,24,Hunting
+.308 Winchester,Sellier & Bellot eXergy Edge,110,2766,0.343,29.6,1.72,,partial,,24,Hunting
+.308 Winchester,PPU FMJ,123,3035,0.315,39.8,0.87,,partial,,24,Target
+.308 Winchester,Fiocchi Hyperformance Defense SBR Polymer Tip Boat Tail,125,3250,0.390,46.4,1.60,,partial,,,Defense
+.308 Winchester,Hornady Custom Lite SST,125,2675,0.311,31.4,1.84,,catalog,,24,Hunting
+.308 Winchester,Black Hills Gold Hornady CX,125,3000,0.311,39.5,2.02,,partial,,24,Hunting
+.308 Winchester,Federal Varmint & Predator JHP,130,3050,0.267,42.5,1.60,,catalog,,24,Varmint
+.308 Winchester,PPU FMJ Boat Tail,145,2838,0.393,41.0,0.87,,partial,,24,Target
+.308 Winchester,PMC Bronze Full Metal Jacket Boat Tail,147,2780,0.398,39.9,1.09,,catalog,,24,Target
+7.62x51mm NATO,PMC X-TAC 7.62x51 NATO Full Metal Jacket Boat Tail,147,2800,0.398,40.5,1.92,,catalog,,24,Target
+.308 Winchester,Winchester USA Full Metal Jacket,147,2800,0.415,40.5,1.09,,catalog,,24,Target
+.308 Winchester,Sellier & Bellot FMJ,147,2789,0.398,40.2,0.93,,partial,,24,Target
+7.62x51mm NATO,Winchester 7.62x51 NATO M80 Full Metal Jacket,149,2790,0.456,40.7,1.09,,catalog,,24,Target
+.308 Winchester,Federal American Eagle FMJ BT,150,2820,0.415,41.9,1.09,,catalog,,24,Target
+.308 Winchester,Federal Fusion,150,2820,0.421,41.9,1.60,,catalog,,24,Hunting
+.308 Winchester,Federal Fusion MSR,150,2770,0.421,40.4,1.60,,catalog,,20,Hunting
+.308 Winchester,Federal Power-Shok Copper HP,150,2820,0.283,41.9,2.40,,catalog,,24,Hunting
+.308 Winchester,Federal Power-Shok SP,150,2820,0.318,41.9,1.60,,catalog,,24,Hunting
+.308 Winchester,Federal Premium Big Game Barnes Triple-Shock X,150,2820,0.369,41.9,2.40,,catalog,,24,Hunting
+.308 Winchester,Federal Premium Big Game Trophy Copper,150,2820,0.469,41.9,2.40,,catalog,,24,Hunting
+.308 Winchester,Fiocchi Backwoods Hunter COPPER HP,150,2900,0.400,44.3,2.40,,catalog,,,Hunting
+.308 Winchester,Fiocchi Field Dynamics PSP,150,2820,0.380,41.9,1.60,,catalog,,,Hunting
+.308 Winchester,Fiocchi Hyperformance Hunt SCIROCCO,150,2875,0.430,43.5,1.60,,catalog,,,Hunting
+.308 Winchester,Fiocchi Hyperformance Hunt SST,150,2860,0.415,43.1,1.84,,catalog,,,Hunting
+.308 Winchester,Fiocchi Range Dynamics FMJBT,150,2890,0.390,44,1.09,,partial,,,Target
+.308 Winchester,Hornady American Whitetail InterLock SP,150,2820,0.355,41.9,1.60,,catalog,,24,Hunting
+.308 Winchester,Hornady American Whitetail SST,150,2810,0.416,41.6,1.84,,catalog,,24,Hunting
+.308 Winchester,Hornady Custom SST,150,2820,0.423,41.9,1.84,,catalog,,24,Hunting
+.308 Winchester,Hornady Outfitter CX,150,2800,0.426,41.3,2.40,,catalog,,24,Hunting
+.308 Winchester,Hornady Superformance CX,150,2900,0.426,44.3,2.76,,catalog,,24,Hunting
+.308 Winchester,Hornady Superformance SST,150,3000,0.423,47.4,2.12,,catalog,,24,Hunting
+.308 Winchester,PMC Bronze Hunting Pointed Soft Point,150,2820,0.336,41.9,1.09,,catalog,,24,Hunting
+.308 Winchester,Remington Core-Lokt Copper,150,2820,0.278,41.9,2.40,,catalog,,,Hunting
+.308 Winchester,Remington Core-Lokt Pointed Soft Point,150,2820,0.314,41.9,1.60,,catalog,,,Hunting
+.308 Winchester,Remington Core-Lokt Tipped,150,2840,0.415,42.5,1.60,,catalog,,,Hunting
+.308 Winchester,Remington UMC Full Metal Jacket,150,2810,0.422,41.6,1.09,,catalog,,,Target
+.308 Winchester,Speer Gold Dot Rifle Personal Protection Soft Point,150,2820,0.390,41.9,2.40,,partial,,,Defense
+.308 Winchester,Winchester Ballistic Silvertip,150,2810,0.435,41.6,1.84,,catalog,,24,Hunting
+.308 Winchester,Winchester Copper Impact Copper Extreme Point,150,2810,0.387,41.6,2.40,,catalog,,24,Hunting
+.308 Winchester,Winchester Deer Season XP Extreme Point,150,2820,0.392,41.9,1.60,,catalog,,24,Hunting
+.308 Winchester,Winchester Power-Point,150,2820,0.294,41.9,1.60,,catalog,,24,Hunting
+.308 Winchester,Winchester Silvertip Defense Tip,150,2620,0.392,36.2,1.60,,catalog,,16,Defense
+.308 Winchester,SIG Sauer Elite Ball FMJ,150,2900,0.415,44.3,1.65,,partial,,24,Target
+.308 Winchester,Black Hills Gold Hornady CX,150,2750,0.415,39.8,2.02,,partial,,24,Hunting
+.308 Winchester,Black Hills Gold Hornady SST,150,2800,0.415,41.3,2.02,,partial,,24,Hunting
+.308 Winchester,Norma Whitetail,150,2822,0.274,42.0,1.59,,published,,24,Hunting
+.308 Winchester,Nosler Trophy Grade AccuBond,150,2875,0.415,43.6,4.40,,partial,,24,Hunting
+.308 Winchester,Lapua Mega Soft Point,150,2790,0.330,41.0,3.23,,published,,26,Hunting
+.308 Winchester,Sellier & Bellot SPCE,150,2789,0.421,41.0,1.72,,partial,,24,Hunting
+.308 Winchester,PPU Soft Point,150,2805,0.355,41.5,1.31,,partial,,24,Hunting
+.308 Winchester,Black Hills Gold Dual Performance,152,2800,0.421,41.9,2.02,,partial,,24,Hunting
+.308 Winchester,Hornady American Gunner BTHP Match,155,2700,0.413,39.7,1.92,,catalog,,24,Match
+.308 Winchester,Hornady BLACK A-MAX,155,2850,0.442,44.2,1.60,,catalog,,24,Match
+.308 Winchester,Hornady Critical Defense FTX,155,2785,0.319,42.2,2.40,,catalog,,24,Defense
+.308 Winchester,Black Hills Gold Hornady ELD Match,155,2800,0.413,42.7,2.11,,partial,,24,Match
+.308 Winchester,Black Hills Gold Sierra TMK,155,2750,0.450,41.2,2.11,,partial,,24,Match
+.308 Winchester,Lapua Scenar-L OTM,155,2820,0.460,43.3,3.07,,published,,26,Match
+.308 Winchester,PPU Match HPBT,155,2789,0.413,42.4,1.34,,partial,,24,Match
+.308 Winchester,PPU Match Solid,156,2740,0.416,41.1,1.34,,partial,,24,Match
+.308 Winchester,Federal Fusion,165,2700,0.453,42.2,1.60,,catalog,,24,Hunting
+.308 Winchester,Federal Premium Big Game Barnes Triple-Shock X,165,2650,0.398,40.7,2.40,,catalog,,24,Hunting
+.308 Winchester,Federal Premium Big Game Swift Scirocco II,165,2700,0.470,42.2,2.40,,catalog,,24,Hunting
+.308 Winchester,Federal Premium Big Game Trophy Bonded Tip,165,2700,0.450,42.2,2.40,,catalog,,24,Hunting
+.308 Winchester,Federal Premium Big Game Trophy Copper,165,2700,0.503,42.2,2.40,,catalog,,24,Hunting
+.308 Winchester,Fiocchi Field Dynamics PSP,165,2700,0.435,42.2,1.60,,catalog,,,Hunting
+.308 Winchester,Hornady American Whitetail InterLock SP,165,2700,0.443,42.2,1.60,,catalog,,24,Hunting
+.308 Winchester,Hornady Outfitter CX,165,2610,0.448,39.5,2.40,,catalog,,24,Hunting
+.308 Winchester,Hornady Superformance CX,165,2750,0.448,43.8,2.76,,catalog,,24,Hunting
+.308 Winchester,Hornady Superformance SST,165,2840,0.455,46.7,2.12,,catalog,,24,Hunting
+.308 Winchester,Remington Core-Lokt Tipped,165,2700,0.447,42.2,1.60,,catalog,,,Hunting
+.308 Winchester,Remington Premier Swift Scirocco Bonded,165,2680,0.475,41.6,2.40,,catalog,,,Hunting
+.308 Winchester,SIG Sauer Platinum Hunter AccuBond,165,2700,0.475,42.2,3.25,,published,,24,Hunting
+.308 Winchester,SIG Sauer Marksman Hunter GameKing,165,2700,0.363,42.2,2.25,,published,,24,Hunting
+.308 Winchester,Black Hills Gold Hornady CX,165,2675,0.448,41.4,2.02,,partial,,24,Hunting
+.308 Winchester,Nosler Trophy Grade AccuBond,165,2800,0.448,45.4,4.40,,partial,,24,Hunting
+.308 Winchester,Nosler Trophy Grade Partition,165,2800,0.443,45.4,4.40,,partial,,24,Hunting
+.308 Winchester,Sellier & Bellot eXergy Blue TXRG,165,2720,0.453,42.8,1.72,,partial,,24,Hunting
+.308 Winchester,Sellier & Bellot eXergy Edge,165,2720,0.453,42.8,1.72,,partial,,24,Hunting
+.308 Winchester,PPU Pointed Soft Point Boat Tail,165,2674,0.443,41.4,1.31,,partial,,24,Hunting
+.308 Winchester,Federal Premium Big Game Berger Hybrid Hunter,168,2700,0.489,43,2.40,,catalog,,24,Hunting
+.308 Winchester,Federal Premium Gold Medal Centerstrike OTM,168,2650,0.450,41.4,2.40,,catalog,,24,Match
+.308 Winchester,Federal Premium Gold Medal Sierra MatchKing BTHP,168,2650,0.462,41.4,2.40,,catalog,,24,Match
+.308 Winchester,Fiocchi Hyperformance Hunt Barnes TTSX,168,2670,0.523,42,2.40,,partial,,,Hunting
+.308 Winchester,Fiocchi Hyperformance Match HPBT MK,168,2650,0.462,41.4,1.92,,catalog,,,Match
+.308 Winchester,Hornady BLACK A-MAX,168,2700,0.483,43,1.60,,catalog,,24,Match
+.308 Winchester,Hornady Match BTHP,168,2700,0.459,43,1.92,,catalog,,24,Match
+.308 Winchester,Hornady Match ELD Match,168,2700,0.532,43,1.92,,catalog,,24,Match
+.308 Winchester,Hornady Superformance Match ELD Match,168,2840,0.533,47.6,2.21,,catalog,,24,Match
+.308 Winchester,PMC X-TAC Match Open Tip Match,168,2700,0.402,43,1.92,,catalog,,24,Match
+.308 Winchester,Remington Premier MatchKing OTM,168,2680,0.475,42.4,1.92,,catalog,,,Match
+.308 Winchester,Winchester Ballistic Silvertip,168,2670,0.490,42,1.84,,catalog,,24,Hunting
+.308 Winchester,Winchester Deer Season XP Extreme Point,168,2670,0.396,42,1.60,,catalog,,24,Hunting
+.308 Winchester,Winchester Expedition Big Game Long Range Accubond LR,168,2680,0.525,42.4,2.40,,catalog,,24,Hunting
+.308 Winchester,Winchester Match BTHP,168,2680,0.453,42.4,1.92,,catalog,,24,Match
+.308 Winchester,Winchester Super Suppressed Open Tip (subsonic),168,1060,0.357,6.6,1.60,,catalog,,24,Subsonic
+.308 Winchester,Winchester USA Ready Open Tip,168,2680,0.327,42.4,1.09,yes,catalog,,24,Hunting
+.308 Winchester,Winchester Match BTHP (2755 fps),168,2755,0.527,44.8,1.92,,catalog,,24,Match
+.308 Winchester,SIG Sauer Elite Match Grade OTM,168,2700,0.462,43.0,1.90,,published,,24,Match
+.308 Winchester,Black Hills Match Hollow Point,168,2650,0.450,41.4,2.11,,partial,,24,Match
+.308 Winchester,Black Hills Gold Hornady ELD Match,168,2650,0.523,41.4,2.11,,partial,,24,Match
+.308 Winchester,Black Hills Gold Barnes TSX,168,2650,0.523,41.4,2.02,,partial,,24,Hunting
+.308 Winchester,Black Hills Gold Sierra TMK,168,2650,0.462,41.4,2.11,,partial,,24,Match
+.308 Winchester,Sellier & Bellot HPBT Match,168,2628,0.450,40.7,1.71,,partial,,24,Match
+.308 Winchester,PPU HPBT,168,2608,0.257,40.1,1.34,,partial,,24,Match
+.308 Winchester,Lapua Naturalis (lead-free),170,2625,0.354,41.1,3.23,,published,,26,Hunting
+.308 Winchester,PPU GROM,170,2510,0.354,37.6,1.31,,partial,,24,Hunting
+.308 Winchester,PPU Z-GROM,170,2510,0.354,37.6,1.31,,partial,,24,Hunting
+.308 Winchester,Remington Speer Impact,172,2635,0.522,41.9,1.60,,catalog,,,Hunting
+.308 Winchester,Federal Premium Big Game Terminal Ascent,175,2600,0.520,41.5,2.40,,catalog,,24,Hunting
+.308 Winchester,Federal Premium Gold Medal Centerstrike OTM,175,2600,0.505,41.5,2.40,,catalog,,24,Match
+.308 Winchester,Federal Premium Gold Medal Sierra MatchKing BTHP,175,2600,0.505,41.5,2.40,,catalog,,24,Match
+.308 Winchester,Fiocchi Hyperformance Match HPBT MK,175,2595,0.496,41.4,1.92,,catalog,,,Match
+.308 Winchester,Remington Premier MatchKing OTM,175,2610,0.496,41.9,1.92,,catalog,,,Match
+7.62x51mm NATO,Winchester 7.62x51 NATO Match HPBT,175,2620,0.496,42.2,1.92,,catalog,,24,Match
+.308 Winchester,SIG Sauer Marksman Elite OTM,175,2600,0.496,41.5,1.90,,published,,24,Match
+.308 Winchester,Black Hills Match Hollow Point,175,2600,0.505,41.5,2.11,,partial,,24,Match
+.308 Winchester,Black Hills Gold Sierra TMK,175,2600,0.505,41.5,2.11,,partial,,24,Match
+.308 Winchester,IMI Match OTM,175,2600,0.505,41.5,1.35,,partial,,24,Match
+.308 Winchester,Lapua Scenar-L OTM,175,2602,0.490,41.6,3.07,,published,,26,Match
+.308 Winchester,Sellier & Bellot HPBT Match,175,2625,0.505,42.3,1.71,,partial,,24,Match
+.308 Winchester,PPU FMJ Boat Tail,175,2592,0.510,41.2,0.87,,partial,,24,Target
+.308 Winchester,PPU HPBT,175,2592,0.267,41.2,1.34,,partial,,24,Match
+.308 Winchester,Federal Premium Big Game ELD-X,178,2610,0.552,42.6,2.40,,catalog,,24,Hunting
+.308 Winchester,Hornady Match BTHP,178,2600,0.540,42.2,1.92,,catalog,,24,Match
+.308 Winchester,Hornady Precision Hunter ELD-X,178,2600,0.564,42.2,2.40,,catalog,,24,Match
+.308 Winchester,Black Hills Gold Hornady ELD-X,178,2600,0.552,42.3,2.02,,partial,,24,Hunting
+.308 Winchester,Federal Fusion,180,2600,0.511,42.7,1.60,,catalog,,24,Hunting
+.308 Winchester,Federal Fusion Tipped,180,2600,0.509,42.7,1.60,,catalog,,24,Hunting
+.308 Winchester,Federal Power-Shok SP,180,2570,0.388,41.7,1.60,,catalog,,24,Hunting
+.308 Winchester,Federal Premium Big Game Trophy Bonded Tip,180,2620,0.500,43.4,2.40,,catalog,,24,Hunting
+.308 Winchester,Fiocchi Hyperformance Hunt SST,180,2570,0.480,41.7,1.84,,catalog,,,Hunting
+.308 Winchester,Hornady Superformance SST,180,2650,0.489,44.4,2.12,,catalog,,24,Hunting
+.308 Winchester,Remington Core-Lokt Pointed Soft Point,180,2620,0.383,43.4,1.60,,catalog,,,Hunting
+.308 Winchester,Remington Core-Lokt Soft Point,180,2620,0.248,43.4,1.60,,catalog,,,Hunting
+.308 Winchester,Remington Core-Lokt Tipped,180,2640,0.480,44,1.60,,catalog,,,Hunting
+.308 Winchester,Remington Pointed Soft Point Boattail,180,2615,0.393,43.2,1.60,,catalog,,,Hunting
+.308 Winchester,Winchester Power-Point,180,2620,0.382,43.4,1.60,,catalog,,24,Hunting
+.308 Winchester,Norma Oryx,180,2612,0.354,43.1,2.28,,published,,24,Hunting
+.308 Winchester,Sellier & Bellot Sierra GameKing SBT,180,2474,0.530,38.7,1.72,,partial,,24,Hunting
+.308 Winchester,Sellier & Bellot HPC,180,2493,0.275,39.3,1.72,,partial,,24,Hunting
+.308 Winchester,Sellier & Bellot SPCE,180,2510,0.511,39.8,1.72,,partial,,24,Hunting
+.308 Winchester,Sellier & Bellot Soft Point,180,2454,0.383,38.0,1.72,,partial,,24,Hunting
+.308 Winchester,Sellier & Bellot FMJ,180,2411,0.525,36.7,0.93,,partial,,24,Target
+.308 Winchester,Sellier & Bellot HPBT Match,180,2625,0.546,43.5,1.71,,partial,,24,Match
+.308 Winchester,Sellier & Bellot PTS,180,2510,0.511,39.8,1.72,,partial,,24,Hunting
+.308 Winchester,PPU Soft Point,180,2543,0.383,40.8,1.31,,partial,,24,Hunting
+.308 Winchester,Buffalo Bore Premium Supercharged Sierra Spitzer,180,2650,0.511,44.4,2.41,,partial,,24,Hunting
+.308 Winchester,Federal Premium Gold Medal Berger Juggernaut OTM,185,2600,0.552,43.9,2.40,,catalog,,24,Match
+.308 Winchester,Winchester Power-Point JHP (subsonic),185,1060,0.283,7.3,1.60,,catalog,,24,Subsonic
+.308 Winchester,Lapua Scenar OTM,185,2475,0.482,39.8,3.07,,published,,26,Match
+.308 Winchester,Federal Subsonic Fusion Tipped,190,1000,0.494,6.7,2.60,,published,,24,Subsonic
+.308 Winchester,Sellier & Bellot HPBT Match,190,2625,0.567,46.2,1.71,,partial,,24,Match
+.308 Winchester,PPU HPBT,190,2477,0.291,41.1,1.34,,partial,,24,Match
+.308 Winchester,Lapua Subsonic FMJBT,200,1066,0.518,8.0,3.24,,published,,16,Subsonic
+7.62x51mm NATO,PPU 7.62x51mm Subsonic FMJ Boat Tail,200,1050,0.518,7.8,1.50,,partial,,24,Subsonic
+.308 Winchester,Federal Subsonic Target Hollow Point,205,1000,0.480,7.2,2.45,,published,,24,Subsonic
+.308 Winchester,PPU FMJ Boat Tail,220,2362,0.570,43.1,0.87,,partial,,24,Target
 7.62x39mm,Hornady BLACK MonoFlex,111,2350,0.178,23.5,1.42,,catalog,,24,Hunting
 7.62x39mm,Winchester Defender,120,2365,0.248,25.7,0.95,,catalog,,24,Defense
 7.62x39mm,Federal Fusion,123,2350,0.302,26,0.95,,catalog,,24,Hunting

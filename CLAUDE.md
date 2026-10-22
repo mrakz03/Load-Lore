@@ -1,7 +1,8 @@
 # Cartridge Calculator
 
-App name (Oct 2026): "In Like Flint - Load Lore" (APP_TITLE / web APP_TITLE, installer AppName,
-.desktop Name, capacitor appName). Repo, file and package names (CartridgeCalculator.exe,
+App name (Oct 2026): "In Like Flint - Load Lore" inside the app (APP_TITLE / web APP_TITLE, window
+title, README heading); device menus show just "Load Lore" (issue #27: installer AppName and
+shortcuts, .desktop Name, capacitor appName). Repo, file and package names (CartridgeCalculator.exe,
 cartridge_calculator.py, appId com.cartridgecalc.app, Windows AppId and install folder) stay as
 they were so updates keep installing over older versions.
 
@@ -18,7 +19,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   in settings.json show_grades / localStorage) and Head to Head (HeadToHeadView / openH2H, 2-5
   loads of one category side by side, picks in App.h2h / H2H, in memory only). Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
-  always naming loads, never numbering them.
+  always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
+  LoadSearch / loadSearch, every typed word must be in the name). The dictionary's brand / load
+  filter sits right above the list (issue #26).
 - Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
   page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones).
   The app name is drawn as a small "In Like Flint" over a larger "Load Lore" (issue #18).
@@ -41,10 +44,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
   (my_calibers.csv, my_handloads.csv, settings.json).
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
-- .223 Remington / 5.56x45mm NATO and .308 Winchester / 7.62x51mm NATO are one list each, but a
-  load's details and Head to Head name the one cartridge it is made for (SHARED_CHAMBERS /
-  chambered, same rules on web): a NATO load must say 5.56 / M193 / M855 or 7.62x51 / M80 in its
-  name; Hornady 5.56 NATO loads are the 20" barrel ones (checked against the 2026 catalogs).
+- .223 Remington, 5.56x45mm NATO, .308 Winchester and 7.62x51mm NATO are four separate cartridges
+  (issue #28; they were two shared lists before). A NATO load says 5.56 / M193 / M855 or
+  7.62x51 / M80 in its name; Hornady 5.56 NATO loads are the 20" barrel ones (checked against the
+  2026 catalogs). Old saved data under the shared names goes through SPLIT_CARTRIDGES: handloads
+  to the commercial cartridge, saved prices to both.
 - Metric cartridges are named with "mm" (7.62x51mm NATO, 7.62x54mmR). When renaming a
   cartridge, add old -> new to RENAMED_CARTRIDGES so users' saved files keep matching.
 - Colour themes live in THEMES (cartridge_calculator.py); build_web.py passes the same table to

@@ -10,24 +10,26 @@ It runs as a desktop app on Windows and Linux and as a phone app on Android (the
 
 ## What's inside
 
-About 2,460 factory loads across four categories:
+About 3,150 factory loads from 20 makers across four categories:
 
 | Category | Cartridges | Loads |
 |---|---|---|
-| Centerfire Rifle | 75 | 1,001 |
-| Handgun | 29 | 567 |
-| Rimfire Rifle | 7 | 129 |
-| Shotgun (10, 12, 16, 20, 28 gauge and .410 bore) | 6 | 763 |
+| Centerfire Rifle | 76 | 1,422 |
+| Handgun | 29 | 819 |
+| Rimfire Rifle | 7 | 130 |
+| Shotgun (10, 12, 16, 20, 28 gauge and .410 bore) | 6 | 782 |
 
-The loads come from the 2026 catalogs of Hornady, Federal, Winchester, Remington, Fiocchi, PMC, CCI and ELEY, plus Speer Gold Dot / Lawman and a few Barnes, Nosler, Buffalo Bore, Sellier & Bellot and PPU loads. Weight and velocity are the maker's published figures; prices and powder charges are estimates.
+The loads come from the 2026 catalogs of Hornady, Federal, Winchester, Remington, Fiocchi, PMC, CCI/Blazer and ELEY, and from the makers' own websites for SIG Sauer, Black Hills, Norma, Nosler, Lapua, Sellier & Bellot, PPU, Underwood, Buffalo Bore, Speer and newer Federal loads (plus a few Barnes and IMI loads from retailer listings). Weight and velocity are the maker's published figures; prices and powder charges are estimates. Where each added load came from is listed in `research/added_loads_sources.tsv`.
+
+5.56x45mm NATO and 7.62x51mm NATO are listed as their own cartridges, separate from .223 Remington and .308 Winchester.
 
 ## Using the app
 
 ### Load Dictionary
 Pick a category, then a cartridge, and every load for it is listed and ranked.
 
-- **Grades.** Each load gets a letter from S to F on velocity, energy, recoil, cost, Taylor KO and HITS, plus an overall grade. Grades compare loads of the *same* cartridge with each other: the average load scores about 70, a B. The **S–F grades: On / Off** switch hides the grades and scores if you just want the numbers; the app remembers your choice.
-- **Filter and sort.** Narrow the list by purpose (Hunting, Varmint, Target, Match, Defense, Subsonic; shotguns by load type) or type a brand or load name. Click a column heading (desktop) or use the sort menu (phone).
+- **Grades.** Each load gets a letter from S to F on velocity, energy, recoil, cost, Taylor KO and HITS, plus an overall grade. Grades compare loads of the *same* cartridge with each other: the average load scores about 70, a B. The **S–F grades: On / Off** switch on the Settings page hides the grades and scores if you just want the numbers; the app remembers your choice.
+- **Filter and sort.** Narrow the list by purpose (Hunting, Varmint, Target, Match, Defense, Subsonic; shotguns by load type) or type a brand or load name in the filter box right above the list. Click a column heading (desktop) or use the sort menu next to the filter box (phone).
 - **Distance and gun weight.** Velocity, energy, Taylor KO and HITS are worked out at the distance you enter; recoil uses the gun weight you enter.
 - **Selected load.** Click a load to open its panel: every figure with its grade, the test barrel length, where the data came from, and:
   - **Ballistic table** (▸ to open): velocity, energy, path (inches above or below the line of sight) and drift in a 10 mph crosswind, from the muzzle out to 500 yd for centerfire rifles (shorter steps for handgun, rimfire and shotgun). Rifles assume a 100 yd zero with the sight 1.5 in above the bore; handguns 25 yd and 0.6 in; rimfire 50 yd; slugs 50 yd. These are estimates from the ballistic coefficient in standard sea-level air, not a full ballistic solver.
@@ -36,7 +38,7 @@ Pick a category, then a cartridge, and every load for it is listed and ranked.
 - **Scoring weights.** Decide how much each factor counts (0 ignores it). The defaults are 3 for everything except recoil (1); rimfire weighs cost double, and shotguns skip Taylor KO and HITS.
 
 ### Head to Head
-Pick 2 to 5 loads from any cartridges in one category, for example a .308 Winchester load against a 6.5 Creedmoor load, or add them from the Load Dictionary. You see:
+Pick 2 to 5 loads from any cartridges in one category, for example a .308 Winchester load against a 6.5 Creedmoor load, or add them from the Load Dictionary. To find a load quickly, type in its load box: every word you type has to appear in the name (for example `hornady 55` or `federal match`), then pick from the matches with a click or tap, or the arrow keys and Enter. You see:
 
 - every figure side by side, with the best one highlighted and how far behind the others are, in %;
 - how many factors each load wins;
@@ -51,7 +53,7 @@ In the Load Dictionary (rifle and handgun), **+ Add handload** opens a form for 
 Handload figures are only as good as your data. The app does not check pressure or safety: always follow a published load manual.
 
 ### Settings
-Theme (several colour schemes; Classic is the original dark look) and text size are in the sidebar on desktop and on the Settings tab on the phone. On Android, the back button steps back through the menus; on the Home screen it closes the app.
+Theme (several colour schemes; Classic is the original dark look), text size and the S–F grades switch are on the Settings page: at the bottom of the sidebar on desktop, and the Settings tab on the phone. On Android, the back button steps back through the menus; on the Home screen it closes the app.
 
 ## How the grades work
 For each factor, a load is scored on a curve against the typical (median) load of the same cartridge, so going further past typical earns less and less. The factor scores are spread out so that the typical load sits at 70 and one "typical spread" (median absolute deviation) moves it about 10 points, then combined using the scoring weights. Letter grades: S 85+, A 77+, B 66+, C 55+, D 45+, F below. Shotshells are only compared with the same load type (target with target, buckshot with buckshot, slugs with slugs).
@@ -72,7 +74,7 @@ Releases are on the repository's **Releases** page.
   ```
 - **Android**: install `CartridgeCalculator.apk` (allow installs from your browser or file manager when asked).
 
-The download files keep their old `CartridgeCalculator` names so updates install over earlier versions.
+In the Start menu, app launcher and phone app drawer the app is called **Load Lore**. The download files keep their old `CartridgeCalculator` names so updates install over earlier versions.
 
 ## For developers
 
@@ -104,7 +106,7 @@ Handloads (`my_handloads.csv`) and settings (`settings.json`) are saved next to 
 ### Data files
 - `loads_*.csv` columns: cartridge, load, bullet_gr, muzzle_fps, bc_g1, powder_gr, default_cost, default, source, group, barrel_in, purpose (and optionally diameter_in). Every load name starts with its brand. `barrel_in` is the test barrel length; `purpose` is Hunting / Varmint / Target / Match / Defense / Subsonic (shotguns use `group`, their load type).
 - `ammo_*.csv` holds generic loads with no brand names; it provides the cartridge list.
-- 5.56x45mm NATO loads are listed under .223 Remington and 7.62x51mm NATO under .308 Winchester.
+- 5.56x45mm NATO and 7.62x51mm NATO are their own cartridges, separate from .223 Remington and .308 Winchester. A NATO load says so in its name (5.56, M193, M855, 7.62x51, M80); Hornady's 5.56 NATO loads are the ones tested in a 20" barrel. Handloads and prices saved when they shared one list are matched up through `SPLIT_CARTRIDGES`.
 - Metric cartridges are named with "mm" (7.62x39mm, 7.62x54mmR). Saved handloads and prices that use older names are matched up automatically through `RENAMED_CARTRIDGES` in `src/cartridge_calculator.py`.
 - Bullet diameters for Taylor KO and HITS come from the `DIAMETERS` table in the same file.
 - `bullets.csv` BCs are approximate published G1 figures.
