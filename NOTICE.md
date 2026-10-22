@@ -9,7 +9,8 @@ Remington, Fiocchi, PMC, CCI, ELEY, Speer, Black Hills, SIG Sauer, Lapua, Norma,
 Barnes, Nosler, Buffalo Bore, Underwood, Sellier & Bellot, PPU, IMI, Hodgdon, IMR,
 Alliant (Reloder), Accurate, Ramshot and Vihtavuori) are trademarks of their
 owners. They are used only to identify the products listed. This project is not
-made, sponsored or endorsed by any of these companies.
+made, sponsored or endorsed by any of these companies, and none of them is
+affiliated with its creator.
 
 Bullet weights and muzzle velocities are the makers' published figures, taken
 from their 2026 catalogs, websites and retailer listings and entered by hand as facts.

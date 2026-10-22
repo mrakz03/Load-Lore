@@ -15,7 +15,8 @@ figures. Read this before relying on anything it shows.
   a few numbers. They say nothing about accuracy, reliability, legality or
   suitability for hunting, defence or any other use.
 - **No endorsement.** Brand names identify products only. No maker has
-  reviewed, sponsored or endorsed this app.
+  reviewed, sponsored or endorsed this app, and none is
+  affiliated with its creator.
 - **Your responsibility.** Follow firearm safety rules and the law where you
   live. The authors accept no liability for any injury, damage or loss from
   using this software or its data. See the "AS IS" clause in LICENSE.
