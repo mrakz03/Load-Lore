@@ -897,3 +897,18 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 .44 Magnum	PPU Semi-Jacketed HP	240	1542	0.169	partial	prvipartizan.com/download/PPU_2023.pdf (A-580) (BC scaled from the nearest same-type load) (price estimated)
 .44 Magnum	PPU Semi-Jacketed Flat Point	240	1542	0.174	partial	prvipartizan.com/download/PPU_2023.pdf (A-359) (BC scaled from the nearest same-type load) (price estimated)
 .44 Magnum	PPU Semi-Jacketed Flat Point	300	1280	0.250	partial	prvipartizan.com/download/PPU_2023.pdf (A-320) (BC scaled from the nearest same-type load) (price estimated)
+10mm Auto	Underwood Hard Cast Flat Nose	200	1250	0.190	partial	underwoodammo.com/10mm-auto-200gr.-flat-nose-black-cherry-coated-hard-cast-hunting-ammo/ (BC scaled from the nearest same-type load)
+10mm Auto	Underwood XTP JHP	200	1250	0.199	published	underwoodammo.com/10mm-auto-200gr.-extreme-terminal-performance-xtp-jacketed-hollow-point-hunting-self-defense-ammo/
+10mm Auto	Underwood Hard Cast Flat Nose	220	1200	0.188	partial	underwoodammo.com/10mm-auto-220gr.-flat-nose-black-cherry-coated-hard-cast-hunting-ammo/ (BC scaled from the nearest same-type load)
+10mm Auto	Underwood Xtreme Hunter	150	1425	0.114	partial	underwoodammo.com/10mm-auto-150gr.-xtreme-hunter-solid-monolithic-hunting-self-defense-ammo/ (BC scaled from the nearest same-type load)
+10mm Auto	Underwood FMJ Flat Nose	180	1300	0.146	partial	underwoodammo.com/10mm-auto-180-grain-full-metal-jacket.html (BC scaled from the nearest same-type load)
+9mm Luger	Underwood Xtreme Defender	90	1400	0.087	published	underwoodammo.com/9mm-luger-90gr-xtreme-defender-solid-monolithic-self-defense-ammo-815-1/
+9mm Luger	Underwood Xtreme Defender +P	90	1475	0.087	published	underwoodammo.com/9mm-luger-p-90gr-xtreme-defender-solid-monolithic-self-defense-ammo-816-1/
+9mm Luger	Underwood Xtreme Defender +P+	90	1550	0.087	published	underwoodammo.com/9mm-luger-p-90gr-xtreme-defender-solid-monolithic-self-defense-ammo-817-1/
+9mm Luger	Underwood XTP JHP +P+	147	1175	0.220	published	underwoodammo.com/9mm-luger-p-147gr-extreme-terminal-performance-xtp-jacketed-hollow-point-hunting-self-defense-ammo-tyd3/
+9mm Luger	Underwood Xtreme Penetrator	115	1150	0.131	partial	underwoodammo.com/9mm-luger-115gr.-xtreme-penetrator-solid-monolithic-hunting-self-defense-ammo/ (BC scaled from the nearest same-type load)
+.380 ACP	Underwood Xtreme Penetrator	90	1100	0.120	published	underwoodammo.com/380-acp-90-grain-xtreme-penetrator/
+.40 S&W	Underwood Xtreme Penetrator	140	1200	0.118	partial	underwoodammo.com/40-s-w-140-grain-xtreme-penetrator/ (BC scaled from the nearest same-type load)
+.44 Magnum	Underwood Xtreme Penetrator	220	1530	0.144	partial	underwoodammo.com/44-remington-magnum-220-grain-xtreme-penetrator/ (BC scaled from the nearest same-type load)
+.357 Magnum	Underwood Xtreme Hunter	120	1700	0.153	published	underwoodammo.com/357-magnum-120-grain-xtreme-hunter/
+.44 Magnum	Underwood Xtreme Hunter	160	1800	0.109	partial	underwoodammo.com/44-remington-magnum-160gr.-xtreme-hunter-solid-monolithic-hunting-self-defense-ammo/ (BC scaled from the nearest same-type load)
