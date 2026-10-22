@@ -397,6 +397,29 @@ RENAMED_CARTRIDGES = {
 }
 
 
+# .223 Rem / 5.56 NATO and .308 Win / 7.62x51mm NATO each share one load list, but every load is
+# made for one of the two. Checked against the 2026 catalogs: Federal, Winchester and PMC put the
+# NATO round in the load name (5.56 / XM193 / M855, 7.62x51 / M80); Hornady lists its 5.56 NATO
+# loads with a 20" test barrel and its .223 Rem loads with 24". Every other load is the commercial one.
+SHARED_CHAMBERS = {
+    ".223 Remington / 5.56x45mm NATO": {"civil": ".223 Remington", "nato": "5.56x45mm NATO",
+                                        "marks": ["5.56", "m193", "m855"], "hornady_20in": True},
+    ".308 Winchester / 7.62x51mm NATO": {"civil": ".308 Winchester", "nato": "7.62x51mm NATO",
+                                         "marks": ["7.62x51", "m80 "], "hornady_20in": False},
+}
+
+
+def chambered(item):
+    """The one cartridge a load is made for (see SHARED_CHAMBERS); handloads keep the list name."""
+    rule = SHARED_CHAMBERS.get(item.cartridge)
+    if rule is None or item.handload:
+        return item.cartridge
+    name = item.load.lower() + " "
+    nato = (any(m in name for m in rule["marks"])
+            or (rule["hornady_20in"] and name.startswith("hornady") and item.barrel_in == 20))
+    return rule["nato"] if nato else rule["civil"]
+
+
 def canonical_name(cartridge):
     return RENAMED_CARTRIDGES.get(cartridge, cartridge)
 
@@ -2322,7 +2345,7 @@ class LoadsView:
             return
         item, st = row["item"], row["stats"]
         self.selected = item
-        self.d_title.config(text=f"{item.cartridge}  ·  {item.label}")
+        self.d_title.config(text=f"{chambered(item)}  ·  {item.label}")
         info = [f"{st['weight']:g} {'gr' if self.cat.grain_style else 'gr payload'}"]
         if self.cat.grain_style:
             info.append(f"{item.barrel_in:g} in test barrel" if item.barrel_in
@@ -2747,7 +2770,7 @@ class HeadToHeadView:
             it = row["item"]
             box = tk.Frame(card, bg=SURFACE)
             box.grid(row=r, column=c, sticky="nsew", padx=12, pady=(14, 6))
-            a.label(box, it.cartridge, 9, MUTED, True, anchor="w").pack(anchor="w")
+            a.label(box, chambered(it), 9, MUTED, True, anchor="w").pack(anchor="w")
             a.label(box, it.label, 11, HAND_FG if it.handload else TEXT, True, anchor="w",
                     justify="left", wraplength=wrap).pack(anchor="w")
             if it.handload:
