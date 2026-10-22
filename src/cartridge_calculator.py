@@ -3,20 +3,21 @@
 Cartridge Value Calculator - a desktop tool for comparing ammunition by
 performance per dollar.
 
-On startup you choose a category (Centerfire Rifle, Handgun, Rimfire Rifle or
-Shotgun). Pick a cartridge and load, enter what you pay per round and the
-distance you care about, and the program grades velocity, energy, recoil and
-cost (S-F) plus an overall score.
+Two tools, each split into categories (Centerfire Rifle, Handgun, Rimfire Rifle,
+Shotgun):
+  Load Dictionary  every factory load (and your handloads) of one cartridge, graded
+                   S-F against each other on velocity, energy, recoil, cost, Taylor KO
+                   and HITS. The grades can be switched off.
+  Head to Head     2-5 loads side by side, from any cartridges in the category.
 
-Each category has its own data file (in data/ in the repo, or next to the program
-when packaged):
-    ammo_centerfire_rifle.csv   ammo_handgun.csv
-    ammo_rimfire_rifle.csv      ammo_shotgun.csv
-Add or edit rows there, or use "Add your own caliber" inside the program (those
-entries are saved to my_calibers.csv).
+Data files (in data/ in the repo, or next to the program when packaged):
+    loads_*.csv   the factory loads, one file per category
+    ammo_*.csv    the cartridge list (cartridges with no factory loads can still
+                  hold handloads)
+Handloads are saved to my_handloads.csv.
 
-Scoring: every factor is scored on a curve, relative to a typical load in the
-same category, so extra speed or energy past a point earns less and less.
+Scoring: every factor is scored on a curve against the median load of the same
+cartridge, then spread so the average load scores 70.
 
 Ballistics: velocity at distance is computed by integrating the standard G1
 drag model using each load's G1 ballistic coefficient. Recoil is an estimate
@@ -49,7 +50,6 @@ except ImportError:  # lets the calculation code be imported/tested without a GU
 APP_TITLE = "Cartridge Value Calculator"
 APP_VERSION = "dev"             # the release build sets this from the git tag (v1.5 -> "1.5")
 GRAINS_PER_OZ = 437.5
-CUSTOM_FILENAME = "my_calibers.csv"
 SETTINGS_FILENAME = "settings.json"
 HANDLOAD_FILENAME = "my_handloads.csv"
 BULLETS_FILENAME = "bullets.csv"
@@ -76,14 +76,6 @@ POWDERS = [
     "Vihtavuori N350", "Ramshot Big Boy", "Ramshot TAC", "Ramshot X-Terminator",
     "Ramshot Enforcer", "Ramshot Silhouette", "Ramshot Competition", "Norma 202", "Norma 203B",
 ]
-CUSTOM_FIELDS = ["category", "cartridge", "load", "bullet_gr", "muzzle_fps",
-                 "bc_g1", "powder_gr", "default_cost", "diameter_in"]
-
-# Score (0-100) needed for each letter grade; anything lower is an F.
-# Scores cluster tightly by design (a typical load is ~70), so the bands are
-# narrow; they were tuned so each category spreads across S-F.
-GRADE_BANDS = [(72.5, "S"), (70.5, "A"), (66, "B"), (61, "C"), (55, "D")]
-
 # metric key -> (display name, higher is better?)
 METRICS = {
     "velocity": ("Velocity", True),
@@ -117,38 +109,35 @@ class Category:
     default_gun_lb: float
     gun_label: str
     cartridge_label: str = "CARTRIDGE"
-    load_label: str = "BULLET WEIGHT"
     payload_row: str = "Bullet weight"
     payload_col: str = "Grains"
-    grain_style: bool = True     # dropdown reads "168 gr  ·  ELD-M"; False = group + load text
+    grain_style: bool = True     # labels read "ELD-M  ·  168 gr"; False = group + load text
     show_oz: bool = False        # also show payload in ounces (shotgun)
     legacy_filename: str = ""    # older file name to fall back to
     weights: tuple = DEFAULT_WEIGHTS   # velocity, energy, recoil, cost, Taylor KO, HITS
-    allow_custom: bool = True    # show "Add your own caliber"
-    default_bc: float = 0.30     # used when a custom entry leaves BC blank
-    sort_loads: bool = True      # sort the load dropdown by weight (False = keep file order)
-    loads_filename: str = ""     # detailed manufacturer loads for the 'Compare Loads' tab
+    loads_filename: str = ""     # manufacturer loads for the Load Dictionary / Head to Head
+    step_yd: float = 100         # Head to Head downrange table: 0, step, 2 x step ... 5 x step
     terminal: bool = True        # show Taylor KO / HITS (needs a bullet diameter; not for shot)
 
 
 CATEGORIES = (
     Category("Centerfire Rifle", "Hunting, precision and military rounds",
              "ammo_centerfire_rifle.csv", 100, 2000, 8.0, "RIFLE WEIGHT (LB)",
-             legacy_filename="ammo_data.csv", default_bc=0.30,
+             legacy_filename="ammo_data.csv",
              loads_filename="loads_centerfire_rifle.csv"),
     Category("Handgun", "Pistol and revolver rounds",
-             "ammo_handgun.csv", 10, 500, 2.0, "HANDGUN WEIGHT (LB)", default_bc=0.15,
-             loads_filename="loads_handgun.csv"),
+             "ammo_handgun.csv", 10, 500, 2.0, "HANDGUN WEIGHT (LB)",
+             loads_filename="loads_handgun.csv", step_yd=25),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
              "ammo_rimfire_rifle.csv", 50, 500, 5.0, "RIFLE WEIGHT (LB)",
-             weights=(3, 3, 1, 6, 3, 3), default_bc=0.13,
-             loads_filename="loads_rimfire_rifle.csv"),
+             weights=(3, 3, 1, 6, 3, 3),
+             loads_filename="loads_rimfire_rifle.csv", step_yd=50),
     Category("Shotgun", "Birdshot, buckshot and slugs",
              "ammo_shotgun.csv", 25, 300, 7.5, "SHOTGUN WEIGHT (LB)",
-             cartridge_label="GAUGE", load_label="LOAD", payload_row="Payload",
+             cartridge_label="GAUGE", payload_row="Payload",
              payload_col="Payload (gr)", grain_style=False, show_oz=True,
-             allow_custom=False, sort_loads=False, terminal=False, weights=(3, 3, 1, 3, 0, 0),
-             loads_filename="loads_shotgun.csv"),
+             terminal=False, weights=(3, 3, 1, 3, 0, 0),
+             loads_filename="loads_shotgun.csv", step_yd=25),
 )
 
 
@@ -163,6 +152,22 @@ def default_weights(cat):
 def metric_keys(cat):
     """The factors that apply to a category (shotshells have no bullet diameter)."""
     return [k for k in METRICS if cat.terminal or k not in TERMINAL_KEYS]
+
+
+# The two tools: (key, title, blurb on the Home screen)
+TOOLS = (("loads", "Load Dictionary", "Every load of a cartridge, factory or your own handload, "
+                                      "graded against each other."),
+         ("h2h", "Head to Head", "Put 2 to 5 loads side by side, even from different cartridges."))
+H2H_MIN, H2H_MAX = 2, 5
+
+
+def tool_title(key):
+    return next((t for k, t, _ in TOOLS if k == key), TOOLS[0][1])
+
+
+def pick_key(item):
+    """How Head to Head remembers a load: its cartridge and handload id or label."""
+    return (item.cartridge, item.hid or item.label)
 
 
 # Colour themes (desktop and, via build_web.py, the phone/web version). "side" is the web
@@ -319,11 +324,6 @@ def recoil_ftlbs(bullet_gr, muzzle_fps, powder_gr, gun_lb):
     ejecta_momentum = (bullet_gr * muzzle_fps + 1.75 * powder_gr * 4000.0) / 7000.0
     gun_velocity = ejecta_momentum / gun_lb        # ft/s
     return 0.5 * (gun_lb / 32.174) * gun_velocity ** 2
-
-
-def estimate_powder(bullet_gr, muzzle_fps):
-    """Rough powder charge (gr) from muzzle energy, for custom loads with no charge given."""
-    return max(0.3, energy_ftlbs(bullet_gr, muzzle_fps) / 60.0)
 
 
 # --------------------------------------------------------------------------- #
@@ -557,9 +557,9 @@ def group_by_cartridge(loads, sort=True):
 
 
 def with_handload_only(groups, cartridge_loads):
-    """Add an empty entry for every Compare Cartridges cartridge that has no factory loads (e.g.
+    """Add an empty entry for every ammo_*.csv cartridge that has no factory loads (e.g.
     .32-40 Winchester), placed after the cartridge it follows there, so handloaders can still
-    use Compare Loads for it."""
+    use the Load Dictionary for it."""
     order = list(dict.fromkeys(x.cartridge for x in cartridge_loads))
     if all(c in groups for c in order):
         return groups
@@ -624,40 +624,6 @@ def write_settings(data):
             json.dump(data, fh)
     except OSError:
         pass                                    # settings are a convenience, never fatal
-
-
-# ---- user-added calibers (my_calibers.csv) ---- #
-def custom_path():
-    return os.path.join(app_dir(), CUSTOM_FILENAME)
-
-
-def read_custom_rows():
-    return _read_user_rows(custom_path())
-
-
-def write_custom_rows(rows):
-    with open(custom_path(), "w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=CUSTOM_FIELDS, extrasaction="ignore")
-        writer.writeheader()
-        writer.writerows(rows)
-
-
-def load_from_custom_row(row, grain_style=True):
-    item = Load(
-        cartridge=row["cartridge"],
-        load=row.get("load") or "Custom",
-        bullet_gr=float(row["bullet_gr"]),
-        muzzle_fps=float(row["muzzle_fps"]),
-        bc_g1=float(row["bc_g1"]),
-        powder_gr=float(row["powder_gr"]),
-        default_cost=float(row["default_cost"]),
-        source="custom",
-        diameter_in=_opt_float(row.get("diameter_in", "")),
-    )
-    if min(item.bullet_gr, item.muzzle_fps, item.bc_g1, item.powder_gr) <= 0:
-        raise ValueError("values must be positive")
-    item.label = make_label(item, grain_style)
-    return item
 
 
 # ---- handloads (my_handloads.csv) and the bullet library (bullets.csv) ---- #
@@ -740,13 +706,6 @@ def load_from_handload_row(row, grain_style=True):
     return item
 
 
-def same_custom_row(row, item):
-    return (row.get("cartridge") == item.cartridge
-            and (row.get("load") or "Custom") == item.load
-            and abs(float(row.get("bullet_gr") or 0) - item.bullet_gr) < 1e-6
-            and abs(float(row.get("muzzle_fps") or 0) - item.muzzle_fps) < 1e-6)
-
-
 # --------------------------------------------------------------------------- #
 # Scoring
 # --------------------------------------------------------------------------- #
@@ -764,13 +723,7 @@ def compute_stats(item, distance_yd, gun_lb, cost=None):
     }
 
 
-def reference_levels(loads, distance_yd, gun_lb):
-    """The 'typical' (median) value of each factor across the category's loads."""
-    all_stats = [compute_stats(x, distance_yd, gun_lb) for x in loads]
-    return {k: statistics.median(s[k] for s in all_stats) for k in METRICS}
-
-
-# "Compare Loads" grades loads of the SAME cartridge against each other. They are all close
+# The Load Dictionary grades loads of the SAME cartridge against each other. They are all close
 # to the category's typical load, so scores are spread out relative to the group: the average
 # load of the cartridge scores REL_CENTER and each standard deviation moves it REL_SPREAD points.
 REL_CENTER, REL_SPREAD = 70.0, 10.0
@@ -818,27 +771,22 @@ def relative_scores(stats_list, weights):
     return [({k: per[k][i] for k in METRICS}, overall[i]) for i in range(len(stats_list))]
 
 
-def rank_among(item, overall, loads, dist, gun, weights, refs):
-    """(rank within the item's cartridge, cartridge size, rank in category, category size).
-
-    Everyone is compared at their default price so the ranking doesn't move when you
-    type a different price for one load; rank 1 = best.
-    """
-    scores = []
-    for other in loads:
-        _, o = score_stats(compute_stats(other, dist, gun), refs, weights)
-        scores.append((other, o))
-    in_cart = [o for x, o in scores if x.cartridge == item.cartridge and x is not item]
-    others = [o for x, o in scores if x is not item]
-    return (1 + sum(o > overall for o in in_cart), len(in_cart) + 1,
-            1 + sum(o > overall for o in others), len(others) + 1)
-
-
-def grade_for(score):
-    for threshold, letter in GRADE_BANDS:
-        if score >= threshold:
-            return letter
-    return "F"
+def score_loads(items, distance_yd, gun_lb, weights, costs, by_type=False):
+    """Grade loads of one cartridge against each other (the Load Dictionary's grades; Head to
+    Head shows the same ones). `costs` is the price per round of each item. Shotshells
+    (by_type) are only graded against their own load type (Target vs Target, Slug vs Slug).
+    Returns one dict per item: stats, scores, overall, grade, rank, peers, group."""
+    stats = [compute_stats(x, distance_yd, gun_lb, c) for x, c in zip(items, costs)]
+    keys = [x.group if by_type else "" for x in items]
+    rows = [None] * len(items)
+    for key in dict.fromkeys(keys):
+        idx = [i for i, k in enumerate(keys) if k == key]
+        for i, (sc, overall) in zip(idx, relative_scores([stats[i] for i in idx], weights)):
+            rows[i] = dict(item=items[i], stats=stats[i], scores=sc, overall=overall,
+                           grade=grade_relative(overall), group=key, peers=len(idx))
+        for n, i in enumerate(sorted(idx, key=lambda i: -rows[i]["overall"]), start=1):
+            rows[i]["rank"] = n
+    return rows
 
 
 def metric_score(value, ref, higher_better):
@@ -855,17 +803,6 @@ def metric_score(value, ref, higher_better):
     if higher_better:
         return 100.0 * (1.0 - math.exp(-_HIGH_K * x))
     return 100.0 * math.exp(-_LOW_K * x)
-
-
-def score_stats(stats, refs, weights):
-    """Returns (per-metric scores, overall score), all 0-100."""
-    scores = {k: metric_score(stats[k], refs[k], METRICS[k][1]) for k in METRICS}
-    total_w = sum(weights.values())
-    if total_w <= 0:
-        weights = {k: 1.0 for k in METRICS}
-        total_w = float(len(METRICS))
-    overall = sum(scores[k] * weights[k] for k in METRICS) / total_w
-    return scores, overall
 
 
 # --------------------------------------------------------------------------- #
@@ -911,23 +848,23 @@ class App:
         self.data = {}      # title -> dict(loads=[...], problems=[...], error="")
         self.hand_rows = read_handload_rows()
         self.bullets = read_bullets()
-        custom_rows = read_custom_rows()
         for cat in CATEGORIES:
-            self.data[cat.title] = self._load_category(cat, custom_rows)
+            self.data[cat.title] = self._load_category(cat)
 
         self.stage = None
-        self.mode = "home"                # home / cartridges / loads
+        self.mode = "home"                # home / loads / h2h
         self.cat = None
         self.carry = {}                   # per category: what each tab knew when you left it
+        self.h2h = {}                     # per category: the Head to Head picks (pick_key)
         self._place_window()
         self._build_shell()
         self.show_launcher()
-        root.bind_all("<Control-Key-1>", lambda e: self.go_mode("cartridges"))
-        root.bind_all("<Control-Key-2>", lambda e: self.go_mode("loads"))
+        root.bind_all("<Control-Key-1>", lambda e: self.go_mode("loads"))
+        root.bind_all("<Control-Key-2>", lambda e: self.go_mode("h2h"))
         root.bind_all("<Control-Key-0>", lambda e: self.show_launcher())
 
     # ---- data ------------------------------------------------------------ #
-    def _load_category(self, cat, custom_rows):
+    def _load_category(self, cat):
         names = [cat.filename] + ([cat.legacy_filename] if cat.legacy_filename else [])
         path = next((p for p in (os.path.join(app_dir(), n) for n in names)
                      if os.path.exists(p)), None)
@@ -939,14 +876,6 @@ class App:
             return {"loads": [], "problems": [], "error": f"Could not read {cat.filename}: {exc}", "detail": [], "detail_error": ""}
         if not loads:
             return {"loads": [], "problems": problems, "error": f"{cat.filename} has no usable rows", "detail": [], "detail_error": ""}
-        if cat.allow_custom:
-            for row in custom_rows:
-                if row.get("category") != cat.title:
-                    continue
-                try:
-                    loads.append(load_from_custom_row(row, cat.grain_style))
-                except (KeyError, ValueError) as exc:
-                    problems.append(f"{CUSTOM_FILENAME} ({row.get('cartridge', '?')}): {exc}")
         detail, detail_error = [], ""
         if cat.loads_filename:
             dpath = os.path.join(app_dir(), cat.loads_filename)
@@ -992,7 +921,27 @@ class App:
         write_handload_rows(rows)
         self.hand_rows = rows
 
-    # ---- prices you set yourself (Compare Loads tab) ---------------------- #
+    # ---- S-F grades on / off (both tools; remembered) ---------------------- #
+    @property
+    def show_grades(self):
+        return self.settings.get("show_grades", True) is not False
+
+    def set_show_grades(self, on):
+        self.settings["show_grades"] = bool(on)
+        write_settings(self.settings)
+
+    # ---- Head to Head picks ------------------------------------------------ #
+    def add_to_h2h(self, cat, item):
+        """Add a load to the category's Head to Head list. Returns the new count, or None if
+        it was already there or the list is full."""
+        picks = self.h2h.setdefault(cat.title, [])
+        key = pick_key(item)
+        if key in picks or len(picks) >= H2H_MAX:
+            return None
+        picks.append(key)
+        return len(picks)
+
+    # ---- prices you set yourself -------------------------------------------- #
     @staticmethod
     def price_key(cat, item):
         return f"{cat.title}|{item.cartridge}|{item.label}"
@@ -1043,7 +992,7 @@ class App:
     def _rebuild(self):
         snap = self.view.snapshot() if self.view is not None else None
         cat = self.view.cat if self.view is not None else None
-        tab = getattr(self.view, "tab", "cartridges")
+        tab = getattr(self.view, "tab", "loads")
         self._style()
         self._build_shell()                          # sidebar / tabs pick up the new size too
         if cat is None:
@@ -1242,7 +1191,7 @@ class App:
         main, sub = tkfont.Font(font=self.f(11, True)), tkfont.Font(font=self.f(10, True))
         small = tkfont.Font(font=self.f(9))
         theme = small.measure("Theme") + 6 + max(small.measure(n) for n in THEMES) + self.px(34)
-        need = max([main.measure("Compare Cartridges"), theme - 10]   # theme row in the footer
+        need = max([main.measure(t) for _, t, _ in TOOLS] + [theme - 10]   # theme row in the footer
                    + [sub.measure(cat.title) + 16 for cat in CATEGORIES])
         return max(self.px(self.SIDEBAR_W), need + 2 * 12 + 2 * 12 + 10)   # label + nav padding
 
@@ -1285,7 +1234,7 @@ class App:
         self.label(self.nav, version_text(), 9, MUTED, bg=SURFACE, anchor="w").pack(
             anchor="w", padx=6, pady=(2, 18))
         self._nav_button("Home", self.show_launcher, self.mode == "home")
-        for key, text in (("cartridges", "Compare Cartridges"), ("loads", "Compare Loads")):
+        for key, text, _ in TOOLS:
             on_picker = self.mode == key and self.cat is None
             self._nav_button(text, lambda k=key: self.show_picker(k), on_picker)
             if self.mode == key:
@@ -1318,14 +1267,13 @@ class App:
         wrap = tk.Frame(stage, bg=BG)
         wrap.pack(fill="x", padx=36, pady=(40, 28))
         self.label(wrap, "Cartridge Calculator", 26, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
-        self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost.", 12, MUTED,
+        self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
+                   "loads head to head.", 12, MUTED,
                    bg=BG, anchor="w").pack(anchor="w", pady=(4, 26))
         feats = tk.Frame(wrap, bg=BG)
         feats.pack(fill="x")
         feats.columnconfigure((0, 1), weight=1, uniform="f")
-        for i, (key, title, blurb) in enumerate((
-                ("cartridges", "Compare Cartridges", "Which caliber is the best value?"),
-                ("loads", "Compare Loads", "Which load is best, factory or your own handload?"))):
+        for i, (key, title, blurb) in enumerate(TOOLS):
             card = tk.Frame(feats, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
                             cursor="hand2")
             card.grid(row=0, column=i, sticky="nsew", padx=(0 if i == 0 else 8, 8 if i == 0 else 0))
@@ -1341,16 +1289,16 @@ class App:
         self._update_scroll()
 
     def show_picker(self, mode):
-        """Choose a category for the feature (Compare Cartridges or Compare Loads)."""
+        """Choose a category for the tool (Load Dictionary or Head to Head)."""
         if self.view is not None and self.cat is not None:
             self.carry.setdefault(self.cat.title, {}).update(self.view.snapshot())
         self.mode, self.cat, self.view = mode, None, None
         stage = self._new_stage()
-        self.root.title(f"{APP_TITLE} — {'Compare Cartridges' if mode == 'cartridges' else 'Compare Loads'}")
+        self.root.title(f"{APP_TITLE} — {tool_title(mode)}")
         self._draw_chrome()
         wrap = tk.Frame(stage, bg=BG)
         wrap.pack(fill="x", padx=36, pady=(32, 28))
-        self.label(wrap, "Compare Cartridges" if mode == "cartridges" else "Compare Loads", 22,
+        self.label(wrap, tool_title(mode), 22,
                    TEXT, True, bg=BG, anchor="w").pack(anchor="w")
         self.label(wrap, "Choose a category", 12, MUTED, bg=BG, anchor="w").pack(
             anchor="w", pady=(2, 20))
@@ -1362,15 +1310,11 @@ class App:
             if info["error"]:
                 caption = "Data file missing" if "not found" in info["error"] else "Data problem"
             else:
-                # count what this screen will show: the load list for Compare Loads,
-                # the cartridge list for Compare Cartridges
-                shown = info["detail"] if mode == "loads" and info["detail"] else info["loads"]
+                shown = info["detail"]
                 carts = {x.cartridge for x in shown}
-                if mode == "loads" and cat.grain_style:      # + cartridges open to handloads only
+                if cat.grain_style:                          # + cartridges open to handloads only
                     carts |= {x.cartridge for x in info["loads"]}
-                caption = f"{len(carts)} cartridges"
-                if mode == "loads":
-                    caption += f"  ·  {len(shown):,} loads"
+                caption = f"{len(carts)} cartridges  ·  {len(shown):,} loads"
             card = tk.Frame(grid, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
                             cursor="hand2")
             card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=6,
@@ -1398,7 +1342,7 @@ class App:
         back.bind("<Button-1>", lambda e: self.show_picker(active))
         back.bind("<Enter>", lambda e: back.config(fg=TEXT))
         back.bind("<Leave>", lambda e: back.config(fg=MUTED))
-        title = "Compare Cartridges" if active == "cartridges" else "Compare Loads"
+        title = tool_title(active)
         self.label(box, f"{title}  ·  {cat.title}", 20, TEXT, True, bg=BG).grid(
             row=1, column=0, sticky="w", pady=(6, 0))
         return box
@@ -1415,7 +1359,7 @@ class App:
     def go_mode(self, tab):
         self.show_picker(tab)
 
-    def open_category(self, cat, tab="cartridges"):
+    def open_category(self, cat, tab="loads"):
         info = self.data[cat.title]
         if info["error"]:
             messagebox.showerror("Can't open this category", info["error"] +
@@ -1431,649 +1375,9 @@ class App:
         stage = self._new_stage()
         self.root.title(f"{APP_TITLE} — {cat.title}")
         self._draw_chrome()
-        if tab == "loads":
-            self.view = LoadsView(self, stage, cat, info["detail"] + self.hand_loads(cat),
-                                  info["detail_error"])
-        else:
-            self.view = CalculatorView(self, stage, cat, info["loads"])
+        view = HeadToHeadView if tab == "h2h" else LoadsView
+        self.view = view(self, stage, cat, info["detail"] + self.hand_loads(cat), info["detail_error"])
         self._update_scroll()
-
-
-class CalculatorView:
-    tab = "cartridges"
-
-    def __init__(self, app, stage, cat, loads):
-        self.app = app
-        self.root = app.root
-        self.cat = cat
-        self.loads = loads                  # shared with App.data so custom loads persist
-        self._regroup()
-        self.label_to_load = {}            # load-dropdown text -> Load
-
-        self.cart_var = tk.StringVar(value="")
-        self.grain_var = tk.StringVar(value="")
-        self.cost_var = tk.StringVar(value="")
-        self.dist_var = tk.StringVar(value=f"{cat.default_distance:g}")
-        self.gun_var = tk.StringVar(value=f"{cat.default_gun_lb:g}")
-        self.weight_vars = {k: tk.StringVar(value=str(v)) for k, v in default_weights(cat).items()}
-        self.weights_open = False
-        self.keys = metric_keys(cat)
-
-        self._build_ui(stage)
-        for var in self.weight_vars.values():
-            var.trace_add("write", self._refresh_weight_note)
-        self._refresh_weight_note()
-        self.root.bind("<Return>", lambda e: self.calculate())
-
-    def snapshot(self):
-        return dict(cart=self.cart_var.get(), grain=self.grain_var.get(), cost=self.cost_var.get(),
-                    dist=self.dist_var.get(), gun=self.gun_var.get(),
-                    weights={k: v.get() for k, v in self.weight_vars.items()},
-                    weights_open=self.weights_open, had_result=self._last_overall is not None)
-
-    def restore(self, snap):
-        for k, v in snap.get("weights", {}).items():
-            if k in self.weight_vars:
-                self.weight_vars[k].set(v)
-        if "dist" in snap:
-            self.dist_var.set(snap["dist"])
-        if "gun" in snap:
-            self.gun_var.set(snap["gun"])
-        if snap.get("cart") in self.groups:
-            self.cart_var.set(snap["cart"])
-            self._on_cartridge()
-            if snap.get("grain") in self.label_to_load:
-                self.grain_var.set(snap["grain"])
-                self._on_grain()
-            if snap.get("cost"):
-                self.cost_var.set(snap["cost"])
-        if snap.get("weights_open") and not self.weights_open:
-            self._toggle_weights()
-        if snap.get("had_result") and self._selected_load() is not None:
-            self.calculate(quiet=True)
-
-    def _regroup(self):
-        self.groups = group_by_cartridge(self.loads, self.cat.sort_loads)
-        self.cartridges = list(self.groups)
-
-    # ---- layout ---------------------------------------------------------- #
-    def _build_ui(self, stage):
-        a, cat = self.app, self.cat
-        outer = tk.Frame(stage, bg=BG)
-        outer.pack(fill="both", expand=True, padx=24, pady=22)
-        outer.columnconfigure(0, weight=1)
-
-        a.header(outer, cat, "cartridges").grid(row=0, column=0, sticky="ew", pady=(0, 16))
-
-        # ---- inputs card
-        card = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        card.grid(row=3, column=0, sticky="ew")
-        card.columnconfigure(0, weight=1)
-        pad = dict(padx=18)
-
-        a.label(card, cat.cartridge_label, 9, MUTED, True).grid(row=0, column=0, sticky="w",
-                                                                 pady=(16, 4), **pad)
-        self.cart_combo = ttk.Combobox(card, textvariable=self.cart_var, values=self.cartridges,
-                                       state="readonly", font=a.f(12))
-        self.cart_combo.grid(row=1, column=0, sticky="ew", **pad)
-        self.cart_combo.bind("<<ComboboxSelected>>", lambda e: self._on_cartridge())
-
-        # load dropdown: created now, shown only after a cartridge is chosen
-        self.grain_frame = tk.Frame(card, bg=SURFACE)
-        self.grain_frame.columnconfigure(0, weight=1)
-        a.label(self.grain_frame, cat.load_label, 9, MUTED, True).grid(
-            row=0, column=0, sticky="w", pady=(14, 4))
-        self.grain_combo = ttk.Combobox(self.grain_frame, textvariable=self.grain_var,
-                                        state="readonly", font=a.f(12))
-        self.grain_combo.grid(row=1, column=0, sticky="ew")
-        self.grain_combo.bind("<<ComboboxSelected>>", lambda e: self._on_grain())
-        self.remove_link = tk.Label(self.grain_frame, text="Remove this custom load", bg=SURFACE,
-                                    fg=MUTED, font=a.f(9), cursor="hand2")
-        self.remove_link.bind("<Button-1>", lambda e: self._remove_custom())
-        self.remove_link.grid(row=2, column=0, sticky="w", pady=(4, 0))
-        self.remove_link.grid_remove()
-        self.grain_frame.grid(row=2, column=0, sticky="ew", **pad)
-        self.grain_frame.grid_remove()
-
-        nums = tk.Frame(card, bg=SURFACE)
-        nums.grid(row=3, column=0, sticky="ew", pady=(14, 0), **pad)
-        for i in range(3):
-            nums.columnconfigure(i, weight=1, uniform="n")
-        for i, (text, var) in enumerate((("COST PER ROUND ($)", self.cost_var),
-                                         ("DISTANCE (YD)", self.dist_var),
-                                         (cat.gun_label, self.gun_var))):
-            a.label(nums, text, 9, MUTED, True).grid(row=0, column=i, sticky="w",
-                                                     padx=(0 if i == 0 else 8, 0))
-            ttk.Entry(nums, textvariable=var, width=10, font=a.f(12)).grid(
-                row=1, column=i, sticky="ew", pady=(4, 0), padx=(0 if i == 0 else 8, 0))
-
-        # one quiet row of links: scoring weights (left), add your own caliber (right)
-        links = tk.Frame(card, bg=SURFACE)
-        links.grid(row=4, column=0, sticky="ew", pady=(14, 0), **pad)
-        self.weights_toggle = tk.Label(links, text="▸  Scoring weights", bg=SURFACE, fg=MUTED,
-                                       font=a.f(10, True), cursor="hand2")
-        self.weights_toggle.pack(side="left")
-        self.weights_toggle.bind("<Button-1>", lambda e: self._toggle_weights())
-        if cat.allow_custom:
-            add = tk.Label(links, text="+  Add your own caliber", bg=SURFACE, fg=ACCENT,
-                           font=a.f(10, True), cursor="hand2")
-            add.pack(side="right")
-            add.bind("<Button-1>", lambda e: self._open_add_dialog())
-
-        self.weights_frame = tk.Frame(card, bg=SURFACE)
-        for i, key in enumerate(self.keys):
-            a.label(self.weights_frame, METRICS[key][0], 10, MUTED).grid(
-                row=0, column=i * 2, padx=(0 if i == 0 else 14, 6))
-            ttk.Spinbox(self.weights_frame, from_=0, to=10, increment=1, width=3,
-                        textvariable=self.weight_vars[key], font=a.f(11)).grid(
-                row=0, column=i * 2 + 1)
-        self.weight_note = a.label(self.weights_frame, "", 9, TEXT, True)
-        self.weight_note.grid(row=1, column=0, columnspan=12, sticky="w", pady=(8, 0))
-        a.label(self.weights_frame, "Higher = matters more. 0 ignores that factor."
-                + ("  Taylor KO and HITS start at 0 (shown, but not graded)." if cat.terminal else ""),
-                9, MUTED).grid(row=2, column=0, columnspan=12, sticky="w", pady=(2, 0))
-        self.weights_frame.grid(row=5, column=0, sticky="w", pady=(8, 0), **pad)
-        self.weights_frame.grid_remove()
-
-        btns = tk.Frame(card, bg=SURFACE)
-        btns.grid(row=6, column=0, sticky="w", pady=(16, 18), **pad)
-        a.button(btns, "Calculate", self.calculate, "primary").pack(side="left")
-        a.button(btns, "Compare All", self.compare_all).pack(side="left", padx=8)
-        a.button(btns, "Reset", self.reset).pack(side="left")
-
-        # ---- result card (hidden until first calculation)
-        self.result = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        self.result.columnconfigure(0, weight=1)
-        self.res_title = a.label(self.result, "", 15, TEXT, True, anchor="w", justify="left",
-                                 wraplength=a.px(600))
-        self.res_title.grid(row=0, column=0, columnspan=3, sticky="w", padx=18, pady=(16, 0))
-        self.res_sub = a.label(self.result, "", 10, MUTED, anchor="w")
-        self.res_sub.grid(row=1, column=0, columnspan=3, sticky="w", padx=18, pady=(2, 10))
-
-        self.res_values, self.res_badges = {}, {}
-        rows = [("weight", cat.payload_row), ("velocity", "Velocity"), ("energy", "Energy"),
-                ("recoil", "Recoil"), ("cost", "Cost")]
-        if cat.terminal:
-            rows += [("taylor", "Taylor KO"), ("hits", "HITS")]
-        for i, (key, text) in enumerate(rows, start=2):
-            a.label(self.result, text, 11, MUTED).grid(row=i, column=0, sticky="w",
-                                                       padx=(18, 8), pady=3)
-            val = a.label(self.result, "", 12, TEXT, True)
-            val.grid(row=i, column=1, sticky="e", padx=8, pady=3)
-            self.res_values[key] = val
-            if key in METRICS:
-                badge = tk.Label(self.result, text="", width=3, font=a.f(10, True))
-                badge.grid(row=i, column=2, sticky="e", padx=(8, 18), pady=3)
-                self.res_badges[key] = badge
-
-        r0 = 2 + len(rows)
-        tk.Frame(self.result, bg=BORDER, height=1).grid(row=r0, column=0, columnspan=3,
-                                                         sticky="ew", padx=18, pady=(8, 8))
-        a.label(self.result, "Overall", 11, MUTED).grid(row=r0 + 1, column=0, sticky="w", padx=18)
-        self.res_overall = a.label(self.result, "", 14, TEXT, True)
-        self.res_overall.grid(row=r0 + 1, column=1, columnspan=2, sticky="e", padx=18)
-        self.bar = tk.Canvas(self.result, height=22, bg=SURFACE, highlightthickness=0)
-        self.bar.grid(row=r0 + 2, column=0, columnspan=3, sticky="ew", padx=18, pady=(8, 4))
-        self.res_rank = a.label(self.result, "", 10, TEXT, anchor="w", justify="left",
-                                wraplength=a.px(600))
-        self.res_rank.grid(row=r0 + 3, column=0, columnspan=3, sticky="w", padx=18, pady=(4, 0))
-        self.res_note = a.label(self.result, "", 9, MUTED, anchor="w", justify="left",
-                                wraplength=a.px(600))
-        self.res_note.grid(row=r0 + 4, column=0, columnspan=3, sticky="w", padx=18, pady=(6, 16))
-        self.result.grid(row=4, column=0, sticky="ew", pady=(16, 0))
-        self.result.grid_remove()
-        self._last_overall = None
-        self.bar.bind("<Configure>", lambda e: self._draw_bar())
-
-    # ---- small helpers --------------------------------------------------- #
-    def _toggle_weights(self):
-        self.weights_open = not self.weights_open
-        if self.weights_open:
-            self.weights_frame.grid()
-            self.weights_toggle.config(text="▾  Scoring weights")
-        else:
-            self.weights_frame.grid_remove()
-            self.weights_toggle.config(text="▸  Scoring weights")
-        self.app.fit_window()
-
-    def _refresh_weight_note(self, *_):
-        """Show what the current weights mean as percentages."""
-        try:
-            vals = {k: float(v.get()) for k, v in self.weight_vars.items()}
-        except ValueError:
-            self.weight_note.config(text="")
-            return
-        total = sum(vals.values())
-        if total <= 0:
-            text = "All weights are 0, so every factor counts equally."
-        else:
-            text = "  ·  ".join(f"{METRICS[k][0]} {100 * vals[k] / total:.0f}%"
-                             for k in self.keys if vals[k] > 0)
-        self.weight_note.config(text=text)
-
-    def _on_cartridge(self):
-        """A cartridge was chosen: reveal and fill the load dropdown."""
-        items = self.groups[self.cart_var.get()]
-        self.label_to_load = {x.label: x for x in items}
-        self.grain_combo.config(values=[x.label for x in items])
-        chosen = next((x for x in items if x.is_default), items[0])
-        self.grain_var.set(chosen.label)
-        self.grain_frame.grid()
-        self._on_grain()
-
-    def _on_grain(self):
-        item = self._selected_load()
-        if item:
-            self.cost_var.set(f"{item.default_cost:.2f}")
-            if item.source == "custom":
-                self.remove_link.grid()
-            else:
-                self.remove_link.grid_remove()
-
-    def _selected_load(self):
-        return self.label_to_load.get(self.grain_var.get())
-
-    def _read_number(self, var, name, minimum, maximum=None):
-        try:
-            value = float(var.get().strip().replace("$", ""))
-        except ValueError:
-            raise ValueError(f"{name} must be a number.")
-        if value < minimum or (maximum is not None and value > maximum):
-            if maximum is None:
-                raise ValueError(f"{name} must be {minimum:g} or more.")
-            raise ValueError(f"{name} must be between {minimum:g} and {maximum:g}.")
-        return value
-
-    def _read_inputs(self, need_cost=True):
-        dist = self._read_number(self.dist_var, "Distance", 0, self.cat.max_distance)
-        gun = self._read_number(self.gun_var, "Gun weight", 0.5, 30)
-        cost = self._read_number(self.cost_var, "Cost per round", 0) if need_cost else None
-        weights = {k: self._read_number(v, f"{METRICS[k][0]} weight", 0, 10)
-                   for k, v in self.weight_vars.items()}
-        return dist, gun, cost, weights
-
-    def _payload_text(self, grains):
-        if self.cat.show_oz:
-            return f"{grains:.0f} gr  ({grains / GRAINS_PER_OZ:.2f} oz)"
-        return f"{grains:g} gr"
-
-    def _draw_bar(self):
-        self.bar.delete("all")
-        if self._last_overall is None:
-            return
-        score, grade = self._last_overall
-        w = max(self.bar.winfo_width(), 60)
-        y, r = 11, 6
-        self.bar.create_line(r, y, w - r, y, width=r * 2, capstyle="round", fill=SURFACE_2)
-        fill_w = (w - 2 * r) * max(0.0, min(100.0, score)) / 100.0
-        self.bar.create_line(r, y, r + fill_w, y, width=r * 2, capstyle="round",
-                             fill=GRADE_COLORS[grade][0])
-
-    # ---- actions --------------------------------------------------------- #
-    def calculate(self, quiet=False):
-        item = self._selected_load()
-        if item is None:
-            if not quiet:
-                messagebox.showinfo("Pick a cartridge", "Choose a cartridge and load first.")
-            return
-        try:
-            dist, gun, cost, weights = self._read_inputs()
-        except ValueError as exc:
-            if not quiet:
-                messagebox.showerror("Check your input", str(exc))
-            return
-
-        stats = compute_stats(item, dist, gun, cost)
-        refs = reference_levels(self.loads, dist, gun)
-        scores, overall = score_stats(stats, refs, weights)
-        grades = {k: grade_for(s) for k, s in scores.items()}
-        overall_grade = grade_for(overall)
-
-        self.res_title.config(text=f"{item.cartridge}  ·  {item.label}")
-        self.res_sub.config(text=f"Velocity and energy at {dist:g} yards")
-        self.res_values["weight"].config(text=self._payload_text(stats["weight"]))
-        self.res_values["velocity"].config(text=f"{stats['velocity']:.0f} fps")
-        self.res_values["energy"].config(text=f"{stats['energy']:.0f} ft-lbs")
-        self.res_values["recoil"].config(text=f"{stats['recoil']:.1f} ft-lbs")
-        self.res_values["cost"].config(text=f"${stats['cost']:.2f}")
-        if self.cat.terminal:
-            self.res_values["taylor"].config(text=f"{stats['taylor']:.1f}")
-            self.res_values["hits"].config(
-                text=f"{stats['hits']:.0f}  ({hits_class(stats['hits'])})")
-        for key, badge in self.res_badges.items():
-            bg, fg = GRADE_COLORS[grades[key]]
-            badge.config(text=grades[key], bg=bg, fg=fg)
-        self.res_overall.config(text=f"{overall_grade}  ·  {overall:.1f}%")
-
-        r_c, n_c, r_a, n_a = rank_among(item, overall, self.loads, dist, gun, weights, refs)
-        self.res_rank.config(
-            text=f"Ranks #{r_c} of {n_c} {item.cartridge} loads  ·  #{r_a} of {n_a} in "
-                 f"{self.cat.title}")
-        src = SOURCE_NOTES.get(item.source, DEFAULT_SOURCE_NOTE)
-        self.res_note.config(
-            text=f"{src} Recoil assumes a {gun:g} lb gun."
-                 + (" HITS: under 500 small game, to 900 medium, to 1500 large, above that dangerous "
-                    "game." if self.cat.terminal else ""))
-        self.result.grid()
-        self._last_overall = (overall, overall_grade)
-        self.app.fit_window()
-        self._draw_bar()
-
-    def reset(self):
-        self.cart_var.set("")
-        self.grain_var.set("")
-        self.label_to_load = {}
-        self.grain_frame.grid_remove()
-        self.cost_var.set("")
-        self.dist_var.set(f"{self.cat.default_distance:g}")
-        self.gun_var.set(f"{self.cat.default_gun_lb:g}")
-        for k, v in self.weight_vars.items():
-            v.set(str(default_weights(self.cat)[k]))
-        if self.weights_open:
-            self._toggle_weights()
-        self.result.grid_remove()
-        self._last_overall = None
-        self.app.fit_window()
-
-    # ---- user-added calibers --------------------------------------------- #
-    def _open_add_dialog(self):
-        a, cat = self.app, self.cat
-        win = tk.Toplevel(self.root)
-        win.configure(bg=BG)
-        win.title(f"Add your own caliber — {cat.title}")
-        win.transient(self.root)
-        win.resizable(False, False)
-
-        body = tk.Frame(win, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        body.pack(padx=18, pady=18, fill="both")
-        body.columnconfigure((0, 1, 2), weight=1, uniform="c")
-        p = dict(padx=18)
-
-        name_var, wt_var, fps_var, cost_var = (tk.StringVar() for _ in range(4))
-        load_var, bc_var, powder_var, dia_var = (tk.StringVar() for _ in range(4))
-
-        a.label(body, "CARTRIDGE NAME", 9, MUTED, True).grid(
-            row=0, column=0, columnspan=3, sticky="w", pady=(16, 4), **p)
-        name_box = ttk.Combobox(body, textvariable=name_var, values=self.cartridges, font=a.f(12))
-        name_box.grid(row=1, column=0, columnspan=3, sticky="ew", **p)
-        a.label(body, "Pick an existing one to add another load to it, or type a new name.",
-                9, MUTED).grid(row=2, column=0, columnspan=3, sticky="w", padx=18, pady=(3, 0))
-
-        for i, (text, var) in enumerate((("BULLET WEIGHT (GR)", wt_var),
-                                         ("MUZZLE VELOCITY (FPS)", fps_var),
-                                         ("PRICE PER ROUND ($)", cost_var))):
-            a.label(body, text, 9, MUTED, True).grid(
-                row=3, column=i, sticky="w", pady=(14, 4), padx=(18 if i == 0 else 6, 6 if i < 2 else 18))
-            ttk.Entry(body, textvariable=var, font=a.f(12), width=10).grid(
-                row=4, column=i, sticky="ew", padx=(18 if i == 0 else 6, 6 if i < 2 else 18))
-
-        more = tk.Frame(body, bg=SURFACE)
-        more.columnconfigure((0, 1, 2), weight=1, uniform="m")
-        for i, (text, var) in enumerate((("LOAD NAME", load_var), ("BALLISTIC COEFF. (G1)", bc_var),
-                                         ("POWDER CHARGE (GR)", powder_var))):
-            a.label(more, text, 9, MUTED, True).grid(row=0, column=i, sticky="w", pady=(0, 4),
-                                                     padx=(0 if i == 0 else 6, 6 if i < 2 else 0))
-            ttk.Entry(more, textvariable=var, font=a.f(12), width=10).grid(
-                row=1, column=i, sticky="ew", padx=(0 if i == 0 else 6, 6 if i < 2 else 0))
-        a.label(more, "BULLET DIAMETER (IN)", 9, MUTED, True).grid(row=3, column=0, sticky="w", pady=(10, 4))
-        ttk.Entry(more, textvariable=dia_var, font=a.f(12), width=10).grid(
-            row=4, column=0, sticky="ew", padx=(0, 6))
-        a.label(more, f"Leave blank to use typical values (BC {cat.default_bc:g}; powder "
-                      f"estimated from the speed and weight). Filling these in makes the recoil "
-                      f"and long-range numbers more accurate.",
-                9, MUTED, anchor="w", justify="left", wraplength=470).grid(
-            row=5, column=0, columnspan=3, sticky="w", pady=(8, 0))
-        state = {"open": False}
-        toggle = tk.Label(body, text="▸  More details (optional)", bg=SURFACE, fg=MUTED,
-                          font=a.f(10, True), cursor="hand2")
-        toggle.grid(row=5, column=0, columnspan=3, sticky="w", pady=(14, 0), **p)
-
-        def flip(_e=None):
-            state["open"] = not state["open"]
-            if state["open"]:
-                more.grid(row=6, column=0, columnspan=3, sticky="ew", pady=(8, 0), **p)
-                toggle.config(text="▾  More details (optional)")
-            else:
-                more.grid_remove()
-                toggle.config(text="▸  More details (optional)")
-
-        toggle.bind("<Button-1>", flip)
-
-        def parse():
-            def num(var, label, lo, hi=None, blank_ok=False):
-                text = var.get().strip().replace("$", "")
-                if not text:
-                    if blank_ok:
-                        return None
-                    raise ValueError(f"{label} is required.")
-                try:
-                    v = float(text)
-                except ValueError:
-                    raise ValueError(f"{label} must be a number.")
-                if v < lo or (hi is not None and v > hi):
-                    rng = f"between {lo:g} and {hi:g}" if hi is not None else f"{lo:g} or more"
-                    raise ValueError(f"{label} must be {rng}.")
-                return v
-
-            cart = name_var.get().strip()
-            if not cart:
-                raise ValueError("Enter a cartridge name.")
-            if any(ch in cart for ch in "\n\r"):
-                raise ValueError("The cartridge name must be on one line.")
-            gr = num(wt_var, "Bullet weight", 1, 2000)
-            fps = num(fps_var, "Muzzle velocity", 100, 5500)
-            cost = num(cost_var, "Price per round", 0)
-            bc = num(bc_var, "Ballistic coefficient", 0.01, 1.5, True)
-            powder = num(powder_var, "Powder charge", 0.1, 300, True)
-            dia = num(dia_var, "Bullet diameter", 0.1, 0.7, True)
-            return dict(category=cat.title, cartridge=cart,
-                        load=load_var.get().strip() or "Custom",
-                        bullet_gr=f"{gr:g}", muzzle_fps=f"{fps:g}",
-                        bc_g1=f"{(bc if bc is not None else cat.default_bc):g}",
-                        powder_gr=f"{(powder if powder is not None else estimate_powder(gr, fps)):.1f}",
-                        default_cost=f"{cost:.2f}",
-                        diameter_in=f"{dia:g}" if dia is not None else "")
-
-        def save(_e=None):
-            try:
-                row = parse()
-                item = load_from_custom_row(row, cat.grain_style)
-            except ValueError as exc:
-                messagebox.showerror("Check your input", str(exc), parent=win)
-                return
-            taken = {x.label for x in self.loads if x.cartridge == item.cartridge}
-            base, n = item.label, 1
-            while item.label in taken:                      # keep dropdown entries unique
-                n += 1
-                item.label = f"{base} (custom{'' if n == 2 else ' ' + str(n - 1)})"
-            try:
-                rows = read_custom_rows()
-                rows.append(row)
-                write_custom_rows(rows)
-            except OSError as exc:
-                messagebox.showerror("Couldn't save", f"Could not write {CUSTOM_FILENAME}:\n{exc}",
-                                     parent=win)
-                return
-            self.loads.append(item)
-            self._regroup()
-            self.cart_combo.config(values=self.cartridges)
-            self.cart_var.set(item.cartridge)
-            self._on_cartridge()
-            self.grain_var.set(item.label)
-            self._on_grain()
-            win.destroy()
-            self.app.fit_window()
-
-        btns = tk.Frame(body, bg=SURFACE)
-        btns.grid(row=7, column=0, columnspan=3, sticky="w", pady=(16, 18), **p)
-        a.button(btns, "Save caliber", save, "primary").pack(side="left")
-        a.button(btns, "Cancel", win.destroy).pack(side="left", padx=8)
-        win.bind("<Return>", save)
-        win.bind("<Escape>", lambda e: win.destroy())
-        name_box.focus_set()
-
-    def _remove_custom(self):
-        item = self._selected_load()
-        if item is None or item.source != "custom":
-            return
-        if not messagebox.askyesno("Remove custom load",
-                                   f"Remove {item.cartridge} {item.label.strip()} from your list?"):
-            return
-        try:
-            rows = [r for r in read_custom_rows()
-                    if not (r.get("category") == self.cat.title and same_custom_row(r, item))]
-            write_custom_rows(rows)
-        except (OSError, ValueError) as exc:
-            messagebox.showerror("Couldn't remove", f"Could not update {CUSTOM_FILENAME}:\n{exc}")
-            return
-        self.loads.remove(item)
-        self._regroup()
-        self.cart_combo.config(values=self.cartridges)
-        if item.cartridge in self.groups:
-            self._on_cartridge()
-        else:
-            self.reset()
-
-    # ---- compare ---------------------------------------------------------- #
-    def compare_all(self):
-        a, cat = self.app, self.cat
-        try:
-            dist, gun, _, weights = self._read_inputs(need_cost=False)
-        except ValueError as exc:
-            messagebox.showerror("Check your input", str(exc))
-            return
-        refs = reference_levels(self.loads, dist, gun)
-        scored = []
-        for item in self.loads:
-            stats = compute_stats(item, dist, gun)
-            _, overall = score_stats(stats, refs, weights)
-            scored.append((item, stats, overall))
-        order = sorted(scored, key=lambda t: -t[2])
-        rank_of = {id(t[0]): n for n, t in enumerate(order, start=1)}
-        rows = [dict(rank=rank_of[id(item)], item=item, stats=stats, score=overall,
-                     grade=grade_for(overall)) for item, stats, overall in scored]
-
-        # (heading, value getter, sort key, best-first?)
-        spec = [("Rank", lambda r: r["rank"], lambda r: r["rank"], False),
-                (cat.cartridge_label.title(), lambda r: r["item"].cartridge,
-                 lambda r: r["item"].cartridge, False),
-                ("Load", lambda r: r["item"].label,
-                 lambda r: r["item"].label.lower(), False),
-                (cat.payload_col, lambda r: f"{r['stats']['weight']:.0f}",
-                 lambda r: r["stats"]["weight"], True),
-                ("Velocity (fps)", lambda r: f"{r['stats']['velocity']:.0f}",
-                 lambda r: r["stats"]["velocity"], True),
-                ("Energy (ft-lbs)", lambda r: f"{r['stats']['energy']:.0f}",
-                 lambda r: r["stats"]["energy"], True),
-                ("Recoil (ft-lbs)", lambda r: f"{r['stats']['recoil']:.1f}",
-                 lambda r: r["stats"]["recoil"], False)]
-        if cat.terminal:
-            spec += [("Taylor KO", lambda r: f"{r['stats']['taylor']:.1f}",
-                      lambda r: r["stats"]["taylor"], True),
-                     ("HITS", lambda r: f"{r['stats']['hits']:.0f}",
-                      lambda r: r["stats"]["hits"], True)]
-        spec += [("Cost ($)", lambda r: f"{r['stats']['cost']:.2f}",
-                  lambda r: r["stats"]["cost"], False),
-                 ("Score (%)", lambda r: f"{r['score']:.1f}", lambda r: r["score"], True),
-                 ("Grade", lambda r: r["grade"], lambda r: r["score"], True)]
-        cols = [c[0] for c in spec]
-        by_col = {c[0]: c for c in spec}
-
-        win = tk.Toplevel(self.root)
-        win.configure(bg=BG)
-        win.title(f"{cat.title}: all loads at {dist:g} yards")
-        # ---- filter bar
-        bar = tk.Frame(win, bg=BG)
-        bar.pack(fill="x", padx=14, pady=(14, 0))
-        tk.Label(bar, text="FILTER", bg=BG, fg=MUTED, font=a.f(9, True)).pack(side="left")
-        filter_var = tk.StringVar()
-        entry = ttk.Entry(bar, textvariable=filter_var, width=28, font=a.f(11))
-        entry.pack(side="left", padx=(8, 12))
-        cart_var = tk.StringVar(value="All")
-        ttk.Combobox(bar, textvariable=cart_var, values=["All"] + self.cartridges,
-                     state="readonly", width=22, font=a.f(11)).pack(side="left")
-        count_lbl = tk.Label(bar, text="", bg=BG, fg=MUTED, font=a.f(10))
-        count_lbl.pack(side="right")
-
-        frame = tk.Frame(win, bg=BG)
-        frame.pack(fill="both", expand=True, padx=14, pady=(10, 6))
-        tree = ttk.Treeview(frame, columns=cols, show="headings", height=min(len(rows), 20))
-        scroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
-        tree.configure(yscrollcommand=scroll.set)
-        for c in spec:
-            tree.column(c[0], anchor="w" if c[0] in cols[1:3] else "center")
-        a.fit_columns(tree, cols, [[c[1](r) for c in spec] for r in rows], "Load")
-        tree.pack(side="left", fill="both", expand=True)
-        scroll.pack(side="right", fill="y")
-        sort_state = {"col": "Score (%)", "desc": True}
-        shown = {}
-
-        def visible():
-            terms = filter_var.get().lower().split()
-            want = cart_var.get()
-            out = []
-            for r in rows:
-                hay = f"{r['item'].cartridge} {r['item'].label}".lower()
-                if want != "All" and r["item"].cartridge != want:
-                    continue
-                if all(t in hay for t in terms):
-                    out.append(r)
-            return out
-
-        def render():
-            data = visible()
-            c = by_col[sort_state["col"]]
-            data.sort(key=c[2], reverse=sort_state["desc"] and c[0] != "Rank")
-            tree.delete(*tree.get_children())
-            shown.clear()
-            for r in data:
-                iid = tree.insert("", "end", values=[c[1](r) for c in spec])
-                shown[iid] = r["item"]
-            count_lbl.config(text=f"Showing {len(data)} of {len(rows)} loads")
-
-        def sort_by(col):
-            if sort_state["col"] == col:
-                desc = not sort_state["desc"]
-            else:                                  # first click: best-first for each column
-                desc = by_col[col][3]
-            sort_state.update(col=col, desc=desc)
-            render()
-
-        def jump(_e=None):
-            sel = tree.selection()
-            if not sel:
-                return
-            item = shown.get(sel[0])
-            win.destroy()
-            if item is not None:
-                self.show_load(item)
-
-        for col in cols:
-            tree.heading(col, text=col, command=lambda c=col: sort_by(c))
-        tree.bind("<Double-1>", jump)
-        tree.bind("<Return>", jump)
-        filter_var.trace_add("write", lambda *_: render())
-        cart_var.trace_add("write", lambda *_: render())
-        tk.Label(win, text="Type to filter (e.g. \"federal 168\"). Click a heading to sort. "
-                           "Double-click a row to open it in the calculator. Scores use your "
-                           "current weights and each load's default price.",
-                 bg=BG, fg=MUTED, font=a.f(9)).pack(pady=(0, 12))
-        render()
-        win.update_idletasks()
-        sw, sh = win.winfo_screenwidth(), win.winfo_screenheight()
-        if win.winfo_reqwidth() > sw - 40 or win.winfo_reqheight() > sh - 90:
-            # keep it on small screens; the Load column gives up width first
-            w, h = min(win.winfo_reqwidth(), sw - 40), min(win.winfo_reqheight(), sh - 90)
-            win.geometry(f"{w}x{h}+{(sw - w) // 2}+20")
-        entry.focus_set()
-
-    def show_load(self, item):
-        """Select a load in the main form (used by Compare All)."""
-        self.cart_var.set(item.cartridge)
-        self._on_cartridge()
-        self.grain_var.set(item.label)
-        self._on_grain()
-        self.calculate(quiet=True)
 
 
 def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=False, on_saved=None):
@@ -2301,8 +1605,22 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
     return win
 
 
+def grades_chip(app, parent, command):
+    """The 'S-F grades  On / Off' switch shared by both tools (remembered in settings)."""
+    chip = tk.Label(parent, text="", font=app.f(10, True), padx=10, pady=3, cursor="hand2")
+    chip.bind("<Button-1>", lambda e: command())
+    style_grades_chip(app, chip)
+    return chip
+
+
+def style_grades_chip(app, chip):
+    on = app.show_grades
+    chip.config(text=f"S–F grades:  {'On' if on else 'Off'}",
+                bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
+
+
 class LoadsView:
-    """'Compare Loads' tab: every brand's load of ONE cartridge, graded against each other."""
+    """Load Dictionary: every brand's load of ONE cartridge, graded against each other."""
     tab = "loads"
 
     def __init__(self, app, stage, cat, loads, error=""):
@@ -2386,10 +1704,14 @@ class LoadsView:
                                        font=a.f(10, True), cursor="hand2")
         self.weights_toggle.grid(row=2, column=0, sticky="w", pady=(8, 0), **pad)
         self.weights_toggle.bind("<Button-1>", lambda e: self._toggle_weights())
+        right = tk.Frame(card, bg=SURFACE)
+        right.grid(row=2, column=0, sticky="e", pady=(8, 0), **pad)
+        self.grades_chip = grades_chip(a, right, self._toggle_grades)
+        self.grades_chip.pack(side="left")
         if cat.grain_style:
-            add = tk.Label(card, text="+  Add handload", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
+            add = tk.Label(right, text="+  Add handload", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
                            cursor="hand2")
-            add.grid(row=2, column=0, sticky="e", pady=(8, 0), **pad)
+            add.pack(side="left", padx=(18, 0))
             add.bind("<Button-1>", lambda e: self._open_handload())
         self.weights_frame = tk.Frame(card, bg=SURFACE)
         for i, key in enumerate(self.keys):
@@ -2488,6 +1810,8 @@ class LoadsView:
                  lambda: self._open_handload(self.selected, duplicate=True)).pack(side="left", padx=8)
         a.button(self.handline, "Delete", self._delete_handload).pack(side="left")
         self.handline.grid_remove()
+        self.h2h_btn = a.button(self.detail, "", self._h2h_click)
+        self.h2h_btn.grid(row=3, column=0, columnspan=2, sticky="e", padx=18, pady=(14, 0))
         a.label(priceline, "YOUR PRICE PER ROUND ($)", 9, MUTED, True).pack(side="left")
         ttk.Entry(priceline, textvariable=self.price_var, width=8, font=a.f(11)).pack(
             side="left", padx=8)
@@ -2498,12 +1822,10 @@ class LoadsView:
         self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 14))
         self.detail.grid(row=5, column=0, sticky="ew", pady=(14, 0))
         self.detail.grid_remove()
-        self.footnote = a.label(
-            outer, f"Grades compare loads of the same cartridge with each other (the average "
-                   f"scores {REL_CENTER:.0f}); they can't be compared with Compare Cartridges "
-                   "grades. Prices are estimates: set your own.",
-            9, MUTED, bg=BG, anchor="w", justify="left", wraplength=a.px(880))
+        self.footnote = a.label(outer, "", 9, MUTED, bg=BG, anchor="w", justify="left",
+                                wraplength=a.px(880))
         self.footnote.grid(row=6, column=0, sticky="w", pady=(10, 0))
+        self._apply_grades()
 
     # ---- state ------------------------------------------------------------ #
     def snapshot(self):
@@ -2538,6 +1860,45 @@ class LoadsView:
             self.weights_frame.grid_remove()
         self.weights_toggle.config(text=("▾" if self.weights_open else "▸") + "  Scoring weights")
         self.fit_table_height()
+
+    def _toggle_grades(self):
+        self.app.set_show_grades(not self.app.show_grades)
+        self._apply_grades()
+        self._render()
+        if self.selected is not None:
+            self._reselect()
+
+    def _apply_grades(self):
+        """Show or hide the S-F grades: the Score / Grade columns and the factor badges."""
+        on = self.app.show_grades
+        style_grades_chip(self.app, self.grades_chip)
+        self.tree.configure(displaycolumns=[c for c in self.cols
+                                            if on or c not in ("Score", "Grade")])
+        self.footnote.config(text=(
+            f"Grades compare loads of the same cartridge with each other (the average scores "
+            f"{REL_CENTER:.0f}). " if on else "") + "Prices are estimates: set your own.")
+
+    def _h2h_click(self):
+        item = self.selected
+        if item is None:
+            return
+        picks = self.app.h2h.get(self.cat.title, [])
+        if pick_key(item) in picks or len(picks) >= H2H_MAX:
+            self.app.go(self.cat, "h2h")
+            return
+        self.app.add_to_h2h(self.cat, item)
+        self._style_h2h()
+
+    def _style_h2h(self):
+        picks = self.app.h2h.get(self.cat.title, [])
+        n = len(picks)
+        if self.selected is not None and pick_key(self.selected) in picks:
+            text = f"In Head to Head ({n} of {H2H_MAX})  ·  Open  ›"
+        elif n >= H2H_MAX:
+            text = f"Head to Head is full ({H2H_MAX})  ·  Open  ›"
+        else:
+            text = "+  Head to Head" + (f"  ({n} picked)" if n else "")
+        self.h2h_btn.config(text=text)
 
     def weight_vars_note(self, *_):
         try:
@@ -2756,24 +2117,12 @@ class LoadsView:
             self.status.config(text=str(exc))
             return
         self.status.config(text="")
-        stats = [compute_stats(x, dist, gun, self.app.price_for(self.cat, x)) for x in items]
-        # shotshells are only comparable with the same type (Target vs Target, Buckshot vs Buckshot)
-        keys = [x.group if not self.cat.grain_style else "" for x in items]
-        self.group_order = {k: n for n, k in enumerate(dict.fromkeys(keys))}
-        scored, rank, peers = [None] * len(items), {}, {}
-        for key in self.group_order:
-            idx = [i for i, k in enumerate(keys) if k == key]
-            for i, res in zip(idx, relative_scores([stats[i] for i in idx], weights)):
-                scored[i] = res
-            for n, i in enumerate(sorted(idx, key=lambda i: -scored[i][1]), start=1):
-                rank[i], peers[i] = n, len(idx)
-        self.rows = []
-        for i, item in enumerate(items):
-            sc, overall = scored[i]
-            self.rows.append(dict(item=item, stats=stats[i], scores=sc, overall=overall,
-                                  grade=grade_relative(overall), rank=rank[i], peers=peers[i],
-                                  group=keys[i],
-                                  custom_price=abs(stats[i]["cost"] - item.default_cost) > 1e-9))
+        self.rows = score_loads(items, dist, gun, weights,
+                                [self.app.price_for(self.cat, x) for x in items],
+                                by_type=not self.cat.grain_style)
+        self.group_order = {k: n for n, k in enumerate(dict.fromkeys(r["group"] for r in self.rows))}
+        for r in self.rows:
+            r["custom_price"] = abs(r["stats"]["cost"] - r["item"].default_cost) > 1e-9
         self.dist = dist
         self._render()
 
@@ -2876,7 +2225,11 @@ class LoadsView:
             grade = grade_relative(row["scores"][key])
             bg, fg = GRADE_COLORS[grade]
             val.config(text=vals[key])
-            badge.config(text=grade, bg=bg, fg=fg)
+            if self.app.show_grades:
+                badge.config(text=grade, bg=bg, fg=fg)
+                badge.pack(side="left", padx=(6, 0))
+            else:
+                badge.pack_forget()
         self.price_var.set(f"{st['cost']:.2f}")
         if item.handload:
             self.priceline.grid_remove()
@@ -2887,9 +2240,10 @@ class LoadsView:
         src = SOURCE_NOTES.get(item.source, DEFAULT_SOURCE_NOTE)
         if item.handload and item.info and item.info.get("notes"):
             src = item.info["notes"] + "  " + src
-        self.d_note.config(text=f"Overall {row['grade']}  ·  {row['overall']:.0f}  ·  rank "
-                                f"#{row['rank']} of {row['peers']}"
+        overall = f"Overall {row['grade']}  ·  {row['overall']:.0f}  ·  " if self.app.show_grades else ""
+        self.d_note.config(text=f"{overall}Rank #{row['rank']} of {row['peers']}"
                                 f"{' ' + row['group'] + ' loads' if row['group'] else ''}.  {src}")
+        self._style_h2h()
         self.detail.grid()
         self.fit_table_height()
 
@@ -2957,6 +2311,420 @@ class LoadsView:
                 self.tree.selection_set(iid)
                 self._on_select()
                 break
+
+
+class HeadToHeadView:
+    """Head to Head: 2-5 loads side by side (any cartridges of one category). Each load keeps
+    the grade it has in the Load Dictionary, so the two tools always agree."""
+    tab = "h2h"
+    FACTORS = ("velocity", "energy", "recoil", "cost", "taylor", "hits")
+
+    def __init__(self, app, stage, cat, loads, error=""):
+        self.app, self.root, self.cat = app, app.root, cat
+        self.loads = loads
+        self.groups = {c: v for c, v in group_by_cartridge(loads, True).items() if v}
+        self.cartridges = list(self.groups)
+        self.choices = {}                 # cartridge -> {text in the load menu: Load}
+        for cart, items in self.groups.items():
+            self.choices[cart] = {x.label + ("  (handload)" if x.handload else ""): x for x in items}
+        self.keys = metric_keys(cat)
+        self.dist_var = tk.StringVar(value=f"{cat.default_distance:g}")
+        self.gun_var = tk.StringVar(value=f"{cat.default_gun_lb:g}")
+        self.weight_vars = {k: tk.StringVar(value=str(v)) for k, v in default_weights(cat).items()}
+        self.weights_open = False
+        self.slots = []                   # [{cart: StringVar, load: StringVar, widgets...}]
+        self._pending = None
+        self._build_ui(stage, error)
+        if not hasattr(self, "slot_box"):
+            return
+        found = {pick_key(x): x for x in loads}
+        picks = [found[k] for k in app.h2h.get(cat.title, []) if k in found][:H2H_MAX]
+        for item in picks:
+            self._add_slot(item)
+        while len(self.slots) < H2H_MIN:
+            self._add_slot()
+        self._save_picks()
+        for var in (self.dist_var, self.gun_var, *self.weight_vars.values()):
+            var.trace_add("write", self._schedule)
+        self.refresh()
+
+    # ---- layout ---------------------------------------------------------- #
+    def _build_ui(self, stage, error):
+        a, cat = self.app, self.cat
+        outer = tk.Frame(stage, bg=BG)
+        outer.pack(fill="both", expand=True, padx=24, pady=22)
+        outer.columnconfigure(0, weight=1)
+        a.header(outer, cat, "h2h").grid(row=0, column=0, sticky="ew", pady=(0, 16))
+        if error or not self.groups:
+            msg = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
+            msg.grid(row=1, column=0, sticky="ew")
+            a.label(msg, error or "No loads found.", 11, TEXT, True, anchor="w").pack(
+                anchor="w", padx=18, pady=(16, 4))
+            a.label(msg, f"Put {cat.loads_filename} next to the program to use this tab.",
+                    10, MUTED, anchor="w").pack(anchor="w", padx=18, pady=(0, 16))
+            return
+
+        card = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
+        card.grid(row=1, column=0, sticky="ew")
+        card.columnconfigure(0, weight=1)
+        pad = dict(padx=18)
+        a.label(card, "LOADS TO COMPARE", 9, MUTED, True).grid(row=0, column=0, sticky="w",
+                                                                pady=(16, 0), **pad)
+        self.slot_box = tk.Frame(card, bg=SURFACE)
+        self.slot_box.grid(row=1, column=0, sticky="ew", pady=(6, 0), **pad)
+        self.slot_box.columnconfigure(2, weight=1)
+        self.add_link = tk.Label(card, text=f"+  Add a load (up to {H2H_MAX})", bg=SURFACE,
+                                 fg=ACCENT, font=a.f(10, True), cursor="hand2")
+        self.add_link.grid(row=2, column=0, sticky="w", pady=(8, 0), **pad)
+        self.add_link.bind("<Button-1>", lambda e: self._add_slot(focus=True))
+
+        top = tk.Frame(card, bg=SURFACE)
+        top.grid(row=3, column=0, sticky="ew", pady=(16, 0), **pad)
+        for i, (text, var) in enumerate((("DISTANCE (YD)", self.dist_var), (cat.gun_label, self.gun_var))):
+            a.label(top, text, 9, MUTED, True).grid(row=0, column=i, sticky="w",
+                                                     padx=(0 if i == 0 else 16, 0))
+            ttk.Entry(top, textvariable=var, font=a.f(12), width=10).grid(
+                row=1, column=i, sticky="w", pady=(4, 0), padx=(0 if i == 0 else 16, 0))
+        self.status = a.label(card, "", 10, DANGER, anchor="w")
+        self.status.grid(row=4, column=0, sticky="w", pady=(8, 0), **pad)
+        self.weights_toggle = tk.Label(card, text="▸  Scoring weights", bg=SURFACE, fg=MUTED,
+                                       font=a.f(10, True), cursor="hand2")
+        self.weights_toggle.grid(row=5, column=0, sticky="w", pady=(4, 0), **pad)
+        self.weights_toggle.bind("<Button-1>", lambda e: self._toggle_weights())
+        self.grades_chip = grades_chip(a, card, self._toggle_grades)
+        self.grades_chip.grid(row=5, column=0, sticky="e", pady=(4, 0), **pad)
+        self.weights_frame = tk.Frame(card, bg=SURFACE)
+        for i, key in enumerate(self.keys):
+            a.label(self.weights_frame, METRICS[key][0], 10, MUTED).grid(
+                row=0, column=i * 2, padx=(0 if i == 0 else 14, 6))
+            ttk.Spinbox(self.weights_frame, from_=0, to=10, increment=1, width=3,
+                        textvariable=self.weight_vars[key], font=a.f(11)).grid(
+                row=0, column=i * 2 + 1)
+        self.weights_frame.grid(row=6, column=0, sticky="w", pady=(8, 0), **pad)
+        self.weights_frame.grid_remove()
+        a.label(card, "", 4).grid(row=7, column=0)
+
+        self.results = tk.Frame(outer, bg=BG)
+        self.results.grid(row=2, column=0, sticky="ew", pady=(14, 0))
+        self.results.columnconfigure(0, weight=1)
+        self.footnote = a.label(outer, "", 9, MUTED, bg=BG, anchor="w", justify="left",
+                                wraplength=a.px(880))
+        self.footnote.grid(row=3, column=0, sticky="w", pady=(10, 0))
+
+    def _add_slot(self, item=None, focus=False):
+        if len(self.slots) >= H2H_MAX:
+            return
+        a = self.app
+        slot = {"cart": tk.StringVar(value=item.cartridge if item else ""),
+                "load": tk.StringVar(value="")}
+        if item is not None:
+            slot["load"].set(next(t for t, x in self.choices[item.cartridge].items() if x is item))
+        elif self.slots:                          # a new row starts on the last row's cartridge
+            slot["cart"].set(self.slots[-1]["cart"].get())
+        else:
+            last = self.app.carry.get(self.cat.title, {}).get("cart")
+            if last in self.groups:
+                slot["cart"].set(last)
+        widest = max([16] + [len(c) for c in self.cartridges])
+        slot["num"] = a.label(self.slot_box, "", 11, MUTED, True)
+        slot["cart_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cart"], values=self.cartridges,
+                                        state="readonly", font=a.f(11), width=widest)
+        slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], state="readonly",
+                                        font=a.f(11), width=40)
+        slot["x"] = tk.Label(self.slot_box, text="✕", bg=SURFACE, fg=MUTED, font=a.f(12, True),
+                             padx=8, cursor="hand2")
+        slot["cart_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cart(s))
+        slot["load_box"].bind("<<ComboboxSelected>>", lambda e: self._changed())
+        slot["x"].bind("<Button-1>", lambda e, s=slot: self._remove_slot(s))
+        slot["x"].bind("<Enter>", lambda e, s=slot: s["x"].config(fg=TEXT))
+        slot["x"].bind("<Leave>", lambda e, s=slot: s["x"].config(fg=MUTED))
+        self.slots.append(slot)
+        self._fill_loads(slot)
+        self._layout_slots()
+        if focus:
+            slot["load_box" if slot["cart"].get() else "cart_box"].focus_set()
+
+    def _fill_loads(self, slot):
+        names = list(self.choices.get(slot["cart"].get(), {}))
+        slot["load_box"].config(values=names, width=max([40] + [min(len(n), 64) for n in names]))
+        if slot["load"].get() not in names:
+            slot["load"].set("")
+
+    def _layout_slots(self):
+        for n, slot in enumerate(self.slots, start=1):
+            slot["num"].config(text=f"{n}")
+            slot["num"].grid(row=n, column=0, sticky="w", padx=(0, 10), pady=3)
+            slot["cart_box"].grid(row=n, column=1, sticky="w", pady=3)
+            slot["load_box"].grid(row=n, column=2, sticky="ew", padx=(8, 0), pady=3)
+            slot["x"].grid(row=n, column=3, sticky="w", padx=(4, 0), pady=3)
+        if len(self.slots) >= H2H_MAX:
+            self.add_link.grid_remove()
+        else:
+            self.add_link.grid()
+
+    def _on_cart(self, slot):
+        slot["load"].set("")
+        self._fill_loads(slot)
+        slot["load_box"].focus_set()
+        self._changed()
+
+    def _remove_slot(self, slot):
+        for key in ("num", "cart_box", "load_box", "x"):
+            slot[key].destroy()
+        self.slots.remove(slot)
+        while len(self.slots) < H2H_MIN:
+            self._add_slot()
+        self._layout_slots()
+        self._changed()
+
+    def _picked(self):
+        """The loads chosen so far, in slot order, without repeats."""
+        out = []
+        for slot in self.slots:
+            item = self.choices.get(slot["cart"].get(), {}).get(slot["load"].get())
+            if item is not None and item not in out:
+                out.append(item)
+        return out
+
+    def _save_picks(self):
+        self.app.h2h[self.cat.title] = [pick_key(x) for x in self._picked()]
+
+    def _changed(self):
+        self._save_picks()
+        self.refresh()
+
+    # ---- state ------------------------------------------------------------ #
+    def snapshot(self):
+        return dict(dist=self.dist_var.get(), gun=self.gun_var.get(),
+                    weights={k: v.get() for k, v in self.weight_vars.items()},
+                    weights_open=self.weights_open)
+
+    def restore(self, snap):
+        if not hasattr(self, "slot_box"):
+            return
+        for k, v in snap.get("weights", {}).items():
+            if k in self.weight_vars:
+                self.weight_vars[k].set(v)
+        if "dist" in snap:
+            self.dist_var.set(snap["dist"])
+        if "gun" in snap:
+            self.gun_var.set(snap["gun"])
+        if snap.get("weights_open") and not self.weights_open:
+            self._toggle_weights()
+        self.refresh()
+
+    def _toggle_weights(self):
+        self.weights_open = not self.weights_open
+        if self.weights_open:
+            self.weights_frame.grid()
+        else:
+            self.weights_frame.grid_remove()
+        self.weights_toggle.config(text=("▾" if self.weights_open else "▸") + "  Scoring weights")
+        self.app.fit_window()
+
+    def _toggle_grades(self):
+        self.app.set_show_grades(not self.app.show_grades)
+        style_grades_chip(self.app, self.grades_chip)
+        self.refresh()
+
+    def _schedule(self, *_):
+        if self._pending is not None:
+            try:
+                self.root.after_cancel(self._pending)
+            except Exception:
+                pass
+        self._pending = self.root.after(250, self.refresh)
+
+    # ---- compute + render ------------------------------------------------- #
+    def refresh(self):
+        self._pending = None
+        if not self.results.winfo_exists():            # a delayed refresh after leaving this tab
+            return
+        for w in self.results.winfo_children():
+            w.destroy()
+        picked = self._picked()
+        try:
+            dist = LoadsView._num(self.dist_var, "Distance", 0, self.cat.max_distance)
+            gun = LoadsView._num(self.gun_var, "Gun weight", 0.5, 30)
+            weights = {k: LoadsView._num(v, f"{METRICS[k][0]} weight", 0, 10)
+                       for k, v in self.weight_vars.items()}
+        except ValueError as exc:
+            self.status.config(text=str(exc))
+            return self.app.fit_window()
+        self.status.config(text="")
+        grades = self.app.show_grades
+        self.footnote.config(text=(
+            "Each grade is the load's Load Dictionary grade: against every load of its own "
+            "cartridge" + (" and load type" if not self.cat.grain_style else "") +
+            ", not against the others here. " if grades else "") +
+            "The best figure in each row is highlighted; the % shows how far the others are "
+            "behind it. Prices are estimates: set your own in the Load Dictionary.")
+        if len(picked) < H2H_MIN:
+            self.app.label(self.results, f"Pick at least {H2H_MIN} loads to put them head to head.",
+                           11, MUTED, bg=BG, anchor="w").grid(row=0, column=0, sticky="w")
+            return self.app.fit_window()
+        rows = h2h_rows(self.cat, picked, dist, gun, weights,
+                        lambda x: self.app.price_for(self.cat, x), self.groups)
+        self._render(rows, dist)
+        self.app.fit_window()
+
+    def _label_w(self):
+        """Width of the row-name column, so the two tables' load columns line up."""
+        f = tkfont.Font(font=self.app.f(10, True))
+        names = ["Rank in its cartridge", self.cat.payload_row] + [
+            METRICS[k][0] + " at 0000 yd" for k in ("velocity", "energy")]
+        return max(f.measure(t) for t in names) + 24
+
+    def _cell(self, parent, r, c, text, size=10, color=None, bold=False, bg=None, **kw):
+        lab = self.app.label(parent, text, size, color, bold, bg=SURFACE if bg is None else bg,
+                             anchor="w", justify="left", **kw)
+        lab.grid(row=r, column=c, sticky="nsew", padx=(12, 12), pady=5)
+        return lab
+
+    def _render(self, rows, dist):
+        a, cat, grades = self.app, self.cat, self.app.show_grades
+        n = len(rows)
+        card = tk.Frame(self.results, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
+        card.grid(row=0, column=0, sticky="ew")
+        card.columnconfigure(0, weight=0, minsize=self._label_w())
+        for c in range(1, n + 1):
+            card.columnconfigure(c, weight=1, uniform="load")
+        wrap = a.px(max(160, 760 // n))
+        r = 0
+        # names
+        for c, row in enumerate(rows, start=1):
+            it = row["item"]
+            box = tk.Frame(card, bg=SURFACE)
+            box.grid(row=r, column=c, sticky="nsew", padx=12, pady=(14, 6))
+            a.label(box, it.cartridge, 9, MUTED, True, anchor="w").pack(anchor="w")
+            a.label(box, it.label, 11, HAND_FG if it.handload else TEXT, True, anchor="w",
+                    justify="left", wraplength=wrap).pack(anchor="w")
+            if it.handload:
+                a.label(box, "handload", 9, HAND_FG, anchor="w").pack(anchor="w")
+        r += 1
+        if grades:
+            self._cell(card, r, 0, "Overall", 10, MUTED, True)
+            for c, row in enumerate(rows, start=1):
+                box = tk.Frame(card, bg=SURFACE)
+                box.grid(row=r, column=c, sticky="w", padx=12, pady=5)
+                bg, fg = GRADE_COLORS[row["grade"]]
+                tk.Label(box, text=row["grade"], bg=bg, fg=fg, width=2, font=a.f(13, True)).pack(side="left")
+                a.label(box, f"{row['overall']:.0f}", 12, TEXT, True).pack(side="left", padx=(8, 0))
+            r += 1
+        self._cell(card, r, 0, "Rank in its cartridge", 10, MUTED, True)
+        for c, row in enumerate(rows, start=1):
+            peers = f"{row['peers']} {row['group'] + ' ' if row['group'] else ''}loads"
+            self._cell(card, r, c, f"#{row['rank']} of {peers}", 10, TEXT)
+        r += 1
+        tk.Frame(card, bg=BORDER, height=1).grid(row=r, column=0, columnspan=n + 1, sticky="ew", pady=4)
+        r += 1
+        # plain facts (no best / worst)
+        facts = [(cat.payload_row, lambda row: h2h_payload(cat, row["item"]))]
+        if cat.grain_style:
+            facts.append(("Test barrel", lambda row: f"{row['item'].barrel_in:g} in"
+                          if row["item"].barrel_in else "not listed"))
+        facts.append(("Purpose", lambda row: row["item"].purpose or row["item"].group or "—"))
+        for name, fn in facts:
+            self._cell(card, r, 0, name, 10, MUTED, True)
+            for c, row in enumerate(rows, start=1):
+                self._cell(card, r, c, fn(row), 10, TEXT)
+            r += 1
+        # graded factors: best highlighted, others show how far behind
+        for key in self.keys:
+            label = METRICS[key][0] + (f" at {dist:g} yd" if key in ("velocity", "energy") else "")
+            self._cell(card, r, 0, label, 10, MUTED, True)
+            for c, row in enumerate(rows, start=1):
+                box = tk.Frame(card, bg=SURFACE)
+                box.grid(row=r, column=c, sticky="w", padx=12, pady=4)
+                best = key in row["best"]
+                a.label(box, h2h_value(key, row["stats"][key]), 11, ACCENT if best else TEXT,
+                        True).pack(side="left")
+                gap = "best" if best else f"{row['gap'][key]:+.0f}%"
+                a.label(box, gap, 9, ACCENT if best else MUTED, best).pack(side="left", padx=(6, 0))
+                if grades:
+                    g = grade_relative(row["scores"][key])
+                    bg, fg = GRADE_COLORS[g]
+                    tk.Label(box, text=g, bg=bg, fg=fg, width=2, font=a.f(9, True)).pack(
+                        side="left", padx=(8, 0))
+            r += 1
+        self._cell(card, r, 0, "Best in", 10, MUTED, True)
+        most = max(len(row["best"]) for row in rows)
+        for c, row in enumerate(rows, start=1):
+            k = len(row["best"])
+            self._cell(card, r, c, f"{k} of {len(self.keys)}", 10,
+                       ACCENT if k == most and k else TEXT, k == most and k > 0)
+        r += 1
+        a.label(card, "", 4).grid(row=r, column=0)
+
+        # downrange
+        a.label(self.results, "DOWNRANGE  ·  velocity (fps) and energy (ft-lbs)", 9, MUTED, True,
+                bg=BG, anchor="w").grid(row=1, column=0, sticky="w", pady=(16, 6))
+        dr = tk.Frame(self.results, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
+        dr.grid(row=2, column=0, sticky="ew")
+        dr.columnconfigure(0, minsize=self._label_w())
+        for c in range(1, n + 1):
+            dr.columnconfigure(c, weight=1, uniform="load")
+        self._cell(dr, 0, 0, "Yards", 9, MUTED, True)
+        for c, row in enumerate(rows, start=1):
+            self._cell(dr, 0, c, row["item"].label, 9, MUTED, True, wraplength=wrap)
+        table = h2h_downrange(cat, [row["item"] for row in rows])
+        for i, (yd, cells) in enumerate(table, start=1):
+            self._cell(dr, i, 0, f"{yd:g}", 10, TEXT, True)
+            top = max(e for _, e in cells)
+            for c, (v, e) in enumerate(cells, start=1):
+                best = e >= top - 1e-9
+                self._cell(dr, i, c, f"{v:,.0f}  ·  {e:,.0f}", 10, ACCENT if best else TEXT, best)
+
+
+def h2h_rows(cat, picked, dist, gun, weights, price_of, groups):
+    """Head to Head figures for the picked loads. Each load is graded the way the Load Dictionary
+    grades it (against every load of its cartridge); `best` is the set of factors where it leads
+    the picked loads and `gap` how far behind the leader it is, in %."""
+    rows, done = [], {}
+    for it in picked:
+        if it.cartridge not in done:
+            items = groups[it.cartridge]
+            done[it.cartridge] = {id(r["item"]): r for r in score_loads(
+                items, dist, gun, weights, [price_of(x) for x in items],
+                by_type=not cat.grain_style)}
+        rows.append(dict(done[it.cartridge][id(it)]))
+    for key in metric_keys(cat):
+        hi = METRICS[key][1]
+        vals = [r["stats"][key] for r in rows]
+        lead = max(vals) if hi else min(vals)
+        for r, v in zip(rows, vals):
+            r.setdefault("best", set())
+            r.setdefault("gap", {})
+            if abs(v - lead) <= 1e-9 * max(1.0, abs(lead)):
+                r["best"].add(key)
+            r["gap"][key] = 0.0 if lead == 0 else 100.0 * (v - lead) / abs(lead)
+    return rows
+
+
+def h2h_downrange(cat, items):
+    """[(yards, [(velocity, energy) per load])] from the muzzle out to 5 steps (or the max)."""
+    out = []
+    for n in range(6):
+        yd = min(n * cat.step_yd, cat.max_distance)
+        if out and yd == out[-1][0]:
+            break
+        cells = []
+        for it in items:
+            v = velocity_at(it.muzzle_fps, it.bc_g1, yd)
+            cells.append((v, energy_ftlbs(it.bullet_gr, v)))
+        out.append((yd, cells))
+    return out
+
+
+def h2h_payload(cat, item):
+    if cat.show_oz:
+        return f"{item.bullet_gr:.0f} gr ({item.bullet_gr / GRAINS_PER_OZ:.2f} oz)"
+    return f"{item.bullet_gr:g} gr"
+
+
+def h2h_value(key, v):
+    return {"velocity": f"{v:,.0f} fps", "energy": f"{v:,.0f} ft-lbs", "recoil": f"{v:.1f} ft-lbs",
+            "cost": f"${v:.2f}", "taylor": f"{v:.1f}", "hits": f"{v:.0f} ({hits_class(v)})"}[key]
 
 
 def sharp_on_windows():

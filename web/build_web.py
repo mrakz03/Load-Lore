@@ -19,10 +19,9 @@ for cat in c.CATEGORIES:
         raise SystemExit(f"{cat.loads_filename}: {dprob}")
     cats.append(dict(title=cat.title, blurb=cat.blurb, default_distance=cat.default_distance,
         max_distance=cat.max_distance, default_gun_lb=cat.default_gun_lb, gun_label=cat.gun_label,
-        cartridge_label=cat.cartridge_label, load_label=cat.load_label, payload_row=cat.payload_row,
+        cartridge_label=cat.cartridge_label, payload_row=cat.payload_row,
         payload_col=cat.payload_col, grain_style=cat.grain_style, show_oz=cat.show_oz,
-        weights=list(cat.weights), allow_custom=cat.allow_custom, default_bc=cat.default_bc,
-        sort_loads=cat.sort_loads, terminal=cat.terminal,
+        weights=list(cat.weights), terminal=cat.terminal, step_yd=cat.step_yd,
         detail=[dict(cartridge=x.cartridge, load=x.load, bullet_gr=x.bullet_gr, muzzle_fps=x.muzzle_fps,
                      bc_g1=x.bc_g1, powder_gr=x.powder_gr, default_cost=x.default_cost,
                      is_default=x.is_default, source=x.source, group=x.group,

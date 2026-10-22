@@ -171,6 +171,29 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .setrow .size{font-size:0}.setrow .size button{font-size:.95rem;min-width:52px;min-height:42px}
 .safety{font-size:.78rem;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:14px;line-height:1.4}
 .costlbl{font-weight:700;margin-top:10px}
+.links{align-items:center;gap:8px}.links .link.m{white-space:nowrap}
+.lright{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}
+.tgl{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:99px;padding:6px 12px;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer}
+.tgl.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.slots{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.slot{display:grid;grid-template-columns:1.4em minmax(0,1fr) minmax(0,2fr) 2.2em;gap:8px;align-items:center}
+.slot .n{font-weight:800;color:var(--muted)}
+.slot .x{background:none;border:0;color:var(--muted);font:inherit;font-size:1.1rem;font-weight:700;cursor:pointer;min-height:40px}
+.slot .x:hover{color:var(--text)}
+@media(max-width:600px){.slot{grid-template-columns:1.4em minmax(0,1fr) 2.2em}.slot .ls{grid-column:2}}
+.h2h{overflow:auto;margin-top:12px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+.h2h table{font-size:.9rem}
+.h2h th,.h2h td{text-align:left;vertical-align:top;white-space:normal;padding:8px 12px}
+.h2h th{position:static;cursor:default;background:var(--surface);font-size:.95rem}
+.h2h td:first-child,.h2h th:first-child{position:sticky;left:0;background:var(--surface);color:var(--muted);font-weight:700;font-size:.82rem;min-width:7.5em;z-index:1}
+.h2h th small{display:block;color:var(--muted);font-size:.72rem;font-weight:700}
+.h2h th.hl{color:var(--hand)}
+.h2h td.c{min-width:9.5em}
+.h2h .v{font-weight:700}.h2h .best{color:var(--accent)}
+.h2h .gap{font-size:.75rem;color:var(--muted);margin-left:6px}.h2h .gap.best{font-weight:700}
+.h2h .badge{display:inline-block;margin-left:8px;min-width:24px;font-size:.75rem;padding:1px 5px}
+.h2h tr.sep td{border-bottom:2px solid var(--border)}
+.sect{font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.04em;margin:18px 0 0}
 </style>
 </head>
 <body>
@@ -205,7 +228,6 @@ function applyTheme(name){
 applyTheme(THEME);
 const VERSION_TEXT = DATA.version && DATA.version !== "dev" ? "Development Build v" + DATA.version : "Development Build";
 const GRAINS_PER_OZ = 437.5;
-const GRADE_BANDS = [[72.5,"S"],[70.5,"A"],[66,"B"],[61,"C"],[55,"D"]];
 const METRICS = {velocity:["Velocity",true],energy:["Energy",true],recoil:["Recoil",false],cost:["Cost",false],taylor:["Taylor KO",true],hits:["HITS",true]};
 const TERMINAL=["taylor","hits"];
 const keysOf=cat=>cat.terminal?MKEYS:MKEYS.filter(k=>!TERMINAL.includes(k));
@@ -228,7 +250,7 @@ const RENAMED = DATA.renamed || {};
 const canon = n => RENAMED[n] || n;
 const canonRows = a => (Array.isArray(a) ? a : []).map(r => r && typeof r === "object" && r.cartridge ? {...r, cartridge: canon(r.cartridge)} : r);
 const PRICE_KEY = "cartridge_calc_prices_v1";
-const CUSTOM_KEY = "cartridge_calc_custom_v1";
+const GRADES_KEY = "cartridge_calc_grades";
 
 const CATEGORIES = DATA.categories;   // title, blurb, distances, labels, flags, weights, loads
 const G1 = [[0,.2629],[.05,.2558],[.1,.2487],[.15,.2413],[.2,.2344],[.25,.2278],[.3,.2214],[.35,.2155],[.4,.2104],[.45,.2061],[.5,.2032],[.55,.202],[.6,.2034],[.7,.2165],[.725,.223],[.75,.2313],[.775,.2417],[.8,.2546],[.825,.2706],[.85,.2901],[.875,.3136],[.9,.3415],[.925,.3734],[.95,.4084],[.975,.4448],[1,.4805],[1.025,.5136],[1.05,.5427],[1.075,.5677],[1.1,.5883],[1.125,.6053],[1.15,.6191],[1.2,.6393],[1.25,.6518],[1.3,.6589],[1.35,.6621],[1.4,.6625],[1.45,.6607],[1.5,.6573],[1.55,.6528],[1.6,.6474],[1.65,.6413],[1.7,.6347],[1.75,.628],[1.8,.621],[1.85,.6141],[1.9,.6072],[1.95,.6003],[2,.5934],[2.05,.5867],[2.1,.5804],[2.15,.5743],[2.2,.5685],[2.25,.563],[2.3,.5577],[2.35,.5527],[2.4,.5481],[2.45,.5438],[2.5,.5397],[2.6,.5325],[2.7,.5264],[2.8,.5211],[2.9,.5168],[3,.5133],[3.1,.5105],[3.2,.5084],[3.3,.5067],[3.4,.5054],[3.5,.504],[3.6,.503],[3.7,.5022],[3.8,.5016],[3.9,.501],[4,.5006],[4.2,.4998],[4.4,.4995],[4.6,.4992],[4.8,.499],[5,.4988]];
@@ -265,7 +287,6 @@ function recoil(gr,fps,powder,gun){
   const mom=(gr*fps+1.75*powder*4000)/7000, gv=mom/gun;
   return 0.5*(gun/32.174)*gv*gv;
 }
-const estimatePowder=(gr,fps)=>Math.max(0.3,energy(gr,fps)/60);
 
 // ---------- scoring ----------
 function bulletDiameter(it){
@@ -285,23 +306,22 @@ function computeStats(item,dist,gun,cost){
           cost:cost==null?item.default_cost:cost};
 }
 function median(a){const s=[...a].sort((x,y)=>x-y),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2;}
-function referenceLevels(loads,dist,gun){
-  const st=loads.map(x=>computeStats(x,dist,gun)); const r={};
-  for(const k of MKEYS)r[k]=median(st.map(s=>s[k])); return r;
-}
-function gradeFor(score){for(const [t,l] of GRADE_BANDS)if(score>=t)return l;return "F";}
 function metricScore(value,ref,hi){
   if(ref<=0)return 50;
   const x=Math.max(value,0)/ref;
   return hi?100*(1-Math.exp(-HIGH_K*x)):100*Math.exp(-LOW_K*x);
 }
-function scoreStats(stats,refs,weights){
-  const scores={}; for(const k of MKEYS)scores[k]=metricScore(stats[k],refs[k],METRICS[k][1]);
-  let tot=MKEYS.reduce((a,k)=>a+weights[k],0), w=weights;
-  if(tot<=0){w=Object.fromEntries(MKEYS.map(k=>[k,1]));tot=MKEYS.length;}
-  return [scores, MKEYS.reduce((a,k)=>a+scores[k]*w[k],0)/tot];
+// grade loads of one cartridge against each other (the Load Dictionary's grades; Head to Head
+// shows the same ones). Shotshells (byType) are only graded against their own load type.
+function scoreLoads(items,dist,gun,weights,costs,byType){
+  const rows=items.map((it,i)=>({it,st:computeStats(it,dist,gun,costs[i]),group:byType?(it.group||""):""}));
+  for(const key of new Set(rows.map(r=>r.group))){
+    const rs=rows.filter(r=>r.group===key),res=relativeScores(rs.map(r=>r.st),weights);
+    rs.forEach((r,i)=>{r.sc=res[i][0];r.overall=res[i][1];r.grade=gradeRel(r.overall);r.peers=rs.length;});
+    [...rs].sort((a,b)=>b.overall-a.overall).forEach((r,i)=>r.rank=i+1);
+  }
+  return rows;
 }
-
 function gradeRel(score){for(const [t,l] of REL_BANDS)if(score>=t)return l;return "F";}
 function spread(vals){
   const n=vals.length; let mid=median(vals);
@@ -331,19 +351,9 @@ function makeLabel(it,cat){
   if(it.group&&it.load)return `${it.group}  ·  ${it.load}`;
   return it.load||g(it.bullet_gr)+" gr";
 }
-function readCustom(){try{return canonRows(JSON.parse(localStorage.getItem(CUSTOM_KEY)||"[]"));}catch(e){return [];}}
-function writeCustom(rows){try{localStorage.setItem(CUSTOM_KEY,JSON.stringify(rows));return true;}catch(e){return false;}}
 const state = {loads:{}};     // title -> array of load objects
 for(const cat of CATEGORIES){
   state.loads[cat.title]=cat.loads.map(x=>Object.assign({},x,{label:makeLabel(x,cat)}));
-  if(cat.allow_custom){
-    for(const r of readCustom()){
-      if(r.category!==cat.title)continue;
-      const it={cartridge:r.cartridge,load:r.load||"Custom",bullet_gr:+r.bullet_gr,muzzle_fps:+r.muzzle_fps,bc_g1:+r.bc_g1,powder_gr:+r.powder_gr,default_cost:+r.default_cost,source:"custom",group:"",is_default:false,diameter_in:+r.diameter_in||0};
-      if(![it.bullet_gr,it.muzzle_fps,it.bc_g1,it.powder_gr].every(v=>v>0))continue;
-      it.label=makeLabel(it,cat); state.loads[cat.title].push(it);
-    }
-  }
 }
 state.detail={};
 for(const cat of CATEGORIES){
@@ -354,8 +364,8 @@ function readPrices(){try{const o=JSON.parse(localStorage.getItem(PRICE_KEY)||"{
 function writePrices(o){try{localStorage.setItem(PRICE_KEY,JSON.stringify(o));return true;}catch(e){return false;}}
 const priceKey=(cat,it)=>`${cat.title}|${it.cartridge}|${it.label}`;
 const shared={};   // category title -> values carried between the two tabs
-// cartridges in Compare Cartridges with no factory loads (e.g. .32-40) still get an empty entry,
-// after the cartridge they follow there, so handloaders can use Compare Loads for them
+// ammo_*.csv cartridges with no factory loads (e.g. .32-40) still get an empty entry, after the
+// cartridge they follow there, so handloaders can use the Load Dictionary for them
 function withHandloadOnly(groups,cartLoads){
   const order=[...new Set(cartLoads.map(x=>x.cartridge))];
   if(order.every(c=>groups.has(c)))return groups;
@@ -369,7 +379,6 @@ function groupBy(loads,sort){
   if(sort)for(const a of m.values())a.sort((x,y)=>x.bullet_gr-y.bullet_gr||(x.load<y.load?-1:x.load>y.load?1:0));
   return m;
 }
-function sameCustom(r,it){return r.cartridge===it.cartridge&&(r.load||"Custom")===it.load&&Math.abs((+r.bullet_gr||0)-it.bullet_gr)<1e-6&&Math.abs((+r.muzzle_fps||0)-it.muzzle_fps)<1e-6;}
 
 // ---------- text size ----------
 let TS=1;
@@ -379,21 +388,35 @@ function setTS(d,after){TS=Math.round(Math.min(1.6,Math.max(.85,TS+d))*100)/100;
 applyTS();
 const sizeCtl=()=>`<div class="size">Text size <button data-ts="-.15" aria-label="Smaller text">A−</button><button data-ts=".15" aria-label="Larger text">A+</button></div>`;
 function wireSize(root){root.querySelectorAll("[data-ts]").forEach(b=>b.onclick=()=>setTS(+b.dataset.ts));}
-function rankAmong(it,overall,loads,dist,gun,weights,refs){
-  const sc=loads.filter(x=>x!==it).map(x=>[x,scoreStats(computeStats(x,dist,gun),refs,weights)[1]]);
-  const inCart=sc.filter(([x])=>x.cartridge===it.cartridge).map(a=>a[1]);
-  return [1+inCart.filter(o=>o>overall).length,inCart.length+1,1+sc.filter(a=>a[1]>overall).length,sc.length+1];
-}
-
 // ---------- views ----------
 const app=$("#app");
 const ICON={
   home:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10"/></svg>',
-  cart:'<svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 7a3 3 0 0 0 6 0L7 7zM17 7l-3 7a3 3 0 0 0 6 0l-3-7z"/></svg>',
+  h2h:'<svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 7a3 3 0 0 0 6 0L7 7zM17 7l-3 7a3 3 0 0 0 6 0l-3-7z"/></svg>',
   loads:'<svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg>',
   settings:'<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>'};
 // Settings is a phone-only tab; wide screens keep Text size in the sidebar and Theme on Home
-const NAVS=[["home","Home",ICON.home],["cartridges","Compare Cartridges",ICON.cart],["loads","Compare Loads",ICON.loads],["settings","Settings",ICON.settings]];
+// the two tools: key, title, Home-screen blurb (same as TOOLS in the desktop app)
+const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or your own handload, graded against each other."],
+  ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges."]];
+const toolTitle=k=>(TOOLS.find(t=>t[0]===k)||TOOLS[0])[1];
+const NAVS=[["home","Home",ICON.home],["loads","Load Dictionary",ICON.loads],["h2h","Head to Head",ICON.h2h],["settings","Settings",ICON.settings]];
+const H2H_MIN=2,H2H_MAX=5,H2H={};   // category title -> Head to Head picks (pickKey)
+const pickKey=it=>it.cartridge+"|"+(it.hid||it.label);
+// S-F grades on / off, shared by both tools and remembered
+let GRADES=true;try{GRADES=localStorage.getItem(GRADES_KEY)!=="0";}catch(e){}
+function setGrades(on){GRADES=on;try{localStorage.setItem(GRADES_KEY,on?"1":"0");}catch(e){}}
+function h2hText(cat,it){
+  const p=H2H[cat.title]||[];
+  if(p.includes(pickKey(it)))return `In Head to Head (${p.length} of ${H2H_MAX}) · Open ›`;
+  if(p.length>=H2H_MAX)return `Head to Head is full (${H2H_MAX}) · Open ›`;
+  return "+ Head to Head"+(p.length?` (${p.length} picked)`:"");
+}
+function wireGrades(root,after){
+  const b=$("[data-grades]",root);
+  b.onclick=()=>{setGrades(!GRADES);b.classList.toggle("on",GRADES);b.setAttribute("aria-pressed",GRADES);b.textContent=`S–F grades: ${GRADES?"On":"Off"}`;after();};
+}
+const gradesBtn=()=>`<button class="tgl ${GRADES?"on":""}" data-grades aria-pressed="${GRADES}">S–F grades: ${GRADES?"On":"Off"}</button>`;
 const NAV={mode:"home",cat:null};
 const hasDetail=cat=>(state.detail[cat.title]||[]).length>0;
 function lastCat(){try{return localStorage.getItem("cartridge_calc_cat");}catch(e){return null;}}
@@ -401,8 +424,8 @@ function drawChrome(){
   const nav=$("#nav");
   nav.innerHTML=NAVS.map(([k,t,ic])=>{
     const on=NAV.mode===k;
-    return `<button data-nav="${k}" class="${on?"on":""}${k==="settings"?" phone":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Compare ","<i class='cmp'>Compare </i>")}</span></button>`+
-      (on&&k!=="home"&&k!=="settings"?`<div class="sub">${CATEGORIES.filter(c=>k==="cartridges"||hasDetail(c)).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
+    return `<button data-nav="${k}" class="${on?"on":""}${k==="settings"?" phone":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
+      (on&&k!=="home"&&k!=="settings"?`<div class="sub">${CATEGORIES.filter(hasDetail).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
   nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(NAV.mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
@@ -418,11 +441,8 @@ function navigate(mode,cat){
 }
 function showHome(){
   document.title=APP_TITLE;app.classList.remove("wide","picker");app.classList.add("home");
-  app.innerHTML=`<div class="hero"><h2>${APP_TITLE}</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost.</p></div>
-  <div class="feat">
-    <button class="fcard" data-go="cartridges"><div class="ic">${ICON.cart}</div><b>Compare Cartridges</b><span>Which caliber gives the most for the money?</span></button>
-    <button class="fcard" data-go="loads"><div class="ic">${ICON.loads}</div><b>Compare Loads</b><span>Which brand or load of one cartridge is best?</span></button>
-  </div>
+  app.innerHTML=`<div class="hero"><h2>${APP_TITLE}</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost, or put loads head to head.</p></div>
+  <div class="feat">${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>
   <div class="look"><label class="l" for="theme" style="margin:0">APPEARANCE</label><select id="theme">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
   $("#theme").onchange=e=>applyTheme(e.target.value);
@@ -440,133 +460,21 @@ function showSettings(){
 function showPicker(mode){
   document.title=APP_TITLE;app.classList.remove("wide","home");app.classList.add("picker");
   const last=lastCat();
-  app.innerHTML=`<div class="phead"><h2>${mode==="loads"?"Compare Loads":"Compare Cartridges"}</h2><p class="sub">Choose a category.</p></div><div class="pick">${
-    CATEGORIES.filter(c=>mode==="cartridges"||hasDetail(c)).map(c=>{
-      const list=mode==="loads"&&(state.detail[c.title]||[]).length?state.detail[c.title]:state.loads[c.title],n=new Set(list.concat(mode==="loads"&&c.grain_style?state.loads[c.title]:[]).map(x=>x.cartridge)).size,d=list.length;
-      return `<button class="cat" data-cat="${esc(c.title)}" ${c.title===last?'style="border-color:var(--accent)"':""}><b>${esc(c.title)}</b><span class="b">${esc(c.blurb)}</span><span class="c">${n} cartridges${mode==="loads"?`  ·  ${d.toLocaleString()} loads`:""}</span></button>`;}).join("")}</div>`;
+  app.innerHTML=`<div class="phead"><h2>${toolTitle(mode)}</h2><p class="sub">Choose a category.</p></div><div class="pick">${
+    CATEGORIES.filter(hasDetail).map(c=>{
+      const list=state.detail[c.title].filter(x=>!x.handload),n=new Set(list.concat(c.grain_style?state.loads[c.title]:[]).map(x=>x.cartridge)).size,d=list.length;
+      return `<button class="cat" data-cat="${esc(c.title)}" ${c.title===last?'style="border-color:var(--accent)"':""}><b>${esc(c.title)}</b><span class="b">${esc(c.blurb)}</span><span class="c">${n} cartridges  ·  ${d.toLocaleString()} loads</span></button>`;}).join("")}</div>`;
   app.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
 }
 
 function openCategory(cat,tab){
-  tab=tab||"cartridges";
+  tab=tab||"loads";
   document.title=`${APP_TITLE} — ${cat.title}`;
-  app.classList.remove("home","picker");app.classList.toggle("wide",tab==="loads");
-  app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2>${esc(cat.title)}</h2></div><div id="pane"></div>`;
+  app.classList.remove("home","picker");app.classList.add("wide");
+  app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2>${toolTitle(tab)} · ${esc(cat.title)}</h2></div><div id="pane"></div>`;
   $("[data-back]",app).onclick=()=>navigate(tab);
   const pane=$("#pane",app);
-  if(tab==="loads")openLoads(cat,pane);else openCartridges(cat,pane);
-}
-
-function openCartridges(cat,pane){
-  const V={cat,loads:state.loads[cat.title],weightsOpen:false,last:null};
-  const regroup=()=>{V.groups=groupBy(V.loads,cat.sort_loads);V.cartridges=[...V.groups.keys()];};
-  regroup();
-  pane.innerHTML=`
-  <div class="card">
-    <div class="field"><label class="l">${esc(cat.cartridge_label)}</label><select id="cart"></select></div>
-    <div class="field hidden" id="loadf"><label class="l">${esc(cat.load_label)}</label><select id="load"></select>
-      <button class="link m hidden" id="rm" style="font-weight:400;font-size:.8rem">Remove this custom load</button></div>
-    <div class="nums">
-      <div><label class="l">COST ($)</label><input id="cost" inputmode="decimal"></div>
-      <div><label class="l">DISTANCE (YD)</label><input id="dist" inputmode="decimal"></div>
-      <div><label class="l">${esc(cat.gun_label.replace(" WEIGHT",""))}</label><input id="gun" inputmode="decimal"></div>
-    </div>
-    <div class="links"><button class="link m" id="wt">▸&nbsp; Scoring weights</button>${cat.allow_custom?'<button class="link" id="add">+&nbsp; Add your own caliber</button>':''}</div>
-    <div class="weights hidden" id="wbox">
-      <div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="w_${k}" inputmode="numeric"></div>`).join("")}</div>
-      <div class="wnote" id="wnote"></div><div class="help">Higher = matters more. 0 ignores that factor. ${cat.terminal?"Taylor KO and HITS are shown for every load but start at 0, so they only affect grades if you raise them.":""}</div>
-    </div>
-    <div class="btns"><button class="btn p" id="calc">Calculate</button><button class="btn" id="cmp">Compare All</button><button class="btn" id="reset">Reset</button></div>
-  </div>
-  <div class="card res hidden" id="res"></div>`;
-  const $$=s=>$(s,pane);
-  const cart=$$("#cart"),loadSel=$$("#load");
-  const fillCart=()=>{cart.innerHTML=`<option value="" disabled selected hidden>Select…</option>`+V.cartridges.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");};
-  const setDefaults=()=>{
-    $$("#dist").value=g(cat.default_distance);$$("#gun").value=g(cat.default_gun_lb);
-    MKEYS.forEach((k,i)=>$$("#w_"+k).value=cat.weights[i]);
-  };
-  const selected=()=>V.byLabel&&V.byLabel[loadSel.value];
-  const onGrain=()=>{const it=selected();if(!it)return;$$("#cost").value=it.default_cost.toFixed(2);$$("#rm").classList.toggle("hidden",it.source!=="custom");};
-  const onCart=()=>{
-    const items=V.groups.get(cart.value);if(!items)return;
-    V.byLabel={};items.forEach(x=>V.byLabel[x.label]=x);
-    loadSel.innerHTML=items.map(x=>`<option value="${esc(x.label)}">${esc(x.label)}</option>`).join("");
-    loadSel.value=(items.find(x=>x.is_default)||items[0]).label;
-    $$("#loadf").classList.remove("hidden");onGrain();
-  };
-  const wnote=()=>{
-    const vals={};for(const k of MKEYS){const v=parseFloat($$("#w_"+k).value);if(isNaN(v)){$$("#wnote").textContent="";return;}vals[k]=v;}
-    const t=MKEYS.reduce((a,k)=>a+vals[k],0);
-    $$("#wnote").textContent=t<=0?"All weights are 0, so every factor counts equally.":keysOf(cat).map(k=>`${METRICS[k][0]} ${(100*vals[k]/t).toFixed(0)}%`).join("  ·  ");
-  };
-  const num=(id,name,min,max)=>{
-    const v=Number(String($$("#"+id).value).trim().replace("$",""));
-    if($$("#"+id).value.trim()===""||!isFinite(v))throw new Error(`${name} must be a number.`);
-    if(v<min||(max!=null&&v>max))throw new Error(max==null?`${name} must be ${g(min)} or more.`:`${name} must be between ${g(min)} and ${g(max)}.`);
-    return v;
-  };
-  const readInputs=(needCost=true)=>{
-    const dist=num("dist","Distance",0,cat.max_distance),gun=num("gun","Gun weight",0.5,30);
-    const cost=needCost?num("cost","Cost per round",0):null;
-    const weights={};for(const k of MKEYS)weights[k]=num("w_"+k,METRICS[k][0]+" weight",0,10);
-    return {dist,gun,cost,weights};
-  };
-  const payload=gr=>cat.show_oz?`${gr.toFixed(0)} gr  (${(gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(gr)} gr`;
-
-  function calculate(){
-    const it=selected(); if(!it){alert("Choose a cartridge and load first.");return;}
-    let inp;try{inp=readInputs();}catch(e){alert(e.message);return;}
-    const stats=computeStats(it,inp.dist,inp.gun,inp.cost),refs=referenceLevels(V.loads,inp.dist,inp.gun);
-    const [scores,overall]=scoreStats(stats,refs,inp.weights);
-    const gr={};for(const k of MKEYS)gr[k]=gradeFor(scores[k]);
-    const rk=rankAmong(it,overall,V.loads,inp.dist,inp.gun,inp.weights,refs);
-    const og=gradeFor(overall),src=SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE;
-    const badge=k=>`<span class="badge" style="background:${GRADE_COLORS[gr[k]][0]};color:${GRADE_COLORS[gr[k]][1]}">${gr[k]}</span>`;
-    const res=$$("#res");
-    res.innerHTML=`<h3>${esc(it.cartridge)}  ·  ${esc(it.label)}</h3>
-      <div class="muted" style="font-size:.85rem;margin:2px 0 8px">Velocity and energy at ${g(inp.dist)} yards</div>
-      <div class="row"><span class="muted">${esc(cat.payload_row)}</span><span class="v">${payload(stats.weight)}</span><span style="width:32px"></span></div>
-      <div class="row"><span class="muted">Velocity</span><span class="v">${stats.velocity.toFixed(0)} fps</span>${badge("velocity")}</div>
-      <div class="row"><span class="muted">Energy</span><span class="v">${stats.energy.toFixed(0)} ft-lbs</span>${badge("energy")}</div>
-      <div class="row"><span class="muted">Recoil</span><span class="v">${stats.recoil.toFixed(1)} ft-lbs</span>${badge("recoil")}</div>
-      <div class="row"><span class="muted">Cost</span><span class="v">$${stats.cost.toFixed(2)}</span>${badge("cost")}</div>
-      ${cat.terminal?`<div class="row"><span class="muted">Taylor KO</span><span class="v">${stats.taylor.toFixed(1)}</span>${badge("taylor")}</div>
-      <div class="row"><span class="muted">HITS</span><span class="v">${stats.hits.toFixed(0)} <small class="muted">(${hitsClass(stats.hits)})</small></span>${badge("hits")}</div>`:""}
-      <hr><div class="row"><span class="muted">Overall</span><span class="v" style="font-size:1.1rem">${og}  ·  ${overall.toFixed(1)}%</span></div>
-      <div class="bar"><i style="width:${Math.max(0,Math.min(100,overall))}%;background:${GRADE_COLORS[og][0]}"></i></div>
-      <div class="rank">Ranks #${rk[0]} of ${rk[1]} ${esc(it.cartridge)} loads  ·  #${rk[2]} of ${rk[3]} in ${esc(cat.title)}  <span class="muted">(others at their default price)</span></div>
-      <div class="note">${esc(src)} Recoil assumes a ${g(inp.gun)} lb gun.</div>`;
-    res.classList.remove("hidden");res.scrollIntoView({behavior:"smooth",block:"nearest"});
-  }
-  function reset(){
-    cart.value="";fillCart();loadSel.innerHTML="";V.byLabel={};$$("#loadf").classList.add("hidden");$$("#cost").value="";
-    setDefaults();if(V.weightsOpen)toggleW();$$("#res").classList.add("hidden");wnote();
-  }
-  function toggleW(){V.weightsOpen=!V.weightsOpen;$$("#wbox").classList.toggle("hidden",!V.weightsOpen);$$("#wt").innerHTML=(V.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";}
-
-  fillCart();setDefaults();wnote();
-  cart.onchange=onCart;loadSel.onchange=onGrain;
-  $$("#wt").onclick=toggleW;
-  MKEYS.forEach(k=>$$("#w_"+k).addEventListener("input",wnote));
-  $$("#calc").onclick=calculate;$$("#reset").onclick=reset;const showLoad=it=>{cart.value=it.cartridge;onCart();loadSel.value=it.label;onGrain();calculate();};
-  $$("#cmp").onclick=()=>compareAll(V,readInputs,showLoad);
-  app.onkeydown=e=>{if(e.key==="Enter"&&e.target.tagName==="INPUT")calculate();};
-  const sh=shared[cat.title]||{};
-  if(sh.dist!=null){$$("#dist").value=sh.dist;$$("#gun").value=sh.gun;if(sh.w)MKEYS.forEach(k=>$$("#w_"+k).value=sh.w[k]);wnote();}
-  if(sh.cart&&V.groups.has(sh.cart)){cart.value=sh.cart;onCart();}
-  app._leave=()=>{shared[cat.title]={cart:cart.value,dist:$$("#dist").value,gun:$$("#gun").value,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#w_"+k).value]))};};
-  $$("#rm").onclick=()=>{
-    const it=selected();if(!it||it.source!=="custom")return;
-    if(!confirm(`Remove ${it.cartridge} ${it.label.trim()} from your list?`))return;
-    const rows=readCustom().filter(r=>!(r.category===cat.title&&sameCustom(r,it)));
-    if(!writeCustom(rows)){alert("Couldn't update saved calibers.");return;}
-    V.loads.splice(V.loads.indexOf(it),1);regroup();
-    const keep=V.groups.has(it.cartridge);const c=it.cartridge;fillCart();
-    if(keep){cart.value=c;onCart();}else reset();
-  };
-  if(cat.allow_custom)$$("#add").onclick=()=>addDialog(V,cat,regroup,c=>{fillCart();cart.value=c.cartridge;onCart();loadSel.value=c.label;onGrain();});
-  window.scrollTo(0,0);
+  if(tab==="h2h")openH2H(cat,pane);else openLoads(cat,pane);
 }
 
 // ---------- handloads ----------
@@ -685,7 +593,7 @@ function handDialog(cat,rec,cartList,done){
   q("#hc").focus();
 }
 
-// ---------- Compare Loads tab ----------
+// ---------- Load Dictionary tab ----------
 function openLoads(cat,pane){
   syncHand(cat);
   const all=state.detail[cat.title];
@@ -705,7 +613,7 @@ function openLoads(cat,pane){
     <div class="chips hidden" id="lsrc" role="group" aria-label="Source"></div>
     <div class="sortrow"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
       <select id="ls"><option value="score">Sort: best value</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
-    <div class="links"><button class="link m" id="lwt">▸&nbsp; Scoring weights</button>${cat.grain_style?'<button class="link" id="hadd">+&nbsp; Add handload</button>':""}</div>
+    <div class="links"><button class="link m" id="lwt">▸&nbsp; Scoring weights</button><span class="lright">${gradesBtn()}${cat.grain_style?'<button class="link" id="hadd">+&nbsp; Add handload</button>':""}</span></div>
     <div class="weights hidden" id="lwb"><div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="lw_${k}" inputmode="numeric"></div>`).join("")}</div>
       <div class="help">Higher = matters more. 0 ignores that factor.</div></div>
   </div>
@@ -755,15 +663,9 @@ function openLoads(cat,pane){
     if(dist==null||gun==null||bad)return null;
     let items=groups.get($$("#lc").value)||[];
     if(L.purpose!=="All")items=items.filter(x=>purposeOf(x)===L.purpose);
-    const rows=items.map(it=>({it,st:computeStats(it,dist,gun,priceOf(it))}));
-    // score each type (shotgun load type) on its own so slugs aren't judged against target loads
-    const byType=new Map();rows.forEach(r=>{const k=r.it.group||"";if(!byType.has(k))byType.set(k,[]);byType.get(k).push(r);});
-    for(const [k,rs] of byType){
-      const res=relativeScores(rs.map(r=>r.st),weights);
-      rs.forEach((r,i)=>{r.sc=res[i][0];r.overall=res[i][1];r.grade=gradeRel(r.overall);r.peers=rs.length;});
-      [...rs].sort((a,b)=>b.overall-a.overall).forEach((r,i)=>r.rank=i+1);
-    }
-    return {rows,dist,gun,multi:byType.size>1};
+    // shotgun loads are scored within their type so slugs aren't judged against target loads
+    const rows=scoreLoads(items,dist,gun,weights,items.map(priceOf),!cat.grain_style);
+    return {rows,dist,gun,multi:new Set(rows.map(r=>r.group)).size>1};
   }
   function render(){
     const out=compute(),box=$$("#lres");
@@ -779,11 +681,11 @@ function openLoads(cat,pane){
     box.innerHTML=rows.map((r,n)=>{
       const it=r.it,open=L.open===keyOf(it), edited=!it.handload&&typeof L.prices[priceKey(cat,it)]==="number";
       const badge=(gr)=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
-      const fb=k=>badge(gradeRel(r.sc[k]));
+      const fb=k=>GRADES?badge(gradeRel(r.sc[k])):`<span style="width:32px"></span>`;
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top"><span class="rk">#${r.rank}</span>
         <div class="nm">${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}</div>
-        <div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div></div>
+        ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}</div>
         ${open?`<div class="det">
           ${it.handload?"":`<div class="row"><span class="muted">${cat.grain_style?"Bullet weight":"Payload"}</span><span class="v">${payload}</span><span style="width:32px"></span></div>`}
           ${cat.grain_style?`<div class="row"><span class="muted">Test barrel</span><span class="v">${it.barrel_in?g(it.barrel_in)+" in":"not listed"}</span><span style="width:32px"></span></div>`:""}
@@ -798,7 +700,8 @@ function openLoads(cat,pane){
           <div class="row"><span class="muted">Price</span><span class="v">$${r.st.cost.toFixed(2)}${edited?" ✎":""}</span>${fb("cost")}</div>
           ${cat.terminal?`<div class="row"><span class="muted">Taylor KO</span><span class="v">${r.st.taylor.toFixed(1)}</span>${fb("taylor")}</div>
           <div class="row"><span class="muted">HITS</span><span class="v">${r.st.hits.toFixed(0)} <small class="muted">(${hitsClass(r.st.hits)})</small></span>${fb("hits")}</div>`:""}
-          <div class="muted" style="font-size:.8rem;margin-top:4px">Ranks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}. Grades compare loads of this cartridge only.</div>
+          <div class="muted" style="font-size:.8rem;margin-top:4px">${GRADES?`Overall ${r.grade} · ${r.overall.toFixed(0)} · r`:"R"}anks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}.${GRADES?" Grades compare loads of this cartridge only.":""}</div>
+          <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button></div>
           ${it.handload?`<div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn d hdel">Delete</button></div>
           <div class="note">${esc(SOURCE_NOTES.handload)}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
           <div class="note">${esc(SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE)} Catalog price estimate: $${it.default_cost.toFixed(2)}.</div></div>`}`:""}
@@ -807,6 +710,12 @@ function openLoads(cat,pane){
       const lab=c.dataset.i;
       c.onclick=e=>{if(e.target.closest(".prow,.hbtns"))return;L.open=L.open===lab?null:lab;render();};
       const it=all.find(x=>keyOf(x)===lab&&x.cartridge===$$("#lc").value);
+      const hb=c.querySelector(".h2hb");
+      if(hb&&it)hb.onclick=()=>{
+        const picks=H2H[cat.title]=H2H[cat.title]||[];
+        if(picks.includes(pickKey(it))||picks.length>=H2H_MAX){navigate("h2h",cat);return;}
+        picks.push(pickKey(it));hb.textContent=h2hText(cat,it);
+      };
       if(it&&it.handload){
         if(!c.querySelector(".hedit"))return;
         c.querySelector(".hedit").onclick=()=>openHand(it.rec);
@@ -818,7 +727,7 @@ function openLoads(cat,pane){
       if(sp)sp.onclick=()=>{const v=parseFloat(c.querySelector(".pin").value);if(!(v>=0)){alert("Enter a price, e.g. 0.45");return;}L.prices[priceKey(cat,it)]=v;writePrices(L.prices);render();};
       if(cl)cl.onclick=()=>{delete L.prices[priceKey(cat,it)];writePrices(L.prices);render();};
     });
-    $$("#lnote").textContent=`Grades compare loads of this cartridge${L.purpose!=="All"?" and purpose ("+L.purpose+")":""}; the average scores about ${REL_CENTER}. Prices are estimates.`;
+    $$("#lnote").textContent=(GRADES?`Grades compare loads of this cartridge${L.purpose!=="All"?" and purpose ("+L.purpose+")":""}; the average scores about ${REL_CENTER}. `:"")+"Prices are estimates.";
   }
   function openHand(rec){
     const cl=[...new Set([...carts,...state.loads[cat.title].map(x=>x.cartridge)])];
@@ -834,8 +743,117 @@ function openLoads(cat,pane){
   $$("#lc").onchange=()=>{L.open=null;buildChips();render();};
   ["#ld","#lg","#lf"].concat(MKEYS.map(k=>"#lw_"+k)).forEach(id=>$$(id).addEventListener("input",render));
   $$("#ls").onchange=render;
+  wireGrades(pane,render);
   $$("#lwt").onclick=()=>{L.weightsOpen=!L.weightsOpen;$$("#lwb").classList.toggle("hidden",!L.weightsOpen);$$("#lwt").innerHTML=(L.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";};
   buildChips();render();
+}
+
+// ---------- Head to Head tab ----------
+// 2-5 loads side by side, from any cartridges of the category. Each load keeps its Load
+// Dictionary grade (against every load of its own cartridge), so the two tabs always agree.
+function h2hRows(cat,picked,dist,gun,weights,priceOf,groups){
+  const done=new Map(),rows=[];
+  for(const it of picked){
+    if(!done.has(it.cartridge)){const items=groups.get(it.cartridge);done.set(it.cartridge,new Map(scoreLoads(items,dist,gun,weights,items.map(priceOf),!cat.grain_style).map(r=>[r.it,r])));}
+    rows.push(Object.assign({},done.get(it.cartridge).get(it),{best:new Set(),gap:{}}));
+  }
+  for(const k of keysOf(cat)){
+    const vals=rows.map(r=>r.st[k]),lead=METRICS[k][1]?Math.max(...vals):Math.min(...vals);
+    rows.forEach((r,i)=>{if(Math.abs(vals[i]-lead)<=1e-9*Math.max(1,Math.abs(lead)))r.best.add(k);r.gap[k]=lead===0?0:100*(vals[i]-lead)/Math.abs(lead);});
+  }
+  return rows;
+}
+function h2hDownrange(cat,items){
+  const out=[];
+  for(let n=0;n<6;n++){
+    const yd=Math.min(n*cat.step_yd,cat.max_distance);if(out.length&&yd===out[out.length-1][0])break;
+    out.push([yd,items.map(it=>{const v=velocityAt(it.muzzle_fps,it.bc_g1,yd);return [v,energy(it.bullet_gr,v)];})]);
+  }
+  return out;
+}
+const fmt0=v=>Math.round(v).toLocaleString("en-US");
+const h2hValue=(k,v)=>({velocity:`${fmt0(v)} fps`,energy:`${fmt0(v)} ft-lbs`,recoil:`${v.toFixed(1)} ft-lbs`,cost:`$${v.toFixed(2)}`,taylor:v.toFixed(1),hits:`${v.toFixed(0)} (${hitsClass(v)})`})[k];
+function openH2H(cat,pane){
+  syncHand(cat);
+  const groups=new Map([...groupBy(state.detail[cat.title],true)].filter(([,v])=>v.length)),carts=[...groups.keys()];
+  const choice=(c,key)=>(groups.get(c)||[]).find(x=>(x.hid||x.label)===key);
+  const sh=shared[cat.title]||{},prices=readPrices();
+  const priceOf=it=>{const v=prices[priceKey(cat,it)];return typeof v==="number"?v:it.default_cost;};
+  const H={weightsOpen:false};
+  // slots: [{cart, key}] where key is the load's handload id or label
+  let slots=(H2H[cat.title]||[]).map(k=>{const i=k.indexOf("|");return {cart:k.slice(0,i),key:k.slice(i+1)};}).filter(s=>choice(s.cart,s.key)).slice(0,H2H_MAX);
+  const blank=()=>({cart:slots.length?slots[slots.length-1].cart:(sh.cart&&groups.has(sh.cart)?sh.cart:""),key:""});
+  while(slots.length<H2H_MIN)slots.push(blank());
+  pane.innerHTML=`<div class="card">
+    <label class="l">LOADS TO COMPARE</label><div class="slots" id="hs"></div>
+    <button class="link" id="hadd2">+&nbsp; Add a load (up to ${H2H_MAX})</button>
+    <div class="nums" style="grid-template-columns:1fr 1fr">
+      <div><label class="l">DISTANCE (YD)</label><input id="hd" inputmode="decimal"></div>
+      <div><label class="l">${esc(cat.gun_label)}</label><input id="hg" inputmode="decimal"></div>
+    </div>
+    <div class="links"><button class="link m" id="hwt">▸&nbsp; Scoring weights</button><span class="lright">${gradesBtn()}</span></div>
+    <div class="weights hidden" id="hwb"><div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="hw_${k}" inputmode="numeric"></div>`).join("")}</div>
+      <div class="help">Higher = matters more. 0 ignores that factor.</div></div>
+  </div>
+  <div id="hres"></div><div class="note" id="hnote"></div>`;
+  const $$=s=>$(s,pane);
+  $$("#hd").value=sh.dist!=null?sh.dist:g(cat.default_distance);
+  $$("#hg").value=sh.gun!=null?sh.gun:g(cat.default_gun_lb);
+  MKEYS.forEach((k,i)=>$$("#hw_"+k).value=sh.w?sh.w[k]:cat.weights[i]);
+  app._leave=()=>{shared[cat.title]=Object.assign({},shared[cat.title],{dist:$$("#hd").value,gun:$$("#hg").value,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#hw_"+k).value]))});};
+  const picked=()=>{const out=[];for(const s of slots){const it=choice(s.cart,s.key);if(it&&!out.includes(it))out.push(it);}return out;};
+  const save=()=>{H2H[cat.title]=picked().map(pickKey);};
+  function drawSlots(){
+    $$("#hs").innerHTML=slots.map((s,i)=>`<div class="slot" data-i="${i}"><span class="n">${i+1}</span>
+      <select class="cs" aria-label="Cartridge ${i+1}"><option value="" disabled ${s.cart?"":"selected"} hidden>Cartridge…</option>${carts.map(c=>`<option value="${esc(c)}" ${c===s.cart?"selected":""}>${esc(c)}</option>`).join("")}</select>
+      <select class="ls" aria-label="Load ${i+1}"><option value="" disabled ${s.key?"":"selected"} hidden>Load…</option>${(groups.get(s.cart)||[]).map(x=>{const k=x.hid||x.label;return `<option value="${esc(k)}" ${k===s.key?"selected":""}>${esc(x.label)}${x.handload?" (handload)":""}</option>`;}).join("")}</select>
+      <button class="x" aria-label="Remove load ${i+1}">✕</button></div>`).join("");
+    $$("#hs").querySelectorAll(".slot").forEach(row=>{
+      const s=slots[+row.dataset.i];
+      row.querySelector(".cs").onchange=e=>{s.cart=e.target.value;s.key="";drawSlots();changed();};
+      row.querySelector(".ls").onchange=e=>{s.key=e.target.value;changed();};
+      row.querySelector(".x").onclick=()=>{slots.splice(slots.indexOf(s),1);while(slots.length<H2H_MIN)slots.push(blank());drawSlots();changed();};
+    });
+    $$("#hadd2").classList.toggle("hidden",slots.length>=H2H_MAX);
+  }
+  const changed=()=>{save();render();};
+  function render(){
+    const box=$$("#hres");
+    const dist=parseFloat($$("#hd").value),gun=parseFloat($$("#hg").value),weights={};let bad=false;
+    for(const k of MKEYS){const v=parseFloat($$("#hw_"+k).value);if(isNaN(v)||v<0||v>10)bad=true;weights[k]=v;}
+    $$("#hnote").textContent=(GRADES?`Each grade is the load's Load Dictionary grade: against every load of its own cartridge${cat.grain_style?"":" and load type"}, not against the others here. `:"")+"The best figure in each row is highlighted; the % shows how far the others are behind it. Prices are estimates: set your own in the Load Dictionary.";
+    if(isNaN(dist)||dist<0||dist>cat.max_distance||isNaN(gun)||gun<.5||gun>30||bad){box.innerHTML=`<div class="cnt">Enter a distance (0–${g(cat.max_distance)}), gun weight (0.5–30) and weights (0–10) to see results.</div>`;return;}
+    const pk=picked();
+    if(pk.length<H2H_MIN){box.innerHTML=`<div class="cnt">Pick at least ${H2H_MIN} loads to put them head to head.</div>`;return;}
+    const rows=h2hRows(cat,pk,dist,gun,weights,priceOf,groups),keys=keysOf(cat);
+    const badge=(gr,big)=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}${big?";margin-left:0;font-size:.95rem;padding:3px 8px":""}">${gr}</span>`;
+    const line=(name,cells,cls)=>`<tr${cls?` class="${cls}"`:""}><td>${name}</td>${cells.map(c=>`<td class="c">${c}</td>`).join("")}</tr>`;
+    const payload=it=>cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
+    const most=Math.max(...rows.map(r=>r.best.size));
+    let h=`<div class="h2h"><table><thead><tr><th></th>${rows.map(r=>`<th class="${r.it.handload?"hl":""}"><small>${esc(r.it.cartridge)}</small>${esc(r.it.label)}${r.it.handload?" <small>handload</small>":""}</th>`).join("")}</tr></thead><tbody>`;
+    if(GRADES)h+=line("Overall",rows.map(r=>`${badge(r.grade,true)} <span class="v" style="margin-left:6px">${r.overall.toFixed(0)}</span>`));
+    h+=line("Rank in its cartridge",rows.map(r=>`#${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads`),"sep");
+    h+=line(esc(cat.payload_row),rows.map(r=>payload(r.it)));
+    if(cat.grain_style)h+=line("Test barrel",rows.map(r=>r.it.barrel_in?g(r.it.barrel_in)+" in":"not listed"));
+    h+=line("Purpose",rows.map(r=>esc(r.it.purpose||r.it.group||"—")));
+    for(const k of keys){
+      h+=line(METRICS[k][0]+(k==="velocity"||k==="energy"?` at ${g(dist)} yd`:""),rows.map(r=>{const b=r.best.has(k);
+        return `<span class="v${b?" best":""}">${h2hValue(k,r.st[k])}</span><span class="gap${b?" best":""}">${b?"best":(r.gap[k]>=0?"+":"−")+Math.abs(r.gap[k]).toFixed(0)+"%"}</span>${GRADES?badge(gradeRel(r.sc[k])):""}`;}));
+    }
+    h+=line("Best in",rows.map(r=>`<span class="${r.best.size===most&&most?"v best":""}">${r.best.size} of ${keys.length}</span>`));
+    h+=`</tbody></table></div><div class="sect">DOWNRANGE · velocity (fps) and energy (ft-lbs)</div><div class="h2h"><table><thead><tr><th>Yards</th>${rows.map(r=>`<th style="font-size:.8rem;color:var(--muted)">${esc(r.it.label)}</th>`).join("")}</tr></thead><tbody>`;
+    for(const [yd,cells] of h2hDownrange(cat,pk)){
+      const top=Math.max(...cells.map(c=>c[1]));
+      h+=`<tr><td>${g(yd)}</td>${cells.map(([v,e])=>`<td class="c${e>=top-1e-9?" v best":""}">${fmt0(v)} · ${fmt0(e)}</td>`).join("")}</tr>`;
+    }
+    box.innerHTML=h+`</tbody></table></div>`;
+  }
+  drawSlots();save();
+  $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push(blank());drawSlots();const r=$$("#hs").lastElementChild;r.querySelector(r.querySelector(".cs").value?".ls":".cs").focus();};
+  ["#hd","#hg"].concat(MKEYS.map(k=>"#hw_"+k)).forEach(id=>$$(id).addEventListener("input",render));
+  $$("#hwt").onclick=()=>{H.weightsOpen=!H.weightsOpen;$$("#hwb").classList.toggle("hidden",!H.weightsOpen);$$("#hwt").innerHTML=(H.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";};
+  wireGrades(pane,render);
+  render();
 }
 
 function modal(inner){
@@ -844,86 +862,6 @@ function modal(inner){
   const close=()=>{m.remove();document.body.style.overflow="";};
   m.addEventListener("mousedown",e=>{if(e.target===m)close();});
   return [m,close];
-}
-
-function addDialog(V,cat,regroup,done){
-  const [m,close]=modal(`
-    <h3 style="margin:0 0 12px">Add your own caliber — ${esc(cat.title)}</h3>
-    <label class="l">CARTRIDGE NAME</label><input id="n" list="dl" autocomplete="off"><datalist id="dl">${V.cartridges.map(c=>`<option value="${esc(c)}">`).join("")}</datalist>
-    <div class="help">Pick an existing one to add another load to it, or type a new name.</div>
-    <div class="three"><div><label class="l">BULLET WEIGHT (GR)</label><input id="gr" inputmode="decimal"></div>
-      <div><label class="l">MUZZLE VEL. (FPS)</label><input id="fps" inputmode="decimal"></div>
-      <div><label class="l">PRICE / ROUND ($)</label><input id="pc" inputmode="decimal"></div></div>
-    <button class="link m" id="mt" style="margin-top:12px">▸&nbsp; More details (optional)</button>
-    <div id="more" class="hidden"><div class="three"><div><label class="l">LOAD NAME</label><input id="ln"></div>
-      <div><label class="l">BC (G1)</label><input id="bc" inputmode="decimal"></div>
-      <div><label class="l">POWDER (GR)</label><input id="pw" inputmode="decimal"></div></div>
-      ${cat.terminal?`<div class="three" style="grid-template-columns:1fr 2fr"><div><label class="l">DIAMETER (IN)</label><input id="dm" inputmode="decimal"></div><div class="help" style="align-self:end">Used for Taylor KO and HITS. Blank = guessed from the weight.</div></div>`:""}
-      <div class="help">Leave blank to use typical values (BC ${g(cat.default_bc)}; powder estimated from the speed and weight). Filling these in makes the recoil and long-range numbers more accurate.</div></div>
-    <div class="btns"><button class="btn p" id="save">Save caliber</button><button class="btn" id="cancel">Cancel</button></div>`);
-  const q=s=>$(s,m);
-  q("#mt").onclick=()=>{const o=q("#more").classList.toggle("hidden");q("#mt").innerHTML=(o?"▸":"▾")+"&nbsp; More details (optional)";};
-  q("#cancel").onclick=close;
-  const num=(id,label,lo,hi,blank)=>{
-    const t=q("#"+id).value.trim().replace("$","");
-    if(!t){if(blank)return null;throw new Error(`${label} is required.`);}
-    const v=Number(t);if(!isFinite(v))throw new Error(`${label} must be a number.`);
-    if(v<lo||(hi!=null&&v>hi))throw new Error(`${label} must be ${hi!=null?`between ${g(lo)} and ${g(hi)}`:`${g(lo)} or more`}.`);
-    return v;
-  };
-  q("#save").onclick=()=>{
-    let row;
-    try{
-      const name=q("#n").value.trim();if(!name)throw new Error("Enter a cartridge name.");
-      const gr=num("gr","Bullet weight",1,2000),fps=num("fps","Muzzle velocity",100,5500),cost=num("pc","Price per round",0);
-      const dm=cat.terminal?num("dm","Bullet diameter",0.1,1,true):null;
-      const bc=num("bc","Ballistic coefficient",0.01,1.5,true),pw=num("pw","Powder charge",0.1,300,true);
-      row={category:cat.title,cartridge:name,load:q("#ln").value.trim()||"Custom",bullet_gr:gr,muzzle_fps:fps,
-           bc_g1:bc!=null?bc:cat.default_bc,powder_gr:+(pw!=null?pw:estimatePowder(gr,fps)).toFixed(1),default_cost:+cost.toFixed(2)};
-      if(dm)row.diameter_in=dm;
-    }catch(e){alert(e.message);return;}
-    const it={cartridge:row.cartridge,load:row.load,bullet_gr:row.bullet_gr,muzzle_fps:row.muzzle_fps,bc_g1:row.bc_g1,powder_gr:row.powder_gr,default_cost:row.default_cost,source:"custom",group:"",is_default:false,diameter_in:row.diameter_in||0};
-    it.label=makeLabel(it,cat);
-    const taken=new Set(V.loads.filter(x=>x.cartridge===it.cartridge).map(x=>x.label));
-    const base=it.label;let n=1;
-    while(taken.has(it.label)){n++;it.label=`${base} (custom${n===2?"":" "+(n-1)})`;}
-    const rows=readCustom();rows.push(row);
-    if(!writeCustom(rows)){alert("Couldn't save: browser storage isn't available.");return;}
-    V.loads.push(it);regroup();close();done(it);
-  };
-  q("#n").focus();
-}
-
-function compareAll(V,readInputs,show){
-  let inp;try{inp=readInputs(false);}catch(e){alert(e.message);return;}
-  const cat=V.cat,refs=referenceLevels(V.loads,inp.dist,inp.gun);
-  const scored=V.loads.map(it=>{const s=computeStats(it,inp.dist,inp.gun),[,o]=scoreStats(s,refs,inp.weights);return [it,s,o];});
-  const rankOf=new Map([...scored].sort((a,b)=>b[2]-a[2]).map((t,n)=>[t[0],n+1]));
-  const rows=scored.map(([it,s,o])=>[rankOf.get(it),it.cartridge,it.label,Math.round(s.weight),Math.round(s.velocity),Math.round(s.energy),+s.recoil.toFixed(1),+s.taylor.toFixed(1),Math.round(s.hits),s.cost,+o.toFixed(1),gradeFor(o),it]);
-  const allCols=["Rank",cat.cartridge_label.charAt(0)+cat.cartridge_label.slice(1).toLowerCase(),"Load",cat.payload_col,"Velocity (fps)","Energy (ft-lbs)","Recoil (ft-lbs)","Taylor KO","HITS","Cost ($)","Score (%)","Grade"];
-  const cols=allCols.filter(c=>cat.terminal||(c!=="Taylor KO"&&c!=="HITS"));
-  const keepCols=new Set(["Rank","Load","Score (%)","Grade"]);
-  const bestFirst=new Set(["Rank",allCols[3],"Velocity (fps)","Energy (ft-lbs)","Taylor KO","HITS","Score (%)"]);
-    const [m,close]=modal(`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="margin:0">${esc(cat.title)}: all loads at ${g(inp.dist)} yards</h3><button class="btn" id="x">Close</button></div>
-    <div class="filters"><input id="flt" type="search" placeholder="Filter, e.g. federal 168" autocomplete="off"><select id="fc"><option value="">All ${esc(cat.cartridge_label.toLowerCase())}s</option>${V.cartridges.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select></div>
-    <div class="cnt" id="cnt"></div>
-    <div class="tblwrap"><table><thead><tr>${cols.map((c,i)=>`<th data-i="${i}"${c==="Load"?' class="ld"':keepCols.has(c)?"":' class="mn"'}>${esc(c)}</th>`).join("")}</tr></thead><tbody></tbody></table></div>
-    <div class="note">Tap a heading to sort and a row to open it in the calculator. Scores use your current weights and each load's default price.</div>`);
-  $("#x",m).onclick=close;
-  const st={col:"Score (%)",desc:true},tb=$("tbody",m);let shown=[];
-  const render=()=>{
-    const terms=$("#flt",m).value.toLowerCase().split(/\s+/).filter(Boolean),want=$("#fc",m).value;
-    shown=rows.filter(r=>(!want||r[1]===want)&&terms.every(t=>(r[1]+" "+r[2]).toLowerCase().includes(t)));
-    const i=allCols.indexOf(st.col);
-    shown.sort((a,b)=>{const x=a[i],y=b[i],c=x<y?-1:x>y?1:0;return c?(st.col==="Rank"?c:(st.desc?-c:c)):a[0]-b[0];});
-    tb.innerHTML=shown.map((r,n)=>`<tr data-n="${n}"><td>${r[0]}</td><td class="mn">${esc(r[1])}</td><td class="ld"><span class="pc">${esc(r[1])}</span>${esc(r[2])}</td><td class="mn">${r[3]}</td><td class="mn">${r[4]}</td><td class="mn">${r[5]}</td><td class="mn">${r[6]}</td>${cat.terminal?`<td class="mn">${r[7]}</td><td class="mn">${r[8]}</td>`:""}<td class="mn">${r[9].toFixed(2)}</td><td>${r[10]}</td><td><span class="badge" style="background:${GRADE_COLORS[r[11]][0]};color:${GRADE_COLORS[r[11]][1]}">${r[11]}</span></td></tr>`).join("");
-    $("#cnt",m).textContent=`Showing ${shown.length} of ${rows.length} loads`;
-  };
-  const sortBy=col=>{st.desc=st.col===col?!st.desc:bestFirst.has(col);st.col=col;render();};
-  m.querySelectorAll("th").forEach(th=>th.onclick=()=>sortBy(cols[+th.dataset.i]));
-  tb.onclick=e=>{const tr=e.target.closest("tr");if(!tr)return;const r=shown[+tr.dataset.n];close();show(r[12]);};
-  $("#flt",m).addEventListener("input",render);$("#fc",m).addEventListener("change",render);
-  render();
 }
 
 $("#ver").textContent=VERSION_TEXT;$("#size1").innerHTML=sizeCtl();$("#size2").innerHTML=sizeCtl();wireSize(document.body);

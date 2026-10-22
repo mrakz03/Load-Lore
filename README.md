@@ -2,15 +2,15 @@
 
 Grades ammo from S to F on velocity, energy, recoil and price, with Taylor KO and HITS shown for rifle and handgun loads. There is a desktop app (Python/Tkinter, Windows and Linux) and a phone/web version (installable as an Android APK).
 
-Two ways to compare (both in the sidebar):
-- **Compare Cartridges**: which caliber is the best value, graded against the whole category.
-- **Compare Loads**: which brand or load of one cartridge is best, filterable by purpose (hunting, target, match, defense...). Reloaders can add their own handloads (bullet, powder, charge, velocity, cost per round), see them graded against factory ammo, and edit or delete them.
+Two tools (both in the sidebar):
+- **Load Dictionary**: every brand's load of one cartridge, graded against each other and filterable by purpose (hunting, target, match, defense...). The S–F grades can be switched off. Reloaders can add their own handloads (bullet, powder, charge, velocity, cost per round), see them graded against factory ammo, and edit or delete them.
+- **Head to Head**: put 2 to 5 loads side by side, even from different cartridges of the same category: every figure with the best one highlighted and how far behind the others are, plus a downrange velocity and energy table. Each load keeps its Load Dictionary grade.
 
 ## Repository layout
 ```
 src/cartridge_calculator.py   desktop app (single file, standard library only)
-data/ammo_*.csv               general cartridge data (Compare Cartridges)
-data/loads_*.csv              per-manufacturer loads (Compare Loads)
+data/loads_*.csv              per-manufacturer loads (Load Dictionary, Head to Head)
+data/ammo_*.csv               cartridge list with generic loads (cartridges with no factory loads can still hold handloads)
 data/bullets.csv              common bullets (weight, diameter, approximate G1 BC) for the handload form
 web/template.html             phone/web app (single page)
 web/build_web.py              embeds the CSV data into web/www/index.html
@@ -27,7 +27,7 @@ package.json, capacitor.config.json   Android wrapper (Capacitor)
 python3 src/cartridge_calculator.py        # desktop app (needs Tk: python3-tkinter)
 python3 web/build_web.py                   # then open web/www/index.html in a browser
 ```
-Your own calibers (`my_calibers.csv`), handloads (`my_handloads.csv`) and settings (`settings.json`) are saved in `data/` and are git-ignored. On the phone/web version they are kept in the browser.
+Your handloads (`my_handloads.csv`) and settings (`settings.json`) are saved in `data/` and are git-ignored. On the phone/web version they are kept in the browser.
 
 ## Making a release
 ```
@@ -58,7 +58,7 @@ bash CartridgeCalculator/install.sh
 - `bullets.csv` BCs are approximate published G1 figures; edit them (or type your own in the form) if you know better. Handload figures are only as good as your data: always follow published load manuals.
 - Cartridges beyond the core list come from the Hornady catalog; a few popular ones with no catalog data (7.62x54mmR, 5.45x39mm, 7.62x25mm Tokarev, .38 Super, .32 S&W Long) use typical factory figures, marked as such.
 - 5.56x45mm NATO loads are listed under .223 Remington and 7.62x51mm NATO under .308 Winchester.
-- Metric cartridges are named with "mm" (7.62x39mm, 7.62x54mmR). Saved handloads, calibers and prices that use the older names (7.62x39, 7.62x54R) are matched up automatically; the old-to-new list is `RENAMED_CARTRIDGES` in `src/cartridge_calculator.py`.
+- Metric cartridges are named with "mm" (7.62x39mm, 7.62x54mmR). Saved handloads and prices that use the older names (7.62x39, 7.62x54R) are matched up automatically; the old-to-new list is `RENAMED_CARTRIDGES` in `src/cartridge_calculator.py`.
 - After editing any CSV or `web/template.html`, run `python3 web/build_web.py`.
 
 ## Taylor KO and HITS
