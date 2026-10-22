@@ -178,7 +178,8 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .slot{display:grid;grid-template-columns:1.4em minmax(0,1fr) minmax(0,2fr) 2.2em;gap:8px;align-items:center}
 .slot .n{font-weight:800;color:var(--muted)}
 .slot .x{background:none;border:0;color:var(--muted);font:inherit;font-size:1.1rem;font-weight:700;cursor:pointer;min-height:40px}
-.slot .x:hover{color:var(--text)}
+.slot .x:hover{color:var(--text);background:var(--surface2)}
+.slot .x{border-radius:8px;min-width:40px}.slot .x.gone{visibility:hidden}
 @media(max-width:600px){.slot{grid-template-columns:1.4em minmax(0,1fr) 2.2em}.slot .ls{grid-column:2}}
 .h2h{overflow:auto;margin-top:12px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
 .h2h table{font-size:.9rem}
@@ -875,12 +876,13 @@ function openH2H(cat,pane){
     $$("#hs").innerHTML=slots.map((s,i)=>`<div class="slot" data-i="${i}"><span class="n">${i+1}</span>
       <select class="cs" aria-label="Cartridge ${i+1}"><option value="" disabled ${s.cart?"":"selected"} hidden>Cartridge…</option>${carts.map(c=>`<option value="${esc(c)}" ${c===s.cart?"selected":""}>${esc(c)}</option>`).join("")}</select>
       <select class="ls" aria-label="Load ${i+1}"><option value="" disabled ${s.key?"":"selected"} hidden>Load…</option>${(groups.get(s.cart)||[]).map(x=>{const k=x.hid||x.label;return `<option value="${esc(k)}" ${k===s.key?"selected":""}>${esc(x.label)}${x.handload?" (handload)":""}</option>`;}).join("")}</select>
-      <button class="x" aria-label="Remove load ${i+1}">✕</button></div>`).join("");
+      <button class="x${slots.length<=H2H_MIN&&!s.key?" gone":""}" aria-label="Remove load ${i+1}">✕</button></div>`).join("");
     $$("#hs").querySelectorAll(".slot").forEach(row=>{
       const s=slots[+row.dataset.i];
       row.querySelector(".cs").onchange=e=>{s.cart=e.target.value;s.key="";drawSlots();changed();};
-      row.querySelector(".ls").onchange=e=>{s.key=e.target.value;changed();};
-      row.querySelector(".x").onclick=()=>{slots.splice(slots.indexOf(s),1);while(slots.length<H2H_MIN)slots.push(blank());drawSlots();changed();};
+      row.querySelector(".ls").onchange=e=>{s.key=e.target.value;drawSlots();changed();};
+      // ✕ removes the row; with only the 2 rows left it clears the load instead (issue #16)
+      row.querySelector(".x").onclick=()=>{if(slots.length<=H2H_MIN)s.key="";else slots.splice(slots.indexOf(s),1);drawSlots();changed();};
     });
     $$("#hadd2").classList.toggle("hidden",slots.length>=H2H_MAX);
   }

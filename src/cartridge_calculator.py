@@ -2608,12 +2608,12 @@ class HeadToHeadView:
         slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], state="readonly",
                                         font=a.f(11), width=40)
         slot["x"] = tk.Label(self.slot_box, text="✕", bg=SURFACE, fg=MUTED, font=a.f(12, True),
-                             padx=8, cursor="hand2")
+                             padx=10, pady=2, cursor="hand2")
         slot["cart_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cart(s))
-        slot["load_box"].bind("<<ComboboxSelected>>", lambda e: self._changed())
+        slot["load_box"].bind("<<ComboboxSelected>>", lambda e: (self._layout_slots(), self._changed()))
         slot["x"].bind("<Button-1>", lambda e, s=slot: self._remove_slot(s))
-        slot["x"].bind("<Enter>", lambda e, s=slot: s["x"].config(fg=TEXT))
-        slot["x"].bind("<Leave>", lambda e, s=slot: s["x"].config(fg=MUTED))
+        slot["x"].bind("<Enter>", lambda e, s=slot: s["x"].config(fg=TEXT, bg=SURFACE_2))
+        slot["x"].bind("<Leave>", lambda e, s=slot: s["x"].config(fg=MUTED, bg=SURFACE))
         self.slots.append(slot)
         self._fill_loads(slot)
         self._layout_slots()
@@ -2633,6 +2633,8 @@ class HeadToHeadView:
             slot["cart_box"].grid(row=n, column=1, sticky="w", pady=3)
             slot["load_box"].grid(row=n, column=2, sticky="ew", padx=(8, 0), pady=3)
             slot["x"].grid(row=n, column=3, sticky="w", padx=(4, 0), pady=3)
+            if len(self.slots) <= H2H_MIN and not slot["load"].get():
+                slot["x"].grid_remove()           # nothing to remove: the 2 rows always stay
         if len(self.slots) >= H2H_MAX:
             self.add_link.grid_remove()
         else:
@@ -2641,10 +2643,17 @@ class HeadToHeadView:
     def _on_cart(self, slot):
         slot["load"].set("")
         self._fill_loads(slot)
+        self._layout_slots()
         slot["load_box"].focus_set()
         self._changed()
 
     def _remove_slot(self, slot):
+        """✕: remove the row, or with only the 2 rows left, just clear its load (issue #16)."""
+        if len(self.slots) <= H2H_MIN:
+            slot["load"].set("")
+            self._layout_slots()
+            self._changed()
+            return
         for key in ("num", "cart_box", "load_box", "x"):
             slot[key].destroy()
         self.slots.remove(slot)
