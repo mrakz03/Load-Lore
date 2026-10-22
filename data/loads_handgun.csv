@@ -41,6 +41,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .25 ACP,Winchester USA Full Metal Jacket,50,760,0.092,1,0.44,,catalog,,2,Target
 7.62x25mm Tokarev,Fiocchi Heritage FMJ,85,1525,0.121,7.3,0.20,,partial,,,Target
 7.62x25mm Tokarev,Winchester USA Full Metal Jacket,85,1645,0.121,8.5,0.20,,partial,,,Target
+7.62x25mm Tokarev,Sellier & Bellot FMJ,85,1857,0.121,10.8,0.60,,partial,,,Target
 .32 ACP,Fiocchi Defense Dynamics SJHP,60,1100,0.084,2.2,1.82,,partial,,,Defense
 .32 ACP,Hornady Critical Defense FTX,60,1000,0.071,1.9,1.82,,catalog,,4,Defense
 .32 ACP,Hornady Custom XTP,60,1000,0.092,1.9,1.82,,catalog,,4,Defense
@@ -92,6 +93,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .38 Super,PMC Bronze Full Metal Jacket +P,130,1100,0.158,5.8,0.86,,partial,,,Target
 .380 ACP,Black Hills HoneyBadger,60,1150,0.065,2.3,1.86,,partial,,3.25,Defense
 .380 ACP,Federal American Eagle IRT Lead Free RHT,70,1110,0.094,2.5,0.44,,catalog,,3.75,Target
+.380 ACP,Sellier & Bellot XRG Defense,77,1115,0.103,2.8,1.44,,partial,,,Defense
 .380 ACP,SIG Sauer Legion TAC-XP HP,80,1110,0.107,2.9,1.25,,published,,3.75,Defense
 .380 ACP,Federal Personal Defense Punch JHP,85,1000,0.093,2.5,1.69,,catalog,,3.75,Defense
 .380 ACP,Federal Train+Protect JHP,85,1000,0.103,2.5,1.69,,catalog,,3.75,Defense
@@ -106,6 +108,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .380 ACP,SIG Sauer Elite V-Crown JHP,90,980,0.097,2.5,1.25,,partial,,3.75,Defense
 .380 ACP,SIG Sauer 365 Elite V-Crown JHP,90,980,0.148,2.5,1.25,,published,,3.75,Defense
 .380 ACP,Black Hills Jacketed Hollow Point,90,950,0.097,2.3,1.86,,partial,,3.25,Defense
+.380 ACP,Sellier & Bellot FMJ,92,955,0.134,2.4,0.37,,partial,,,Target
 .380 ACP,CCI Blazer Aluminum FMJ,95,945,0.134,2.5,0.44,yes,catalog,,3.75,Target
 .380 ACP,CCI Blazer Brass FMJ RN,95,945,0.134,2.5,0.44,,catalog,,3.75,Target
 .380 ACP,Federal American Eagle FMJ,95,980,0.103,2.7,0.44,,catalog,,3.75,Target
@@ -126,10 +129,13 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .380 ACP,Black Hills Full Metal Jacket,100,850,0.141,2.1,0.48,,partial,,3.25,Target
 .380 ACP,Remington Golden Saber Brass Jacketed Hollow Point,102,940,0.148,2.6,1.69,,catalog,,4,Defense
 9mm Luger,Federal American Eagle IRT Lead Free RHT,70,1625,0.096,5.4,0.26,,catalog,,4,Target
+9mm Luger,Sellier & Bellot Nontox FMJ (zinc core),91,1493,0.132,6.0,0.22,,partial,,,Target
 9mm Luger,Winchester Super Clean Zinc FMJ,95,1225,0.138,4.2,0.26,,catalog,,4,Target
 9mm Luger,CCI Blazer Brass FMJ RN,100,1130,0.106,3.7,0.26,,catalog,,4,Target
 9mm Luger,Hornady Critical Defense Lite FTX,100,1125,0.111,3.7,0.99,,catalog,,4,Defense
 9mm Luger,Black Hills HoneyBadger +P,100,1250,0.108,4.5,1.09,,partial,,4,Defense
+9mm Luger,Sellier & Bellot Soft Point,100,1404,0.119,5.7,0.84,,partial,,,Defense
+9mm Luger,Sellier & Bellot XRG Defense,100,1312,0.111,5.0,0.84,,partial,,,Defense
 9mm Luger,CCI Blazer Aluminum FMJ,115,1145,0.155,4.4,0.26,,catalog,,4,Target
 9mm Luger,CCI Blazer Brass FMJ RN,115,1145,0.155,4.4,0.26,,catalog,,4,Target
 9mm Luger,CCI Blazer Brass HP JHP,115,1145,0.159,4.4,0.99,,catalog,,4,Defense
@@ -167,6 +173,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 9mm Luger,Black Hills EXP HP,115,1200,0.159,4.8,1.09,,partial,,4,Defense
 9mm Luger,Black Hills Barnes TAC-XP +P,115,1200,0.124,4.8,1.09,,partial,,4,Defense
 9mm Luger,IMI Di-Cut JHP,115,1150,0.159,4.4,0.99,,partial,,4,Defense
+9mm Luger,Sellier & Bellot JHP,115,1237,0.159,5.1,0.84,,partial,,,Defense
+9mm Luger,Sellier & Bellot FMJ,115,1280,0.155,5.5,0.22,,partial,,,Target
 9mm Luger,CCI Blazer Brass FMJ RN,124,1090,0.170,4.3,0.26,,catalog,,4,Target
 9mm Luger,CCI Blazer Brass HP JHP,124,1100,0.180,4.4,0.99,,catalog,,4,Defense
 9mm Luger,Federal American Eagle FMJ,124,1150,0.154,4.8,0.26,,catalog,,4,Target
@@ -210,6 +218,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 9mm Luger,Black Hills Jacketed Hollow Point,124,1150,0.180,4.8,1.09,,partial,,4,Defense
 9mm Luger,IMI Black Dot JHP +P,124,1180,0.180,5.0,0.99,,partial,,4,Defense
 9mm Luger,Nosler Defense Bonded JHP +P,124,1200,0.180,5.2,2.30,,partial,,,Defense
+9mm Luger,Sellier & Bellot JHP,124,1201,0.180,5.2,0.84,,partial,,,Defense
+9mm Luger,Sellier & Bellot Soft Point,124,1165,0.148,4.9,0.84,,partial,,,Defense
+9mm Luger,Sellier & Bellot FMJ,124,1181,0.170,5.0,0.22,,partial,,,Target
 9mm Luger,Black Hills HoneyBadger Subsonic,125,1000,0.135,3.6,1.09,,partial,,4,Defense
 9mm Luger,Federal Syntech PCC TSJ,130,1130,0.155,4.9,0.26,,catalog,,16,Target
 9mm Luger,Federal Premium Personal Defense Hydra-Shok Deep,135,1060,0.185,4.4,0.99,,catalog,,4,Defense
@@ -220,6 +231,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 9mm Luger,Speer Lawman Training Total Metal Jacket,135,1120,0.145,5,0.26,,partial,,,Target
 9mm Luger,Federal Syntech Defense SHP,138,1050,0.111,4.5,0.99,,catalog,,4,Defense
 9mm Luger,Hornady Backcountry Defense DGH +P,138,1150,0.198,5.4,0.99,,catalog,,4,Defense
+9mm Luger,Sellier & Bellot Subsonic FMJ,140,1001,0.161,4.1,0.84,,partial,,,Subsonic
 9mm Luger,Remington CAST,145,1110,0.147,5.2,0.26,,catalog,,4,Target
 9mm Luger,CCI Blazer Brass Clean-Fire Suppressor TMJ,147,900,0.158,3.5,0.26,,partial,,4,Target
 9mm Luger,CCI Blazer Brass FMJ FN,147,950,0.169,3.9,0.26,,catalog,,4,Target
@@ -253,9 +265,11 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 9mm Luger,SIG Sauer Match Elite Competition JHP,147,880,0.206,3.3,0.90,,partial,,4,Match
 9mm Luger,SIG Sauer Elite V-Crown JHP,147,985,0.155,4.2,1.25,,partial,,4,Defense
 9mm Luger,Federal Syntech Action Pistol TSJ,150,890,0.204,3.5,0.26,,catalog,,4,Target
+9mm Luger,Sellier & Bellot Subsonic FMJ,150,1001,0.172,4.4,0.84,,partial,,,Subsonic
 9mm Luger,Fiocchi Range Dynamics FMJ,158,850,0.170,3.3,0.26,,partial,,,Target
 .357 Magnum,Remington HTP Semi-Jacketed Hollow Point,110,1295,0.098,10.3,2.47,,catalog,,4,Defense
 .357 Magnum,Winchester USA Jacketed Hollow Point,110,1295,0.102,10.3,2.47,,catalog,,4,Defense
+.357 Magnum,Sellier & Bellot XRG Defense,110,1591,0.135,15.5,2.10,,partial,,6,Defense
 .357 Magnum,Federal Train+Protect JHP,125,1440,0.133,14.5,2.47,,catalog,,4,Defense
 .357 Magnum,Fiocchi CovertX JHP,125,1425,0.133,14.2,2.47,,partial,,,Defense
 .357 Magnum,Fiocchi Defense Dynamics JHP,125,1450,0.133,14.7,2.47,,partial,,,Defense
@@ -299,6 +313,10 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 Magnum,Winchester Super-X Jacketed Hollow Point (hunting),158,1235,0.149,13.5,2.47,,catalog,,4,Hunting
 .357 Magnum,Winchester Super-X Jacketed Soft Point (hunting),158,1235,0.149,13.5,0.95,,catalog,,4,Hunting
 .357 Magnum,Black Hills Jacketed Hollow Point,158,1250,0.168,13.8,1.56,,partial,,6,Hunting
+.357 Magnum,Sellier & Bellot Soft Point,158,1263,0.186,14.1,1.21,,partial,,6,Hunting
+.357 Magnum,Sellier & Bellot FMJ,158,1263,0.177,14.1,0.55,,partial,,6,Target
+.357 Magnum,Sellier & Bellot Lead Flat Nose,158,1125,0.205,11.2,0.55,,partial,,6,Target
+.357 Magnum,Sellier & Bellot SJHP,158,1329,0.168,15.6,2.10,,partial,,6,Defense
 .357 Magnum,Federal Power-Shok JHP,180,1080,0.212,11.7,2.47,,catalog,,4,Hunting
 .357 Magnum,Federal Premium Hunting Handgun Solid Core,180,1400,0.204,19.7,1.42,,catalog,,6,Hunting
 .357 Magnum,Federal Premium Hunting Handgun Swift A-Frame,180,1130,0.186,12.9,1.42,,catalog,,6,Hunting
@@ -312,6 +330,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .38 Special,Remington HTP Semi-Jacketed Hollow Point,110,950,0.126,3.6,1.69,,catalog,,4,Defense
 .38 Special,Remington HTP Semi-Jacketed Hollow Point +P,110,995,0.128,4,1.69,,catalog,,4,Defense
 .38 Special,Winchester Silvertip Plated JHP,110,945,0.150,3.6,1.69,,catalog,,4,Defense
+.38 Special,Sellier & Bellot XRG Defense,110,1115,0.123,4.9,1.44,,partial,,,Defense
 .38 Special,Federal Personal Defense Punch JHP +P,120,1000,0.096,4.4,1.69,,catalog,,4,Defense
 .38 Special,CCI Blazer Aluminum JHP +P [vented test barrel],125,945,0.132,4.1,1.69,,catalog,,4,Defense
 .38 Special,CCI Blazer Brass FMJ FN [vented test barrel],125,865,0.149,3.4,0.44,,catalog,,4,Target
@@ -362,10 +381,16 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .38 Special,Speer Lawman Clean-Fire Training Total Metal Jacket +P,158,900,0.168,4.7,0.44,,partial,,,Target
 .38 Special,Speer Lawman Training Total Metal Jacket +P,158,900,0.168,4.7,0.44,,partial,,,Target
 .38 Special,Winchester USA Lead,158,800,0.135,3.7,0.44,,catalog,,4,Target
+.38 Special,Sellier & Bellot Lead Round Nose,158,997,0.181,5.8,0.37,,partial,,,Target
+.38 Special,Sellier & Bellot Soft Point,158,889,0.168,4.6,1.44,,partial,,,Defense
+.38 Special,Sellier & Bellot FMJ,158,889,0.177,4.6,0.37,,partial,,,Target
+.38 Special,Sellier & Bellot Lead Flat Nose,158,938,0.181,5.1,0.37,,partial,,,Target
 9x18mm Makarov,Hornady Critical Defense FTX,95,1000,0.102,3.0,1.17,yes,catalog,,4,Defense
 9x18mm Makarov,Fiocchi Heritage FMJ,95,1020,0.102,3.7,0.88,,partial,,,Target
 9x18mm Makarov,Winchester USA Full Metal Jacket,95,1015,0.102,3.6,0.88,,partial,,,Target
+9x18mm Makarov,Sellier & Bellot FMJ,95,1017,0.102,3.1,0.50,,partial,,,Target
 10mm Auto,Black Hills HoneyBadger,115,1600,0.098,9.8,2.43,,partial,,5,Defense
+10mm Auto,Sellier & Bellot XRG Defense,130,1362,0.110,8.1,1.88,,partial,,,Defense
 10mm Auto,Hornady Handgun Hunter MonoFlex,135,1315,0.103,7.8,1.27,,catalog,,5,Hunting
 10mm Auto,Hornady LEVERevolution FTX,150,1220,0.095,7.5,0.98,,catalog,,5,Hunting
 10mm Auto,Fiocchi Hyperformance Hunt Barnes XPB,155,1165,0.131,7.1,2.21,,partial,,,Defense
@@ -393,6 +418,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 10mm Auto,Winchester USA Ready,180,1250,0.170,9.4,0.58,,catalog,,5,Target
 10mm Auto,SIG Sauer Elite Ball FMJ,180,1250,0.146,9.4,0.80,,partial,,5,Target
 10mm Auto,SIG Sauer Elite V-Crown JHP,180,1250,0.175,9.4,1.50,,partial,,5,Defense
+10mm Auto,Sellier & Bellot FMJ,180,1165,0.146,8.2,0.49,,partial,,,Target
+10mm Auto,Sellier & Bellot JHP,180,1165,0.175,8.2,1.88,,partial,,,Defense
 10mm Auto,CCI Blazer Aluminum FMJ,200,1050,0.173,7.4,0.58,,catalog,,5,Target
 10mm Auto,Federal Fusion SP,200,1200,0.190,9.7,0.85,,catalog,,5,Hunting
 10mm Auto,Federal Personal Defense Punch JHP,200,1100,0.228,8.1,2.21,,catalog,,5,Defense
@@ -412,6 +439,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 10mm Auto,Federal Syntech Range TSJ,205,1150,0.175,9.1,0.58,,catalog,,5,Target
 .40 S&W,Black Hills HoneyBadger,115,1325,0.098,5.6,1.57,,partial,,4.5,Defense
 .40 S&W,Winchester Super Clean Zinc FMJ,120,1250,0.127,5.2,0.37,,catalog,,4,Target
+.40 S&W,Sellier & Bellot XRG Defense,130,1247,0.110,5.6,1.22,,partial,,,Defense
 .40 S&W,Hornady Handgun Hunter MonoFlex,135,1130,0.114,4.8,0.83,,partial,,4,Hunting
 .40 S&W,Black Hills Barnes TAC-XP,140,1150,0.119,5.2,1.57,,partial,,4.5,Defense
 .40 S&W,Federal American Eagle FMJ,155,1160,0.134,5.8,0.37,,catalog,,4,Target
@@ -442,6 +470,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .40 S&W,Fiocchi Range Dynamics FMJTC,165,1020,0.139,4.8,0.37,,partial,,,Target
 .40 S&W,Federal Premium Personal Defense Hydra-Shok Deep,165,1050,0.155,5.1,1.43,,catalog,,4,Defense
 .40 S&W,SIG Sauer Elite V-Crown JHP,165,1090,0.155,5.5,1.50,,partial,,4,Defense
+.40 S&W,Sellier & Bellot FMJ,165,1027,0.138,4.9,0.31,,partial,,,Target
 .40 S&W,Fiocchi Range Dynamics FMJTC,170,1020,0.143,4.9,0.37,,partial,,,Target
 .40 S&W,Winchester USA Ready Defense Hex-Vent JHP,170,1170,0.180,6.5,1.43,,catalog,,4,Defense
 .40 S&W,Federal Syntech Defense SHP,175,1000,0.111,4.9,1.43,,catalog,,4,Defense
@@ -479,6 +508,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .40 S&W,SIG Sauer Elite Ball FMJ,180,985,0.153,4.8,0.70,,partial,,4,Target
 .40 S&W,SIG Sauer Elite V-Crown JHP,180,985,0.182,4.8,1.50,,partial,,4,Defense
 .40 S&W,Black Hills Jacketed Hollow Point,180,1000,0.182,5.0,1.57,,partial,,4.5,Defense
+.40 S&W,Sellier & Bellot FMJ,180,968,0.153,4.7,0.31,,partial,,,Target
+.40 S&W,Sellier & Bellot JHP,180,974,0.182,4.7,1.22,,partial,,,Defense
 .40 S&W,Federal Premium Hunting Handgun Solid Core,200,1000,0.206,5.6,0.83,,catalog,,4,Hunting
 .40 S&W,Nosler Defense Bonded JHP,200,900,0.202,4.5,2.20,,partial,,,Defense
 .40 S&W,Federal Syntech Action Pistol TSJ,205,830,0.174,3.9,0.37,,catalog,,4,Target
@@ -520,6 +551,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .44 Magnum,Winchester Big Bore Semi Jacketed Hollow Point (hunting),240,1485,0.170,33.7,3.51,,catalog,,8.375,Hunting
 .44 Magnum,Winchester USA Jacketed Soft Point (hunting),240,1180,0.177,21.3,0.92,,catalog,,4,Hunting
 .44 Magnum,Black Hills Jacketed Hollow Point,240,1260,0.169,24.3,3.86,,partial,,6.5,Hunting
+.44 Magnum,Sellier & Bellot Soft Point,240,1280,0.186,25.0,2.98,,partial,,6,Hunting
+.44 Magnum,Sellier & Bellot SJHP,240,1280,0.169,25.0,2.98,,partial,,6,Hunting
 .44 Magnum,Federal Premium Hunting Handgun Swift A-Frame,280,1170,0.155,24.4,2.03,,catalog,,6,Hunting
 .44 Magnum,Federal Premium Hunting Handgun Solid Core,300,1150,0.170,25.3,2.03,,catalog,,6.5,Hunting
 .44 Magnum,Hornady Custom XTP,300,1150,0.250,25.3,3.51,,catalog,,7,Hunting
@@ -537,6 +570,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 ACP,Black Hills HoneyBadger,135,1250,0.090,6.6,1.86,,partial,,5,Defense
 .45 ACP,Hornady Handgun Hunter MonoFlex +P,160,1110,0.128,6.2,0.98,,catalog,,5,Hunting
 .45 ACP,Winchester Super Clean Zinc FMJ,160,1100,0.143,6.1,0.44,,catalog,,5,Target
+.45 ACP,Sellier & Bellot XRG Defense,165,1148,0.127,6.8,1.44,,partial,,,Defense
 .45 ACP,Federal Premium Gold Medal FMJ-SWC Match,185,770,0.093,3.5,0.98,,catalog,,5,Match
 .45 ACP,Hornady American Gunner XTP,185,970,0.142,5.5,1.69,,catalog,,5,Defense
 .45 ACP,Hornady Critical Defense FTX,185,900,0.143,4.7,1.69,,catalog,,3,Defense
@@ -607,6 +641,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 ACP,Black Hills Jacketed Hollow Point,230,850,0.194,5.3,1.86,,partial,,5,Defense
 .45 ACP,Black Hills Jacketed Hollow Point +P,230,950,0.194,6.6,1.86,,partial,,5,Defense
 .45 ACP,Nosler Defense Bonded JHP +P,230,950,0.194,6.6,2.55,,partial,,,Defense
+.45 ACP,Sellier & Bellot FMJ,230,853,0.156,5.3,0.37,,partial,,,Target
+.45 ACP,Sellier & Bellot JHP,230,889,0.194,5.8,1.44,,partial,,,Defense
 .45 ACP,Federal Premium Hunting Handgun Solid Core +P,240,1000,0.186,7.6,0.98,,catalog,,5,Hunting
 .45 Colt,Hornady Critical Defense FTX,185,920,0.143,6.6,2.99,,catalog,,3,Defense
 .45 Colt,CCI Blazer Aluminum JHP,200,1000,0.142,8.5,2.99,,catalog,,7.26,Hunting
