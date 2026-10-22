@@ -62,8 +62,8 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .wrap.home{max-width:760px}
   .nav>button.phone{display:none}
 }
-.lgrid{align-items:start;display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
-@media(min-width:720px){.lgrid{grid-template-columns:1fr 1fr}}
+.lgrid{align-items:start;display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-top:12px}
+@media(min-width:720px){.lgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 .lc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;cursor:pointer}
 .lc.open{border-color:var(--accent)}
 .lc .top{display:flex;gap:10px;align-items:flex-start}
@@ -193,10 +193,14 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .h2h .gap{font-size:.75rem;color:var(--muted);margin-left:6px}.h2h .gap.best{font-weight:700}
 .h2h .badge{display:inline-block;margin-left:8px;min-width:24px;font-size:.75rem;padding:1px 5px}
 .h2h tr.sep td{border-bottom:2px solid var(--border)}
+details.btab{margin-top:10px}
+details.btab summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.9rem;padding:6px 0}
+details.btab table th,details.btab table td{text-align:right;padding:7px 8px}
+details.btab th small{display:block;font-weight:600;color:var(--muted)}
+details.btab table td:first-child,details.btab table th:first-child{text-align:left;position:static}
 .h2hm{display:none}
 @media(max-width:600px){
   .h2hw{display:none}.h2hm{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-  .h2hm .num{flex:none;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent);color:var(--on-accent);font-weight:800;font-size:.8rem;display:inline-flex;align-items:center;justify-content:center}
   .mload{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
   .mload.hl{border-left:3px solid var(--hand)}
   .mload .mi{flex:1;min-width:0}.mload small{display:block;color:var(--muted);font-size:.72rem;font-weight:700}
@@ -207,17 +211,16 @@ th:nth-child(1){background:var(--surface2);z-index:2}
   .mcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
   .mcard .mt{font-weight:800;display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
   .mcard .mt small{color:var(--muted);font-weight:600;font-size:.78rem}.mcard .mt .hint{margin-left:auto;font-size:.7rem}
-  .mrow{display:grid;grid-template-columns:1.6rem 1fr auto auto;column-gap:8px;row-gap:4px;align-items:center;padding:6px 0}
+  .mrow{display:grid;grid-template-columns:1fr auto auto;column-gap:8px;row-gap:3px;align-items:center;padding:7px 0;border-top:1px solid var(--border)}
+  .mt+.mrow,.mdr+.mrow{border-top:0}
+  .mrow .mname{grid-column:1/4;font-size:.8rem;color:var(--muted);font-weight:600;line-height:1.3}
+  .mrow .mname.hl{color:var(--hand)}
+  .chips.mdr{margin:4px 0 6px}.chips.mdr button{min-height:32px;padding:5px 11px}
   .mrow .mv{font-weight:700}.mrow .best{color:var(--accent)}
   .mrow .mg{font-size:.75rem;color:var(--muted)}.mrow .mg.best{font-weight:700}
   .mrow .badge{min-width:26px;font-size:.75rem;padding:2px 5px}
-  .mbar{grid-column:2/5;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+  .mbar{grid-column:1/4;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
   .mbar i{display:block;height:100%;background:var(--muted);border-radius:3px}.mbar i.b{background:var(--accent)}
-  table.mdr th,table.mdr td{text-align:center;vertical-align:middle;padding:7px 6px}
-  table.mdr td:first-child,table.mdr th:first-child{text-align:left;color:var(--muted);min-width:0;width:3.2em}
-  table.mdr td{font-weight:600}table.mdr td small{color:var(--muted);font-weight:500}
-  table.mdr td.best{color:var(--accent);font-weight:800}table.mdr td.best small{color:var(--accent)}
-  .h2hm .sect{margin-top:8px}
 }
 .sect{font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.04em;margin:18px 0 0}
 </style>
@@ -309,6 +312,36 @@ function velocityAt(fps,bc,distYd){
   return Math.max(v,0)*FT_PER_M;
 }
 const energy=(gr,v)=>gr*v*v/450240;
+// time of flight to each distance (same G1 / RK2 steps as velocityAt); null past the stop point
+const GRAVITY=9.80665,IN_PER_M=39.37007874,WIND_MPH=10,MS_PER_MPH=0.44704;
+function flightTimes(fps,bc,dists){
+  const marks=[...new Set(dists.filter(d=>d>0).map(d=>d/YD_PER_M))].sort((a,b)=>a-b);
+  let v=fps/FT_PER_M,x=0,t=0;const step=0.5,out=new Map([[0,0]]);
+  const dvdx=s=>-KDRAG*g1cd(s/SOS)*s/bc;
+  for(const m of marks){
+    while(x<m-1e-12&&v>1){const h=Math.min(step,m-x),k1=dvdx(v),mid=v+0.5*h*k1,k2=dvdx(mid);t+=h/mid;v+=h*k2;x+=h;}
+    if(v<=1)break;
+    out.set(m,t);
+  }
+  return dists.map(d=>{const k=d>0?d/YD_PER_M:0;return out.has(k)?out.get(k):null;});
+}
+// [yards, velocity, energy, path in, 10 mph drift in] out to 5 x step (ballistic_table in the desktop app)
+function ballisticTable(it,cat){
+  const yards=[];for(let n=0;n<6;n++){const yd=Math.min(n*cat.step_yd,cat.max_distance);if(yards.length&&yd===yards[yards.length-1])break;yards.push(yd);}
+  const times=flightTimes(it.muzzle_fps,it.bc_g1,yards.concat([cat.zero_yd])),tz=times[times.length-1];
+  const drop=t=>0.5*GRAVITY*t*t*IN_PER_M,v0=it.muzzle_fps/FT_PER_M,rows=[];
+  for(let i=0;i<yards.length;i++){
+    const yd=yards[i],t=times[i];if(t==null||tz==null)break;
+    const v=velocityAt(it.muzzle_fps,it.bc_g1,yd);
+    rows.push([yd,v,energy(it.bullet_gr,v),-drop(t)-cat.sight_in+(drop(tz)+cat.sight_in)*yd/cat.zero_yd,WIND_MPH*MS_PER_MPH*(t-(yd/YD_PER_M)/v0)*IN_PER_M]);
+  }
+  return rows;
+}
+function ballisticHTML(it,cat,open){
+  return `<details class="btab"${open?" open":""}><summary>Ballistic table</summary><div class="tblwrap" style="max-height:none"><table><thead><tr><th>Yd</th><th>Velocity<small>fps</small></th><th>Energy<small>ft-lbs</small></th><th>Path<small>in</small></th><th>Wind<small>in</small></th></tr></thead><tbody>${
+    ballisticTable(it,cat).map(([yd,v,e,p,w])=>`<tr><td>${g(yd)}</td><td>${Math.round(v).toLocaleString("en-US")}</td><td>${Math.round(e).toLocaleString("en-US")}</td><td>${Math.abs(p)<0.05?"0.0":(p>0?"+":"−")+Math.abs(p).toFixed(1)}</td><td>${w.toFixed(1)}</td></tr>`).join("")
+  }</tbody></table></div><div class="note">Zeroed at ${g(cat.zero_yd)} yd with the sight ${g(cat.sight_in)} in above the bore; wind is a ${WIND_MPH} mph crosswind. Drop and drift are estimates from the G1 BC in sea-level air.</div></details>`;
+}
 function recoil(gr,fps,powder,gun){
   const mom=(gr*fps+1.75*powder*4000)/7000, gv=mom/gun;
   return 0.5*(gun/32.174)*gv*gv;
@@ -727,6 +760,7 @@ function openLoads(cat,pane){
           ${cat.terminal?`<div class="row"><span class="muted">Taylor KO</span><span class="v">${r.st.taylor.toFixed(1)}</span>${fb("taylor")}</div>
           <div class="row"><span class="muted">HITS</span><span class="v">${r.st.hits.toFixed(0)} <small class="muted">(${hitsClass(r.st.hits)})</small></span>${fb("hits")}</div>`:""}
           <div class="muted" style="font-size:.8rem;margin-top:4px">${GRADES?`Overall ${r.grade} · ${r.overall.toFixed(0)} · r`:"R"}anks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}.${GRADES?" Grades compare loads of this cartridge only.":""}</div>
+          ${ballisticHTML(it,cat,L.btOpen)}
           <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button></div>
           ${it.handload?`<div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn d hdel">Delete</button></div>
           <div class="note">${esc(SOURCE_NOTES.handload)}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
@@ -734,8 +768,10 @@ function openLoads(cat,pane){
       </div>`;}).join("")||`<div class="muted">No loads match that filter.</div>`;
     box.querySelectorAll(".lc").forEach(c=>{
       const lab=c.dataset.i;
-      c.onclick=e=>{if(e.target.closest(".prow,.hbtns"))return;L.open=L.open===lab?null:lab;render();};
+      c.onclick=e=>{if(e.target.closest(".prow,.hbtns,.btab"))return;L.open=L.open===lab?null:lab;render();};
       const it=all.find(x=>keyOf(x)===lab&&x.cartridge===$$("#lc").value);
+      const bt=c.querySelector("details.btab");
+      if(bt){bt.addEventListener("toggle",()=>{L.btOpen=bt.open;});bt.onclick=e=>e.stopPropagation();}
       const hb=c.querySelector(".h2hb");
       if(hb&&it)hb.onclick=()=>{
         const picks=H2H[cat.title]=H2H[cat.title]||[];
@@ -846,25 +882,28 @@ function openH2H(cat,pane){
   // phones: one card per load, then one card per factor with a bar per load, so nothing
   // has to be read across a wide table
   function phoneView(rows,dist,keys,most,badge,payload){
-    const num=i=>`<span class="num">${i+1}</span>`;
-    let h=`<div class="h2hm">`+rows.map((r,i)=>`<div class="mload${r.it.handload?" hl":""}">${num(i)}<div class="mi">
+    const name=r=>`<div class="mname${r.it.handload?" hl":""}">${esc(r.it.label)}${r.it.handload?" (handload)":""}</div>`;
+    let h=`<div class="h2hm">`+rows.map(r=>`<div class="mload${r.it.handload?" hl":""}"><div class="mi">
       <small>${esc(r.it.cartridge)}</small><b>${esc(r.it.label)}</b>${r.it.handload?' <span class="chip">Handload</span>':""}
       <div class="mf">${esc([payload(r.it),cat.grain_style&&r.it.barrel_in?g(r.it.barrel_in)+" in barrel":"",r.it.purpose||r.it.group||""].filter(Boolean).join(" · "))}</div>
       <div class="mf">Rank #${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads · <span class="${r.best.size===most&&most?"best":""}">best in ${r.best.size} of ${keys.length}</span></div></div>
       ${GRADES?`<div class="mo">${badge(r.grade,true)}<span>${r.overall.toFixed(0)}</span></div>`:""}</div>`).join("");
+    const bar=(w,b)=>`<div class="mbar"><i class="${b?"b":""}" style="width:${Math.max(3,Math.min(100,100*w)).toFixed(1)}%"></i></div>`;
     for(const k of keys){
       const hi=METRICS[k][1],vals=rows.map(r=>r.st[k]),top=Math.max(...vals),low=Math.min(...vals);
       h+=`<div class="mcard"><div class="mt">${METRICS[k][0]}${k==="velocity"||k==="energy"?` <small>at ${g(dist)} yd</small>`:""}<small class="hint">${hi?"higher is better":"lower is better"}</small></div>`+
-        rows.map((r,i)=>{const b=r.best.has(k),v=r.st[k],w=hi?(top>0?v/top:0):(v>0?low/v:1);
-          return `<div class="mrow">${num(i)}<span class="mv${b?" best":""}">${h2hValue(k,v)}</span><span class="mg${b?" best":""}">${b?"best":(r.gap[k]>=0?"+":"−")+Math.abs(r.gap[k]).toFixed(0)+"%"}</span>${GRADES?badge(gradeRel(r.sc[k])):"<span></span>"}
-            <div class="mbar"><i class="${b?"b":""}" style="width:${Math.max(3,Math.min(100,100*w)).toFixed(1)}%"></i></div></div>`;}).join("")+`</div>`;
+        rows.map(r=>{const b=r.best.has(k),v=r.st[k],w=hi?(top>0?v/top:0):(v>0?low/v:1);
+          return `<div class="mrow">${name(r)}<span class="mv${b?" best":""}">${h2hValue(k,v)}</span><span class="mg${b?" best":""}">${b?"best":(r.gap[k]>=0?"+":"−")+Math.abs(r.gap[k]).toFixed(0)+"%"}</span>${GRADES?badge(gradeRel(r.sc[k])):"<span></span>"}${bar(w,b)}</div>`;}).join("")+`</div>`;
     }
-    h+=`<div class="sect">DOWNRANGE · velocity (fps) / energy (ft-lbs)</div><div class="h2h"><table class="mdr"><thead><tr><th>Yd</th>${rows.map((r,i)=>`<th>${num(i)}</th>`).join("")}</tr></thead><tbody>`;
-    for(const [yd,cells] of h2hDownrange(cat,rows.map(r=>r.it))){
-      const top=Math.max(...cells.map(c=>c[1]));
-      h+=`<tr><td>${g(yd)}</td>${cells.map(([v,e])=>`<td class="${e>=top-1e-9?"best":""}">${fmt0(v)}<br><small>${fmt0(e)}</small></td>`).join("")}</tr>`;
-    }
-    return h+`</tbody></table></div></div>`;
+    // downrange: pick a distance, then the same bubble rows with names
+    const dr=h2hDownrange(cat,rows.map(r=>r.it));
+    if(H.drYd==null||!dr.some(([yd])=>yd===H.drYd))H.drYd=dr[Math.min(dr.length-1,2)][0];
+    const at=dr.find(([yd])=>yd===H.drYd)[1],eTop=Math.max(...at.map(c=>c[1]));
+    h+=`<div class="mcard"><div class="mt">Downrange<small class="hint">velocity · energy</small></div>
+      <div class="chips mdr" role="group" aria-label="Distance">${dr.map(([yd])=>`<button data-yd="${yd}" class="${yd===H.drYd?"on":""}">${g(yd)} yd</button>`).join("")}</div>`+
+      rows.map((r,i)=>{const [v,e]=at[i],b=e>=eTop-1e-9;
+        return `<div class="mrow">${name(r)}<span class="mv${b?" best":""}">${fmt0(v)} fps</span><span class="mg${b?" best":""}">${fmt0(e)} ft-lbs</span><span></span>${bar(eTop>0?e/eTop:0,b)}</div>`;}).join("")+`</div>`;
+    return h+`</div>`;
   }
   function render(){
     const box=$$("#hres");
@@ -896,6 +935,7 @@ function openH2H(cat,pane){
       h+=`<tr><td>${g(yd)}</td>${cells.map(([v,e])=>`<td class="c${e>=top-1e-9?" v best":""}">${fmt0(v)} · ${fmt0(e)}</td>`).join("")}</tr>`;
     }
     box.innerHTML=h+`</tbody></table></div></div>`+phoneView(rows,dist,keys,most,badge,payload);
+    box.querySelectorAll("[data-yd]").forEach(c=>c.onclick=()=>{H.drYd=+c.dataset.yd;render();});
   }
   drawSlots();save();
   $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push(blank());drawSlots();const r=$$("#hs").lastElementChild;r.querySelector(r.querySelector(".cs").value?".ls":".cs").focus();};
@@ -905,16 +945,30 @@ function openH2H(cat,pane){
   render();
 }
 
+let openModalClose=null;   // the open dialog's close(), for the Android back button
 function modal(inner){
   const m=el(`<div class="modal"><div class="card">${inner}</div></div>`);
   document.body.appendChild(m);document.body.style.overflow="hidden";
-  const close=()=>{m.remove();document.body.style.overflow="";};
+  const close=()=>{m.remove();document.body.style.overflow="";if(openModalClose===close)openModalClose=null;};
+  openModalClose=close;
   m.addEventListener("mousedown",e=>{if(e.target===m)close();});
   return [m,close];
 }
 
 $("#ver").textContent=VERSION_TEXT;$("#size1").innerHTML=sizeCtl();$("#size2").innerHTML=sizeCtl();wireSize(document.body);
 navigate("home");
+// Android back button (Capacitor App plugin): close a dialog, then step back up the menus
+// (category -> category list -> Home); only Home closes the app
+(function(){
+  const AppPlugin=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
+  if(!AppPlugin||!AppPlugin.addListener)return;
+  AppPlugin.addListener("backButton",()=>{
+    if(openModalClose){openModalClose();return;}
+    if(NAV.cat)navigate(NAV.mode);
+    else if(NAV.mode!=="home")navigate("home");
+    else AppPlugin.exitApp();
+  });
+})();
 </script>
 </body>
 </html>

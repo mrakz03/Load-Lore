@@ -116,7 +116,9 @@ class Category:
     legacy_filename: str = ""    # older file name to fall back to
     weights: tuple = DEFAULT_WEIGHTS   # velocity, energy, recoil, cost, Taylor KO, HITS
     loads_filename: str = ""     # manufacturer loads for the Load Dictionary / Head to Head
-    step_yd: float = 100         # Head to Head downrange table: 0, step, 2 x step ... 5 x step
+    step_yd: float = 100         # downrange / ballistic tables: 0, step, 2 x step ... 5 x step
+    zero_yd: float = 100         # ballistic table: zero range
+    sight_in: float = 1.5        # ballistic table: sight height over the bore (inches)
     terminal: bool = True        # show Taylor KO / HITS (needs a bullet diameter; not for shot)
 
 
@@ -127,17 +129,17 @@ CATEGORIES = (
              loads_filename="loads_centerfire_rifle.csv"),
     Category("Handgun", "Pistol and revolver rounds",
              "ammo_handgun.csv", 10, 500, 2.0, "HANDGUN WEIGHT (LB)",
-             loads_filename="loads_handgun.csv", step_yd=25),
+             loads_filename="loads_handgun.csv", step_yd=25, zero_yd=25, sight_in=0.6),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
              "ammo_rimfire_rifle.csv", 50, 500, 5.0, "RIFLE WEIGHT (LB)",
              weights=(3, 3, 1, 6, 3, 3),
-             loads_filename="loads_rimfire_rifle.csv", step_yd=50),
+             loads_filename="loads_rimfire_rifle.csv", step_yd=50, zero_yd=50),
     Category("Shotgun", "Birdshot, buckshot and slugs",
              "ammo_shotgun.csv", 25, 300, 7.5, "SHOTGUN WEIGHT (LB)",
              cartridge_label="GAUGE", payload_row="Payload",
              payload_col="Payload (gr)", grain_style=False, show_oz=True,
              terminal=False, weights=(3, 3, 1, 3, 0, 0),
-             loads_filename="loads_shotgun.csv", step_yd=25),
+             loads_filename="loads_shotgun.csv", step_yd=25, zero_yd=50, sight_in=0.6),
 )
 
 
@@ -309,6 +311,61 @@ def velocity_at(muzzle_fps, bc_g1, distance_yd):
         v += h * k2                               # midpoint (RK2) step
         x += h
     return max(v, 0.0) * FT_PER_M
+
+
+GRAVITY_MS2 = 9.80665
+IN_PER_M = 39.37007874
+WIND_MPH = 10.0
+MS_PER_MPH = 0.44704
+
+
+def flight_times(muzzle_fps, bc_g1, distances_yd):
+    """Time of flight (s) to each distance, same G1 / RK2 steps as velocity_at; None past
+    the point where the bullet stops."""
+    marks = sorted(set(d / YD_PER_M for d in distances_yd if d > 0))
+    v, x, t, step, out = muzzle_fps / FT_PER_M, 0.0, 0.0, 0.5, {0.0: 0.0}
+
+    def dvdx(speed):
+        return -_K * g1_cd(speed / SPEED_OF_SOUND_MS) * speed / bc_g1
+
+    for m in marks:
+        while x < m - 1e-12 and v > 1.0:
+            h = min(step, m - x)
+            k1 = dvdx(v)
+            mid = v + 0.5 * h * k1
+            k2 = dvdx(mid)
+            t += h / mid
+            v += h * k2
+            x += h
+        if v <= 1.0:
+            break
+        out[m] = t
+    return [out.get(d / YD_PER_M if d > 0 else 0.0) for d in distances_yd]
+
+
+def ballistic_table(item, cat):
+    """[(yards, velocity fps, energy ft-lbs, path in, 10 mph wind drift in)] from the muzzle out
+    to 5 x cat.step_yd. Path is above (+) or below (-) the line of sight for a sight
+    cat.sight_in above the bore zeroed at cat.zero_yd; a flat-fire estimate, not a solver."""
+    yards = []
+    for n in range(6):
+        yd = min(n * cat.step_yd, cat.max_distance)
+        if yards and yd == yards[-1]:
+            break
+        yards.append(yd)
+    times = flight_times(item.muzzle_fps, item.bc_g1, yards + [cat.zero_yd])
+    tz = times[-1]
+    drop = lambda t: 0.5 * GRAVITY_MS2 * t * t * IN_PER_M
+    v0 = item.muzzle_fps / FT_PER_M
+    rows = []
+    for yd, t in zip(yards, times):
+        if t is None or tz is None:
+            break
+        v = velocity_at(item.muzzle_fps, item.bc_g1, yd)
+        path = -drop(t) - cat.sight_in + (drop(tz) + cat.sight_in) * yd / cat.zero_yd
+        drift = WIND_MPH * MS_PER_MPH * (t - (yd / YD_PER_M) / v0) * IN_PER_M
+        rows.append((yd, v, energy_ftlbs(item.bullet_gr, v), path, drift))
+    return rows
 
 
 def energy_ftlbs(bullet_gr, velocity_fps):
@@ -1622,6 +1679,7 @@ def style_grades_chip(app, chip):
 class LoadsView:
     """Load Dictionary: every brand's load of ONE cartridge, graded against each other."""
     tab = "loads"
+    OPEN_ROWS = 7                     # list rows while a load's panel is open
 
     def __init__(self, app, stage, cat, loads, error=""):
         self.app, self.root, self.cat = app, app.root, cat
@@ -1773,31 +1831,31 @@ class LoadsView:
         # ---- selected load
         self.detail = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
         self.detail.columnconfigure(0, weight=1)
-        self.d_title = a.label(self.detail, "", 13, TEXT, True, anchor="w", justify="left",
+        self.d_title = a.label(self.detail, "", 16, TEXT, True, anchor="w", justify="left",
                                wraplength=a.px(820))
         self.d_title.grid(row=0, column=0, sticky="w", padx=18, pady=(14, 2))
-        close = tk.Label(self.detail, text="✕", bg=SURFACE, fg=MUTED, font=a.f(13, True),
+        close = tk.Label(self.detail, text="✕", bg=SURFACE, fg=MUTED, font=a.f(15, True),
                          padx=8, pady=2, cursor="hand2")
         close.grid(row=0, column=1, sticky="ne", padx=(0, 10), pady=(10, 0))
         close.bind("<Button-1>", lambda e: self._close_detail())
         close.bind("<Enter>", lambda e: close.config(fg=TEXT, bg=SURFACE_2))
         close.bind("<Leave>", lambda e: close.config(fg=MUTED, bg=SURFACE))
-        self.d_info = a.label(self.detail, "", 10, MUTED, anchor="w", justify="left",
+        self.d_info = a.label(self.detail, "", 12, MUTED, anchor="w", justify="left",
                               wraplength=a.px(820))
-        self.d_info.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 10))
+        self.d_info.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
         # the four factors sit side by side, packed to the left (no stretched columns)
         factors = tk.Frame(self.detail, bg=SURFACE)
         factors.grid(row=2, column=0, sticky="w", padx=18)
         self.d_badges = {}
         for i, key in enumerate(self.keys):
             cell = tk.Frame(factors, bg=SURFACE)
-            cell.pack(side="left", padx=(0, 28))
-            a.label(cell, METRICS[key][0].upper(), 8, MUTED, True).pack(anchor="w")
+            cell.pack(side="left", padx=(0, 34))
+            a.label(cell, METRICS[key][0].upper(), 10, MUTED, True).pack(anchor="w")
             line = tk.Frame(cell, bg=SURFACE)
-            line.pack(anchor="w", pady=(2, 0))
-            val = a.label(line, "", 11, TEXT, True)
+            line.pack(anchor="w", pady=(4, 0))
+            val = a.label(line, "", 16, TEXT, True)
             val.pack(side="left")
-            badge = tk.Label(line, text="", width=2, font=a.f(10, True))
+            badge = tk.Label(line, text="", width=2, font=a.f(13, True))
             badge.pack(side="left", padx=(6, 0))
             self.d_badges[key] = (val, badge)
         priceline = tk.Frame(self.detail, bg=SURFACE)
@@ -1817,9 +1875,16 @@ class LoadsView:
             side="left", padx=8)
         a.button(priceline, "Set price", self._set_price, "primary").pack(side="left")
         a.button(priceline, "Use catalog estimate", self._reset_price).pack(side="left", padx=8)
-        self.d_note = a.label(self.detail, "", 9, MUTED, anchor="w", justify="left",
+        self.d_note = a.label(self.detail, "", 10, MUTED, anchor="w", justify="left",
                               wraplength=a.px(820))
-        self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 14))
+        self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 6))
+        self.bt_toggle = tk.Label(self.detail, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
+                                  cursor="hand2")
+        self.bt_toggle.grid(row=5, column=0, sticky="w", padx=18, pady=(4, 14))
+        self.bt_toggle.bind("<Button-1>", lambda e: self._toggle_ballistics())
+        self.bt_frame = tk.Frame(self.detail, bg=SURFACE)
+        self.bt_frame.grid(row=6, column=0, columnspan=2, sticky="w", padx=18, pady=(0, 16))
+        self.bt_frame.grid_remove()
         self.detail.grid(row=5, column=0, sticky="ew", pady=(14, 0))
         self.detail.grid_remove()
         self.footnote = a.label(outer, "", 9, MUTED, bg=BG, anchor="w", justify="left",
@@ -2244,8 +2309,40 @@ class LoadsView:
         self.d_note.config(text=f"{overall}Rank #{row['rank']} of {row['peers']}"
                                 f"{' ' + row['group'] + ' loads' if row['group'] else ''}.  {src}")
         self._style_h2h()
+        self._draw_ballistics()
         self.detail.grid()
         self.fit_table_height()
+
+    def _toggle_ballistics(self):
+        self.ballistics_open = not getattr(self, "ballistics_open", False)
+        self._draw_ballistics()
+        self.fit_table_height()
+
+    def _draw_ballistics(self):
+        """The selected load's ballistic table, under its scores (opened with the ▸ link)."""
+        a, cat, item = self.app, self.cat, self.selected
+        is_open = getattr(self, "ballistics_open", False)
+        self.bt_toggle.config(text=("▾" if is_open else "▸") + "  Ballistic table")
+        for w in self.bt_frame.winfo_children():
+            w.destroy()
+        if not is_open or item is None:
+            self.bt_frame.grid_remove()
+            return
+        heads = ["Yards", "Velocity (fps)", "Energy (ft-lbs)", "Path (in)",
+                 f"Wind drift (in, {WIND_MPH:g} mph)"]
+        for c, h in enumerate(heads):
+            a.label(self.bt_frame, h, 10, MUTED, True, anchor="e").grid(
+                row=0, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=(0, 4))
+        for r, (yd, v, e, path, drift) in enumerate(ballistic_table(item, cat), start=1):
+            for c, text in enumerate((f"{yd:g}", f"{v:,.0f}", f"{e:,.0f}", "0.0" if abs(path) < 0.05 else f"{path:+.1f}",
+                                      f"{drift:.1f}")):
+                a.label(self.bt_frame, text, 11, TEXT, c == 0, anchor="e").grid(
+                    row=r, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=1)
+        a.label(self.bt_frame, f"Zeroed at {cat.zero_yd:g} yd with the sight {cat.sight_in:g} in "
+                f"above the bore; drop and drift are estimates from the G1 BC, sea-level air.",
+                9, MUTED, anchor="w", justify="left", wraplength=a.px(760)).grid(
+            row=99, column=0, columnspan=5, sticky="w", pady=(8, 0))
+        self.bt_frame.grid()
 
     def _close_detail(self):
         """The panel's ✕: deselect the load and give the table its rows back."""
@@ -2271,6 +2368,8 @@ class LoadsView:
             spare = a.canvas.winfo_height() - a.px(22) - (bottom - rows_now * rowh)
             n = len(self.tree.get_children())
             rows = min(max(spare // rowh, 6), max(n, 1))
+            if self.selected is not None:          # the selected load gets the room, not the list
+                rows = min(rows, self.OPEN_ROWS)
         except tk.TclError:
             return
         if rows != rows_now:

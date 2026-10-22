@@ -16,7 +16,14 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Two tools (Oct 2026; Compare Cartridges and "Add your own caliber" were removed): Load
   Dictionary (LoadsView / openLoads, the old Compare Loads, plus an S-F grades on/off switch kept
   in settings.json show_grades / localStorage) and Head to Head (HeadToHeadView / openH2H, 2-5
-  loads of one category side by side, picks in App.h2h / H2H, in memory only).
+  loads of one category side by side, picks in App.h2h / H2H, in memory only). Phones (<=600 px)
+  get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
+  always naming loads, never numbering them.
+- Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
+  flat-fire drop + 10 mph drift from flight_times / flightTimes (same G1 RK2 steps as velocity_at),
+  zero_yd / sight_in per category. An estimate, not a solver.
+- Android back button: @capacitor/app backButton listener in template.html closes a dialog, then
+  steps category -> category list -> Home; only Home exits.
 - data/loads_*.csv: every load name starts with its brand (Federal, Hornady, SIG Sauer...).
   data/ammo_*.csv: generic loads, no brand names; now only the cartridge list (handload-only
   cartridges, handload dialog).
@@ -41,7 +48,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   The Load column fits the longest full name, re-measured per cartridge; grow_to_fit widens
   the window for it and gives the room back later, never below the width the user chose.
   LoadsView.fit_table_height sets the table's row count from the window height so the
-  selected load's scores panel fits without scrolling (min 6 rows, then the page scrolls).
+  selected load's (larger) panel fits without scrolling: at most OPEN_ROWS while a load is open,
+  the full height when closed (min 6 rows, then the page scrolls).
   App.px() scales by text size AND screen DPI (self.dpi, 96 dpi = 1.0). On Windows,
   sharp_on_windows() declares DPI awareness before Tk starts, otherwise Windows stretches the
   window and it looks blurry (issue #5).
