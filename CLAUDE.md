@@ -77,10 +77,11 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   with no payload given (Hornady #4 Buck / Heavy Magnum Coyote / .410 Triple Defense, Winchester PDX1).
   Catalog misprints fixed from the energy column: Winchester S308M2 "652 gr" = 168 gr,
   Federal P40HSD1 "100 fps" = 1050 fps.
-- Web-sourced loads (Oct 2026): 234 loads from maker websites, not catalogs: SIG Sauer (sigsauer.com),
+- Web-sourced loads (Oct 2026): 258 loads from maker websites, not catalogs: SIG Sauer (sigsauer.com),
   Black Hills incl. Gold and HoneyBadger (black-hills.com), Norma (normausa.com; its spec tables are
   sometimes copied from another product, so the headline velocity is used), Nosler Trophy Grade
-  and Defense (nosler.com), Federal Subsonic (federalpremium.com), and IMI (retailer listings; IMI is mostly out of stock in the US). Missing BCs come from
+  and Defense (nosler.com), Federal Subsonic (federalpremium.com), Lapua (lapua.com; price
+  estimated), and IMI (retailer listings; IMI is mostly out of stock in the US). Missing BCs come from
   bullets.csv when the bullet is named, else are scaled from the nearest same-type load (source=partial);
   missing prices are the cartridge/purpose median x a brand factor. Rows and URLs are in
   research/added_loads_sources.tsv. Black Hills 5.56mm loads carry "5.56mm" in the name because the
@@ -88,7 +89,7 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
-  7mm STW. 8x57mm Mauser and .480 Ruger need PPU / S&B / Buffalo Bore data.
+  7mm STW. 8x57mm Mauser has one Lapua load; it and .480 Ruger could use PPU / S&B / Buffalo Bore data.
 
 ## Known to-dos
 - Desktop layout fixed for HiDPI and checked under Xvfb; confirm on the real Fedora and
