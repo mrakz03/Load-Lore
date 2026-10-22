@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Cartridge Value Calculator - a desktop tool for comparing ammunition by
+In Like Flint - Load Lore (formerly Cartridge Value Calculator) - a desktop tool for comparing ammunition by
 performance per dollar.
 
 Two tools, each split into categories (Centerfire Rifle, Handgun, Rimfire Rifle,
@@ -47,7 +47,7 @@ except ImportError:  # lets the calculation code be imported/tested without a GU
 # --------------------------------------------------------------------------- #
 # Settings you may want to tweak
 # --------------------------------------------------------------------------- #
-APP_TITLE = "Cartridge Value Calculator"
+APP_TITLE = "In Like Flint - Load Lore"
 APP_VERSION = "dev"             # the release build sets this from the git tag (v1.5 -> "1.5")
 GRAINS_PER_OZ = 437.5
 SETTINGS_FILENAME = "settings.json"
@@ -1229,7 +1229,7 @@ class App:
         """(Re)draw the sidebar: Home, the two features, and the categories of the open feature."""
         for w in self.nav.winfo_children():
             w.destroy()
-        self.label(self.nav, "Cartridge\nCalculator", 15, TEXT, True, bg=SURFACE,
+        self.label(self.nav, "In Like Flint\nLoad Lore", 15, TEXT, True, bg=SURFACE,
                    anchor="w", justify="left").pack(anchor="w", padx=6)
         self.label(self.nav, version_text(), 9, MUTED, bg=SURFACE, anchor="w").pack(
             anchor="w", padx=6, pady=(2, 18))
@@ -1266,7 +1266,7 @@ class App:
         self._draw_chrome()
         wrap = tk.Frame(stage, bg=BG)
         wrap.pack(fill="x", padx=36, pady=(40, 28))
-        self.label(wrap, "Cartridge Calculator", 26, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
+        self.label(wrap, APP_TITLE, 26, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
         self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
                    "loads head to head.", 12, MUTED,
                    bg=BG, anchor="w").pack(anchor="w", pady=(4, 26))

@@ -1,5 +1,10 @@
 # Cartridge Calculator
 
+App name (Oct 2026): "In Like Flint - Load Lore" (APP_TITLE / web APP_TITLE, installer AppName,
+.desktop Name, capacitor appName). Repo, file and package names (CartridgeCalculator.exe,
+cartridge_calculator.py, appId com.cartridgecalc.app, Windows AppId and install folder) stay as
+they were so updates keep installing over older versions.
+
 Grades ammo S–F on velocity, energy, recoil, cost (plus Taylor KO and HITS;
 default weights 3/3/1/3/3/3, Shotgun keeps Taylor KO and HITS at 0: no bullet diameter).
 Desktop app: src/cartridge_calculator.py (Tkinter, stdlib only). Phone/web: web/template.html,

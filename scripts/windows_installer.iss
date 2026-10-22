@@ -12,7 +12,7 @@
 
 [Setup]
 AppId={{0561EDF5-07C9-425D-9A41-3572B678EB12}
-AppName=Cartridge Calculator
+AppName=In Like Flint - Load Lore
 AppVersion={#AppVersion}
 AppPublisher=mrakz03
 SourceDir=..
@@ -24,7 +24,7 @@ OutputDir=dist
 OutputBaseFilename=CartridgeCalculator-Setup
 SetupIconFile=assets\icon.ico
 UninstallDisplayIcon={app}\CartridgeCalculator.exe
-UninstallDisplayName=Cartridge Calculator
+UninstallDisplayName=In Like Flint - Load Lore
 CloseApplications=yes
 Compression=lzma2
 SolidCompression=yes
@@ -37,14 +37,17 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Type: files; Name: "{app}\ammo_*.csv"
 Type: files; Name: "{app}\loads_*.csv"
 Type: files; Name: "{app}\bullets.csv"
+; shortcuts from before the rename to In Like Flint - Load Lore (install folder and AppId stay the same)
+Type: files; Name: "{autoprograms}\Cartridge Calculator.lnk"
+Type: files; Name: "{autodesktop}\Cartridge Calculator.lnk"
 
 [Files]
 Source: "dist\CartridgeCalculator.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "data\*.csv"; Excludes: "my_*.csv"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\Cartridge Calculator"; Filename: "{app}\CartridgeCalculator.exe"; WorkingDir: "{app}"
-Name: "{autodesktop}\Cartridge Calculator"; Filename: "{app}\CartridgeCalculator.exe"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{autoprograms}\In Like Flint - Load Lore"; Filename: "{app}\CartridgeCalculator.exe"; WorkingDir: "{app}"
+Name: "{autodesktop}\In Like Flint - Load Lore"; Filename: "{app}\CartridgeCalculator.exe"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\CartridgeCalculator.exe"; Description: "{cm:LaunchProgram,Cartridge Calculator}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\CartridgeCalculator.exe"; Description: "{cm:LaunchProgram,In Like Flint - Load Lore}"; Flags: nowait postinstall skipifsilent

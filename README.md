@@ -1,4 +1,6 @@
-# Cartridge Value Calculator
+# In Like Flint - Load Lore
+
+(Formerly Cartridge Value Calculator. The download files keep the `CartridgeCalculator` names so updates install over older versions.)
 
 Grades ammo from S to F on velocity, energy, recoil and price, with Taylor KO and HITS shown for rifle and handgun loads. There is a desktop app (Python/Tkinter, Windows and Linux) and a phone/web version (installable as an Android APK).
 
