@@ -19,6 +19,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   loads of one category side by side, picks in App.h2h / H2H, in memory only). Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
   always naming loads, never numbering them.
+- Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
+  page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones).
+  The app name is drawn as a small "In Like Flint" over a larger "Load Lore" (issue #18).
 - Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
   flat-fire drop + 10 mph drift from flight_times / flightTimes (same G1 RK2 steps as velocity_at),
   zero_yd / sight_in per category. An estimate, not a solver.

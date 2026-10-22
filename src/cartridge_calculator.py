@@ -1056,32 +1056,12 @@ class App:
         if cat is None:
             if self.mode == "home":
                 self.show_launcher()
+            elif self.mode == "settings":
+                self.show_settings()
             else:
                 self.show_picker(self.mode)
         else:
             self.open_category(cat, tab, snap)
-
-    def size_controls(self, parent, bg):
-        """Small 'Text size  A-  A+' control, packed by the caller."""
-        box = tk.Frame(parent, bg=bg)
-        tk.Label(box, text="Text size", bg=bg, fg=MUTED, font=self.f(9)).pack(side="left", padx=(0, 6))
-        for text, delta in (("A−", -0.15), ("A+", 0.15)):
-            b = tk.Label(box, text=text, bg=SURFACE_2, fg=TEXT, font=self.f(10, True),
-                         padx=10, pady=3, cursor="hand2")
-            b.pack(side="left", padx=2)
-            b.bind("<Button-1>", lambda e, d=delta: self.set_scale(self.scale + d))
-        return box
-
-    def theme_controls(self, parent, bg):
-        """Small 'Theme  [Classic v]' picker, packed by the caller."""
-        box = tk.Frame(parent, bg=bg)
-        tk.Label(box, text="Theme", bg=bg, fg=MUTED, font=self.f(9)).pack(side="left", padx=(0, 6))
-        theme_var = tk.StringVar(value=self.theme)
-        pick = ttk.Combobox(box, textvariable=theme_var, values=list(THEMES), state="readonly",
-                            width=1, font=self.f(9))
-        pick.pack(side="left", fill="x", expand=True)
-        pick.bind("<<ComboboxSelected>>", lambda e: self.set_theme(theme_var.get()))
-        return box
 
     def _style(self):
         r = self.root
@@ -1239,10 +1219,8 @@ class App:
         self.sidebar.pack(side="left", fill="y")
         self.sidebar.pack_propagate(False)
         tk.Frame(self.shell, bg=BORDER, width=1).pack(side="left", fill="y")
-        foot = tk.Frame(self.sidebar, bg=SURFACE)
-        foot.pack(side="bottom", fill="x", padx=14, pady=14)
-        self.theme_controls(foot, SURFACE).pack(fill="x", pady=(0, 8))
-        self.size_controls(foot, SURFACE).pack(anchor="w")
+        self.foot = tk.Frame(self.sidebar, bg=SURFACE)     # Settings, at the bottom left
+        self.foot.pack(side="bottom", fill="x", padx=12, pady=14)
         self.nav = tk.Frame(self.sidebar, bg=SURFACE)
         self.nav.pack(fill="x", padx=12, pady=(22, 0))
 
@@ -1270,9 +1248,8 @@ class App:
     def _sidebar_width(self):
         """Wide enough for the longest menu entry at the current text size and screen DPI."""
         main, sub = tkfont.Font(font=self.f(11, True)), tkfont.Font(font=self.f(10, True))
-        small = tkfont.Font(font=self.f(9))
-        theme = small.measure("Theme") + 6 + max(small.measure(n) for n in THEMES) + self.px(34)
-        need = max([main.measure(t) for _, t, _ in TOOLS] + [theme - 10]   # theme row in the footer
+        title = tkfont.Font(font=self.f(17, True))
+        need = max([main.measure(t) for _, t, _ in TOOLS] + [title.measure("Load Lore") - 12]
                    + [sub.measure(cat.title) + 16 for cat in CATEGORIES])
         return max(self.px(self.SIDEBAR_W), need + 2 * 12 + 2 * 12 + 10)   # label + nav padding
 
@@ -1291,11 +1268,11 @@ class App:
         step = -1 if (getattr(e, "num", 0) == 4 or getattr(e, "delta", 0) > 0) else 1
         self.canvas.yview_scroll(step * 3, "units")
 
-    def _nav_button(self, text, command, active, sub=False):
+    def _nav_button(self, text, command, active, sub=False, parent=None):
         bg = ACCENT if active else SURFACE
         hover = ACCENT if active else SURFACE_2
         fg = ON_ACCENT if active else (MUTED if sub else TEXT)
-        box = tk.Frame(self.nav, bg=bg, cursor="hand2")
+        box = tk.Frame(parent or self.nav, bg=bg, cursor="hand2")
         box.pack(fill="x", pady=(1 if sub else 3), padx=(16, 0) if sub else (0, 0))
         t = tk.Label(box, text=text, bg=bg, fg=fg, font=self.f(10 if sub else 11, not sub or active),
                      anchor="w")
@@ -1308,12 +1285,16 @@ class App:
 
     def _draw_chrome(self):
         """(Re)draw the sidebar: Home, the two features, and the categories of the open feature."""
-        for w in self.nav.winfo_children():
+        for w in self.nav.winfo_children() + self.foot.winfo_children():
             w.destroy()
-        self.label(self.nav, "In Like Flint\nLoad Lore", 15, TEXT, True, bg=SURFACE,
-                   anchor="w", justify="left").pack(anchor="w", padx=6)
+        self.label(self.nav, "In Like Flint", 11, MUTED, True, bg=SURFACE, anchor="w").pack(
+            anchor="w", padx=6)
+        self.label(self.nav, "Load Lore", 17, TEXT, True, bg=SURFACE, anchor="w").pack(
+            anchor="w", padx=6)
         self.label(self.nav, version_text(), 9, MUTED, bg=SURFACE, anchor="w").pack(
             anchor="w", padx=6, pady=(2, 18))
+        self._nav_button("Settings", self.show_settings, self.mode == "settings",
+                         parent=self.foot)
         self._nav_button("Home", self.show_launcher, self.mode == "home")
         for key, text, _ in TOOLS:
             on_picker = self.mode == key and self.cat is None
@@ -1347,7 +1328,8 @@ class App:
         self._draw_chrome()
         wrap = tk.Frame(stage, bg=BG)
         wrap.pack(fill="x", padx=36, pady=(40, 28))
-        self.label(wrap, APP_TITLE, 26, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
+        self.label(wrap, "In Like Flint", 15, MUTED, True, bg=BG, anchor="w").pack(anchor="w")
+        self.label(wrap, "Load Lore", 26, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
         self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
                    "loads head to head.", 12, MUTED,
                    bg=BG, anchor="w").pack(anchor="w", pady=(4, 26))
@@ -1367,6 +1349,50 @@ class App:
             for w in (card, t, d):
                 w.bind("<Button-1>", lambda e, k=key: self.show_picker(k))
             self._card_hover([card, t, d], SURFACE, SURFACE_2)
+        self._update_scroll()
+
+    def show_settings(self):
+        """Settings (bottom of the sidebar): theme, text size and the S-F grades switch."""
+        if self.view is not None and self.cat is not None:
+            self.carry.setdefault(self.cat.title, {}).update(self.view.snapshot())
+        self.mode, self.cat, self.view = "settings", None, None
+        stage = self._new_stage()
+        self.root.title(f"{APP_TITLE} — Settings")
+        self._draw_chrome()
+        wrap = tk.Frame(stage, bg=BG)
+        wrap.pack(fill="x", padx=36, pady=(32, 28))
+        self.label(wrap, "Settings", 22, TEXT, True, bg=BG, anchor="w").pack(anchor="w", pady=(0, 20))
+
+        def row(title, note):
+            card = tk.Frame(wrap, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
+            card.pack(fill="x", pady=6)
+            text = tk.Frame(card, bg=SURFACE)
+            text.pack(side="left", fill="x", expand=True, padx=20, pady=14)
+            self.label(text, title, 12, TEXT, True, bg=SURFACE, anchor="w").pack(anchor="w")
+            self.label(text, note, 10, MUTED, bg=SURFACE, anchor="w").pack(anchor="w", pady=(2, 0))
+            right = tk.Frame(card, bg=SURFACE)
+            right.pack(side="right", padx=20, pady=14)
+            return right
+
+        theme_var = tk.StringVar(value=self.theme)
+        pick = ttk.Combobox(row("Theme", "Colours for the whole app"), textvariable=theme_var,
+                            values=list(THEMES), state="readonly", font=self.f(11),
+                            width=max(len(n) for n in THEMES) + 2)
+        pick.pack()
+        pick.bind("<<ComboboxSelected>>", lambda e: self.set_theme(theme_var.get()))
+        box = row("Text size", f"{round(self.scale * 100)}%")
+        for text, delta in (("A−", -0.15), ("A+", 0.15)):
+            b = tk.Label(box, text=text, bg=SURFACE_2, fg=TEXT, font=self.f(11, True),
+                         padx=12, pady=4, cursor="hand2")
+            b.pack(side="left", padx=2)
+            b.bind("<Button-1>", lambda e, d=delta: self.set_scale(self.scale + d))
+        def flip():
+            self.set_show_grades(not self.show_grades)
+            style_grades_chip(self, chip)
+        chip = grades_chip(self, row("S–F grades", "Show the grades in the Load Dictionary and "
+                                     "Head to Head"), flip)
+        chip.pack()
+        self.label(wrap, version_text(), 10, MUTED, bg=BG, anchor="w").pack(anchor="w", pady=(14, 0))
         self._update_scroll()
 
     def show_picker(self, mode):
@@ -1688,7 +1714,7 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
 
 
 def grades_chip(app, parent, command):
-    """The 'S-F grades  On / Off' switch shared by both tools (remembered in settings)."""
+    """The 'S-F grades  On / Off' switch on the Settings page (both tools; remembered)."""
     chip = tk.Label(parent, text="", font=app.f(10, True), padx=10, pady=3, cursor="hand2")
     chip.bind("<Button-1>", lambda e: command())
     style_grades_chip(app, chip)
@@ -1697,7 +1723,7 @@ def grades_chip(app, parent, command):
 
 def style_grades_chip(app, chip):
     on = app.show_grades
-    chip.config(text=f"S–F grades:  {'On' if on else 'Off'}",
+    chip.config(text="On" if on else "Off", width=4,
                 bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
 
 
@@ -1792,12 +1818,10 @@ class LoadsView:
         self.weights_toggle.bind("<Button-1>", lambda e: self._toggle_weights())
         right = tk.Frame(card, bg=SURFACE)
         right.grid(row=2, column=0, sticky="e", pady=(8, 0), **pad)
-        self.grades_chip = grades_chip(a, right, self._toggle_grades)
-        self.grades_chip.pack(side="left")
         if cat.grain_style:
             add = tk.Label(right, text="+  Add handload", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
                            cursor="hand2")
-            add.pack(side="left", padx=(18, 0))
+            add.pack(side="left")
             add.bind("<Button-1>", lambda e: self._open_handload())
         self.weights_frame = tk.Frame(card, bg=SURFACE)
         for i, key in enumerate(self.keys):
@@ -1959,17 +1983,9 @@ class LoadsView:
         self.weights_toggle.config(text=("▾" if self.weights_open else "▸") + "  Scoring weights")
         self.fit_table_height()
 
-    def _toggle_grades(self):
-        self.app.set_show_grades(not self.app.show_grades)
-        self._apply_grades()
-        self._render()
-        if self.selected is not None:
-            self._reselect()
-
     def _apply_grades(self):
         """Show or hide the S-F grades: the Score / Grade columns and the factor badges."""
         on = self.app.show_grades
-        style_grades_chip(self.app, self.grades_chip)
         self.tree.configure(displaycolumns=[c for c in self.cols
                                             if on or c not in ("Score", "Grade")])
         self.footnote.config(text=(
@@ -2530,8 +2546,6 @@ class HeadToHeadView:
                                        font=a.f(10, True), cursor="hand2")
         self.weights_toggle.grid(row=5, column=0, sticky="w", pady=(4, 0), **pad)
         self.weights_toggle.bind("<Button-1>", lambda e: self._toggle_weights())
-        self.grades_chip = grades_chip(a, card, self._toggle_grades)
-        self.grades_chip.grid(row=5, column=0, sticky="e", pady=(4, 0), **pad)
         self.weights_frame = tk.Frame(card, bg=SURFACE)
         for i, key in enumerate(self.keys):
             a.label(self.weights_frame, METRICS[key][0], 10, MUTED).grid(
@@ -2663,11 +2677,6 @@ class HeadToHeadView:
             self.weights_frame.grid_remove()
         self.weights_toggle.config(text=("▾" if self.weights_open else "▸") + "  Scoring weights")
         self.app.fit_window()
-
-    def _toggle_grades(self):
-        self.app.set_show_grades(not self.app.show_grades)
-        style_grades_chip(self.app, self.grades_chip)
-        self.refresh()
 
     def _schedule(self, *_):
         if self._pending is not None:

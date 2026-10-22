@@ -18,9 +18,9 @@ body{padding:max(16px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inse
 
 .shell{max-width:1240px;margin:0 auto}
 .brand{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
-.brand b{font-size:1.05rem;letter-spacing:.01em}
+.brand b{display:block;font-size:1.05rem;letter-spacing:.01em}
+.brand small{display:block;font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.02em}
 .brand .ver{font-size:.72rem;color:var(--muted);margin-top:2px}
-.sizebox{display:none}
 .nav{display:flex;gap:4px}
 .nav>button{flex:1;background:none;border:0;color:var(--muted);font:inherit;font-weight:700;font-size:.74rem;padding:7px 4px 6px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:54px}
 .nav>button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -35,6 +35,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .back{padding:0 0 6px;font-size:.88rem}
 .hero{margin:4px 0 18px}
 .hero h2{font-size:1.7rem;line-height:1.2;margin:0}
+.hero h2 small{display:block;font-size:.95rem;color:var(--muted);letter-spacing:.02em}
 .hero p{color:var(--muted);margin:8px 0 0;line-height:1.5}
 .feat{display:grid;grid-template-columns:1fr;gap:12px}
 .fcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px;text-align:left;color:var(--text);font:inherit;cursor:pointer}
@@ -48,19 +49,19 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   body{padding:0}
   .shell{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:none;min-height:100vh}
   .side{display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;padding:22px 14px;background:var(--side);border-right:1px solid var(--border);overflow:auto}
-  .side .brand{margin:0 6px}.side .brand .size{display:none}
-  .side .nav{position:static;flex-direction:column;background:none;border:0;padding:0;gap:4px;border-radius:0}
+  .side .brand{margin:0 6px}
+  .side .brand b{font-size:1.3rem}
+  .side .nav{position:static;flex:1;flex-direction:column;background:none;border:0;padding:0;gap:4px;border-radius:0}
+  .nav>button[data-nav=settings]{margin-top:auto}   /* Settings sits at the bottom left */
   .nav>button{flex:none;flex-direction:row;justify-content:flex-start;align-items:center;gap:12px;font-size:.95rem;padding:11px 12px;min-height:0;text-align:left}
   .cmp{display:inline}
   .nav .sub{display:flex;flex-direction:column;gap:2px;margin:0 0 8px 24px;border-left:1px solid var(--border);padding-left:8px}
   .nav .sub button{background:none;border:0;color:var(--muted);font:inherit;font-size:.88rem;text-align:left;padding:8px 10px;border-radius:8px;cursor:pointer}
   .nav .sub button:hover{background:var(--surface)}
   .nav .sub button.on{color:var(--text);background:var(--surface2);font-weight:700}
-  .sizebox{display:block;margin-top:auto;padding:0 6px}
   .main{padding:26px 34px 48px;min-width:0}
   .wrap.wide{max-width:1040px}.wrap{margin:0}
   .wrap.home{max-width:760px}
-  .nav>button.phone{display:none}
 }
 .lgrid{align-items:start;display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-top:12px}
 @media(min-width:720px){.lgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
@@ -156,18 +157,16 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .hbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .hbtns .btn{padding:9px 14px;font-size:.85rem}
 .hbtns .btn.d{color:var(--danger)}
-.look{display:flex;align-items:center;gap:10px;margin-top:22px}.look select{max-width:240px}
-/* phone: a line under the app name, Home and the two menus sit a little lower, and Text size /
-   Theme live on the Settings tab instead of the header and Home screen */
+/* phone: a line under the app name, Home and the two menus sit a little lower */
 @media(max-width:899px){
   .brand{border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:14px}
-  .brand #size1,#app .look{display:none}
   #app.home,#app.picker{padding-top:7vh}
 }
 .setlist{display:flex;flex-direction:column;gap:12px;margin-top:6px}
 .setrow{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .setrow b{font-size:.98rem}.setrow .muted{font-size:.85rem}
 .setrow select{max-width:220px}
+.setrow.nw{flex-wrap:nowrap}.setrow.nw>div{flex:1;min-width:0}
 .setrow .size{font-size:0}.setrow .size button{font-size:.95rem;min-width:52px;min-height:42px}
 .safety{font-size:.78rem;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:14px;line-height:1.4}
 .costlbl{font-weight:700;margin-top:10px}
@@ -228,9 +227,8 @@ details.btab table td:first-child,details.btab table th:first-child{text-align:l
 <body>
 <div class="shell">
   <aside class="side">
-    <div class="brand"><div><b>In Like Flint - Load Lore</b><div class="ver" id="ver"></div></div><div id="size1"></div></div>
+    <div class="brand"><div><small>In Like Flint</small><b>Load Lore</b><div class="ver" id="ver"></div></div></div>
     <nav class="nav" id="nav" aria-label="Main"></nav>
-    <div class="sizebox" id="size2"></div>
   </aside>
   <main class="main">
     <div class="wrap" id="app"></div>
@@ -454,7 +452,7 @@ const ICON={
   h2h:'<svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 7a3 3 0 0 0 6 0L7 7zM17 7l-3 7a3 3 0 0 0 6 0l-3-7z"/></svg>',
   loads:'<svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg>',
   settings:'<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>'};
-// Settings is a phone-only tab; wide screens keep Text size in the sidebar and Theme on Home
+// Settings (theme, text size, S-F grades): a tab on phones, the bottom of the sidebar on wide screens
 // the two tools: key, title, Home-screen blurb (same as TOOLS in the desktop app)
 const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or your own handload, graded against each other."],
   ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges."]];
@@ -462,7 +460,7 @@ const toolTitle=k=>(TOOLS.find(t=>t[0]===k)||TOOLS[0])[1];
 const NAVS=[["home","Home",ICON.home],["loads","Load Dictionary",ICON.loads],["h2h","Head to Head",ICON.h2h],["settings","Settings",ICON.settings]];
 const H2H_MIN=2,H2H_MAX=5,H2H={};   // category title -> Head to Head picks (pickKey)
 const pickKey=it=>it.cartridge+"|"+(it.hid||it.label);
-// S-F grades on / off, shared by both tools and remembered
+// S-F grades on / off (Settings), shared by both tools and remembered
 let GRADES=true;try{GRADES=localStorage.getItem(GRADES_KEY)!=="0";}catch(e){}
 function setGrades(on){GRADES=on;try{localStorage.setItem(GRADES_KEY,on?"1":"0");}catch(e){}}
 function h2hText(cat,it){
@@ -471,11 +469,11 @@ function h2hText(cat,it){
   if(p.length>=H2H_MAX)return `Head to Head is full (${H2H_MAX}) · Open ›`;
   return "+ Head to Head"+(p.length?` (${p.length} picked)`:"");
 }
-function wireGrades(root,after){
+function wireGrades(root){
   const b=$("[data-grades]",root);
-  b.onclick=()=>{setGrades(!GRADES);b.classList.toggle("on",GRADES);b.setAttribute("aria-pressed",GRADES);b.textContent=`S–F grades: ${GRADES?"On":"Off"}`;after();};
+  b.onclick=()=>{setGrades(!GRADES);b.classList.toggle("on",GRADES);b.setAttribute("aria-pressed",GRADES);b.textContent=GRADES?"On":"Off";};
 }
-const gradesBtn=()=>`<button class="tgl ${GRADES?"on":""}" data-grades aria-pressed="${GRADES}">S–F grades: ${GRADES?"On":"Off"}</button>`;
+const gradesBtn=()=>`<button class="tgl ${GRADES?"on":""}" data-grades aria-pressed="${GRADES}" aria-label="S–F grades">${GRADES?"On":"Off"}</button>`;
 const NAV={mode:"home",cat:null};
 const hasDetail=cat=>(state.detail[cat.title]||[]).length>0;
 function lastCat(){try{return localStorage.getItem("cartridge_calc_cat");}catch(e){return null;}}
@@ -483,7 +481,7 @@ function drawChrome(){
   const nav=$("#nav");
   nav.innerHTML=NAVS.map(([k,t,ic])=>{
     const on=NAV.mode===k;
-    return `<button data-nav="${k}" class="${on?"on":""}${k==="settings"?" phone":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
+    return `<button data-nav="${k}" class="${on?"on":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
       (on&&k!=="home"&&k!=="settings"?`<div class="sub">${CATEGORIES.filter(hasDetail).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
@@ -500,20 +498,19 @@ function navigate(mode,cat){
 }
 function showHome(){
   document.title=APP_TITLE;app.classList.remove("wide","picker");app.classList.add("home");
-  app.innerHTML=`<div class="hero"><h2>${APP_TITLE}</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost, or put loads head to head.</p></div>
-  <div class="feat">${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>
-  <div class="look"><label class="l" for="theme" style="margin:0">APPEARANCE</label><select id="theme">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>`;
+  app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost, or put loads head to head.</p></div>
+  <div class="feat">${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
-  $("#theme").onchange=e=>applyTheme(e.target.value);
 }
 function showSettings(){
   document.title=APP_TITLE;app.classList.remove("wide","home","picker");
   app.innerHTML=`<div class="phead"><h2>Settings</h2></div><div class="setlist">
     <div class="setrow"><b>Text size</b>${sizeCtl()}</div>
     <div class="setrow"><label for="theme2"><b>Theme</b></label><select id="theme2">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>
+    <div class="setrow nw"><div><b>S–F grades</b><div class="muted">Show the grades in the Load Dictionary and Head to Head</div></div>${gradesBtn()}</div>
     <div class="setrow"><b>Version</b><span class="muted">${esc(VERSION_TEXT)}</span></div>
   </div>`;
-  wireSize(app);
+  wireSize(app);wireGrades(app);
   $("#theme2").onchange=e=>applyTheme(e.target.value);
 }
 function showPicker(mode){
@@ -672,7 +669,7 @@ function openLoads(cat,pane){
     <div class="chips hidden" id="lsrc" role="group" aria-label="Source"></div>
     <div class="sortrow"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
       <select id="ls"><option value="score">Sort: best value</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
-    <div class="links"><button class="link m" id="lwt">▸&nbsp; Scoring weights</button><span class="lright">${gradesBtn()}${cat.grain_style?'<button class="link" id="hadd">+&nbsp; Add handload</button>':""}</span></div>
+    <div class="links"><button class="link m" id="lwt">▸&nbsp; Scoring weights</button><span class="lright">${cat.grain_style?'<button class="link" id="hadd">+&nbsp; Add handload</button>':""}</span></div>
     <div class="weights hidden" id="lwb"><div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="lw_${k}" inputmode="numeric"></div>`).join("")}</div>
       <div class="help">Higher = matters more. 0 ignores that factor.</div></div>
   </div>
@@ -805,7 +802,6 @@ function openLoads(cat,pane){
   $$("#lc").onchange=()=>{L.open=null;buildChips();render();};
   ["#ld","#lg","#lf"].concat(MKEYS.map(k=>"#lw_"+k)).forEach(id=>$$(id).addEventListener("input",render));
   $$("#ls").onchange=render;
-  wireGrades(pane,render);
   $$("#lwt").onclick=()=>{L.weightsOpen=!L.weightsOpen;$$("#lwb").classList.toggle("hidden",!L.weightsOpen);$$("#lwt").innerHTML=(L.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";};
   buildChips();render();
 }
@@ -853,7 +849,7 @@ function openH2H(cat,pane){
       <div><label class="l">DISTANCE (YD)</label><input id="hd" inputmode="decimal"></div>
       <div><label class="l">${esc(cat.gun_label)}</label><input id="hg" inputmode="decimal"></div>
     </div>
-    <div class="links"><button class="link m" id="hwt">▸&nbsp; Scoring weights</button><span class="lright">${gradesBtn()}</span></div>
+    <div class="links"><button class="link m" id="hwt">▸&nbsp; Scoring weights</button></div>
     <div class="weights hidden" id="hwb"><div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="hw_${k}" inputmode="numeric"></div>`).join("")}</div>
       <div class="help">Higher = matters more. 0 ignores that factor.</div></div>
   </div>
@@ -941,7 +937,6 @@ function openH2H(cat,pane){
   $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push(blank());drawSlots();const r=$$("#hs").lastElementChild;r.querySelector(r.querySelector(".cs").value?".ls":".cs").focus();};
   ["#hd","#hg"].concat(MKEYS.map(k=>"#hw_"+k)).forEach(id=>$$(id).addEventListener("input",render));
   $$("#hwt").onclick=()=>{H.weightsOpen=!H.weightsOpen;$$("#hwb").classList.toggle("hidden",!H.weightsOpen);$$("#hwt").innerHTML=(H.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";};
-  wireGrades(pane,render);
   render();
 }
 
@@ -955,7 +950,7 @@ function modal(inner){
   return [m,close];
 }
 
-$("#ver").textContent=VERSION_TEXT;$("#size1").innerHTML=sizeCtl();$("#size2").innerHTML=sizeCtl();wireSize(document.body);
+$("#ver").textContent=VERSION_TEXT;
 navigate("home");
 // Android back button (Capacitor App plugin): close a dialog, then step back up the menus
 // (category -> category list -> Home); only Home closes the app
