@@ -887,6 +887,7 @@ class App:
         except (tk.TclError, ValueError):
             self.dpi = 1.0
         self.view = None
+        self._fonts, self._widths = {}, {}   # text_width caches
         self._base_w = self._auto_w = None   # window width before / after grow_to_fit
         families = set(tkfont.families(root))
         self.family = next((f for f in ("Segoe UI", "SF Pro Text", "Inter", "Noto Sans",
@@ -1058,9 +1059,7 @@ class App:
             else:
                 self.show_picker(self.mode)
         else:
-            self.open_category(cat, tab)
-            if snap:
-                self.view.restore(snap)
+            self.open_category(cat, tab, snap)
 
     def size_controls(self, parent, bg):
         """Small 'Text size  A-  A+' control, packed by the caller."""
@@ -1135,19 +1134,41 @@ class App:
         counts don't). `rows` are lists of cell strings; `known` keeps widths from earlier
         calls so columns never shrink while filtering. The stretch column fits its longest
         entry (full load names) and takes any spare room."""
-        head = tkfont.Font(font=self.f(10, True))
-        body = tkfont.Font(font=self.f(10))
-        pad = body.measure("00") + 14
+        head, body = self.f(10, True), self.f(10)
+        pad = self.text_width(body, "00") + 14
         known = {} if known is None else known
         for i, col in enumerate(cols):
-            need = max([head.measure(col)] + [body.measure(str(r[i])) for r in rows]) + pad
+            need = max([self.text_width(head, col)]
+                       + self.widest(body, {str(r[i]) for r in rows})) + pad
             known[col] = max(known.get(col, 0), need)
             if col == stretch_col:
-                tree.column(col, width=known[col], minwidth=min(known[col], body.measure("0" * 24)),
+                tree.column(col, width=known[col], minwidth=min(known[col], self.text_width(body, "0" * 24)),
                             stretch=True)
             else:
                 tree.column(col, width=known[col], minwidth=known[col], stretch=False)
         return known
+
+    def text_width(self, font, text):
+        """Pixel width of `text` in `font` (an f() tuple), remembered: a Tk measure call is slow
+        (about half a millisecond), and a table re-measures the same names on every redraw."""
+        key = (font, text)
+        w = self._widths.get(key)
+        if w is None:
+            f = self._fonts.get(font)
+            if f is None:
+                f = self._fonts[font] = tkfont.Font(font=font)
+            w = self._widths[key] = f.measure(text)
+        return w
+
+    def widest(self, font, texts):
+        """Exact widths of the few strings that can be the widest of `texts`. Each string is
+        first estimated from its letters' widths (measured once per letter), then the top few
+        are measured for real, so a column of 1,000 load names costs a handful of measures."""
+        texts = list(texts)
+        if len(texts) <= 8:
+            return [self.text_width(font, t) for t in texts]
+        est = sorted(texts, key=lambda t: sum(self.text_width(font, ch) for ch in t), reverse=True)
+        return [self.text_width(font, t) for t in est[:8]]
 
     def grow_to_fit(self, extra):
         """Resize the window by `extra` px so a table fits, within the screen. It widens for a
@@ -1241,6 +1262,9 @@ class App:
                                                    self._update_scroll(), self._refit_soon()))
         for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
             self.root.bind_all(seq, self._on_wheel)
+            # Tk's dropdowns step their value on every wheel tick, and each step re-ran the
+            # theme or cartridge change (issue #14): over a closed dropdown the wheel scrolls the page
+            self.root.bind_class("TCombobox", seq, lambda e: (self._on_wheel(e), "break")[1])
         self._draw_chrome()
 
     def _sidebar_width(self):
@@ -1408,15 +1432,15 @@ class App:
         """Open a category in a feature, remembering what each tab had on screen."""
         if self.view is not None and self.cat is not None:
             self.carry.setdefault(self.cat.title, {}).update(self.view.snapshot())
-        self.open_category(cat, tab)
         mem = self.carry.get(cat.title)
-        if mem and self.view is not None:
-            self.view.restore(dict(mem))
+        self.open_category(cat, tab, dict(mem) if mem else None)
 
     def go_mode(self, tab):
         self.show_picker(tab)
 
-    def open_category(self, cat, tab="loads"):
+    def open_category(self, cat, tab="loads", snap=None):
+        """Open a category's tool, set up from `snap` (what it had on screen last time) so the
+        table is computed and drawn once, not once with the defaults and again restored."""
         info = self.data[cat.title]
         if info["error"]:
             messagebox.showerror("Can't open this category", info["error"] +
@@ -1433,7 +1457,8 @@ class App:
         self.root.title(f"{APP_TITLE} — {cat.title}")
         self._draw_chrome()
         view = HeadToHeadView if tab == "h2h" else LoadsView
-        self.view = view(self, stage, cat, info["detail"] + self.hand_loads(cat), info["detail_error"])
+        self.view = view(self, stage, cat, info["detail"] + self.hand_loads(cat), info["detail_error"],
+                         snap)
         self._update_scroll()
 
 
@@ -1681,7 +1706,7 @@ class LoadsView:
     tab = "loads"
     OPEN_ROWS = 7                     # list rows while a load's panel is open
 
-    def __init__(self, app, stage, cat, loads, error=""):
+    def __init__(self, app, stage, cat, loads, error="", snap=None):
         self.app, self.root, self.cat = app, app.root, cat
         self.loads = loads
         self.groups = self._group(loads)
@@ -1705,11 +1730,14 @@ class LoadsView:
         self._pending = None
         self._build_ui(stage, error)
         if hasattr(self, "tree"):
+            cart = self._apply_snap(snap) if snap and self.loads else None
             for var in (self.dist_var, self.gun_var, self.filter_var, *self.weight_vars.values()):
                 var.trace_add("write", self._schedule)
             self.weight_vars_note()
-            if self.cartridges:                       # start on the cartridge with the most loads
-                self.cart_var.set(max(self.cartridges, key=lambda c: len(self.groups[c])))
+            if cart is None and self.cartridges:      # start on the cartridge with the most loads
+                cart = max(self.cartridges, key=lambda c: len(self.groups[c]))
+            if cart is not None:
+                self.cart_var.set(cart)
                 self._on_cartridge()
 
     # ---- layout ---------------------------------------------------------- #
@@ -1901,6 +1929,13 @@ class LoadsView:
     def restore(self, snap):
         if not self.loads or not hasattr(self, "tree"):
             return
+        cart = self._apply_snap(snap)
+        if cart is not None:
+            self.cart_var.set(cart)
+            self._on_cartridge()
+
+    def _apply_snap(self, snap):
+        """Put a snapshot's settings back; returns its cartridge if it is still listed."""
         self.purpose = snap.get("purpose", "All")
         self.source = snap.get("source", "All")
         for k, v in snap.get("weights", {}).items():
@@ -1912,9 +1947,7 @@ class LoadsView:
             self.gun_var.set(snap["gun"])
         if snap.get("weights_open") and not self.weights_open:
             self._toggle_weights()
-        if snap.get("cart") in self.groups:
-            self.cart_var.set(snap["cart"])
-            self._on_cartridge()
+        return snap.get("cart") if snap.get("cart") in self.groups else None
 
     # ---- helpers ---------------------------------------------------------- #
     def _toggle_weights(self):
@@ -2156,6 +2189,11 @@ class LoadsView:
 
     # ---- compute + render ------------------------------------------------- #
     def refresh(self):
+        if self._pending is not None:                 # this redraw covers any queued one
+            try:
+                self.root.after_cancel(self._pending)
+            except Exception:
+                pass
         self._pending = None
         alive = getattr(self.tree, "winfo_exists", None)
         if alive is not None and not alive():          # a delayed refresh after leaving this tab
@@ -2418,7 +2456,7 @@ class HeadToHeadView:
     tab = "h2h"
     FACTORS = ("velocity", "energy", "recoil", "cost", "taylor", "hits")
 
-    def __init__(self, app, stage, cat, loads, error=""):
+    def __init__(self, app, stage, cat, loads, error="", snap=None):
         self.app, self.root, self.cat = app, app.root, cat
         self.loads = loads
         self.groups = {c: v for c, v in group_by_cartridge(loads, True).items() if v}
@@ -2443,6 +2481,8 @@ class HeadToHeadView:
         while len(self.slots) < H2H_MIN:
             self._add_slot()
         self._save_picks()
+        if snap:
+            self._apply_snap(snap)
         for var in (self.dist_var, self.gun_var, *self.weight_vars.values()):
             var.trace_add("write", self._schedule)
         self.refresh()
@@ -2601,6 +2641,10 @@ class HeadToHeadView:
     def restore(self, snap):
         if not hasattr(self, "slot_box"):
             return
+        self._apply_snap(snap)
+        self.refresh()
+
+    def _apply_snap(self, snap):
         for k, v in snap.get("weights", {}).items():
             if k in self.weight_vars:
                 self.weight_vars[k].set(v)
@@ -2610,7 +2654,6 @@ class HeadToHeadView:
             self.gun_var.set(snap["gun"])
         if snap.get("weights_open") and not self.weights_open:
             self._toggle_weights()
-        self.refresh()
 
     def _toggle_weights(self):
         self.weights_open = not self.weights_open
