@@ -1,5 +1,10 @@
 # Cartridge Calculator
 
+App name (Oct 2026): "In Like Flint - Load Lore" (APP_TITLE / web APP_TITLE, installer AppName,
+.desktop Name, capacitor appName). Repo, file and package names (CartridgeCalculator.exe,
+cartridge_calculator.py, appId com.cartridgecalc.app, Windows AppId and install folder) stay as
+they were so updates keep installing over older versions.
+
 Grades ammo S–F on velocity, energy, recoil, cost (plus Taylor KO and HITS;
 default weights 3/3/1/3/3/3, Shotgun keeps Taylor KO and HITS at 0: no bullet diameter).
 Desktop app: src/cartridge_calculator.py (Tkinter, stdlib only). Phone/web: web/template.html,
@@ -8,13 +13,26 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 ## Rules
 - Desktop and web scoring must stay in parity (same formulas, same data).
 - Data lives in data/*.csv. After editing any CSV or the template, rebuild the web version.
-- Compare Cartridges uses data/ammo_*.csv: generic loads, no brand names. Compare Loads uses
-  data/loads_*.csv: every load name starts with its brand (Federal, Hornady, SIG Sauer...).
+- Two tools (Oct 2026; Compare Cartridges and "Add your own caliber" were removed): Load
+  Dictionary (LoadsView / openLoads, the old Compare Loads, plus an S-F grades on/off switch kept
+  in settings.json show_grades / localStorage) and Head to Head (HeadToHeadView / openH2H, 2-5
+  loads of one category side by side, picks in App.h2h / H2H, in memory only). Phones (<=600 px)
+  get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
+  always naming loads, never numbering them.
+- Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
+  flat-fire drop + 10 mph drift from flight_times / flightTimes (same G1 RK2 steps as velocity_at),
+  zero_yd / sight_in per category. An estimate, not a solver.
+- Android back button: @capacitor/app backButton listener in template.html closes a dialog, then
+  steps category -> category list -> Home; only Home exits.
+- data/loads_*.csv: every load name starts with its brand (Federal, Hornady, SIG Sauer...).
+  data/ammo_*.csv: generic loads, no brand names; now only the cartridge list (handload-only
+  cartridges, handload dialog).
   Generic rows never go in loads_*.csv, branded rows never in ammo_*.csv.
   ammo_*.csv names are bullet types only (Soft Point, Polymer Tip, Match BTHP, FMJ, JHP, Solid,
   Copper (lead-free)...), no product lines; it covers the common bases per cartridge, not every load.
-- Compare Cartridges grades on an absolute curve; Compare Loads grades relative to the
-  same cartridge and purpose (median/MAD, centre 70).
+- Grades are relative to the same cartridge and purpose (median/MAD, centre 70; shotshells
+  within their load type): score_loads / scoreLoads. Head to Head shows each load's Load
+  Dictionary grade (purpose All), never grades the picked loads against each other.
 - Load labels read "Load  ·  150 gr" (make_label / makeLabel). Saved prices are keyed by label;
   keys from the old weight-first format are converted on read (_rename_price_key / readPrices).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
@@ -30,7 +48,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   The Load column fits the longest full name, re-measured per cartridge; grow_to_fit widens
   the window for it and gives the room back later, never below the width the user chose.
   LoadsView.fit_table_height sets the table's row count from the window height so the
-  selected load's scores panel fits without scrolling (min 6 rows, then the page scrolls).
+  selected load's (larger) panel fits without scrolling: at most OPEN_ROWS while a load is open,
+  the full height when closed (min 6 rows, then the page scrolls).
   App.px() scales by text size AND screen DPI (self.dpi, 96 dpi = 1.0). On Windows,
   sharp_on_windows() declares DPI awareness before Tk starts, otherwise Windows stretches the
   window and it looks blurry (issue #5).
@@ -54,7 +73,7 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
 - Desktop: python3.12 has Tk here (the default python3 doesn't); drive App headlessly under
   xvfb-run, patching messagebox so popups don't block. Try `tk scaling 2.0` for HiDPI.
 - Web: Playwright from /opt/node-tools/node_modules against web/www/index.html.
-- Parity: compare score_stats/relative_scores with the web's scoreStats/relativeScores per load.
+- Parity: compare score_loads/h2h_rows/h2h_downrange with the web's scoreLoads/h2hRows/h2hDownrange.
 
 ## Data notes
 - No loads were ever deleted (checked against the user's older load files, Oct 2026). The
@@ -77,7 +96,7 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
 - Desktop layout fixed for HiDPI and checked under Xvfb; confirm on the real Fedora and
   Windows machines.
 - The generic "typical" rows (7.62x54mmR, 5.45x39mm, 7.62x25mm Tokarev, .38 Super, .32 S&W Long)
-  were taken out of Compare Loads (Oct 2026); they remain in Compare Cartridges and could be
-  checked against real steel-case import data (Wolf, Tula, PPU) some day.
-- Compare Loads (rifle/handgun) also lists every Compare Cartridges cartridge that has no factory
+  were taken out of Compare Loads (Oct 2026); with Compare Cartridges gone they are only in
+  ammo_*.csv. They could come back as branded loads from steel-case import data (Wolf, Tula, PPU).
+- The Load Dictionary (rifle/handgun) also lists every ammo_*.csv cartridge that has no factory
   loads (with_handload_only / withHandloadOnly), e.g. .32-40 Winchester, so it can hold handloads.

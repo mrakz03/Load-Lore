@@ -18,7 +18,7 @@ if [ "$1" = "--uninstall" ]; then
         rmdir "$APPDIR" 2>/dev/null || echo "Kept your own files in $APPDIR (delete the folder to remove them)."
     fi
     update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
-    echo "Cartridge Calculator removed."
+    echo "In Like Flint - Load Lore removed."
     exit 0
 fi
 
@@ -38,7 +38,7 @@ chmod +x "$APPDIR/CartridgeCalculator"
 cat > "$DESKTOP" <<DESK
 [Desktop Entry]
 Type=Application
-Name=Cartridge Calculator
+Name=In Like Flint - Load Lore
 Comment=Best-value ammo calculator
 Exec=$APPDIR/CartridgeCalculator
 Path=$APPDIR
@@ -48,5 +48,5 @@ Categories=Utility;
 DESK
 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
 
-echo "Done! Search for 'Cartridge Calculator' in your app launcher."
+echo "Done! Search for 'In Like Flint - Load Lore' in your app launcher."
 echo "Data files (editable) live in: $APPDIR"

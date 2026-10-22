@@ -18,6 +18,8 @@ OUT = os.path.join(ROOT, "assets")
 BG_TOP, BG_BOTTOM = (31, 36, 46), (14, 16, 20)
 BORDER = (45, 51, 63)
 ACCENT, ON_ACCENT = (76, 141, 255), (255, 255, 255)
+ACCENT_DARK, ACCENT_LIGHT = (44, 92, 186), (130, 176, 255)
+PAGES, PAGES_SHADE = (238, 230, 210), (200, 190, 166)
 BRASS, BRASS_LIGHT, BRASS_DARK = (205, 160, 62), (240, 207, 120), (150, 112, 38)
 COPPER, COPPER_LIGHT = (190, 104, 52), (226, 142, 86)
 FONTS = ("/usr/share/fonts/opentype/inter/Inter-ExtraBold.otf",
@@ -44,34 +46,58 @@ def _ogive(cx, half_w, base_y, tip_y, steps=40):
     return left, right
 
 
-def draw_symbol(d, s, ox=0.0, oy=0.0):
-    """Cartridge + grade badge on a 1024-unit grid scaled by s, offset by (ox, oy)."""
-    X = lambda v: ox + v * s
-    Y = lambda v: oy + v * s
-    cx, half = 450, 118
-    # case (straight-walled, like .45-70), with a lit stripe and a shaded edge
-    d.rounded_rectangle([X(cx - half), Y(440), X(cx + half), Y(808)], radius=10 * s, fill=BRASS)
-    d.rectangle([X(cx - half + 26), Y(446), X(cx - half + 70), Y(800)], fill=BRASS_LIGHT)
-    d.rectangle([X(cx + half - 40), Y(446), X(cx + half - 4), Y(800)], fill=BRASS_DARK)
+def draw_cartridge(d, X, Y, cx=450, half=112):
+    """A bottlenecked rifle cartridge on the 1024-unit grid (X / Y map grid units to pixels)."""
+    neck, shoulder_top, shoulder_bot, mouth = 60, 330, 410, 250
+    body = [(cx - half, 808), (cx - half, shoulder_bot), (cx - neck, shoulder_top), (cx - neck, mouth),
+            (cx + neck, mouth), (cx + neck, shoulder_top), (cx + half, shoulder_bot), (cx + half, 808)]
+    # bullet first (the case mouth overlaps its base): a spitzer nose to a sharp-ish tip
+    left, right = _ogive(cx, neck - 4, 262, 40)
+    d.polygon([(X(x), Y(y)) for x, y in left + right[::-1]], fill=COPPER)
+    l2, _ = _ogive(cx - neck + 30, 12, 262, 110)      # highlight down the lit side of the nose
+    d.polygon([(X(x), Y(y)) for x, y in l2] + [(X(cx - neck + 44), Y(262))], fill=COPPER_LIGHT)
+    d.polygon([(X(x), Y(y)) for x, y in body], fill=BRASS)
+    # lit stripe and shaded edge follow the body, shoulder and neck
+    d.polygon([(X(x), Y(y)) for x, y in [(cx - half + 24, 800), (cx - half + 24, shoulder_bot + 8),
+                                         (cx - half + 66, shoulder_bot - 18), (cx - half + 66, 800)]],
+              fill=BRASS_LIGHT)
+    d.rectangle([X(cx - neck + 14), Y(mouth + 8), X(cx - neck + 30), Y(shoulder_top + 4)], fill=BRASS_LIGHT)
+    d.polygon([(X(x), Y(y)) for x, y in [(cx + half - 38, 800), (cx + half - 38, shoulder_bot - 4),
+                                         (cx + half, shoulder_bot), (cx + half, 800)]], fill=BRASS_DARK)
     # extractor groove and rim
     d.rectangle([X(cx - half + 18), Y(808), X(cx + half - 18), Y(838)], fill=BRASS_DARK)
-    d.rounded_rectangle([X(cx - half - 12), Y(838), X(cx + half + 12), Y(884)], radius=12 * s, fill=BRASS)
-    d.rectangle([X(cx - half + 4), Y(846), X(cx - half + 46), Y(876)], fill=BRASS_LIGHT)
-    # bullet: a short straight bearing surface, then the nose
-    bh = half - 8
-    d.rectangle([X(cx - bh), Y(360), X(cx + bh), Y(446)], fill=COPPER)
-    left, right = _ogive(cx, bh, 362, 120)
-    d.polygon([(X(x), Y(y)) for x, y in left + right[::-1]], fill=COPPER)
-    l2, _ = _ogive(cx - bh + 52, 22, 446, 196)        # highlight down the lit side of the nose
-    d.polygon([(X(x), Y(y)) for x, y in l2] + [(X(cx - bh + 74), Y(446))], fill=COPPER_LIGHT)
-    # crimp line where bullet meets case
-    d.rectangle([X(cx - half), Y(440), X(cx + half), Y(452)], fill=BRASS_DARK)
-    # grade badge: an "S" in the accent colour, ringed in the background colour
-    bx, by, r = 722, 730, 168
-    d.ellipse([X(bx - r - 22), Y(by - r - 22), X(bx + r + 22), Y(by + r + 22)], fill=BG_BOTTOM)
-    d.ellipse([X(bx - r), Y(by - r), X(bx + r), Y(by + r)], fill=ACCENT)
-    f = _font(int(250 * s))
-    d.text((X(bx), Y(by + 6)), "S", font=f, fill=ON_ACCENT, anchor="mm")
+    d.rounded_rectangle([X(cx - half - 4), Y(838), X(cx + half + 4), Y(884)], radius=X(12) - X(0),
+                        fill=BRASS)
+    d.rectangle([X(cx - half + 8), Y(846), X(cx - half + 50), Y(876)], fill=BRASS_LIGHT)
+
+
+def draw_book(d, X, Y):
+    """A closed hardcover book lying flat (spine on the left, page edges facing out)."""
+    l, r, top, bot = 196, 820, 742, 892
+    # back cover peeks out under the pages, front cover on top
+    d.rounded_rectangle([X(l), Y(bot - 30), X(r + 14), Y(bot)], radius=X(14) - X(0), fill=ACCENT_DARK)
+    d.rectangle([X(l + 40), Y(top + 30), X(r), Y(bot - 22)], fill=PAGES)
+    for k in range(1, 5):                              # page lines on the fore edge
+        yy = top + 30 + k * (bot - 52 - top - 30) / 5
+        d.rectangle([X(l + 48), Y(yy - 3), X(r - 6), Y(yy + 3)], fill=PAGES_SHADE)
+    d.rounded_rectangle([X(l), Y(top), X(r + 14), Y(top + 38)], radius=X(14) - X(0), fill=ACCENT)
+    # spine, rounded, with two bands
+    d.rounded_rectangle([X(l - 8), Y(top), X(l + 58), Y(bot)], radius=X(26) - X(0), fill=ACCENT)
+    for yy in (top + 48, bot - 62):
+        d.rectangle([X(l - 8), Y(yy), X(l + 58), Y(yy + 12)], fill=ACCENT_DARK)
+    d.rectangle([X(l + 8), Y(top + 8), X(l + 20), Y(bot - 8)], fill=ACCENT_LIGHT)   # lit edge
+
+
+def draw_symbol(d, s, ox=0.0, oy=0.0):
+    """A cartridge standing on a book (load lore) on a 1024-unit grid scaled by s, offset (ox, oy)."""
+    X = lambda v: ox + v * s
+    Y = lambda v: oy + v * s
+    draw_book(d, X, Y)
+    # the cartridge stands on the book: 0.76 scale, rim resting on the cover, centred
+    k, cx = 0.76, 512
+    Xc = lambda v: X(cx + (v - 450) * k)
+    Yc = lambda v: Y(742 - (884 - v) * k)
+    draw_cartridge(d, Xc, Yc)
 
 
 def full_icon(size, round_mask=False):
