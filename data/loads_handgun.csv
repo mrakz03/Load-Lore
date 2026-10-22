@@ -93,6 +93,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 SIG,Winchester USA Full Metal Jacket-Flat Nose,125,1370,0.110,8.7,1.56,,partial,,,Target
 .357 SIG,Winchester USA Jacketed Hollow Point,125,1370,0.110,8.7,1.56,,partial,,,Defense
 .357 SIG,PPU Flat Point Jacketed,125,1542,0.153,11.0,1.22,,partial,,5.9,Target
+.357 SIG,Buffalo Bore Low Flash JHP,125,1425,0.118,9.4,2.01,,partial,,,Defense
+.357 SIG,Buffalo Bore Low Flash FMJ-FN,125,1425,0.153,9.4,2.01,,partial,,,Target
 .38 Super,Federal American Eagle JHP,115,1130,0.123,5.4,0.86,,catalog,,5,Defense
 .38 Super,Winchester Silvertip Plated JHP,125,1240,0.152,7.1,1.55,,partial,,,Defense
 .38 Super,Fiocchi Range Dynamics FMJ,129,1150,0.157,6.3,0.86,,partial,,,Target
@@ -444,6 +446,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 10mm Auto,Fiocchi Hyperformance Hunt Barnes XPB,155,1165,0.131,7.1,2.21,,partial,,,Defense
 10mm Auto,Hornady American Gunner XTP,155,1410,0.139,10.3,2.21,,catalog,,5,Hunting
 10mm Auto,Hornady Custom XTP,155,1410,0.139,10.3,2.21,,catalog,,5,Hunting
+10mm Auto,Buffalo Bore Barnes TAC-XP (lead-free),155,1350,0.131,9.5,2.66,,partial,,,Defense
 10mm Auto,PMC Bronze Jacketed Hollow Point,170,1200,0.114,8.2,2.21,,catalog,,,Hunting
 10mm Auto,Winchester USA Ready Defense Hex-Vent JHP,170,1250,0.157,8.9,2.21,,catalog,,5,Defense
 10mm Auto,PPU Flat Point Jacketed,170,1115,0.159,7.1,0.46,,partial,,5.9,Target
@@ -472,8 +475,12 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 10mm Auto,PPU JHP,180,1083,0.175,7.1,1.43,,partial,,5.9,Defense
 10mm Auto,PPU JHP High Velocity,180,1198,0.175,8.7,1.43,,partial,,5.9,Defense
 10mm Auto,Underwood FMJ Flat Nose,180,1300,0.146,10.2,1.06,,partial,,,Target
+10mm Auto,Buffalo Bore JHP,180,1350,0.175,11.0,2.10,,partial,,,Defense
+10mm Auto,Buffalo Bore Tactical Low Recoil JHP,180,1200,0.175,8.7,2.10,,partial,,,Defense
+10mm Auto,Buffalo Bore Tactical Low Recoil FMJ-FN,180,1200,0.146,8.7,2.10,,partial,,,Target
 10mm Auto,PPU Flat Point Jacketed,190,1050,0.145,7.0,0.46,,partial,,5.9,Target
 10mm Auto,PPU Flat Point Jacketed High Velocity,190,1165,0.145,8.6,0.46,,partial,,5.9,Target
+10mm Auto,Buffalo Bore Dangerous Game Mono-Metal,190,1200,0.145,9.1,2.66,,partial,,,Hunting
 10mm Auto,CCI Blazer Aluminum FMJ,200,1050,0.173,7.4,0.58,,catalog,,5,Target
 10mm Auto,Federal Fusion SP,200,1200,0.190,9.7,0.85,,catalog,,5,Hunting
 10mm Auto,Federal Personal Defense Punch JHP,200,1100,0.228,8.1,2.21,,catalog,,5,Defense
@@ -491,9 +498,11 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 10mm Auto,Nosler Defense JHP,200,1000,0.228,6.7,2.80,,partial,,,Defense
 10mm Auto,Underwood Hard Cast Flat Nose,200,1250,0.190,10.5,1.51,,partial,,,Hunting
 10mm Auto,Underwood XTP JHP,200,1250,0.199,10.5,1.61,,published,,,Defense
+10mm Auto,Buffalo Bore FMJ,200,1200,0.173,9.7,2.10,,partial,,,Target
 10mm Auto,Federal Premium Hunting Handgun Terminal Ascent,203,1180,0.183,9.5,1.27,,catalog,,5,Hunting
 10mm Auto,Federal Syntech Range TSJ,205,1150,0.175,9.1,0.58,,catalog,,5,Target
 10mm Auto,Underwood Hard Cast Flat Nose,220,1200,0.188,10.6,1.56,,partial,,,Hunting
+10mm Auto,Buffalo Bore Outdoorsman Hard Cast FN,220,1200,0.188,10.6,2.10,,partial,,,Hunting
 .40 S&W,Black Hills HoneyBadger,115,1325,0.098,5.6,1.57,,partial,,4.5,Defense
 .40 S&W,Winchester Super Clean Zinc FMJ,120,1250,0.127,5.2,0.37,,catalog,,4,Target
 .40 S&W,Sellier & Bellot XRG Defense,130,1247,0.110,5.6,1.22,,partial,,,Defense
@@ -505,6 +514,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .40 S&W,Remington HTP Jacketed Hollow Point,155,1205,0.163,6.3,1.43,,catalog,,4,Defense
 .40 S&W,Winchester Silvertip Plated JHP,155,1205,0.169,6.3,1.43,,catalog,,4,Defense
 .40 S&W,Black Hills Jacketed Hollow Point,155,1150,0.163,5.7,1.57,,partial,,4.5,Defense
+.40 S&W,Buffalo Bore JHP +P,155,1300,0.139,7.3,1.92,,partial,,,Defense
 .40 S&W,CCI Blazer Aluminum FMJ,165,1100,0.138,5.6,0.37,,catalog,,4,Target
 .40 S&W,CCI Blazer Brass FMJ FN,165,1050,0.139,5.1,0.37,,catalog,,4,Target
 .40 S&W,Federal American Eagle FMJ,165,1130,0.155,5.9,0.37,,catalog,,4,Target
@@ -573,6 +583,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .40 S&W,PPU TMJ,180,968,0.147,4.7,0.30,,partial,,4.0,Target
 .40 S&W,PPU JHP,180,968,0.182,4.7,1.14,,partial,,4.0,Defense
 .40 S&W,PPU Flat Point Jacketed,180,968,0.147,4.7,0.30,,partial,,4.0,Target
+.40 S&W,Buffalo Bore JHP +P,180,1100,0.182,6.0,1.92,,partial,,,Defense
+.40 S&W,Buffalo Bore FMJ +P,180,1100,0.153,6.0,1.92,,partial,,,Target
 .40 S&W,PPU Flat Point Jacketed,190,902,0.155,4.3,0.30,,partial,,4.0,Target
 .40 S&W,Federal Premium Hunting Handgun Solid Core,200,1000,0.206,5.6,0.83,,catalog,,4,Hunting
 .40 S&W,Nosler Defense Bonded JHP,200,900,0.202,4.5,2.20,,partial,,,Defense
