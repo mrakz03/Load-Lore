@@ -77,19 +77,24 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   with no payload given (Hornady #4 Buck / Heavy Magnum Coyote / .410 Triple Defense, Winchester PDX1).
   Catalog misprints fixed from the energy column: Winchester S308M2 "652 gr" = 168 gr,
   Federal P40HSD1 "100 fps" = 1050 fps.
-- Web-sourced loads (Oct 2026): 258 loads from maker websites, not catalogs: SIG Sauer (sigsauer.com),
+- Web-sourced loads (Oct 2026): 646 loads from maker websites, not the catalogs: SIG Sauer (sigsauer.com),
   Black Hills incl. Gold and HoneyBadger (black-hills.com), Norma (normausa.com; its spec tables are
   sometimes copied from another product, so the headline velocity is used), Nosler Trophy Grade
-  and Defense (nosler.com), Federal Subsonic (federalpremium.com), Lapua (lapua.com; price
-  estimated), and IMI (retailer listings; IMI is mostly out of stock in the US). Missing BCs come from
-  bullets.csv when the bullet is named, else are scaled from the nearest same-type load (source=partial);
-  missing prices are the cartridge/purpose median x a brand factor. Rows and URLs are in
+  and Defense (nosler.com), Federal Subsonic and Federal/Speer loads released after the 2026 catalog
+  (federalpremium.com), Lapua (lapua.com), Sellier & Bellot (sellierbellot.us; m/s converted to fps),
+  PPU (PPU's 2023 catalog PDF, its newest; 8x57 IS rows stand for 8x57mm Mauser, PPU's US-pressure
+  "8mm Mauser" and "7mm Mauser" loads left out), Underwood (core handgun loads), Buffalo Bore
+  (buffalobore.com), and IMI (retailer listings; IMI is mostly out of stock in the US). Missing BCs come
+  from bullets.csv when the bullet is named, else are scaled from the nearest same-type load
+  (source=partial); missing prices are the cartridge/purpose median x a brand factor (S&B and PPU
+  further adjusted toward their real budget prices). Rows and URLs are in
   research/added_loads_sources.tsv. Black Hills 5.56mm loads carry "5.56mm" in the name because the
-  same bullets are also sold as .223 Rem at different velocities.
+  same bullets are also sold as .223 Rem at different velocities. Barnes VOR-TX is not in: its site
+  loads the specs by script.
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
-  7mm STW. 8x57mm Mauser has one Lapua load; it and .480 Ruger could use PPU / S&B / Buffalo Bore data.
+  7mm STW. .480 Ruger could use Buffalo Bore data.
 
 ## Known to-dos
 - Desktop layout fixed for HiDPI and checked under Xvfb; confirm on the real Fedora and
