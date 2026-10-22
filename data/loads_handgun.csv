@@ -207,6 +207,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 9mm Luger,Black Hills Jacketed Hollow Point +P,124,1200,0.180,5.2,1.09,,partial,,4,Defense
 9mm Luger,Black Hills Jacketed Hollow Point,124,1150,0.180,4.8,1.09,,partial,,4,Defense
 9mm Luger,IMI Black Dot JHP +P,124,1180,0.180,5.0,0.99,,partial,,4,Defense
+9mm Luger,Nosler Defense Bonded JHP +P,124,1200,0.180,5.2,2.30,,partial,,,Defense
 9mm Luger,Black Hills HoneyBadger Subsonic,125,1000,0.135,3.6,1.09,,partial,,4,Defense
 9mm Luger,Federal Syntech PCC TSJ,130,1130,0.155,4.9,0.26,,catalog,,16,Target
 9mm Luger,Federal Premium Personal Defense Hydra-Shok Deep,135,1060,0.185,4.4,0.99,,catalog,,4,Defense
@@ -404,6 +405,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 10mm Auto,Speer Gold Dot Personal Protection Hollow Point,200,1100,0.169,8.1,2.21,,partial,,,Defense
 10mm Auto,Winchester Big Bore Semi Jacketed Hollow Point (hunting),200,1175,0.182,9.3,2.21,,catalog,,5,Hunting
 10mm Auto,SIG Sauer Elite V-Crown JHP,200,1050,0.150,7.4,1.50,,published,,5,Defense
+10mm Auto,Nosler Defense JHP,200,1000,0.228,6.7,2.80,,partial,,,Defense
 10mm Auto,Federal Premium Hunting Handgun Terminal Ascent,203,1180,0.183,9.5,1.27,,catalog,,5,Hunting
 10mm Auto,Federal Syntech Range TSJ,205,1150,0.175,9.1,0.58,,catalog,,5,Target
 .40 S&W,Black Hills HoneyBadger,115,1325,0.098,5.6,1.57,,partial,,4.5,Defense
@@ -476,6 +478,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .40 S&W,SIG Sauer Elite V-Crown JHP,180,985,0.182,4.8,1.50,,partial,,4,Defense
 .40 S&W,Black Hills Jacketed Hollow Point,180,1000,0.182,5.0,1.57,,partial,,4.5,Defense
 .40 S&W,Federal Premium Hunting Handgun Solid Core,200,1000,0.206,5.6,0.83,,catalog,,4,Hunting
+.40 S&W,Nosler Defense Bonded JHP,200,900,0.202,4.5,2.20,,partial,,,Defense
 .40 S&W,Federal Syntech Action Pistol TSJ,205,830,0.174,3.9,0.37,,catalog,,4,Target
 .41 Magnum,Hornady LEVERevolution FTX,190,1620,0.168,15.8,1.72,yes,catalog,,10,Hunting
 .41 Magnum,Hornady Custom XTP,210,1545,0.186,15.8,3.90,,catalog,,10,Defense
@@ -601,6 +604,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 ACP,Black Hills Full Metal Jacket,230,850,0.156,5.3,0.48,,partial,,5,Target
 .45 ACP,Black Hills Jacketed Hollow Point,230,850,0.194,5.3,1.86,,partial,,5,Defense
 .45 ACP,Black Hills Jacketed Hollow Point +P,230,950,0.194,6.6,1.86,,partial,,5,Defense
+.45 ACP,Nosler Defense Bonded JHP +P,230,950,0.194,6.6,2.55,,partial,,,Defense
 .45 ACP,Federal Premium Hunting Handgun Solid Core +P,240,1000,0.186,7.6,0.98,,catalog,,5,Hunting
 .45 Colt,Hornady Critical Defense FTX,185,920,0.143,6.6,2.99,,catalog,,3,Defense
 .45 Colt,CCI Blazer Aluminum JHP,200,1000,0.142,8.5,2.99,,catalog,,7.26,Hunting
