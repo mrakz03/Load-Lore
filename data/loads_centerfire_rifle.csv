@@ -812,6 +812,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .30-06 Springfield,Sellier & Bellot eXergy Blue TXRG,180,2654,0.505,53.3,1.88,,partial,,24,Hunting
 .30-06 Springfield,Sellier & Bellot eXergy Edge,180,2654,0.505,53.3,1.88,,partial,,24,Hunting
 .30-06 Springfield,PPU Soft Point,180,2690,0.433,54.8,1.36,,partial,,24,Hunting
+.30-06 Springfield,Buffalo Bore Premium Supercharged Sierra Spitzer,180,2850,0.505,61.5,2.73,,partial,,24,Hunting
 .30-06 Springfield,Lapua Mega Soft Point,185,2625,0.319,53.6,3.38,,published,,24,Hunting
 .30-06 Springfield,Winchester Expedition Big Game Long Range Accubond LR,190,2750,0.597,60.4,2.62,,catalog,,24,Hunting
 .30-06 Springfield,PPU HPBT,190,2625,0.258,55.0,1.55,,partial,,24,Match
@@ -844,6 +845,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .30-30 Winchester,Federal Subsonic Target Soft Point,170,1000,0.313,6.2,1.90,,published,,24,Subsonic
 .30-30 Winchester,PPU Flat Soft Point,170,2182,0.254,29.4,1.22,,partial,,24,Hunting
 .30-30 Winchester,Hornady Subsonic SUB-X,175,1050,0.306,7,2.33,,catalog,,24,Subsonic
+.30-30 Winchester,Buffalo Bore Heavy JFN,190,2100,0.332,30.4,4.29,,partial,,24,Hunting
 .30-40 Krag,Hornady Custom InterLock SP,180,2430,0.433,44.7,3.20,yes,catalog,,24,Hunting
 .30-40 Krag,Remington Core-Lokt Pointed Soft Point,180,2430,0.383,39.3,2.40,,catalog,,24,Hunting
 .30-40 Krag,Winchester Power-Point,180,2430,0.394,39.3,2.40,,catalog,,24,Hunting
@@ -1185,6 +1187,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .308 Winchester / 7.62x51mm NATO,Sellier & Bellot HPBT Match,180,2625,0.546,43.5,1.71,,partial,,24,Match
 .308 Winchester / 7.62x51mm NATO,Sellier & Bellot PTS,180,2510,0.511,39.8,1.72,,partial,,24,Hunting
 .308 Winchester / 7.62x51mm NATO,PPU Soft Point,180,2543,0.383,40.8,1.31,,partial,,24,Hunting
+.308 Winchester / 7.62x51mm NATO,Buffalo Bore Premium Supercharged Sierra Spitzer,180,2650,0.511,44.4,2.41,,partial,,24,Hunting
 .308 Winchester / 7.62x51mm NATO,Federal Premium Gold Medal Berger Juggernaut OTM,185,2600,0.552,43.9,2.40,,catalog,,24,Match
 .308 Winchester / 7.62x51mm NATO,Winchester Power-Point JHP (subsonic),185,1060,0.283,7.3,1.60,,catalog,,24,Subsonic
 .308 Winchester / 7.62x51mm NATO,Lapua Scenar OTM,185,2475,0.482,39.8,3.07,,published,,26,Match
@@ -1388,7 +1391,10 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45-70 Government,Winchester Super-X Jacketed Hollow Point,300,1920,0.184,40.9,2.92,,catalog,,24,Hunting
 .45-70 Government,Federal Subsonic Fusion Soft Point,300,1000,0.290,11.1,3.00,,published,,24,Subsonic
 .45-70 Government,Federal Subsonic Target Soft Point,300,1000,0.290,11.1,2.80,,published,,24,Subsonic
+.45-70 Government,Buffalo Bore Low Recoil Standard Pressure JHP,300,2000,0.295,44.5,4.31,,partial,,24,Hunting
 .45-70 Government,Black Hills HoneyBadger,325,1775,0.204,43.1,4.29,,partial,,24,Hunting
+.45-70 Government,Buffalo Bore Magnum Lever Gun JFN,350,2150,0.252,68.1,4.31,,partial,,24,Hunting
+.45-70 Government,Buffalo Bore Dangerous Game Mono-Metal WFN,380,2075,0.263,60.6,5.17,,partial,,24,Hunting
 .45-70 Government,Barnes Pioneer,400,1715,0.246,43.6,5.27,,published,,24,Hunting
 .45-70 Government,Fiocchi Cowboy Action LRNFP,405,1185,0.281,21.1,2.92,,partial,,,Target
 .45-70 Government,Remington Core-Lokt Soft Point (full pressure),405,1600,0.281,38.4,2.92,,catalog,,24,Hunting
@@ -1396,7 +1402,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45-70 Government,Sellier & Bellot Semi-Jacketed Soft Point,405,1509,0.281,34.1,2.92,,partial,,,Hunting
 .45-70 Government,Winchester Super-X Lead Flat Nose,405,1150,0.280,19.8,2.92,,catalog,,24,Hunting
 .45-70 Government,PPU Semi-Jacketed Flat Point,405,1329,0.280,26.5,1.97,,partial,,24,Hunting
+.45-70 Government,Buffalo Bore Magnum Lever Gun JFN,405,2000,0.280,60.1,4.31,,partial,,24,Hunting
 .45-70 Government,"Buffalo Bore Hard Cast FN (+P, modern rifles only)",430,1920,0.304,58.7,5.27,,partial,,22,Hunting
+.45-70 Government,Buffalo Bore Low Recoil Standard Pressure LBT-LFN,430,1550,0.304,38.3,4.41,,partial,,24,Hunting
 .45-70 Government,Buffalo Bore Hard Cast GC (black powder equivalent),440,1300,0.311,27.5,5.27,,partial,,,Hunting
 .45-70 Government,"Buffalo Bore FMJ FN (+P, modern rifles only)",500,1625,0.354,48.9,5.27,,partial,,,Hunting
 .45-70 Government,Buffalo Bore Hard Cast Plain Base (black powder equivalent),500,1250,0.354,28.9,5.27,,partial,,,Hunting
