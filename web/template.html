@@ -193,6 +193,32 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .h2h .gap{font-size:.75rem;color:var(--muted);margin-left:6px}.h2h .gap.best{font-weight:700}
 .h2h .badge{display:inline-block;margin-left:8px;min-width:24px;font-size:.75rem;padding:1px 5px}
 .h2h tr.sep td{border-bottom:2px solid var(--border)}
+.h2hm{display:none}
+@media(max-width:600px){
+  .h2hw{display:none}.h2hm{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .h2hm .num{flex:none;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent);color:var(--on-accent);font-weight:800;font-size:.8rem;display:inline-flex;align-items:center;justify-content:center}
+  .mload{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+  .mload.hl{border-left:3px solid var(--hand)}
+  .mload .mi{flex:1;min-width:0}.mload small{display:block;color:var(--muted);font-size:.72rem;font-weight:700}
+  .mload b{line-height:1.3;word-break:break-word}.mload .mf{font-size:.8rem;color:var(--muted);margin-top:3px}
+  .mload .best{color:var(--accent);font-weight:700}
+  .mload .mo{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.75rem;color:var(--muted)}
+  .mload .mo .badge{margin:0}
+  .mcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+  .mcard .mt{font-weight:800;display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+  .mcard .mt small{color:var(--muted);font-weight:600;font-size:.78rem}.mcard .mt .hint{margin-left:auto;font-size:.7rem}
+  .mrow{display:grid;grid-template-columns:1.6rem 1fr auto auto;column-gap:8px;row-gap:4px;align-items:center;padding:6px 0}
+  .mrow .mv{font-weight:700}.mrow .best{color:var(--accent)}
+  .mrow .mg{font-size:.75rem;color:var(--muted)}.mrow .mg.best{font-weight:700}
+  .mrow .badge{min-width:26px;font-size:.75rem;padding:2px 5px}
+  .mbar{grid-column:2/5;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+  .mbar i{display:block;height:100%;background:var(--muted);border-radius:3px}.mbar i.b{background:var(--accent)}
+  table.mdr th,table.mdr td{text-align:center;vertical-align:middle;padding:7px 6px}
+  table.mdr td:first-child,table.mdr th:first-child{text-align:left;color:var(--muted);min-width:0;width:3.2em}
+  table.mdr td{font-weight:600}table.mdr td small{color:var(--muted);font-weight:500}
+  table.mdr td.best{color:var(--accent);font-weight:800}table.mdr td.best small{color:var(--accent)}
+  .h2hm .sect{margin-top:8px}
+}
 .sect{font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.04em;margin:18px 0 0}
 </style>
 </head>
@@ -817,6 +843,29 @@ function openH2H(cat,pane){
     $$("#hadd2").classList.toggle("hidden",slots.length>=H2H_MAX);
   }
   const changed=()=>{save();render();};
+  // phones: one card per load, then one card per factor with a bar per load, so nothing
+  // has to be read across a wide table
+  function phoneView(rows,dist,keys,most,badge,payload){
+    const num=i=>`<span class="num">${i+1}</span>`;
+    let h=`<div class="h2hm">`+rows.map((r,i)=>`<div class="mload${r.it.handload?" hl":""}">${num(i)}<div class="mi">
+      <small>${esc(r.it.cartridge)}</small><b>${esc(r.it.label)}</b>${r.it.handload?' <span class="chip">Handload</span>':""}
+      <div class="mf">${esc([payload(r.it),cat.grain_style&&r.it.barrel_in?g(r.it.barrel_in)+" in barrel":"",r.it.purpose||r.it.group||""].filter(Boolean).join(" · "))}</div>
+      <div class="mf">Rank #${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads · <span class="${r.best.size===most&&most?"best":""}">best in ${r.best.size} of ${keys.length}</span></div></div>
+      ${GRADES?`<div class="mo">${badge(r.grade,true)}<span>${r.overall.toFixed(0)}</span></div>`:""}</div>`).join("");
+    for(const k of keys){
+      const hi=METRICS[k][1],vals=rows.map(r=>r.st[k]),top=Math.max(...vals),low=Math.min(...vals);
+      h+=`<div class="mcard"><div class="mt">${METRICS[k][0]}${k==="velocity"||k==="energy"?` <small>at ${g(dist)} yd</small>`:""}<small class="hint">${hi?"higher is better":"lower is better"}</small></div>`+
+        rows.map((r,i)=>{const b=r.best.has(k),v=r.st[k],w=hi?(top>0?v/top:0):(v>0?low/v:1);
+          return `<div class="mrow">${num(i)}<span class="mv${b?" best":""}">${h2hValue(k,v)}</span><span class="mg${b?" best":""}">${b?"best":(r.gap[k]>=0?"+":"−")+Math.abs(r.gap[k]).toFixed(0)+"%"}</span>${GRADES?badge(gradeRel(r.sc[k])):"<span></span>"}
+            <div class="mbar"><i class="${b?"b":""}" style="width:${Math.max(3,Math.min(100,100*w)).toFixed(1)}%"></i></div></div>`;}).join("")+`</div>`;
+    }
+    h+=`<div class="sect">DOWNRANGE · velocity (fps) / energy (ft-lbs)</div><div class="h2h"><table class="mdr"><thead><tr><th>Yd</th>${rows.map((r,i)=>`<th>${num(i)}</th>`).join("")}</tr></thead><tbody>`;
+    for(const [yd,cells] of h2hDownrange(cat,rows.map(r=>r.it))){
+      const top=Math.max(...cells.map(c=>c[1]));
+      h+=`<tr><td>${g(yd)}</td>${cells.map(([v,e])=>`<td class="${e>=top-1e-9?"best":""}">${fmt0(v)}<br><small>${fmt0(e)}</small></td>`).join("")}</tr>`;
+    }
+    return h+`</tbody></table></div></div>`;
+  }
   function render(){
     const box=$$("#hres");
     const dist=parseFloat($$("#hd").value),gun=parseFloat($$("#hg").value),weights={};let bad=false;
@@ -830,7 +879,7 @@ function openH2H(cat,pane){
     const line=(name,cells,cls)=>`<tr${cls?` class="${cls}"`:""}><td>${name}</td>${cells.map(c=>`<td class="c">${c}</td>`).join("")}</tr>`;
     const payload=it=>cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
     const most=Math.max(...rows.map(r=>r.best.size));
-    let h=`<div class="h2h"><table><thead><tr><th></th>${rows.map(r=>`<th class="${r.it.handload?"hl":""}"><small>${esc(r.it.cartridge)}</small>${esc(r.it.label)}${r.it.handload?" <small>handload</small>":""}</th>`).join("")}</tr></thead><tbody>`;
+    let h=`<div class="h2hw"><div class="h2h"><table><thead><tr><th></th>${rows.map(r=>`<th class="${r.it.handload?"hl":""}"><small>${esc(r.it.cartridge)}</small>${esc(r.it.label)}${r.it.handload?" <small>handload</small>":""}</th>`).join("")}</tr></thead><tbody>`;
     if(GRADES)h+=line("Overall",rows.map(r=>`${badge(r.grade,true)} <span class="v" style="margin-left:6px">${r.overall.toFixed(0)}</span>`));
     h+=line("Rank in its cartridge",rows.map(r=>`#${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads`),"sep");
     h+=line(esc(cat.payload_row),rows.map(r=>payload(r.it)));
@@ -846,7 +895,7 @@ function openH2H(cat,pane){
       const top=Math.max(...cells.map(c=>c[1]));
       h+=`<tr><td>${g(yd)}</td>${cells.map(([v,e])=>`<td class="c${e>=top-1e-9?" v best":""}">${fmt0(v)} · ${fmt0(e)}</td>`).join("")}</tr>`;
     }
-    box.innerHTML=h+`</tbody></table></div>`;
+    box.innerHTML=h+`</tbody></table></div></div>`+phoneView(rows,dist,keys,most,badge,payload);
   }
   drawSlots();save();
   $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push(blank());drawSlots();const r=$$("#hs").lastElementChild;r.querySelector(r.querySelector(".cs").value?".ls":".cs").focus();};
