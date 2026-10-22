@@ -588,3 +588,9 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 6.5 Creedmoor	Lapua Scenar OTM	123	2790	0.527	published	lapua.com/product/6-5-creedmoor-open-tip-match-cartridge-scenar-8g-123gr-4316060/ (price estimated)
 6.5x55mm Swedish	Lapua Naturalis (lead-free)	140	2625	0.201	published	lapua.com/product/6-5x55-swedish-leadfree-naturalis-hunting-cartridge-91g-140gr-n316102/ (price estimated)
 8x57mm Mauser	Lapua Naturalis (lead-free)	180	2625	0.357	published	lapua.com/product/8x57-is-leadfree-naturalis-hunting-cartridge-117g-180gr-n318009/ (price estimated)
+6mm ARC	Federal Premium Gold Medal Berger BT Target	108	2650	0.538	partial	kygunco.com/product/federal-ammo-gold-medal-berger-6mm-arc-108-grain-2650-fps-20rd (GM6ARCBT1) (BC estimated from sectional density)
+6.5 Creedmoor	Federal Premium +Peak Terminal Ascent	130	3100	0.532	published	federalpremium.com/rifle/terminal-ascent (P65CRDPKTA1); 65-creedmoor-plus-peak.html
+6.5 Creedmoor	Federal +Peak Fusion Tipped	155	2900	0.590	partial	federalpremium.com/65-creedmoor-plus-peak.html (F65CRDPKTFS2) (BC scaled from the nearest same-type load) (price estimated)
+.22 ARC	Federal American Eagle TMJ	75	2975	0.400	published	federalpremium.com/rifle/american-eagle/ (AE22ARC1)
+5.7x28mm	Federal American Eagle TMJ	40	1655	0.137	partial	luckygunner.com/5-7x28mm-40-gr-tmj-federal-american-eagle-50-rounds (AE5728A) (BC scaled from the nearest same-type load) (price estimated)
+5.7x28mm	Speer Gold Dot Personal Protection GDHP	40	1800	0.108	partial	speer.com/ammunition/handgun/gold_dot_personal_protection/19-25728GD.html (BC estimated from sectional density)

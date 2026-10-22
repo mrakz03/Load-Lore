@@ -26,6 +26,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 5.7x28mm,Fiocchi Jacketed Frangible,35,1750,0.128,4.0,1.44,,partial,,,Target
 5.7x28mm,Fiocchi Range Dynamics FMJ,40,1700,0.146,4.3,1.08,,partial,,,Target
 5.7x28mm,Fiocchi Tipped Hollow Point,40,1750,0.146,4.5,1.44,,partial,,,Defense
+5.7x28mm,Federal American Eagle TMJ,40,1655,0.137,3.4,1.08,,partial,,5,Target
+5.7x28mm,Speer Gold Dot Personal Protection GDHP,40,1800,0.108,4.1,1.84,,partial,,5,Defense
 5.7x28mm,Fiocchi Subsonic FMJ,62,1050,0.146,2.5,1.44,,partial,,,Subsonic
 .25 ACP,Hornady Critical Defense FTX,35,900,0.067,1,1.69,,catalog,,2,Defense
 .25 ACP,Hornady Custom XTP,35,900,0.074,1,1.69,,catalog,,2,Defense
