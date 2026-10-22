@@ -19,6 +19,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   loads of one category side by side, picks in App.h2h / H2H, in memory only). Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
   always naming loads, never numbering them.
+- Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
+  page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones).
+  The app name is drawn as a small "In Like Flint" over a larger "Load Lore" (issue #18).
 - Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
   flat-fire drop + 10 mph drift from flight_times / flightTimes (same G1 RK2 steps as velocity_at),
   zero_yd / sight_in per category. An estimate, not a solver.
@@ -38,6 +41,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
   (my_calibers.csv, my_handloads.csv, settings.json).
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
+- .223 Remington / 5.56x45mm NATO and .308 Winchester / 7.62x51mm NATO are one list each, but a
+  load's details and Head to Head name the one cartridge it is made for (SHARED_CHAMBERS /
+  chambered, same rules on web): a NATO load must say 5.56 / M193 / M855 or 7.62x51 / M80 in its
+  name; Hornady 5.56 NATO loads are the 20" barrel ones (checked against the 2026 catalogs).
 - Metric cartridges are named with "mm" (7.62x51mm NATO, 7.62x54mmR). When renaming a
   cartridge, add old -> new to RENAMED_CARTRIDGES so users' saved files keep matching.
 - Colour themes live in THEMES (cartridge_calculator.py); build_web.py passes the same table to
