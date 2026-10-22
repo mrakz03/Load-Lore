@@ -77,6 +77,14 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   with no payload given (Hornady #4 Buck / Heavy Magnum Coyote / .410 Triple Defense, Winchester PDX1).
   Catalog misprints fixed from the energy column: Winchester S308M2 "652 gr" = 168 gr,
   Federal P40HSD1 "100 fps" = 1050 fps.
+- Web-sourced loads (Oct 2026): 204 loads from maker websites, not catalogs: SIG Sauer (sigsauer.com),
+  Black Hills incl. Gold and HoneyBadger (black-hills.com), Norma (normausa.com; its spec tables are
+  sometimes copied from another product, so the headline velocity is used), Nosler Trophy Grade
+  (nosler.com), and IMI (retailer listings; IMI is mostly out of stock in the US). Missing BCs come from
+  bullets.csv when the bullet is named, else are scaled from the nearest same-type load (source=partial);
+  missing prices are the cartridge/purpose median x a brand factor. Rows and URLs are in
+  research/added_loads_sources.tsv. Black Hills 5.56mm loads carry "5.56mm" in the name because the
+  same bullets are also sold as .223 Rem at different velocities.
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
