@@ -19,10 +19,10 @@ for cat in c.CATEGORIES:
         raise SystemExit(f"{cat.loads_filename}: {dprob}")
     cats.append(dict(title=cat.title, blurb=cat.blurb, default_distance=cat.default_distance,
         max_distance=cat.max_distance, default_gun_lb=cat.default_gun_lb, gun_label=cat.gun_label,
-        cartridge_label=cat.cartridge_label, load_label=cat.load_label, payload_row=cat.payload_row,
+        cartridge_label=cat.cartridge_label, payload_row=cat.payload_row,
         payload_col=cat.payload_col, grain_style=cat.grain_style, show_oz=cat.show_oz,
-        weights=list(cat.weights), allow_custom=cat.allow_custom, default_bc=cat.default_bc,
-        sort_loads=cat.sort_loads, terminal=cat.terminal,
+        weights=list(cat.weights), terminal=cat.terminal, step_yd=cat.step_yd,
+        zero_yd=cat.zero_yd, sight_in=cat.sight_in,
         detail=[dict(cartridge=x.cartridge, load=x.load, bullet_gr=x.bullet_gr, muzzle_fps=x.muzzle_fps,
                      bc_g1=x.bc_g1, powder_gr=x.powder_gr, default_cost=x.default_cost,
                      is_default=x.is_default, source=x.source, group=x.group,
@@ -47,5 +47,5 @@ POWDERS = ["H4350","H4831SC","H1000","Varget","H4895","H335","H322","CFE 223","B
 tpl = open(os.path.join(here, "template.html"), encoding="utf-8").read()
 os.makedirs(os.path.join(here, "www"), exist_ok=True)
 with open(os.path.join(here, "www", "index.html"), "w", encoding="utf-8") as f:
-    f.write(tpl.replace("__DATA__", json.dumps({"version": c.APP_VERSION, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "renamed": c.RENAMED_CARTRIDGES, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": POWDERS}, ensure_ascii=False)))
+    f.write(tpl.replace("__DATA__", json.dumps({"version": c.APP_VERSION, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "renamed": c.RENAMED_CARTRIDGES, "chambers": c.SHARED_CHAMBERS, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": POWDERS}, ensure_ascii=False)))
 print("wrote www/index.html")
