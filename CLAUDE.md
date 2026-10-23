@@ -44,6 +44,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
   (my_calibers.csv, my_handloads.csv, settings.json).
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
+- Recoil (recoil_ftlbs / recoil): standard free recoil, bullet + powder gas at GAS_FPS 4000, gas counted
+  once (a 1.75x gas factor read 40-60% high; fixed Oct 2026 against Chuck Hawks' recoil table).
 - .223 Remington, 5.56x45mm NATO, .308 Winchester and 7.62x51mm NATO are four separate cartridges
   (issue #28; they were two shared lists before). A NATO load says 5.56 / M193 / M855 or
   7.62x51 / M80 in its name; Hornady 5.56 NATO loads are the 20" barrel ones (checked against the
