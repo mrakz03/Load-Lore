@@ -14,12 +14,12 @@ About 3,150 factory loads from 20 makers across four categories:
 
 | Category | Cartridges | Loads |
 |---|---|---|
-| Centerfire Rifle | 76 | 1,422 |
+| Centerfire Rifle | 76 | 1,432 |
 | Handgun | 29 | 819 |
 | Rimfire Rifle | 7 | 130 |
 | Shotgun (10, 12, 16, 20, 28 gauge and .410 bore) | 6 | 782 |
 
-The loads come from the 2026 catalogs of Hornady, Federal, Winchester, Remington, Fiocchi, PMC, CCI/Blazer and ELEY, and from the makers' own websites for SIG Sauer, Black Hills, Norma, Nosler, Lapua, Sellier & Bellot, PPU, Underwood, Buffalo Bore, Speer and newer Federal loads (plus a few Barnes and IMI loads from retailer listings). Weight and velocity are the maker's published figures; prices and powder charges are estimates. Where each added load came from is listed in `research/added_loads_sources.tsv`.
+The loads come from the 2026 catalogs of Hornady, Federal, Winchester, Remington, Fiocchi, PMC, CCI/Blazer and ELEY, and from the makers' own websites for SIG Sauer, Black Hills, Norma, Nosler, Lapua, Sellier & Bellot, PPU, Underwood, Buffalo Bore, Speer and newer Federal loads (plus a few Barnes, IMI, Winchester and Federal loads from retailer listings). Weight and velocity are the maker's published figures; prices and powder charges are estimates. Where each added load came from is listed in `research/added_loads_sources.tsv`.
 
 5.56x45mm NATO and 7.62x51mm NATO are listed as their own cartridges, separate from .223 Remington and .308 Winchester.
 
