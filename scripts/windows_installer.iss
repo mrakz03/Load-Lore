@@ -47,6 +47,9 @@ Type: files; Name: "{autodesktop}\In Like Flint - Load Lore.lnk"
 [Files]
 Source: "dist\CartridgeCalculator.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "data\*.csv"; Excludes: "my_*.csv"; DestDir: "{app}"; Flags: ignoreversion
+Source: "LICENSE"; DestDir: "{app}"; DestName: "LICENSE.txt"; Flags: ignoreversion
+Source: "NOTICE.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DISCLAIMER.md"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\Load Lore"; Filename: "{app}\CartridgeCalculator.exe"; WorkingDir: "{app}"

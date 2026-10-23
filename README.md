@@ -123,3 +123,9 @@ keytool -genkeypair -keystore debug.keystore -storepass android -alias androidde
 base64 -w0 debug.keystore      # paste this output as the secret's value
 ```
 Keep `debug.keystore` somewhere safe and out of the repo. Without the secret, each APK gets a new key and testers have to uninstall the old app before installing a new one.
+
+## License
+
+Free software under the [MIT License](LICENSE): use, change and share it, with no warranty. Brand names identify products only; no maker sponsors or endorses this app. Third-party licenses and trademark notes are in [NOTICE.md](NOTICE.md).
+
+**Read the [disclaimer](DISCLAIMER.md).** Figures are estimates, the powder charges are not reloading data, and the ballistic table is not for real shooting decisions.
