@@ -5,6 +5,7 @@
 ; Reinstalling a newer version upgrades in place: it first removes the data files the old
 ; version shipped (ammo_*, loads_*, bullets.csv), so files a release drops don't linger.
 ; my_calibers.csv, my_handloads.csv and settings.json are never touched.
+; The app's own updater (Settings > Updates) downloads this installer and runs it with /SILENT.
 
 #ifndef AppVersion
   #define AppVersion "0.0-dev"
@@ -59,3 +60,5 @@ Name: "{autodesktop}\Load Lore"; Filename: "{app}\CartridgeCalculator.exe"; Work
 
 [Run]
 Filename: "{app}\CartridgeCalculator.exe"; Description: "{cm:LaunchProgram,Load Lore}"; Flags: nowait postinstall skipifsilent
+; the in-app update (Settings > Updates) runs this installer with /SILENT: start the new version after it
+Filename: "{app}\CartridgeCalculator.exe"; Flags: nowait; Check: WizardSilent

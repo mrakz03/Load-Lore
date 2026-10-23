@@ -29,12 +29,22 @@ for Windows and macOS).
 
 import bisect
 import csv
+import glob
+import hashlib
 import json
 import math
 import os
 import re
+import shutil
+import ssl
 import statistics
+import subprocess
 import sys
+import tarfile
+import tempfile
+import threading
+import urllib.request
+import webbrowser
 from dataclasses import dataclass
 
 try:
@@ -724,6 +734,156 @@ def write_settings(data):
         pass                                    # settings are a convenience, never fatal
 
 
+# ---- updates (Settings > Updates): the newest GitHub release, installed in place ---- #
+UPDATE_REPO = "mrakz03/Load-Lore"
+RELEASES_PAGE = f"https://github.com/{UPDATE_REPO}/releases/latest"
+LATEST_RELEASE_API = f"https://api.github.com/repos/{UPDATE_REPO}/releases/latest"
+SUMS_ASSET = "SHA256SUMS.txt"                      # made by the release job in CI
+WINDOWS_ASSET = "CartridgeCalculator-Setup.exe"
+LINUX_ASSET = "CartridgeCalculator-Linux.tar.gz"
+SHIPPED_DATA = ("ammo_*.csv", "loads_*.csv", BULLETS_FILENAME, "NOTICE.md", "DISCLAIMER.md")
+# certificate bundles of the common Linux distros: the packaged app's OpenSSL was built on
+# Ubuntu and only looks where Ubuntu keeps them, so on Fedora etc. it would find none
+CA_BUNDLES = ("/etc/ssl/certs/ca-certificates.crt", "/etc/pki/tls/certs/ca-bundle.crt",
+              "/etc/ssl/ca-bundle.pem", "/etc/ssl/cert.pem", "/etc/pki/tls/cacert.pem")
+
+
+def version_tuple(text):
+    """"v1.6.2" or "1.6.2" -> (1, 6, 2); None for "dev" or anything that isn't a version."""
+    m = re.fullmatch(r"v?(\d+(?:\.\d+)*)", (text or "").strip())
+    return tuple(int(x) for x in m.group(1).split(".")) if m else None
+
+
+def is_newer(latest, current):
+    a, b = version_tuple(latest), version_tuple(current)
+    if a is None or b is None:
+        return False
+    n = max(len(a), len(b))
+    return a + (0,) * (n - len(a)) > b + (0,) * (n - len(b))
+
+
+def _ssl_context():
+    if sys.platform.startswith("linux") and not os.environ.get("SSL_CERT_FILE"):
+        for path in CA_BUNDLES:
+            if os.path.exists(path):
+                return ssl.create_default_context(cafile=path)
+    return ssl.create_default_context()
+
+
+def _http_get(url, timeout=20):
+    """GET over HTTPS (certificates checked). Raises OSError on network problems."""
+    req = urllib.request.Request(url, headers={"User-Agent": f"LoadLore/{APP_VERSION}"})
+    with urllib.request.urlopen(req, timeout=timeout, context=_ssl_context()) as resp:
+        return resp.read()
+
+
+def latest_release():
+    """The newest GitHub release: {version, page, assets: {file name: download url}}.
+    Raises OSError (no connection) or ValueError (an answer we can't read)."""
+    data = json.loads(_http_get(LATEST_RELEASE_API))
+    if not isinstance(data, dict) or version_tuple(data.get("tag_name")) is None:
+        raise ValueError("GitHub's answer had no release version in it.")
+    return {"version": data["tag_name"].strip().lstrip("v"),
+            "page": data.get("html_url") or RELEASES_PAGE,
+            "assets": {a["name"]: a["browser_download_url"] for a in data.get("assets") or []
+                       if isinstance(a, dict) and a.get("name") and a.get("browser_download_url")}}
+
+
+def update_method():
+    """How this copy can update itself: "windows" (run the new installer, which upgrades in
+    place), "linux" (swap the files in place, like install.sh) or None (running from source,
+    from the Windows zip, or a folder we can't write to): then Update opens the releases page."""
+    if not getattr(sys, "frozen", False) or version_tuple(APP_VERSION) is None:
+        return None
+    here = os.path.dirname(sys.executable)
+    try:
+        if sys.platform == "win32":                # the installer leaves unins000.exe beside the app
+            return "windows" if glob.glob(os.path.join(here, "unins*.exe")) else None
+        if sys.platform.startswith("linux"):
+            return "linux" if os.access(here, os.W_OK) else None
+    except OSError:
+        pass
+    return None
+
+
+def download_verified(release, name, folder):
+    """Download one file of a release into `folder` and check it against the release's
+    SHA256SUMS.txt. Returns its path. Raises ValueError if it's missing or doesn't match."""
+    assets = release["assets"]
+    for need in (name, SUMS_ASSET):
+        if need not in assets:
+            raise ValueError(f"Release v{release['version']} has no {need}.")
+    sums = {}
+    for line in _http_get(assets[SUMS_ASSET]).decode("utf-8", "replace").splitlines():
+        parts = line.split()
+        if len(parts) == 2:
+            sums[parts[1].lstrip("*")] = parts[0].lower()
+    if name not in sums:
+        raise ValueError(f"{SUMS_ASSET} has no checksum for {name}.")
+    data = _http_get(assets[name], timeout=60)
+    if hashlib.sha256(data).hexdigest() != sums[name]:
+        raise ValueError("The download didn't match its checksum, so nothing was installed.")
+    path = os.path.join(folder, name)
+    with open(path, "wb") as fh:
+        fh.write(data)
+    return path
+
+
+def install_linux_update(tar_path, program):
+    """Unpack a Linux release over the copy at `program` (the CartridgeCalculator file): the
+    program first, copied under a temporary name and renamed (the running one can't be written
+    over), then the data files. The user's own files (my_*.csv, settings.json) aren't in the
+    tar and are left alone."""
+    here = os.path.dirname(program)
+    with tempfile.TemporaryDirectory() as tmp:
+        with tarfile.open(tar_path) as tar:
+            tar.extractall(tmp, filter="data")
+        src = os.path.join(tmp, "CartridgeCalculator")
+        new_data = [f for f in glob.glob(os.path.join(src, "*.csv"))
+                    if not os.path.basename(f).startswith("my_")]
+        if not os.path.isfile(os.path.join(src, "CartridgeCalculator")) or \
+                not any(os.path.basename(f).startswith("loads_") for f in new_data):
+            raise ValueError("The download doesn't look like a Load Lore release.")
+        part = program + ".new"
+        shutil.copyfile(os.path.join(src, "CartridgeCalculator"), part)
+        os.chmod(part, 0o755)
+        os.replace(part, program)
+        keep = {os.path.basename(f) for f in new_data}
+        for f in new_data:
+            shutil.copyfile(f, os.path.join(here, os.path.basename(f)))
+        for pattern in SHIPPED_DATA:               # files an older release shipped and this one drops
+            for f in glob.glob(os.path.join(here, pattern)):
+                if os.path.basename(f) not in keep:
+                    os.remove(f)
+        for name in ("icon.png", "LICENSE", "LEGAL.md"):
+            if os.path.exists(os.path.join(src, name)):
+                shutil.copyfile(os.path.join(src, name), os.path.join(here, name))
+
+
+def _update_error(what, err):
+    """One line for the Updates card: network trouble in plain words, our own ValueErrors as is."""
+    if isinstance(err, ValueError):
+        return f"{what}: {err}"
+    if isinstance(err, OSError) and not isinstance(err, PermissionError):
+        return f"{what}: couldn't reach GitHub. Check your internet connection."
+    return f"{what}: {err}"
+
+
+def _launch_env():
+    """Environment for starting a new copy of the packaged app (directly, or through the
+    installer): without PYINSTALLER_RESET_ENVIRONMENT the new copy would take the running
+    one's unpacked files for its own, and on Linux LD_LIBRARY_PATH goes back to the user's."""
+    env = dict(os.environ)
+    env["PYINSTALLER_RESET_ENVIRONMENT"] = "1"
+    if sys.platform.startswith("linux") and getattr(sys, "frozen", False):
+        orig = env.pop("LD_LIBRARY_PATH_ORIG", None)
+        if orig is None:
+            env.pop("LD_LIBRARY_PATH", None)
+        else:
+            env["LD_LIBRARY_PATH"] = orig
+    return env
+
+
 # ---- handloads (my_handloads.csv) and the bullet library (bullets.csv) ---- #
 def read_bullets():
     """Common bullets: [{maker, name, diameter, weight, bc, type}]. Empty if the file is missing."""
@@ -961,6 +1121,9 @@ class App:
         root.bind_all("<Control-Key-1>", lambda e: self.go_mode("loads"))
         root.bind_all("<Control-Key-2>", lambda e: self.go_mode("h2h"))
         root.bind_all("<Control-Key-0>", lambda e: self.show_launcher())
+        self.upd = {"state": "idle"}      # Settings > Updates: idle/checking/latest/available/downloading/error
+        if self.check_on_start and version_tuple(APP_VERSION):
+            root.after(2000, lambda: self.check_updates(on_start=True))
 
     # ---- data ------------------------------------------------------------ #
     def _load_category(self, cat):
@@ -1396,8 +1559,141 @@ class App:
             self._card_hover([card, t, d], SURFACE, SURFACE_2)
         self._update_scroll()
 
+    # ---- updates (Settings > Updates) -------------------------------------- #
+    @property
+    def check_on_start(self):
+        return self.settings.get("check_updates") is True
+
+    def set_check_on_start(self, on):
+        self.settings["check_updates"] = bool(on)
+        write_settings(self.settings)
+
+    def _in_background(self, work, done):
+        """Run work() off the Tk thread (it waits on the network), then done(result, error) on it."""
+        box = {}
+
+        def run():
+            try:
+                box["result"] = work()
+            except Exception as exc:               # any failure is shown, never fatal
+                box["error"] = exc
+        t = threading.Thread(target=run, daemon=True)
+        t.start()
+
+        def poll():
+            if t.is_alive():
+                self.root.after(150, poll)
+            else:
+                done(box.get("result"), box.get("error"))
+        self.root.after(150, poll)
+
+    def _set_update(self, **state):
+        self.upd = state
+        if self.mode == "settings":
+            self.show_settings()
+
+    def check_updates(self, on_start=False):
+        if self.upd["state"] in ("checking", "downloading"):
+            return
+        if not on_start:
+            self._set_update(state="checking")
+
+        def done(rel, err):
+            if err is not None:
+                if not on_start:
+                    self._set_update(state="error", message=_update_error("Couldn't check for updates", err))
+                return
+            if not is_newer(rel["version"], APP_VERSION):
+                if not on_start:
+                    self._set_update(state="latest", release=rel)
+                return
+            self._set_update(state="available", release=rel)
+            if on_start and messagebox.askyesno(
+                    "Update available", f"Load Lore v{rel['version']} is available (you have "
+                    f"v{APP_VERSION}). Update now?\n\nYou can also update later from Settings."):
+                self.start_update()
+        self._in_background(latest_release, done)
+
+    def start_update(self):
+        rel, method = self.upd.get("release"), update_method()
+        if rel is None:
+            return
+        if method is None:
+            webbrowser.open(rel["page"])
+            return
+        if not messagebox.askyesno(
+                "Update Load Lore", f"Download and install v{rel['version']}? The app closes and "
+                "opens again by itself. Your handloads, prices and settings are kept."):
+            return
+        self._set_update(state="downloading", release=rel)
+        folder = tempfile.mkdtemp(prefix="loadlore-update-")
+
+        def work():
+            path = download_verified(rel, WINDOWS_ASSET if method == "windows" else LINUX_ASSET, folder)
+            if method == "linux":
+                install_linux_update(path, sys.executable)
+                shutil.rmtree(folder, ignore_errors=True)
+            return path
+
+        def done(path, err):
+            if err is not None:
+                shutil.rmtree(folder, ignore_errors=True)
+                self._set_update(state="error", release=rel, message=_update_error("Update failed", err))
+                return
+            try:
+                if method == "windows":            # upgrades in place, then starts the new version
+                    subprocess.Popen([path, "/SILENT", "/SUPPRESSMSGBOXES", "/NORESTART",
+                                      "/CLOSEAPPLICATIONS"], env=_launch_env())
+                else:
+                    subprocess.Popen([sys.executable], cwd=os.path.dirname(sys.executable),
+                                     env=_launch_env(), start_new_session=True)
+            except OSError as exc:
+                self._set_update(state="error", release=rel, message=(
+                    f"Updated, but couldn't restart: {exc}. Close and reopen the app."
+                    if method == "linux" else f"Couldn't start the installer: {exc}"))
+                return
+            self.root.destroy()
+        self._in_background(work, done)
+
+    def _updates_row(self, row):
+        """The Updates card on the Settings page: status, Check / Update button, start-up switch."""
+        u, rel = self.upd, self.upd.get("release")
+        if version_tuple(APP_VERSION) is None:     # running from source
+            self.button(row("Updates", "This copy runs from source: update it with git pull"),
+                        "Releases page", lambda: webbrowser.open(RELEASES_PAGE)).pack()
+            return
+        notes = {"idle": f"You have v{APP_VERSION}",
+                 "checking": "Checking GitHub for a newer version…",
+                 "latest": f"You have the newest version (v{APP_VERSION})",
+                 "available": f"v{rel and rel['version']} is available (you have v{APP_VERSION})",
+                 "downloading": f"Downloading v{rel and rel['version']}…",
+                 "error": u.get("message", "")}
+        box = row("Updates", notes[u["state"]])
+        if u["state"] == "available":
+            text = f"Update to v{rel['version']}" if update_method() else "Download"
+            self.button(box, text, self.start_update, "primary").pack(side="left", padx=(0, 10))
+        else:
+            b = self.button(box, "Check for updates", self.check_updates)
+            if u["state"] in ("checking", "downloading"):
+                b.config(state="disabled", cursor="")
+            b.pack(side="left", padx=(0, 10))
+        self.label(box, "Check at start", 10, MUTED, bg=SURFACE).pack(side="left", padx=(6, 6))
+        chip = tk.Label(box, font=self.f(10, True), padx=10, pady=3, cursor="hand2", width=4)
+
+        def flip(e=None):
+            self.set_check_on_start(not self.check_on_start)
+            paint()
+
+        def paint():
+            on = self.check_on_start
+            chip.config(text="On" if on else "Off", bg=ACCENT if on else SURFACE_2,
+                        fg=ON_ACCENT if on else TEXT)
+        paint()
+        chip.bind("<Button-1>", flip)
+        chip.pack(side="left")
+
     def show_settings(self):
-        """Settings (bottom of the sidebar): theme, text size and the S-F grades switch."""
+        """Settings (bottom of the sidebar): theme, text size, the S-F grades switch and updates."""
         if self.view is not None and self.cat is not None:
             self.carry.setdefault(self.cat.title, {}).update(self.view.snapshot())
         self.mode, self.cat, self.view = "settings", None, None
@@ -1437,6 +1733,7 @@ class App:
         chip = grades_chip(self, row("S–F grades", "Show the grades in the Load Dictionary and "
                                      "Head to Head"), flip)
         chip.pack()
+        self._updates_row(row)
         card = tk.Frame(wrap, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
         card.pack(fill="x", pady=6)
         self.label(card, "Disclaimer", 12, TEXT, True, bg=SURFACE, anchor="w").pack(

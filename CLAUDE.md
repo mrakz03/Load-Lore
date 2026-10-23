@@ -76,6 +76,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   and copies assets/android/res over the Capacitor project after `cap add android`.
 
 ## Release
+- In-app updates (Windows/Linux, Settings > Updates, App.check_updates / start_update): asks the
+  GitHub latest-release API, downloads the Setup.exe (run with /SILENT; the .iss [Run] entry with
+  Check: WizardSilent reopens the app) or the Linux tar (install_linux_update swaps the files in
+  place like install.sh), checked against SHA256SUMS.txt from the release job. "Check at start"
+  (settings.json check_updates) is off by default. Asset names must stay as they are.
 git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
 (tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
 - APP_VERSION in cartridge_calculator.py stays "dev" in the repo; CI sets it from the tag.

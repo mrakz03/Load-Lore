@@ -74,6 +74,8 @@ Releases are on the repository's **Releases** page.
   ```
 - **Android**: install `CartridgeCalculator.apk` (allow installs from your browser or file manager when asked).
 
+**Updating (Windows and Linux):** open Settings and press **Check for updates**. When a newer release is out, **Update to vX** downloads it, checks it against the release's `SHA256SUMS.txt`, installs it over the old version and reopens the app; your handloads, prices and settings are kept. Turn on **Check at start** to be asked whenever a new version comes out. The app only talks to GitHub when you press the button or turn that on. The portable Windows .zip can't update itself, so its button opens the Releases page instead.
+
 In the Start menu, app launcher and phone app drawer the app is called **Load Lore**. The download files keep their old `CartridgeCalculator` names so updates install over earlier versions.
 
 ## For developers
