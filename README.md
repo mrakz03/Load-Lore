@@ -126,6 +126,6 @@ Keep `debug.keystore` somewhere safe and out of the repo. Without the secret, ea
 
 ## License
 
-Free software under the [MIT License](LICENSE): use, change and share it, with no warranty. Brand names identify products only; no maker sponsors or endorses this app. Third-party licenses and trademark notes are in [NOTICE.md](NOTICE.md).
+Free software under the [MIT License](LICENSE): use, change and share it, with no warranty. Brand names identify products only; no maker sponsors or endorses this app.
 
-**Read the [disclaimer](DISCLAIMER.md).** Figures are estimates, the powder charges are not reloading data, and the ballistic table is not for real shooting decisions.
+**Read [LEGAL.md](LEGAL.md)** before relying on the app: figures are estimates, the powder charges are not reloading data, and the ballistic table is not for real shooting decisions. It also has the trademark notes, where the load data comes from, and the licenses of the bundled software.
