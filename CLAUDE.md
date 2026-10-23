@@ -49,6 +49,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
 - Recoil (recoil_ftlbs / recoil): standard free recoil, bullet + powder gas at GAS_FPS 4000, gas counted
   once (a 1.75x gas factor read 40-60% high; fixed Oct 2026 against Chuck Hawks' recoil table).
+- Gun weight (Oct 2026): GUN_LB / typical_gun_lb (gun_lb, typicalGun in web) gives a typical gun per
+  cartridge where the category default is far off (.50 BMG 30 lb read 379 ft-lbs at 8 lb). The
+  dictionary's gun field follows the cartridge unless the user typed their own (_gun_auto / L.gunAuto);
+  Head to Head's gun is blank by default = each load in its own cartridge's gun (h2h_gun / h2hGun,
+  not shared with the dictionary). Limit GUN_LB_MAX 60 lb.
 - .223 Remington, 5.56x45mm NATO, .308 Winchester and 7.62x51mm NATO are four separate cartridges
   (issue #28; they were two shared lists before). A NATO load says 5.56 / M193 / M855 or
   7.62x51 / M80 in its name; Hornady 5.56 NATO loads are the 20" barrel ones (checked against the

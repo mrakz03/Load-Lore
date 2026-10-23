@@ -412,6 +412,22 @@ def recoil_ftlbs(bullet_gr, muzzle_fps, powder_gr, gun_lb):
     return 0.5 * (gun_lb / 32.174) * gun_velocity ** 2
 
 
+# Typical gun weight (lb, loaded, scoped rifles) for cartridges far from their category's default:
+# recoil is worked out for this weight unless you enter your own. A .50 BMG in the rifle default's
+# 8 lb read 340+ ft-lbs; in its usual ~30 lb rifle it is about 95 (no muzzle brake).
+GUN_LB = {
+    ".50 BMG": 30.0, ".338 Lapua Magnum": 15.0, ".416 Remington Magnum": 10.0,
+    ".458 Winchester Magnum": 10.0, ".458 Lott": 10.0, ".375 H&H Magnum": 9.5, ".375 Ruger": 9.5,
+    ".500 S&W Magnum": 4.5, ".460 S&W Magnum": 4.5, ".50 AE": 4.5, ".454 Casull": 3.5,
+    ".480 Ruger": 3.5, ".44 Magnum": 3.0, "10 Gauge": 10.0,
+}
+GUN_LB_MAX = 60.0
+
+
+def typical_gun_lb(cat, cartridge):
+    return GUN_LB.get(cartridge, cat.default_gun_lb)
+
+
 # --------------------------------------------------------------------------- #
 # Data loading
 # --------------------------------------------------------------------------- #
@@ -2007,6 +2023,7 @@ class LoadsView:
     # ---- state ------------------------------------------------------------ #
     def snapshot(self):
         return dict(cart=self.cart_var.get(), dist=self.dist_var.get(), gun=self.gun_var.get(),
+                    gun_auto=getattr(self, "_gun_auto", self.cat.default_gun_lb),
                     weights={k: v.get() for k, v in self.weight_vars.items()},
                     weights_open=self.weights_open, purpose=self.purpose, source=self.source)
 
@@ -2029,6 +2046,7 @@ class LoadsView:
             self.dist_var.set(snap["dist"])
         if "gun" in snap:
             self.gun_var.set(snap["gun"])
+            self._gun_auto = snap.get("gun_auto", self.cat.default_gun_lb)
         if snap.get("weights_open") and not self.weights_open:
             self._toggle_weights()
         return snap.get("cart") if snap.get("cart") in self.groups else None
@@ -2109,6 +2127,15 @@ class LoadsView:
 
     def _on_cartridge(self):
         self.filter_var.set("")
+        # the gun weight follows the cartridge's typical gun (GUN_LB) unless you typed your own
+        new = typical_gun_lb(self.cat, self.cart_var.get())
+        try:
+            own = float(self.gun_var.get()) != getattr(self, "_gun_auto", self.cat.default_gun_lb)
+        except ValueError:
+            own = False
+        if not own:
+            self.gun_var.set(f"{new:g}")
+        self._gun_auto = new
         if self.purpose not in self._purposes_of(self.cart_var.get()):
             self.purpose = "All"
         self._build_chips(self.cart_var.get())
@@ -2289,7 +2316,7 @@ class LoadsView:
             items = [x for x in items if self._purpose_of(x) == self.purpose]
         try:
             dist = self._num(self.dist_var, "Distance", 0, self.cat.max_distance)
-            gun = self._num(self.gun_var, "Gun weight", 0.5, 30)
+            gun = self._num(self.gun_var, "Gun weight", 0.5, GUN_LB_MAX)
             weights = {k: self._num(v, f"{METRICS[k][0]} weight", 0, 10)
                        for k, v in self.weight_vars.items()}
         except ValueError as exc:
@@ -2652,7 +2679,7 @@ class HeadToHeadView:
             self.choices[cart] = {x.label + ("  (handload)" if x.handload else ""): x for x in items}
         self.keys = metric_keys(cat)
         self.dist_var = tk.StringVar(value=f"{cat.default_distance:g}")
-        self.gun_var = tk.StringVar(value=f"{cat.default_gun_lb:g}")
+        self.gun_var = tk.StringVar(value="")   # blank: each cartridge's typical gun (GUN_LB)
         self.weight_vars = {k: tk.StringVar(value=str(v)) for k, v in default_weights(cat).items()}
         self.weights_open = False
         self.slots = []                   # [{cart: StringVar, load: StringVar, widgets...}]
@@ -2710,6 +2737,8 @@ class HeadToHeadView:
                                                      padx=(0 if i == 0 else 16, 0))
             ttk.Entry(top, textvariable=var, font=a.f(12), width=10).grid(
                 row=1, column=i, sticky="w", pady=(4, 0), padx=(0 if i == 0 else 16, 0))
+        a.label(top, "Blank: each load in its cartridge's usual gun", 9, MUTED).grid(
+            row=2, column=1, sticky="w", pady=(4, 0), padx=(16, 0))
         self.status = a.label(card, "", 10, DANGER, anchor="w")
         self.status.grid(row=4, column=0, sticky="w", pady=(8, 0), **pad)
         self.weights_toggle = tk.Label(card, text="▸  Scoring weights", bg=SURFACE, fg=MUTED,
@@ -2836,7 +2865,7 @@ class HeadToHeadView:
 
     # ---- state ------------------------------------------------------------ #
     def snapshot(self):
-        return dict(dist=self.dist_var.get(), gun=self.gun_var.get(),
+        return dict(dist=self.dist_var.get(), h2h_gun=self.gun_var.get(),
                     weights={k: v.get() for k, v in self.weight_vars.items()},
                     weights_open=self.weights_open)
 
@@ -2852,8 +2881,8 @@ class HeadToHeadView:
                 self.weight_vars[k].set(v)
         if "dist" in snap:
             self.dist_var.set(snap["dist"])
-        if "gun" in snap:
-            self.gun_var.set(snap["gun"])
+        if "h2h_gun" in snap:
+            self.gun_var.set(snap["h2h_gun"])
         if snap.get("weights_open") and not self.weights_open:
             self._toggle_weights()
 
@@ -2884,7 +2913,9 @@ class HeadToHeadView:
         picked = self._picked()
         try:
             dist = LoadsView._num(self.dist_var, "Distance", 0, self.cat.max_distance)
-            gun = LoadsView._num(self.gun_var, "Gun weight", 0.5, 30)
+            # blank: each load in its cartridge's typical gun (GUN_LB); a number: all in that gun
+            gun = (None if not self.gun_var.get().strip()
+                   else LoadsView._num(self.gun_var, "Gun weight", 0.5, GUN_LB_MAX))
             weights = {k: LoadsView._num(v, f"{METRICS[k][0]} weight", 0, 10)
                        for k, v in self.weight_vars.items()}
         except ValueError as exc:
@@ -3018,13 +3049,15 @@ class HeadToHeadView:
 def h2h_rows(cat, picked, dist, gun, weights, price_of, groups):
     """Head to Head figures for the picked loads. Each load is graded the way the Load Dictionary
     grades it (against every load of its cartridge); `best` is the set of factors where it leads
-    the picked loads and `gap` how far behind the leader it is, in %."""
+    the picked loads and `gap` how far behind the leader it is, in %. gun None: each cartridge
+    in its typical gun (GUN_LB)."""
     rows, done = [], {}
     for it in picked:
         if it.cartridge not in done:
             items = groups[it.cartridge]
             done[it.cartridge] = {id(r["item"]): r for r in score_loads(
-                items, dist, gun, weights, [price_of(x) for x in items],
+                items, dist, typical_gun_lb(cat, it.cartridge) if gun is None else gun,
+                weights, [price_of(x) for x in items],
                 by_type=not cat.grain_style)}
         rows.append(dict(done[it.cartridge][id(it)]))
     for key in metric_keys(cat):

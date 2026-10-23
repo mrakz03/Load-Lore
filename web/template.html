@@ -360,6 +360,9 @@ function ballisticHTML(it,cat,open){
     ballisticTable(it,cat).map(([yd,v,e,p,w])=>`<tr><td>${g(yd)}</td><td>${Math.round(v).toLocaleString("en-US")}</td><td>${Math.round(e).toLocaleString("en-US")}</td><td>${Math.abs(p)<0.05?"0.0":(p>0?"+":"−")+Math.abs(p).toFixed(1)}</td><td>${w.toFixed(1)}</td></tr>`).join("")
   }</tbody></table></div><div class="note">Zeroed at ${g(cat.zero_yd)} yd with the sight ${g(cat.sight_in)} in above the bore; wind is a ${WIND_MPH} mph crosswind. Drop and drift are estimates from the G1 BC in sea-level air.</div></details>`;
 }
+// typical gun weight for cartridges far from their category's default (GUN_LB in the desktop app)
+const GUN_LB=DATA.gun_lb||{},GUN_MAX=DATA.gun_max||60;
+const typicalGun=(cat,cart)=>GUN_LB[cart]!=null?GUN_LB[cart]:cat.default_gun_lb;
 function recoil(gr,fps,powder,gun){
   // standard free recoil: bullet + powder gas at ~4000 fps (GAS_FPS); no 1.75x gas factor
   const mom=(gr*fps+powder*4000)/7000, gv=mom/gun;
@@ -704,11 +707,13 @@ function openLoads(cat,pane){
   const biggest=carts.reduce((a,c)=>groups.get(c).length>groups.get(a).length?c:a,carts[0]);
   $$("#lc").value=(sh.cart&&groups.has(sh.cart))?sh.cart:biggest;
   $$("#ld").value=sh.dist!=null?sh.dist:g(cat.default_distance);
-  $$("#lg").value=sh.gun!=null?sh.gun:g(cat.default_gun_lb);
+  // the gun weight follows the cartridge's typical gun (GUN_LB) unless you typed your own
+  L.gunAuto=sh.gun!=null?(sh.gunAuto!=null?sh.gunAuto:cat.default_gun_lb):typicalGun(cat,$$("#lc").value);
+  $$("#lg").value=sh.gun!=null?sh.gun:g(L.gunAuto);
   MKEYS.forEach((k,i)=>$$("#lw_"+k).value=sh.w?sh.w[k]:cat.weights[i]);
   const readNum=(id,lo,hi)=>{const v=parseFloat($$(id).value);return isNaN(v)?null:Math.min(hi,Math.max(lo,v));};
   const priceOf=it=>{const v=L.prices[priceKey(cat,it)];return typeof v==="number"?v:it.default_cost;};
-  app._leave=()=>{shared[cat.title]={purpose:L.purpose,cart:$$("#lc").value,dist:$$("#ld").value,gun:$$("#lg").value,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#lw_"+k).value]))};};
+  app._leave=()=>{shared[cat.title]=Object.assign({},shared[cat.title],{purpose:L.purpose,cart:$$("#lc").value,dist:$$("#ld").value,gun:$$("#lg").value,gunAuto:L.gunAuto,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#lw_"+k).value]))});};
   function buildChips(){
     const items=groups.get($$("#lc").value)||[], cnt={};
     items.forEach(x=>{const p=purposeOf(x);if(p)cnt[p]=(cnt[p]||0)+1;});
@@ -736,7 +741,7 @@ function openLoads(cat,pane){
     $$("#lp").querySelectorAll("button").forEach(b=>{const p=b.dataset.p;b.querySelector("small").textContent=p==="All"?shown.length:shown.filter(x=>purposeOf(x)===p).length;});
   }
   function compute(){
-    const dist=readNum("#ld",0,cat.max_distance), gun=readNum("#lg",.5,30);
+    const dist=readNum("#ld",0,cat.max_distance), gun=readNum("#lg",.5,GUN_MAX);
     const weights={};let bad=false;
     for(const k of MKEYS){const v=parseFloat($$("#lw_"+k).value);if(isNaN(v)||v<0)bad=true;weights[k]=bad?0:Math.min(10,v);}
     if(dist==null||gun==null||bad)return null;
@@ -822,7 +827,9 @@ function openLoads(cat,pane){
     buildChips();render();
   }
   if(cat.grain_style)$$("#hadd").onclick=()=>openHand(null);
-  $$("#lc").onchange=()=>{L.open=null;buildChips();render();};
+  $$("#lc").onchange=()=>{
+    const nw=typicalGun(cat,$$("#lc").value);if(parseFloat($$("#lg").value)===L.gunAuto||isNaN(parseFloat($$("#lg").value)))$$("#lg").value=g(nw);L.gunAuto=nw;
+    L.open=null;buildChips();render();};
   ["#ld","#lg","#lf"].concat(MKEYS.map(k=>"#lw_"+k)).forEach(id=>$$(id).addEventListener("input",render));
   $$("#ls").onchange=render;
   $$("#lwt").onclick=()=>{L.weightsOpen=!L.weightsOpen;$$("#lwb").classList.toggle("hidden",!L.weightsOpen);$$("#lwt").innerHTML=(L.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";};
@@ -835,7 +842,7 @@ function openLoads(cat,pane){
 function h2hRows(cat,picked,dist,gun,weights,priceOf,groups){
   const done=new Map(),rows=[];
   for(const it of picked){
-    if(!done.has(it.cartridge)){const items=groups.get(it.cartridge);done.set(it.cartridge,new Map(scoreLoads(items,dist,gun,weights,items.map(priceOf),!cat.grain_style).map(r=>[r.it,r])));}
+    if(!done.has(it.cartridge)){const items=groups.get(it.cartridge);done.set(it.cartridge,new Map(scoreLoads(items,dist,gun==null?typicalGun(cat,it.cartridge):gun,weights,items.map(priceOf),!cat.grain_style).map(r=>[r.it,r])));}
     rows.push(Object.assign({},done.get(it.cartridge).get(it),{best:new Set(),gap:{}}));
   }
   for(const k of keysOf(cat)){
@@ -870,7 +877,7 @@ function openH2H(cat,pane){
     <button class="link" id="hadd2">+&nbsp; Add a load (up to ${H2H_MAX})</button>
     <div class="nums" style="grid-template-columns:1fr 1fr">
       <div><label class="l">DISTANCE (YD)</label><input id="hd" inputmode="decimal"></div>
-      <div><label class="l">${esc(cat.gun_label)}</label><input id="hg" inputmode="decimal"></div>
+      <div><label class="l">${esc(cat.gun_label)}</label><input id="hg" inputmode="decimal" placeholder="Usual for each"></div>
     </div>
     <div class="links"><button class="link m" id="hwt">▸&nbsp; Scoring weights</button></div>
     <div class="weights hidden" id="hwb"><div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="hw_${k}" inputmode="numeric"></div>`).join("")}</div>
@@ -879,9 +886,9 @@ function openH2H(cat,pane){
   <div id="hres"></div><div class="note" id="hnote"></div>`;
   const $$=s=>$(s,pane);
   $$("#hd").value=sh.dist!=null?sh.dist:g(cat.default_distance);
-  $$("#hg").value=sh.gun!=null?sh.gun:g(cat.default_gun_lb);
+  $$("#hg").value=sh.h2hGun!=null?sh.h2hGun:"";   // blank: each cartridge's typical gun
   MKEYS.forEach((k,i)=>$$("#hw_"+k).value=sh.w?sh.w[k]:cat.weights[i]);
-  app._leave=()=>{shared[cat.title]=Object.assign({},shared[cat.title],{dist:$$("#hd").value,gun:$$("#hg").value,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#hw_"+k).value]))});};
+  app._leave=()=>{shared[cat.title]=Object.assign({},shared[cat.title],{dist:$$("#hd").value,h2hGun:$$("#hg").value,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#hw_"+k).value]))});};
   const picked=()=>{const out=[];for(const s of slots){const it=choice(s.cart,s.key);if(it&&!out.includes(it))out.push(it);}return out;};
   const save=()=>{H2H[cat.title]=picked().map(pickKey);};
   // the load box is a search (issue #24): every typed word must be in the name, the list
@@ -955,10 +962,10 @@ function openH2H(cat,pane){
   }
   function render(){
     const box=$$("#hres");
-    const dist=parseFloat($$("#hd").value),gun=parseFloat($$("#hg").value),weights={};let bad=false;
+    const gs=$$("#hg").value.trim(),dist=parseFloat($$("#hd").value),gun=gs?parseFloat(gs):null,weights={};let bad=false;
     for(const k of MKEYS){const v=parseFloat($$("#hw_"+k).value);if(isNaN(v)||v<0||v>10)bad=true;weights[k]=v;}
     $$("#hnote").textContent=(GRADES?`Each grade is the load's Load Dictionary grade: against every load of its own cartridge${cat.grain_style?"":" and load type"}, not against the others here. `:"")+"The best figure in each row is highlighted; the % shows how far the others are behind it. Prices are estimates: set your own in the Load Dictionary.";
-    if(isNaN(dist)||dist<0||dist>cat.max_distance||isNaN(gun)||gun<.5||gun>30||bad){box.innerHTML=`<div class="cnt">Enter a distance (0–${g(cat.max_distance)}), gun weight (0.5–30) and weights (0–10) to see results.</div>`;return;}
+    if(isNaN(dist)||dist<0||dist>cat.max_distance||(gun!=null&&(isNaN(gun)||gun<.5||gun>GUN_MAX))||bad){box.innerHTML=`<div class="cnt">Enter a distance (0–${g(cat.max_distance)}), gun weight (0.5–${g(GUN_MAX)}, or blank) and weights (0–10) to see results.</div>`;return;}
     const pk=picked();
     if(pk.length<H2H_MIN){box.innerHTML=`<div class="cnt">Pick at least ${H2H_MIN} loads to put them head to head.</div>`;return;}
     const rows=h2hRows(cat,pk,dist,gun,weights,priceOf,groups),keys=keysOf(cat);
