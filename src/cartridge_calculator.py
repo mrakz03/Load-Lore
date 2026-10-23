@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 In Like Flint - Load Lore (formerly Cartridge Value Calculator) - a desktop tool for comparing ammunition by
-performance per dollar.
+performance.
 
 Two tools, each split into categories (Centerfire Rifle, Handgun, Rimfire Rifle,
 Shotgun):
