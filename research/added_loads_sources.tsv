@@ -976,3 +976,13 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 .45 Colt	Buffalo Bore JFN +P (3D)	300	1200	0.151	partial	buffalobore.com (3D/20) (BC scaled from the nearest same-type load)
 .45 Colt	Buffalo Bore Barnes XPB +P (lead-free)	225	1500	0.150	partial	buffalobore.com (3G/20) (BC scaled from the nearest same-type load)
 .45 Colt	Buffalo Bore Dangerous Game Mono-Metal +P	300	1300	0.151	partial	buffalobore.com (3DG 300/20) (BC scaled from the nearest same-type load)
+.223 Remington	Hornady Frontier FMJ	55	3240	0.248	catalog	Hornady 2026 catalog (Frontier, made by Hornady), load FR100; BC of the same-weight Hornady load
+.223 Remington	Hornady Frontier Spire Point	55	3240	0.239	catalog	Hornady 2026 catalog (Frontier, made by Hornady), load FR120; BC of the same-weight Hornady load
+.223 Remington	Hornady Frontier Hollow Point Match	55	3240	0.259	catalog	Hornady 2026 catalog (Frontier, made by Hornady), load FR140; BC of the same-weight Hornady load
+5.56x45mm NATO	Hornady Frontier 5.56 NATO M193 FMJ	55	3240	0.248	catalog	Hornady 2026 catalog (Frontier, made by Hornady), load FR200; BC of the same-weight Hornady load
+5.56x45mm NATO	Hornady Frontier Hollow Point Match	55	3240	0.259	catalog	Hornady 2026 catalog (Frontier, made by Hornady), load FR240; BC of the same-weight Hornady load
+5.56x45mm NATO	Hornady Frontier FMJ	62	3060	0.279	catalog	Hornady 2026 catalog (Frontier, made by Hornady), load FR260; BC of the same-weight Hornady load
+5.56x45mm NATO	Hornady Frontier BTHP Match	68	2960	0.362	catalog	Hornady 2026 catalog (Frontier, made by Hornady), load FR310; BC of the same-weight Hornady load
+5.56x45mm NATO	Winchester USA 5.56 NATO Full Metal Jacket	55	3270	0.267	published	winchesterle.com/Ammunition/Products/Rifle/USA (Q3131, the white-box 5.56mm)
+5.56x45mm NATO	Winchester USA 5.56 NATO M193 FMJ (Lake City)	55	3240	0.250	partial	retailer listings of WM193 (Lake City M193, 3240 fps) (BC of the Federal XM193)
+7.62x51mm NATO	Federal American Eagle 7.62x51 NATO XM80 FMJ	149	2790	0.408	published	retailer listings of XM80C (targetsportsusa.com, luckygunner.com)

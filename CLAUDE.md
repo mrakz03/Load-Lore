@@ -17,7 +17,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Two tools (Oct 2026; Compare Cartridges and "Add your own caliber" were removed): Load
   Dictionary (LoadsView / openLoads, the old Compare Loads, plus an S-F grades on/off switch kept
   in settings.json show_grades / localStorage) and Head to Head (HeadToHeadView / openH2H, 2-5
-  loads of one category side by side, picks in App.h2h / H2H, in memory only). Phones (<=600 px)
+  loads side by side, from any category (Oct 2026): picks are (category, load) pairs, pick_key /
+  pickKey include the category title, in App.h2h / H2H per page category, in memory only; a load
+  from another category is graded with that category's default weights, factors it lacks show "—"). Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
   always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
   LoadSearch / loadSearch, every typed word must be in the name). The dictionary's brand / load
@@ -49,6 +51,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
 - Recoil (recoil_ftlbs / recoil): standard free recoil, bullet + powder gas at GAS_FPS 4000, gas counted
   once (a 1.75x gas factor read 40-60% high; fixed Oct 2026 against Chuck Hawks' recoil table).
+- Gun weight (Oct 2026): GUN_LB / typical_gun_lb (gun_lb, typicalGun in web) gives a typical gun per
+  category + cartridge (.44 Magnum is in both rifle and handgun) where the category default is far off (.50 BMG 30 lb read 379 ft-lbs at 8 lb). The
+  dictionary's gun field follows the cartridge unless the user typed their own (_gun_auto / L.gunAuto);
+  Head to Head's gun is blank by default = each load in its own cartridge's gun (h2h_gun / h2hGun,
+  not shared with the dictionary). Limit GUN_LB_MAX 60 lb.
 - .223 Remington, 5.56x45mm NATO, .308 Winchester and 7.62x51mm NATO are four separate cartridges
   (issue #28; they were two shared lists before). A NATO load says 5.56 / M193 / M855 or
   7.62x51 / M80 in its name; Hornady 5.56 NATO loads are the 20" barrel ones (checked against the
@@ -126,6 +133,11 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   research/added_loads_sources.tsv. Black Hills 5.56mm loads carry "5.56mm" in the name because the
   same bullets are also sold as .223 Rem at different velocities. Barnes VOR-TX is not in: its site
   loads the specs by script.
+- BC sweep (Oct 2026): each load's form factor (sectional density / BC) was compared with same-cartridge
+  loads of similar weight. Catalog misprints fixed from the catalog's own downrange velocities (Fiocchi
+  22-250 55 PSP 0.453 -> 0.239, Fiocchi 30-06 165 HPBT GK 0.224 -> 0.370, Remington .224 Valkyrie 90 OTM
+  0.274 -> 0.572); bad scaled (partial) BCs on PPU HPBT and a few others set to the bullet's published BC.
+  Hornady's Frontier line is in under "Hornady Frontier ..." (same ballistics as some Hornady loads).
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,

@@ -40,8 +40,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .25 ACP,Remington UMC Full Metal Jacket,50,760,0.088,1,0.44,,catalog,,2,Target
 .25 ACP,Winchester USA Full Metal Jacket,50,760,0.092,1,0.44,,catalog,,2,Target
 .25 ACP,PPU FMJ,50,771,0.113,1.0,0.35,,partial,,2.0,Target
-7.62x25mm Tokarev,Fiocchi Heritage FMJ,85,1525,0.121,7.3,0.20,,partial,,,Target
-7.62x25mm Tokarev,Winchester USA Full Metal Jacket,85,1645,0.121,8.5,0.20,,partial,,,Target
+7.62x25mm Tokarev,Fiocchi Heritage FMJ,85,1525,0.121,7.3,0.55,,partial,,,Target
+7.62x25mm Tokarev,Winchester USA Full Metal Jacket,85,1645,0.121,8.5,0.55,,partial,,,Target
 7.62x25mm Tokarev,Sellier & Bellot FMJ,85,1857,0.121,10.8,0.60,,partial,,,Target
 7.62x25mm Tokarev,PPU FMJ,85,1722,0.121,9.3,0.55,,partial,,9.8,Target
 7.62x25mm Tokarev,PPU JHP,85,1673,0.121,8.8,0.55,,partial,,9.8,Defense
