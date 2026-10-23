@@ -49,7 +49,7 @@ except ImportError:  # lets the calculation code be imported/tested without a GU
 # --------------------------------------------------------------------------- #
 APP_TITLE = "In Like Flint - Load Lore"
 APP_VERSION = "dev"             # the release build sets this from the git tag (v1.5 -> "1.5")
-# Shown on the Settings page (web too, via build_web.py); the full text is DISCLAIMER.md
+# Shown on the Settings page (web too, via build_web.py); the full text is LEGAL.md
 ABOUT_TEXT = ("Calculated figures are estimates from makers' published velocities, approximate BCs "
               "and prices, and a simple ballistic model. Powder charges are NOT reloading data. This "
               "program is not intended for making real shooting or reloading decisions. Brand names "

@@ -37,6 +37,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Type: files; Name: "{app}\ammo_*.csv"
 Type: files; Name: "{app}\loads_*.csv"
 Type: files; Name: "{app}\bullets.csv"
+; NOTICE.md and DISCLAIMER.md were combined into LEGAL.md
+Type: files; Name: "{app}\NOTICE.md"
+Type: files; Name: "{app}\DISCLAIMER.md"
 ; shortcuts from before the rename to In Like Flint - Load Lore (install folder and AppId stay the same)
 Type: files; Name: "{autoprograms}\Cartridge Calculator.lnk"
 Type: files; Name: "{autodesktop}\Cartridge Calculator.lnk"
@@ -48,8 +51,7 @@ Type: files; Name: "{autodesktop}\In Like Flint - Load Lore.lnk"
 Source: "dist\CartridgeCalculator.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "data\*.csv"; Excludes: "my_*.csv"; DestDir: "{app}"; Flags: ignoreversion
 Source: "LICENSE"; DestDir: "{app}"; DestName: "LICENSE.txt"; Flags: ignoreversion
-Source: "NOTICE.md"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DISCLAIMER.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "LEGAL.md"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\Load Lore"; Filename: "{app}\CartridgeCalculator.exe"; WorkingDir: "{app}"

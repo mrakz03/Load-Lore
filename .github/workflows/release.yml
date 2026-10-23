@@ -29,8 +29,7 @@ jobs:
           copy dist\CartridgeCalculator.exe CartridgeCalculator\
           copy data\*.csv CartridgeCalculator\
           copy LICENSE CartridgeCalculator\LICENSE.txt
-          copy NOTICE.md CartridgeCalculator\
-          copy DISCLAIMER.md CartridgeCalculator\
+          copy LEGAL.md CartridgeCalculator\
           powershell Compress-Archive -Path CartridgeCalculator -DestinationPath CartridgeCalculator-Windows.zip
         shell: cmd
       - run: choco install innosetup -y --no-progress
@@ -67,7 +66,7 @@ jobs:
       - run: pyinstaller --onefile --windowed --name CartridgeCalculator --add-data "assets/icon.png:." src/cartridge_calculator.py
       - run: |
           mkdir CartridgeCalculator
-          cp dist/CartridgeCalculator data/*.csv assets/icon.png LICENSE NOTICE.md DISCLAIMER.md CartridgeCalculator/
+          cp dist/CartridgeCalculator data/*.csv assets/icon.png LICENSE LEGAL.md CartridgeCalculator/
           cp scripts/install_linux.sh CartridgeCalculator/install.sh
           tar czf CartridgeCalculator-Linux.tar.gz CartridgeCalculator
       - uses: actions/upload-artifact@v4
