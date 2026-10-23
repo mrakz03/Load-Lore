@@ -50,7 +50,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Recoil (recoil_ftlbs / recoil): standard free recoil, bullet + powder gas at GAS_FPS 4000, gas counted
   once (a 1.75x gas factor read 40-60% high; fixed Oct 2026 against Chuck Hawks' recoil table).
 - Gun weight (Oct 2026): GUN_LB / typical_gun_lb (gun_lb, typicalGun in web) gives a typical gun per
-  cartridge where the category default is far off (.50 BMG 30 lb read 379 ft-lbs at 8 lb). The
+  category + cartridge (.44 Magnum is in both rifle and handgun) where the category default is far off (.50 BMG 30 lb read 379 ft-lbs at 8 lb). The
   dictionary's gun field follows the cartridge unless the user typed their own (_gun_auto / L.gunAuto);
   Head to Head's gun is blank by default = each load in its own cartridge's gun (h2h_gun / h2hGun,
   not shared with the dictionary). Limit GUN_LB_MAX 60 lb.
@@ -131,6 +131,11 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   research/added_loads_sources.tsv. Black Hills 5.56mm loads carry "5.56mm" in the name because the
   same bullets are also sold as .223 Rem at different velocities. Barnes VOR-TX is not in: its site
   loads the specs by script.
+- BC sweep (Oct 2026): each load's form factor (sectional density / BC) was compared with same-cartridge
+  loads of similar weight. Catalog misprints fixed from the catalog's own downrange velocities (Fiocchi
+  22-250 55 PSP 0.453 -> 0.239, Fiocchi 30-06 165 HPBT GK 0.224 -> 0.370, Remington .224 Valkyrie 90 OTM
+  0.274 -> 0.572); bad scaled (partial) BCs on PPU HPBT and a few others set to the bullet's published BC.
+  Hornady's Frontier line is in under "Hornady Frontier ..." (same ballistics as some Hornady loads).
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,

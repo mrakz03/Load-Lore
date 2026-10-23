@@ -415,17 +415,21 @@ def recoil_ftlbs(bullet_gr, muzzle_fps, powder_gr, gun_lb):
 # Typical gun weight (lb, loaded, scoped rifles) for cartridges far from their category's default:
 # recoil is worked out for this weight unless you enter your own. A .50 BMG in the rifle default's
 # 8 lb read 340+ ft-lbs; in its usual ~30 lb rifle it is about 95 (no muzzle brake).
-GUN_LB = {
-    ".50 BMG": 30.0, ".338 Lapua Magnum": 15.0, ".416 Remington Magnum": 10.0,
-    ".458 Winchester Magnum": 10.0, ".458 Lott": 10.0, ".375 H&H Magnum": 9.5, ".375 Ruger": 9.5,
-    ".500 S&W Magnum": 4.5, ".460 S&W Magnum": 4.5, ".50 AE": 4.5, ".454 Casull": 3.5,
-    ".480 Ruger": 3.5, ".44 Magnum": 3.0, "10 Gauge": 10.0,
+GUN_LB = {     # per category: the same cartridge can be in a rifle and a handgun (.44 Magnum)
+    "Centerfire Rifle": {
+        ".50 BMG": 30.0, ".338 Lapua Magnum": 15.0, ".416 Remington Magnum": 10.0,
+        ".458 Winchester Magnum": 10.0, ".458 Lott": 10.0, ".375 H&H Magnum": 9.5,
+        ".375 Ruger": 9.5},
+    "Handgun": {
+        ".500 S&W Magnum": 4.5, ".460 S&W Magnum": 4.5, ".50 AE": 4.5, ".454 Casull": 3.5,
+        ".480 Ruger": 3.5, ".44 Magnum": 3.0},
+    "Shotgun": {"10 Gauge": 10.0},
 }
 GUN_LB_MAX = 60.0
 
 
 def typical_gun_lb(cat, cartridge):
-    return GUN_LB.get(cartridge, cat.default_gun_lb)
+    return GUN_LB.get(cat.title, {}).get(cartridge, cat.default_gun_lb)
 
 
 # --------------------------------------------------------------------------- #

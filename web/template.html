@@ -362,7 +362,7 @@ function ballisticHTML(it,cat,open){
 }
 // typical gun weight for cartridges far from their category's default (GUN_LB in the desktop app)
 const GUN_LB=DATA.gun_lb||{},GUN_MAX=DATA.gun_max||60;
-const typicalGun=(cat,cart)=>GUN_LB[cart]!=null?GUN_LB[cart]:cat.default_gun_lb;
+const typicalGun=(cat,cart)=>{const t=GUN_LB[cat.title]||{};return t[cart]!=null?t[cart]:cat.default_gun_lb;};
 function recoil(gr,fps,powder,gun){
   // standard free recoil: bullet + powder gas at ~4000 fps (GAS_FPS); no 1.75x gas factor
   const mom=(gr*fps+powder*4000)/7000, gv=mom/gun;
