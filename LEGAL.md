@@ -16,7 +16,8 @@ figures. Read this before relying on anything it shows.
   sighting in, range estimation or hunting shot decisions.
 - **Not reloading data.** The app does not check pressure or safety. Powder
   charges shown are not load data. Handload figures are only what you type in.
-  Always follow a current published load manual and the powder maker's data.
+  Always confirm with the manufacturer's data and a current load manual before
+  shooting or reloading.
 - **Grades are opinions.** S to F grades compare loads of the same cartridge on
   a few numbers. They say nothing about accuracy, reliability, legality or
   suitability for hunting, defence or any other use.
