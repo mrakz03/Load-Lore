@@ -1699,8 +1699,10 @@ class App:
     def _updates_row(self, row):
         """The Updates card on the Settings page: status, Check / Update button, start-up switch."""
         u, rel = self.upd, self.upd.get("release")
-        if version_tuple(APP_VERSION) is None:     # running from source
-            self.button(row("Updates", "This copy runs from source: update it with git pull"),
+        if version_tuple(APP_VERSION) is None:     # running from source, or a test build from Actions
+            note = ("Test build: install a release to get updates" if getattr(sys, "frozen", False)
+                    else "This copy runs from source: update it with git pull")
+            self.button(row("Updates", note),
                         "Releases page", lambda: webbrowser.open(RELEASES_PAGE)).pack()
             return
         notes = {"idle": f"You have v{APP_VERSION}",
