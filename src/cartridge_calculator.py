@@ -326,51 +326,69 @@ WIND_MPH = 10.0
 MS_PER_MPH = 0.44704
 
 
-def flight_times(muzzle_fps, bc_g1, distances_yd):
-    """Time of flight (s) to each distance, same G1 / RK2 steps as velocity_at; None past
-    the point where the bullet stops."""
-    marks = sorted(set(d / YD_PER_M for d in distances_yd if d > 0))
-    v, x, t, step, out = muzzle_fps / FT_PER_M, 0.0, 0.0, 0.5, {0.0: 0.0}
+def _fly(muzzle_fps, bc_g1, start_y_m, angle, marks_m):
+    """Point-mass flight in the vertical plane: G1 drag along the flight path plus gravity,
+    RK2 midpoint steps of 0.5 m downrange. Returns {mark: (time s, height m)}, stopping where
+    the bullet slows below 1 m/s."""
+    v = muzzle_fps / FT_PER_M
+    vx, vy = v * math.cos(angle), v * math.sin(angle)
+    x, y, t, step, out = 0.0, start_y_m, 0.0, 0.5, {0.0: (0.0, start_y_m)}
 
-    def dvdx(speed):
-        return -_K * g1_cd(speed / SPEED_OF_SOUND_MS) * speed / bc_g1
+    def deriv(vx, vy):                            # d/dx of (vx, vy, y, t)
+        speed = math.hypot(vx, vy)
+        k = _K * g1_cd(speed / SPEED_OF_SOUND_MS) * speed / bc_g1      # drag per metre
+        return -k, -(k * vy + GRAVITY_MS2) / vx, vy / vx, 1.0 / vx
 
-    for m in marks:
-        while x < m - 1e-12 and v > 1.0:
+    for m in sorted(set(marks_m)):
+        while x < m - 1e-12 and vx > 1.0:
             h = min(step, m - x)
-            k1 = dvdx(v)
-            mid = v + 0.5 * h * k1
-            k2 = dvdx(mid)
-            t += h / mid
-            v += h * k2
-            x += h
-        if v <= 1.0:
+            a = deriv(vx, vy)
+            b = deriv(vx + 0.5 * h * a[0], vy + 0.5 * h * a[1])
+            vx, vy = vx + h * b[0], vy + h * b[1]
+            y, t, x = y + h * b[2], t + h * b[3], x + h
+        if vx <= 1.0:
             break
-        out[m] = t
-    return [out.get(d / YD_PER_M if d > 0 else 0.0) for d in distances_yd]
+        out[m] = (t, y)
+    return out
+
+
+def trajectory(muzzle_fps, bc_g1, sight_in, zero_yd, distances_yd):
+    """[(time of flight s, path in)] at each distance, or None past where the bullet stops.
+    The bore starts sight_in below the line of sight and is tilted up so the bullet crosses it
+    again at zero_yd; path is above (+) or below (-) the line of sight. Gravity slows the bullet's
+    rise and fall like the drag does (a true point-mass path, not the flat-fire t^2 drop, which
+    read 10-15% too much drop at 400-500 yd against Hornady's published tables)."""
+    marks = [d / YD_PER_M for d in distances_yd]
+    zm, start = zero_yd / YD_PER_M, -sight_in / IN_PER_M
+    angle = 0.0
+    for _ in range(4):                            # aim: tilt by the miss over the zero range
+        hit = _fly(muzzle_fps, bc_g1, start, angle, [zm]).get(zm)
+        if hit is None:
+            break
+        angle -= hit[1] / zm
+    flown = _fly(muzzle_fps, bc_g1, start, angle, marks)
+    return [(flown[m][0], flown[m][1] * IN_PER_M) if m in flown else None for m in marks]
 
 
 def ballistic_table(item, cat):
     """[(yards, velocity fps, energy ft-lbs, path in, 10 mph wind drift in)] from the muzzle out
     to 5 x cat.step_yd. Path is above (+) or below (-) the line of sight for a sight
-    cat.sight_in above the bore zeroed at cat.zero_yd; a flat-fire estimate, not a solver."""
+    cat.sight_in above the bore zeroed at cat.zero_yd (point-mass G1 path in standard air);
+    an estimate, not a full solver."""
     yards = []
     for n in range(6):
         yd = min(n * cat.step_yd, cat.max_distance)
         if yards and yd == yards[-1]:
             break
         yards.append(yd)
-    times = flight_times(item.muzzle_fps, item.bc_g1, yards + [cat.zero_yd])
-    tz = times[-1]
-    drop = lambda t: 0.5 * GRAVITY_MS2 * t * t * IN_PER_M
     v0 = item.muzzle_fps / FT_PER_M
     rows = []
-    for yd, t in zip(yards, times):
-        if t is None or tz is None:
+    for yd, hit in zip(yards, trajectory(item.muzzle_fps, item.bc_g1, cat.sight_in, cat.zero_yd, yards)):
+        if hit is None:
             break
+        t, path = hit
         v = velocity_at(item.muzzle_fps, item.bc_g1, yd)
-        path = -drop(t) - cat.sight_in + (drop(tz) + cat.sight_in) * yd / cat.zero_yd
-        drift = WIND_MPH * MS_PER_MPH * (t - (yd / YD_PER_M) / v0) * IN_PER_M
+        drift = WIND_MPH * MS_PER_MPH * (t - (yd / YD_PER_M) / v0) * IN_PER_M   # Didion's lag rule
         rows.append((yd, v, energy_ftlbs(item.bullet_gr, v), path, drift))
     return rows
 
@@ -379,13 +397,17 @@ def energy_ftlbs(bullet_gr, velocity_fps):
     return bullet_gr * velocity_fps ** 2 / 450240.0
 
 
+GAS_FPS = 4000.0      # powder gas velocity at the muzzle, for recoil
+
+
 def recoil_ftlbs(bullet_gr, muzzle_fps, powder_gr, gun_lb):
     """Estimated free recoil energy (ft-lbs).
 
-    Uses the common approximation that propellant gas leaves at ~4000 fps and
-    contributes 1.75x its weight to the ejected momentum.
+    The standard free-recoil formula: the gun takes the momentum of the bullet plus the powder
+    gas, which leaves the muzzle at about 4000 fps. (It used to count the gas 1.75 times over,
+    which read 40-60% above published recoil tables such as Chuck Hawks'.)
     """
-    ejecta_momentum = (bullet_gr * muzzle_fps + 1.75 * powder_gr * 4000.0) / 7000.0
+    ejecta_momentum = (bullet_gr * muzzle_fps + powder_gr * GAS_FPS) / 7000.0
     gun_velocity = ejecta_momentum / gun_lb        # ft/s
     return 0.5 * (gun_lb / 32.174) * gun_velocity ** 2
 
@@ -404,43 +426,30 @@ RENAMED_CARTRIDGES = {
 }
 
 
-# .223 Rem / 5.56 NATO and .308 Win / 7.62x51mm NATO each share one load list, but every load is
-# made for one of the two. Checked against the 2026 catalogs: Federal, Winchester and PMC put the
-# NATO round in the load name (5.56 / XM193 / M855, 7.62x51 / M80); Hornady lists its 5.56 NATO
-# loads with a 20" test barrel and its .223 Rem loads with 24". Every other load is the commercial one.
-SHARED_CHAMBERS = {
-    ".223 Remington / 5.56x45mm NATO": {"civil": ".223 Remington", "nato": "5.56x45mm NATO",
-                                        "marks": ["5.56", "m193", "m855"], "hornady_20in": True},
-    ".308 Winchester / 7.62x51mm NATO": {"civil": ".308 Winchester", "nato": "7.62x51mm NATO",
-                                         "marks": ["7.62x51", "m80 "], "hornady_20in": False},
+# .223 Remington / 5.56x45mm NATO and .308 Winchester / 7.62x51mm NATO used to share one list each;
+# since issue #28 the NATO loads are their own cartridges. Saved handloads under an old shared
+# name go to the commercial cartridge, and a saved price is kept for both (its load is in one).
+SPLIT_CARTRIDGES = {
+    ".223 Remington / 5.56x45mm NATO": (".223 Remington", "5.56x45mm NATO"),
+    ".308 Winchester / 7.62x51mm NATO": (".308 Winchester", "7.62x51mm NATO"),
 }
 
 
-def chambered(item):
-    """The one cartridge a load is made for (see SHARED_CHAMBERS); handloads keep the list name."""
-    rule = SHARED_CHAMBERS.get(item.cartridge)
-    if rule is None or item.handload:
-        return item.cartridge
-    name = item.load.lower() + " "
-    nato = (any(m in name for m in rule["marks"])
-            or (rule["hornady_20in"] and name.startswith("hornady") and item.barrel_in == 20))
-    return rule["nato"] if nato else rule["civil"]
-
-
 def canonical_name(cartridge):
-    return RENAMED_CARTRIDGES.get(cartridge, cartridge)
+    cartridge = RENAMED_CARTRIDGES.get(cartridge, cartridge)
+    return SPLIT_CARTRIDGES.get(cartridge, (cartridge,))[0]
 
 
 # Bullet diameter (inches) per cartridge, for Taylor KO and HITS. Shotshells aren't listed.
 DIAMETERS = {
-    ".22-250 Remington": .224, ".223 Remington": .224, ".223 Remington / 5.56x45mm NATO": .224,
+    ".22-250 Remington": .224, ".223 Remington": .224, "5.56x45mm NATO": .224,
     ".224 Valkyrie": .224, ".243 Winchester": .243, ".25-35 Winchester": .257, "6mm ARC": .243,
     "6.5 Grendel": .264, ".260 Remington": .264, "6.5 Creedmoor": .264, "6.5 PRC": .264,
     ".270 Winchester": .277, "7mm-08 Remington": .284, ".277 Fury": .277, "6.8 Western": .277,
     "7mm Remington Magnum": .284, ".300 Blackout": .308, "7.62x39mm": .310, ".30-30 Winchester": .308,
-    ".32-40 Winchester": .321, ".308 Winchester": .308, ".308 Winchester / 7.62x51mm NATO": .308,
+    ".32-40 Winchester": .321, ".308 Winchester": .308, "7.62x51mm NATO": .308,
     ".30-06 Springfield": .308, ".300 Winchester Magnum": .308, ".300 PRC": .308,
-    ".35 Remington": .358, ".348 Winchester": .348, ".350 Legend": .357, ".357 Magnum": .357,
+    ".35 Remington": .358, ".348 Winchester": .348, ".350 Legend": .355, ".357 Magnum": .357,
     ".38-55 Winchester": .376, ".44 Magnum": .429, ".444 Marlin": .429, ".450 Bushmaster": .452,
     ".22 LR": .224, ".22 WMR": .224, ".25 ACP": .251, ".32 ACP": .312, ".32 H&R Magnum": .312,
     ".380 ACP": .355, "9mm Luger": .355, ".40 S&W": .400, "10mm Auto": .400, ".45 ACP": .451,
@@ -668,7 +677,7 @@ def read_settings():
         if not isinstance(data, dict):
             return {}
         if isinstance(data.get("prices"), dict):        # keys are "category|cartridge|load"
-            data["prices"] = {_rename_price_key(k): v for k, v in data["prices"].items()}
+            data["prices"] = {new: v for k, v in data["prices"].items() for new in _rename_price_key(k)}
         return data
     except (OSError, ValueError):
         return {}
@@ -679,14 +688,16 @@ _OLD_LABEL = re.compile(r"^(\d+(?:\.\d+)?) gr  ·  (.+)$")
 
 def _rename_price_key(key):
     """Update a saved price's key: old cartridge names, and loads saved when the label put the
-    weight first ("150 gr  ·  Load", before v1.5) now read "Load  ·  150 gr"."""
+    weight first ("150 gr  ·  Load", before v1.5) now read "Load  ·  150 gr". Returns a list:
+    a price saved under a split cartridge (SPLIT_CARTRIDGES) is kept for both new ones."""
     parts = key.split("|", 2)
-    if len(parts) == 3:
-        parts[1] = canonical_name(parts[1])
-        m = _OLD_LABEL.match(parts[2])
-        if m:
-            parts[2] = f"{m.group(2)}  ·  {m.group(1)} gr"
-    return "|".join(parts)
+    if len(parts) != 3:
+        return [key]
+    m = _OLD_LABEL.match(parts[2])
+    if m:
+        parts[2] = f"{m.group(2)}  ·  {m.group(1)} gr"
+    name = RENAMED_CARTRIDGES.get(parts[1], parts[1])
+    return ["|".join([parts[0], c, parts[2]]) for c in SPLIT_CARTRIDGES.get(name, (name,))]
 
 
 def _read_user_rows(path):
@@ -1285,6 +1296,10 @@ class App:
 
     def _on_wheel(self, e):
         """Scroll the page with the mouse wheel (tables and lists keep their own wheel)."""
+        if getattr(self, "search_popup", None) is not None:
+            if isinstance(e.widget, tk.Listbox) and e.widget is self.search_popup.listbox:
+                return
+            self.search_popup.close()         # the load search list would stay put as the page moved
         try:
             w = self.root.winfo_containing(e.x_root, e.y_root)
         except Exception:
@@ -1826,10 +1841,10 @@ class LoadsView:
         top = tk.Frame(card, bg=SURFACE)
         top.grid(row=0, column=0, sticky="ew", pady=(16, 0), **pad)
         top.columnconfigure(0, weight=3, minsize=a.px(300))
-        for i in (1, 2, 3):
+        for i in (1, 2):
             top.columnconfigure(i, weight=1)
         fields = ((cat.cartridge_label, None), ("DISTANCE (YD)", self.dist_var),
-                  (cat.gun_label, self.gun_var), ("FILTER BRAND / LOAD", self.filter_var))
+                  (cat.gun_label, self.gun_var))
         for i, (text, var) in enumerate(fields):
             a.label(top, text, 9, MUTED, True).grid(row=0, column=i, sticky="w",
                                                      padx=(0 if i == 0 else 8, 0))
@@ -1875,11 +1890,19 @@ class LoadsView:
 
         # ---- ranked table
         tbl = tk.Frame(outer, bg=BG)
-        tbl.grid(row=4, column=0, sticky="nsew", pady=(14, 0))
+        tbl.grid(row=4, column=0, sticky="nsew", pady=(16, 0))
         tbl.columnconfigure(0, weight=1)
-        self.count_lbl = a.label(tbl, "Choose a cartridge to see how every brand's load compares.",
-                                 10, MUTED, bg=BG, anchor="w")
-        self.count_lbl.grid(row=0, column=0, sticky="w", pady=(0, 6))
+        # the brand / load filter sits right above the list it filters (issue #26); label over
+        # the box like the fields in the card, the load count level with the box
+        above = tk.Frame(tbl, bg=BG)
+        above.grid(row=0, column=0, sticky="ew", pady=(0, 10))
+        above.columnconfigure(1, weight=1)
+        a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).grid(row=0, column=0, sticky="w")
+        ttk.Entry(above, textvariable=self.filter_var, font=a.f(10), width=22).grid(
+            row=1, column=0, sticky="w", pady=(4, 0))
+        self.count_lbl = a.label(above, "Choose a cartridge to see how every brand's load compares.",
+                                 10, MUTED, bg=BG, anchor="e")
+        self.count_lbl.grid(row=1, column=1, sticky="e", pady=(4, 0), padx=(16, 0))
         # (for bullets the weight is already in the Load text, so no separate Grains column)
         self.cols = ["#", "Load"] + ([] if cat.grain_style else [cat.payload_col])
         if cat.grain_style:
@@ -2359,7 +2382,7 @@ class LoadsView:
             return
         item, st = row["item"], row["stats"]
         self.selected = item
-        self.d_title.config(text=f"{chambered(item)}  ·  {item.label}")
+        self.d_title.config(text=f"{item.cartridge}  ·  {item.label}")
         info = [f"{st['weight']:g} {'gr' if self.cat.grain_style else 'gr payload'}"]
         if self.cat.grain_style:
             info.append(f"{item.barrel_in:g} in test barrel" if item.barrel_in
@@ -2503,6 +2526,116 @@ class LoadsView:
                 break
 
 
+class LoadSearch:
+    """Type into a Head to Head load menu to search it (issue #24). The matches show in a list
+    under the box while the box keeps the keyboard: every typed word must appear in the name
+    (brand, bullet, weight...), Up/Down move, Enter or a click picks, Esc closes."""
+    MAX_ROWS = 12
+
+    def __init__(self, app, box, names, on_pick):
+        self.app, self.box, self.names, self.on_pick = app, box, names, on_pick
+        self.var = box.cget("textvariable")
+        self.popup = self.listbox = None
+        self.matches = []
+        self.last = ""                    # the load picked before the typing started
+        box.bind("<KeyRelease>", self._typed)
+        box.bind("<Down>", lambda e: self._move(1))
+        box.bind("<Up>", lambda e: self._move(-1))
+        box.bind("<Return>", lambda e: self._pick())
+        box.bind("<Escape>", lambda e: self.close())
+        box.bind("<FocusIn>", lambda e: box.select_range(0, "end"))
+        box.bind("<FocusOut>", lambda e: box.after(150, self._left))
+
+    def text(self):
+        return self.box.getvar(self.var)
+
+    def _typed(self, e):
+        if e.keysym in ("Down", "Up", "Return", "KP_Enter", "Escape", "Tab", "ISO_Left_Tab"):
+            return
+        words = self.text().lower().split()
+        if self.text() in self.names:
+            self.close()
+            return
+        self.matches = [n for n in self.names if all(w in n.lower() for w in words)]
+        self._show()
+
+    def _show(self):
+        if not self.matches:
+            self.close()
+            return
+        a = self.app
+        if self.popup is None:
+            self.popup = tk.Toplevel(self.box)
+            self.popup.wm_overrideredirect(True)
+            self.listbox = tk.Listbox(self.popup, bg=SURFACE_2, fg=TEXT, selectbackground=ACCENT,
+                                      selectforeground=ON_ACCENT, font=a.f(11), activestyle="none",
+                                      highlightthickness=1, highlightbackground=BORDER,
+                                      borderwidth=0, takefocus=0, exportselection=False)
+            self.listbox.pack(fill="both", expand=True)
+            self.listbox.bind("<ButtonRelease-1>", lambda e: self._pick(self.listbox.nearest(e.y)))
+            a.search_popup = self
+        self.listbox.delete(0, "end")
+        for n in self.matches:
+            self.listbox.insert("end", n)
+        self.listbox.config(height=min(len(self.matches), self.MAX_ROWS))
+        self.listbox.selection_clear(0, "end")
+        self.listbox.selection_set(0)
+        self.popup.wm_geometry(f"+{self.box.winfo_rootx()}+{self.box.winfo_rooty() + self.box.winfo_height()}")
+        self.popup.update_idletasks()
+        self.popup.wm_geometry(f"{max(self.box.winfo_width(), self.listbox.winfo_reqwidth())}x"
+                               f"{self.listbox.winfo_reqheight()}")
+        self.popup.lift()
+
+    def _move(self, step):
+        if self.popup is None:
+            self.matches = list(self.names) if self.text() in self.names or not self.text().strip() \
+                else [n for n in self.names if all(w in n.lower() for w in self.text().lower().split())]
+            self._show()
+            return "break"
+        cur = self.listbox.curselection()
+        i = min(max((cur[0] if cur else -1) + step, 0), len(self.matches) - 1)
+        self.listbox.selection_clear(0, "end")
+        self.listbox.selection_set(i)
+        self.listbox.see(i)
+        return "break"
+
+    def _pick(self, i=None):
+        if self.popup is not None and self.matches:
+            if i is None:
+                cur = self.listbox.curselection()
+                i = cur[0] if cur else 0
+            self.box.setvar(self.var, self.matches[i])
+            self.close()
+            self.box.focus_set()
+            self.box.icursor("end")
+            self.on_pick()
+        return "break"
+
+    def _left(self):
+        """Focus left the box: drop typing that isn't a load (the pick before it stays)."""
+        try:
+            if not self.box.winfo_exists():
+                return
+            focus = self.box.focus_get()
+        except (KeyError, tk.TclError):
+            focus = None
+        if focus is self.box or (focus is not None and focus is self.listbox):
+            return
+        self.close()
+        if self.text() not in self.names:
+            self.box.setvar(self.var, self.last if self.last in self.names else "")
+
+    def close(self):
+        if self.popup is not None:
+            try:
+                self.popup.destroy()
+            except tk.TclError:
+                pass
+            self.popup = self.listbox = None
+        if getattr(self.app, "search_popup", None) is self:
+            self.app.search_popup = None
+
+
 class HeadToHeadView:
     """Head to Head: 2-5 loads side by side (any cartridges of one category). Each load keeps
     the grade it has in the Load Dictionary, so the two tools always agree."""
@@ -2560,8 +2693,8 @@ class HeadToHeadView:
         card.grid(row=1, column=0, sticky="ew")
         card.columnconfigure(0, weight=1)
         pad = dict(padx=18)
-        a.label(card, "LOADS TO COMPARE", 9, MUTED, True).grid(row=0, column=0, sticky="w",
-                                                                pady=(16, 0), **pad)
+        a.label(card, "LOADS TO COMPARE  ·  type in a load box to search", 9, MUTED, True).grid(
+            row=0, column=0, sticky="w", pady=(16, 0), **pad)
         self.slot_box = tk.Frame(card, bg=SURFACE)
         self.slot_box.grid(row=1, column=0, sticky="ew", pady=(6, 0), **pad)
         self.slot_box.columnconfigure(2, weight=1)
@@ -2619,12 +2752,12 @@ class HeadToHeadView:
         slot["num"] = a.label(self.slot_box, "", 11, MUTED, True)
         slot["cart_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cart"], values=self.cartridges,
                                         state="readonly", font=a.f(11), width=widest)
-        slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], state="readonly",
-                                        font=a.f(11), width=40)
+        slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], font=a.f(11), width=40)
+        slot["search"] = LoadSearch(a, slot["load_box"], [], lambda s=slot: self._on_load(s))
         slot["x"] = tk.Label(self.slot_box, text="✕", bg=SURFACE, fg=MUTED, font=a.f(12, True),
                              padx=10, pady=2, cursor="hand2")
         slot["cart_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cart(s))
-        slot["load_box"].bind("<<ComboboxSelected>>", lambda e: (self._layout_slots(), self._changed()))
+        slot["load_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_load(s))
         slot["x"].bind("<Button-1>", lambda e, s=slot: self._remove_slot(s))
         slot["x"].bind("<Enter>", lambda e, s=slot: s["x"].config(fg=TEXT, bg=SURFACE_2))
         slot["x"].bind("<Leave>", lambda e, s=slot: s["x"].config(fg=MUTED, bg=SURFACE))
@@ -2637,8 +2770,16 @@ class HeadToHeadView:
     def _fill_loads(self, slot):
         names = list(self.choices.get(slot["cart"].get(), {}))
         slot["load_box"].config(values=names, width=max([40] + [min(len(n), 64) for n in names]))
+        slot["search"].names = names
         if slot["load"].get() not in names:
             slot["load"].set("")
+        slot["search"].last = slot["load"].get()
+
+    def _on_load(self, slot):
+        """A load was picked from the menu or from the search list."""
+        slot["search"].last = slot["load"].get()
+        self._layout_slots()
+        self._changed()
 
     def _layout_slots(self):
         for n, slot in enumerate(self.slots, start=1):
@@ -2668,6 +2809,7 @@ class HeadToHeadView:
             self._layout_slots()
             self._changed()
             return
+        slot["search"].close()
         for key in ("num", "cart_box", "load_box", "x"):
             slot[key].destroy()
         self.slots.remove(slot)
@@ -2793,7 +2935,7 @@ class HeadToHeadView:
             it = row["item"]
             box = tk.Frame(card, bg=SURFACE)
             box.grid(row=r, column=c, sticky="nsew", padx=12, pady=(14, 6))
-            a.label(box, chambered(it), 9, MUTED, True, anchor="w").pack(anchor="w")
+            a.label(box, it.cartridge, 9, MUTED, True, anchor="w").pack(anchor="w")
             a.label(box, it.label, 11, HAND_FG if it.handload else TEXT, True, anchor="w",
                     justify="left", wraplength=wrap).pack(anchor="w")
             if it.handload:

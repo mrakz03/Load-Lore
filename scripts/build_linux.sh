@@ -20,7 +20,7 @@ cp data/*.csv "$APPDIR/"
 cat > "$HOME/.local/share/applications/cartridge-calculator.desktop" <<DESK
 [Desktop Entry]
 Type=Application
-Name=In Like Flint - Load Lore
+Name=Load Lore
 Comment=Best-value ammo calculator
 Exec=$APPDIR/CartridgeCalculator
 Path=$APPDIR
@@ -30,5 +30,5 @@ DESK
 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
 
 echo
-echo "Done! Search for 'In Like Flint - Load Lore' in your app launcher."
+echo "Done! Search for 'Load Lore' in your app launcher."
 echo "Data files (editable) live in: $APPDIR"

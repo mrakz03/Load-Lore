@@ -12,7 +12,7 @@
 
 [Setup]
 AppId={{0561EDF5-07C9-425D-9A41-3572B678EB12}
-AppName=In Like Flint - Load Lore
+AppName=Load Lore
 AppVersion={#AppVersion}
 AppPublisher=mrakz03
 SourceDir=..
@@ -24,7 +24,7 @@ OutputDir=dist
 OutputBaseFilename=CartridgeCalculator-Setup
 SetupIconFile=assets\icon.ico
 UninstallDisplayIcon={app}\CartridgeCalculator.exe
-UninstallDisplayName=In Like Flint - Load Lore
+UninstallDisplayName=Load Lore
 CloseApplications=yes
 Compression=lzma2
 SolidCompression=yes
@@ -40,6 +40,9 @@ Type: files; Name: "{app}\bullets.csv"
 ; shortcuts from before the rename to In Like Flint - Load Lore (install folder and AppId stay the same)
 Type: files; Name: "{autoprograms}\Cartridge Calculator.lnk"
 Type: files; Name: "{autodesktop}\Cartridge Calculator.lnk"
+; shortcuts named "In Like Flint - Load Lore" from before the menu name became just Load Lore (issue #27)
+Type: files; Name: "{autoprograms}\In Like Flint - Load Lore.lnk"
+Type: files; Name: "{autodesktop}\In Like Flint - Load Lore.lnk"
 
 [Files]
 Source: "dist\CartridgeCalculator.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -49,8 +52,8 @@ Source: "NOTICE.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DISCLAIMER.md"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\In Like Flint - Load Lore"; Filename: "{app}\CartridgeCalculator.exe"; WorkingDir: "{app}"
-Name: "{autodesktop}\In Like Flint - Load Lore"; Filename: "{app}\CartridgeCalculator.exe"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{autoprograms}\Load Lore"; Filename: "{app}\CartridgeCalculator.exe"; WorkingDir: "{app}"
+Name: "{autodesktop}\Load Lore"; Filename: "{app}\CartridgeCalculator.exe"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\CartridgeCalculator.exe"; Description: "{cm:LaunchProgram,In Like Flint - Load Lore}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\CartridgeCalculator.exe"; Description: "{cm:LaunchProgram,Load Lore}"; Flags: nowait postinstall skipifsilent
