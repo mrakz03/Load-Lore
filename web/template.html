@@ -324,28 +324,33 @@ function velocityAt(fps,bc,distYd){
   return Math.max(v,0)*FT_PER_M;
 }
 const energy=(gr,v)=>gr*v*v/450240;
-// time of flight to each distance (same G1 / RK2 steps as velocityAt); null past the stop point
 const GRAVITY=9.80665,IN_PER_M=39.37007874,WIND_MPH=10,MS_PER_MPH=0.44704;
-function flightTimes(fps,bc,dists){
-  const marks=[...new Set(dists.filter(d=>d>0).map(d=>d/YD_PER_M))].sort((a,b)=>a-b);
-  let v=fps/FT_PER_M,x=0,t=0;const step=0.5,out=new Map([[0,0]]);
-  const dvdx=s=>-KDRAG*g1cd(s/SOS)*s/bc;
-  for(const m of marks){
-    while(x<m-1e-12&&v>1){const h=Math.min(step,m-x),k1=dvdx(v),mid=v+0.5*h*k1,k2=dvdx(mid);t+=h/mid;v+=h*k2;x+=h;}
-    if(v<=1)break;
-    out.set(m,t);
+// point-mass flight: G1 drag along the path plus gravity, RK2 steps of 0.5 m downrange (_fly)
+function fly(fps,bc,y0,ang,marks){
+  let v=fps/FT_PER_M,vx=v*Math.cos(ang),vy=v*Math.sin(ang),x=0,y=y0,t=0;const step=0.5,out=new Map([[0,[0,y0]]]);
+  const d=(vx,vy)=>{const sp=Math.hypot(vx,vy),k=KDRAG*g1cd(sp/SOS)*sp/bc;return [-k,-(k*vy+GRAVITY)/vx,vy/vx,1/vx];};
+  for(const m of [...new Set(marks)].sort((a,b)=>a-b)){
+    while(x<m-1e-12&&vx>1){const h=Math.min(step,m-x),a=d(vx,vy),b=d(vx+0.5*h*a[0],vy+0.5*h*a[1]);vx+=h*b[0];vy+=h*b[1];y+=h*b[2];t+=h*b[3];x+=h;}
+    if(vx<=1)break;
+    out.set(m,[t,y]);
   }
-  return dists.map(d=>{const k=d>0?d/YD_PER_M:0;return out.has(k)?out.get(k):null;});
+  return out;
+}
+// [time s, path in] at each distance (trajectory in the desktop app), null past the stop point
+function trajectory(fps,bc,sightIn,zeroYd,dists){
+  const marks=dists.map(d=>d/YD_PER_M),zm=zeroYd/YD_PER_M,y0=-sightIn/IN_PER_M;let ang=0;
+  for(let n=0;n<4;n++){const hit=fly(fps,bc,y0,ang,[zm]).get(zm);if(!hit)break;ang-=hit[1]/zm;}
+  const f=fly(fps,bc,y0,ang,marks);
+  return marks.map(m=>f.has(m)?[f.get(m)[0],f.get(m)[1]*IN_PER_M]:null);
 }
 // [yards, velocity, energy, path in, 10 mph drift in] out to 5 x step (ballistic_table in the desktop app)
 function ballisticTable(it,cat){
   const yards=[];for(let n=0;n<6;n++){const yd=Math.min(n*cat.step_yd,cat.max_distance);if(yards.length&&yd===yards[yards.length-1])break;yards.push(yd);}
-  const times=flightTimes(it.muzzle_fps,it.bc_g1,yards.concat([cat.zero_yd])),tz=times[times.length-1];
-  const drop=t=>0.5*GRAVITY*t*t*IN_PER_M,v0=it.muzzle_fps/FT_PER_M,rows=[];
+  const tr=trajectory(it.muzzle_fps,it.bc_g1,cat.sight_in,cat.zero_yd,yards),v0=it.muzzle_fps/FT_PER_M,rows=[];
   for(let i=0;i<yards.length;i++){
-    const yd=yards[i],t=times[i];if(t==null||tz==null)break;
+    const yd=yards[i];if(!tr[i])break;const [t,path]=tr[i];
     const v=velocityAt(it.muzzle_fps,it.bc_g1,yd);
-    rows.push([yd,v,energy(it.bullet_gr,v),-drop(t)-cat.sight_in+(drop(tz)+cat.sight_in)*yd/cat.zero_yd,WIND_MPH*MS_PER_MPH*(t-(yd/YD_PER_M)/v0)*IN_PER_M]);
+    rows.push([yd,v,energy(it.bullet_gr,v),path,WIND_MPH*MS_PER_MPH*(t-(yd/YD_PER_M)/v0)*IN_PER_M]);
   }
   return rows;
 }

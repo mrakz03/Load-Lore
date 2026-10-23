@@ -26,8 +26,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones).
   The app name is drawn as a small "In Like Flint" over a larger "Load Lore" (issue #18).
 - Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
-  flat-fire drop + 10 mph drift from flight_times / flightTimes (same G1 RK2 steps as velocity_at),
-  zero_yd / sight_in per category. An estimate, not a solver.
+  point-mass G1 path (trajectory / _fly, fly in web: drag along the path + gravity, RK2 0.5 m
+  steps, bore tilted to cross the sight line at zero_yd) + 10 mph drift by Didion's lag rule,
+  zero_yd / sight_in per category. Checked Oct 2026 against the Hornady 2026 ballistics pages:
+  velocity and path match to ~0.1-0.3 in median error out to 500 yd (the old flat-fire t^2 drop
+  read 10-15% too much drop at 400-500 yd). An estimate, not a full solver.
 - Android back button: @capacitor/app backButton listener in template.html closes a dialog, then
   steps category -> category list -> Home; only Home exits.
 - data/loads_*.csv: every load name starts with its brand (Federal, Hornady, SIG Sauer...).

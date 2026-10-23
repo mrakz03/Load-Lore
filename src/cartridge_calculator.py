@@ -319,51 +319,69 @@ WIND_MPH = 10.0
 MS_PER_MPH = 0.44704
 
 
-def flight_times(muzzle_fps, bc_g1, distances_yd):
-    """Time of flight (s) to each distance, same G1 / RK2 steps as velocity_at; None past
-    the point where the bullet stops."""
-    marks = sorted(set(d / YD_PER_M for d in distances_yd if d > 0))
-    v, x, t, step, out = muzzle_fps / FT_PER_M, 0.0, 0.0, 0.5, {0.0: 0.0}
+def _fly(muzzle_fps, bc_g1, start_y_m, angle, marks_m):
+    """Point-mass flight in the vertical plane: G1 drag along the flight path plus gravity,
+    RK2 midpoint steps of 0.5 m downrange. Returns {mark: (time s, height m)}, stopping where
+    the bullet slows below 1 m/s."""
+    v = muzzle_fps / FT_PER_M
+    vx, vy = v * math.cos(angle), v * math.sin(angle)
+    x, y, t, step, out = 0.0, start_y_m, 0.0, 0.5, {0.0: (0.0, start_y_m)}
 
-    def dvdx(speed):
-        return -_K * g1_cd(speed / SPEED_OF_SOUND_MS) * speed / bc_g1
+    def deriv(vx, vy):                            # d/dx of (vx, vy, y, t)
+        speed = math.hypot(vx, vy)
+        k = _K * g1_cd(speed / SPEED_OF_SOUND_MS) * speed / bc_g1      # drag per metre
+        return -k, -(k * vy + GRAVITY_MS2) / vx, vy / vx, 1.0 / vx
 
-    for m in marks:
-        while x < m - 1e-12 and v > 1.0:
+    for m in sorted(set(marks_m)):
+        while x < m - 1e-12 and vx > 1.0:
             h = min(step, m - x)
-            k1 = dvdx(v)
-            mid = v + 0.5 * h * k1
-            k2 = dvdx(mid)
-            t += h / mid
-            v += h * k2
-            x += h
-        if v <= 1.0:
+            a = deriv(vx, vy)
+            b = deriv(vx + 0.5 * h * a[0], vy + 0.5 * h * a[1])
+            vx, vy = vx + h * b[0], vy + h * b[1]
+            y, t, x = y + h * b[2], t + h * b[3], x + h
+        if vx <= 1.0:
             break
-        out[m] = t
-    return [out.get(d / YD_PER_M if d > 0 else 0.0) for d in distances_yd]
+        out[m] = (t, y)
+    return out
+
+
+def trajectory(muzzle_fps, bc_g1, sight_in, zero_yd, distances_yd):
+    """[(time of flight s, path in)] at each distance, or None past where the bullet stops.
+    The bore starts sight_in below the line of sight and is tilted up so the bullet crosses it
+    again at zero_yd; path is above (+) or below (-) the line of sight. Gravity slows the bullet's
+    rise and fall like the drag does (a true point-mass path, not the flat-fire t^2 drop, which
+    read 10-15% too much drop at 400-500 yd against Hornady's published tables)."""
+    marks = [d / YD_PER_M for d in distances_yd]
+    zm, start = zero_yd / YD_PER_M, -sight_in / IN_PER_M
+    angle = 0.0
+    for _ in range(4):                            # aim: tilt by the miss over the zero range
+        hit = _fly(muzzle_fps, bc_g1, start, angle, [zm]).get(zm)
+        if hit is None:
+            break
+        angle -= hit[1] / zm
+    flown = _fly(muzzle_fps, bc_g1, start, angle, marks)
+    return [(flown[m][0], flown[m][1] * IN_PER_M) if m in flown else None for m in marks]
 
 
 def ballistic_table(item, cat):
     """[(yards, velocity fps, energy ft-lbs, path in, 10 mph wind drift in)] from the muzzle out
     to 5 x cat.step_yd. Path is above (+) or below (-) the line of sight for a sight
-    cat.sight_in above the bore zeroed at cat.zero_yd; a flat-fire estimate, not a solver."""
+    cat.sight_in above the bore zeroed at cat.zero_yd (point-mass G1 path in standard air);
+    an estimate, not a full solver."""
     yards = []
     for n in range(6):
         yd = min(n * cat.step_yd, cat.max_distance)
         if yards and yd == yards[-1]:
             break
         yards.append(yd)
-    times = flight_times(item.muzzle_fps, item.bc_g1, yards + [cat.zero_yd])
-    tz = times[-1]
-    drop = lambda t: 0.5 * GRAVITY_MS2 * t * t * IN_PER_M
     v0 = item.muzzle_fps / FT_PER_M
     rows = []
-    for yd, t in zip(yards, times):
-        if t is None or tz is None:
+    for yd, hit in zip(yards, trajectory(item.muzzle_fps, item.bc_g1, cat.sight_in, cat.zero_yd, yards)):
+        if hit is None:
             break
+        t, path = hit
         v = velocity_at(item.muzzle_fps, item.bc_g1, yd)
-        path = -drop(t) - cat.sight_in + (drop(tz) + cat.sight_in) * yd / cat.zero_yd
-        drift = WIND_MPH * MS_PER_MPH * (t - (yd / YD_PER_M) / v0) * IN_PER_M
+        drift = WIND_MPH * MS_PER_MPH * (t - (yd / YD_PER_M) / v0) * IN_PER_M   # Didion's lag rule
         rows.append((yd, v, energy_ftlbs(item.bullet_gr, v), path, drift))
     return rows
 
@@ -424,7 +442,7 @@ DIAMETERS = {
     "7mm Remington Magnum": .284, ".300 Blackout": .308, "7.62x39mm": .310, ".30-30 Winchester": .308,
     ".32-40 Winchester": .321, ".308 Winchester": .308, "7.62x51mm NATO": .308,
     ".30-06 Springfield": .308, ".300 Winchester Magnum": .308, ".300 PRC": .308,
-    ".35 Remington": .358, ".348 Winchester": .348, ".350 Legend": .357, ".357 Magnum": .357,
+    ".35 Remington": .358, ".348 Winchester": .348, ".350 Legend": .355, ".357 Magnum": .357,
     ".38-55 Winchester": .376, ".44 Magnum": .429, ".444 Marlin": .429, ".450 Bushmaster": .452,
     ".22 LR": .224, ".22 WMR": .224, ".25 ACP": .251, ".32 ACP": .312, ".32 H&R Magnum": .312,
     ".380 ACP": .355, "9mm Luger": .355, ".40 S&W": .400, "10mm Auto": .400, ".45 ACP": .451,
