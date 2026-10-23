@@ -1876,18 +1876,19 @@ class LoadsView:
 
         # ---- ranked table
         tbl = tk.Frame(outer, bg=BG)
-        tbl.grid(row=4, column=0, sticky="nsew", pady=(14, 0))
+        tbl.grid(row=4, column=0, sticky="nsew", pady=(16, 0))
         tbl.columnconfigure(0, weight=1)
-        # the brand / load filter sits right above the list it filters (issue #26)
+        # the brand / load filter sits right above the list it filters (issue #26); label over
+        # the box like the fields in the card, the load count level with the box
         above = tk.Frame(tbl, bg=BG)
-        above.grid(row=0, column=0, sticky="ew", pady=(0, 6))
-        find = tk.Frame(above, bg=BG)
-        find.pack(side="left")
-        a.label(find, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).pack(anchor="w")
-        ttk.Entry(find, textvariable=self.filter_var, font=a.f(12), width=22).pack(anchor="w", pady=(4, 0))
+        above.grid(row=0, column=0, sticky="ew", pady=(0, 10))
+        above.columnconfigure(1, weight=1)
+        a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).grid(row=0, column=0, sticky="w")
+        ttk.Entry(above, textvariable=self.filter_var, font=a.f(12), width=22).grid(
+            row=1, column=0, sticky="w", pady=(4, 0))
         self.count_lbl = a.label(above, "Choose a cartridge to see how every brand's load compares.",
                                  10, MUTED, bg=BG, anchor="e")
-        self.count_lbl.pack(side="right", anchor="s", padx=(16, 0))
+        self.count_lbl.grid(row=1, column=1, sticky="e", pady=(4, 0), padx=(16, 0))
         # (for bullets the weight is already in the Load text, so no separate Grains column)
         self.cols = ["#", "Load"] + ([] if cat.grain_style else [cat.payload_col])
         if cat.grain_style:
