@@ -43,6 +43,7 @@ import sys
 import tarfile
 import tempfile
 import threading
+import urllib.error
 import urllib.request
 import webbrowser
 from dataclasses import dataclass
@@ -886,6 +887,14 @@ def _update_error(what, err):
     """One line for the Updates card: network trouble in plain words, our own ValueErrors as is."""
     if isinstance(err, ValueError):
         return f"{what}: {err}"
+    if isinstance(err, urllib.error.HTTPError):    # GitHub answered, but not with a release
+        if err.code == 404:                        # also what a private repository answers
+            return f"{what}: GitHub has no public release to check against."
+        if err.code in (403, 429):
+            return f"{what}: GitHub is limiting checks right now. Try again in an hour."
+        return f"{what}: GitHub answered with error {err.code}. Try again later."
+    if isinstance(getattr(err, "reason", None), ssl.SSLError):
+        return f"{what}: couldn't verify GitHub's security certificate."
     if isinstance(err, OSError) and not isinstance(err, PermissionError):
         return f"{what}: couldn't reach GitHub. Check your internet connection."
     return f"{what}: {err}"
