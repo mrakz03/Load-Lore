@@ -61,7 +61,7 @@ For each factor, a load is scored on a curve against the typical (median) load o
 - **Taylor KO**: bullet weight (gr) × velocity (fps) × diameter (in) ÷ 7000.
 - **HITS** (Hornady Index of Terminal Standards): (weight² ÷ 7000) × (velocity ÷ diameter²) ÷ 100, shown with Hornady's game-size class.
 - **Velocity downrange**: integrated from the G1 drag model using each load's G1 ballistic coefficient.
-- **Recoil**: free recoil energy for a gun of the weight you enter.
+- **Recoil**: free recoil energy for a gun of the weight you enter: the gun takes the momentum of the bullet plus the powder gas (leaving at about 4000 fps). Powder charges are estimates, so figures are within about 10% of published recoil tables such as Chuck Hawks'.
 
 ## Download and install
 Releases are on the repository's **Releases** page.

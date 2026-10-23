@@ -372,13 +372,17 @@ def energy_ftlbs(bullet_gr, velocity_fps):
     return bullet_gr * velocity_fps ** 2 / 450240.0
 
 
+GAS_FPS = 4000.0      # powder gas velocity at the muzzle, for recoil
+
+
 def recoil_ftlbs(bullet_gr, muzzle_fps, powder_gr, gun_lb):
     """Estimated free recoil energy (ft-lbs).
 
-    Uses the common approximation that propellant gas leaves at ~4000 fps and
-    contributes 1.75x its weight to the ejected momentum.
+    The standard free-recoil formula: the gun takes the momentum of the bullet plus the powder
+    gas, which leaves the muzzle at about 4000 fps. (It used to count the gas 1.75 times over,
+    which read 40-60% above published recoil tables such as Chuck Hawks'.)
     """
-    ejecta_momentum = (bullet_gr * muzzle_fps + 1.75 * powder_gr * 4000.0) / 7000.0
+    ejecta_momentum = (bullet_gr * muzzle_fps + powder_gr * GAS_FPS) / 7000.0
     gun_velocity = ejecta_momentum / gun_lb        # ft/s
     return 0.5 * (gun_lb / 32.174) * gun_velocity ** 2
 

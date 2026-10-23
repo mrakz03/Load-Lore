@@ -355,7 +355,8 @@ function ballisticHTML(it,cat,open){
   }</tbody></table></div><div class="note">Zeroed at ${g(cat.zero_yd)} yd with the sight ${g(cat.sight_in)} in above the bore; wind is a ${WIND_MPH} mph crosswind. Drop and drift are estimates from the G1 BC in sea-level air.</div></details>`;
 }
 function recoil(gr,fps,powder,gun){
-  const mom=(gr*fps+1.75*powder*4000)/7000, gv=mom/gun;
+  // standard free recoil: bullet + powder gas at ~4000 fps (GAS_FPS); no 1.75x gas factor
+  const mom=(gr*fps+powder*4000)/7000, gv=mom/gun;
   return 0.5*(gun/32.174)*gv*gv;
 }
 
