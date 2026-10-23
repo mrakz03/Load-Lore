@@ -1,5 +1,7 @@
 # Cartridge Calculator
 
+Working notes for contributors and AI coding assistants: the rules the code follows and why.
+
 App name (Oct 2026): "In Like Flint - Load Lore" inside the app (APP_TITLE / web APP_TITLE, window
 title, README heading); device menus show just "Load Lore" (issue #27: installer AppName and
 shortcuts, .desktop Name, capacitor appName). Repo, file and package names (CartridgeCalculator.exe,
@@ -93,8 +95,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
 (tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
 - APP_VERSION in cartridge_calculator.py stays "dev" in the repo; CI sets it from the tag.
-- Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the user saves the
-  middle number (v1.6) for bigger releases.
+- Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the maintainer saves
+  the middle number (v1.6) for bigger releases.
 - Installers upgrade in place and clear old shipped data (ammo_*, loads_*, bullets.csv) first.
 - APK updates install over the old app only once the ANDROID_DEBUG_KEYSTORE secret is set
   (see README); until then testers must uninstall the old APK first.
@@ -110,7 +112,7 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   cartridges added with the reorganize commit (e84117b) came almost entirely from Hornady's
   catalogue.
 - Oct 2026: 241 loads added for those cartridges from the 2026 Federal, Winchester, Remington,
-  Fiocchi, PMC and CCI catalogs (user-supplied PDFs, not in the repo), plus a few Barnes, Nosler,
+  Fiocchi, PMC and CCI catalogs (the maintainer's PDFs, not in the repo), plus a few Barnes, Nosler,
   Buffalo Bore, Sellier & Bellot and PPU loads from retailer listings. Every added row and its
   source is in research/added_loads_sources.tsv. Missing BCs were scaled from the nearest-weight
   published load of the same cartridge (source=partial); price is estimated by brand tier.
