@@ -1884,7 +1884,7 @@ class LoadsView:
         above.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         above.columnconfigure(1, weight=1)
         a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).grid(row=0, column=0, sticky="w")
-        ttk.Entry(above, textvariable=self.filter_var, font=a.f(12), width=22).grid(
+        ttk.Entry(above, textvariable=self.filter_var, font=a.f(10), width=22).grid(
             row=1, column=0, sticky="w", pady=(4, 0))
         self.count_lbl = a.label(above, "Choose a cartridge to see how every brand's load compares.",
                                  10, MUTED, bg=BG, anchor="e")
