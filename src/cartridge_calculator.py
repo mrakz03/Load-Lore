@@ -1881,11 +1881,11 @@ class LoadsView:
         # the brand / load filter sits right above the list it filters (issue #26)
         above = tk.Frame(tbl, bg=BG)
         above.grid(row=0, column=0, sticky="ew", pady=(0, 6))
-        a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).pack(side="left", padx=(0, 8))
-        ttk.Entry(above, textvariable=self.filter_var, font=a.f(12), width=22).pack(side="left")
+        ttk.Entry(above, textvariable=self.filter_var, font=a.f(12), width=22).pack(side="right")
+        a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).pack(side="right", padx=(16, 8))
         self.count_lbl = a.label(above, "Choose a cartridge to see how every brand's load compares.",
                                  10, MUTED, bg=BG, anchor="w")
-        self.count_lbl.pack(side="left", padx=(16, 0))
+        self.count_lbl.pack(side="left")
         # (for bullets the weight is already in the Load text, so no separate Grains column)
         self.cols = ["#", "Load"] + ([] if cat.grain_style else [cat.payload_col])
         if cat.grain_style:
