@@ -136,6 +136,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with: { path: out, merge-multiple: true }
+      - name: Checksums (the in-app updater won't install a download that doesn't match)
+        working-directory: out
+        run: sha256sum CartridgeCalculator-Setup.exe CartridgeCalculator-Windows.zip CartridgeCalculator-Linux.tar.gz CartridgeCalculator.apk > SHA256SUMS.txt && cat SHA256SUMS.txt
       - uses: softprops/action-gh-release@v2
         with:
           files: |
@@ -143,3 +146,4 @@ jobs:
             out/CartridgeCalculator-Windows.zip
             out/CartridgeCalculator-Linux.tar.gz
             out/CartridgeCalculator.apk
+            out/SHA256SUMS.txt

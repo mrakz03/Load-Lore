@@ -18,8 +18,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   Dictionary (LoadsView / openLoads, the old Compare Loads, plus an S-F grades on/off switch kept
   in settings.json show_grades / localStorage) and Head to Head (HeadToHeadView / openH2H, 2-5
   loads side by side, from any category (Oct 2026): picks are (category, load) pairs, pick_key /
-  pickKey include the category title, in App.h2h / H2H per page category, in memory only; a load
-  from another category is graded with that category's default weights, factors it lacks show "—"). Phones (<=600 px)
+  pickKey include the category title, in App.h2h / H2H (one list), in memory only). Head to Head is
+  one page (show_h2h / showH2H; no category picker, no sidebar sub-list, no weights panel): each
+  load is graded with its own category's Load Dictionary weights (dict_weights / dictWeights),
+  factors it lacks show "—", downrange steps come from the picked category with the largest step. Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
   always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
   LoadSearch / loadSearch, every typed word must be in the name). The dictionary's brand / load
@@ -83,6 +85,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   and copies assets/android/res over the Capacitor project after `cap add android`.
 
 ## Release
+- In-app updates (Windows/Linux, Settings > Updates, App.check_updates / start_update): asks the
+  GitHub latest-release API, downloads the Setup.exe (run with /SILENT; the .iss [Run] entry with
+  Check: WizardSilent reopens the app) or the Linux tar (install_linux_update swaps the files in
+  place like install.sh), checked against SHA256SUMS.txt from the release job. "Check at start"
+  (settings.json check_updates) is off by default. Asset names must stay as they are.
 git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
 (tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
 - APP_VERSION in cartridge_calculator.py stays "dev" in the repo; CI sets it from the tag.
