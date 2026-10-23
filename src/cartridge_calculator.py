@@ -169,6 +169,7 @@ TOOLS = (("loads", "Load Dictionary", "Every load of a cartridge, factory or you
          ("h2h", "Head to Head", "Put 2 to 5 loads side by side, even from different cartridges "
                                  "or categories."))
 H2H_MIN, H2H_MAX = 2, 5
+H2H_DISTANCE = 100       # Head to Head's starting distance (yd); each load is capped at its category's max
 
 
 def tool_title(key):
@@ -975,12 +976,13 @@ class App:
         self.mode = "home"                # home / loads / h2h
         self.cat = None
         self.carry = {}                   # per category: what each tab knew when you left it
-        self.h2h = {}                     # per category: the Head to Head picks (pick_key)
+        self.h2h = []                     # the Head to Head picks (pick_key), any category
+        self.h2h_snap = {}                # what Head to Head had on screen when you left it
         self._place_window()
         self._build_shell()
         self.show_launcher()
         root.bind_all("<Control-Key-1>", lambda e: self.go_mode("loads"))
-        root.bind_all("<Control-Key-2>", lambda e: self.go_mode("h2h"))
+        root.bind_all("<Control-Key-2>", lambda e: self.show_h2h())
         root.bind_all("<Control-Key-0>", lambda e: self.show_launcher())
 
     # ---- data ------------------------------------------------------------ #
@@ -1052,14 +1054,25 @@ class App:
 
     # ---- Head to Head picks ------------------------------------------------ #
     def add_to_h2h(self, cat, item):
-        """Add a load to the category's Head to Head list. Returns the new count, or None if
-        it was already there or the list is full."""
-        picks = self.h2h.setdefault(cat.title, [])
+        """Add a load to the Head to Head list. Returns the new count, or None if it was
+        already there or the list is full."""
         key = pick_key(cat, item)
-        if key in picks or len(picks) >= H2H_MAX:
+        if key in self.h2h or len(self.h2h) >= H2H_MAX:
             return None
-        picks.append(key)
-        return len(picks)
+        self.h2h.append(key)
+        return len(self.h2h)
+
+    def dict_weights(self, cat):
+        """The category's scoring weights as last set in its Load Dictionary (else the
+        defaults), so Head to Head grades each load the way the dictionary does."""
+        out = default_weights(cat)
+        for k, v in self.carry.get(cat.title, {}).get("weights", {}).items():
+            try:
+                if k in out and 0 <= float(v) <= 10:
+                    out[k] = float(v)
+            except (TypeError, ValueError):
+                pass
+        return out
 
     # ---- prices you set yourself -------------------------------------------- #
     @staticmethod
@@ -1120,6 +1133,10 @@ class App:
                 self.show_launcher()
             elif self.mode == "settings":
                 self.show_settings()
+            elif self.mode == "h2h":
+                self.h2h_snap.update(snap or {})
+                self.view = None
+                self.show_h2h()
             else:
                 self.show_picker(self.mode)
         else:
@@ -1363,6 +1380,9 @@ class App:
                          parent=self.foot)
         self._nav_button("Home", self.show_launcher, self.mode == "home")
         for key, text, _ in TOOLS:
+            if key == "h2h":                  # one page for every category: no category list
+                self._nav_button(text, self.show_h2h, self.mode == key)
+                continue
             on_picker = self.mode == key and self.cat is None
             self._nav_button(text, lambda k=key: self.show_picker(k), on_picker)
             if self.mode == key:
@@ -1419,8 +1439,7 @@ class App:
 
     def show_settings(self):
         """Settings (bottom of the sidebar): theme, text size and the S-F grades switch."""
-        if self.view is not None and self.cat is not None:
-            self.carry.setdefault(self.cat.title, {}).update(self.view.snapshot())
+        self._stash()
         self.mode, self.cat, self.view = "settings", None, None
         stage = self._new_stage()
         self.root.title(f"{APP_TITLE} — Settings")
@@ -1468,10 +1487,30 @@ class App:
         self.label(wrap, version_text(), 10, MUTED, bg=BG, anchor="w").pack(anchor="w", pady=(14, 0))
         self._update_scroll()
 
-    def show_picker(self, mode):
-        """Choose a category for the tool (Load Dictionary or Head to Head)."""
-        if self.view is not None and self.cat is not None:
+    def _stash(self):
+        """Remember what the open tool has on screen, for when you come back to it."""
+        if self.view is None:
+            return
+        if self.view.tab == "h2h":
+            self.h2h_snap.update(self.view.snapshot())
+        elif self.cat is not None:
             self.carry.setdefault(self.cat.title, {}).update(self.view.snapshot())
+
+    def show_h2h(self):
+        """Head to Head: one page for loads of every category."""
+        self._stash()
+        self.mode, self.cat, self.view = "h2h", None, None
+        stage = self._new_stage()
+        self.root.title(f"{APP_TITLE} — {tool_title('h2h')}")
+        self._draw_chrome()
+        self.view = HeadToHeadView(self, stage, dict(self.h2h_snap) or None)
+        self._update_scroll()
+
+    def show_picker(self, mode):
+        """Choose a category for the Load Dictionary (Head to Head has no categories)."""
+        if mode == "h2h":
+            return self.show_h2h()
+        self._stash()
         self.mode, self.cat, self.view = mode, None, None
         stage = self._new_stage()
         self.root.title(f"{APP_TITLE} — {tool_title(mode)}")
@@ -1529,8 +1568,9 @@ class App:
 
     def go(self, cat, tab):
         """Open a category in a feature, remembering what each tab had on screen."""
-        if self.view is not None and self.cat is not None:
-            self.carry.setdefault(self.cat.title, {}).update(self.view.snapshot())
+        if tab == "h2h":
+            return self.show_h2h()
+        self._stash()
         mem = self.carry.get(cat.title)
         self.open_category(cat, tab, dict(mem) if mem else None)
 
@@ -1555,9 +1595,8 @@ class App:
         stage = self._new_stage()
         self.root.title(f"{APP_TITLE} — {cat.title}")
         self._draw_chrome()
-        view = HeadToHeadView if tab == "h2h" else LoadsView
-        self.view = view(self, stage, cat, info["detail"] + self.hand_loads(cat), info["detail_error"],
-                         snap)
+        self.view = LoadsView(self, stage, cat, info["detail"] + self.hand_loads(cat),
+                              info["detail_error"], snap)
         self._update_scroll()
 
 
@@ -1919,7 +1958,7 @@ class LoadsView:
         above.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         above.columnconfigure(1, weight=1)
         a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).grid(row=0, column=0, sticky="w")
-        ttk.Entry(above, textvariable=self.filter_var, font=a.f(10), width=22).grid(
+        ttk.Entry(above, textvariable=self.filter_var, font=a.f(10), width=28).grid(
             row=1, column=0, sticky="w", pady=(4, 0))
         self.count_lbl = a.label(above, "Choose a cartridge to see how every brand's load compares.",
                                  10, MUTED, bg=BG, anchor="e")
@@ -2079,15 +2118,15 @@ class LoadsView:
         item = self.selected
         if item is None:
             return
-        picks = self.app.h2h.get(self.cat.title, [])
+        picks = self.app.h2h
         if pick_key(self.cat, item) in picks or len(picks) >= H2H_MAX:
-            self.app.go(self.cat, "h2h")
+            self.app.show_h2h()
             return
         self.app.add_to_h2h(self.cat, item)
         self._style_h2h()
 
     def _style_h2h(self):
-        picks = self.app.h2h.get(self.cat.title, [])
+        picks = self.app.h2h
         n = len(picks)
         if self.selected is not None and pick_key(self.cat, self.selected) in picks:
             text = f"In Head to Head ({n} of {H2H_MAX})  ·  Open  ›"
@@ -2669,22 +2708,24 @@ class LoadSearch:
 
 
 class HeadToHeadView:
-    """Head to Head: 2-5 loads side by side, from any cartridges of any category (the page's own
-    category comes first). Each load keeps the grade it has in its Load Dictionary, so the two
-    tools always agree."""
+    """Head to Head: 2-5 loads side by side, from any cartridges of any category, on one page
+    (no category of its own). Each load keeps the grade it has in its Load Dictionary, with that
+    category's scoring weights, so the two tools always agree."""
     tab = "h2h"
+    cat = None
     FACTORS = ("velocity", "energy", "recoil", "cost", "taylor", "hits")
 
-    def __init__(self, app, stage, cat, loads, error="", snap=None):
-        self.app, self.root, self.cat = app, app.root, cat
-        self.loads = loads
-        # every category's loads: (category title, cartridge) -> loads; the page's category first
-        self.cats = {cat.title: cat}
-        self.groups, self.cartridges = {}, {}
-        for c in [cat] + [c for c in CATEGORIES if c.title != cat.title]:
+    def __init__(self, app, stage, snap=None):
+        self.app, self.root = app, app.root
+        # the category last opened in the Load Dictionary: listed first, new rows start there
+        first = next((c for c in CATEGORIES if c.title == app.settings.get("last_category")),
+                     CATEGORIES[0])
+        self.first = first
+        # every category's loads: (category title, cartridge) -> loads
+        self.cats, self.groups, self.cartridges = {}, {}, {}
+        for c in [first] + [c for c in CATEGORIES if c is not first]:
             info = app.data.get(c.title, {})
-            items = loads if c is cat else (
-                [] if info.get("error") else info.get("detail", []) + app.hand_loads(c))
+            items = [] if info.get("error") else info.get("detail", []) + app.hand_loads(c)
             groups = {k: v for k, v in group_by_cartridge(items, True).items() if v}
             if not groups:
                 continue
@@ -2695,19 +2736,16 @@ class HeadToHeadView:
         self.choices = {}                 # (category, cartridge) -> {text in the load menu: Load}
         for key, items in self.groups.items():
             self.choices[key] = {x.label + ("  (handload)" if x.handload else ""): x for x in items}
-        self.keys = metric_keys(cat)
-        self.dist_var = tk.StringVar(value=f"{cat.default_distance:g}")
+        self.dist_var = tk.StringVar(value=f"{H2H_DISTANCE:g}")
         self.gun_var = tk.StringVar(value="")   # blank: each cartridge's typical gun (GUN_LB)
-        self.weight_vars = {k: tk.StringVar(value=str(v)) for k, v in default_weights(cat).items()}
-        self.weights_open = False
-        self.slots = []                   # [{cart: StringVar, load: StringVar, widgets...}]
+        self.slots = []                   # [{cat, cart, load: StringVar, widgets...}]
         self._pending = None
-        self._build_ui(stage, error)
+        self._build_ui(stage)
         if not hasattr(self, "slot_box"):
             return
         found = {pick_key(self.cats[t], x): (self.cats[t], x)
                  for (t, _), items in self.groups.items() for x in items}
-        picks = [found[k] for k in app.h2h.get(cat.title, []) if k in found][:H2H_MAX]
+        picks = [found[k] for k in app.h2h if k in found][:H2H_MAX]
         for icat, item in picks:
             self._add_slot(item, icat)
         while len(self.slots) < H2H_MIN:
@@ -2715,23 +2753,24 @@ class HeadToHeadView:
         self._save_picks()
         if snap:
             self._apply_snap(snap)
-        for var in (self.dist_var, self.gun_var, *self.weight_vars.values()):
+        for var in (self.dist_var, self.gun_var):
             var.trace_add("write", self._schedule)
         self.refresh()
 
     # ---- layout ---------------------------------------------------------- #
-    def _build_ui(self, stage, error):
-        a, cat = self.app, self.cat
+    def _build_ui(self, stage):
+        a = self.app
         outer = tk.Frame(stage, bg=BG)
         outer.pack(fill="both", expand=True, padx=24, pady=22)
         outer.columnconfigure(0, weight=1)
-        a.header(outer, cat, "h2h").grid(row=0, column=0, sticky="ew", pady=(0, 16))
-        if error or not self.groups:
+        a.label(outer, tool_title("h2h"), 20, TEXT, True, bg=BG).grid(
+            row=0, column=0, sticky="w", pady=(6, 16))
+        if not self.groups:
             msg = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
             msg.grid(row=1, column=0, sticky="ew")
-            a.label(msg, error or "No loads found.", 11, TEXT, True, anchor="w").pack(
+            a.label(msg, "No loads found.", 11, TEXT, True, anchor="w").pack(
                 anchor="w", padx=18, pady=(16, 4))
-            a.label(msg, f"Put {cat.loads_filename} next to the program to use this tab.",
+            a.label(msg, "Put the loads_*.csv files next to the program to use this tab.",
                     10, MUTED, anchor="w").pack(anchor="w", padx=18, pady=(0, 16))
             return
 
@@ -2739,8 +2778,8 @@ class HeadToHeadView:
         card.grid(row=1, column=0, sticky="ew")
         card.columnconfigure(0, weight=1)
         pad = dict(padx=18)
-        a.label(card, "LOADS TO COMPARE  ·  type in a load box to search", 9, MUTED, True).grid(
-            row=0, column=0, sticky="w", pady=(16, 0), **pad)
+        a.label(card, "LOADS TO COMPARE  ·  any category  ·  type in a load box to search", 9,
+                MUTED, True).grid(row=0, column=0, sticky="w", pady=(16, 0), **pad)
         self.slot_box = tk.Frame(card, bg=SURFACE)
         self.slot_box.grid(row=1, column=0, sticky="ew", pady=(6, 0), **pad)
         self.slot_box.columnconfigure(3, weight=1)
@@ -2751,7 +2790,8 @@ class HeadToHeadView:
 
         top = tk.Frame(card, bg=SURFACE)
         top.grid(row=3, column=0, sticky="ew", pady=(16, 0), **pad)
-        for i, (text, var) in enumerate((("DISTANCE (YD)", self.dist_var), (cat.gun_label, self.gun_var))):
+        for i, (text, var) in enumerate((("DISTANCE (YD)", self.dist_var),
+                                         ("GUN WEIGHT (LB)", self.gun_var))):
             a.label(top, text, 9, MUTED, True).grid(row=0, column=i, sticky="w",
                                                      padx=(0 if i == 0 else 16, 0))
             ttk.Entry(top, textvariable=var, font=a.f(12), width=10).grid(
@@ -2760,20 +2800,7 @@ class HeadToHeadView:
             row=2, column=1, sticky="w", pady=(4, 0), padx=(16, 0))
         self.status = a.label(card, "", 10, DANGER, anchor="w")
         self.status.grid(row=4, column=0, sticky="w", pady=(8, 0), **pad)
-        self.weights_toggle = tk.Label(card, text="▸  Scoring weights", bg=SURFACE, fg=MUTED,
-                                       font=a.f(10, True), cursor="hand2")
-        self.weights_toggle.grid(row=5, column=0, sticky="w", pady=(4, 0), **pad)
-        self.weights_toggle.bind("<Button-1>", lambda e: self._toggle_weights())
-        self.weights_frame = tk.Frame(card, bg=SURFACE)
-        for i, key in enumerate(self.keys):
-            a.label(self.weights_frame, METRICS[key][0], 10, MUTED).grid(
-                row=0, column=i * 2, padx=(0 if i == 0 else 14, 6))
-            ttk.Spinbox(self.weights_frame, from_=0, to=10, increment=1, width=3,
-                        textvariable=self.weight_vars[key], font=a.f(11)).grid(
-                row=0, column=i * 2 + 1)
-        self.weights_frame.grid(row=6, column=0, sticky="w", pady=(8, 0), **pad)
-        self.weights_frame.grid_remove()
-        a.label(card, "", 4).grid(row=7, column=0)
+        a.label(card, "", 4).grid(row=5, column=0)
 
         self.results = tk.Frame(outer, bg=BG)
         self.results.grid(row=2, column=0, sticky="ew", pady=(14, 0))
@@ -2786,7 +2813,7 @@ class HeadToHeadView:
         if len(self.slots) >= H2H_MAX:
             return
         a = self.app
-        slot = {"cat": tk.StringVar(value=(icat or self.cat).title),
+        slot = {"cat": tk.StringVar(value=(icat or self.first).title),
                 "cart": tk.StringVar(value=item.cartridge if item else ""),
                 "load": tk.StringVar(value="")}
         if item is not None:
@@ -2796,8 +2823,8 @@ class HeadToHeadView:
             slot["cat"].set(self.slots[-1]["cat"].get())
             slot["cart"].set(self.slots[-1]["cart"].get())
         else:
-            last = self.app.carry.get(self.cat.title, {}).get("cart")
-            if (self.cat.title, last) in self.groups:
+            last = self.app.carry.get(self.first.title, {}).get("cart")
+            if (self.first.title, last) in self.groups:
                 slot["cart"].set(last)
         widest = max([16] + [len(c) for carts in self.cartridges.values() for c in carts])
         slot["num"] = a.label(self.slot_box, "", 11, MUTED, True)
@@ -2896,7 +2923,7 @@ class HeadToHeadView:
         return out
 
     def _save_picks(self):
-        self.app.h2h[self.cat.title] = [pick_key(c, x) for c, x in self._picked()]
+        self.app.h2h[:] = [pick_key(c, x) for c, x in self._picked()]
 
     def _changed(self):
         self._save_picks()
@@ -2904,9 +2931,7 @@ class HeadToHeadView:
 
     # ---- state ------------------------------------------------------------ #
     def snapshot(self):
-        return dict(dist=self.dist_var.get(), h2h_gun=self.gun_var.get(),
-                    weights={k: v.get() for k, v in self.weight_vars.items()},
-                    weights_open=self.weights_open)
+        return dict(dist=self.dist_var.get(), gun=self.gun_var.get())
 
     def restore(self, snap):
         if not hasattr(self, "slot_box"):
@@ -2915,24 +2940,10 @@ class HeadToHeadView:
         self.refresh()
 
     def _apply_snap(self, snap):
-        for k, v in snap.get("weights", {}).items():
-            if k in self.weight_vars:
-                self.weight_vars[k].set(v)
         if "dist" in snap:
             self.dist_var.set(snap["dist"])
-        if "h2h_gun" in snap:
-            self.gun_var.set(snap["h2h_gun"])
-        if snap.get("weights_open") and not self.weights_open:
-            self._toggle_weights()
-
-    def _toggle_weights(self):
-        self.weights_open = not self.weights_open
-        if self.weights_open:
-            self.weights_frame.grid()
-        else:
-            self.weights_frame.grid_remove()
-        self.weights_toggle.config(text=("▾" if self.weights_open else "▸") + "  Scoring weights")
-        self.app.fit_window()
+        if "gun" in snap:
+            self.gun_var.set(snap["gun"])
 
     def _schedule(self, *_):
         if self._pending is not None:
@@ -2951,39 +2962,34 @@ class HeadToHeadView:
             w.destroy()
         picked = self._picked()
         try:
-            far = max([self.cat.max_distance] + [c.max_distance for c, _ in picked])
+            far = max([c.max_distance for c, _ in picked] or [H2H_DISTANCE])
             dist = LoadsView._num(self.dist_var, "Distance", 0, far)
             # blank: each load in its cartridge's typical gun (GUN_LB); a number: all in that gun
             gun = (None if not self.gun_var.get().strip()
                    else LoadsView._num(self.gun_var, "Gun weight", 0.5, GUN_LB_MAX))
-            weights = {k: LoadsView._num(v, f"{METRICS[k][0]} weight", 0, 10)
-                       for k, v in self.weight_vars.items()}
         except ValueError as exc:
             self.status.config(text=str(exc))
             return self.app.fit_window()
         self.status.config(text="")
         grades = self.app.show_grades
-        others = any(c.title != self.cat.title for c, _ in picked)
         self.footnote.config(text=(
             "Each grade is the load's Load Dictionary grade: against every load of its own "
-            "cartridge" + (" and load type" if not self.cat.grain_style else "") +
-            ", not against the others here. " if grades else "") +
-            ("Loads from another category are graded with that category's usual weights. "
-             if grades and others else "") +
+            "cartridge (shotshells: and load type), with its category's scoring weights from the "
+            "Load Dictionary, not against the others here. " if grades else "") +
             "The best figure in each row is highlighted; the % shows how far the others are "
             "behind it. Prices are estimates: set your own in the Load Dictionary.")
         if len(picked) < H2H_MIN:
             self.app.label(self.results, f"Pick at least {H2H_MIN} loads to put them head to head.",
                            11, MUTED, bg=BG, anchor="w").grid(row=0, column=0, sticky="w")
             return self.app.fit_window()
-        rows = h2h_rows(self.cat, picked, dist, gun, weights, self.app.price_for, self.groups)
+        rows = h2h_rows(picked, dist, gun, self.app.dict_weights, self.app.price_for, self.groups)
         self._render(rows, dist)
         self.app.fit_window()
 
     def _label_w(self):
         """Width of the row-name column, so the two tables' load columns line up."""
         f = tkfont.Font(font=self.app.f(10, True))
-        names = ["Rank in its cartridge", self.cat.payload_row, "Bullet / payload"] + [
+        names = ["Rank in its cartridge", "Bullet / payload"] + [
             METRICS[k][0] + " at 0000 yd" for k in ("velocity", "energy")]
         return max(f.measure(t) for t in names) + 24
 
@@ -2994,7 +3000,7 @@ class HeadToHeadView:
         return lab
 
     def _render(self, rows, dist):
-        a, cat, grades = self.app, self.cat, self.app.show_grades
+        a, grades = self.app, self.app.show_grades
         n = len(rows)
         cats = list({row["cat"].title: row["cat"] for row in rows}.values())
         keys = h2h_keys(cats)
@@ -3088,7 +3094,7 @@ class HeadToHeadView:
         self._cell(dr, 0, 0, "Yards", 9, MUTED, True)
         for c, row in enumerate(rows, start=1):
             self._cell(dr, 0, c, row["item"].label, 9, MUTED, True, wraplength=wrap)
-        table = h2h_downrange(cat, [(row["cat"], row["item"]) for row in rows])
+        table = h2h_downrange([(row["cat"], row["item"]) for row in rows])
         for i, (yd, cells) in enumerate(table, start=1):
             self._cell(dr, i, 0, f"{yd:g}", 10, TEXT, True)
             top = max(cell[1] for cell in cells if cell)
@@ -3106,13 +3112,12 @@ def h2h_keys(cats):
     return [k for k in METRICS if any(k in metric_keys(c) for c in cats)]
 
 
-def h2h_rows(cat, picked, dist, gun, weights, price_of, groups):
+def h2h_rows(picked, dist, gun, weights_of, price_of, groups):
     """Head to Head figures for the picked (category, load) pairs. Each load is graded the way
-    its Load Dictionary grades it (against every load of its cartridge): with `weights` for the
-    page's category `cat`, with its own category's default weights otherwise, and at `dist`
-    capped to its category's max. `best` is the set of factors where it leads the picked loads
-    and `gap` how far behind the leader it is, in %; factors that don't apply to a load (`keys`)
-    are left out. gun None: each cartridge in its typical gun (GUN_LB). `groups` maps
+    its Load Dictionary grades it (against every load of its cartridge, with weights_of(category)),
+    at `dist` capped to its category's max. `best` is the set of factors where it leads the picked
+    loads and `gap` how far behind the leader it is, in %; factors that don't apply to a load
+    (`keys`) are left out. gun None: each cartridge in its typical gun (GUN_LB). `groups` maps
     (category title, cartridge) to its loads; price_of(category, load)."""
     rows, done = [], {}
     for icat, it in picked:
@@ -3120,10 +3125,9 @@ def h2h_rows(cat, picked, dist, gun, weights, price_of, groups):
         d = min(dist, icat.max_distance)
         if key not in done:
             items = groups[key]
-            w = weights if icat.title == cat.title else default_weights(icat)
             done[key] = {id(r["item"]): r for r in score_loads(
                 items, d, typical_gun_lb(icat, it.cartridge) if gun is None else gun,
-                w, [price_of(icat, x) for x in items], by_type=not icat.grain_style)}
+                weights_of(icat), [price_of(icat, x) for x in items], by_type=not icat.grain_style)}
         rows.append(dict(done[key][id(it)], cat=icat, dist=d, keys=metric_keys(icat),
                          best=set(), gap={}))
     for key in h2h_keys([r["cat"] for r in rows]):
@@ -3138,12 +3142,14 @@ def h2h_rows(cat, picked, dist, gun, weights, price_of, groups):
     return rows
 
 
-def h2h_downrange(cat, picked):
-    """[(yards, [(velocity, energy) or None per load])] from the muzzle out to 5 of the page
-    category's steps (or its max); None past the load's own category's max distance."""
+def h2h_downrange(picked):
+    """[(yards, [(velocity, energy) or None per load])] in the steps of the picked categories'
+    widest table (rifle 100 yd, rimfire 50, handgun and shotgun 25), out to 5 steps or its max;
+    None past the load's own category's max distance."""
+    base = max((c for c, _ in picked), key=lambda c: (c.step_yd, c.max_distance))
     out = []
     for n in range(6):
-        yd = min(n * cat.step_yd, cat.max_distance)
+        yd = min(n * base.step_yd, base.max_distance)
         if out and yd == out[-1][0]:
             break
         cells = []

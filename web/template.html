@@ -479,16 +479,16 @@ const ICON={
 // Settings (theme, text size, S-F grades): a tab on phones, the bottom of the sidebar on wide screens
 // the two tools: key, title, Home-screen blurb (same as TOOLS in the desktop app)
 const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or your own handload, graded against each other."],
-  ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges."]];
+  ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges or categories."]];
 const toolTitle=k=>(TOOLS.find(t=>t[0]===k)||TOOLS[0])[1];
 const NAVS=[["home","Home",ICON.home],["loads","Load Dictionary",ICON.loads],["h2h","Head to Head",ICON.h2h],["settings","Settings",ICON.settings]];
-const H2H_MIN=2,H2H_MAX=5,H2H={};   // category title -> Head to Head picks (pickKey)
+const H2H_MIN=2,H2H_MAX=5,H2H=[],H2H_DISTANCE=100;   // Head to Head picks (pickKey), any category
 const pickKey=(cat,it)=>cat.title+"|"+it.cartridge+"|"+(it.hid||it.label);
 // S-F grades on / off (Settings), shared by both tools and remembered
 let GRADES=true;try{GRADES=localStorage.getItem(GRADES_KEY)!=="0";}catch(e){}
 function setGrades(on){GRADES=on;try{localStorage.setItem(GRADES_KEY,on?"1":"0");}catch(e){}}
 function h2hText(cat,it){
-  const p=H2H[cat.title]||[];
+  const p=H2H;
   if(p.includes(pickKey(cat,it)))return `In Head to Head (${p.length} of ${H2H_MAX}) · Open ›`;
   if(p.length>=H2H_MAX)return `Head to Head is full (${H2H_MAX}) · Open ›`;
   return "+ Head to Head"+(p.length?` (${p.length} picked)`:"");
@@ -506,7 +506,7 @@ function drawChrome(){
   nav.innerHTML=NAVS.map(([k,t,ic])=>{
     const on=NAV.mode===k;
     return `<button data-nav="${k}" class="${on?"on":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
-      (on&&k!=="home"&&k!=="settings"?`<div class="sub">${CATEGORIES.filter(hasDetail).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
+      (on&&k==="loads"?`<div class="sub">${CATEGORIES.filter(hasDetail).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
   nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(NAV.mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
@@ -514,10 +514,10 @@ function drawChrome(){
 function navigate(mode,cat){
   if(app._leave){try{app._leave();}catch(e){}}
   app._leave=null;app.onkeydown=null;
-  NAV.mode=mode;NAV.cat=mode==="home"||mode==="settings"?null:(cat||null);
+  NAV.mode=mode;NAV.cat=mode==="loads"?(cat||null):null;   // Head to Head has no category
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
-  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
+  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
   window.scrollTo(0,0);
 }
 function showHome(){
@@ -554,8 +554,14 @@ function openCategory(cat,tab){
   app.classList.remove("home","picker");app.classList.add("wide");
   app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2>${toolTitle(tab)} · ${esc(cat.title)}</h2></div><div id="pane"></div>`;
   $("[data-back]",app).onclick=()=>navigate(tab);
-  const pane=$("#pane",app);
-  if(tab==="h2h")openH2H(cat,pane);else openLoads(cat,pane);
+  openLoads(cat,$("#pane",app));
+}
+// Head to Head: one page for loads of every category
+function showH2H(){
+  document.title=`${APP_TITLE} — ${toolTitle("h2h")}`;
+  app.classList.remove("home","picker");app.classList.add("wide");
+  app.innerHTML=`<div class="phead"><h2>${toolTitle("h2h")}</h2></div><div id="pane"></div>`;
+  openH2H($("#pane",app));
 }
 
 // ---------- handloads ----------
@@ -799,8 +805,8 @@ function openLoads(cat,pane){
       if(bt){bt.addEventListener("toggle",()=>{L.btOpen=bt.open;});bt.onclick=e=>e.stopPropagation();}
       const hb=c.querySelector(".h2hb");
       if(hb&&it)hb.onclick=()=>{
-        const picks=H2H[cat.title]=H2H[cat.title]||[];
-        if(picks.includes(pickKey(cat,it))||picks.length>=H2H_MAX){navigate("h2h",cat);return;}
+        const picks=H2H;
+        if(picks.includes(pickKey(cat,it))||picks.length>=H2H_MAX){navigate("h2h");return;}
         picks.push(pickKey(cat,it));hb.textContent=h2hText(cat,it);
       };
       if(it&&it.handload){
@@ -840,14 +846,19 @@ function openLoads(cat,pane){
 // 2-5 loads side by side, from any cartridges of any category (the page's own category first).
 // Each load keeps its Load Dictionary grade (against every load of its own cartridge), so the
 // two tabs always agree. picked: [[category, load]]; groups: "title|cartridge" -> loads.
+// a category's scoring weights as last set in its Load Dictionary (else the defaults)
+function dictWeights(c){
+  const w=(shared[c.title]||{}).w||{};
+  return Object.fromEntries(MKEYS.map((k,i)=>{const v=parseFloat(w[k]);return [k,!isNaN(v)&&v>=0&&v<=10?v:c.weights[i]];}));
+}
 const h2hKeys=cats=>MKEYS.filter(k=>cats.some(c=>keysOf(c).includes(k)));
-function h2hRows(cat,picked,dist,gun,weights,priceOf,groups){
+function h2hRows(picked,dist,gun,weightsOf,priceOf,groups){
   const done=new Map(),rows=[];
   for(const [ic,it] of picked){
     const key=ic.title+"|"+it.cartridge,d=Math.min(dist,ic.max_distance);
     if(!done.has(key)){
-      const items=groups.get(key),w=ic.title===cat.title?weights:Object.fromEntries(MKEYS.map((k,i)=>[k,ic.weights[i]]));
-      done.set(key,new Map(scoreLoads(items,d,gun==null?typicalGun(ic,it.cartridge):gun,w,items.map(x=>priceOf(ic,x)),!ic.grain_style).map(r=>[r.it,r])));
+      const items=groups.get(key);
+      done.set(key,new Map(scoreLoads(items,d,gun==null?typicalGun(ic,it.cartridge):gun,weightsOf(ic),items.map(x=>priceOf(ic,x)),!ic.grain_style).map(r=>[r.it,r])));
     }
     rows.push(Object.assign({},done.get(key).get(it),{cat:ic,dist:d,keys:keysOf(ic),best:new Set(),gap:{}}));
   }
@@ -857,11 +868,13 @@ function h2hRows(cat,picked,dist,gun,weights,priceOf,groups){
   }
   return rows;
 }
-// null past the load's own category's max distance; rows where every load is past it are left out
-function h2hDownrange(cat,picked){
-  const out=[];
+// in the steps of the picked categories' widest table (rifle 100 yd, rimfire 50, handgun and
+// shotgun 25); null past the load's own category's max distance; rows where every load is past it
+// are left out
+function h2hDownrange(picked){
+  const base=picked.map(([c])=>c).reduce((a,c)=>c.step_yd>a.step_yd||(c.step_yd===a.step_yd&&c.max_distance>a.max_distance)?c:a),out=[];
   for(let n=0;n<6;n++){
-    const yd=Math.min(n*cat.step_yd,cat.max_distance);if(out.length&&yd===out[out.length-1][0])break;
+    const yd=Math.min(n*base.step_yd,base.max_distance);if(out.length&&yd===out[out.length-1][0])break;
     const cells=picked.map(([ic,it])=>{if(yd>ic.max_distance)return null;const v=velocityAt(it.muzzle_fps,it.bc_g1,yd);return [v,energy(it.bullet_gr,v)];});
     if(cells.some(Boolean))out.push([yd,cells]);
   }
@@ -871,40 +884,38 @@ function h2hDownrange(cat,picked){
 const h2hGap=gap=>{const t=1+gap/100;return t>=10?Math.round(t).toLocaleString("en-US")+"x":(gap>=0?"+":"−")+Math.abs(gap).toFixed(0)+"%";};
 const fmt0=v=>Math.round(v).toLocaleString("en-US");
 const h2hValue=(k,v)=>({velocity:`${fmt0(v)} fps`,energy:`${fmt0(v)} ft-lbs`,recoil:`${v.toFixed(1)} ft-lbs`,cost:`$${v.toFixed(2)}`,taylor:v.toFixed(1),hits:`${v.toFixed(0)} (${hitsClass(v)})`})[k];
-function openH2H(cat,pane){
-  // every category's loads, the page's category first: "title|cartridge" -> loads
-  const cats=[cat].concat(DATA.categories.filter(c=>c.title!==cat.title&&hasDetail(c))),byTitle={},carts={},groups=new Map();
+const H2HS={};   // what Head to Head had on screen when you left it (distance, gun)
+function openH2H(pane){
+  // every category's loads, the one last opened in the Load Dictionary first: "title|cartridge" -> loads
+  const lc=lastCat(),first=CATEGORIES.find(c=>c.title===lc&&hasDetail(c))||CATEGORIES.find(hasDetail);
+  const cats=[first].concat(DATA.categories.filter(c=>c.title!==first.title&&hasDetail(c))),byTitle={},carts={},groups=new Map();
   for(const c of cats){
     syncHand(c);byTitle[c.title]=c;
     carts[c.title]=[...groupBy(state.detail[c.title],true)].filter(([,v])=>v.length).map(([k,v])=>{groups.set(c.title+"|"+k,v);return k;});
   }
   const choice=(t,c,key)=>(groups.get(t+"|"+c)||[]).find(x=>(x.hid||x.label)===key);
-  const sh=shared[cat.title]||{},prices=readPrices();
+  const sh=shared[first.title]||{},prices=readPrices();
   const priceOf=(ic,it)=>{const v=prices[priceKey(ic,it)];return typeof v==="number"?v:it.default_cost;};
-  const H={weightsOpen:false};
+  const H={};
   // slots: [{cat, cart, key}]: category title, cartridge, and the load's handload id or label
-  let slots=(H2H[cat.title]||[]).map(k=>{const p=k.split("|");return {cat:p[0],cart:p[1],key:p.slice(2).join("|")};}).filter(s=>choice(s.cat,s.cart,s.key)).slice(0,H2H_MAX);
-  const blank=()=>{const l=slots[slots.length-1];return l?{cat:l.cat,cart:l.cart,key:""}:{cat:cat.title,cart:sh.cart&&groups.has(cat.title+"|"+sh.cart)?sh.cart:"",key:""};};
+  let slots=H2H.map(k=>{const p=k.split("|");return {cat:p[0],cart:p[1],key:p.slice(2).join("|")};}).filter(s=>choice(s.cat,s.cart,s.key)).slice(0,H2H_MAX);
+  const blank=()=>{const l=slots[slots.length-1];return l?{cat:l.cat,cart:l.cart,key:""}:{cat:first.title,cart:sh.cart&&groups.has(first.title+"|"+sh.cart)?sh.cart:"",key:""};};
   while(slots.length<H2H_MIN)slots.push(blank());
   pane.innerHTML=`<div class="card">
-    <label class="l">LOADS TO COMPARE</label><div class="slots" id="hs"></div>
+    <label class="l">LOADS TO COMPARE · ANY CATEGORY</label><div class="slots" id="hs"></div>
     <button class="link" id="hadd2">+&nbsp; Add a load (up to ${H2H_MAX})</button>
     <div class="nums" style="grid-template-columns:1fr 1fr">
       <div><label class="l">DISTANCE (YD)</label><input id="hd" inputmode="decimal"></div>
-      <div><label class="l">${esc(cat.gun_label)}</label><input id="hg" inputmode="decimal" placeholder="Usual for each"></div>
+      <div><label class="l">GUN WEIGHT (LB)</label><input id="hg" inputmode="decimal" placeholder="Usual for each"></div>
     </div>
-    <div class="links"><button class="link m" id="hwt">▸&nbsp; Scoring weights</button></div>
-    <div class="weights hidden" id="hwb"><div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="hw_${k}" inputmode="numeric"></div>`).join("")}</div>
-      <div class="help">Higher = matters more. 0 ignores that factor.</div></div>
   </div>
   <div id="hres"></div><div class="note" id="hnote"></div>`;
   const $$=s=>$(s,pane);
-  $$("#hd").value=sh.dist!=null?sh.dist:g(cat.default_distance);
-  $$("#hg").value=sh.h2hGun!=null?sh.h2hGun:"";   // blank: each cartridge's typical gun
-  MKEYS.forEach((k,i)=>$$("#hw_"+k).value=sh.w?sh.w[k]:cat.weights[i]);
-  app._leave=()=>{shared[cat.title]=Object.assign({},shared[cat.title],{dist:$$("#hd").value,h2hGun:$$("#hg").value,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#hw_"+k).value]))});};
+  $$("#hd").value=H2HS.dist!=null?H2HS.dist:g(H2H_DISTANCE);
+  $$("#hg").value=H2HS.gun!=null?H2HS.gun:"";   // blank: each cartridge's typical gun
+  app._leave=()=>{H2HS.dist=$$("#hd").value;H2HS.gun=$$("#hg").value;};
   const picked=()=>{const out=[];for(const s of slots){const it=choice(s.cat,s.cart,s.key);if(it&&!out.some(([,x])=>x===it))out.push([byTitle[s.cat],it]);}return out;};
-  const save=()=>{H2H[cat.title]=picked().map(([c,it])=>pickKey(c,it));};
+  const save=()=>{H2H.splice(0,H2H.length,...picked().map(([c,it])=>pickKey(c,it)));};
   // the load box is a search (issue #24): every typed word must be in the name, the list
   // shows the matches, arrows + Enter or a tap pick one; leaving the box keeps the old pick
   const optText=x=>x?x.label+(x.handload?" (handload)":""):"";
@@ -966,7 +977,7 @@ function openH2H(cat,pane){
           return `<div class="mrow">${name(r)}<span class="mv${b?" best":""}">${h2hValue(k,v)}</span><span class="mg${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?badge(gradeRel(r.sc[k])):"<span></span>"}${bar(w,b)}</div>`;}).join("")+`</div>`;
     }
     // downrange: pick a distance, then the same bubble rows with names
-    const dr=h2hDownrange(cat,rows.map(r=>[r.cat,r.it]));
+    const dr=h2hDownrange(rows.map(r=>[r.cat,r.it]));
     if(H.drYd==null||!dr.some(([yd])=>yd===H.drYd))H.drYd=dr[Math.min(dr.length-1,2)][0];
     const at=dr.find(([yd])=>yd===H.drYd)[1],eTop=Math.max(...at.filter(Boolean).map(c=>c[1]));
     h+=`<div class="mcard"><div class="mt">Downrange<small class="hint">velocity · energy</small></div>
@@ -978,13 +989,12 @@ function openH2H(cat,pane){
   }
   function render(){
     const box=$$("#hres");
-    const gs=$$("#hg").value.trim(),dist=parseFloat($$("#hd").value),gun=gs?parseFloat(gs):null,weights={};let bad=false;
-    for(const k of MKEYS){const v=parseFloat($$("#hw_"+k).value);if(isNaN(v)||v<0||v>10)bad=true;weights[k]=v;}
-    const pk=picked(),others=pk.some(([c])=>c.title!==cat.title),far=Math.max(cat.max_distance,...pk.map(([c])=>c.max_distance));
-    $$("#hnote").textContent=(GRADES?`Each grade is the load's Load Dictionary grade: against every load of its own cartridge${cat.grain_style?"":" and load type"}, not against the others here. `+(others?"Loads from another category are graded with that category's usual weights. ":""):"")+"The best figure in each row is highlighted; the % shows how far the others are behind it. Prices are estimates: set your own in the Load Dictionary.";
-    if(isNaN(dist)||dist<0||dist>far||(gun!=null&&(isNaN(gun)||gun<.5||gun>GUN_MAX))||bad){box.innerHTML=`<div class="cnt">Enter a distance (0–${g(far)}), gun weight (0.5–${g(GUN_MAX)}, or blank) and weights (0–10) to see results.</div>`;return;}
+    const gs=$$("#hg").value.trim(),dist=parseFloat($$("#hd").value),gun=gs?parseFloat(gs):null;
+    const pk=picked(),far=pk.length?Math.max(...pk.map(([c])=>c.max_distance)):H2H_DISTANCE;
+    $$("#hnote").textContent=(GRADES?"Each grade is the load's Load Dictionary grade: against every load of its own cartridge (shotshells: and load type), with its category's scoring weights from the Load Dictionary, not against the others here. ":"")+"The best figure in each row is highlighted; the % shows how far the others are behind it. Prices are estimates: set your own in the Load Dictionary.";
+    if(isNaN(dist)||dist<0||dist>far||(gun!=null&&(isNaN(gun)||gun<.5||gun>GUN_MAX))){box.innerHTML=`<div class="cnt">Enter a distance (0–${g(far)}) and a gun weight (0.5–${g(GUN_MAX)}, or blank) to see results.</div>`;return;}
     if(pk.length<H2H_MIN){box.innerHTML=`<div class="cnt">Pick at least ${H2H_MIN} loads to put them head to head.</div>`;return;}
-    const rows=h2hRows(cat,pk,dist,gun,weights,priceOf,groups),rcats=[...new Set(rows.map(r=>r.cat))],keys=h2hKeys(rcats);
+    const rows=h2hRows(pk,dist,gun,dictWeights,priceOf,groups),rcats=[...new Set(rows.map(r=>r.cat))],keys=h2hKeys(rcats);
     const badge=(gr,big)=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}${big?";margin-left:0;font-size:.95rem;padding:3px 8px":""}">${gr}</span>`;
     const line=(name,cells,cls)=>`<tr${cls?` class="${cls}"`:""}><td>${name}</td>${cells.map(c=>`<td class="c">${c}</td>`).join("")}</tr>`;
     const payload=r=>r.cat.show_oz?`${r.it.bullet_gr.toFixed(0)} gr (${(r.it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(r.it.bullet_gr)} gr`;
@@ -1001,7 +1011,7 @@ function openH2H(cat,pane){
     }
     h+=line("Best in",rows.map(r=>`<span class="${r.best.size===most&&most?"v best":""}">${r.best.size} of ${r.keys.length}</span>`));
     h+=`</tbody></table></div><div class="sect">DOWNRANGE · velocity (fps) and energy (ft-lbs)</div><div class="h2h"><table><thead><tr><th>Yards</th>${rows.map(r=>`<th style="font-size:.8rem;color:var(--muted)">${esc(r.it.label)}</th>`).join("")}</tr></thead><tbody>`;
-    for(const [yd,cells] of h2hDownrange(cat,rows.map(r=>[r.cat,r.it]))){
+    for(const [yd,cells] of h2hDownrange(rows.map(r=>[r.cat,r.it]))){
       const top=Math.max(...cells.filter(Boolean).map(c=>c[1]));
       h+=`<tr><td>${g(yd)}</td>${cells.map(c=>!c?`<td class="c">—</td>`:`<td class="c${c[1]>=top-1e-9?" v best":""}">${fmt0(c[0])} · ${fmt0(c[1])}</td>`).join("")}</tr>`;
     }
@@ -1010,8 +1020,7 @@ function openH2H(cat,pane){
   }
   drawSlots();save();
   $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push(blank());drawSlots();const r=$$("#hs").lastElementChild;r.querySelector(r.querySelector(".cs").value?".ls":".cs").focus();};
-  ["#hd","#hg"].concat(MKEYS.map(k=>"#hw_"+k)).forEach(id=>$$(id).addEventListener("input",render));
-  $$("#hwt").onclick=()=>{H.weightsOpen=!H.weightsOpen;$$("#hwb").classList.toggle("hidden",!H.weightsOpen);$$("#hwt").innerHTML=(H.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";};
+  ["#hd","#hg"].forEach(id=>$$(id).addEventListener("input",render));
   render();
 }
 
@@ -1028,7 +1037,7 @@ function modal(inner){
 $("#ver").textContent=VERSION_TEXT;
 navigate("home");
 // Android back button (Capacitor App plugin): close a dialog, then step back up the menus
-// (category -> category list -> Home); only Home closes the app
+// (category -> category list -> Home; Head to Head -> Home); only Home closes the app
 (function(){
   const AppPlugin=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
   if(!AppPlugin||!AppPlugin.addListener)return;

@@ -18,8 +18,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   Dictionary (LoadsView / openLoads, the old Compare Loads, plus an S-F grades on/off switch kept
   in settings.json show_grades / localStorage) and Head to Head (HeadToHeadView / openH2H, 2-5
   loads side by side, from any category (Oct 2026): picks are (category, load) pairs, pick_key /
-  pickKey include the category title, in App.h2h / H2H per page category, in memory only; a load
-  from another category is graded with that category's default weights, factors it lacks show "—"). Phones (<=600 px)
+  pickKey include the category title, in App.h2h / H2H (one list), in memory only). Head to Head is
+  one page (show_h2h / showH2H; no category picker, no sidebar sub-list, no weights panel): each
+  load is graded with its own category's Load Dictionary weights (dict_weights / dictWeights),
+  factors it lacks show "—", downrange steps come from the picked category with the largest step. Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
   always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
   LoadSearch / loadSearch, every typed word must be in the name). The dictionary's brand / load
