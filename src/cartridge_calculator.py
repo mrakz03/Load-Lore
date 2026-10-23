@@ -49,6 +49,13 @@ except ImportError:  # lets the calculation code be imported/tested without a GU
 # --------------------------------------------------------------------------- #
 APP_TITLE = "In Like Flint - Load Lore"
 APP_VERSION = "dev"             # the release build sets this from the git tag (v1.5 -> "1.5")
+# Shown on the Settings page (web too, via build_web.py); the full text is DISCLAIMER.md
+ABOUT_TEXT = ("Calculated figures are estimates from makers' published velocities, approximate BCs "
+              "and prices, and a simple ballistic model. Powder charges are NOT reloading data. This "
+              "program is not intended for making real shooting or reloading decisions. Brand names "
+              "identify products only. No maker sponsors or endorses this software or is affiliated "
+              "with its creator.\n\n"
+              "Free software under the MIT License, provided as is, with no warranty.")
 GRAINS_PER_OZ = 437.5
 SETTINGS_FILENAME = "settings.json"
 HANDLOAD_FILENAME = "my_handloads.csv"
@@ -1415,6 +1422,13 @@ class App:
         chip = grades_chip(self, row("S–F grades", "Show the grades in the Load Dictionary and "
                                      "Head to Head"), flip)
         chip.pack()
+        card = tk.Frame(wrap, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
+        card.pack(fill="x", pady=6)
+        self.label(card, "Disclaimer", 12, TEXT, True, bg=SURFACE, anchor="w").pack(
+            anchor="w", padx=20, pady=(14, 0))
+        about = self.label(card, ABOUT_TEXT, 10, MUTED, bg=SURFACE, anchor="w", justify="left")
+        about.pack(fill="x", padx=20, pady=(2, 14))
+        about.bind("<Configure>", lambda e: about.configure(wraplength=max(e.width, 1)))
         self.label(wrap, version_text(), 10, MUTED, bg=BG, anchor="w").pack(anchor="w", pady=(14, 0))
         self._update_scroll()
 

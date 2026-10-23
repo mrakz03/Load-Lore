@@ -38,6 +38,7 @@ mv -f "$APPDIR/CartridgeCalculator.new" "$APPDIR/CartridgeCalculator"
 rm -f "$APPDIR"/ammo_*.csv "$APPDIR"/loads_*.csv "$APPDIR"/bullets.csv
 cp "$SRC"/*.csv "$APPDIR/"
 if [ -f "$SRC/icon.png" ]; then cp "$SRC/icon.png" "$APPDIR/"; fi
+for f in LICENSE NOTICE.md DISCLAIMER.md; do if [ -f "$SRC/$f" ]; then cp "$SRC/$f" "$APPDIR/"; fi; done
 
 cat > "$DESKTOP" <<DESK
 [Desktop Entry]

@@ -518,6 +518,7 @@ function showSettings(){
     <div class="setrow"><b>Text size</b>${sizeCtl()}</div>
     <div class="setrow"><label for="theme2"><b>Theme</b></label><select id="theme2">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>
     <div class="setrow nw"><div><b>S–F grades</b><div class="muted">Show the grades in the Load Dictionary and Head to Head</div></div>${gradesBtn()}</div>
+    <div class="setrow"><div><b>Disclaimer</b><div class="muted" style="white-space:pre-line">${esc(DATA.about||"")}</div></div></div>
     <div class="setrow"><b>Version</b><span class="muted">${esc(VERSION_TEXT)}</span></div>
   </div>`;
   wireSize(app);wireGrades(app);
