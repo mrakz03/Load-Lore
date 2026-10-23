@@ -47,7 +47,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .22-250 Remington,Federal Fusion,55,3600,0.219,35.9,1.35,yes,catalog,,24,Hunting
 .22-250 Remington,Federal Power-Shok SP,55,3650,0.212,36.9,1.35,,catalog,,24,Varmint
 .22-250 Remington,Federal Varmint & Predator Hornady V-Max,55,3670,0.259,37.3,1.35,,catalog,,24,Varmint
-.22-250 Remington,Fiocchi Field Dynamics PSP,55,3650,0.453,36.9,1.35,,catalog,,,Varmint
+.22-250 Remington,Fiocchi Field Dynamics PSP,55,3650,0.239,36.9,1.35,,catalog,,,Varmint
 .22-250 Remington,Fiocchi Field Dynamics V-MAX,55,3650,0.255,36.9,1.35,,catalog,,,Varmint
 .22-250 Remington,Hornady V-MAX,55,3680,0.260,37.5,1.35,,catalog,,24,Varmint
 .22-250 Remington,Remington Pointed Soft Point,55,3680,0.197,37.5,1.35,,catalog,,,Varmint
@@ -112,7 +112,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .223 Remington,"PMC Bronze Full Metal Jacket Boat Tail (16"" barrel)",55,2900,0.243,21,0.58,,catalog,,16,Target
 .223 Remington,"PMC Bronze Full Metal Jacket Boat Tail (24"" barrel)",55,3200,0.243,25.6,0.58,,catalog,,24,Target
 .223 Remington,PMC Bronze Hunting Pointed Soft Point,55,3200,0.222,25.6,0.58,,catalog,,24,Hunting
-5.56x45mm NATO,PMC X-TAC 5.56 NATO Full Metal Jacket Boat Tail,55,3270,0.243,26.7,1.02,,catalog,,20,Target
+5.56x45mm NATO,PMC X-TAC 5.56 NATO Full Metal Jacket Boat Tail,55,3270,0.243,26.7,0.58,,catalog,,20,Target
 .223 Remington,Remington Pointed Soft Point,55,3240,0.197,26.2,0.85,,catalog,,,Hunting
 .223 Remington,Remington Premier AccuTip-V,55,3240,0.255,26.2,0.85,,catalog,,,Hunting
 .223 Remington,Remington UMC Full Metal Jacket,55,3240,0.202,26.2,0.58,,catalog,,,Target
@@ -132,6 +132,13 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .223 Remington,PPU Soft Point,55,3248,0.222,26.3,0.68,,partial,,24,Varmint
 .223 Remington,PPU HPBT,55,3248,0.228,26.3,0.82,,partial,,24,Match
 .223 Remington,PPU FMJ Boat Tail,55,3248,0.250,26.3,0.46,,partial,,24,Target
+.223 Remington,Hornady Frontier FMJ,55,3240,0.248,26.2,0.58,,catalog,,24,Target
+.223 Remington,Hornady Frontier Spire Point,55,3240,0.239,26.2,0.85,,catalog,,24,Hunting
+.223 Remington,Hornady Frontier Hollow Point Match,55,3240,0.259,26.2,1.02,,catalog,,24,Match
+5.56x45mm NATO,Hornady Frontier 5.56 NATO M193 FMJ,55,3240,0.248,26.2,0.58,,catalog,,20,Target
+5.56x45mm NATO,Hornady Frontier Hollow Point Match,55,3240,0.259,26.2,1.02,,catalog,,20,Match
+5.56x45mm NATO,Winchester USA 5.56 NATO Full Metal Jacket,55,3270,0.267,26.2,0.58,,published,,20,Target
+5.56x45mm NATO,Winchester USA 5.56 NATO M193 FMJ (Lake City),55,3240,0.250,26.2,0.58,,partial,,20,Target
 .223 Remington,Black Hills Soft Point,60,3075,0.226,25.8,0.94,,partial,,24,Hunting
 .223 Remington,Black Hills Hornady V-MAX,60,3050,0.290,25.4,0.94,,partial,,24,Varmint
 5.56x45mm NATO,Federal American Eagle 5.56x45 NATO XM855 FMJ BT,62,3020,0.355,25.7,0.58,,catalog,,,Target
@@ -141,9 +148,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .223 Remington,Fiocchi Range Dynamics FMJBT,62,3000,0.304,25.3,0.58,,partial,,,Target
 .223 Remington,"Hornady BLACK FMJ (24"" barrel)",62,3100,0.279,27,0.58,,catalog,,24,Target
 5.56x45mm NATO,"Hornady BLACK FMJ (20"" barrel)",62,3060,0.279,26.3,0.58,,catalog,,20,Target
-5.56x45mm NATO,Hornady BTHP Match,62,3060,0.326,26.3,1.02,,catalog,,20,Match
-5.56x45mm NATO,Hornady Spire Point,62,3060,0.269,26.3,0.85,,catalog,,20,Hunting
-5.56x45mm NATO,PMC X-TAC 5.56 NATO Light Armor Piercing,62,3100,0.304,27,1.02,,catalog,,20,Target
+5.56x45mm NATO,Hornady Frontier BTHP Match,62,3060,0.326,26.3,1.02,,catalog,,20,Match
+5.56x45mm NATO,Hornady Frontier Spire Point,62,3060,0.269,26.3,0.85,,catalog,,20,Hunting
+5.56x45mm NATO,PMC X-TAC 5.56 NATO Light Armor Piercing,62,3100,0.304,27,0.62,,catalog,,20,Target
 .223 Remington,Remington Core-Lokt Ultra Bonded PSP,62,3100,0.234,27,1.27,,catalog,,,Hunting
 .223 Remington,Remington Hollow Point Match,62,3025,0.205,25.7,1.02,,catalog,,,Match
 .223 Remington,Speer Gold Dot Rifle Personal Protection Soft Point,62,3000,0.304,25.3,1.27,,partial,,,Defense
@@ -155,13 +162,15 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .223 Remington,Black Hills Barnes TSX,62,3025,0.298,25.8,0.94,,partial,,24,Hunting
 .223 Remington,PPU FMJ Boat Tail,62,3051,0.355,26.2,0.46,,partial,,24,Target
 .223 Remington,PPU HPBT,62,3051,0.300,26.2,0.82,,partial,,24,Match
+5.56x45mm NATO,Hornady Frontier FMJ,62,3060,0.279,26.3,0.58,,catalog,,20,Target
 .223 Remington,Federal Power-Shok SP,64,3050,0.260,27,0.85,,catalog,,24,Hunting
 5.56x45mm NATO,Winchester 5.56 NATO Defender,64,2800,0.177,22.8,0.85,,catalog,,16,Defense
 .223 Remington,Winchester Deer Season XP Extreme Point,64,3020,0.282,26.5,0.85,,catalog,,24,Hunting
 .223 Remington,Winchester Power-Point,64,3020,0.257,26.5,0.85,,catalog,,24,Hunting
 .223 Remington,Winchester Silvertip Defense Tip,64,2700,0.282,21.2,0.85,,catalog,,16,Defense
-.223 Remington,Hornady BTHP Match,68,2960,0.362,27,1.02,,catalog,,24,Match
+.223 Remington,Hornady Frontier BTHP Match,68,2960,0.362,27,1.02,,catalog,,24,Match
 .223 Remington,Black Hills Heavy Match HP,68,2850,0.362,25.0,1.12,,partial,,24,Match
+5.56x45mm NATO,Hornady Frontier BTHP Match,68,2960,0.362,27,1.02,,catalog,,20,Match
 .223 Remington,Federal Premium Gold Medal Sierra MatchKing BTHP,69,2950,0.301,27.2,1.27,,catalog,,24,Match
 .223 Remington,Fiocchi Hyperformance Match HPBT MK,69,2850,0.301,25.4,1.02,,catalog,,,Match
 .223 Remington,Remington Premier MatchKing OTM,69,3000,0.336,28.2,1.02,,catalog,,,Match
@@ -178,7 +187,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .223 Remington,Hornady Match ELD Match,73,2790,0.405,25.8,1.02,,catalog,,24,Match
 .223 Remington,Federal American Eagle TMJ,75,2775,0.407,26.2,0.58,,catalog,,24,Target
 .223 Remington,Hornady BLACK BTHP,75,2790,0.403,26.5,1.02,,catalog,,24,Match
-5.56x45mm NATO,Hornady BTHP Match,75,2860,0.362,27.8,1.02,,catalog,,20,Match
+5.56x45mm NATO,Hornady Frontier BTHP Match,75,2860,0.362,27.8,1.02,,catalog,,20,Match
 .223 Remington,Hornady Match BTHP Match,75,2790,0.403,26.5,1.02,,catalog,,24,Match
 .223 Remington,"Hornady Superformance Match BTHP (24"" barrel)",75,2930,0.402,29.2,1.17,,catalog,,24,Match
 5.56x45mm NATO,"Hornady Superformance Match BTHP (20"" barrel)",75,2910,0.402,28.8,1.17,,catalog,,20,Match
@@ -211,7 +220,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .224 Valkyrie,Hornady ELD Match,88,2675,0.555,28.4,1.92,,catalog,,24,Match
 .224 Valkyrie,Federal Fusion MSR,90,2700,0.431,29.6,1.60,yes,catalog,,24,Hunting
 .224 Valkyrie,Federal Premium Gold Medal Sierra MatchKing BTHP,90,2700,0.563,29.6,2.40,,catalog,,24,Match
-.224 Valkyrie,Remington Premier MatchKing OTM,90,2700,0.274,29.6,1.92,,catalog,,,Match
+.224 Valkyrie,Remington Premier MatchKing OTM,90,2700,0.572,29.6,1.92,,catalog,,,Match
 .243 Winchester,Hornady Superformance Varmint V-MAX,58,3925,0.255,42,1.90,,catalog,,24,Varmint
 .243 Winchester,Black Hills Gold Hornady V-MAX,58,3700,0.185,37.3,1.81,,partial,,24,Varmint
 .243 Winchester,Winchester Varmint-X Extreme Point,65,3620,0.272,40,1.65,,catalog,,24,Varmint
@@ -324,7 +333,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .25-06 Remington,Remington Core-Lokt Pointed Soft Point,120,2990,0.362,39.7,2.01,,catalog,,24,Hunting
 .25-06 Remington,Winchester Super-X Positive Exp. Point,120,2990,0.344,39.7,2.01,,catalog,,24,Hunting
 .25-35 Winchester,Winchester Super-X Power-Point,117,2230,0.253,27,2.00,yes,catalog,,,Hunting
-.25-35 Winchester,Hornady LEVERevolution FTX,110,2425,0.404,27,2.40,,partial,,,Hunting
 .25-35 Winchester,Hornady LEVERevolution FTX,110,2425,0.346,28.5,2.76,,catalog,,24,Hunting
 .25-35 Winchester,Winchester Power-Point,117,2230,0.213,25.6,2.40,,catalog,,24,Hunting
 .250 Savage,Hornady Custom InterLock SP,100,2800,0.356,33.0,2.50,yes,catalog,,24,Hunting
@@ -406,7 +414,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 6.5 Creedmoor,Lapua Naturalis (lead-free),140,2559,0.201,36.1,3.44,,published,,24,Hunting
 6.5 Creedmoor,Sellier & Bellot FMJBT,140,2657,0.509,38.9,2.48,,partial,,24,Target
 6.5 Creedmoor,Sellier & Bellot Soft Point,140,2657,0.410,38.9,1.90,,partial,,24,Hunting
-6.5 Creedmoor,PPU HPBT,140,2690,0.607,39.9,1.47,,partial,,24,Match
+6.5 Creedmoor,PPU HPBT,140,2690,0.535,39.9,1.47,,partial,,24,Match
 6.5 Creedmoor,Fiocchi Hyperformance Match HPBT MK,142,2675,0.611,40,2.34,,catalog,,,Match
 6.5 Creedmoor,Winchester Expedition Big Game Long Range Accubond LR,142,2700,0.625,40.7,2.92,,catalog,,24,Hunting
 6.5 Creedmoor,Sellier & Bellot HPBT Match,142,2625,0.611,38.5,1.99,,partial,,24,Match
@@ -433,7 +441,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 6.5 Grendel,Remington Premier Berger OTM,130,2400,0.560,25.6,2.10,,catalog,,,Match
 6.5 PRC,Hornady ELD-VT,100,3450,0.448,51,2.60,,catalog,,24,Hunting
 6.5 PRC,Federal Premium Big Game Trophy Copper,120,3050,0.497,47.8,3.90,,catalog,,24,Hunting
-6.5 PRC,Fiocchi Hyperformance Hunt Barnes TTSX,120,3070,0.625,48.4,3.90,,partial,,,Hunting
+6.5 PRC,Fiocchi Hyperformance Hunt Barnes TTSX,120,3070,0.459,48.4,3.90,,partial,,,Hunting
 6.5 PRC,Winchester Copper Impact Copper Extreme Point,125,3100,0.428,51.5,3.90,,catalog,,24,Hunting
 6.5 PRC,Hornady American Whitetail SST,129,3120,0.485,53.8,2.99,,catalog,,24,Hunting
 6.5 PRC,Federal Premium Big Game Terminal Ascent,130,3000,0.532,50.1,3.90,,catalog,,24,Hunting
@@ -749,7 +757,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .30-06 Springfield,Federal Premium Big Game Swift Scirocco II,165,2800,0.470,54.4,2.62,,catalog,,24,Hunting
 .30-06 Springfield,Federal Premium Big Game Trophy Bonded Tip,165,2800,0.450,54.4,2.62,,catalog,,24,Hunting
 .30-06 Springfield,Fiocchi Field Dynamics PSP,165,2800,0.404,54.4,1.75,,catalog,,,Hunting
-.30-06 Springfield,Fiocchi Hyperformance Hunt HPBT GK,165,2850,0.224,56.4,2.10,,catalog,,,Match
+.30-06 Springfield,Fiocchi Hyperformance Hunt HPBT GK,165,2850,0.370,56.4,2.10,,catalog,,,Match
 .30-06 Springfield,Fiocchi Hyperformance Hunt SCIROCCO,165,2875,0.470,57.4,1.75,,catalog,,,Hunting
 .30-06 Springfield,Hornady American Whitetail SST,165,2900,0.447,58.4,2.01,,catalog,,24,Hunting
 .30-06 Springfield,Hornady Superformance CX,165,2940,0.448,60,3.02,,catalog,,24,Hunting
@@ -768,7 +776,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .30-06 Springfield,Black Hills Gold Hornady Match Hollow Point,168,2700,0.463,51.5,2.60,,partial,,24,Match
 .30-06 Springfield,Black Hills Gold Hornady ELD Match,168,2750,0.523,53.4,2.60,,partial,,24,Match
 .30-06 Springfield,Sellier & Bellot HPBT Match,168,2785,0.463,54.8,2.21,,partial,,24,Match
-.30-06 Springfield,PPU HPBT,168,2805,0.228,55.6,1.55,,partial,,24,Match
+.30-06 Springfield,PPU HPBT,168,2805,0.462,55.6,1.55,,partial,,24,Match
 .30-06 Springfield,Lapua Naturalis (lead-free),170,2723,0.354,53.0,3.38,,published,,24,Hunting
 .30-06 Springfield,PPU GROM,170,2657,0.354,50.5,1.36,,partial,,24,Hunting
 .30-06 Springfield,PPU Z-GROM,170,2657,0.354,50.5,1.36,,partial,,24,Hunting
@@ -815,7 +823,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .30-06 Springfield,Buffalo Bore Premium Supercharged Sierra Spitzer,180,2850,0.505,61.5,2.73,,partial,,24,Hunting
 .30-06 Springfield,Lapua Mega Soft Point,185,2625,0.319,53.6,3.38,,published,,24,Hunting
 .30-06 Springfield,Winchester Expedition Big Game Long Range Accubond LR,190,2750,0.597,60.4,2.62,,catalog,,24,Hunting
-.30-06 Springfield,PPU HPBT,190,2625,0.258,55.0,1.55,,partial,,24,Match
+.30-06 Springfield,PPU HPBT,190,2625,0.533,55.0,1.55,,partial,,24,Match
 .30-06 Springfield,Remington Core-Lokt Soft Point,220,2410,0.294,53.7,1.75,,catalog,,,Hunting
 .30-30 Winchester,Remington Core-Lokt Soft Point,125,2175,0.215,21.5,1.55,,catalog,,,Hunting
 .30-30 Winchester,Hornady LEVERevolution MonoFlex,140,2465,0.300,30.9,2.33,,catalog,,24,Hunting
@@ -1000,7 +1008,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .300 Winchester Magnum,SIG Sauer Elite Match Grade OTM,190,2850,0.533,74.8,2.75,,published,,24,Match
 .300 Winchester Magnum,Black Hills Match Hollow Point,190,2950,0.533,80.1,4.29,,partial,,24,Match
 .300 Winchester Magnum,Sellier & Bellot HPBT Match,190,2848,0.533,74.6,3.31,,partial,,24,Match
-.300 Winchester Magnum,PPU HPBT,190,2838,0.611,74.1,1.78,,partial,,24,Match
+.300 Winchester Magnum,PPU HPBT,190,2838,0.533,74.1,1.78,,partial,,24,Match
 .300 Winchester Magnum,Hornady Match ELD Match,195,2930,0.595,81.1,3.12,,catalog,,24,Match
 .300 Winchester Magnum,Winchester Supreme Long Range BC Max,195,2900,0.569,79.5,3.90,,catalog,,24,Target
 .300 Winchester Magnum,Federal Premium Big Game ELD-X,200,2860,0.597,79.3,3.90,,catalog,,24,Hunting
@@ -1050,10 +1058,11 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .308 Winchester,Federal Varmint & Predator JHP,130,3050,0.267,42.5,1.60,,catalog,,24,Varmint
 .308 Winchester,PPU FMJ Boat Tail,145,2838,0.393,41.0,0.87,,partial,,24,Target
 .308 Winchester,PMC Bronze Full Metal Jacket Boat Tail,147,2780,0.398,39.9,1.09,,catalog,,24,Target
-7.62x51mm NATO,PMC X-TAC 7.62x51 NATO Full Metal Jacket Boat Tail,147,2800,0.398,40.5,1.92,,catalog,,24,Target
+7.62x51mm NATO,PMC X-TAC 7.62x51 NATO Full Metal Jacket Boat Tail,147,2800,0.398,40.5,1.09,,catalog,,24,Target
 .308 Winchester,Winchester USA Full Metal Jacket,147,2800,0.415,40.5,1.09,,catalog,,24,Target
 .308 Winchester,Sellier & Bellot FMJ,147,2789,0.398,40.2,0.93,,partial,,24,Target
 7.62x51mm NATO,Winchester 7.62x51 NATO M80 Full Metal Jacket,149,2790,0.456,40.7,1.09,,catalog,,24,Target
+7.62x51mm NATO,Federal American Eagle 7.62x51 NATO XM80 FMJ,149,2790,0.408,40.7,1.09,,published,,24,Target
 .308 Winchester,Federal American Eagle FMJ BT,150,2820,0.415,41.9,1.09,,catalog,,24,Target
 .308 Winchester,Federal Fusion,150,2820,0.421,41.9,1.60,,catalog,,24,Hunting
 .308 Winchester,Federal Fusion MSR,150,2770,0.421,40.4,1.60,,catalog,,20,Hunting
@@ -1144,7 +1153,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .308 Winchester,Black Hills Gold Barnes TSX,168,2650,0.523,41.4,2.02,,partial,,24,Hunting
 .308 Winchester,Black Hills Gold Sierra TMK,168,2650,0.462,41.4,2.11,,partial,,24,Match
 .308 Winchester,Sellier & Bellot HPBT Match,168,2628,0.450,40.7,1.71,,partial,,24,Match
-.308 Winchester,PPU HPBT,168,2608,0.257,40.1,1.34,,partial,,24,Match
+.308 Winchester,PPU HPBT,168,2608,0.462,40.1,1.34,,partial,,24,Match
 .308 Winchester,Lapua Naturalis (lead-free),170,2625,0.354,41.1,3.23,,published,,26,Hunting
 .308 Winchester,PPU GROM,170,2510,0.354,37.6,1.31,,partial,,24,Hunting
 .308 Winchester,PPU Z-GROM,170,2510,0.354,37.6,1.31,,partial,,24,Hunting
@@ -1162,7 +1171,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .308 Winchester,Lapua Scenar-L OTM,175,2602,0.490,41.6,3.07,,published,,26,Match
 .308 Winchester,Sellier & Bellot HPBT Match,175,2625,0.505,42.3,1.71,,partial,,24,Match
 .308 Winchester,PPU FMJ Boat Tail,175,2592,0.510,41.2,0.87,,partial,,24,Target
-.308 Winchester,PPU HPBT,175,2592,0.267,41.2,1.34,,partial,,24,Match
+.308 Winchester,PPU HPBT,175,2592,0.505,41.2,1.34,,partial,,24,Match
 .308 Winchester,Federal Premium Big Game ELD-X,178,2610,0.552,42.6,2.40,,catalog,,24,Hunting
 .308 Winchester,Hornady Match BTHP,178,2600,0.540,42.2,1.92,,catalog,,24,Match
 .308 Winchester,Hornady Precision Hunter ELD-X,178,2600,0.564,42.2,2.40,,catalog,,24,Match
@@ -1193,7 +1202,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .308 Winchester,Lapua Scenar OTM,185,2475,0.482,39.8,3.07,,published,,26,Match
 .308 Winchester,Federal Subsonic Fusion Tipped,190,1000,0.494,6.7,2.60,,published,,24,Subsonic
 .308 Winchester,Sellier & Bellot HPBT Match,190,2625,0.567,46.2,1.71,,partial,,24,Match
-.308 Winchester,PPU HPBT,190,2477,0.291,41.1,1.34,,partial,,24,Match
+.308 Winchester,PPU HPBT,190,2477,0.533,41.1,1.34,,partial,,24,Match
 .308 Winchester,Lapua Subsonic FMJBT,200,1066,0.518,8.0,3.24,,published,,16,Subsonic
 7.62x51mm NATO,PPU 7.62x51mm Subsonic FMJ Boat Tail,200,1050,0.518,7.8,1.50,,partial,,24,Subsonic
 .308 Winchester,Federal Subsonic Target Hollow Point,205,1000,0.480,7.2,2.45,,published,,24,Subsonic
@@ -1344,7 +1353,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .375 H&H Magnum,Federal Premium Safari Trophy Bonded Bear Claw,300,2400,0.342,64.0,8.44,,catalog,,24,Hunting
 .375 H&H Magnum,Federal Premium Safari Trophy Bonded Sledgehammer Solid,300,2440,0.253,66.1,8.44,,catalog,,24,Hunting
 .375 H&H Magnum,Federal Premium Safari Woodleigh Hydro,300,2500,0.260,69.4,8.44,,catalog,,24,Hunting
-.375 H&H Magnum,PPU FMJ Round Nose,300,2543,0.518,81.6,3.12,,partial,,24,Target
+.375 H&H Magnum,PPU FMJ Round Nose,300,2543,0.279,81.6,3.12,,partial,,24,Target
 .375 H&H Magnum,PPU Soft Point Round Nose,300,2543,0.297,81.6,3.12,,partial,,24,Hunting
 .375 Ruger,Hornady Outfitter CX,250,2800,0.410,82.5,6.90,,catalog,,24,Hunting
 .375 Ruger,Hornady Dangerous Game InterLock SP-RP,270,2840,0.386,91.7,4.60,yes,catalog,,24,Hunting
@@ -1356,7 +1365,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .416 Remington Magnum,Federal Premium Safari Swift A-Frame,400,2400,0.367,85.3,12.66,,catalog,,24,Hunting
 .416 Remington Magnum,Federal Premium Safari Trophy Bonded Bear Claw,400,2400,0.373,85.3,12.66,,catalog,,24,Hunting
 .416 Remington Magnum,Federal Premium Safari Trophy Bonded Sledgehammer Solid,400,2400,0.273,85.3,12.66,,catalog,,24,Hunting
-.44 Magnum,Hornady LEVERevolution FTX (rifle barrel),225,1850,0.279,22,2.00,,approx,,,Hunting
+.44 Magnum,Hornady LEVERevolution FTX (rifle barrel),225,1850,0.147,22,2.00,,approx,,,Hunting
 .44 Magnum,Federal Premium Hammerdown Revolver Carbine Bonded Soft Point,270,1715,0.196,23.2,2.85,,catalog,,20,Hunting
 .44 Magnum,Winchester Big Bore Jacketed Soft Point,240,1765,0.167,21.9,1.90,yes,catalog,,20,Hunting
 .444 Marlin,Remington Soft Point,240,2350,0.146,45,2.80,,catalog,,,Hunting

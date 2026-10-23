@@ -360,6 +360,9 @@ function ballisticHTML(it,cat,open){
     ballisticTable(it,cat).map(([yd,v,e,p,w])=>`<tr><td>${g(yd)}</td><td>${Math.round(v).toLocaleString("en-US")}</td><td>${Math.round(e).toLocaleString("en-US")}</td><td>${Math.abs(p)<0.05?"0.0":(p>0?"+":"−")+Math.abs(p).toFixed(1)}</td><td>${w.toFixed(1)}</td></tr>`).join("")
   }</tbody></table></div><div class="note">Zeroed at ${g(cat.zero_yd)} yd with the sight ${g(cat.sight_in)} in above the bore; wind is a ${WIND_MPH} mph crosswind. Drop and drift are estimates from the G1 BC in sea-level air.</div></details>`;
 }
+// typical gun weight for cartridges far from their category's default (GUN_LB in the desktop app)
+const GUN_LB=DATA.gun_lb||{},GUN_MAX=DATA.gun_max||60;
+const typicalGun=(cat,cart)=>{const t=GUN_LB[cat.title]||{};return t[cart]!=null?t[cart]:cat.default_gun_lb;};
 function recoil(gr,fps,powder,gun){
   // standard free recoil: bullet + powder gas at ~4000 fps (GAS_FPS); no 1.75x gas factor
   const mom=(gr*fps+powder*4000)/7000, gv=mom/gun;
@@ -476,17 +479,17 @@ const ICON={
 // Settings (theme, text size, S-F grades): a tab on phones, the bottom of the sidebar on wide screens
 // the two tools: key, title, Home-screen blurb (same as TOOLS in the desktop app)
 const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or your own handload, graded against each other."],
-  ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges."]];
+  ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges or categories."]];
 const toolTitle=k=>(TOOLS.find(t=>t[0]===k)||TOOLS[0])[1];
 const NAVS=[["home","Home",ICON.home],["loads","Load Dictionary",ICON.loads],["h2h","Head to Head",ICON.h2h],["settings","Settings",ICON.settings]];
-const H2H_MIN=2,H2H_MAX=5,H2H={};   // category title -> Head to Head picks (pickKey)
-const pickKey=it=>it.cartridge+"|"+(it.hid||it.label);
+const H2H_MIN=2,H2H_MAX=5,H2H=[],H2H_DISTANCE=100;   // Head to Head picks (pickKey), any category
+const pickKey=(cat,it)=>cat.title+"|"+it.cartridge+"|"+(it.hid||it.label);
 // S-F grades on / off (Settings), shared by both tools and remembered
 let GRADES=true;try{GRADES=localStorage.getItem(GRADES_KEY)!=="0";}catch(e){}
 function setGrades(on){GRADES=on;try{localStorage.setItem(GRADES_KEY,on?"1":"0");}catch(e){}}
 function h2hText(cat,it){
-  const p=H2H[cat.title]||[];
-  if(p.includes(pickKey(it)))return `In Head to Head (${p.length} of ${H2H_MAX}) · Open ›`;
+  const p=H2H;
+  if(p.includes(pickKey(cat,it)))return `In Head to Head (${p.length} of ${H2H_MAX}) · Open ›`;
   if(p.length>=H2H_MAX)return `Head to Head is full (${H2H_MAX}) · Open ›`;
   return "+ Head to Head"+(p.length?` (${p.length} picked)`:"");
 }
@@ -503,7 +506,7 @@ function drawChrome(){
   nav.innerHTML=NAVS.map(([k,t,ic])=>{
     const on=NAV.mode===k;
     return `<button data-nav="${k}" class="${on?"on":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
-      (on&&k!=="home"&&k!=="settings"?`<div class="sub">${CATEGORIES.filter(hasDetail).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
+      (on&&k==="loads"?`<div class="sub">${CATEGORIES.filter(hasDetail).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
   nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(NAV.mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
@@ -511,10 +514,10 @@ function drawChrome(){
 function navigate(mode,cat){
   if(app._leave){try{app._leave();}catch(e){}}
   app._leave=null;app.onkeydown=null;
-  NAV.mode=mode;NAV.cat=mode==="home"||mode==="settings"?null:(cat||null);
+  NAV.mode=mode;NAV.cat=mode==="loads"?(cat||null):null;   // Head to Head has no category
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
-  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
+  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
   window.scrollTo(0,0);
 }
 function showHome(){
@@ -551,8 +554,14 @@ function openCategory(cat,tab){
   app.classList.remove("home","picker");app.classList.add("wide");
   app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2>${toolTitle(tab)} · ${esc(cat.title)}</h2></div><div id="pane"></div>`;
   $("[data-back]",app).onclick=()=>navigate(tab);
-  const pane=$("#pane",app);
-  if(tab==="h2h")openH2H(cat,pane);else openLoads(cat,pane);
+  openLoads(cat,$("#pane",app));
+}
+// Head to Head: one page for loads of every category
+function showH2H(){
+  document.title=`${APP_TITLE} — ${toolTitle("h2h")}`;
+  app.classList.remove("home","picker");app.classList.add("wide");
+  app.innerHTML=`<div class="phead"><h2>${toolTitle("h2h")}</h2></div><div id="pane"></div>`;
+  openH2H($("#pane",app));
 }
 
 // ---------- handloads ----------
@@ -704,11 +713,13 @@ function openLoads(cat,pane){
   const biggest=carts.reduce((a,c)=>groups.get(c).length>groups.get(a).length?c:a,carts[0]);
   $$("#lc").value=(sh.cart&&groups.has(sh.cart))?sh.cart:biggest;
   $$("#ld").value=sh.dist!=null?sh.dist:g(cat.default_distance);
-  $$("#lg").value=sh.gun!=null?sh.gun:g(cat.default_gun_lb);
+  // the gun weight follows the cartridge's typical gun (GUN_LB) unless you typed your own
+  L.gunAuto=sh.gun!=null?(sh.gunAuto!=null?sh.gunAuto:cat.default_gun_lb):typicalGun(cat,$$("#lc").value);
+  $$("#lg").value=sh.gun!=null?sh.gun:g(L.gunAuto);
   MKEYS.forEach((k,i)=>$$("#lw_"+k).value=sh.w?sh.w[k]:cat.weights[i]);
   const readNum=(id,lo,hi)=>{const v=parseFloat($$(id).value);return isNaN(v)?null:Math.min(hi,Math.max(lo,v));};
   const priceOf=it=>{const v=L.prices[priceKey(cat,it)];return typeof v==="number"?v:it.default_cost;};
-  app._leave=()=>{shared[cat.title]={purpose:L.purpose,cart:$$("#lc").value,dist:$$("#ld").value,gun:$$("#lg").value,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#lw_"+k).value]))};};
+  app._leave=()=>{shared[cat.title]=Object.assign({},shared[cat.title],{purpose:L.purpose,cart:$$("#lc").value,dist:$$("#ld").value,gun:$$("#lg").value,gunAuto:L.gunAuto,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#lw_"+k).value]))});};
   function buildChips(){
     const items=groups.get($$("#lc").value)||[], cnt={};
     items.forEach(x=>{const p=purposeOf(x);if(p)cnt[p]=(cnt[p]||0)+1;});
@@ -736,7 +747,7 @@ function openLoads(cat,pane){
     $$("#lp").querySelectorAll("button").forEach(b=>{const p=b.dataset.p;b.querySelector("small").textContent=p==="All"?shown.length:shown.filter(x=>purposeOf(x)===p).length;});
   }
   function compute(){
-    const dist=readNum("#ld",0,cat.max_distance), gun=readNum("#lg",.5,30);
+    const dist=readNum("#ld",0,cat.max_distance), gun=readNum("#lg",.5,GUN_MAX);
     const weights={};let bad=false;
     for(const k of MKEYS){const v=parseFloat($$("#lw_"+k).value);if(isNaN(v)||v<0)bad=true;weights[k]=bad?0:Math.min(10,v);}
     if(dist==null||gun==null||bad)return null;
@@ -794,9 +805,9 @@ function openLoads(cat,pane){
       if(bt){bt.addEventListener("toggle",()=>{L.btOpen=bt.open;});bt.onclick=e=>e.stopPropagation();}
       const hb=c.querySelector(".h2hb");
       if(hb&&it)hb.onclick=()=>{
-        const picks=H2H[cat.title]=H2H[cat.title]||[];
-        if(picks.includes(pickKey(it))||picks.length>=H2H_MAX){navigate("h2h",cat);return;}
-        picks.push(pickKey(it));hb.textContent=h2hText(cat,it);
+        const picks=H2H;
+        if(picks.includes(pickKey(cat,it))||picks.length>=H2H_MAX){navigate("h2h");return;}
+        picks.push(pickKey(cat,it));hb.textContent=h2hText(cat,it);
       };
       if(it&&it.handload){
         if(!c.querySelector(".hedit"))return;
@@ -822,7 +833,9 @@ function openLoads(cat,pane){
     buildChips();render();
   }
   if(cat.grain_style)$$("#hadd").onclick=()=>openHand(null);
-  $$("#lc").onchange=()=>{L.open=null;buildChips();render();};
+  $$("#lc").onchange=()=>{
+    const nw=typicalGun(cat,$$("#lc").value);if(parseFloat($$("#lg").value)===L.gunAuto||isNaN(parseFloat($$("#lg").value)))$$("#lg").value=g(nw);L.gunAuto=nw;
+    L.open=null;buildChips();render();};
   ["#ld","#lg","#lf"].concat(MKEYS.map(k=>"#lw_"+k)).forEach(id=>$$(id).addEventListener("input",render));
   $$("#ls").onchange=render;
   $$("#lwt").onclick=()=>{L.weightsOpen=!L.weightsOpen;$$("#lwb").classList.toggle("hidden",!L.weightsOpen);$$("#lwt").innerHTML=(L.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";};
@@ -830,60 +843,79 @@ function openLoads(cat,pane){
 }
 
 // ---------- Head to Head tab ----------
-// 2-5 loads side by side, from any cartridges of the category. Each load keeps its Load
-// Dictionary grade (against every load of its own cartridge), so the two tabs always agree.
-function h2hRows(cat,picked,dist,gun,weights,priceOf,groups){
+// 2-5 loads side by side, from any cartridges of any category (the page's own category first).
+// Each load keeps its Load Dictionary grade (against every load of its own cartridge), so the
+// two tabs always agree. picked: [[category, load]]; groups: "title|cartridge" -> loads.
+// a category's scoring weights as last set in its Load Dictionary (else the defaults)
+function dictWeights(c){
+  const w=(shared[c.title]||{}).w||{};
+  return Object.fromEntries(MKEYS.map((k,i)=>{const v=parseFloat(w[k]);return [k,!isNaN(v)&&v>=0&&v<=10?v:c.weights[i]];}));
+}
+const h2hKeys=cats=>MKEYS.filter(k=>cats.some(c=>keysOf(c).includes(k)));
+function h2hRows(picked,dist,gun,weightsOf,priceOf,groups){
   const done=new Map(),rows=[];
-  for(const it of picked){
-    if(!done.has(it.cartridge)){const items=groups.get(it.cartridge);done.set(it.cartridge,new Map(scoreLoads(items,dist,gun,weights,items.map(priceOf),!cat.grain_style).map(r=>[r.it,r])));}
-    rows.push(Object.assign({},done.get(it.cartridge).get(it),{best:new Set(),gap:{}}));
+  for(const [ic,it] of picked){
+    const key=ic.title+"|"+it.cartridge,d=Math.min(dist,ic.max_distance);
+    if(!done.has(key)){
+      const items=groups.get(key);
+      done.set(key,new Map(scoreLoads(items,d,gun==null?typicalGun(ic,it.cartridge):gun,weightsOf(ic),items.map(x=>priceOf(ic,x)),!ic.grain_style).map(r=>[r.it,r])));
+    }
+    rows.push(Object.assign({},done.get(key).get(it),{cat:ic,dist:d,keys:keysOf(ic),best:new Set(),gap:{}}));
   }
-  for(const k of keysOf(cat)){
-    const vals=rows.map(r=>r.st[k]),lead=METRICS[k][1]?Math.max(...vals):Math.min(...vals);
-    rows.forEach((r,i)=>{if(Math.abs(vals[i]-lead)<=1e-9*Math.max(1,Math.abs(lead)))r.best.add(k);r.gap[k]=lead===0?0:100*(vals[i]-lead)/Math.abs(lead);});
+  for(const k of h2hKeys(rows.map(r=>r.cat))){
+    const have=rows.filter(r=>r.keys.includes(k)),vals=have.map(r=>r.st[k]),lead=METRICS[k][1]?Math.max(...vals):Math.min(...vals);
+    have.forEach((r,i)=>{if(Math.abs(vals[i]-lead)<=1e-9*Math.max(1,Math.abs(lead)))r.best.add(k);r.gap[k]=lead===0?0:100*(vals[i]-lead)/Math.abs(lead);});
   }
   return rows;
 }
-function h2hDownrange(cat,items){
-  const out=[];
+// in the steps of the picked categories' widest table (rifle 100 yd, rimfire 50, handgun and
+// shotgun 25); null past the load's own category's max distance; rows where every load is past it
+// are left out
+function h2hDownrange(picked){
+  const base=picked.map(([c])=>c).reduce((a,c)=>c.step_yd>a.step_yd||(c.step_yd===a.step_yd&&c.max_distance>a.max_distance)?c:a),out=[];
   for(let n=0;n<6;n++){
-    const yd=Math.min(n*cat.step_yd,cat.max_distance);if(out.length&&yd===out[out.length-1][0])break;
-    out.push([yd,items.map(it=>{const v=velocityAt(it.muzzle_fps,it.bc_g1,yd);return [v,energy(it.bullet_gr,v)];})]);
+    const yd=Math.min(n*base.step_yd,base.max_distance);if(out.length&&yd===out[out.length-1][0])break;
+    const cells=picked.map(([ic,it])=>{if(yd>ic.max_distance)return null;const v=velocityAt(it.muzzle_fps,it.bc_g1,yd);return [v,energy(it.bullet_gr,v)];});
+    if(cells.some(Boolean))out.push([yd,cells]);
   }
   return out;
 }
+// how far behind the leader: "+45%", or "35x" once it is ten times or more (h2h_gap)
+const h2hGap=gap=>{const t=1+gap/100;return t>=10?Math.round(t).toLocaleString("en-US")+"x":(gap>=0?"+":"−")+Math.abs(gap).toFixed(0)+"%";};
 const fmt0=v=>Math.round(v).toLocaleString("en-US");
 const h2hValue=(k,v)=>({velocity:`${fmt0(v)} fps`,energy:`${fmt0(v)} ft-lbs`,recoil:`${v.toFixed(1)} ft-lbs`,cost:`$${v.toFixed(2)}`,taylor:v.toFixed(1),hits:`${v.toFixed(0)} (${hitsClass(v)})`})[k];
-function openH2H(cat,pane){
-  syncHand(cat);
-  const groups=new Map([...groupBy(state.detail[cat.title],true)].filter(([,v])=>v.length)),carts=[...groups.keys()];
-  const choice=(c,key)=>(groups.get(c)||[]).find(x=>(x.hid||x.label)===key);
-  const sh=shared[cat.title]||{},prices=readPrices();
-  const priceOf=it=>{const v=prices[priceKey(cat,it)];return typeof v==="number"?v:it.default_cost;};
-  const H={weightsOpen:false};
-  // slots: [{cart, key}] where key is the load's handload id or label
-  let slots=(H2H[cat.title]||[]).map(k=>{const i=k.indexOf("|");return {cart:k.slice(0,i),key:k.slice(i+1)};}).filter(s=>choice(s.cart,s.key)).slice(0,H2H_MAX);
-  const blank=()=>({cart:slots.length?slots[slots.length-1].cart:(sh.cart&&groups.has(sh.cart)?sh.cart:""),key:""});
+const H2HS={};   // what Head to Head had on screen when you left it (distance, gun)
+function openH2H(pane){
+  // every category's loads, the one last opened in the Load Dictionary first: "title|cartridge" -> loads
+  const lc=lastCat(),first=CATEGORIES.find(c=>c.title===lc&&hasDetail(c))||CATEGORIES.find(hasDetail);
+  const cats=[first].concat(DATA.categories.filter(c=>c.title!==first.title&&hasDetail(c))),byTitle={},carts={},groups=new Map();
+  for(const c of cats){
+    syncHand(c);byTitle[c.title]=c;
+    carts[c.title]=[...groupBy(state.detail[c.title],true)].filter(([,v])=>v.length).map(([k,v])=>{groups.set(c.title+"|"+k,v);return k;});
+  }
+  const choice=(t,c,key)=>(groups.get(t+"|"+c)||[]).find(x=>(x.hid||x.label)===key);
+  const sh=shared[first.title]||{},prices=readPrices();
+  const priceOf=(ic,it)=>{const v=prices[priceKey(ic,it)];return typeof v==="number"?v:it.default_cost;};
+  const H={};
+  // slots: [{cat, cart, key}]: category title, cartridge, and the load's handload id or label
+  let slots=H2H.map(k=>{const p=k.split("|");return {cat:p[0],cart:p[1],key:p.slice(2).join("|")};}).filter(s=>choice(s.cat,s.cart,s.key)).slice(0,H2H_MAX);
+  const blank=()=>{const l=slots[slots.length-1];return l?{cat:l.cat,cart:l.cart,key:""}:{cat:first.title,cart:sh.cart&&groups.has(first.title+"|"+sh.cart)?sh.cart:"",key:""};};
   while(slots.length<H2H_MIN)slots.push(blank());
   pane.innerHTML=`<div class="card">
-    <label class="l">LOADS TO COMPARE</label><div class="slots" id="hs"></div>
+    <label class="l">LOADS TO COMPARE · ANY CATEGORY</label><div class="slots" id="hs"></div>
     <button class="link" id="hadd2">+&nbsp; Add a load (up to ${H2H_MAX})</button>
     <div class="nums" style="grid-template-columns:1fr 1fr">
       <div><label class="l">DISTANCE (YD)</label><input id="hd" inputmode="decimal"></div>
-      <div><label class="l">${esc(cat.gun_label)}</label><input id="hg" inputmode="decimal"></div>
+      <div><label class="l">GUN WEIGHT (LB)</label><input id="hg" inputmode="decimal" placeholder="Usual for each"></div>
     </div>
-    <div class="links"><button class="link m" id="hwt">▸&nbsp; Scoring weights</button></div>
-    <div class="weights hidden" id="hwb"><div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="hw_${k}" inputmode="numeric"></div>`).join("")}</div>
-      <div class="help">Higher = matters more. 0 ignores that factor.</div></div>
   </div>
   <div id="hres"></div><div class="note" id="hnote"></div>`;
   const $$=s=>$(s,pane);
-  $$("#hd").value=sh.dist!=null?sh.dist:g(cat.default_distance);
-  $$("#hg").value=sh.gun!=null?sh.gun:g(cat.default_gun_lb);
-  MKEYS.forEach((k,i)=>$$("#hw_"+k).value=sh.w?sh.w[k]:cat.weights[i]);
-  app._leave=()=>{shared[cat.title]=Object.assign({},shared[cat.title],{dist:$$("#hd").value,gun:$$("#hg").value,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#hw_"+k).value]))});};
-  const picked=()=>{const out=[];for(const s of slots){const it=choice(s.cart,s.key);if(it&&!out.includes(it))out.push(it);}return out;};
-  const save=()=>{H2H[cat.title]=picked().map(pickKey);};
+  $$("#hd").value=H2HS.dist!=null?H2HS.dist:g(H2H_DISTANCE);
+  $$("#hg").value=H2HS.gun!=null?H2HS.gun:"";   // blank: each cartridge's typical gun
+  app._leave=()=>{H2HS.dist=$$("#hd").value;H2HS.gun=$$("#hg").value;};
+  const picked=()=>{const out=[];for(const s of slots){const it=choice(s.cat,s.cart,s.key);if(it&&!out.some(([,x])=>x===it))out.push([byTitle[s.cat],it]);}return out;};
+  const save=()=>{H2H.splice(0,H2H.length,...picked().map(([c,it])=>pickKey(c,it)));};
   // the load box is a search (issue #24): every typed word must be in the name, the list
   // shows the matches, arrows + Enter or a tap pick one; leaving the box keeps the old pick
   const optText=x=>x?x.label+(x.handload?" (handload)":""):"";
@@ -914,13 +946,13 @@ function openH2H(cat,pane){
   }
   function drawSlots(){
     $$("#hs").innerHTML=slots.map((s,i)=>`<div class="slot" data-i="${i}"><span class="n">${i+1}</span>
-      <select class="cs" aria-label="Cartridge ${i+1}"><option value="" disabled ${s.cart?"":"selected"} hidden>Cartridge…</option>${carts.map(c=>`<option value="${esc(c)}" ${c===s.cart?"selected":""}>${esc(c)}</option>`).join("")}</select>
-      <div class="ls lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Load ${i+1}: type to search" placeholder="${s.cart?"Load… type to search":"Pick a cartridge first"}" autocomplete="off" value="${esc(optText(choice(s.cart,s.key)))}"${s.cart?"":" disabled"}><div class="lopts hidden" role="listbox"></div></div>
+      <select class="cs" aria-label="Cartridge ${i+1}"><option value="" disabled ${s.cart?"":"selected"} hidden>Cartridge…</option>${cats.map(c=>`<optgroup label="${esc(c.title)}">${carts[c.title].map(k=>`<option value="${esc(c.title+"|"+k)}" ${c.title===s.cat&&k===s.cart?"selected":""}>${esc(k)}</option>`).join("")}</optgroup>`).join("")}</select>
+      <div class="ls lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Load ${i+1}: type to search" placeholder="${s.cart?"Load… type to search":"Pick a cartridge first"}" autocomplete="off" value="${esc(optText(choice(s.cat,s.cart,s.key)))}"${s.cart?"":" disabled"}><div class="lopts hidden" role="listbox"></div></div>
       <button class="x${slots.length<=H2H_MIN&&!s.key?" gone":""}" aria-label="Remove load ${i+1}">✕</button></div>`).join("");
     $$("#hs").querySelectorAll(".slot").forEach(row=>{
       const s=slots[+row.dataset.i];
-      row.querySelector(".cs").onchange=e=>{s.cart=e.target.value;s.key="";drawSlots();changed();};
-      loadSearch(row.querySelector(".lsearch"),groups.get(s.cart)||[],s.key,k=>{s.key=k;drawSlots();changed();});
+      row.querySelector(".cs").onchange=e=>{const v=e.target.value,i=v.indexOf("|");s.cat=v.slice(0,i);s.cart=v.slice(i+1);s.key="";drawSlots();changed();};
+      loadSearch(row.querySelector(".lsearch"),groups.get(s.cat+"|"+s.cart)||[],s.key,k=>{s.key=k;drawSlots();changed();});
       // ✕ removes the row; with only the 2 rows left it clears the load instead (issue #16)
       row.querySelector(".x").onclick=()=>{if(slots.length<=H2H_MIN)s.key="";else slots.splice(slots.indexOf(s),1);drawSlots();changed();};
     });
@@ -933,62 +965,62 @@ function openH2H(cat,pane){
     const name=r=>`<div class="mname${r.it.handload?" hl":""}">${esc(r.it.label)}${r.it.handload?" (handload)":""}</div>`;
     let h=`<div class="h2hm">`+rows.map(r=>`<div class="mload${r.it.handload?" hl":""}"><div class="mi">
       <small>${esc(r.it.cartridge)}</small><b>${esc(r.it.label)}</b>${r.it.handload?' <span class="chip">Handload</span>':""}
-      <div class="mf">${esc([payload(r.it),cat.grain_style&&r.it.barrel_in?g(r.it.barrel_in)+" in barrel":"",r.it.purpose||r.it.group||""].filter(Boolean).join(" · "))}</div>
-      <div class="mf">Rank #${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads · <span class="${r.best.size===most&&most?"best":""}">best in ${r.best.size} of ${keys.length}</span></div></div>
+      <div class="mf">${esc([payload(r),r.cat.grain_style&&r.it.barrel_in?g(r.it.barrel_in)+" in barrel":"",r.it.purpose||r.it.group||""].filter(Boolean).join(" · "))}</div>
+      <div class="mf">Rank #${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads · <span class="${r.best.size===most&&most?"best":""}">best in ${r.best.size} of ${r.keys.length}</span></div></div>
       ${GRADES?`<div class="mo">${badge(r.grade,true)}<span>${r.overall.toFixed(0)}</span></div>`:""}</div>`).join("");
     const bar=(w,b)=>`<div class="mbar"><i class="${b?"b":""}" style="width:${Math.max(3,Math.min(100,100*w)).toFixed(1)}%"></i></div>`;
     for(const k of keys){
-      const hi=METRICS[k][1],vals=rows.map(r=>r.st[k]),top=Math.max(...vals),low=Math.min(...vals);
+      const hi=METRICS[k][1],vals=rows.filter(r=>r.keys.includes(k)).map(r=>r.st[k]),top=Math.max(...vals),low=Math.min(...vals);
       h+=`<div class="mcard"><div class="mt">${METRICS[k][0]}${k==="velocity"||k==="energy"?` <small>at ${g(dist)} yd</small>`:""}<small class="hint">${hi?"higher is better":"lower is better"}</small></div>`+
-        rows.map(r=>{const b=r.best.has(k),v=r.st[k],w=hi?(top>0?v/top:0):(v>0?low/v:1);
-          return `<div class="mrow">${name(r)}<span class="mv${b?" best":""}">${h2hValue(k,v)}</span><span class="mg${b?" best":""}">${b?"best":(r.gap[k]>=0?"+":"−")+Math.abs(r.gap[k]).toFixed(0)+"%"}</span>${GRADES?badge(gradeRel(r.sc[k])):"<span></span>"}${bar(w,b)}</div>`;}).join("")+`</div>`;
+        rows.map(r=>{if(!r.keys.includes(k))return `<div class="mrow">${name(r)}<span class="mv">—</span><span class="mg">does not apply</span><span></span></div>`;
+          const b=r.best.has(k),v=r.st[k],w=hi?(top>0?v/top:0):(v>0?low/v:1),at=(k==="velocity"||k==="energy")&&r.dist!==dist?` at ${g(r.dist)} yd`:"";
+          return `<div class="mrow">${name(r)}<span class="mv${b?" best":""}">${h2hValue(k,v)}</span><span class="mg${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?badge(gradeRel(r.sc[k])):"<span></span>"}${bar(w,b)}</div>`;}).join("")+`</div>`;
     }
     // downrange: pick a distance, then the same bubble rows with names
-    const dr=h2hDownrange(cat,rows.map(r=>r.it));
+    const dr=h2hDownrange(rows.map(r=>[r.cat,r.it]));
     if(H.drYd==null||!dr.some(([yd])=>yd===H.drYd))H.drYd=dr[Math.min(dr.length-1,2)][0];
-    const at=dr.find(([yd])=>yd===H.drYd)[1],eTop=Math.max(...at.map(c=>c[1]));
+    const at=dr.find(([yd])=>yd===H.drYd)[1],eTop=Math.max(...at.filter(Boolean).map(c=>c[1]));
     h+=`<div class="mcard"><div class="mt">Downrange<small class="hint">velocity · energy</small></div>
       <div class="chips mdr" role="group" aria-label="Distance">${dr.map(([yd])=>`<button data-yd="${yd}" class="${yd===H.drYd?"on":""}">${g(yd)} yd</button>`).join("")}</div>`+
-      rows.map((r,i)=>{const [v,e]=at[i],b=e>=eTop-1e-9;
+      rows.map((r,i)=>{if(!at[i])return `<div class="mrow">${name(r)}<span class="mv">—</span><span class="mg">past its range</span><span></span></div>`;
+        const [v,e]=at[i],b=e>=eTop-1e-9;
         return `<div class="mrow">${name(r)}<span class="mv${b?" best":""}">${fmt0(v)} fps</span><span class="mg${b?" best":""}">${fmt0(e)} ft-lbs</span><span></span>${bar(eTop>0?e/eTop:0,b)}</div>`;}).join("")+`</div>`;
     return h+`</div>`;
   }
   function render(){
     const box=$$("#hres");
-    const dist=parseFloat($$("#hd").value),gun=parseFloat($$("#hg").value),weights={};let bad=false;
-    for(const k of MKEYS){const v=parseFloat($$("#hw_"+k).value);if(isNaN(v)||v<0||v>10)bad=true;weights[k]=v;}
-    $$("#hnote").textContent=(GRADES?`Each grade is the load's Load Dictionary grade: against every load of its own cartridge${cat.grain_style?"":" and load type"}, not against the others here. `:"")+"The best figure in each row is highlighted; the % shows how far the others are behind it. Prices are estimates: set your own in the Load Dictionary.";
-    if(isNaN(dist)||dist<0||dist>cat.max_distance||isNaN(gun)||gun<.5||gun>30||bad){box.innerHTML=`<div class="cnt">Enter a distance (0–${g(cat.max_distance)}), gun weight (0.5–30) and weights (0–10) to see results.</div>`;return;}
-    const pk=picked();
+    const gs=$$("#hg").value.trim(),dist=parseFloat($$("#hd").value),gun=gs?parseFloat(gs):null;
+    const pk=picked(),far=pk.length?Math.max(...pk.map(([c])=>c.max_distance)):H2H_DISTANCE;
+    $$("#hnote").textContent=(GRADES?"Each grade is the load's Load Dictionary grade: against every load of its own cartridge (shotshells: and load type), with its category's scoring weights from the Load Dictionary, not against the others here. ":"")+"The best figure in each row is highlighted; the % shows how far the others are behind it. Prices are estimates: set your own in the Load Dictionary.";
+    if(isNaN(dist)||dist<0||dist>far||(gun!=null&&(isNaN(gun)||gun<.5||gun>GUN_MAX))){box.innerHTML=`<div class="cnt">Enter a distance (0–${g(far)}) and a gun weight (0.5–${g(GUN_MAX)}, or blank) to see results.</div>`;return;}
     if(pk.length<H2H_MIN){box.innerHTML=`<div class="cnt">Pick at least ${H2H_MIN} loads to put them head to head.</div>`;return;}
-    const rows=h2hRows(cat,pk,dist,gun,weights,priceOf,groups),keys=keysOf(cat);
+    const rows=h2hRows(pk,dist,gun,dictWeights,priceOf,groups),rcats=[...new Set(rows.map(r=>r.cat))],keys=h2hKeys(rcats);
     const badge=(gr,big)=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}${big?";margin-left:0;font-size:.95rem;padding:3px 8px":""}">${gr}</span>`;
     const line=(name,cells,cls)=>`<tr${cls?` class="${cls}"`:""}><td>${name}</td>${cells.map(c=>`<td class="c">${c}</td>`).join("")}</tr>`;
-    const payload=it=>cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
+    const payload=r=>r.cat.show_oz?`${r.it.bullet_gr.toFixed(0)} gr (${(r.it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(r.it.bullet_gr)} gr`;
     const most=Math.max(...rows.map(r=>r.best.size));
     let h=`<div class="h2hw"><div class="h2h"><table><thead><tr><th></th>${rows.map(r=>`<th class="${r.it.handload?"hl":""}"><small>${esc(r.it.cartridge)}</small>${esc(r.it.label)}${r.it.handload?" <small>handload</small>":""}</th>`).join("")}</tr></thead><tbody>`;
     if(GRADES)h+=line("Overall",rows.map(r=>`${badge(r.grade,true)} <span class="v" style="margin-left:6px">${r.overall.toFixed(0)}</span>`));
     h+=line("Rank in its cartridge",rows.map(r=>`#${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads`),"sep");
-    h+=line(esc(cat.payload_row),rows.map(r=>payload(r.it)));
-    if(cat.grain_style)h+=line("Test barrel",rows.map(r=>r.it.barrel_in?g(r.it.barrel_in)+" in":"not listed"));
+    h+=line(new Set(rcats.map(c=>c.payload_row)).size===1?esc(rcats[0].payload_row):"Bullet / payload",rows.map(payload));
+    if(rcats.some(c=>c.grain_style))h+=line("Test barrel",rows.map(r=>!r.cat.grain_style?"—":r.it.barrel_in?g(r.it.barrel_in)+" in":"not listed"));
     h+=line("Purpose",rows.map(r=>esc(r.it.purpose||r.it.group||"—")));
     for(const k of keys){
-      h+=line(METRICS[k][0]+(k==="velocity"||k==="energy"?` at ${g(dist)} yd`:""),rows.map(r=>{const b=r.best.has(k);
-        return `<span class="v${b?" best":""}">${h2hValue(k,r.st[k])}</span><span class="gap${b?" best":""}">${b?"best":(r.gap[k]>=0?"+":"−")+Math.abs(r.gap[k]).toFixed(0)+"%"}</span>${GRADES?badge(gradeRel(r.sc[k])):""}`;}));
+      h+=line(METRICS[k][0]+(k==="velocity"||k==="energy"?` at ${g(dist)} yd`:""),rows.map(r=>{if(!r.keys.includes(k))return `<span class="gap">—</span>`;const b=r.best.has(k),at=(k==="velocity"||k==="energy")&&r.dist!==dist?` at ${g(r.dist)} yd`:"";
+        return `<span class="v${b?" best":""}">${h2hValue(k,r.st[k])}</span><span class="gap${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?badge(gradeRel(r.sc[k])):""}`;}));
     }
-    h+=line("Best in",rows.map(r=>`<span class="${r.best.size===most&&most?"v best":""}">${r.best.size} of ${keys.length}</span>`));
+    h+=line("Best in",rows.map(r=>`<span class="${r.best.size===most&&most?"v best":""}">${r.best.size} of ${r.keys.length}</span>`));
     h+=`</tbody></table></div><div class="sect">DOWNRANGE · velocity (fps) and energy (ft-lbs)</div><div class="h2h"><table><thead><tr><th>Yards</th>${rows.map(r=>`<th style="font-size:.8rem;color:var(--muted)">${esc(r.it.label)}</th>`).join("")}</tr></thead><tbody>`;
-    for(const [yd,cells] of h2hDownrange(cat,pk)){
-      const top=Math.max(...cells.map(c=>c[1]));
-      h+=`<tr><td>${g(yd)}</td>${cells.map(([v,e])=>`<td class="c${e>=top-1e-9?" v best":""}">${fmt0(v)} · ${fmt0(e)}</td>`).join("")}</tr>`;
+    for(const [yd,cells] of h2hDownrange(rows.map(r=>[r.cat,r.it]))){
+      const top=Math.max(...cells.filter(Boolean).map(c=>c[1]));
+      h+=`<tr><td>${g(yd)}</td>${cells.map(c=>!c?`<td class="c">—</td>`:`<td class="c${c[1]>=top-1e-9?" v best":""}">${fmt0(c[0])} · ${fmt0(c[1])}</td>`).join("")}</tr>`;
     }
     box.innerHTML=h+`</tbody></table></div></div>`+phoneView(rows,dist,keys,most,badge,payload);
     box.querySelectorAll("[data-yd]").forEach(c=>c.onclick=()=>{H.drYd=+c.dataset.yd;render();});
   }
   drawSlots();save();
   $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push(blank());drawSlots();const r=$$("#hs").lastElementChild;r.querySelector(r.querySelector(".cs").value?".ls":".cs").focus();};
-  ["#hd","#hg"].concat(MKEYS.map(k=>"#hw_"+k)).forEach(id=>$$(id).addEventListener("input",render));
-  $$("#hwt").onclick=()=>{H.weightsOpen=!H.weightsOpen;$$("#hwb").classList.toggle("hidden",!H.weightsOpen);$$("#hwt").innerHTML=(H.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";};
+  ["#hd","#hg"].forEach(id=>$$(id).addEventListener("input",render));
   render();
 }
 
@@ -1005,7 +1037,7 @@ function modal(inner){
 $("#ver").textContent=VERSION_TEXT;
 navigate("home");
 // Android back button (Capacitor App plugin): close a dialog, then step back up the menus
-// (category -> category list -> Home); only Home closes the app
+// (category -> category list -> Home; Head to Head -> Home); only Home closes the app
 (function(){
   const AppPlugin=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
   if(!AppPlugin||!AppPlugin.addListener)return;
