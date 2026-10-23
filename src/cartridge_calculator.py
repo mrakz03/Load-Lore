@@ -1881,8 +1881,8 @@ class LoadsView:
         # the brand / load filter sits right above the list it filters (issue #26)
         above = tk.Frame(tbl, bg=BG)
         above.grid(row=0, column=0, sticky="ew", pady=(0, 6))
-        a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).pack(side="left", padx=(0, 8))
         ttk.Entry(above, textvariable=self.filter_var, font=a.f(12), width=22).pack(side="left")
+        a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).pack(side="left", padx=(8, 0))
         self.count_lbl = a.label(above, "Choose a cartridge to see how every brand's load compares.",
                                  10, MUTED, bg=BG, anchor="e")
         self.count_lbl.pack(side="right", padx=(16, 0))
