@@ -38,7 +38,7 @@ Pick a category, then a cartridge, and every load for it is listed and ranked.
 - **Scoring weights.** Decide how much each factor counts (0 ignores it). The defaults are 3 for everything except recoil (1); rimfire weighs cost double, and shotguns skip Taylor KO and HITS.
 
 ### Head to Head
-Pick 2 to 5 loads from any cartridges in one category, for example a .308 Winchester load against a 6.5 Creedmoor load, or add them from the Load Dictionary. To find a load quickly, type in its load box: every word you type has to appear in the name (for example `hornady 55` or `federal match`), then pick from the matches with a click or tap, or the arrow keys and Enter. You see:
+Pick 2 to 5 loads from any cartridges, for example a .308 Winchester load against a 6.5 Creedmoor load, or add them from the Load Dictionary. Loads can come from different categories too (a 12 gauge slug against a .50 BMG): on the desktop each row has a category box, on a phone the cartridge menu is grouped by category. A factor that doesn't apply to a load (shotguns have no Taylor KO or HITS) shows a dash, and a load from another category keeps the grade its own Load Dictionary gives it. To find a load quickly, type in its load box: every word you type has to appear in the name (for example `hornady 55` or `federal match`), then pick from the matches with a click or tap, or the arrow keys and Enter. You see:
 
 - every figure side by side, with the best one highlighted and how far behind the others are, in %;
 - how many factors each load wins;

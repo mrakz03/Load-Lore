@@ -17,7 +17,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Two tools (Oct 2026; Compare Cartridges and "Add your own caliber" were removed): Load
   Dictionary (LoadsView / openLoads, the old Compare Loads, plus an S-F grades on/off switch kept
   in settings.json show_grades / localStorage) and Head to Head (HeadToHeadView / openH2H, 2-5
-  loads of one category side by side, picks in App.h2h / H2H, in memory only). Phones (<=600 px)
+  loads side by side, from any category (Oct 2026): picks are (category, load) pairs, pick_key /
+  pickKey include the category title, in App.h2h / H2H per page category, in memory only; a load
+  from another category is graded with that category's default weights, factors it lacks show "—"). Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
   always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
   LoadSearch / loadSearch, every typed word must be in the name). The dictionary's brand / load
