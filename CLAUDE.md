@@ -31,7 +31,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
   LoadSearch / searchBox, every typed word must be in the name); so are the cartridge boxes
   (Oct 2026): the dictionary's searches its category, Head to Head's searches every category
-  (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings). The dictionary's brand / load
+  (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings).
+  Head to Head has no category box (Oct 2026): the cartridge box picks it; the desktop menu lists
+  every category's cartridges under "──  Category  ──" headings (cart_menu). The dictionary's brand / load
   filter sits right above the list (issue #26). Beside it, for cartridges that have +P / +P+ loads, a check box each
   (pressure_of / pressureOf reads the load name; Train+Protect and +Peak aren't +P) hides those
   loads from the list without changing any grade; ticked by default, kept per category while the
