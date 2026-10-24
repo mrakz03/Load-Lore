@@ -10,8 +10,8 @@ Hornady,V-MAX,0.224,55,0.255,Varmint
 Hornady,V-MAX,0.224,60,0.290,Varmint
 Hornady,BTHP Match,0.224,68,0.355,Match
 Hornady,ELD Match,0.224,73,0.398,Match
-Hornady,ELD Match,0.224,75,0.435,Match
-Hornady,ELD Match,0.224,80,0.455,Match
+Hornady,ELD Match,0.224,75,0.467,Match
+Hornady,ELD Match,0.224,80,0.485,Match
 Hornady,FMJ-BT,0.224,55,0.243,Target
 Sierra,BlitzKing,0.224,40,0.185,Varmint
 Sierra,BlitzKing,0.224,50,0.222,Varmint
@@ -29,7 +29,7 @@ Barnes,TSX,0.224,62,0.298,Hunting
 Berger,Match VLD Target,0.224,80,0.456,Match
 Hornady,SST,0.243,95,0.379,Hunting
 Hornady,SST,0.243,100,0.405,Hunting
-Hornady,ELD Match,0.243,103,0.512,Match
+Hornady,ELD-X,0.243,103,0.512,Hunting
 Hornady,ELD Match,0.243,108,0.536,Match
 Hornady,V-MAX,0.243,58,0.185,Varmint
 Hornady,V-MAX,0.243,75,0.330,Varmint
@@ -39,11 +39,11 @@ Sierra,GameKing,0.243,100,0.430,Hunting
 Nosler,Ballistic Tip,0.243,95,0.379,Hunting
 Nosler,Partition,0.243,100,0.384,Hunting
 Berger,Hybrid Target,0.243,105,0.536,Match
-Hornady,ELD Match,0.264,120,0.458,Match
-Hornady,ELD Match,0.264,130,0.560,Match
+Hornady,ELD Match,0.264,120,0.486,Match
+Hornady,ELD Match,0.264,130,0.554,Match
 Hornady,ELD Match,0.264,140,0.646,Match
-Hornady,ELD-X,0.264,143,0.625,Hunting
-Hornady,ELD-X,0.264,147,0.697,Hunting
+Hornady,ELD-X,0.264,143,0.623,Hunting
+Hornady,ELD Match,0.264,147,0.697,Match
 Hornady,SST,0.264,129,0.485,Hunting
 Hornady,InterLock,0.264,140,0.490,Hunting
 Sierra,MatchKing,0.264,123,0.510,Match
@@ -59,7 +59,6 @@ Barnes,TTSX,0.264,120,0.395,Hunting
 Hornady,InterLock,0.277,130,0.409,Hunting
 Hornady,SST,0.277,130,0.447,Hunting
 Hornady,ELD-X,0.277,145,0.536,Hunting
-Hornady,ELD-X,0.277,162,0.631,Hunting
 Sierra,GameKing,0.277,140,0.486,Hunting
 Sierra,GameKing,0.277,150,0.547,Hunting
 Sierra,MatchKing,0.277,135,0.480,Match
@@ -68,9 +67,9 @@ Nosler,Partition,0.277,150,0.465,Hunting
 Barnes,TTSX,0.277,130,0.395,Hunting
 Hornady,SST,0.284,139,0.486,Hunting
 Hornady,SST,0.284,150,0.526,Hunting
-Hornady,ELD-X,0.284,162,0.625,Hunting
+Hornady,ELD-X,0.284,162,0.631,Hunting
 Hornady,ELD-X,0.284,175,0.689,Hunting
-Hornady,ELD Match,0.284,180,0.724,Match
+Hornady,ELD Match,0.284,180,0.777,Match
 Hornady,InterLock,0.284,154,0.433,Hunting
 Sierra,MatchKing,0.284,168,0.617,Match
 Sierra,MatchKing,0.284,175,0.696,Match
@@ -86,7 +85,7 @@ Hornady,SST,0.308,150,0.415,Hunting
 Hornady,SST,0.308,165,0.447,Hunting
 Hornady,SST,0.308,180,0.478,Hunting
 Hornady,ELD-X,0.308,178,0.552,Hunting
-Hornady,ELD-X,0.308,200,0.626,Hunting
+Hornady,ELD-X,0.308,200,0.597,Hunting
 Hornady,ELD Match,0.308,168,0.523,Match
 Hornady,ELD Match,0.308,178,0.547,Match
 Hornady,BTHP Match,0.308,168,0.447,Match
@@ -100,7 +99,7 @@ Sierra,GameKing,0.308,150,0.435,Hunting
 Sierra,GameKing,0.308,165,0.477,Hunting
 Sierra,GameKing,0.308,180,0.530,Hunting
 Sierra,Pro-Hunter,0.308,180,0.384,Hunting
-Nosler,Ballistic Tip,0.308,150,0.387,Hunting
+Nosler,Ballistic Tip,0.308,150,0.435,Hunting
 Nosler,Ballistic Tip,0.308,165,0.475,Hunting
 Nosler,AccuBond,0.308,180,0.507,Hunting
 Nosler,Partition,0.308,180,0.474,Hunting
@@ -115,7 +114,7 @@ Barnes,TTSX,0.308,168,0.470,Hunting
 Barnes,TSX,0.308,180,0.472,Hunting
 Swift,Scirocco II,0.308,180,0.528,Hunting
 Hornady,SST,0.338,225,0.454,Hunting
-Hornady,ELD-X,0.338,230,0.590,Hunting
+Hornady,ELD-X,0.338,230,0.616,Hunting
 Hornady,ELD Match,0.338,285,0.829,Match
 Sierra,MatchKing,0.338,250,0.675,Match
 Sierra,GameKing,0.338,250,0.557,Hunting

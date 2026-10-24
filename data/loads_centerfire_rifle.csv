@@ -420,7 +420,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 6.5 Creedmoor,Sellier & Bellot HPBT Match,142,2625,0.611,38.5,1.99,,partial,,24,Match
 6.5 Creedmoor,Federal Premium Big Game ELD-X,143,2700,0.625,41,2.92,,catalog,,24,Hunting
 6.5 Creedmoor,Hornady Precision Hunter ELD-X,143,2700,0.632,41,2.92,,catalog,,24,Match
-6.5 Creedmoor,Black Hills Gold Hornady ELD-X,143,2700,0.625,41.0,2.15,,partial,,22,Hunting
+6.5 Creedmoor,Black Hills Gold Hornady ELD-X,143,2700,0.623,41.0,2.15,,partial,,22,Hunting
 6.5 Creedmoor,Hornady Match ELD Match,147,2695,0.711,42,2.34,,catalog,,24,Match
 6.5 Creedmoor,Black Hills Gold Hornady ELD Match,147,2700,0.711,42.2,2.57,,partial,,22,Match
 6.5 Creedmoor,Federal +Peak Fusion Tipped,155,2900,0.590,51.3,2.24,,partial,,24,Hunting
@@ -462,7 +462,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 6.5 PRC,Winchester Expedition Big Game Long Range Accubond LR,142,3020,0.625,55.5,3.90,,catalog,,24,Hunting
 6.5 PRC,Federal Premium Big Game ELD-X,143,2900,0.625,51.5,3.90,,catalog,,24,Hunting
 6.5 PRC,Hornady Precision Hunter ELD-X,143,2960,0.633,53.7,3.90,yes,catalog,,24,Match
-6.5 PRC,Black Hills Gold Hornady ELD-X,143,2900,0.625,51.5,3.29,,partial,,24,Hunting
+6.5 PRC,Black Hills Gold Hornady ELD-X,143,2900,0.623,51.5,3.29,,partial,,24,Hunting
 6.5 PRC,Hornady Match ELD Match,147,2910,0.709,53.3,3.12,,catalog,,24,Match
 6.5x55mm Swedish,Sellier & Bellot eXergy Blue TXRG,120,2831,0.418,35.6,2.36,,partial,,24,Hunting
 6.5x55mm Swedish,Sellier & Bellot eXergy Edge,120,2936,0.418,38.3,2.36,,partial,,24,Hunting
@@ -1014,7 +1014,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .300 Winchester Magnum,Federal Premium Big Game ELD-X,200,2860,0.597,79.3,3.90,,catalog,,24,Hunting
 .300 Winchester Magnum,Federal Premium Big Game Terminal Ascent,200,2810,0.608,76.5,3.90,,catalog,,24,Hunting
 .300 Winchester Magnum,Hornady Precision Hunter ELD-X,200,2860,0.613,79.3,3.90,yes,catalog,,24,Match
-.300 Winchester Magnum,Black Hills Gold Hornady ELD-X,200,2800,0.626,76.0,4.04,,partial,,24,Hunting
+.300 Winchester Magnum,Black Hills Gold Hornady ELD-X,200,2800,0.597,76.0,4.04,,partial,,24,Hunting
 .300 Winchester Magnum,Nosler Trophy Grade Partition,200,2750,0.481,73.3,6.05,,partial,,24,Hunting
 .300 Winchester Magnum,Federal Premium Gold Medal Berger Hybrid,215,2825,0.691,83.2,3.90,,catalog,,24,Match
 .300 Winchester Magnum,Sellier & Bellot HPBT Match,220,2713,0.671,78.5,3.31,,partial,,24,Match

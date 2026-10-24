@@ -155,6 +155,12 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   Hornady's Frontier line is in under "Hornady Frontier ..." (same ballistics as some Hornady loads).
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
+- Data check (Oct 24 2026): bullets.csv Hornady ELD Match / ELD-X BCs set to hornady.com/bc (G1 at
+  Mach 2.25; 6.5 147 gr is ELD Match, 6mm 103 gr is ELD-X, there is no .277 162 ELD-X), Nosler 30 cal
+  150 BT 0.435. Slug BCs (were a flat 0.09 / 0.079) taken from the Remington and Winchester catalogs'
+  own BC column, or fitted to Federal's downrange velocities. ELEY .22 LR prices from retail box
+  prices (Lucky Gunner / KY Gun Co, Oct 2026). Prices elsewhere are still brand-tier estimates; some
+  tiers read high against retail (.357 Magnum premium loads $2.47 vs ~$1.40-1.85 retail).
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
