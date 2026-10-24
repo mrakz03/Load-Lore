@@ -3294,6 +3294,16 @@ class HeadToHeadView:
         # the cartridge search covers every category: "6.5 Creedmoor  ·  Rifle" -> (category, cartridge)
         self.cart_names = {f"{cart}  ·  {t}": (t, cart) for t, carts in self.cartridges.items()
                            for cart in carts}
+        # the cartridge menu: every category's cartridges under a "──  Category  ──" heading;
+        # a cartridge in two categories (.44 Magnum) names its category: text -> (category,
+        # cartridge), None for a heading
+        twice = {c for c in (c for carts in self.cartridges.values() for c in carts)
+                 if sum(c in carts for carts in self.cartridges.values()) > 1}
+        self.cart_menu = {}
+        for t, carts in self.cartridges.items():
+            self.cart_menu[f"──  {t}  ──"] = None
+            for cart in carts:
+                self.cart_menu[f"{cart} ({t})" if cart in twice else cart] = (t, cart)
         self.choices = {}                 # (category, cartridge) -> {text in the load menu: Load}
         for key, items in self.groups.items():
             self.choices[key] = {x.label + ("  (handload)" if x.handload else ""): x for x in items}
@@ -3391,12 +3401,8 @@ class HeadToHeadView:
                 slot["cart"].set(last)
         widest = max([16] + [len(c) for carts in self.cartridges.values() for c in carts])
         slot["num"] = a.label(self.slot_box, "", 11, MUTED, True)
-        slot["cat_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cat"], values=list(self.cats),
-                                       state="readonly", font=a.f(11),
-                                       width=self._chars(self.cats))
         slot["cart_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cart"],
-                                        values=self.cartridges.get(slot["cat"].get(), []),
-                                        font=a.f(11), width=widest)
+                                        values=list(self.cart_menu), font=a.f(11), width=widest)
         slot["cart_search"] = LoadSearch(a, slot["cart_box"], list(self.cart_names),
                                          lambda n, s=slot: self._on_cart_search(s, n),
                                          value=lambda n: self.cart_names[n][1])
@@ -3409,8 +3415,7 @@ class HeadToHeadView:
         slot["gun"].trace_add("write", self._schedule)
         slot["x"] = tk.Label(self.slot_box, text="✕", bg=SURFACE, fg=MUTED, font=a.f(12, True),
                              padx=10, pady=2, cursor="hand2")
-        slot["cat_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cat(s))
-        slot["cart_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cart(s))
+        slot["cart_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cart_menu(s))
         slot["load_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_load(s))
         slot["x"].bind("<Button-1>", lambda e, s=slot: self._remove_slot(s))
         slot["x"].bind("<Enter>", lambda e, s=slot: s["x"].config(fg=TEXT, bg=SURFACE_2))
@@ -3421,19 +3426,13 @@ class HeadToHeadView:
         if focus:
             slot["load_box" if slot["cart"].get() else "cart_box"].focus_set()
 
-    def _chars(self, texts):
-        """A box width in average characters (what ttk counts) that just fits the longest
-        text: names are mostly narrower letters than the "0" ttk measures by."""
-        f = tkfont.Font(font=self.app.f(11))
-        return math.ceil(max(f.measure(t) for t in texts) / f.measure("0")) + 1
-
     def _fill_loads(self, slot):
-        # the cartridge search: any category's cartridge can be typed; with nothing typed,
-        # Down lists this row's category
+        # the cartridge search: any category's cartridge can be typed (the row's category
+        # first, for a cartridge in two); with nothing typed, Down lists them all
         t = slot["cat"].get()
         cs = slot["cart_search"]
-        cs.valid = self.cartridges.get(t, [])
-        cs.browse = [n for n, (ct, _) in self.cart_names.items() if ct == t]
+        cs.valid = [c for _, c in self.cart_names.values()]
+        cs.browse = sorted(self.cart_names, key=lambda n: self.cart_names[n][0] != t)
         cs.last = slot["cart"].get()
         names = list(self.choices.get((slot["cat"].get(), slot["cart"].get()), {}))
         slot["load_box"].config(values=names, width=max([40] + [min(len(n), 64) for n in names]))
@@ -3460,7 +3459,6 @@ class HeadToHeadView:
         for n, slot in enumerate(self.slots, start=1):
             slot["num"].config(text=f"{n}")
             slot["num"].grid(row=n, column=0, sticky="w", padx=(0, 10), pady=3)
-            slot["cat_box"].grid(row=n, column=1, sticky="w", padx=(0, 8), pady=3)
             slot["cart_box"].grid(row=n, column=2, sticky="w", pady=3)
             slot["load_box"].grid(row=n, column=3, sticky="ew", padx=(8, 0), pady=3)
             if self.gun_open:
@@ -3478,22 +3476,20 @@ class HeadToHeadView:
         else:
             self.add_link.grid()
 
-    def _on_cat(self, slot):
-        """Another category: its cartridges go in the cartridge menu."""
-        slot["cart_box"].config(values=self.cartridges.get(slot["cat"].get(), []))
-        slot["cart"].set("")
-        slot["load"].set("")
-        slot["gun"].set("")
-        self._fill_loads(slot)
-        self._layout_slots()
-        slot["cart_box"].focus_set()
-        self._changed()
+    def _on_cart_menu(self, slot):
+        """A cartridge was picked from the menu; a category heading picks nothing."""
+        pick = self.cart_menu.get(slot["cart"].get())
+        if pick is None:
+            slot["cart"].set(slot["cart_search"].last)
+            return
+        slot["cat"].set(pick[0])
+        slot["cart"].set(pick[1])
+        self._on_cart(slot)
 
     def _on_cart_search(self, slot, name):
         """A cartridge was picked from the search list, maybe from another category."""
         t, cart = self.cart_names[name]
         slot["cat"].set(t)
-        slot["cart_box"].config(values=self.cartridges.get(t, []))
         slot["cart"].set(cart)
         self._on_cart(slot)
 
@@ -3514,7 +3510,7 @@ class HeadToHeadView:
             return
         slot["search"].close()
         slot["cart_search"].close()
-        for key in ("num", "cat_box", "cart_box", "load_box", "gun_box", "x"):
+        for key in ("num", "cart_box", "load_box", "gun_box", "x"):
             slot[key].destroy()
         self.slots.remove(slot)
         while len(self.slots) < H2H_MIN:
