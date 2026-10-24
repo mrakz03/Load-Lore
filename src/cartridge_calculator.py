@@ -1412,8 +1412,14 @@ class App:
         base = self._base_w if cur == self._auto_w else cur
         w = max(base, min(cur + extra, r.winfo_screenwidth() - 20))
         if w != cur:
-            x = max(0, min(r.winfo_x(), r.winfo_screenwidth() - w - 10))
-            r.geometry(f"{w}x{r.winfo_height()}+{x}+{r.winfo_y()}")
+            # Only the size changes. The position Tk reports with winfo_x / winfo_y is the
+            # inside of the window, under the title bar, so passing it back moved the window
+            # down by the title bar's height each time (issue #3). wm_geometry gives the
+            # outer position, which is what setting it expects.
+            m = re.search(r"[+-](-?\d+)[+-](-?\d+)$", r.wm_geometry())
+            fx, fy = (int(m[1]), int(m[2])) if m else (r.winfo_x(), r.winfo_y())
+            x = max(0, min(fx, r.winfo_screenwidth() - w - 10))
+            r.geometry(f"{w}x{r.winfo_height()}" + (f"+{x}+{fy}" if x != fx else ""))
             r.update_idletasks()
         self._base_w, self._auto_w = base, r.winfo_width()
 
@@ -2416,10 +2422,12 @@ class LoadsView:
         self.fit_table_height()
 
     def _apply_grades(self):
-        """Show or hide the S-F grades: the Score / Grade columns and the factor badges."""
+        """Show or hide the S-F grades: the rank (#) / Score / Grade columns and the factor
+        badges. With grades off the list keeps its default order, just without the ranks
+        (issue #4)."""
         on = self.app.show_grades
         self.tree.configure(displaycolumns=[c for c in self.cols
-                                            if on or c not in ("Score", "Grade")])
+                                            if on or c not in ("#", "Score", "Grade")])
         self.footnote.config(text=(
             f"Grades compare loads of the same cartridge with each other (the average scores "
             f"{REL_CENTER:.0f}). " if on else "") + "Prices are estimates: set your own.")
@@ -2690,11 +2698,16 @@ class LoadsView:
         self._render()
 
     def _sort_by(self, col):
+        first = col in (self.cat.payload_col, "Velocity", "Energy", "Taylor", "HITS", "Score")
+        if self.sort["col"] == col and not self.app.show_grades and self.sort["desc"] != first:
+            # grades off hides the # column, so a third click on a heading goes back to the
+            # default order instead
+            self.sort = {"col": "#", "desc": False}
+            return self._render()
         if self.sort["col"] == col:
             self.sort["desc"] = not self.sort["desc"]
         else:
-            self.sort = {"col": col, "desc": col in (self.cat.payload_col, "Velocity", "Energy",
-                                                    "Taylor", "HITS", "Score")}
+            self.sort = {"col": col, "desc": first}
         if col == "#":
             self.sort["desc"] = False
         self._render()
@@ -2803,9 +2816,10 @@ class LoadsView:
         src = SOURCE_NOTES.get(item.source, DEFAULT_SOURCE_NOTE)
         if item.handload and item.info and item.info.get("notes"):
             src = item.info["notes"] + "  " + src
-        overall = f"Overall {row['grade']}  ·  {row['overall']:.0f}  ·  " if self.app.show_grades else ""
-        self.d_note.config(text=f"{overall}Rank #{row['rank']} of {row['peers']}"
-                                f"{' ' + row['group'] + ' loads' if row['group'] else ''}.  {src}")
+        rank = (f"Overall {row['grade']}  ·  {row['overall']:.0f}  ·  Rank #{row['rank']} of "
+                f"{row['peers']}{' ' + row['group'] + ' loads' if row['group'] else ''}.  "
+                if self.app.show_grades else "")
+        self.d_note.config(text=rank + src)
         self._style_h2h()
         self._draw_ballistics()
         self.detail.grid()
@@ -3379,11 +3393,12 @@ class HeadToHeadView:
                 tk.Label(box, text=row["grade"], bg=bg, fg=fg, width=2, font=a.f(13, True)).pack(side="left")
                 a.label(box, f"{row['overall']:.0f}", 12, TEXT, True).pack(side="left", padx=(8, 0))
             r += 1
-        self._cell(card, r, 0, "Rank in its cartridge", 10, MUTED, True)
-        for c, row in enumerate(rows, start=1):
-            peers = f"{row['peers']} {row['group'] + ' ' if row['group'] else ''}loads"
-            self._cell(card, r, c, f"#{row['rank']} of {peers}", 10, TEXT)
-        r += 1
+        if grades:
+            self._cell(card, r, 0, "Rank in its cartridge", 10, MUTED, True)
+            for c, row in enumerate(rows, start=1):
+                peers = f"{row['peers']} {row['group'] + ' ' if row['group'] else ''}loads"
+                self._cell(card, r, c, f"#{row['rank']} of {peers}", 10, TEXT)
+            r += 1
         tk.Frame(card, bg=BORDER, height=1).grid(row=r, column=0, columnspan=n + 1, sticky="ew", pady=4)
         r += 1
         # plain facts (no best / worst)
