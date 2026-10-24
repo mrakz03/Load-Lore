@@ -1688,6 +1688,7 @@ class App:
 
     def show_launcher(self):
         """Home screen: the two things you can do."""
+        self._stash()
         self.mode, self.cat, self.view = "home", None, None
         stage = self._new_stage()
         self.root.title(APP_TITLE)
@@ -3297,8 +3298,10 @@ class HeadToHeadView:
         for key, items in self.groups.items():
             self.choices[key] = {x.label + ("  (handload)" if x.handload else ""): x for x in items}
         self.dist_var = tk.StringVar(value=f"{H2H_DISTANCE:g}")
-        self.gun_var = tk.StringVar(value="")   # blank: each cartridge's typical gun (GUN_LB)
-        self.slots = []                   # [{cat, cart, load: StringVar, widgets...}]
+        # gun weight per load, hidden until opened: while hidden every load is in its
+        # cartridge's typical gun (GUN_LB); a blank box means the same
+        self.gun_open = False
+        self.slots = []                   # [{cat, cart, load, gun: StringVar, widgets...}]
         self._pending = None
         self._build_ui(stage)
         if not hasattr(self, "slot_box"):
@@ -3313,8 +3316,8 @@ class HeadToHeadView:
         self._save_picks()
         if snap:
             self._apply_snap(snap)
-        for var in (self.dist_var, self.gun_var):
-            var.trace_add("write", self._schedule)
+        self.dist_var.trace_add("write", self._schedule)
+        self._layout_slots()
         self.refresh()
 
     # ---- layout ---------------------------------------------------------- #
@@ -3350,14 +3353,14 @@ class HeadToHeadView:
 
         top = tk.Frame(card, bg=SURFACE)
         top.grid(row=3, column=0, sticky="ew", pady=(16, 0), **pad)
-        for i, (text, var) in enumerate((("DISTANCE (YD)", self.dist_var),
-                                         ("GUN WEIGHT (LB)", self.gun_var))):
-            a.label(top, text, 9, MUTED, True).grid(row=0, column=i, sticky="w",
-                                                     padx=(0 if i == 0 else 16, 0))
-            ttk.Entry(top, textvariable=var, font=a.f(12), width=10).grid(
-                row=1, column=i, sticky="w", pady=(4, 0), padx=(0 if i == 0 else 16, 0))
-        a.label(top, "Blank: each load in its cartridge's usual gun", 9, MUTED).grid(
-            row=2, column=1, sticky="w", pady=(4, 0), padx=(16, 0))
+        a.label(top, "DISTANCE (YD)", 9, MUTED, True).grid(row=0, column=0, sticky="w")
+        ttk.Entry(top, textvariable=self.dist_var, font=a.f(12), width=10).grid(
+            row=1, column=0, sticky="w", pady=(4, 0))
+        # opens a gun weight box on each load's row
+        self.gun_link = tk.Label(top, text="", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
+                                 cursor="hand2")
+        self.gun_link.grid(row=1, column=1, sticky="w", padx=(24, 0), pady=(4, 0))
+        self.gun_link.bind("<Button-1>", lambda e: self._toggle_gun())
         self.status = a.label(card, "", 10, DANGER, anchor="w")
         self.status.grid(row=4, column=0, sticky="w", pady=(8, 0), **pad)
         a.label(card, "", 4).grid(row=5, column=0)
@@ -3375,7 +3378,7 @@ class HeadToHeadView:
         a = self.app
         slot = {"cat": tk.StringVar(value=(icat or self.first).title),
                 "cart": tk.StringVar(value=item.cartridge if item else ""),
-                "load": tk.StringVar(value="")}
+                "load": tk.StringVar(value=""), "gun": tk.StringVar(value="")}
         if item is not None:
             slot["load"].set(next(t for t, x in self.choices[(icat.title, item.cartridge)].items()
                                   if x is item))
@@ -3399,6 +3402,11 @@ class HeadToHeadView:
                                          value=lambda n: self.cart_names[n][1])
         slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], font=a.f(11), width=40)
         slot["search"] = LoadSearch(a, slot["load_box"], [], lambda n, s=slot: self._on_load(s))
+        slot["gun_box"] = tk.Frame(self.slot_box, bg=SURFACE)
+        ttk.Entry(slot["gun_box"], textvariable=slot["gun"], font=a.f(11), width=6).pack(side="left")
+        slot["usual"] = a.label(slot["gun_box"], "", 9, MUTED)
+        slot["usual"].pack(side="left", padx=(6, 0))
+        slot["gun"].trace_add("write", self._schedule)
         slot["x"] = tk.Label(self.slot_box, text="✕", bg=SURFACE, fg=MUTED, font=a.f(12, True),
                              padx=10, pady=2, cursor="hand2")
         slot["cat_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cat(s))
@@ -3435,13 +3443,28 @@ class HeadToHeadView:
         self._changed()
 
     def _layout_slots(self):
+        if not hasattr(self, "gun_head"):
+            self.gun_head = self.app.label(self.slot_box, "GUN WEIGHT (LB)", 9, MUTED, True)
+        if self.gun_open:
+            self.gun_head.grid(row=0, column=4, sticky="w", padx=(12, 0))
+        else:
+            self.gun_head.grid_remove()
+        self.gun_link.config(text=("▾  Hide gun weights  (blank: the cartridge's usual gun)"
+                                   if self.gun_open else "▸  Gun weight for each load"))
         for n, slot in enumerate(self.slots, start=1):
             slot["num"].config(text=f"{n}")
             slot["num"].grid(row=n, column=0, sticky="w", padx=(0, 10), pady=3)
             slot["cat_box"].grid(row=n, column=1, sticky="w", padx=(0, 8), pady=3)
             slot["cart_box"].grid(row=n, column=2, sticky="w", pady=3)
             slot["load_box"].grid(row=n, column=3, sticky="ew", padx=(8, 0), pady=3)
-            slot["x"].grid(row=n, column=4, sticky="w", padx=(4, 0), pady=3)
+            if self.gun_open:
+                t, cart = slot["cat"].get(), slot["cart"].get()
+                slot["usual"].config(text=f"usual {typical_gun_lb(self.cats[t], cart):g}"
+                                     if cart else "")
+                slot["gun_box"].grid(row=n, column=4, sticky="w", padx=(12, 0), pady=3)
+            else:
+                slot["gun_box"].grid_remove()
+            slot["x"].grid(row=n, column=5, sticky="w", padx=(4, 0), pady=3)
             if len(self.slots) <= H2H_MIN and not slot["load"].get():
                 slot["x"].grid_remove()           # nothing to remove: the 2 rows always stay
         if len(self.slots) >= H2H_MAX:
@@ -3454,6 +3477,7 @@ class HeadToHeadView:
         slot["cart_box"].config(values=self.cartridges.get(slot["cat"].get(), []))
         slot["cart"].set("")
         slot["load"].set("")
+        slot["gun"].set("")
         self._fill_loads(slot)
         self._layout_slots()
         slot["cart_box"].focus_set()
@@ -3469,6 +3493,7 @@ class HeadToHeadView:
 
     def _on_cart(self, slot):
         slot["load"].set("")
+        slot["gun"].set("")                       # another cartridge: back to its usual gun
         self._fill_loads(slot)
         self._layout_slots()
         slot["load_box"].focus_set()
@@ -3483,7 +3508,7 @@ class HeadToHeadView:
             return
         slot["search"].close()
         slot["cart_search"].close()
-        for key in ("num", "cat_box", "cart_box", "load_box", "x"):
+        for key in ("num", "cat_box", "cart_box", "load_box", "gun_box", "x"):
             slot[key].destroy()
         self.slots.remove(slot)
         while len(self.slots) < H2H_MIN:
@@ -3491,15 +3516,23 @@ class HeadToHeadView:
         self._layout_slots()
         self._changed()
 
-    def _picked(self):
-        """The loads chosen so far as (category, load), in slot order, without repeats."""
+    def _picked_slots(self):
+        """The loads chosen so far as (category, load, slot), in slot order, without repeats."""
         out = []
         for slot in self.slots:
             t = slot["cat"].get()
             item = self.choices.get((t, slot["cart"].get()), {}).get(slot["load"].get())
-            if item is not None and all(item is not x for _, x in out):
-                out.append((self.cats[t], item))
+            if item is not None and all(item is not x for _, x, _ in out):
+                out.append((self.cats[t], item, slot))
         return out
+
+    def _picked(self):
+        return [(c, x) for c, x, _ in self._picked_slots()]
+
+    def _toggle_gun(self):
+        self.gun_open = not self.gun_open
+        self._layout_slots()
+        self.refresh()
 
     def _save_picks(self):
         self.app.h2h[:] = [pick_key(c, x) for c, x in self._picked()]
@@ -3510,7 +3543,8 @@ class HeadToHeadView:
 
     # ---- state ------------------------------------------------------------ #
     def snapshot(self):
-        return dict(dist=self.dist_var.get(), gun=self.gun_var.get())
+        return dict(dist=self.dist_var.get(), gun_open=self.gun_open,
+                    guns={pick_key(c, x): s["gun"].get() for c, x, s in self._picked_slots()})
 
     def restore(self, snap):
         if not hasattr(self, "slot_box"):
@@ -3521,8 +3555,12 @@ class HeadToHeadView:
     def _apply_snap(self, snap):
         if "dist" in snap:
             self.dist_var.set(snap["dist"])
-        if "gun" in snap:
-            self.gun_var.set(snap["gun"])
+        self.gun_open = snap.get("gun_open", self.gun_open)
+        guns = snap.get("guns", {})
+        for c, x, slot in self._picked_slots():
+            if pick_key(c, x) in guns:
+                slot["gun"].set(guns[pick_key(c, x)])
+        self._layout_slots()
 
     def _schedule(self, *_):
         if self._pending is not None:
@@ -3539,13 +3577,15 @@ class HeadToHeadView:
             return
         for w in self.results.winfo_children():
             w.destroy()
-        picked = self._picked()
+        picks = self._picked_slots()
+        picked = [(c, x) for c, x, _ in picks]
         try:
             far = max([c.max_distance for c, _ in picked] or [H2H_DISTANCE])
             dist = LoadsView._num(self.dist_var, "Distance", 0, far)
-            # blank: each load in its cartridge's typical gun (GUN_LB); a number: all in that gun
-            gun = (None if not self.gun_var.get().strip()
-                   else LoadsView._num(self.gun_var, "Gun weight", 0.5, GUN_LB_MAX))
+            # a blank box (or the boxes hidden): the load's cartridge's typical gun (GUN_LB)
+            guns = [None if not self.gun_open or not s["gun"].get().strip()
+                    else LoadsView._num(s["gun"], f"Gun weight for {x.label}", 0.5, GUN_LB_MAX)
+                    for _, x, s in picks]
         except ValueError as exc:
             self.status.config(text=str(exc))
             return self.app.fit_window()
@@ -3561,7 +3601,7 @@ class HeadToHeadView:
             self.app.label(self.results, f"Pick at least {H2H_MIN} loads to put them head to head.",
                            11, MUTED, bg=BG, anchor="w").grid(row=0, column=0, sticky="w")
             return self.app.fit_window()
-        rows = h2h_rows(picked, dist, gun, self.app.dict_weights, self.app.price_for, self.groups)
+        rows = h2h_rows(picked, dist, guns, self.app.dict_weights, self.app.price_for, self.groups)
         self._render(rows, dist)
         self.app.fit_window()
 
@@ -3692,21 +3732,24 @@ def h2h_keys(cats):
     return [k for k in METRICS if any(k in metric_keys(c) for c in cats)]
 
 
-def h2h_rows(picked, dist, gun, weights_of, price_of, groups):
+def h2h_rows(picked, dist, guns, weights_of, price_of, groups):
     """Head to Head figures for the picked (category, load) pairs. Each load is graded the way
     its Load Dictionary grades it (against every load of its cartridge, with weights_of(category)),
     at `dist` capped to its category's max. `best` is the set of factors where it leads the picked
     loads and `gap` how far behind the leader it is, in %; factors that don't apply to a load
-    (`keys`) are left out. gun None: each cartridge in its typical gun (GUN_LB). `groups` maps
-    (category title, cartridge) to its loads; price_of(category, load)."""
+    (`keys`) are left out. guns: a gun weight per picked load, None (or a None in the list) for
+    its cartridge's typical gun (GUN_LB). `groups` maps (category title, cartridge) to its loads;
+    price_of(category, load)."""
     rows, done = [], {}
-    for icat, it in picked:
-        key = (icat.title, it.cartridge)
+    for n, (icat, it) in enumerate(picked):
+        gun = guns[n] if guns else None
+        gun = typical_gun_lb(icat, it.cartridge) if gun is None else gun
+        key = (icat.title, it.cartridge, gun)
         d = min(dist, icat.max_distance)
         if key not in done:
-            items = groups[key]
+            items = groups[key[:2]]
             done[key] = {id(r["item"]): r for r in score_loads(
-                items, d, typical_gun_lb(icat, it.cartridge) if gun is None else gun,
+                items, d, gun,
                 weights_of(icat), [price_of(icat, x) for x in items], by_type=not icat.grain_style)}
         rows.append(dict(done[key][id(it)], cat=icat, dist=d, keys=metric_keys(icat),
                          best=set(), gap={}))
