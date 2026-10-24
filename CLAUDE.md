@@ -24,7 +24,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   factors it lacks show "—", downrange steps come from the picked category with the largest step. Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
   always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
-  LoadSearch / loadSearch, every typed word must be in the name). The dictionary's brand / load
+  LoadSearch / searchBox, every typed word must be in the name); so are the cartridge boxes
+  (Oct 2026): the dictionary's searches its category, Head to Head's searches every category
+  (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings). The dictionary's brand / load
   filter sits right above the list (issue #26).
 - Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
   page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones).
