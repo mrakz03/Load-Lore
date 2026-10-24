@@ -820,17 +820,19 @@ def github_mark_png(size, colour):
 
 
 def version_tuple(text):
-    """"v1.6.2" or "1.6.2" -> (1, 6, 2); None for "dev" or anything that isn't a version."""
-    m = re.fullmatch(r"v?(\d+(?:\.\d+)*)", (text or "").strip())
-    return tuple(int(x) for x in m.group(1).split(".")) if m else None
+    """"v1.6.2" or "1.6.2" -> (1, 6, 2, 0, 1), for comparing; None for "dev" or anything that
+    isn't a version. A suffix ("v1.7.2-dev", "1.8-beta") marks a test build: it sorts after
+    the version before it and before the same number without a suffix (the last field 0 / 1)."""
+    m = re.fullmatch(r"v?(\d+(?:\.\d+)*)([-+ ._]?[A-Za-z][\w.+-]*)?", (text or "").strip())
+    if not m:
+        return None
+    nums = [int(x) for x in m.group(1).split(".")][:4]
+    return tuple(nums + [0] * (4 - len(nums))) + (0 if m.group(2) else 1,)
 
 
 def is_newer(latest, current):
     a, b = version_tuple(latest), version_tuple(current)
-    if a is None or b is None:
-        return False
-    n = max(len(a), len(b))
-    return a + (0,) * (n - len(a)) > b + (0,) * (n - len(b))
+    return a is not None and b is not None and a > b
 
 
 def _ssl_context():
@@ -852,8 +854,10 @@ def latest_release():
     """The newest GitHub release: {version, page, assets: {file name: download url}}.
     Raises OSError (no connection) or ValueError (an answer we can't read)."""
     data = json.loads(_http_get(LATEST_RELEASE_API))
-    if not isinstance(data, dict) or version_tuple(data.get("tag_name")) is None:
+    if not isinstance(data, dict) or not data.get("tag_name"):
         raise ValueError("GitHub's answer had no release version in it.")
+    if version_tuple(data["tag_name"]) is None:
+        raise ValueError(f"the newest release's tag ({data['tag_name']}) isn't a version number.")
     return {"version": data["tag_name"].strip().lstrip("v"),
             "page": data.get("html_url") or RELEASES_PAGE,
             "assets": {a["name"]: a["browser_download_url"] for a in data.get("assets") or []
