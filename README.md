@@ -91,7 +91,7 @@ scripts/build_linux.sh        build from source and install on Fedora / Linux
 scripts/install_linux.sh      installer shipped in the Linux release (as install.sh)
 scripts/build_windows.bat     build the Windows .exe locally
 scripts/windows_installer.iss Inno Setup script for the Windows installer (built in CI)
-.github/workflows/release.yml builds Windows, Linux and Android (see RELEASING.md)
+.github/workflows/release.yml builds Windows, Linux and Android
 package.json, capacitor.config.json   Android wrapper (Capacitor)
 research/                     where each added load came from
 ```
@@ -112,7 +112,7 @@ Handloads (`my_handloads.csv`) and settings (`settings.json`) are saved next to 
 - `bullets.csv` BCs are approximate published G1 figures.
 
 ## Contributing
-Bug reports, load corrections and ideas are welcome as GitHub issues. For a data fix, name the load and give the source (maker's catalog page or website) for the numbers. Pull requests should keep the desktop and phone versions in step (same formulas, same data) and rebuild the web version after changing a CSV or `web/template.html`. `CLAUDE.md` holds the project's working notes and rules in more detail, and `RELEASING.md` how releases are made.
+Bug reports, load corrections and ideas are welcome as GitHub issues. For a data fix, name the load and give the source (maker's catalog page or website) for the numbers. Pull requests should keep the desktop and phone versions in step (same formulas, same data) and rebuild the web version after changing a CSV or `web/template.html`. `CLAUDE.md` holds the project's working notes and rules in more detail.
 
 ## License
 
