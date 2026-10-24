@@ -1239,16 +1239,26 @@ class App:
 
     # ---- handloads --------------------------------------------------------- #
     def hand_loads(self, cat):
+        """The category's handloads. One whose label is already taken in its cartridge (a
+        duplicate with no name of its own) gets " (2)", " (3)"... like the web version, so each
+        can be told apart and picked in Head to Head."""
         out = []
         if not cat.grain_style:
             return out
+        taken = {(x.cartridge, x.label) for x in self.data[cat.title]["detail"]}
         for row in self.hand_rows:
             if row.get("category") != cat.title:
                 continue
             try:
-                out.append(load_from_handload_row(row, cat.grain_style))
+                item = load_from_handload_row(row, cat.grain_style)
             except (KeyError, ValueError):
                 continue
+            base, n = item.label, 1
+            while (item.cartridge, item.label) in taken:
+                n += 1
+                item.label = f"{base} ({n})"
+            taken.add((item.cartridge, item.label))
+            out.append(item)
         return out
 
     def save_handload(self, row):
