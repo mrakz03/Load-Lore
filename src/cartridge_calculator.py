@@ -2208,12 +2208,14 @@ class LoadsView:
             a.label(top, text, 9, MUTED, True).grid(row=0, column=i, sticky="w",
                                                      padx=(0 if i == 0 else 8, 0))
             if var is None:
+                # the cartridge menu is a search too: type "6.5" or "mag" to narrow it down
                 self.cart_combo = ttk.Combobox(top, textvariable=self.cart_var,
-                                               values=self.cartridges, state="readonly",
-                                               font=a.f(12),
+                                               values=self.cartridges, font=a.f(12),
                                                width=max([16] + [len(c) for c in self.cartridges]))
                 self.cart_combo.grid(row=1, column=i, sticky="ew", pady=(4, 0))
                 self.cart_combo.bind("<<ComboboxSelected>>", lambda e: self._on_cartridge())
+                self.cart_search = LoadSearch(a, self.cart_combo, self.cartridges,
+                                              lambda n: self._on_cartridge())
             else:
                 ttk.Entry(top, textvariable=var, font=a.f(12), width=10).grid(
                     row=1, column=i, sticky="ew", pady=(4, 0), padx=(8, 0))
@@ -2469,6 +2471,7 @@ class LoadsView:
         return v
 
     def _on_cartridge(self):
+        self.cart_search.last = self.cart_var.get()
         self.filter_var.set("")
         # the gun weight follows the cartridge's typical gun (GUN_LB) unless you typed your own
         new = typical_gun_lb(self.cat, self.cart_var.get())
@@ -2504,6 +2507,8 @@ class LoadsView:
         if cart not in self.groups:
             cart = max(self.cartridges, key=lambda c: len(self.groups[c])) if self.cartridges else ""
         self.cart_var.set(cart)
+        self.cart_search.names = self.cartridges
+        self.cart_search.last = cart
         self.selected = None
         self.detail.grid_remove()
         if self.purpose not in self._purposes_of(cart):
@@ -2897,17 +2902,23 @@ class LoadsView:
 
 
 class LoadSearch:
-    """Type into a Head to Head load menu to search it (issue #24). The matches show in a list
-    under the box while the box keeps the keyboard: every typed word must appear in the name
-    (brand, bullet, weight...), Up/Down move, Enter or a click picks, Esc closes."""
+    """Type into a load or cartridge menu to search it (issue #24; cartridges too since Oct
+    2026). The matches show in a list under the box while the box keeps the keyboard: every
+    typed word must appear in the name (brand, bullet, weight...), Up/Down move, Enter or a
+    click picks, Esc closes.
+    names: the searched list. value(name): the box text once a name is picked (default: the
+    name). valid: the box texts that count as a pick; browse: what Down lists with nothing typed
+    (both default to names). on_pick(name) gets the picked name from the list."""
     MAX_ROWS = 12
 
-    def __init__(self, app, box, names, on_pick):
+    def __init__(self, app, box, names, on_pick, value=None):
         self.app, self.box, self.names, self.on_pick = app, box, names, on_pick
+        self.value = value or (lambda n: n)
+        self.valid = self.browse = None   # None: the same as names
         self.var = box.cget("textvariable")
         self.popup = self.listbox = None
         self.matches = []
-        self.last = ""                    # the load picked before the typing started
+        self.last = ""                    # the pick before the typing started
         box.bind("<KeyRelease>", self._typed)
         box.bind("<Down>", lambda e: self._move(1))
         box.bind("<Up>", lambda e: self._move(-1))
@@ -2922,12 +2933,18 @@ class LoadSearch:
     def _typed(self, e):
         if e.keysym in ("Down", "Up", "Return", "KP_Enter", "Escape", "Tab", "ISO_Left_Tab"):
             return
-        words = self.text().lower().split()
-        if self.text() in self.names:
+        if self._ok(self.text()):
             self.close()
             return
-        self.matches = [n for n in self.names if all(w in n.lower() for w in words)]
+        self.matches = self._find(self.text())
         self._show()
+
+    def _ok(self, text):
+        return text in (self.names if self.valid is None else self.valid)
+
+    def _find(self, text):
+        words = text.lower().split()
+        return [n for n in self.names if all(w in n.lower() for w in words)]
 
     def _show(self):
         if not self.matches:
@@ -2958,8 +2975,8 @@ class LoadSearch:
 
     def _move(self, step):
         if self.popup is None:
-            self.matches = list(self.names) if self.text() in self.names or not self.text().strip() \
-                else [n for n in self.names if all(w in n.lower() for w in self.text().lower().split())]
+            self.matches = list(self.names if self.browse is None else self.browse) \
+                if self._ok(self.text()) or not self.text().strip() else self._find(self.text())
             self._show()
             return "break"
         cur = self.listbox.curselection()
@@ -2974,15 +2991,16 @@ class LoadSearch:
             if i is None:
                 cur = self.listbox.curselection()
                 i = cur[0] if cur else 0
-            self.box.setvar(self.var, self.matches[i])
+            name = self.matches[i]
+            self.box.setvar(self.var, self.value(name))
             self.close()
             self.box.focus_set()
             self.box.icursor("end")
-            self.on_pick()
+            self.on_pick(name)
         return "break"
 
     def _left(self):
-        """Focus left the box: drop typing that isn't a load (the pick before it stays)."""
+        """Focus left the box: drop typing that isn't a pick (the pick before it stays)."""
         try:
             if not self.box.winfo_exists():
                 return
@@ -2992,8 +3010,8 @@ class LoadSearch:
         if focus is self.box or (focus is not None and focus is self.listbox):
             return
         self.close()
-        if self.text() not in self.names:
-            self.box.setvar(self.var, self.last if self.last in self.names else "")
+        if not self._ok(self.text()):
+            self.box.setvar(self.var, self.last if self._ok(self.last) else "")
 
     def close(self):
         if self.popup is not None:
@@ -3032,6 +3050,9 @@ class HeadToHeadView:
             self.cartridges[c.title] = list(groups)
             for cart, v in groups.items():
                 self.groups[(c.title, cart)] = v
+        # the cartridge search covers every category: "6.5 Creedmoor  ·  Rifle" -> (category, cartridge)
+        self.cart_names = {f"{cart}  ·  {t}": (t, cart) for t, carts in self.cartridges.items()
+                           for cart in carts}
         self.choices = {}                 # (category, cartridge) -> {text in the load menu: Load}
         for key, items in self.groups.items():
             self.choices[key] = {x.label + ("  (handload)" if x.handload else ""): x for x in items}
@@ -3077,8 +3098,8 @@ class HeadToHeadView:
         card.grid(row=1, column=0, sticky="ew")
         card.columnconfigure(0, weight=1)
         pad = dict(padx=18)
-        a.label(card, "LOADS TO COMPARE  ·  any category  ·  type in a load box to search", 9,
-                MUTED, True).grid(row=0, column=0, sticky="w", pady=(16, 0), **pad)
+        a.label(card, "LOADS TO COMPARE  ·  any category  ·  type in a cartridge or load box "
+                "to search", 9, MUTED, True).grid(row=0, column=0, sticky="w", pady=(16, 0), **pad)
         self.slot_box = tk.Frame(card, bg=SURFACE)
         self.slot_box.grid(row=1, column=0, sticky="ew", pady=(6, 0), **pad)
         self.slot_box.columnconfigure(3, weight=1)
@@ -3132,9 +3153,12 @@ class HeadToHeadView:
                                        width=max(len(t) for t in self.cats))
         slot["cart_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cart"],
                                         values=self.cartridges.get(slot["cat"].get(), []),
-                                        state="readonly", font=a.f(11), width=widest)
+                                        font=a.f(11), width=widest)
+        slot["cart_search"] = LoadSearch(a, slot["cart_box"], list(self.cart_names),
+                                         lambda n, s=slot: self._on_cart_search(s, n),
+                                         value=lambda n: self.cart_names[n][1])
         slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], font=a.f(11), width=40)
-        slot["search"] = LoadSearch(a, slot["load_box"], [], lambda s=slot: self._on_load(s))
+        slot["search"] = LoadSearch(a, slot["load_box"], [], lambda n, s=slot: self._on_load(s))
         slot["x"] = tk.Label(self.slot_box, text="✕", bg=SURFACE, fg=MUTED, font=a.f(12, True),
                              padx=10, pady=2, cursor="hand2")
         slot["cat_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cat(s))
@@ -3150,6 +3174,13 @@ class HeadToHeadView:
             slot["load_box" if slot["cart"].get() else "cart_box"].focus_set()
 
     def _fill_loads(self, slot):
+        # the cartridge search: any category's cartridge can be typed; with nothing typed,
+        # Down lists this row's category
+        t = slot["cat"].get()
+        cs = slot["cart_search"]
+        cs.valid = self.cartridges.get(t, [])
+        cs.browse = [n for n, (ct, _) in self.cart_names.items() if ct == t]
+        cs.last = slot["cart"].get()
         names = list(self.choices.get((slot["cat"].get(), slot["cart"].get()), {}))
         slot["load_box"].config(values=names, width=max([40] + [min(len(n), 64) for n in names]))
         slot["search"].names = names
@@ -3188,6 +3219,14 @@ class HeadToHeadView:
         slot["cart_box"].focus_set()
         self._changed()
 
+    def _on_cart_search(self, slot, name):
+        """A cartridge was picked from the search list, maybe from another category."""
+        t, cart = self.cart_names[name]
+        slot["cat"].set(t)
+        slot["cart_box"].config(values=self.cartridges.get(t, []))
+        slot["cart"].set(cart)
+        self._on_cart(slot)
+
     def _on_cart(self, slot):
         slot["load"].set("")
         self._fill_loads(slot)
@@ -3203,6 +3242,7 @@ class HeadToHeadView:
             self._changed()
             return
         slot["search"].close()
+        slot["cart_search"].close()
         for key in ("num", "cat_box", "cart_box", "load_box", "x"):
             slot[key].destroy()
         self.slots.remove(slot)

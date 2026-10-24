@@ -192,6 +192,7 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .lopts [role=option].cur{font-weight:700}
 .lopts [role=option].on,.lopts [role=option]:hover{background:var(--accent);color:var(--on-accent)}
 .lopts .none{padding:10px 12px;color:var(--muted)}
+.lopts .hd{padding:7px 12px 5px;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface);border-bottom:1px solid var(--border)}
 .h2h{overflow:auto;margin-top:12px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
 .h2h table{font-size:.9rem}
 .h2h th,.h2h td{text-align:left;vertical-align:top;white-space:normal;padding:8px 12px}
@@ -681,6 +682,40 @@ function handDialog(cat,rec,cartList,done){
 }
 
 // ---------- Load Dictionary tab ----------
+// a search box over a list (issue #24; cartridges too since Oct 2026): every typed word must
+// be in the name, the list shows the matches, arrows + Enter or a tap pick one; leaving the box
+// keeps the old pick. o: text(x) = box text, find(x) = searched text (default text),
+// head(x) = group heading over the list rows (optional), cur() = the current pick, pick(x), none.
+function searchBox(box,items,o){
+  const q=box.querySelector(".lq"),list=box.querySelector(".lopts"),find=o.find||o.text;
+  const all_=()=>typeof items==="function"?items():items,cur=()=>o.cur();
+  let shown=[],at=0;
+  const open=all=>{
+    const words=all?[]:q.value.toLowerCase().split(/\s+/).filter(Boolean),c=cur();
+    shown=all_().filter(x=>{const t=find(x).toLowerCase();return words.every(w=>t.includes(w));});
+    at=Math.max(0,shown.indexOf(c));
+    let last=null;
+    list.innerHTML=shown.length?shown.map((x,i)=>{const h=o.head?o.head(x):null,top=h!==last?`<div class="hd">${esc(h)}</div>`:"";last=h;
+      return `${top}<div role="option" class="${i===at?"on":""}${x===c?" cur":""}" data-i="${i}">${esc(o.text(x))}</div>`;}).join(""):`<div class="none">No ${o.none} matches “${esc(q.value.trim())}”</div>`;
+    list.classList.remove("hidden");q.setAttribute("aria-expanded","true");
+    const on=list.querySelector(".on");if(on)on.scrollIntoView({block:"nearest"});
+  };
+  const close=()=>{list.classList.add("hidden");q.setAttribute("aria-expanded","false");};
+  const move=d=>{if(!shown.length)return;at=(at+d+shown.length)%shown.length;list.querySelectorAll("[role=option]").forEach((o,i)=>o.classList.toggle("on",i===at));list.querySelector(".on").scrollIntoView({block:"nearest"});};
+  const back=()=>{const c=cur();q.value=c==null?"":o.text(c);};
+  const choose=i=>{const x=shown[i];if(!x)return;close();q.value=o.text(x);o.pick(x);};
+  q.onfocus=()=>{q.select();open(true);};
+  q.oninput=()=>open(!q.value.trim());
+  q.onkeydown=e=>{
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();if(list.classList.contains("hidden")){const c=cur();open(c!=null&&q.value===o.text(c));}else move(e.key==="ArrowDown"?1:-1);}
+    else if(e.key==="Enter"){e.preventDefault();if(!list.classList.contains("hidden"))choose(at);}
+    else if(e.key==="Escape"){if(!list.classList.contains("hidden")){e.preventDefault();e.stopPropagation();}close();back();}
+  };
+  q.onblur=()=>{close();back();};
+  // mousedown, not click: the box must keep focus until the pick is made
+  list.onmousedown=e=>{e.preventDefault();const r=e.target.closest("[role=option]");if(r)choose(+r.dataset.i);};
+  back();
+}
 function openLoads(cat,pane){
   syncHand(cat);
   const all=state.detail[cat.title];
@@ -691,7 +726,7 @@ function openLoads(cat,pane){
   const PORDER=["Hunting","Varmint","Target","Match","Defense","Subsonic","Game","Waterfowl","Turkey","Buckshot","Slug"];
   const purposeOf=it=>it.purpose||it.group||"";
   pane.innerHTML=`<div class="card">
-    <div class="field"><label class="l">${esc(cat.cartridge_label)}</label><select id="lc"></select></div>
+    <div class="field"><label class="l" for="lcq">${esc(cat.cartridge_label)}</label><div class="lsearch" id="lcs"><input class="lq" id="lcq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" placeholder="Type to search, e.g. 6.5" autocomplete="off"><div class="lopts hidden" role="listbox"></div></div><input type="hidden" id="lc"></div>
     <div class="nums" style="grid-template-columns:1fr 1fr">
       <div><label class="l">DISTANCE (YD)</label><input id="ld" inputmode="decimal"></div>
       <div><label class="l">${esc(cat.gun_label)}</label><input id="lg" inputmode="decimal"></div>
@@ -708,10 +743,11 @@ function openLoads(cat,pane){
   <div class="cnt" id="lcnt"></div><div class="lgrid" id="lres"></div>
   <div class="note" id="lnote"></div>`;
   const $$=s=>$(s,pane);
-  const fillCarts=()=>{$$("#lc").innerHTML=`<option value="" disabled hidden>Select…</option>`+carts.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");};
-  fillCarts();
+  // the cartridge box is a search too: type "6.5" or "mag" to narrow the list down
+  const setCart=c=>{$$("#lc").value=c;$$("#lcq").value=c;};
+  searchBox($$("#lcs"),()=>carts,{text:c=>c,none:"cartridge",cur:()=>$$("#lc").value,pick:c=>{if(c===$$("#lc").value)return;setCart(c);$$("#lc").onchange();}});
   const biggest=carts.reduce((a,c)=>groups.get(c).length>groups.get(a).length?c:a,carts[0]);
-  $$("#lc").value=(sh.cart&&groups.has(sh.cart))?sh.cart:biggest;
+  setCart((sh.cart&&groups.has(sh.cart))?sh.cart:biggest);
   $$("#ld").value=sh.dist!=null?sh.dist:g(cat.default_distance);
   // the gun weight follows the cartridge's typical gun (GUN_LB) unless you typed your own
   L.gunAuto=sh.gun!=null?(sh.gunAuto!=null?sh.gunAuto:cat.default_gun_lb):typicalGun(cat,$$("#lc").value);
@@ -827,8 +863,8 @@ function openLoads(cat,pane){
     handDialog(cat,rec||{cartridge:$$("#lc").value},cl,afterHand);
   }
   function afterHand(r){
-    const cur0=$$("#lc").value;syncHand(cat);regroup();fillCarts();$$("#lc").value=groups.has(cur0)?cur0:(groups.has(biggest)?biggest:carts[0]);
-    if(r){const cur=r.cartridge;$$("#lc").value=cur;L.purpose="All";L.src="All";const it=all.find(x=>x.hid===r.id);L.open=it?keyOf(it):null;}
+    const cur0=$$("#lc").value;syncHand(cat);regroup();setCart(groups.has(cur0)?cur0:(groups.has(biggest)?biggest:carts[0]));
+    if(r){const cur=r.cartridge;setCart(cur);L.purpose="All";L.src="All";const it=all.find(x=>x.hid===r.id);L.open=it?keyOf(it):null;}
     
     buildChips();render();
   }
@@ -916,43 +952,23 @@ function openH2H(pane){
   app._leave=()=>{H2HS.dist=$$("#hd").value;H2HS.gun=$$("#hg").value;};
   const picked=()=>{const out=[];for(const s of slots){const it=choice(s.cat,s.cart,s.key);if(it&&!out.some(([,x])=>x===it))out.push([byTitle[s.cat],it]);}return out;};
   const save=()=>{H2H.splice(0,H2H.length,...picked().map(([c,it])=>pickKey(c,it)));};
-  // the load box is a search (issue #24): every typed word must be in the name, the list
-  // shows the matches, arrows + Enter or a tap pick one; leaving the box keeps the old pick
+  // the load box is a search (issue #24), the cartridge box too (any category's cartridge)
   const optText=x=>x?x.label+(x.handload?" (handload)":""):"";
-  function loadSearch(box,items,key,pick){
-    const q=box.querySelector(".lq"),list=box.querySelector(".lopts"),cur=items.find(x=>(x.hid||x.label)===key);
-    let shown=[],at=0;
-    const open=all=>{
-      const words=all?[]:q.value.toLowerCase().split(/\s+/).filter(Boolean);
-      shown=items.filter(x=>{const t=optText(x).toLowerCase();return words.every(w=>t.includes(w));});
-      at=Math.max(0,shown.indexOf(cur));
-      list.innerHTML=shown.length?shown.map((x,i)=>`<div role="option" class="${i===at?"on":""}${x===cur?" cur":""}" data-i="${i}">${esc(optText(x))}</div>`).join(""):`<div class="none">No load matches “${esc(q.value.trim())}”</div>`;
-      list.classList.remove("hidden");q.setAttribute("aria-expanded","true");
-      const on=list.querySelector(".on");if(on)on.scrollIntoView({block:"nearest"});
-    };
-    const close=()=>{list.classList.add("hidden");q.setAttribute("aria-expanded","false");};
-    const move=d=>{if(!shown.length)return;at=(at+d+shown.length)%shown.length;list.querySelectorAll("[role=option]").forEach((o,i)=>o.classList.toggle("on",i===at));list.querySelector(".on").scrollIntoView({block:"nearest"});};
-    const choose=i=>{const x=shown[i];if(!x)return;close();q.value=optText(x);pick(x.hid||x.label);};
-    q.onfocus=()=>{q.select();open(true);};
-    q.oninput=()=>open(!q.value.trim());
-    q.onkeydown=e=>{
-      if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();if(list.classList.contains("hidden"))open(q.value===optText(cur));else move(e.key==="ArrowDown"?1:-1);}
-      else if(e.key==="Enter"){e.preventDefault();if(!list.classList.contains("hidden"))choose(at);}
-      else if(e.key==="Escape"){if(!list.classList.contains("hidden")){e.preventDefault();e.stopPropagation();}close();q.value=optText(cur);}
-    };
-    q.onblur=()=>{close();q.value=optText(cur);};
-    // mousedown, not click: the box must keep focus until the pick is made
-    list.onmousedown=e=>{e.preventDefault();const o=e.target.closest("[role=option]");if(o)choose(+o.dataset.i);};
-  }
+  const cartItems=cats.flatMap(c=>carts[c.title].map(k=>({cat:c.title,cart:k})));
+  const dupCart=new Set(cartItems.map(x=>x.cart).filter((k,i,a)=>a.indexOf(k)!==i));
+  const cartText=x=>x.cart+(dupCart.has(x.cart)?` (${x.cat})`:"");
   function drawSlots(){
     $$("#hs").innerHTML=slots.map((s,i)=>`<div class="slot" data-i="${i}"><span class="n">${i+1}</span>
-      <select class="cs" aria-label="Cartridge ${i+1}"><option value="" disabled ${s.cart?"":"selected"} hidden>Cartridge…</option>${cats.map(c=>`<optgroup label="${esc(c.title)}">${carts[c.title].map(k=>`<option value="${esc(c.title+"|"+k)}" ${c.title===s.cat&&k===s.cart?"selected":""}>${esc(k)}</option>`).join("")}</optgroup>`).join("")}</select>
+      <div class="cs lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Cartridge ${i+1}: type to search" placeholder="Cartridge… type to search" autocomplete="off"><div class="lopts hidden" role="listbox"></div></div>
       <div class="ls lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Load ${i+1}: type to search" placeholder="${s.cart?"Load… type to search":"Pick a cartridge first"}" autocomplete="off" value="${esc(optText(choice(s.cat,s.cart,s.key)))}"${s.cart?"":" disabled"}><div class="lopts hidden" role="listbox"></div></div>
       <button class="x${slots.length<=H2H_MIN&&!s.key?" gone":""}" aria-label="Remove load ${i+1}">✕</button></div>`).join("");
     $$("#hs").querySelectorAll(".slot").forEach(row=>{
       const s=slots[+row.dataset.i];
-      row.querySelector(".cs").onchange=e=>{const v=e.target.value,i=v.indexOf("|");s.cat=v.slice(0,i);s.cart=v.slice(i+1);s.key="";drawSlots();changed();};
-      loadSearch(row.querySelector(".lsearch"),groups.get(s.cat+"|"+s.cart)||[],s.key,k=>{s.key=k;drawSlots();changed();});
+      const ci=cartItems.find(x=>x.cat===s.cat&&x.cart===s.cart);
+      searchBox(row.querySelector(".cs"),cartItems,{text:cartText,find:x=>x.cart+" "+x.cat,head:x=>x.cat,none:"cartridge",cur:()=>ci,
+        pick:x=>{if(x===ci)return;s.cat=x.cat;s.cart=x.cart;s.key="";drawSlots();changed();const nr=$$("#hs").children[slots.indexOf(s)];if(nr)nr.querySelector(".ls .lq").focus();}});
+      const li=groups.get(s.cat+"|"+s.cart)||[],lc=li.find(x=>(x.hid||x.label)===s.key);
+      searchBox(row.querySelector(".ls"),li,{text:optText,none:"load",cur:()=>lc,pick:x=>{s.key=x.hid||x.label;drawSlots();changed();}});
       // ✕ removes the row; with only the 2 rows left it clears the load instead (issue #16)
       row.querySelector(".x").onclick=()=>{if(slots.length<=H2H_MIN)s.key="";else slots.splice(slots.indexOf(s),1);drawSlots();changed();};
     });
@@ -1019,7 +1035,7 @@ function openH2H(pane){
     box.querySelectorAll("[data-yd]").forEach(c=>c.onclick=()=>{H.drYd=+c.dataset.yd;render();});
   }
   drawSlots();save();
-  $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push(blank());drawSlots();const r=$$("#hs").lastElementChild;r.querySelector(r.querySelector(".cs").value?".ls":".cs").focus();};
+  $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push(blank());drawSlots();const r=$$("#hs").lastElementChild;r.querySelector((slots[slots.length-1].cart?".ls":".cs")+" .lq").focus();};
   ["#hd","#hg"].forEach(id=>$$(id).addEventListener("input",render));
   render();
 }
