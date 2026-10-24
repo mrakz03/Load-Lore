@@ -6,7 +6,6 @@ A field guide to factory ammunition. Look up every brand's load for a cartridge,
 
 It runs as a desktop app on Windows and Linux and as a phone app on Android (the phone version also works in any web browser).
 
-*Formerly Cartridge Value Calculator.*
 
 > **Still in development.** Load Lore is a work in progress. Most of it works well, but some parts aren't fully polished yet, and you may run into rough edges, layout quirks or a load whose figures need fixing. If something looks wrong, please [open an issue](https://github.com/mrakz03/Load-Lore/issues).
 
@@ -28,7 +27,7 @@ The loads come from the 2026 catalogs of Hornady, Federal, Winchester, Remington
 ### Load Dictionary
 Pick a category, then a cartridge, and every load for it is listed and ranked.
 
-- **Grades.** Each load gets a letter from S to F on velocity, energy, recoil, cost, Taylor KO and HITS, plus an overall grade. Grades compare loads of the *same* cartridge with each other: the average load scores about 70, a B. The **S–F grades: On / Off** switch on the Settings page hides the grades and scores if you just want the numbers; the app remembers your choice.
+- **Grades.** Each load gets a letter from S to F on velocity, energy, recoil, cost, Taylor KO and HITS, plus an overall grade. Grades compare loads of the *same* cartridge with each other: the average load scores about 70, a B. The **S–F grades: On / Off** switch on the Settings page hides the grades and scores if you just want the numbers; the app remembers your choice. (This is added for you Fudds that will complain that your favorite load somehow got ranked as an F).
 - **Filter and sort.** Narrow the list by purpose (Hunting, Varmint, Target, Match, Defense, Subsonic; shotguns by load type) or type a brand or load name in the filter box right above the list. Click a column heading (desktop) or use the sort menu next to the filter box (phone).
 - **Distance and gun weight.** Velocity, energy, Taylor KO and HITS are worked out at the distance you enter; recoil uses the gun weight you enter. The weight starts at a typical gun for the cartridge: 8 lb for most rifles, but 30 lb for .50 BMG, 15 lb for .338 Lapua, around 10 lb for the big dangerous-game rounds and heavier revolvers for the magnum handgun rounds. If you type your own weight it stays put when you switch cartridges. In Head to Head, leave the weight blank to put each load in its own cartridge's typical gun.
 - **Selected load.** Click a load to open its panel: every figure with its grade, the test barrel length, where the data came from, and:
@@ -38,7 +37,7 @@ Pick a category, then a cartridge, and every load for it is listed and ranked.
 - **Scoring weights.** Decide how much each factor counts (0 ignores it). The defaults are 3 for everything except recoil (1); rimfire weighs cost double, and shotguns skip Taylor KO and HITS.
 
 ### Head to Head
-Pick 2 to 5 loads from any cartridges, for example a .308 Winchester load against a 6.5 Creedmoor load, or add them from the Load Dictionary. Head to Head is one page for every category, so loads can come from different categories too (a 12 gauge slug against a .50 BMG): on the desktop each row has a category box, on a phone the cartridge menu is grouped by category. A factor that doesn't apply to a load (shotguns have no Taylor KO or HITS) shows a dash, and every load keeps the grade its own Load Dictionary gives it, with that category's scoring weights. To find a load quickly, type in its load box: every word you type has to appear in the name (for example `hornady 55` or `federal match`), then pick from the matches with a click or tap, or the arrow keys and Enter. You see:
+Pick 2 to 5 loads from any cartridges, for example a .308 Winchester load against a 6.5 Creedmoor load, or add them from the Load Dictionary. Head to Head is one page for every category, so loads can come from different categories too (a 12 gauge slug against a .30-30 Winchester): on the desktop each row has a category box, on a phone the cartridge menu is grouped by category. A factor that doesn't apply to a load (shotguns have no Taylor KO or HITS) shows a dash, and every load keeps the grade its own Load Dictionary gives it, with that category's scoring weights. To find a load quickly, type in its load box: every word you type has to appear in the name (for example `hornady 55` or `federal match`), then pick from the matches with a click or tap, or the arrow keys and Enter. You see:
 
 - every figure side by side, with the best one highlighted and how far behind the others are, in %;
 - how many factors each load wins;
@@ -48,12 +47,12 @@ Pick 2 to 5 loads from any cartridges, for example a .308 Winchester load agains
 On a phone this is laid out as cards: one per load, then one per factor with a bar for each load, then downrange at the distance you pick.
 
 ### Handloads
-In the Load Dictionary (rifle and handgun), **+ Add handload** opens a form for your own load: bullet (pick from the built-in bullet library or type your own), powder and charge, velocity, barrel length, purpose and cost per round (a total, or bullet + powder + primer + brass with the number of times you reuse the brass). Handloads are graded alongside the factory loads, marked in a different colour, and can be edited, duplicated or deleted.
+In the Load Dictionary (rifle and handgun), **+ Add handload** opens a form for your own load: bullet (pick from the built-in bullet library or type your own), powder and charge, velocity, barrel length, purpose and cost per round (a total, or bullet + powder + primer + brass with the number of times you reuse the brass). Handloads are graded alongside the factory loads, marked in a different color, and can be edited, duplicated or deleted.
 
 Handload figures are only as good as your data. The app does not check pressure or safety: always follow a published load manual.
 
 ### Settings
-Theme (several colour schemes; Classic is the original dark look), text size and the S–F grades switch are on the Settings page: at the bottom of the sidebar on desktop, and the Settings tab on the phone. On Android, the back button steps back through the menus; on the Home screen it closes the app.
+Theme (several color schemes; Classic is the original dark look), text size and the S–F grades switch are on the Settings page: at the bottom of the sidebar on desktop, and the Settings tab on the phone. On Android, the back button steps back through the menus; on the Home screen it closes the app.
 
 ## How the grades work
 For each factor, a load is scored on a curve against the typical (median) load of the same cartridge, so going further past typical earns less and less. The factor scores are spread out so that the typical load sits at 70 and one "typical spread" (median absolute deviation) moves it about 10 points, then combined using the scoring weights. Letter grades: S 85+, A 77+, B 66+, C 55+, D 45+, F below. Shotshells are only compared with the same load type (target with target, buckshot with buckshot, slugs with slugs).
@@ -109,12 +108,12 @@ Handloads (`my_handloads.csv`) and settings (`settings.json`) are saved next to 
 - `loads_*.csv` columns: cartridge, load, bullet_gr, muzzle_fps, bc_g1, powder_gr, default_cost, default, source, group, barrel_in, purpose (and optionally diameter_in). Every load name starts with its brand. `barrel_in` is the test barrel length; `purpose` is Hunting / Varmint / Target / Match / Defense / Subsonic (shotguns use `group`, their load type).
 - `ammo_*.csv` holds generic loads with no brand names; it provides the cartridge list.
 - 5.56x45mm NATO and 7.62x51mm NATO are their own cartridges, separate from .223 Remington and .308 Winchester. A NATO load says so in its name (5.56, M193, M855, 7.62x51, M80); Hornady's 5.56 NATO loads are the ones tested in a 20" barrel. Handloads and prices saved when they shared one list are matched up through `SPLIT_CARTRIDGES`.
-- Metric cartridges are named with "mm" (7.62x39mm, 7.62x54mmR). Saved handloads and prices that use older names are matched up automatically through `RENAMED_CARTRIDGES` in `src/cartridge_calculator.py`.
+- Saved handloads and prices that use older names are matched up automatically through `RENAMED_CARTRIDGES` in `src/cartridge_calculator.py`.
 - Bullet diameters for Taylor KO and HITS come from the `DIAMETERS` table in the same file.
 - `bullets.csv` BCs are approximate published G1 figures.
 
 ## Contributing
-Bug reports, load corrections and ideas are welcome as GitHub issues. For a data fix, name the load and give the source (maker's catalog page or website) for the numbers. Pull requests should keep the desktop and phone versions in step (same formulas, same data) and rebuild the web version after changing a CSV or `web/template.html`. `CLAUDE.md` holds the project's working notes and rules in more detail.
+Bug reports, load corrections and ideas are welcome as GitHub issues. For a data fix, name the load and give the source (maker's catalog page or website) for the numbers. Pull requests should keep the desktop and phone versions in step (same formulas, same data) and rebuild the web version after changing a CSV or `web/template.html`. `CLAUDE.md` holds the project's working notes and rules in more detail. I have shit to do IRL so I might not be the fastest at looking at your forks/PRs, but please feel free to improve this program and send over any suggestions!
 
 ## License
 
