@@ -1121,6 +1121,7 @@ class App:
         self.view = None
         self._fonts, self._widths = {}, {}   # text_width caches
         self._base_w = self._auto_w = None   # window width before / after grow_to_fit
+        self._wm_shift = (0, 0)   # how far the window manager moves the window we place (Wayland)
         families = set(tkfont.families(root))
         self.family = next((f for f in ("Segoe UI", "SF Pro Text", "Inter", "Noto Sans",
                                         "Cantarell", "Ubuntu", "Helvetica Neue", "Helvetica",
@@ -1412,15 +1413,24 @@ class App:
         base = self._base_w if cur == self._auto_w else cur
         w = max(base, min(cur + extra, r.winfo_screenwidth() - 20))
         if w != cur:
-            # Only the size changes. The position Tk reports with winfo_x / winfo_y is the
-            # inside of the window, under the title bar, so passing it back moved the window
-            # down by the title bar's height each time (issue #3). wm_geometry gives the
-            # outer position, which is what setting it expects.
+            # The window should only change size (issue #3). wm_geometry gives the outer
+            # position, which is what setting it expects (winfo_x / winfo_y is the inside, under
+            # the title bar). Some window managers still move it: on KDE Wayland with Tk 9 every
+            # resize put it a title bar lower. So check where it landed, put it back, and
+            # remember the shift so later resizes ask for the right place straight away.
             m = re.search(r"[+-](-?\d+)[+-](-?\d+)$", r.wm_geometry())
             fx, fy = (int(m[1]), int(m[2])) if m else (r.winfo_x(), r.winfo_y())
             x = max(0, min(fx, r.winfo_screenwidth() - w - 10))
-            r.geometry(f"{w}x{r.winfo_height()}" + (f"+{x}+{fy}" if x != fx else ""))
+            x0, y0 = r.winfo_rootx() + x - fx, r.winfo_rooty()   # where the inside should end up
+            sx, sy = self._wm_shift
+            moved = x != fx or self._wm_shift != (0, 0)
+            r.geometry(f"{w}x{r.winfo_height()}" + (f"+{x - sx}+{fy - sy}" if moved else ""))
             r.update_idletasks()
+            dx, dy = r.winfo_rootx() - x0, r.winfo_rooty() - y0
+            if dx or dy:
+                self._wm_shift = (sx + dx, sy + dy)
+                r.geometry(f"+{x - sx - dx}+{fy - sy - dy}")
+                r.update_idletasks()
         self._base_w, self._auto_w = base, r.winfo_width()
 
     # ---- window + shell --------------------------------------------------- #
