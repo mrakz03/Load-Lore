@@ -89,7 +89,7 @@ data/loads_*.csv              factory loads, one file per category
 data/ammo_*.csv               cartridge list (cartridges with no factory loads can still hold handloads)
 data/bullets.csv              bullet library for the handload form (weight, diameter, approximate G1 BC)
 assets/                       app icons (drawn by scripts/make_icons.py, needs Pillow)
-scripts/build_linux.sh        build and install on Fedora / Linux
+scripts/build_linux.sh        build from source and install on Fedora / Linux
 scripts/install_linux.sh      installer shipped in the Linux release (as install.sh)
 scripts/build_windows.bat     build the Windows .exe locally
 scripts/windows_installer.iss Inno Setup script for the Windows installer (built in CI)
@@ -125,6 +125,9 @@ keytool -genkeypair -keystore debug.keystore -storepass android -alias androidde
 base64 -w0 debug.keystore      # paste this output as the secret's value
 ```
 Keep `debug.keystore` somewhere safe and out of the repo. Without the secret, each APK gets a new key and testers have to uninstall the old app before installing a new one.
+
+## Contributing
+Bug reports, load corrections and ideas are welcome as GitHub issues. For a data fix, name the load and give the source (maker's catalog page or website) for the numbers. Pull requests should keep the desktop and phone versions in step (same formulas, same data) and rebuild the web version after changing a CSV or `web/template.html`. `CLAUDE.md` holds the project's working notes and rules in more detail.
 
 ## License
 

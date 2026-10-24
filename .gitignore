@@ -9,5 +9,8 @@ __pycache__/
 build/
 dist/
 *.spec
+.buildenv/
+.venv/
+/CartridgeCalculator/
 node_modules/
 /android/
