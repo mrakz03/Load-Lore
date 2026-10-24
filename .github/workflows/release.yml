@@ -112,16 +112,17 @@ jobs:
             echo "::warning::No ANDROID_DEBUG_KEYSTORE secret, so this APK gets a new key and won't install over an older one."
             exit 0
           fi
-          for d in "${ANDROID_USER_HOME:-$HOME/.android}" "$HOME/.android"; do
-            mkdir -p "$d" && echo "$KEYSTORE" | base64 -d > "$d/debug.keystore"
-          done
-      - run: ./gradlew assembleDebug
+          # Gradle's default debug keystore location depends on the runner's environment, so name
+          # the key outright (android.injected.signing.* applies to debug builds too)
+          echo "$KEYSTORE" | base64 -d > "$RUNNER_TEMP/debug.keystore"
+          echo "SIGN_ARGS=-Pandroid.injected.signing.store.file=$RUNNER_TEMP/debug.keystore -Pandroid.injected.signing.store.password=android -Pandroid.injected.signing.key.alias=androiddebugkey -Pandroid.injected.signing.key.password=android" >> "$GITHUB_ENV"
+      - run: ./gradlew assembleDebug $SIGN_ARGS
         working-directory: android
       - name: Check the APK was signed with the saved key
         if: ${{ env.HAS_KEY == 'true' }}
         shell: bash
         run: |
-          want=$(keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android | grep -m1 'SHA256:' | awk '{print $2}')
+          want=$(keytool -list -v -keystore "$RUNNER_TEMP/debug.keystore" -storepass android | grep -m1 'SHA256:' | awk '{print $2}')
           got=$(keytool -printcert -jarfile android/app/build/outputs/apk/debug/app-debug.apk | grep -m1 'SHA256:' | awk '{print $2}')
           echo "keystore $want"; echo "apk      $got"
           [ -n "$want" ] && [ "$want" = "$got" ]
