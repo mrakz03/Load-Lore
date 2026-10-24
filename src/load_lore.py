@@ -3393,7 +3393,7 @@ class HeadToHeadView:
         slot["num"] = a.label(self.slot_box, "", 11, MUTED, True)
         slot["cat_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cat"], values=list(self.cats),
                                        state="readonly", font=a.f(11),
-                                       width=max(len(t) for t in self.cats))
+                                       width=self._chars(self.cats))
         slot["cart_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cart"],
                                         values=self.cartridges.get(slot["cat"].get(), []),
                                         font=a.f(11), width=widest)
@@ -3420,6 +3420,12 @@ class HeadToHeadView:
         self._layout_slots()
         if focus:
             slot["load_box" if slot["cart"].get() else "cart_box"].focus_set()
+
+    def _chars(self, texts):
+        """A box width in average characters (what ttk counts) that just fits the longest
+        text: names are mostly narrower letters than the "0" ttk measures by."""
+        f = tkfont.Font(font=self.app.f(11))
+        return math.ceil(max(f.measure(t) for t in texts) / f.measure("0")) + 1
 
     def _fill_loads(self, slot):
         # the cartridge search: any category's cartridge can be typed; with nothing typed,
