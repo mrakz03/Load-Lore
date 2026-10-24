@@ -192,7 +192,7 @@ def pick_key(cat, item):
     return (cat.title, item.cartridge, item.hid or item.label)
 
 
-# Colour themes (desktop and, via build_web.py, the phone/web version). "side" is the web
+# Color themes (desktop and, via build_web.py, the phone/web version). "side" is the web
 # sidebar / bottom bar; "scheme" tells the browser whether form controls should be light or dark.
 THEMES = {
     "Classic": dict(bg="#0e1014", surface="#171a21", surface_2="#222732", border="#2d333f",
@@ -1284,7 +1284,7 @@ class App:
         self._rebuild()
 
     def set_theme(self, name):
-        """Appearance picker. Rebuilds the current screen in the new colours."""
+        """Appearance picker. Rebuilds the current screen in the new colors."""
         if name not in THEMES or name == self.theme:
             return
         self.theme = name
@@ -1767,7 +1767,7 @@ class App:
             return right
 
         theme_var = tk.StringVar(value=self.theme)
-        pick = ttk.Combobox(row("Theme", "Colours for the whole app"), textvariable=theme_var,
+        pick = ttk.Combobox(row("Theme", "Colors for the whole app"), textvariable=theme_var,
                             values=list(THEMES), state="readonly", font=self.f(11),
                             width=max(len(n) for n in THEMES) + 2)
         pick.pack()
