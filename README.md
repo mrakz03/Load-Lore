@@ -75,7 +75,7 @@ Releases are on the repository's **Releases** page.
 
 **Updating (Windows and Linux):** open Settings and press **Check for updates**. When a newer release is out, **Update to vX** downloads it, checks it against the release's `SHA256SUMS.txt`, installs it over the old version and reopens the app; your handloads, prices and settings are kept. Turn on **Check at start** to be asked whenever a new version comes out. The app only talks to GitHub when you press the button or turn that on. The portable Windows .zip can't update itself, so its button opens the Releases page instead.
 
-In the Start menu, app launcher and phone app drawer the app is called **Load Lore**. Download files carry the version in their name. Releases also include `CartridgeCalculator-Setup.exe` and `CartridgeCalculator-Linux.tar.gz`, the names v1.7.3-dev and older look for when they update; you don't need them for a new install. Copies installed under the old name (the Cartridge Calculator folder) are moved to a Load Lore folder by their next update, handloads and settings included.
+In the Start menu, app launcher and phone app drawer the app is called **Load Lore**. Download files carry the version in their name. Copies of v1.7.3-dev and older can't update themselves to the renamed version: download and run the new installer (or install.sh) once. It moves the app from the old Cartridge Calculator folder to a Load Lore folder, handloads and settings included.
 
 ## For developers
 

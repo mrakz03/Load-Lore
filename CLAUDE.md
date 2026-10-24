@@ -7,7 +7,7 @@ title, README heading); device menus show just "Load Lore" (issue #27: installer
 shortcuts, .desktop Name, capacitor appName). File names were renamed too (Oct 2026): src/load_lore.py,
 LoadLore.exe / LoadLore, install folders ...\Programs\Load Lore and ~/.local/share/load-lore (an
 upgrade moves the old "Cartridge Calculator" / cartridge-calculator folder, user files included: the
-.iss [Code] + external [Files], install.sh OLD_APPDIR, install_linux_update). Kept on purpose:
+.iss [Code] + external [Files], install.sh OLD_APPDIR). Kept on purpose:
 Android appId com.cartridgecalc.app (changing it makes a new app: reinstall, handloads lost), the
 Windows AppId, and the web's cartridge_calc_* localStorage keys (saved handloads/prices/settings).
 
@@ -100,9 +100,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   place like install.sh), checked against SHA256SUMS.txt from the release job. "Check at start"
   (settings.json check_updates) is off by default. Release files carry the version
   (LoadLore-v1.7.4-dev-Setup.exe, -Windows.zip, -Linux.tar.gz, .apk; release_asset matches them).
-  The release also ships LEGACY copies CartridgeCalculator-Setup.exe and CartridgeCalculator-Linux.tar.gz
-  (that tar keeps the CartridgeCalculator/CartridgeCalculator layout) because v1.7.3-dev and older only
-  look for those names; drop the LEGACY lines in release.yml once no such copies are left.
+  v1.7.3-dev and older only look for CartridgeCalculator-Setup.exe / -Linux.tar.gz, which releases
+  no longer ship (the maintainer's call, Oct 24 2026): those copies are reinstalled by hand, and the
+  installer / install.sh move the old folder and user files.
   SHA256SUMS.txt keeps its name.
   Tags are vX.Y.Z, optionally with a suffix for a test build (v1.7.2-dev sorts after 1.7.1, before
   1.7.2: version_tuple); a release marked "pre-release" on GitHub is skipped by the latest-release API.
