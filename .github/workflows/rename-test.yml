@@ -36,7 +36,8 @@ jobs:
           Start-Sleep 3
           $setup = Start-Process dist\LoadLore-Setup.exe -ArgumentList "/SILENT","/SUPPRESSMSGBOXES","/NORESTART","/CLOSEAPPLICATIONS","/LOG=$PWD\setup.log" -PassThru
           Start-Sleep 1
-          Stop-Process -Id $app.Id -Force
+          # what the old app does after starting the installer: close (both PyInstaller processes)
+          Get-Process CartridgeCalculator -ErrorAction SilentlyContinue | Stop-Process -Force
           $setup.WaitForExit()
           Start-Sleep 3
           Get-Content setup.log -Tail 30
@@ -45,7 +46,7 @@ jobs:
           if (-not (Test-Path "$new\unins000.exe")) { throw "uninstaller missing" }
           if ((Get-Content "$new\my_handloads.csv" -Raw) -notmatch "308") { throw "handloads not moved" }
           if ((Get-Content "$new\settings.json" -Raw) -notmatch "Light") { throw "settings not moved" }
-          if (Test-Path $old) { Get-ChildItem $old; throw "old folder still there" }
+          if (Test-Path $old) { Get-ChildItem $old | Format-Table Name; throw "old folder still there" }
           if (-not (Get-Process LoadLore -ErrorAction SilentlyContinue)) { throw "new app was not started" }
           $lnk = (New-Object -ComObject WScript.Shell).CreateShortcut("$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Load Lore.lnk")
           "shortcut -> $($lnk.TargetPath)"

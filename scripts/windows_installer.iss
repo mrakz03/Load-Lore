@@ -81,12 +81,21 @@ Filename: "{app}\LoadLore.exe"; Flags: nowait; Check: WizardSilent
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   Old: String;
+  Tries: Integer;
 begin
   Old := ExpandConstant('{#OldDir}');
   if (CurStep = ssPostInstall) and DirExists(Old) and (CompareText(Old, ExpandConstant('{app}')) <> 0) then
   begin
-    Sleep(1500);   // the old app closes itself after starting this installer
-    if not DelTree(Old, True, True, True) then
+    // the old app closes itself after starting this installer, but its .exe stays locked
+    // until it has: try for up to 10 seconds
+    Tries := 0;
+    while DirExists(Old) and (Tries < 10) do
+    begin
+      DelTree(Old, True, True, True);
+      if DirExists(Old) then Sleep(1000);
+      Tries := Tries + 1;
+    end;
+    if DirExists(Old) then
       Log('Could not remove all of ' + Old);
   end;
 end;
