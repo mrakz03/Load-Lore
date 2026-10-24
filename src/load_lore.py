@@ -617,6 +617,16 @@ def make_label(item, grain_style):
     return item.load or f"{item.bullet_gr:g} gr"
 
 
+PRESSURES = ("+P", "+P+")
+
+
+def pressure_of(name):
+    """'+P+', '+P' or '' from a load's name (Federal Train+Protect and +Peak aren't +P)."""
+    if re.search(r"\+P\+", name or ""):
+        return "+P+"
+    return "+P" if re.search(r"\+P(?![A-Za-z+])", name or "") else ""
+
+
 def icon_path():
     """assets/icon.png: bundled into the packaged app by PyInstaller (--add-data), or the
     repo's copy when running from a git checkout. None if it isn't there."""
@@ -2293,6 +2303,9 @@ class LoadsView:
         self.source = "All"               # All / Factory / Handloads
         self.chips = {}
         self.src_chips = {}
+        # +P / +P+ check boxes: untick one to hide those loads from the list (grades don't change)
+        self.press_vars = {p: tk.BooleanVar(value=True) for p in PRESSURES}
+        self.press_boxes = {}
         self.weight_vars = {k: tk.StringVar(value=str(v)) for k, v in default_weights(cat).items()}
         self.weights_open = False
         self.rows = []                    # computed rows for the chosen cartridge
@@ -2394,8 +2407,12 @@ class LoadsView:
         above.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         above.columnconfigure(1, weight=1)
         a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).grid(row=0, column=0, sticky="w")
-        ttk.Entry(above, textvariable=self.filter_var, font=a.f(10), width=28).grid(
-            row=1, column=0, sticky="w", pady=(4, 0))
+        fl = tk.Frame(above, bg=BG)
+        fl.grid(row=1, column=0, sticky="w", pady=(4, 0))
+        ttk.Entry(fl, textvariable=self.filter_var, font=a.f(10), width=28).pack(side="left")
+        # +P / +P+ check boxes, only for cartridges that have such loads
+        self.press_row = tk.Frame(fl, bg=BG)
+        self.press_row.pack(side="left", padx=(14, 0))
         self.count_lbl = a.label(above, "Choose a cartridge to see how every brand's load compares.",
                                  10, MUTED, bg=BG, anchor="e")
         self.count_lbl.grid(row=1, column=1, sticky="e", pady=(4, 0), padx=(16, 0))
@@ -2505,7 +2522,8 @@ class LoadsView:
         return dict(cart=self.cart_var.get(), dist=self.dist_var.get(), gun=self.gun_var.get(),
                     gun_auto=getattr(self, "_gun_auto", self.cat.default_gun_lb),
                     weights={k: v.get() for k, v in self.weight_vars.items()},
-                    weights_open=self.weights_open, purpose=self.purpose, source=self.source)
+                    weights_open=self.weights_open, purpose=self.purpose, source=self.source,
+                    pressure={p: v.get() for p, v in self.press_vars.items()})
 
     def restore(self, snap):
         if not self.loads or not hasattr(self, "tree"):
@@ -2519,6 +2537,9 @@ class LoadsView:
         """Put a snapshot's settings back; returns its cartridge if it is still listed."""
         self.purpose = snap.get("purpose", "All")
         self.source = snap.get("source", "All")
+        for p, on in snap.get("pressure", {}).items():
+            if p in self.press_vars:
+                self.press_vars[p].set(bool(on))
         for k, v in snap.get("weights", {}).items():
             if k in self.weight_vars:
                 self.weight_vars[k].set(v)
@@ -2721,6 +2742,45 @@ class LoadsView:
             self.src_chips[name] = chip
         self._style_chips()
 
+    def _build_pressure(self, cart):
+        """A check box per pressure (+P, +P+) this cartridge has loads of; unticked hides them."""
+        for w in self.press_row.winfo_children():
+            w.destroy()
+        self.press_boxes = {}
+        have = {pressure_of(x.load) for x in self.groups.get(cart, [])}
+        for p in PRESSURES:
+            if p not in have:
+                continue
+            # drawn as a box + text (ttk's clam check box is a tiny X that's hard to see)
+            row = tk.Frame(self.press_row, bg=BG, cursor="hand2")
+            row.pack(side="left", padx=(0, 16))
+            mark = tk.Label(row, width=2, font=self.app.f(10, True), highlightthickness=1)
+            mark.pack(side="left")
+            text = self.app.label(row, p, 10, TEXT, True, bg=BG)
+            text.pack(side="left", padx=(6, 0))
+            for w in (row, mark, text):
+                w.bind("<Button-1>", lambda e, pr=p: self._pick_pressure(pr))
+            self.press_boxes[p] = (mark, text)
+        self._style_pressure()
+
+    def _style_pressure(self):
+        for p, (mark, _) in self.press_boxes.items():
+            on = self.press_vars[p].get()
+            mark.config(text="✓" if on else "", bg=ACCENT if on else SURFACE_2,
+                        fg=ON_ACCENT, highlightbackground=ACCENT if on else MUTED)
+
+    def _pick_pressure(self, p=None):
+        if p is not None:
+            self.press_vars[p].set(not self.press_vars[p].get())
+        self._style_pressure()
+        self.selected = None
+        self.detail.grid_remove()
+        self._render()
+
+    def _press_ok(self, item):
+        p = pressure_of(item.load)
+        return not p or self.press_vars[p].get()
+
     def _pick_source(self, name):
         self.source = name
         self.selected = None
@@ -2733,6 +2793,7 @@ class LoadsView:
             w.destroy()
         self.chips = {}
         self._build_source_chips(cart)
+        self._build_pressure(cart)
         items = self.groups.get(cart, [])
         names = self._purposes_of(cart)
         if len(names) <= 2:                      # only one purpose: nothing to pick between
@@ -2748,10 +2809,14 @@ class LoadsView:
         self._style_chips()
 
     def _count_chips(self):
-        """Chip counts follow the brand/load filter (and the purpose chips the Show choice too)."""
+        """Chip counts follow the brand/load filter (and the purpose chips the Show choice too);
+        the +P / +P+ boxes count the filtered loads, the chips leave out the hidden ones."""
         terms = self.filter_var.get().lower().split()
         items = [x for x in self.groups.get(self.cart_var.get(), [])
                  if all(t in x.label.lower() for t in terms)]
+        for p, (_, text) in self.press_boxes.items():
+            text.config(text=f"{p} ({sum(pressure_of(x.load) == p for x in items)})")
+        items = [x for x in items if self._press_ok(x)]
         for name, chip in self.src_chips.items():
             n = sum(name == "All" or x.handload == (name == "Handloads") for x in items)
             chip.config(text=f"{name} ({n})")
@@ -2839,7 +2904,8 @@ class LoadsView:
         self._count_chips()
         terms = self.filter_var.get().lower().split()
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
-                and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))]
+                and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))
+                and self._press_ok(r["item"])]
         keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["item"].label.lower(), r["stats"]["weight"]),
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
                 "Barrel": lambda r: r["item"].barrel_in or 999,
