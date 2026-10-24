@@ -2569,6 +2569,11 @@ class LoadsView:
         on = self.app.show_grades
         self.tree.configure(displaycolumns=[c for c in self.cols
                                             if on or c not in ("#", "Score", "Grade")])
+        # without the # column the load names would sit against the table's edge: the empty
+        # tree column (#0) gives them a little room on the left instead
+        # (_render takes its width back out of the Load column, so the table is no wider)
+        self.tree.configure(show="headings" if on else ("tree", "headings"))
+        self.tree.column("#0", width=self.app.px(6), minwidth=self.app.px(6), stretch=False)
         self.footnote.config(text=(
             f"Grades compare loads of the same cartridge with each other (the average scores "
             f"{REL_CENTER:.0f}). " if on else "") + "Prices are estimates: set your own.")
@@ -2954,6 +2959,11 @@ class LoadsView:
             # as wide as the last cartridge's longest name (filtering within one keeps them)
             self.col_widths.clear()
         self.app.fit_columns(self.tree, self.cols, cells, "Load", self.col_widths)
+        if not self.app.show_grades:
+            # the left gap (tree column #0) comes out of the Load column's spare room
+            gap = self.app.px(6)
+            self.tree.column("Load", width=self.col_widths["Load"] - gap,
+                             minwidth=max(0, int(self.tree.column("Load", "minwidth")) - gap))
         if self.sized != self.cart_var.get() and cells:
             # widen the window (never shrinks, stays on screen) if every column doesn't fit
             self.sized = self.cart_var.get()
