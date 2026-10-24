@@ -23,7 +23,7 @@ Ballistics: velocity at distance is computed by integrating the standard G1
 drag model using each load's G1 ballistic coefficient. Recoil is an estimate
 of free recoil energy for a gun of the weight you enter.
 
-Requires only Python 3.8+ with Tkinter (included with the standard installers
+Requires only Python 3.9+ with Tkinter (included with the standard installers
 for Windows and macOS).
 """
 
@@ -89,7 +89,7 @@ POWDERS = [
     "Reloder 22", "Reloder 23", "Reloder 25", "Reloder 26", "Reloder 33", "Reloder 50",
     "Unique", "Bullseye", "Power Pistol", "Blue Dot", "Red Dot", "2400", "Green Dot", "Herco",
     "Sport Pistol", "Winchester 231", "Winchester 296", "Winchester 748", "Winchester 760",
-    "AutoComp", "WSF", "StaBall 6.5",
+    "Winchester AutoComp", "Winchester WSF", "Winchester StaBall 6.5",
     "Accurate 2230", "Accurate 2460", "Accurate 2520", "Accurate 4350", "Accurate 5744",
     "Accurate No.2", "Accurate No.5", "Accurate No.7", "Accurate No.9",
     "Vihtavuori N140", "Vihtavuori N150", "Vihtavuori N160", "Vihtavuori N165",
@@ -714,6 +714,8 @@ def read_settings():
             return {}
         if isinstance(data.get("prices"), dict):        # keys are "category|cartridge|load"
             data["prices"] = {new: v for k, v in data["prices"].items() for new in _rename_price_key(k)}
+        elif "prices" in data:                          # a hand-edited file: setting a price would crash
+            del data["prices"]
         return data
     except (OSError, ValueError):
         return {}
