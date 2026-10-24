@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets")
 
-# Classic theme colours (THEMES in src/cartridge_calculator.py)
+# Classic theme colors (THEMES in src/cartridge_calculator.py)
 BG_TOP, BG_BOTTOM = (31, 36, 46), (14, 16, 20)
 BORDER = (45, 51, 63)
 ACCENT, ON_ACCENT = (76, 141, 255), (255, 255, 255)
