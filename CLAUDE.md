@@ -129,7 +129,8 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   Fiocchi, PMC and CCI catalogs (the maintainer's PDFs, not in the repo), plus a few Barnes, Nosler,
   Buffalo Bore, Sellier & Bellot and PPU loads from retailer listings. Every added row and its
   source is in research/added_loads_sources.tsv. Missing BCs were scaled from the nearest-weight
-  published load of the same cartridge (source=partial); price is estimated by brand tier.
+  published load of the same cartridge (source=partial); price was estimated by brand tier
+  (re-set from retail Oct 24, see below).
 - 10 and 16 Gauge (Oct 2026): 41 loads from the 2026 Federal, Winchester, Remington and Fiocchi
   catalogs (rows in research/added_loads_sources.tsv). BC is set by shot size like the other gauges;
   price is the same line's 12 ga price x1.25 (16 ga) or x1.6 (10 ga).
@@ -167,8 +168,14 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   Mach 2.25; 6.5 147 gr is ELD Match, 6mm 103 gr is ELD-X, there is no .277 162 ELD-X), Nosler 30 cal
   150 BT 0.435. Slug BCs (were a flat 0.09 / 0.079) taken from the Remington and Winchester catalogs'
   own BC column, or fitted to Federal's downrange velocities. ELEY .22 LR prices from retail box
-  prices (Lucky Gunner / KY Gun Co, Oct 2026). Prices elsewhere are still brand-tier estimates; some
-  tiers read high against retail (.357 Magnum premium loads $2.47 vs ~$1.40-1.85 retail).
+  prices (Lucky Gunner / KY Gun Co, Oct 2026).
+- Retail prices (Oct 24 2026): every default_cost re-set from Lucky Gunner's category pages (PSA and
+  MidwayUSA load prices by script, so they can't be read; Ammunition Depot has no round counts). A
+  load matched to a listing (same brand, grain or payload, product line; smallest box listed) gets
+  that per-round price (about 1,230 loads). The rest are scaled from the old brand-tier price by the
+  matched loads of the same product line, else the same brand + old price in that cartridge, else a
+  fitted cartridge x brand ratio (0.33-3x). ELEY kept. Each load's old/new price and method is in
+  research/price_sources.tsv. Shotshells match by brand, line, length, payload / buck size.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
