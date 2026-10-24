@@ -2191,12 +2191,12 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
             barrel = num("barrel_in", "Barrel length", 1, 60, True)
             if dia is None:
                 dia = DIAMETERS.get(cart) or bullet_diameter(cart, gr)
+            if not dia:                       # a "gauge" / "bore" name has no bullet diameter
+                raise ValueError("Enter the bullet diameter.")
             if bc is None:
                 bc = estimate_bc(gr, dia, cat.title == "Handgun")
-            total = V["total"].get().strip().replace("$", "")
-            cost = float(total) if total else parts_cost()
-            if total:
-                num("total", "Total cost", 0)
+            total = num("total", "Total cost", 0, blank=True)
+            cost = parts_cost() if total is None else total
             if not cost or cost <= 0:
                 raise ValueError("Enter what a round costs (the parts, or a total per round).")
         except ValueError as exc:
