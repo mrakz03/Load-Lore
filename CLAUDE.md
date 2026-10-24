@@ -68,8 +68,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Gun weight (Oct 2026): GUN_LB / typical_gun_lb (gun_lb, typicalGun in web) gives a typical gun per
   category + cartridge (.44 Magnum is in both rifle and handgun) where the category default is far off (.50 BMG 30 lb read 379 ft-lbs at 8 lb). The
   dictionary's gun field follows the cartridge unless the user typed their own (_gun_auto / L.gunAuto);
-  Head to Head's gun is blank by default = each load in its own cartridge's gun (h2h_gun / h2hGun,
-  not shared with the dictionary). Limit GUN_LB_MAX 60 lb.
+  Head to Head's gun weights are hidden by default ("Gun weight for each load" link: gun_open /
+  gunOpen); opened, each load row gets its own box, blank = that cartridge's usual gun, and hiding
+  them puts every load back in its usual gun (h2h_rows / h2hRows take a gun per load, in memory
+  only, not shared with the dictionary). Limit GUN_LB_MAX 60 lb.
 - .223 Remington, 5.56x45mm NATO, .308 Winchester and 7.62x51mm NATO are four separate cartridges
   (issue #28; they were two shared lists before). A NATO load says 5.56 / M193 / M855 or
   7.62x51 / M80 in its name; Hornady 5.56 NATO loads are the 20" barrel ones (checked against the
