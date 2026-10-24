@@ -759,7 +759,8 @@ def write_settings(data):
 
 # ---- updates (Settings > Updates): the newest GitHub release, installed in place ---- #
 UPDATE_REPO = "mrakz03/Load-Lore"
-RELEASES_PAGE = f"https://github.com/{UPDATE_REPO}/releases/latest"
+REPO_PAGE = f"https://github.com/{UPDATE_REPO}"      # Settings > Source code (web too)
+RELEASES_PAGE = f"{REPO_PAGE}/releases/latest"
 LATEST_RELEASE_API = f"https://api.github.com/repos/{UPDATE_REPO}/releases/latest"
 SUMS_ASSET = "SHA256SUMS.txt"                      # made by the release job in CI
 WINDOWS_ASSET = "CartridgeCalculator-Setup.exe"
@@ -1791,6 +1792,8 @@ class App:
                                      "Head to Head"), flip)
         chip.pack()
         self._updates_row(row)
+        self.button(row("Source code", "Free and open source: code, issues and releases on GitHub"),
+                    "Open on GitHub", lambda: webbrowser.open(REPO_PAGE)).pack()
         card = tk.Frame(wrap, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
         card.pack(fill="x", pady=6)
         self.label(card, "Disclaimer", 12, TEXT, True, bg=SURFACE, anchor="w").pack(

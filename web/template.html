@@ -113,8 +113,8 @@ select:focus,input:focus{outline:none;border-color:var(--accent)}
 .wrow label{font-size:.8rem;color:var(--muted)}
 .wnote{font-size:.8rem;font-weight:700;margin-top:8px}
 .btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-button.btn{background:var(--surface2);color:var(--text);border:0;border-radius:8px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}
-button.btn:hover{background:var(--border)}
+button.btn,a.btn{background:var(--surface2);color:var(--text);border:0;border-radius:8px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap}
+button.btn:hover,a.btn:hover{background:var(--border)}
 button.btn.p{background:var(--accent);color:var(--on-accent)}button.btn.p:hover{background:var(--accent-h)}
 .hidden{display:none!important}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -533,6 +533,7 @@ function showSettings(){
     <div class="setrow"><b>Text size</b>${sizeCtl()}</div>
     <div class="setrow"><label for="theme2"><b>Theme</b></label><select id="theme2">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>
     <div class="setrow nw"><div><b>S–F grades</b><div class="muted">Show the grades in the Load Dictionary and Head to Head</div></div>${gradesBtn()}</div>
+    <div class="setrow nw"><div><b>Source code</b><div class="muted">Free and open source: code, issues and releases on GitHub</div></div><a class="btn" href="${esc(DATA.repo||"")}" target="_blank" rel="noopener">Open on GitHub</a></div>
     <div class="setrow"><div><b>Disclaimer</b><div class="muted" style="white-space:pre-line">${esc(DATA.about||"")}</div></div></div>
     <div class="setrow"><b>Version</b><span class="muted">${esc(VERSION_TEXT)}</span></div>
   </div>`;
