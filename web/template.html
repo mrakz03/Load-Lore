@@ -85,6 +85,13 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .chips button small{opacity:.75;font-weight:600;margin-left:3px}
 .sortrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 @media(max-width:480px){.sortrow{grid-template-columns:1fr}}
+.pchk{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px}
+.pchk label{display:flex;align-items:center;gap:7px;font-weight:700;font-size:.9rem;cursor:pointer;min-height:32px}
+.pchk input{width:22px;height:22px;flex:none;margin:0;padding:0;border:1.5px solid var(--muted);border-radius:5px;display:grid;place-content:center;cursor:pointer}
+.pchk input:checked{background:var(--accent);border-color:var(--accent)}
+.pchk input:checked::before{content:"✓";color:var(--on-accent);font-size:15px;font-weight:800;line-height:1}
+.pchk input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pchk small{opacity:.75;font-weight:600}
 .sortrow #ls{padding-top:8px;padding-bottom:8px;font-size:.9rem}
 
 h1{font-size:1.45rem;margin:0}
@@ -439,6 +446,9 @@ function makeLabel(it,cat){
   if(it.group&&it.load)return `${it.group}  ·  ${it.load}`;
   return it.load||g(it.bullet_gr)+" gr";
 }
+const PRESSURES=["+P","+P+"];
+// "+P+", "+P" or "" from a load's name (Federal Train+Protect and +Peak aren't +P)
+function pressureOf(name){name=name||"";return /\+P\+/.test(name)?"+P+":/\+P(?![A-Za-z+])/.test(name)?"+P":"";}
 const state = {loads:{}};     // title -> array of load objects
 for(const cat of CATEGORIES){
   state.loads[cat.title]=cat.loads.map(x=>Object.assign({},x,{label:makeLabel(x,cat)}));
@@ -734,7 +744,7 @@ function openLoads(cat,pane){
   const all=state.detail[cat.title];
   let groups,carts;const regroup=()=>{groups=groupBy(all,false);if(cat.grain_style)groups=withHandloadOnly(groups,state.loads[cat.title]);carts=[...groups.keys()];};regroup();
   const sh=shared[cat.title]||{};
-  const L={open:null,sort:"score",weightsOpen:false,prices:readPrices(),purpose:sh.purpose||"All",src:"All"};
+  const L={open:null,sort:"score",weightsOpen:false,prices:readPrices(),purpose:sh.purpose||"All",src:"All",press:Object.assign({"+P":true,"+P+":true},sh.press)};
   const keyOf=it=>it.hid||it.label;
   const PORDER=["Hunting","Varmint","Target","Match","Defense","Subsonic","Game","Waterfowl","Turkey","Buckshot","Slug"];
   const purposeOf=it=>it.purpose||it.group||"";
@@ -753,6 +763,7 @@ function openLoads(cat,pane){
   <!-- the brand / load filter and sort sit right above the list (issue #26) -->
   <div class="sortrow above"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
       <select id="ls"><option value="score">Sort: ${GRADES?"best value":"default order"}</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
+  <div class="pchk hidden" id="lpr" role="group" aria-label="Show +P loads"></div>
   <div class="cnt" id="lcnt"></div><div class="lgrid" id="lres"></div>
   <div class="note" id="lnote"></div>`;
   const $$=s=>$(s,pane);
@@ -768,7 +779,7 @@ function openLoads(cat,pane){
   MKEYS.forEach((k,i)=>$$("#lw_"+k).value=sh.w?sh.w[k]:cat.weights[i]);
   const readNum=(id,lo,hi)=>{const v=parseFloat($$(id).value);return isNaN(v)?null:Math.min(hi,Math.max(lo,v));};
   const priceOf=it=>{const v=L.prices[priceKey(cat,it)];return typeof v==="number"?v:it.default_cost;};
-  app._leave=()=>{shared[cat.title]=Object.assign({},shared[cat.title],{purpose:L.purpose,cart:$$("#lc").value,dist:$$("#ld").value,gun:$$("#lg").value,gunAuto:L.gunAuto,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#lw_"+k).value]))});};
+  app._leave=()=>{shared[cat.title]=Object.assign({},shared[cat.title],{purpose:L.purpose,press:L.press,cart:$$("#lc").value,dist:$$("#ld").value,gun:$$("#lg").value,gunAuto:L.gunAuto,w:Object.fromEntries(MKEYS.map(k=>[k,$$("#lw_"+k).value]))});};
   function buildChips(){
     const items=groups.get($$("#lc").value)||[], cnt={};
     items.forEach(x=>{const p=purposeOf(x);if(p)cnt[p]=(cnt[p]||0)+1;});
@@ -782,6 +793,11 @@ function openLoads(cat,pane){
       sb.innerHTML=[["All",items.length],["Factory",items.length-nh],["Handloads",nh]].map(([n,c])=>`<button data-s="${n}" class="${L.src===n?"on":""}" aria-pressed="${L.src===n}">${n}<small>${c}</small></button>`).join("");
       sb.querySelectorAll("button").forEach(b=>b.onclick=()=>{L.src=b.dataset.s;L.open=null;buildChips();render();});
     }else{sb.innerHTML="";sb.classList.add("hidden");}
+    // a check box per pressure (+P, +P+) this cartridge has loads of; unticked hides them
+    const have=new Set(items.map(x=>pressureOf(x.load))),pb=$$("#lpr"),ps=PRESSURES.filter(p=>have.has(p));
+    pb.classList.toggle("hidden",!ps.length);
+    pb.innerHTML=ps.map(p=>`<label><input type="checkbox" data-pr="${p}"${L.press[p]?" checked":""}>${p}<small></small></label>`).join("");
+    pb.querySelectorAll("input").forEach(b=>b.onchange=()=>{L.press[b.dataset.pr]=b.checked;L.open=null;render();});
     if(names.length<2){box.innerHTML="";box.classList.add("hidden");return;}
     box.classList.remove("hidden");
     box.innerHTML=[["All",items.length]].concat(names.map(n=>[n,cnt[n]])).map(([n,c])=>`<button data-p="${esc(n)}" class="${L.purpose===n?"on":""}" aria-pressed="${L.purpose===n}">${esc(n)}<small>${c}</small></button>`).join("");
@@ -789,8 +805,12 @@ function openLoads(cat,pane){
   }
   // chip counts follow the brand/load filter (and the purpose chips the Show choice too)
   const matchesFilter=x=>{const q=$$("#lf").value.trim().toLowerCase().split(/\s+/).filter(Boolean),t=(x.load+" "+(x.group||"")+" "+x.bullet_gr).toLowerCase();return q.every(w=>t.includes(w));};
+  const pressOk=x=>{const p=pressureOf(x.load);return !p||L.press[p];};
+  // the +P / +P+ boxes count the filtered loads, the chips leave out the hidden ones
   function countChips(){
-    const items=(groups.get($$("#lc").value)||[]).filter(matchesFilter);
+    let items=(groups.get($$("#lc").value)||[]).filter(matchesFilter);
+    $$("#lpr").querySelectorAll("input").forEach(b=>{b.parentNode.querySelector("small").textContent=items.filter(x=>pressureOf(x.load)===b.dataset.pr).length;});
+    items=items.filter(pressOk);
     $$("#lsrc").querySelectorAll("button").forEach(b=>{const s=b.dataset.s;b.querySelector("small").textContent=items.filter(x=>s==="All"||!!x.handload===(s==="Handloads")).length;});
     const shown=items.filter(x=>L.src==="All"||!!x.handload===(L.src==="Handloads"));
     $$("#lp").querySelectorAll("button").forEach(b=>{const p=b.dataset.p;b.querySelector("small").textContent=p==="All"?shown.length:shown.filter(x=>purposeOf(x)===p).length;});
@@ -811,7 +831,7 @@ function openLoads(cat,pane){
     if(!out){box.innerHTML=`<div class="muted">Enter a distance, gun weight and weights (numbers) to see results.</div>`;$$("#lcnt").textContent="";return;}
     if(!(groups.get($$("#lc").value)||[]).length){box.innerHTML=`<div class="muted">No factory loads listed for ${esc($$("#lc").value)}. Use “+ Add handload” to grade your own.</div>`;$$("#lcnt").textContent="";return;}
     countChips();
-    let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>matchesFilter(r.it));
+    let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>matchesFilter(r.it)&&pressOk(r.it));
     const key=$$("#ls").value;
     const cmp={score:(a,b)=>(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
       cost:(a,b)=>a.st.cost-b.st.cost,velocity:(a,b)=>b.st.velocity-a.st.velocity,energy:(a,b)=>b.st.energy-a.st.energy,taylor:(a,b)=>b.st.taylor-a.st.taylor,hits:(a,b)=>b.st.hits-a.st.hits,recoil:(a,b)=>a.st.recoil-b.st.recoil}[key];

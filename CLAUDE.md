@@ -32,7 +32,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   LoadSearch / searchBox, every typed word must be in the name); so are the cartridge boxes
   (Oct 2026): the dictionary's searches its category, Head to Head's searches every category
   (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings). The dictionary's brand / load
-  filter sits right above the list (issue #26).
+  filter sits right above the list (issue #26). Beside it, for cartridges that have +P / +P+ loads, a check box each
+  (pressure_of / pressureOf reads the load name; Train+Protect and +Peak aren't +P) hides those
+  loads from the list without changing any grade; ticked by default, kept per category while the
+  app is open (snapshot / shared), not in settings.json.
 - Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
   page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones),
   in two boxes, Display and About (rows split by thin lines, not one box each). About has a small
