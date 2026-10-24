@@ -11,10 +11,6 @@ DESKTOP="$HOME/.local/share/applications/load-lore.desktop"
 OLD_APPDIR="$HOME/.local/share/cartridge-calculator"
 OLD_DESKTOP="$HOME/.local/share/applications/cartridge-calculator.desktop"
 USER_FILES="my_calibers.csv my_handloads.csv settings.json"
-# the program is LoadLore; the CartridgeCalculator-Linux.tar.gz copy kept for old updaters
-# still calls it CartridgeCalculator
-PROG=LoadLore
-if [ ! -f "$SRC/$PROG" ] && [ -f "$SRC/CartridgeCalculator" ]; then PROG=CartridgeCalculator; fi
 
 if [ "$1" = "--uninstall" ]; then
     rm -f "$DESKTOP" "$OLD_DESKTOP"
@@ -29,7 +25,7 @@ if [ "$1" = "--uninstall" ]; then
     exit 0
 fi
 
-if [ ! -f "$SRC/$PROG" ] || ! ls "$SRC"/loads_*.csv >/dev/null 2>&1; then
+if [ ! -f "$SRC/LoadLore" ] || ! ls "$SRC"/loads_*.csv >/dev/null 2>&1; then
     echo "Run this from the unpacked LoadLore folder (the program or its data files are not next to it)."
     exit 1
 fi
@@ -47,7 +43,7 @@ fi
 # Copy the program under a temporary name and move it into place: copying straight over it
 # fails ("Text file busy") while the app is open, and the update used to stop there after
 # the old data files were already deleted, leaving the app with no data.
-cp "$SRC/$PROG" "$APPDIR/LoadLore.new"
+cp "$SRC/LoadLore" "$APPDIR/LoadLore.new"
 chmod +x "$APPDIR/LoadLore.new"
 mv -f "$APPDIR/LoadLore.new" "$APPDIR/LoadLore"
 # clear the data files an older version shipped, so ones a release drops don't linger

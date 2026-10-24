@@ -44,15 +44,12 @@ jobs:
           & $iscc.FullName "/DAppVersion=$v" scripts\windows_installer.iss
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Copy-Item dist\LoadLore-Setup.exe "LoadLore-$env:VTAG-Setup.exe"
-          # LEGACY: v1.7.3-dev and older update only from this name. Drop once those copies are updated.
-          Copy-Item dist\LoadLore-Setup.exe CartridgeCalculator-Setup.exe
       - uses: actions/upload-artifact@v4
         with:
           name: windows
           path: |
             LoadLore-${{ env.VTAG }}-Windows.zip
             LoadLore-${{ env.VTAG }}-Setup.exe
-            CartridgeCalculator-Setup.exe
 
   linux:
     runs-on: ubuntu-latest
@@ -76,16 +73,8 @@ jobs:
           cp dist/LoadLore data/*.csv assets/icon.png LICENSE LEGAL.md LoadLore/
           cp scripts/install_linux.sh LoadLore/install.sh
           tar czf "LoadLore-$VTAG-Linux.tar.gz" LoadLore
-          # LEGACY: v1.7.3-dev and older update only from this name, and look for
-          # CartridgeCalculator/CartridgeCalculator inside. Drop once those copies are updated.
-          cp -r LoadLore CartridgeCalculator && mv CartridgeCalculator/LoadLore CartridgeCalculator/CartridgeCalculator
-          tar czf CartridgeCalculator-Linux.tar.gz CartridgeCalculator
       - uses: actions/upload-artifact@v4
-        with:
-          name: linux
-          path: |
-            LoadLore-${{ env.VTAG }}-Linux.tar.gz
-            CartridgeCalculator-Linux.tar.gz
+        with: { name: linux, path: "LoadLore-${{ env.VTAG }}-Linux.tar.gz" }
 
   android:
     runs-on: ubuntu-latest
@@ -156,10 +145,9 @@ jobs:
         with: { path: out, merge-multiple: true }
       - name: Checksums (the in-app updater won't install a download that doesn't match)
         working-directory: out
-        run: sha256sum LoadLore-* CartridgeCalculator-* > SHA256SUMS.txt && cat SHA256SUMS.txt
+        run: sha256sum LoadLore-* > SHA256SUMS.txt && cat SHA256SUMS.txt
       - uses: softprops/action-gh-release@v2
         with:
           files: |
             out/LoadLore-*
-            out/CartridgeCalculator-*
             out/SHA256SUMS.txt
