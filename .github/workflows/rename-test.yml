@@ -5,6 +5,7 @@ on:
 jobs:
   windows:
     runs-on: windows-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,7 +25,8 @@ jobs:
           $old = "$env:LOCALAPPDATA\Programs\Cartridge Calculator"
           $new = "$env:LOCALAPPDATA\Programs\Load Lore"
           Invoke-WebRequest https://github.com/mrakz03/Load-Lore/releases/download/v1.7.3-dev/CartridgeCalculator-Setup.exe -OutFile old-setup.exe
-          Start-Process .\old-setup.exe -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART" -Wait
+          # not -Wait: that also waits for the app the installer starts
+          (Start-Process .\old-setup.exe -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART" -PassThru).WaitForExit()
           Start-Sleep 3
           Get-Process CartridgeCalculator -ErrorAction SilentlyContinue | Stop-Process -Force
           if (-not (Test-Path "$old\CartridgeCalculator.exe")) { throw "old install missing" }
@@ -62,6 +64,7 @@ jobs:
 
   linux:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -84,5 +87,5 @@ jobs:
           grep -q Light $HOME/.local/share/load-lore/settings.json
           test -f $HOME/.local/share/load-lore/my_handloads.csv
           grep Exec $HOME/.local/share/applications/load-lore.desktop
-          timeout 10 xvfb-run -a $HOME/.local/share/load-lore/LoadLore; test $? -eq 124
+          timeout 10 xvfb-run -a $HOME/.local/share/load-lore/LoadLore || test $? -eq 124   # 124 = still running after 10 s
           echo "all good"
