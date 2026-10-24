@@ -2548,6 +2548,10 @@ class LoadsView:
         on = self.app.show_grades
         self.tree.configure(displaycolumns=[c for c in self.cols
                                             if on or c not in ("#", "Score", "Grade")])
+        # without the # column the load names would sit against the table's edge: the empty
+        # tree column (#0) gives them a little room on the left instead
+        self.tree.configure(show="headings" if on else ("tree", "headings"))
+        self.tree.column("#0", width=self.app.px(10), minwidth=self.app.px(10), stretch=False)
         self.footnote.config(text=(
             f"Grades compare loads of the same cartridge with each other (the average scores "
             f"{REL_CENTER:.0f}). " if on else "") + "Prices are estimates: set your own.")
