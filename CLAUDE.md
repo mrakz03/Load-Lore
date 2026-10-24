@@ -96,6 +96,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   Check: WizardSilent reopens the app) or the Linux tar (install_linux_update swaps the files in
   place like install.sh), checked against SHA256SUMS.txt from the release job. "Check at start"
   (settings.json check_updates) is off by default. Asset names must stay as they are.
+  Tags are vX.Y.Z, optionally with a suffix for a test build (v1.7.2-dev sorts after 1.7.1, before
+  1.7.2: version_tuple); a release marked "pre-release" on GitHub is skipped by the latest-release API.
 git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
 (tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
 - APP_VERSION in cartridge_calculator.py stays "dev" in the repo; CI sets it from the tag.
