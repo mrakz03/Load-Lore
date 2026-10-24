@@ -101,7 +101,7 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   the middle number (v1.6) for bigger releases.
 - Installers upgrade in place and clear old shipped data (ammo_*, loads_*, bullets.csv) first.
 - APK updates install over the old app only once the ANDROID_DEBUG_KEYSTORE secret is set
-  (see README); until then testers must uninstall the old APK first.
+  (a debug.keystore made with keytool, base64 in the secret; the maintainer keeps the file); until then testers must uninstall the old APK first.
 
 ## Testing
 - Desktop: python3.12 has Tk here (the default python3 doesn't); drive App headlessly under
