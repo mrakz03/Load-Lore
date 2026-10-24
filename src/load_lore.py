@@ -1606,8 +1606,9 @@ class App:
     def _sidebar_width(self):
         """Wide enough for the longest menu entry at the current text size and screen DPI."""
         main, sub = tkfont.Font(font=self.f(11, True)), tkfont.Font(font=self.f(10, True))
-        title = tkfont.Font(font=self.f(17, True))
+        title, ver = tkfont.Font(font=self.f(17, True)), tkfont.Font(font=self.f(8))
         need = max([main.measure(t) for _, t, _ in TOOLS] + [title.measure("Load Lore") - 12]
+                   + [ver.measure(version_text()) - 12]
                    + [sub.measure(cat.title) + 16 for cat in CATEGORIES])
         return max(self.px(self.SIDEBAR_W), need + 2 * 12 + 2 * 12 + 10)   # label + nav padding
 
@@ -1653,7 +1654,7 @@ class App:
             anchor="w", padx=6)
         self.label(self.nav, "Load Lore", 17, TEXT, True, bg=SURFACE, anchor="w").pack(
             anchor="w", padx=6)
-        self.label(self.nav, version_text(), 9, MUTED, bg=SURFACE, anchor="w").pack(
+        self.label(self.nav, version_text(), 8, MUTED, bg=SURFACE, anchor="w").pack(
             anchor="w", padx=6, pady=(2, 18))
         self._nav_button("Settings", self.show_settings, self.mode == "settings",
                          parent=self.foot)
