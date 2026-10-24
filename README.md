@@ -8,6 +8,8 @@ It runs as a desktop app on Windows and Linux and as a phone app on Android (the
 
 *Formerly Cartridge Value Calculator.*
 
+> **Still in development.** Load Lore is a work in progress. Most of it works well, but some parts aren't fully polished yet, and you may run into rough edges, layout quirks or a load whose figures need fixing. If something looks wrong, please [open an issue](https://github.com/mrakz03/Load-Lore/issues).
+
 ## What's inside
 
 About 3,150 factory loads from 20 makers across four categories:
