@@ -31,7 +31,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings). The dictionary's brand / load
   filter sits right above the list (issue #26).
 - Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
-  page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones).
+  page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones),
+  in two boxes, Display and About (rows split by thin lines, not one box each). About has a small
+  GitHub logo that opens REPO_PAGE (GITHUB_MARK; web gets the URL as DATA.repo).
   The app name is drawn as a small "In Like Flint" over a larger "Load Lore" (issue #18).
 - Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
   point-mass G1 path (trajectory / _fly, fly in web: drag along the path + gravity, RK2 0.5 m
