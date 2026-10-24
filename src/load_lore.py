@@ -23,7 +23,7 @@ Ballistics: velocity at distance is computed by integrating the standard G1
 drag model using each load's G1 ballistic coefficient. Recoil is an estimate
 of free recoil energy for a gun of the weight you enter.
 
-Requires only Python 3.8+ with Tkinter (included with the standard installers
+Requires only Python 3.9+ with Tkinter (included with the standard installers
 for Windows and macOS).
 """
 
@@ -89,7 +89,7 @@ POWDERS = [
     "Reloder 22", "Reloder 23", "Reloder 25", "Reloder 26", "Reloder 33", "Reloder 50",
     "Unique", "Bullseye", "Power Pistol", "Blue Dot", "Red Dot", "2400", "Green Dot", "Herco",
     "Sport Pistol", "Winchester 231", "Winchester 296", "Winchester 748", "Winchester 760",
-    "AutoComp", "WSF", "StaBall 6.5",
+    "Winchester AutoComp", "Winchester WSF", "Winchester StaBall 6.5",
     "Accurate 2230", "Accurate 2460", "Accurate 2520", "Accurate 4350", "Accurate 5744",
     "Accurate No.2", "Accurate No.5", "Accurate No.7", "Accurate No.9",
     "Vihtavuori N140", "Vihtavuori N150", "Vihtavuori N160", "Vihtavuori N165",
@@ -714,6 +714,8 @@ def read_settings():
             return {}
         if isinstance(data.get("prices"), dict):        # keys are "category|cartridge|load"
             data["prices"] = {new: v for k, v in data["prices"].items() for new in _rename_price_key(k)}
+        elif "prices" in data:                          # a hand-edited file: setting a price would crash
+            del data["prices"]
         return data
     except (OSError, ValueError):
         return {}
@@ -1271,16 +1273,26 @@ class App:
 
     # ---- handloads --------------------------------------------------------- #
     def hand_loads(self, cat):
+        """The category's handloads. One whose label is already taken in its cartridge (a
+        duplicate with no name of its own) gets " (2)", " (3)"... like the web version, so each
+        can be told apart and picked in Head to Head."""
         out = []
         if not cat.grain_style:
             return out
+        taken = {(x.cartridge, x.label) for x in self.data[cat.title]["detail"]}
         for row in self.hand_rows:
             if row.get("category") != cat.title:
                 continue
             try:
-                out.append(load_from_handload_row(row, cat.grain_style))
+                item = load_from_handload_row(row, cat.grain_style)
             except (KeyError, ValueError):
                 continue
+            base, n = item.label, 1
+            while (item.cartridge, item.label) in taken:
+                n += 1
+                item.label = f"{base} ({n})"
+            taken.add((item.cartridge, item.label))
+            out.append(item)
         return out
 
     def save_handload(self, row):
@@ -2213,12 +2225,12 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
             barrel = num("barrel_in", "Barrel length", 1, 60, True)
             if dia is None:
                 dia = DIAMETERS.get(cart) or bullet_diameter(cart, gr)
+            if not dia:                       # a "gauge" / "bore" name has no bullet diameter
+                raise ValueError("Enter the bullet diameter.")
             if bc is None:
                 bc = estimate_bc(gr, dia, cat.title == "Handgun")
-            total = V["total"].get().strip().replace("$", "")
-            cost = float(total) if total else parts_cost()
-            if total:
-                num("total", "Total cost", 0)
+            total = num("total", "Total cost", 0, blank=True)
+            cost = parts_cost() if total is None else total
             if not cost or cost <= 0:
                 raise ValueError("Enter what a round costs (the parts, or a total per round).")
         except ValueError as exc:
@@ -2795,6 +2807,7 @@ class LoadsView:
             return
         if not items:                                # a cartridge with no factory loads yet
             self.tree.delete(*self.tree.get_children())
+            self.rows = []
             self.selected = None
             self.detail.grid_remove()
             self.count_lbl.config(text=f"No factory loads listed for {cart}. Use \"+ Add handload\" "
@@ -2836,6 +2849,8 @@ class LoadsView:
         self._render()
 
     def _render(self):
+        if not self.groups.get(self.cart_var.get()):
+            return                                   # nothing to list (refresh says why)
         self._count_chips()
         terms = self.filter_var.get().lower().split()
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
@@ -3132,8 +3147,21 @@ class LoadSearch:
         self.listbox.see(i)
         return "break"
 
+    def _typed_pick(self):
+        """The name whose box text was typed out in full instead of picked from the list (the
+        list closes then), or None if the text is no pick or the one already made."""
+        text = self.text()
+        if text == self.last or not self._ok(text):
+            return None
+        return next((n for n in (self.names if self.browse is None else self.browse)
+                     if self.value(n) == text), None)
+
     def _pick(self, i=None):
-        if self.popup is not None and self.matches:
+        if self.popup is None:                # a name typed out in full + Enter picks it too
+            name = self._typed_pick()
+            if name is not None:
+                self.on_pick(name)
+        elif self.matches:
             if i is None:
                 cur = self.listbox.curselection()
                 i = cur[0] if cur else 0
@@ -3158,6 +3186,10 @@ class LoadSearch:
         self.close()
         if not self._ok(self.text()):
             self.box.setvar(self.var, self.last if self._ok(self.last) else "")
+            return
+        name = self._typed_pick()             # typed out in full: the table follows the box
+        if name is not None:
+            self.on_pick(name)
 
     def close(self):
         if self.popup is not None:
