@@ -21,8 +21,6 @@ About 3,150 factory loads from 20 makers across four categories:
 
 The loads come from the 2026 catalogs of Hornady, Federal, Winchester, Remington, Fiocchi, PMC, CCI/Blazer and ELEY, and from the makers' own websites for SIG Sauer, Black Hills, Norma, Nosler, Lapua, Sellier & Bellot, PPU, Underwood, Buffalo Bore, Speer and newer Federal loads (plus a few Barnes, IMI, Winchester and Federal loads from retailer listings). Weight and velocity are the maker's published figures; prices and powder charges are estimates. Where each added load came from is listed in `research/added_loads_sources.tsv`.
 
-5.56x45mm NATO and 7.62x51mm NATO are listed as their own cartridges, separate from .223 Remington and .308 Winchester.
-
 ## Using the app
 
 ### Load Dictionary
@@ -93,7 +91,7 @@ scripts/build_linux.sh        build from source and install on Fedora / Linux
 scripts/install_linux.sh      installer shipped in the Linux release (as install.sh)
 scripts/build_windows.bat     build the Windows .exe locally
 scripts/windows_installer.iss Inno Setup script for the Windows installer (built in CI)
-.github/workflows/release.yml builds Windows, Linux and Android
+.github/workflows/release.yml builds Windows, Linux and Android (see RELEASING.md)
 package.json, capacitor.config.json   Android wrapper (Capacitor)
 research/                     where each added load came from
 ```
@@ -113,21 +111,8 @@ Handloads (`my_handloads.csv`) and settings (`settings.json`) are saved next to 
 - Bullet diameters for Taylor KO and HITS come from the `DIAMETERS` table in the same file.
 - `bullets.csv` BCs are approximate published G1 figures.
 
-### Making a release
-```
-git pull && git tag v1.6 && git push origin v1.6
-```
-GitHub Actions builds the Windows installer and .zip, the Linux .tar.gz and the Android APK, and publishes them as a release. The tag sets the version the apps show ("Development Build v1.6"; builds from source show "Development Build"). Running the workflow by hand (Actions tab > Run workflow) builds the files without releasing; they appear under the run's Artifacts.
-
-A new APK installs over the old one only if every release is signed with the same key. Make one once (needs Java's `keytool`) and save it as a repository secret named `ANDROID_DEBUG_KEYSTORE` (Settings > Secrets and variables > Actions):
-```
-keytool -genkeypair -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-base64 -w0 debug.keystore      # paste this output as the secret's value
-```
-Keep `debug.keystore` somewhere safe and out of the repo. Without the secret, each APK gets a new key and testers have to uninstall the old app before installing a new one.
-
 ## Contributing
-Bug reports, load corrections and ideas are welcome as GitHub issues. For a data fix, name the load and give the source (maker's catalog page or website) for the numbers. Pull requests should keep the desktop and phone versions in step (same formulas, same data) and rebuild the web version after changing a CSV or `web/template.html`. `CLAUDE.md` holds the project's working notes and rules in more detail.
+Bug reports, load corrections and ideas are welcome as GitHub issues. For a data fix, name the load and give the source (maker's catalog page or website) for the numbers. Pull requests should keep the desktop and phone versions in step (same formulas, same data) and rebuild the web version after changing a CSV or `web/template.html`. `CLAUDE.md` holds the project's working notes and rules in more detail, and `RELEASING.md` how releases are made.
 
 ## License
 
