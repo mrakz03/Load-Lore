@@ -33,19 +33,8 @@ for cat in c.CATEGORIES:
 bullets = [dict(maker=r["maker"], name=r["name"], diameter=float(r["diameter_in"]), weight=float(r["weight_gr"]),
                bc=float(r["bc_g1"]), type=r["type"])
            for r in csv.DictReader(open(os.path.join(data, "bullets.csv"), encoding="utf-8-sig"))]
-POWDERS = ["H4350","H4831SC","H1000","Varget","H4895","H335","H322","CFE 223","Benchmark","Lil'Gun","H110","H4198",
-  "Titegroup","Longshot","Universal","Clays","HS-6","H380","Retumbo","Superformance","H414","H4227",
-  "IMR 4064","IMR 4350","IMR 4895","IMR 4831","IMR 3031","IMR 7828","IMR 4198","IMR 8208 XBR","IMR 4227","IMR 4759",
-  "Reloder 7","Reloder 10X","Reloder 15","Reloder 16","Reloder 17","Reloder 19","Reloder 22","Reloder 23","Reloder 25",
-  "Reloder 26","Reloder 33","Reloder 50","Unique","Bullseye","Power Pistol","Blue Dot","Red Dot","2400","Green Dot",
-  "Herco","Sport Pistol","Winchester 231","Winchester 296","Winchester 748","Winchester 760","Winchester AutoComp",
-  "Winchester WSF","Winchester StaBall 6.5","Accurate 2230","Accurate 2460","Accurate 2520","Accurate 4350",
-  "Accurate 5744","Accurate No.2","Accurate No.5","Accurate No.7","Accurate No.9","Vihtavuori N140","Vihtavuori N150",
-  "Vihtavuori N160","Vihtavuori N165","Vihtavuori N133","Vihtavuori N550","Vihtavuori N320","Vihtavuori N340",
-  "Vihtavuori N350","Ramshot Big Boy","Ramshot TAC","Ramshot X-Terminator","Ramshot Enforcer","Ramshot Silhouette",
-  "Ramshot Competition","Norma 202","Norma 203B"]
 tpl = open(os.path.join(here, "template.html"), encoding="utf-8").read()
 os.makedirs(os.path.join(here, "www"), exist_ok=True)
 with open(os.path.join(here, "www", "index.html"), "w", encoding="utf-8") as f:
-    f.write(tpl.replace("__DATA__", json.dumps({"version": c.APP_VERSION, "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": POWDERS}, ensure_ascii=False)))
+    f.write(tpl.replace("__DATA__", json.dumps({"version": c.APP_VERSION, "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS}, ensure_ascii=False)))
 print("wrote www/index.html")
