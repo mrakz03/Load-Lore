@@ -1,16 +1,19 @@
-# Cartridge Calculator
+# Load Lore (formerly Cartridge Calculator)
 
 Working notes for contributors and AI coding assistants: the rules the code follows and why.
 
 App name (Oct 2026): "In Like Flint - Load Lore" inside the app (APP_TITLE / web APP_TITLE, window
 title, README heading); device menus show just "Load Lore" (issue #27: installer AppName and
-shortcuts, .desktop Name, capacitor appName). Repo, file and package names (CartridgeCalculator.exe,
-cartridge_calculator.py, appId com.cartridgecalc.app, Windows AppId and install folder) stay as
-they were so updates keep installing over older versions.
+shortcuts, .desktop Name, capacitor appName). File names were renamed too (Oct 2026): src/load_lore.py,
+LoadLore.exe / LoadLore, install folders ...\Programs\Load Lore and ~/.local/share/load-lore (an
+upgrade moves the old "Cartridge Calculator" / cartridge-calculator folder, user files included: the
+.iss [Code] + external [Files], install.sh OLD_APPDIR). Kept on purpose:
+Android appId com.cartridgecalc.app (changing it makes a new app: reinstall, handloads lost), the
+Windows AppId, and the web's cartridge_calc_* localStorage keys (saved handloads/prices/settings).
 
 Grades ammo S–F on velocity, energy, recoil, cost (plus Taylor KO and HITS;
 default weights 3/3/1/3/3/3, Shotgun keeps Taylor KO and HITS at 0: no bullet diameter).
-Desktop app: src/cartridge_calculator.py (Tkinter, stdlib only). Phone/web: web/template.html,
+Desktop app: src/load_lore.py (Tkinter, stdlib only). Phone/web: web/template.html,
 built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK in CI).
 
 ## Rules
@@ -28,8 +31,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
   LoadSearch / searchBox, every typed word must be in the name); so are the cartridge boxes
   (Oct 2026): the dictionary's searches its category, Head to Head's searches every category
-  (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings). The dictionary's brand / load
-  filter sits right above the list (issue #26).
+  (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings).
+  Head to Head has no category box (Oct 2026): the cartridge box picks it; the desktop menu lists
+  every category's cartridges under "──  Category  ──" headings (cart_menu). The dictionary's brand / load
+  filter sits right above the list (issue #26). Beside it, for cartridges that have +P / +P+ loads, a check box each
+  (pressure_of / pressureOf reads the load name; Train+Protect and +Peak aren't +P) hides those
+  loads from the list without changing any grade; ticked by default, kept per category while the
+  app is open (snapshot / shared), not in settings.json.
 - Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
   page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones),
   in two boxes, Display and About (rows split by thin lines, not one box each). About has a small
@@ -62,8 +70,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Gun weight (Oct 2026): GUN_LB / typical_gun_lb (gun_lb, typicalGun in web) gives a typical gun per
   category + cartridge (.44 Magnum is in both rifle and handgun) where the category default is far off (.50 BMG 30 lb read 379 ft-lbs at 8 lb). The
   dictionary's gun field follows the cartridge unless the user typed their own (_gun_auto / L.gunAuto);
-  Head to Head's gun is blank by default = each load in its own cartridge's gun (h2h_gun / h2hGun,
-  not shared with the dictionary). Limit GUN_LB_MAX 60 lb.
+  Head to Head's gun weights are hidden by default ("Gun weight for each load" link: gun_open /
+  gunOpen); opened, each load row gets its own box, blank = that cartridge's usual gun, and hiding
+  them puts every load back in its usual gun (h2h_rows / h2hRows take a gun per load, in memory
+  only, not shared with the dictionary). Limit GUN_LB_MAX 60 lb.
 - .223 Remington, 5.56x45mm NATO, .308 Winchester and 7.62x51mm NATO are four separate cartridges
   (issue #28; they were two shared lists before). A NATO load says 5.56 / M193 / M855 or
   7.62x51 / M80 in its name; Hornady 5.56 NATO loads are the 20" barrel ones (checked against the
@@ -71,7 +81,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   to the commercial cartridge, saved prices to both.
 - Metric cartridges are named with "mm" (7.62x51mm NATO, 7.62x54mmR). When renaming a
   cartridge, add old -> new to RENAMED_CARTRIDGES so users' saved files keep matching.
-- Colour themes live in THEMES (cartridge_calculator.py); build_web.py passes the same table to
+- Colour themes live in THEMES (load_lore.py); build_web.py passes the same table to
   the web version. Classic is the default and the original look. Use the palette globals
   (BG, SURFACE, TEXT, ACCENT, ON_ACCENT, DANGER, HAND_FG...) / CSS variables, never hard-coded colours.
 - Desktop UI sizes come from measured text (App.fit_columns, _sidebar_width), not fixed pixel
@@ -95,12 +105,17 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   GitHub latest-release API, downloads the Setup.exe (run with /SILENT; the .iss [Run] entry with
   Check: WizardSilent reopens the app) or the Linux tar (install_linux_update swaps the files in
   place like install.sh), checked against SHA256SUMS.txt from the release job. "Check at start"
-  (settings.json check_updates) is off by default. Asset names must stay as they are.
+  (settings.json check_updates) is off by default. Release files carry the version
+  (LoadLore-v1.7.4-dev-Setup.exe, -Windows.zip, -Linux.tar.gz, .apk; release_asset matches them).
+  v1.7.3-dev and older only look for CartridgeCalculator-Setup.exe / -Linux.tar.gz, which releases
+  no longer ship (the maintainer's call, Oct 24 2026): those copies are reinstalled by hand, and the
+  installer / install.sh move the old folder and user files.
+  SHA256SUMS.txt keeps its name.
   Tags are vX.Y.Z, optionally with a suffix for a test build (v1.7.2-dev sorts after 1.7.1, before
   1.7.2: version_tuple); a release marked "pre-release" on GitHub is skipped by the latest-release API.
 git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
 (tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
-- APP_VERSION in cartridge_calculator.py stays "dev" in the repo; CI sets it from the tag.
+- APP_VERSION in load_lore.py stays "dev" in the repo; CI sets it from the tag.
 - Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the maintainer saves
   the middle number (v1.6) for bigger releases.
 - Installers upgrade in place and clear old shipped data (ammo_*, loads_*, bullets.csv) first.
@@ -121,7 +136,8 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   Fiocchi, PMC and CCI catalogs (the maintainer's PDFs, not in the repo), plus a few Barnes, Nosler,
   Buffalo Bore, Sellier & Bellot and PPU loads from retailer listings. Every added row and its
   source is in research/added_loads_sources.tsv. Missing BCs were scaled from the nearest-weight
-  published load of the same cartridge (source=partial); price is estimated by brand tier.
+  published load of the same cartridge (source=partial); price was estimated by brand tier
+  (re-set from retail Oct 24, see below).
 - 10 and 16 Gauge (Oct 2026): 41 loads from the 2026 Federal, Winchester, Remington and Fiocchi
   catalogs (rows in research/added_loads_sources.tsv). BC is set by shot size like the other gauges;
   price is the same line's 12 ga price x1.25 (16 ga) or x1.6 (10 ga).
@@ -155,6 +171,18 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   Hornady's Frontier line is in under "Hornady Frontier ..." (same ballistics as some Hornady loads).
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
+- Data check (Oct 24 2026): bullets.csv Hornady ELD Match / ELD-X BCs set to hornady.com/bc (G1 at
+  Mach 2.25; 6.5 147 gr is ELD Match, 6mm 103 gr is ELD-X, there is no .277 162 ELD-X), Nosler 30 cal
+  150 BT 0.435. Slug BCs (were a flat 0.09 / 0.079) taken from the Remington and Winchester catalogs'
+  own BC column, or fitted to Federal's downrange velocities. ELEY .22 LR prices from retail box
+  prices (Lucky Gunner / KY Gun Co, Oct 2026).
+- Retail prices (Oct 24 2026): every default_cost re-set from Lucky Gunner's category pages (PSA and
+  MidwayUSA load prices by script, so they can't be read; Ammunition Depot has no round counts). A
+  load matched to a listing (same brand, grain or payload, product line; smallest box listed) gets
+  that per-round price (about 1,230 loads). The rest are scaled from the old brand-tier price by the
+  matched loads of the same product line, else the same brand + old price in that cartridge, else a
+  fitted cartridge x brand ratio (0.33-3x). ELEY kept. Each load's old/new price and method is in
+  research/price_sources.tsv. Shotshells match by brand, line, length, payload / buck size.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 

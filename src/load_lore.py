@@ -23,7 +23,7 @@ Ballistics: velocity at distance is computed by integrating the standard G1
 drag model using each load's G1 ballistic coefficient. Recoil is an estimate
 of free recoil energy for a gun of the weight you enter.
 
-Requires only Python 3.8+ with Tkinter (included with the standard installers
+Requires only Python 3.9+ with Tkinter (included with the standard installers
 for Windows and macOS).
 """
 
@@ -89,7 +89,7 @@ POWDERS = [
     "Reloder 22", "Reloder 23", "Reloder 25", "Reloder 26", "Reloder 33", "Reloder 50",
     "Unique", "Bullseye", "Power Pistol", "Blue Dot", "Red Dot", "2400", "Green Dot", "Herco",
     "Sport Pistol", "Winchester 231", "Winchester 296", "Winchester 748", "Winchester 760",
-    "AutoComp", "WSF", "StaBall 6.5",
+    "Winchester AutoComp", "Winchester WSF", "Winchester StaBall 6.5",
     "Accurate 2230", "Accurate 2460", "Accurate 2520", "Accurate 4350", "Accurate 5744",
     "Accurate No.2", "Accurate No.5", "Accurate No.7", "Accurate No.9",
     "Vihtavuori N140", "Vihtavuori N150", "Vihtavuori N160", "Vihtavuori N165",
@@ -617,6 +617,16 @@ def make_label(item, grain_style):
     return item.load or f"{item.bullet_gr:g} gr"
 
 
+PRESSURES = ("+P", "+P+")
+
+
+def pressure_of(name):
+    """'+P+', '+P' or '' from a load's name (Federal Train+Protect and +Peak aren't +P)."""
+    if re.search(r"\+P\+", name or ""):
+        return "+P+"
+    return "+P" if re.search(r"\+P(?![A-Za-z+])", name or "") else ""
+
+
 def icon_path():
     """assets/icon.png: bundled into the packaged app by PyInstaller (--add-data), or the
     repo's copy when running from a git checkout. None if it isn't there."""
@@ -714,6 +724,8 @@ def read_settings():
             return {}
         if isinstance(data.get("prices"), dict):        # keys are "category|cartridge|load"
             data["prices"] = {new: v for k, v in data["prices"].items() for new in _rename_price_key(k)}
+        elif "prices" in data:                          # a hand-edited file: setting a price would crash
+            del data["prices"]
         return data
     except (OSError, ValueError):
         return {}
@@ -766,8 +778,11 @@ REPO_PAGE = f"https://github.com/{UPDATE_REPO}"      # Settings > Source code (w
 RELEASES_PAGE = f"{REPO_PAGE}/releases/latest"
 LATEST_RELEASE_API = f"https://api.github.com/repos/{UPDATE_REPO}/releases/latest"
 SUMS_ASSET = "SHA256SUMS.txt"                      # made by the release job in CI
-WINDOWS_ASSET = "CartridgeCalculator-Setup.exe"
-LINUX_ASSET = "CartridgeCalculator-Linux.tar.gz"
+# release files carry the version: LoadLore-v1.7.4-Setup.exe / LoadLore-v1.7.4-Linux.tar.gz
+# (v1.7.3-dev and older looked for CartridgeCalculator-*; those copies are reinstalled by hand)
+ASSET_PREFIX = "LoadLore-"
+ASSET_SUFFIX = {"windows": "-Setup.exe", "linux": "-Linux.tar.gz"}
+PROGRAM = "LoadLore"                               # the Linux program, in a LoadLore folder in the tar
 SHIPPED_DATA = ("ammo_*.csv", "loads_*.csv", BULLETS_FILENAME, "NOTICE.md", "DISCLAIMER.md")
 # certificate bundles of the common Linux distros: the packaged app's OpenSSL was built on
 # Ubuntu and only looks where Ubuntu keeps them, so on Fedora etc. it would find none
@@ -881,6 +896,19 @@ def update_method():
     return None
 
 
+def release_asset(release, method):
+    """The file of `release` to install for `method` ("windows" / "linux"): the one named with the
+    release's version, else any LoadLore-*-Setup.exe / -Linux.tar.gz."""
+    assets, suffix = release["assets"], ASSET_SUFFIX[method]
+    exact = f"{ASSET_PREFIX}v{release['version']}{suffix}"
+    if exact in assets:
+        return exact
+    named = sorted(n for n in assets if n.startswith(ASSET_PREFIX) and n.endswith(suffix))
+    if named:
+        return named[-1]
+    raise ValueError(f"Release v{release['version']} has no {exact}.")
+
+
 def download_verified(release, name, folder):
     """Download one file of a release into `folder` and check it against the release's
     SHA256SUMS.txt. Returns its path. Raises ValueError if it's missing or doesn't match."""
@@ -905,22 +933,22 @@ def download_verified(release, name, folder):
 
 
 def install_linux_update(tar_path, program):
-    """Unpack a Linux release over the copy at `program` (the CartridgeCalculator file): the
-    program first, copied under a temporary name and renamed (the running one can't be written
-    over), then the data files. The user's own files (my_*.csv, settings.json) aren't in the
-    tar and are left alone."""
+    """Unpack a Linux release over the copy at `program` (the LoadLore file): the program first,
+    copied under a temporary name and renamed (the running one can't be written over), then the
+    data files. The user's own files (my_*.csv, settings.json) aren't in the tar and are left
+    alone. Returns the program to start."""
     here = os.path.dirname(program)
     with tempfile.TemporaryDirectory() as tmp:
         with tarfile.open(tar_path) as tar:
             tar.extractall(tmp, filter="data")
-        src = os.path.join(tmp, "CartridgeCalculator")
+        src = os.path.join(tmp, PROGRAM)
         new_data = [f for f in glob.glob(os.path.join(src, "*.csv"))
                     if not os.path.basename(f).startswith("my_")]
-        if not os.path.isfile(os.path.join(src, "CartridgeCalculator")) or \
+        if not os.path.isfile(os.path.join(src, PROGRAM)) or \
                 not any(os.path.basename(f).startswith("loads_") for f in new_data):
             raise ValueError("The download doesn't look like a Load Lore release.")
         part = program + ".new"
-        shutil.copyfile(os.path.join(src, "CartridgeCalculator"), part)
+        shutil.copyfile(os.path.join(src, PROGRAM), part)
         os.chmod(part, 0o755)
         os.replace(part, program)
         keep = {os.path.basename(f) for f in new_data}
@@ -933,6 +961,7 @@ def install_linux_update(tar_path, program):
         for name in ("icon.png", "LICENSE", "LEGAL.md"):
             if os.path.exists(os.path.join(src, name)):
                 shutil.copyfile(os.path.join(src, name), os.path.join(here, name))
+    return program
 
 
 def _update_error(what, err):
@@ -1239,16 +1268,26 @@ class App:
 
     # ---- handloads --------------------------------------------------------- #
     def hand_loads(self, cat):
+        """The category's handloads. One whose label is already taken in its cartridge (a
+        duplicate with no name of its own) gets " (2)", " (3)"... like the web version, so each
+        can be told apart and picked in Head to Head."""
         out = []
         if not cat.grain_style:
             return out
+        taken = {(x.cartridge, x.label) for x in self.data[cat.title]["detail"]}
         for row in self.hand_rows:
             if row.get("category") != cat.title:
                 continue
             try:
-                out.append(load_from_handload_row(row, cat.grain_style))
+                item = load_from_handload_row(row, cat.grain_style)
             except (KeyError, ValueError):
                 continue
+            base, n = item.label, 1
+            while (item.cartridge, item.label) in taken:
+                n += 1
+                item.label = f"{base} ({n})"
+            taken.add((item.cartridge, item.label))
+            out.append(item)
         return out
 
     def save_handload(self, row):
@@ -1567,8 +1606,9 @@ class App:
     def _sidebar_width(self):
         """Wide enough for the longest menu entry at the current text size and screen DPI."""
         main, sub = tkfont.Font(font=self.f(11, True)), tkfont.Font(font=self.f(10, True))
-        title = tkfont.Font(font=self.f(17, True))
+        title, ver = tkfont.Font(font=self.f(17, True)), tkfont.Font(font=self.f(8))
         need = max([main.measure(t) for _, t, _ in TOOLS] + [title.measure("Load Lore") - 12]
+                   + [ver.measure(version_text()) - 12]
                    + [sub.measure(cat.title) + 16 for cat in CATEGORIES])
         return max(self.px(self.SIDEBAR_W), need + 2 * 12 + 2 * 12 + 10)   # label + nav padding
 
@@ -1614,7 +1654,7 @@ class App:
             anchor="w", padx=6)
         self.label(self.nav, "Load Lore", 17, TEXT, True, bg=SURFACE, anchor="w").pack(
             anchor="w", padx=6)
-        self.label(self.nav, version_text(), 9, MUTED, bg=SURFACE, anchor="w").pack(
+        self.label(self.nav, version_text(), 8, MUTED, bg=SURFACE, anchor="w").pack(
             anchor="w", padx=6, pady=(2, 18))
         self._nav_button("Settings", self.show_settings, self.mode == "settings",
                          parent=self.foot)
@@ -1648,6 +1688,7 @@ class App:
 
     def show_launcher(self):
         """Home screen: the two things you can do."""
+        self._stash()
         self.mode, self.cat, self.view = "home", None, None
         stage = self._new_stage()
         self.root.title(APP_TITLE)
@@ -1747,9 +1788,9 @@ class App:
         folder = tempfile.mkdtemp(prefix="loadlore-update-")
 
         def work():
-            path = download_verified(rel, WINDOWS_ASSET if method == "windows" else LINUX_ASSET, folder)
+            path = download_verified(rel, release_asset(rel, method), folder)
             if method == "linux":
-                install_linux_update(path, sys.executable)
+                path = install_linux_update(path, sys.executable)    # the program to start
                 shutil.rmtree(folder, ignore_errors=True)
             return path
 
@@ -1763,7 +1804,7 @@ class App:
                     subprocess.Popen([path, "/SILENT", "/SUPPRESSMSGBOXES", "/NORESTART",
                                       "/CLOSEAPPLICATIONS"], env=_launch_env())
                 else:
-                    subprocess.Popen([sys.executable], cwd=os.path.dirname(sys.executable),
+                    subprocess.Popen([path], cwd=os.path.dirname(path),
                                      env=_launch_env(), start_new_session=True)
             except OSError as exc:
                 self._set_update(state="error", release=rel, message=(
@@ -2181,12 +2222,12 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
             barrel = num("barrel_in", "Barrel length", 1, 60, True)
             if dia is None:
                 dia = DIAMETERS.get(cart) or bullet_diameter(cart, gr)
+            if not dia:                       # a "gauge" / "bore" name has no bullet diameter
+                raise ValueError("Enter the bullet diameter.")
             if bc is None:
                 bc = estimate_bc(gr, dia, cat.title == "Handgun")
-            total = V["total"].get().strip().replace("$", "")
-            cost = float(total) if total else parts_cost()
-            if total:
-                num("total", "Total cost", 0)
+            total = num("total", "Total cost", 0, blank=True)
+            cost = parts_cost() if total is None else total
             if not cost or cost <= 0:
                 raise ValueError("Enter what a round costs (the parts, or a total per round).")
         except ValueError as exc:
@@ -2264,6 +2305,9 @@ class LoadsView:
         self.source = "All"               # All / Factory / Handloads
         self.chips = {}
         self.src_chips = {}
+        # +P / +P+ check boxes: untick one to hide those loads from the list (grades don't change)
+        self.press_vars = {p: tk.BooleanVar(value=True) for p in PRESSURES}
+        self.press_boxes = {}
         self.weight_vars = {k: tk.StringVar(value=str(v)) for k, v in default_weights(cat).items()}
         self.weights_open = False
         self.rows = []                    # computed rows for the chosen cartridge
@@ -2365,8 +2409,12 @@ class LoadsView:
         above.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         above.columnconfigure(1, weight=1)
         a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).grid(row=0, column=0, sticky="w")
-        ttk.Entry(above, textvariable=self.filter_var, font=a.f(10), width=28).grid(
-            row=1, column=0, sticky="w", pady=(4, 0))
+        fl = tk.Frame(above, bg=BG)
+        fl.grid(row=1, column=0, sticky="w", pady=(4, 0))
+        ttk.Entry(fl, textvariable=self.filter_var, font=a.f(10), width=28).pack(side="left")
+        # +P / +P+ check boxes, only for cartridges that have such loads
+        self.press_row = tk.Frame(fl, bg=BG)
+        self.press_row.pack(side="left", padx=(14, 0))
         self.count_lbl = a.label(above, "Choose a cartridge to see how every brand's load compares.",
                                  10, MUTED, bg=BG, anchor="e")
         self.count_lbl.grid(row=1, column=1, sticky="e", pady=(4, 0), padx=(16, 0))
@@ -2476,7 +2524,8 @@ class LoadsView:
         return dict(cart=self.cart_var.get(), dist=self.dist_var.get(), gun=self.gun_var.get(),
                     gun_auto=getattr(self, "_gun_auto", self.cat.default_gun_lb),
                     weights={k: v.get() for k, v in self.weight_vars.items()},
-                    weights_open=self.weights_open, purpose=self.purpose, source=self.source)
+                    weights_open=self.weights_open, purpose=self.purpose, source=self.source,
+                    pressure={p: v.get() for p, v in self.press_vars.items()})
 
     def restore(self, snap):
         if not self.loads or not hasattr(self, "tree"):
@@ -2490,6 +2539,9 @@ class LoadsView:
         """Put a snapshot's settings back; returns its cartridge if it is still listed."""
         self.purpose = snap.get("purpose", "All")
         self.source = snap.get("source", "All")
+        for p, on in snap.get("pressure", {}).items():
+            if p in self.press_vars:
+                self.press_vars[p].set(bool(on))
         for k, v in snap.get("weights", {}).items():
             if k in self.weight_vars:
                 self.weight_vars[k].set(v)
@@ -2519,6 +2571,11 @@ class LoadsView:
         on = self.app.show_grades
         self.tree.configure(displaycolumns=[c for c in self.cols
                                             if on or c not in ("#", "Score", "Grade")])
+        # without the # column the load names would sit against the table's edge: the empty
+        # tree column (#0) gives them a little room on the left instead
+        # (_render takes its width back out of the Load column, so the table is no wider)
+        self.tree.configure(show="headings" if on else ("tree", "headings"))
+        self.tree.column("#0", width=self.app.px(6), minwidth=self.app.px(6), stretch=False)
         self.footnote.config(text=(
             f"Grades compare loads of the same cartridge with each other (the average scores "
             f"{REL_CENTER:.0f}). " if on else "") + "Prices are estimates: set your own.")
@@ -2692,6 +2749,45 @@ class LoadsView:
             self.src_chips[name] = chip
         self._style_chips()
 
+    def _build_pressure(self, cart):
+        """A check box per pressure (+P, +P+) this cartridge has loads of; unticked hides them."""
+        for w in self.press_row.winfo_children():
+            w.destroy()
+        self.press_boxes = {}
+        have = {pressure_of(x.load) for x in self.groups.get(cart, [])}
+        for p in PRESSURES:
+            if p not in have:
+                continue
+            # drawn as a box + text (ttk's clam check box is a tiny X that's hard to see)
+            row = tk.Frame(self.press_row, bg=BG, cursor="hand2")
+            row.pack(side="left", padx=(0, 16))
+            mark = tk.Label(row, width=2, font=self.app.f(10, True), highlightthickness=1)
+            mark.pack(side="left")
+            text = self.app.label(row, p, 10, TEXT, True, bg=BG)
+            text.pack(side="left", padx=(6, 0))
+            for w in (row, mark, text):
+                w.bind("<Button-1>", lambda e, pr=p: self._pick_pressure(pr))
+            self.press_boxes[p] = (mark, text)
+        self._style_pressure()
+
+    def _style_pressure(self):
+        for p, (mark, _) in self.press_boxes.items():
+            on = self.press_vars[p].get()
+            mark.config(text="✓" if on else "", bg=ACCENT if on else SURFACE_2,
+                        fg=ON_ACCENT, highlightbackground=ACCENT if on else MUTED)
+
+    def _pick_pressure(self, p=None):
+        if p is not None:
+            self.press_vars[p].set(not self.press_vars[p].get())
+        self._style_pressure()
+        self.selected = None
+        self.detail.grid_remove()
+        self._render()
+
+    def _press_ok(self, item):
+        p = pressure_of(item.load)
+        return not p or self.press_vars[p].get()
+
     def _pick_source(self, name):
         self.source = name
         self.selected = None
@@ -2704,6 +2800,7 @@ class LoadsView:
             w.destroy()
         self.chips = {}
         self._build_source_chips(cart)
+        self._build_pressure(cart)
         items = self.groups.get(cart, [])
         names = self._purposes_of(cart)
         if len(names) <= 2:                      # only one purpose: nothing to pick between
@@ -2719,10 +2816,14 @@ class LoadsView:
         self._style_chips()
 
     def _count_chips(self):
-        """Chip counts follow the brand/load filter (and the purpose chips the Show choice too)."""
+        """Chip counts follow the brand/load filter (and the purpose chips the Show choice too);
+        the +P / +P+ boxes count the filtered loads, the chips leave out the hidden ones."""
         terms = self.filter_var.get().lower().split()
         items = [x for x in self.groups.get(self.cart_var.get(), [])
                  if all(t in x.label.lower() for t in terms)]
+        for p, (_, text) in self.press_boxes.items():
+            text.config(text=f"{p} ({sum(pressure_of(x.load) == p for x in items)})")
+        items = [x for x in items if self._press_ok(x)]
         for name, chip in self.src_chips.items():
             n = sum(name == "All" or x.handload == (name == "Handloads") for x in items)
             chip.config(text=f"{name} ({n})")
@@ -2763,6 +2864,7 @@ class LoadsView:
             return
         if not items:                                # a cartridge with no factory loads yet
             self.tree.delete(*self.tree.get_children())
+            self.rows = []
             self.selected = None
             self.detail.grid_remove()
             self.count_lbl.config(text=f"No factory loads listed for {cart}. Use \"+ Add handload\" "
@@ -2804,10 +2906,13 @@ class LoadsView:
         self._render()
 
     def _render(self):
+        if not self.groups.get(self.cart_var.get()):
+            return                                   # nothing to list (refresh says why)
         self._count_chips()
         terms = self.filter_var.get().lower().split()
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
-                and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))]
+                and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))
+                and self._press_ok(r["item"])]
         keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["item"].label.lower(), r["stats"]["weight"]),
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
                 "Barrel": lambda r: r["item"].barrel_in or 999,
@@ -2856,6 +2961,11 @@ class LoadsView:
             # as wide as the last cartridge's longest name (filtering within one keeps them)
             self.col_widths.clear()
         self.app.fit_columns(self.tree, self.cols, cells, "Load", self.col_widths)
+        if not self.app.show_grades:
+            # the left gap (tree column #0) comes out of the Load column's spare room
+            gap = self.app.px(6)
+            self.tree.column("Load", width=self.col_widths["Load"] - gap,
+                             minwidth=max(0, int(self.tree.column("Load", "minwidth")) - gap))
         if self.sized != self.cart_var.get() and cells:
             # widen the window (never shrinks, stays on screen) if every column doesn't fit
             self.sized = self.cart_var.get()
@@ -3100,8 +3210,21 @@ class LoadSearch:
         self.listbox.see(i)
         return "break"
 
+    def _typed_pick(self):
+        """The name whose box text was typed out in full instead of picked from the list (the
+        list closes then), or None if the text is no pick or the one already made."""
+        text = self.text()
+        if text == self.last or not self._ok(text):
+            return None
+        return next((n for n in (self.names if self.browse is None else self.browse)
+                     if self.value(n) == text), None)
+
     def _pick(self, i=None):
-        if self.popup is not None and self.matches:
+        if self.popup is None:                # a name typed out in full + Enter picks it too
+            name = self._typed_pick()
+            if name is not None:
+                self.on_pick(name)
+        elif self.matches:
             if i is None:
                 cur = self.listbox.curselection()
                 i = cur[0] if cur else 0
@@ -3126,6 +3249,10 @@ class LoadSearch:
         self.close()
         if not self._ok(self.text()):
             self.box.setvar(self.var, self.last if self._ok(self.last) else "")
+            return
+        name = self._typed_pick()             # typed out in full: the table follows the box
+        if name is not None:
+            self.on_pick(name)
 
     def close(self):
         if self.popup is not None:
@@ -3167,12 +3294,24 @@ class HeadToHeadView:
         # the cartridge search covers every category: "6.5 Creedmoor  ·  Rifle" -> (category, cartridge)
         self.cart_names = {f"{cart}  ·  {t}": (t, cart) for t, carts in self.cartridges.items()
                            for cart in carts}
+        # the cartridge menu: every category's cartridges under a "──  Category  ──" heading;
+        # a cartridge in two categories (.44 Magnum) names its category: text -> (category,
+        # cartridge), None for a heading
+        twice = {c for c in (c for carts in self.cartridges.values() for c in carts)
+                 if sum(c in carts for carts in self.cartridges.values()) > 1}
+        self.cart_menu = {}
+        for t, carts in self.cartridges.items():
+            self.cart_menu[f"──  {t}  ──"] = None
+            for cart in carts:
+                self.cart_menu[f"{cart} ({t})" if cart in twice else cart] = (t, cart)
         self.choices = {}                 # (category, cartridge) -> {text in the load menu: Load}
         for key, items in self.groups.items():
             self.choices[key] = {x.label + ("  (handload)" if x.handload else ""): x for x in items}
         self.dist_var = tk.StringVar(value=f"{H2H_DISTANCE:g}")
-        self.gun_var = tk.StringVar(value="")   # blank: each cartridge's typical gun (GUN_LB)
-        self.slots = []                   # [{cat, cart, load: StringVar, widgets...}]
+        # gun weight per load, hidden until opened: while hidden every load is in its
+        # cartridge's typical gun (GUN_LB); a blank box means the same
+        self.gun_open = False
+        self.slots = []                   # [{cat, cart, load, gun: StringVar, widgets...}]
         self._pending = None
         self._build_ui(stage)
         if not hasattr(self, "slot_box"):
@@ -3187,8 +3326,8 @@ class HeadToHeadView:
         self._save_picks()
         if snap:
             self._apply_snap(snap)
-        for var in (self.dist_var, self.gun_var):
-            var.trace_add("write", self._schedule)
+        self.dist_var.trace_add("write", self._schedule)
+        self._layout_slots()
         self.refresh()
 
     # ---- layout ---------------------------------------------------------- #
@@ -3224,14 +3363,14 @@ class HeadToHeadView:
 
         top = tk.Frame(card, bg=SURFACE)
         top.grid(row=3, column=0, sticky="ew", pady=(16, 0), **pad)
-        for i, (text, var) in enumerate((("DISTANCE (YD)", self.dist_var),
-                                         ("GUN WEIGHT (LB)", self.gun_var))):
-            a.label(top, text, 9, MUTED, True).grid(row=0, column=i, sticky="w",
-                                                     padx=(0 if i == 0 else 16, 0))
-            ttk.Entry(top, textvariable=var, font=a.f(12), width=10).grid(
-                row=1, column=i, sticky="w", pady=(4, 0), padx=(0 if i == 0 else 16, 0))
-        a.label(top, "Blank: each load in its cartridge's usual gun", 9, MUTED).grid(
-            row=2, column=1, sticky="w", pady=(4, 0), padx=(16, 0))
+        a.label(top, "DISTANCE (YD)", 9, MUTED, True).grid(row=0, column=0, sticky="w")
+        ttk.Entry(top, textvariable=self.dist_var, font=a.f(12), width=10).grid(
+            row=1, column=0, sticky="w", pady=(4, 0))
+        # opens a gun weight box on each load's row
+        self.gun_link = tk.Label(top, text="", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
+                                 cursor="hand2")
+        self.gun_link.grid(row=1, column=1, sticky="w", padx=(24, 0), pady=(4, 0))
+        self.gun_link.bind("<Button-1>", lambda e: self._toggle_gun())
         self.status = a.label(card, "", 10, DANGER, anchor="w")
         self.status.grid(row=4, column=0, sticky="w", pady=(8, 0), **pad)
         a.label(card, "", 4).grid(row=5, column=0)
@@ -3249,7 +3388,7 @@ class HeadToHeadView:
         a = self.app
         slot = {"cat": tk.StringVar(value=(icat or self.first).title),
                 "cart": tk.StringVar(value=item.cartridge if item else ""),
-                "load": tk.StringVar(value="")}
+                "load": tk.StringVar(value=""), "gun": tk.StringVar(value="")}
         if item is not None:
             slot["load"].set(next(t for t, x in self.choices[(icat.title, item.cartridge)].items()
                                   if x is item))
@@ -3262,21 +3401,21 @@ class HeadToHeadView:
                 slot["cart"].set(last)
         widest = max([16] + [len(c) for carts in self.cartridges.values() for c in carts])
         slot["num"] = a.label(self.slot_box, "", 11, MUTED, True)
-        slot["cat_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cat"], values=list(self.cats),
-                                       state="readonly", font=a.f(11),
-                                       width=max(len(t) for t in self.cats))
         slot["cart_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cart"],
-                                        values=self.cartridges.get(slot["cat"].get(), []),
-                                        font=a.f(11), width=widest)
+                                        values=list(self.cart_menu), font=a.f(11), width=widest)
         slot["cart_search"] = LoadSearch(a, slot["cart_box"], list(self.cart_names),
                                          lambda n, s=slot: self._on_cart_search(s, n),
                                          value=lambda n: self.cart_names[n][1])
         slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], font=a.f(11), width=40)
         slot["search"] = LoadSearch(a, slot["load_box"], [], lambda n, s=slot: self._on_load(s))
+        slot["gun_box"] = tk.Frame(self.slot_box, bg=SURFACE)
+        ttk.Entry(slot["gun_box"], textvariable=slot["gun"], font=a.f(11), width=6).pack(side="left")
+        slot["usual"] = a.label(slot["gun_box"], "", 9, MUTED)
+        slot["usual"].pack(side="left", padx=(6, 0))
+        slot["gun"].trace_add("write", self._schedule)
         slot["x"] = tk.Label(self.slot_box, text="✕", bg=SURFACE, fg=MUTED, font=a.f(12, True),
                              padx=10, pady=2, cursor="hand2")
-        slot["cat_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cat(s))
-        slot["cart_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cart(s))
+        slot["cart_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cart_menu(s))
         slot["load_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_load(s))
         slot["x"].bind("<Button-1>", lambda e, s=slot: self._remove_slot(s))
         slot["x"].bind("<Enter>", lambda e, s=slot: s["x"].config(fg=TEXT, bg=SURFACE_2))
@@ -3288,12 +3427,12 @@ class HeadToHeadView:
             slot["load_box" if slot["cart"].get() else "cart_box"].focus_set()
 
     def _fill_loads(self, slot):
-        # the cartridge search: any category's cartridge can be typed; with nothing typed,
-        # Down lists this row's category
+        # the cartridge search: any category's cartridge can be typed (the row's category
+        # first, for a cartridge in two); with nothing typed, Down lists them all
         t = slot["cat"].get()
         cs = slot["cart_search"]
-        cs.valid = self.cartridges.get(t, [])
-        cs.browse = [n for n, (ct, _) in self.cart_names.items() if ct == t]
+        cs.valid = [c for _, c in self.cart_names.values()]
+        cs.browse = sorted(self.cart_names, key=lambda n: self.cart_names[n][0] != t)
         cs.last = slot["cart"].get()
         names = list(self.choices.get((slot["cat"].get(), slot["cart"].get()), {}))
         slot["load_box"].config(values=names, width=max([40] + [min(len(n), 64) for n in names]))
@@ -3309,13 +3448,27 @@ class HeadToHeadView:
         self._changed()
 
     def _layout_slots(self):
+        if not hasattr(self, "gun_head"):
+            self.gun_head = self.app.label(self.slot_box, "GUN WEIGHT (LB)", 9, MUTED, True)
+        if self.gun_open:
+            self.gun_head.grid(row=0, column=4, sticky="w", padx=(12, 0))
+        else:
+            self.gun_head.grid_remove()
+        self.gun_link.config(text=("▾  Hide gun weights  (blank: the cartridge's usual gun)"
+                                   if self.gun_open else "▸  Gun weight for each load"))
         for n, slot in enumerate(self.slots, start=1):
             slot["num"].config(text=f"{n}")
             slot["num"].grid(row=n, column=0, sticky="w", padx=(0, 10), pady=3)
-            slot["cat_box"].grid(row=n, column=1, sticky="w", padx=(0, 8), pady=3)
             slot["cart_box"].grid(row=n, column=2, sticky="w", pady=3)
             slot["load_box"].grid(row=n, column=3, sticky="ew", padx=(8, 0), pady=3)
-            slot["x"].grid(row=n, column=4, sticky="w", padx=(4, 0), pady=3)
+            if self.gun_open:
+                t, cart = slot["cat"].get(), slot["cart"].get()
+                slot["usual"].config(text=f"usual {typical_gun_lb(self.cats[t], cart):g}"
+                                     if cart else "")
+                slot["gun_box"].grid(row=n, column=4, sticky="w", padx=(12, 0), pady=3)
+            else:
+                slot["gun_box"].grid_remove()
+            slot["x"].grid(row=n, column=5, sticky="w", padx=(4, 0), pady=3)
             if len(self.slots) <= H2H_MIN and not slot["load"].get():
                 slot["x"].grid_remove()           # nothing to remove: the 2 rows always stay
         if len(self.slots) >= H2H_MAX:
@@ -3323,26 +3476,26 @@ class HeadToHeadView:
         else:
             self.add_link.grid()
 
-    def _on_cat(self, slot):
-        """Another category: its cartridges go in the cartridge menu."""
-        slot["cart_box"].config(values=self.cartridges.get(slot["cat"].get(), []))
-        slot["cart"].set("")
-        slot["load"].set("")
-        self._fill_loads(slot)
-        self._layout_slots()
-        slot["cart_box"].focus_set()
-        self._changed()
+    def _on_cart_menu(self, slot):
+        """A cartridge was picked from the menu; a category heading picks nothing."""
+        pick = self.cart_menu.get(slot["cart"].get())
+        if pick is None:
+            slot["cart"].set(slot["cart_search"].last)
+            return
+        slot["cat"].set(pick[0])
+        slot["cart"].set(pick[1])
+        self._on_cart(slot)
 
     def _on_cart_search(self, slot, name):
         """A cartridge was picked from the search list, maybe from another category."""
         t, cart = self.cart_names[name]
         slot["cat"].set(t)
-        slot["cart_box"].config(values=self.cartridges.get(t, []))
         slot["cart"].set(cart)
         self._on_cart(slot)
 
     def _on_cart(self, slot):
         slot["load"].set("")
+        slot["gun"].set("")                       # another cartridge: back to its usual gun
         self._fill_loads(slot)
         self._layout_slots()
         slot["load_box"].focus_set()
@@ -3357,7 +3510,7 @@ class HeadToHeadView:
             return
         slot["search"].close()
         slot["cart_search"].close()
-        for key in ("num", "cat_box", "cart_box", "load_box", "x"):
+        for key in ("num", "cart_box", "load_box", "gun_box", "x"):
             slot[key].destroy()
         self.slots.remove(slot)
         while len(self.slots) < H2H_MIN:
@@ -3365,15 +3518,23 @@ class HeadToHeadView:
         self._layout_slots()
         self._changed()
 
-    def _picked(self):
-        """The loads chosen so far as (category, load), in slot order, without repeats."""
+    def _picked_slots(self):
+        """The loads chosen so far as (category, load, slot), in slot order, without repeats."""
         out = []
         for slot in self.slots:
             t = slot["cat"].get()
             item = self.choices.get((t, slot["cart"].get()), {}).get(slot["load"].get())
-            if item is not None and all(item is not x for _, x in out):
-                out.append((self.cats[t], item))
+            if item is not None and all(item is not x for _, x, _ in out):
+                out.append((self.cats[t], item, slot))
         return out
+
+    def _picked(self):
+        return [(c, x) for c, x, _ in self._picked_slots()]
+
+    def _toggle_gun(self):
+        self.gun_open = not self.gun_open
+        self._layout_slots()
+        self.refresh()
 
     def _save_picks(self):
         self.app.h2h[:] = [pick_key(c, x) for c, x in self._picked()]
@@ -3384,7 +3545,8 @@ class HeadToHeadView:
 
     # ---- state ------------------------------------------------------------ #
     def snapshot(self):
-        return dict(dist=self.dist_var.get(), gun=self.gun_var.get())
+        return dict(dist=self.dist_var.get(), gun_open=self.gun_open,
+                    guns={pick_key(c, x): s["gun"].get() for c, x, s in self._picked_slots()})
 
     def restore(self, snap):
         if not hasattr(self, "slot_box"):
@@ -3395,8 +3557,12 @@ class HeadToHeadView:
     def _apply_snap(self, snap):
         if "dist" in snap:
             self.dist_var.set(snap["dist"])
-        if "gun" in snap:
-            self.gun_var.set(snap["gun"])
+        self.gun_open = snap.get("gun_open", self.gun_open)
+        guns = snap.get("guns", {})
+        for c, x, slot in self._picked_slots():
+            if pick_key(c, x) in guns:
+                slot["gun"].set(guns[pick_key(c, x)])
+        self._layout_slots()
 
     def _schedule(self, *_):
         if self._pending is not None:
@@ -3413,13 +3579,15 @@ class HeadToHeadView:
             return
         for w in self.results.winfo_children():
             w.destroy()
-        picked = self._picked()
+        picks = self._picked_slots()
+        picked = [(c, x) for c, x, _ in picks]
         try:
             far = max([c.max_distance for c, _ in picked] or [H2H_DISTANCE])
             dist = LoadsView._num(self.dist_var, "Distance", 0, far)
-            # blank: each load in its cartridge's typical gun (GUN_LB); a number: all in that gun
-            gun = (None if not self.gun_var.get().strip()
-                   else LoadsView._num(self.gun_var, "Gun weight", 0.5, GUN_LB_MAX))
+            # a blank box (or the boxes hidden): the load's cartridge's typical gun (GUN_LB)
+            guns = [None if not self.gun_open or not s["gun"].get().strip()
+                    else LoadsView._num(s["gun"], f"Gun weight for {x.label}", 0.5, GUN_LB_MAX)
+                    for _, x, s in picks]
         except ValueError as exc:
             self.status.config(text=str(exc))
             return self.app.fit_window()
@@ -3435,7 +3603,7 @@ class HeadToHeadView:
             self.app.label(self.results, f"Pick at least {H2H_MIN} loads to put them head to head.",
                            11, MUTED, bg=BG, anchor="w").grid(row=0, column=0, sticky="w")
             return self.app.fit_window()
-        rows = h2h_rows(picked, dist, gun, self.app.dict_weights, self.app.price_for, self.groups)
+        rows = h2h_rows(picked, dist, guns, self.app.dict_weights, self.app.price_for, self.groups)
         self._render(rows, dist)
         self.app.fit_window()
 
@@ -3566,21 +3734,24 @@ def h2h_keys(cats):
     return [k for k in METRICS if any(k in metric_keys(c) for c in cats)]
 
 
-def h2h_rows(picked, dist, gun, weights_of, price_of, groups):
+def h2h_rows(picked, dist, guns, weights_of, price_of, groups):
     """Head to Head figures for the picked (category, load) pairs. Each load is graded the way
     its Load Dictionary grades it (against every load of its cartridge, with weights_of(category)),
     at `dist` capped to its category's max. `best` is the set of factors where it leads the picked
     loads and `gap` how far behind the leader it is, in %; factors that don't apply to a load
-    (`keys`) are left out. gun None: each cartridge in its typical gun (GUN_LB). `groups` maps
-    (category title, cartridge) to its loads; price_of(category, load)."""
+    (`keys`) are left out. guns: a gun weight per picked load, None (or a None in the list) for
+    its cartridge's typical gun (GUN_LB). `groups` maps (category title, cartridge) to its loads;
+    price_of(category, load)."""
     rows, done = [], {}
-    for icat, it in picked:
-        key = (icat.title, it.cartridge)
+    for n, (icat, it) in enumerate(picked):
+        gun = guns[n] if guns else None
+        gun = typical_gun_lb(icat, it.cartridge) if gun is None else gun
+        key = (icat.title, it.cartridge, gun)
         d = min(dist, icat.max_distance)
         if key not in done:
-            items = groups[key]
+            items = groups[key[:2]]
             done[key] = {id(r["item"]): r for r in score_loads(
-                items, d, typical_gun_lb(icat, it.cartridge) if gun is None else gun,
+                items, d, gun,
                 weights_of(icat), [price_of(icat, x) for x in items], by_type=not icat.grain_style)}
         rows.append(dict(done[key][id(it)], cat=icat, dist=d, keys=metric_keys(icat),
                          best=set(), gap={}))

@@ -65,23 +65,23 @@ For each factor, a load is scored on a curve against the typical (median) load o
 ## Download and install
 Releases are on the repository's **Releases** page.
 
-- **Windows**: run `CartridgeCalculator-Setup.exe`. It installs for the current user (no admin password), adds Start menu and desktop shortcuts, and can be removed from Settings > Apps. A newer installer upgrades in place and keeps your handloads and settings. The installer isn't code-signed, so SmartScreen may say "Windows protected your PC": click More info, then Run anyway. A portable .zip is also available.
+- **Windows**: run `LoadLore-v<version>-Setup.exe` (for example `LoadLore-v1.7.4-Setup.exe`). It installs for the current user (no admin password), adds Start menu and desktop shortcuts, and can be removed from Settings > Apps. A newer installer upgrades in place and keeps your handloads and settings. The installer isn't code-signed, so SmartScreen may say "Windows protected your PC": click More info, then Run anyway. A portable .zip is also available.
 - **Linux**: unpack and run the installer, which adds the app to your launcher. Run it again with a newer release to update (your own files are kept), or with `--uninstall` to remove it.
   ```
-  tar xzf CartridgeCalculator-Linux.tar.gz
-  bash CartridgeCalculator/install.sh
+  tar xzf LoadLore-v*-Linux.tar.gz
+  bash LoadLore/install.sh
   ```
-- **Android**: install `CartridgeCalculator.apk` (allow installs from your browser or file manager when asked).
+- **Android**: install `LoadLore-v<version>.apk` (allow installs from your browser or file manager when asked).
 
 **Updating (Windows and Linux):** open Settings and press **Check for updates**. When a newer release is out, **Update to vX** downloads it, checks it against the release's `SHA256SUMS.txt`, installs it over the old version and reopens the app; your handloads, prices and settings are kept. Turn on **Check at start** to be asked whenever a new version comes out. The app only talks to GitHub when you press the button or turn that on. The portable Windows .zip can't update itself, so its button opens the Releases page instead.
 
-In the Start menu, app launcher and phone app drawer the app is called **Load Lore**. The download files keep their old `CartridgeCalculator` names so updates install over earlier versions.
+In the Start menu, app launcher and phone app drawer the app is called **Load Lore**. Download files carry the version in their name. Copies of v1.7.3-dev and older can't update themselves to the renamed version: download and run the new installer (or install.sh) once. It moves the app from the old Cartridge Calculator folder to a Load Lore folder, handloads and settings included.
 
 ## For developers
 
 ### Repository layout
 ```
-src/cartridge_calculator.py   desktop app (single file, Python standard library + Tkinter only)
+src/load_lore.py              desktop app (single file, Python standard library + Tkinter only)
 web/template.html             phone/web app (single page, no framework)
 web/build_web.py              embeds the CSV data into web/www/index.html
 data/loads_*.csv              factory loads, one file per category
@@ -99,7 +99,7 @@ research/                     where each added load came from
 
 ### Running from source
 ```
-python3 src/cartridge_calculator.py        # desktop app (needs Tk: python3-tkinter)
+python3 src/load_lore.py                   # desktop app (needs Tk: python3-tkinter)
 python3 web/build_web.py                   # then open web/www/index.html in a browser
 ```
 Handloads (`my_handloads.csv`) and settings (`settings.json`) are saved next to the data files and are git-ignored; the phone/web version keeps them in the browser. The desktop and web versions use the same formulas and data and must stay in step: after editing any CSV or `web/template.html`, run `python3 web/build_web.py`.
@@ -108,7 +108,7 @@ Handloads (`my_handloads.csv`) and settings (`settings.json`) are saved next to 
 - `loads_*.csv` columns: cartridge, load, bullet_gr, muzzle_fps, bc_g1, powder_gr, default_cost, default, source, group, barrel_in, purpose (and optionally diameter_in). Every load name starts with its brand. `barrel_in` is the test barrel length; `purpose` is Hunting / Varmint / Target / Match / Defense / Subsonic (shotguns use `group`, their load type).
 - `ammo_*.csv` holds generic loads with no brand names; it provides the cartridge list.
 - 5.56x45mm NATO and 7.62x51mm NATO are their own cartridges, separate from .223 Remington and .308 Winchester. A NATO load says so in its name (5.56, M193, M855, 7.62x51, M80); Hornady's 5.56 NATO loads are the ones tested in a 20" barrel. Handloads and prices saved when they shared one list are matched up through `SPLIT_CARTRIDGES`.
-- Saved handloads and prices that use older names are matched up automatically through `RENAMED_CARTRIDGES` in `src/cartridge_calculator.py`.
+- Saved handloads and prices that use older names are matched up automatically through `RENAMED_CARTRIDGES` in `src/load_lore.py`.
 - Bullet diameters for Taylor KO and HITS come from the `DIAMETERS` table in the same file.
 - `bullets.csv` BCs are approximate published G1 figures.
 
