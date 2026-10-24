@@ -27,6 +27,7 @@ Requires only Python 3.8+ with Tkinter (included with the standard installers
 for Windows and macOS).
 """
 
+import base64
 import bisect
 import csv
 import glob
@@ -38,6 +39,7 @@ import re
 import shutil
 import ssl
 import statistics
+import struct
 import subprocess
 import sys
 import tarfile
@@ -46,6 +48,7 @@ import threading
 import urllib.error
 import urllib.request
 import webbrowser
+import zlib
 from dataclasses import dataclass
 
 try:
@@ -770,6 +773,50 @@ SHIPPED_DATA = ("ammo_*.csv", "loads_*.csv", BULLETS_FILENAME, "NOTICE.md", "DIS
 # Ubuntu and only looks where Ubuntu keeps them, so on Fedora etc. it would find none
 CA_BUNDLES = ("/etc/ssl/certs/ca-certificates.crt", "/etc/pki/tls/certs/ca-bundle.crt",
               "/etc/ssl/ca-bundle.pem", "/etc/ssl/cert.pem", "/etc/pki/tls/cacert.pem")
+
+# GitHub's mark (Octicons mark-github), 96x96 alpha, zlib + base64: drawn in the theme's text colour
+GITHUB_MARK = (
+    "eNrdmWtsVEUUxy8VA1uobdPWikKAVBRpbEFeiYEWMASSlprSkC7Io8bQuFEJkIKVRWnBxFhAIylQ2uoHio+tpmkDNqWg"
+    "2bSRFEUFa4gUYalgCY/yKO2uqYVxubu9vTPn3Hvnzuwn/9/2nDO/3b0zd+acM4rCI8e05aWe1vZL3YR0X2pv9WxzTh2p"
+    "REjD5+5oGyBAAydKXnxEGh69qqGPGKq3dpkUPbeOWKnPky0IH+G6SLj0R8FwAXzRVcKtTpdd+vwLxJbOzrBDT6whdnW/"
+    "PIYbn9NNBHQlg4/+6B4ipoGtURz4CaeJsLxJlvjMO0RCl1Mt8Mv+IVLqyTTFv/2ASKrfbMd4h8jrQb7xwyGRUL/ROl3w"
+    "b0T45O5kFJ/aRyKky4kIfuR5EjEdGwb51fSb0nLPFvGE95r+42aAd1LhtUHLtDWf8bFr184Khm+gbLMZ/Dj65zpD1rFV"
+    "1vSvnw3FjqesPgfNb6QHaXvt5IPm9IbpGuJ3ylFG4fPpUb/oXCnN4RPkm+3OeaqWFNecCqi2X6fqAitpxgs6V/x12ldF"
+    "ffnKhtL8NHa+UrLdX2ylLC6a8bPOtZv51++L5AN5DKRA8ySwb9ZGEf5LDOSc5illZ22TCH8xS8kLO0bfYj3vivCXspTB"
+    "GXgLrLoqEf5GgJkbcvwEHCdF+DCnqVTtzyCvTbwA/zqg3FbtOxB+ln38GAST+9Dhg/Z6kedThOxNQfMUaPbFCSXc3wLQ"
+    "vShs9ZA5Ygl9IjwAg9t0AzAeFS1H4Ey6lWG9wPi8KD8W5H7fKekA/714PbWTZfmV5SQimw++xREyoTRyjydYsoHsddGX"
+    "rKVLpuBsZGlvgmy/VYb/CUsrB1VinQwfJMj1oNQ6IMMvYGkwTftAhp/N0tr7WctHMnz2jCd/g+W5X4a/mqUFAP+gDP91"
+    "0GG5C3JrGT7Y4TrB+uyQ4YMz+NSf4AHJ8FtYWFMb4E8Rx0eB6TzkAfxXxflws/+4DJiqxflvwAPMZZC1COkHAFs6Bx7v"
+    "OaL4pyEr2XEf2JpF+bBx5GPLJlXPieFj/IB0SFE+RcpjMf4+SHKB0k5VoQh+IQJKV5Q4pOUTEHjHnkSagoGHDbk25Hs7"
+    "nrCdW/2IYNSV4kZbIDazlEkdGGW1+sfQnpg/3w4+pwdtBI1Qncfx0r9uPC99bC1O2B1yv6IZ/vL+pvd7uBL12F1GzYmU"
+    "cERn+PP50YriWHhO37Zeb1FqJG44FjDCN4FTM9S1qaDXQMW6NJw9s6jyuFlv5WUtsmvwMmJFqAsK1vFJ+DeaLfvdQ7GF"
+    "QxWZ2hf6kI2dxXOWGPY39JvcYfXzWaxQZlRijm/Rxy5ieicz8YVANxxvmvLpTbiecVBT4MXn17R1xrSQkm4zBUCxLrYE"
+    "568wwV9gr/dyhnzzQqmkVlj6DNZnqgl/AYiuYAvIx91NXq/3yNpJRu9WgjG+DJmuds07nXPfMe5aYtETtT2wkZNvdJVy"
+    "ZhQanqUFrOPj9+D4q09ZVk/rufi9KN6fbjhgaFGezuPg+1F+rsmILbrKYG+oHbzE/VW0nfl1mv4kF3ZYxhoEI/cpdzKt"
+    "LsAQ/mPcv/9KquVDTesEo2J4+WfGcMxa3GF2WBwn/yjnFe2aW3zdUDrq5irudCaZvtdP4OHXJNhJmLK6dEMNbl0d+v04"
+    "Q7GnaF1Wk2zJ3yaQbye9d8NifYb7nReLkwULnpVHBi/DUJWrJUqGIqH410rcDkPv9s8LY5X/t/4DeFtYRQ==")
+
+
+def github_mark_png(size, colour):
+    """The GitHub mark as a base64 PNG, `size` px square, in `colour` ("#rrggbb")."""
+    src, n = zlib.decompress(base64.b64decode(GITHUB_MARK)), 96
+    r, g, b = (int(colour[i:i + 2], 16) for i in (1, 3, 5))
+    raw = bytearray()
+    for y in range(size):
+        y0, y1 = y * n // size, max((y + 1) * n // size, y * n // size + 1)
+        raw.append(0)                                   # PNG row filter: none
+        for x in range(size):
+            x0, x1 = x * n // size, max((x + 1) * n // size, x * n // size + 1)
+            cells = [src[j * n + i] for j in range(y0, y1) for i in range(x0, x1)]
+            raw += bytes((r, g, b, sum(cells) // len(cells)))
+
+    def chunk(kind, data):
+        return (struct.pack(">I", len(data)) + kind + data
+                + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF))
+    png = (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0))
+           + chunk(b"IDAT", zlib.compress(bytes(raw))) + chunk(b"IEND", b""))
+    return base64.b64encode(png).decode("ascii")
+
 
 
 def version_tuple(text):
@@ -1751,6 +1798,17 @@ class App:
         chip.bind("<Button-1>", flip)
         chip.pack(side="left")
 
+    def _github_button(self, parent):
+        """A small GitHub logo that opens the repo page (Settings > Source code)."""
+        img = tk.PhotoImage(data=github_mark_png(self.px(26), TEXT))
+        b = tk.Label(parent, image=img, bg=SURFACE, cursor="hand2", padx=self.px(7),
+                     pady=self.px(7))
+        b.image = img                                   # Tk drops images nobody holds
+        b.bind("<Button-1>", lambda e: webbrowser.open(REPO_PAGE))
+        b.bind("<Enter>", lambda e: b.config(bg=SURFACE_2))
+        b.bind("<Leave>", lambda e: b.config(bg=SURFACE))
+        return b
+
     def show_settings(self):
         """Settings (bottom of the sidebar): theme, text size, the S-F grades switch and updates."""
         self._stash()
@@ -1760,19 +1818,35 @@ class App:
         self._draw_chrome()
         wrap = tk.Frame(stage, bg=BG)
         wrap.pack(fill="x", padx=36, pady=(32, 28))
-        self.label(wrap, "Settings", 22, TEXT, True, bg=BG, anchor="w").pack(anchor="w", pady=(0, 20))
+        self.label(wrap, "Settings", 22, TEXT, True, bg=BG, anchor="w").pack(anchor="w", pady=(0, 6))
+
+        def section(title):
+            """A titled box; its rows are split by thin lines instead of each having a box."""
+            self.label(wrap, title, 11, MUTED, True, bg=BG, anchor="w").pack(
+                anchor="w", pady=(10, 6))
+            card = tk.Frame(wrap, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
+            card.pack(fill="x", pady=(0, 12))
+            card.rows = 0
+            return card
+
+        def line(card):
+            if card.rows:
+                tk.Frame(card, bg=BORDER, height=1).pack(fill="x", padx=20)
+            card.rows += 1
 
         def row(title, note):
-            card = tk.Frame(wrap, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-            card.pack(fill="x", pady=6)
-            text = tk.Frame(card, bg=SURFACE)
+            line(card)
+            r = tk.Frame(card, bg=SURFACE)
+            r.pack(fill="x")
+            text = tk.Frame(r, bg=SURFACE)
             text.pack(side="left", fill="x", expand=True, padx=20, pady=14)
             self.label(text, title, 12, TEXT, True, bg=SURFACE, anchor="w").pack(anchor="w")
             self.label(text, note, 10, MUTED, bg=SURFACE, anchor="w").pack(anchor="w", pady=(2, 0))
-            right = tk.Frame(card, bg=SURFACE)
+            right = tk.Frame(r, bg=SURFACE)
             right.pack(side="right", padx=20, pady=14)
             return right
 
+        card = section("Display")
         theme_var = tk.StringVar(value=self.theme)
         pick = ttk.Combobox(row("Theme", "Colors for the whole app"), textvariable=theme_var,
                             values=list(THEMES), state="readonly", font=self.f(11),
@@ -1791,17 +1865,17 @@ class App:
         chip = grades_chip(self, row("S–F grades", "Show the grades in the Load Dictionary and "
                                      "Head to Head"), flip)
         chip.pack()
+        card = section("About")
         self._updates_row(row)
-        self.button(row("Source code", "Free and open source: code, issues and releases on GitHub"),
-                    "Open on GitHub", lambda: webbrowser.open(REPO_PAGE)).pack()
-        card = tk.Frame(wrap, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        card.pack(fill="x", pady=6)
+        self._github_button(row("Source code", "Free and open source: code, issues and "
+                                "releases on GitHub")).pack()
+        line(card)
         self.label(card, "Disclaimer", 12, TEXT, True, bg=SURFACE, anchor="w").pack(
             anchor="w", padx=20, pady=(14, 0))
         about = self.label(card, ABOUT_TEXT, 10, MUTED, bg=SURFACE, anchor="w", justify="left")
         about.pack(fill="x", padx=20, pady=(2, 14))
         about.bind("<Configure>", lambda e: about.configure(wraplength=max(e.width, 1)))
-        self.label(wrap, version_text(), 10, MUTED, bg=BG, anchor="w").pack(anchor="w", pady=(14, 0))
+        self.label(wrap, version_text(), 10, MUTED, bg=BG, anchor="w").pack(anchor="w", pady=(2, 0))
         self._update_scroll()
 
     def _stash(self):
