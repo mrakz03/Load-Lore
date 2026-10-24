@@ -768,8 +768,15 @@ REPO_PAGE = f"https://github.com/{UPDATE_REPO}"      # Settings > Source code (w
 RELEASES_PAGE = f"{REPO_PAGE}/releases/latest"
 LATEST_RELEASE_API = f"https://api.github.com/repos/{UPDATE_REPO}/releases/latest"
 SUMS_ASSET = "SHA256SUMS.txt"                      # made by the release job in CI
-WINDOWS_ASSET = "CartridgeCalculator-Setup.exe"
-LINUX_ASSET = "CartridgeCalculator-Linux.tar.gz"
+# release files are named LoadLore-v1.7.4-Setup.exe / LoadLore-v1.7.4-Linux.tar.gz (the version is
+# in the name since Oct 2026); the old fixed names are still matched, and releases keep shipping
+# copies under them for a while because v1.7.3-dev and older only look for those
+ASSET_PREFIX = "LoadLore-"
+ASSET_SUFFIX = {"windows": "-Setup.exe", "linux": "-Linux.tar.gz"}
+LEGACY_ASSET = {"windows": "CartridgeCalculator-Setup.exe", "linux": "CartridgeCalculator-Linux.tar.gz"}
+PROGRAM_NAMES = ("LoadLore", "CartridgeCalculator")   # the Linux program in the tar: new name, old name
+# where install.sh put the Linux app before the rename; an update moves it to ~/.local/share/load-lore
+OLD_LINUX_APPDIR = os.path.join(os.path.expanduser("~"), ".local", "share", "cartridge-calculator")
 SHIPPED_DATA = ("ammo_*.csv", "loads_*.csv", BULLETS_FILENAME, "NOTICE.md", "DISCLAIMER.md")
 # certificate bundles of the common Linux distros: the packaged app's OpenSSL was built on
 # Ubuntu and only looks where Ubuntu keeps them, so on Fedora etc. it would find none
@@ -883,6 +890,21 @@ def update_method():
     return None
 
 
+def release_asset(release, method):
+    """The file of `release` to install for `method` ("windows" / "linux"): the one named with the
+    release's version, else any LoadLore-*-Setup.exe / -Linux.tar.gz, else the old fixed name."""
+    assets, suffix = release["assets"], ASSET_SUFFIX[method]
+    exact = f"{ASSET_PREFIX}v{release['version']}{suffix}"
+    if exact in assets:
+        return exact
+    named = sorted(n for n in assets if n.startswith(ASSET_PREFIX) and n.endswith(suffix))
+    if named:
+        return named[-1]
+    if LEGACY_ASSET[method] in assets:
+        return LEGACY_ASSET[method]
+    raise ValueError(f"Release v{release['version']} has no {exact}.")
+
+
 def download_verified(release, name, folder):
     """Download one file of a release into `folder` and check it against the release's
     SHA256SUMS.txt. Returns its path. Raises ValueError if it's missing or doesn't match."""
@@ -907,22 +929,31 @@ def download_verified(release, name, folder):
 
 
 def install_linux_update(tar_path, program):
-    """Unpack a Linux release over the copy at `program` (the CartridgeCalculator file): the
-    program first, copied under a temporary name and renamed (the running one can't be written
-    over), then the data files. The user's own files (my_*.csv, settings.json) aren't in the
-    tar and are left alone."""
+    """Unpack a Linux release over the copy at `program` (the LoadLore file): the program first,
+    copied under a temporary name and renamed (the running one can't be written over), then the
+    data files. The user's own files (my_*.csv, settings.json) aren't in the tar and are left
+    alone. A copy still in the pre-rename folder (~/.local/share/cartridge-calculator) is moved
+    by the release's install.sh instead, user files and all. Returns the program to start."""
     here = os.path.dirname(program)
     with tempfile.TemporaryDirectory() as tmp:
         with tarfile.open(tar_path) as tar:
             tar.extractall(tmp, filter="data")
-        src = os.path.join(tmp, "CartridgeCalculator")
+        found = [(os.path.join(tmp, n), n) for n in PROGRAM_NAMES
+                 if os.path.isfile(os.path.join(tmp, n, n))]
+        src, exe = found[0] if found else (tmp, "")
         new_data = [f for f in glob.glob(os.path.join(src, "*.csv"))
                     if not os.path.basename(f).startswith("my_")]
-        if not os.path.isfile(os.path.join(src, "CartridgeCalculator")) or \
-                not any(os.path.basename(f).startswith("loads_") for f in new_data):
+        if not found or not any(os.path.basename(f).startswith("loads_") for f in new_data):
             raise ValueError("The download doesn't look like a Load Lore release.")
+        script = os.path.join(src, "install.sh")
+        if os.path.realpath(here) == os.path.realpath(OLD_LINUX_APPDIR) and os.path.isfile(script):
+            subprocess.run(["bash", script], check=True, capture_output=True, env=_launch_env())
+            moved = os.path.join(os.path.dirname(OLD_LINUX_APPDIR), "load-lore", "LoadLore")
+            if os.path.isfile(moved):
+                return moved
+            raise ValueError("install.sh ran but the new copy isn't in ~/.local/share/load-lore.")
         part = program + ".new"
-        shutil.copyfile(os.path.join(src, "CartridgeCalculator"), part)
+        shutil.copyfile(os.path.join(src, exe), part)
         os.chmod(part, 0o755)
         os.replace(part, program)
         keep = {os.path.basename(f) for f in new_data}
@@ -935,6 +966,7 @@ def install_linux_update(tar_path, program):
         for name in ("icon.png", "LICENSE", "LEGAL.md"):
             if os.path.exists(os.path.join(src, name)):
                 shutil.copyfile(os.path.join(src, name), os.path.join(here, name))
+    return program
 
 
 def _update_error(what, err):
@@ -1759,9 +1791,9 @@ class App:
         folder = tempfile.mkdtemp(prefix="loadlore-update-")
 
         def work():
-            path = download_verified(rel, WINDOWS_ASSET if method == "windows" else LINUX_ASSET, folder)
+            path = download_verified(rel, release_asset(rel, method), folder)
             if method == "linux":
-                install_linux_update(path, sys.executable)
+                path = install_linux_update(path, sys.executable)    # the program to start
                 shutil.rmtree(folder, ignore_errors=True)
             return path
 
@@ -1775,7 +1807,7 @@ class App:
                     subprocess.Popen([path, "/SILENT", "/SUPPRESSMSGBOXES", "/NORESTART",
                                       "/CLOSEAPPLICATIONS"], env=_launch_env())
                 else:
-                    subprocess.Popen([sys.executable], cwd=os.path.dirname(sys.executable),
+                    subprocess.Popen([path], cwd=os.path.dirname(path),
                                      env=_launch_env(), start_new_session=True)
             except OSError as exc:
                 self._set_update(state="error", release=rel, message=(

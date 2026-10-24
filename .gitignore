@@ -11,6 +11,6 @@ dist/
 *.spec
 .buildenv/
 .venv/
-/CartridgeCalculator/
+/LoadLore/
 node_modules/
 /android/

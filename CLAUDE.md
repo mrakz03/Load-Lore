@@ -1,16 +1,19 @@
-# Cartridge Calculator
+# Load Lore (formerly Cartridge Calculator)
 
 Working notes for contributors and AI coding assistants: the rules the code follows and why.
 
 App name (Oct 2026): "In Like Flint - Load Lore" inside the app (APP_TITLE / web APP_TITLE, window
 title, README heading); device menus show just "Load Lore" (issue #27: installer AppName and
-shortcuts, .desktop Name, capacitor appName). Repo, file and package names (CartridgeCalculator.exe,
-cartridge_calculator.py, appId com.cartridgecalc.app, Windows AppId and install folder) stay as
-they were so updates keep installing over older versions.
+shortcuts, .desktop Name, capacitor appName). File names were renamed too (Oct 2026): src/load_lore.py,
+LoadLore.exe / LoadLore, install folders ...\Programs\Load Lore and ~/.local/share/load-lore (an
+upgrade moves the old "Cartridge Calculator" / cartridge-calculator folder, user files included: the
+.iss [Code] + external [Files], install.sh OLD_APPDIR, install_linux_update). Kept on purpose:
+Android appId com.cartridgecalc.app (changing it makes a new app: reinstall, handloads lost), the
+Windows AppId, and the web's cartridge_calc_* localStorage keys (saved handloads/prices/settings).
 
 Grades ammo S–F on velocity, energy, recoil, cost (plus Taylor KO and HITS;
 default weights 3/3/1/3/3/3, Shotgun keeps Taylor KO and HITS at 0: no bullet diameter).
-Desktop app: src/cartridge_calculator.py (Tkinter, stdlib only). Phone/web: web/template.html,
+Desktop app: src/load_lore.py (Tkinter, stdlib only). Phone/web: web/template.html,
 built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK in CI).
 
 ## Rules
@@ -71,7 +74,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   to the commercial cartridge, saved prices to both.
 - Metric cartridges are named with "mm" (7.62x51mm NATO, 7.62x54mmR). When renaming a
   cartridge, add old -> new to RENAMED_CARTRIDGES so users' saved files keep matching.
-- Colour themes live in THEMES (cartridge_calculator.py); build_web.py passes the same table to
+- Colour themes live in THEMES (load_lore.py); build_web.py passes the same table to
   the web version. Classic is the default and the original look. Use the palette globals
   (BG, SURFACE, TEXT, ACCENT, ON_ACCENT, DANGER, HAND_FG...) / CSS variables, never hard-coded colours.
 - Desktop UI sizes come from measured text (App.fit_columns, _sidebar_width), not fixed pixel
@@ -95,12 +98,17 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   GitHub latest-release API, downloads the Setup.exe (run with /SILENT; the .iss [Run] entry with
   Check: WizardSilent reopens the app) or the Linux tar (install_linux_update swaps the files in
   place like install.sh), checked against SHA256SUMS.txt from the release job. "Check at start"
-  (settings.json check_updates) is off by default. Asset names must stay as they are.
+  (settings.json check_updates) is off by default. Release files carry the version
+  (LoadLore-v1.7.4-dev-Setup.exe, -Windows.zip, -Linux.tar.gz, .apk; release_asset matches them).
+  The release also ships LEGACY copies CartridgeCalculator-Setup.exe and CartridgeCalculator-Linux.tar.gz
+  (that tar keeps the CartridgeCalculator/CartridgeCalculator layout) because v1.7.3-dev and older only
+  look for those names; drop the LEGACY lines in release.yml once no such copies are left.
+  SHA256SUMS.txt keeps its name.
   Tags are vX.Y.Z, optionally with a suffix for a test build (v1.7.2-dev sorts after 1.7.1, before
   1.7.2: version_tuple); a release marked "pre-release" on GitHub is skipped by the latest-release API.
 git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
 (tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
-- APP_VERSION in cartridge_calculator.py stays "dev" in the repo; CI sets it from the tag.
+- APP_VERSION in load_lore.py stays "dev" in the repo; CI sets it from the tag.
 - Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the maintainer saves
   the middle number (v1.6) for bigger releases.
 - Installers upgrade in place and clear old shipped data (ammo_*, loads_*, bullets.csv) first.
