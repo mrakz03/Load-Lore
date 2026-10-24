@@ -2763,6 +2763,7 @@ class LoadsView:
             return
         if not items:                                # a cartridge with no factory loads yet
             self.tree.delete(*self.tree.get_children())
+            self.rows = []
             self.selected = None
             self.detail.grid_remove()
             self.count_lbl.config(text=f"No factory loads listed for {cart}. Use \"+ Add handload\" "
@@ -2804,6 +2805,8 @@ class LoadsView:
         self._render()
 
     def _render(self):
+        if not self.groups.get(self.cart_var.get()):
+            return                                   # nothing to list (refresh says why)
         self._count_chips()
         terms = self.filter_var.get().lower().split()
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
@@ -3100,8 +3103,21 @@ class LoadSearch:
         self.listbox.see(i)
         return "break"
 
+    def _typed_pick(self):
+        """The name whose box text was typed out in full instead of picked from the list (the
+        list closes then), or None if the text is no pick or the one already made."""
+        text = self.text()
+        if text == self.last or not self._ok(text):
+            return None
+        return next((n for n in (self.names if self.browse is None else self.browse)
+                     if self.value(n) == text), None)
+
     def _pick(self, i=None):
-        if self.popup is not None and self.matches:
+        if self.popup is None:                # a name typed out in full + Enter picks it too
+            name = self._typed_pick()
+            if name is not None:
+                self.on_pick(name)
+        elif self.matches:
             if i is None:
                 cur = self.listbox.curselection()
                 i = cur[0] if cur else 0
@@ -3126,6 +3142,10 @@ class LoadSearch:
         self.close()
         if not self._ok(self.text()):
             self.box.setvar(self.var, self.last if self._ok(self.last) else "")
+            return
+        name = self._typed_pick()             # typed out in full: the table follows the box
+        if name is not None:
+            self.on_pick(name)
 
     def close(self):
         if self.popup is not None:
