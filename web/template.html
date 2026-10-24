@@ -163,7 +163,13 @@ th:nth-child(1){background:var(--surface2);z-index:2}
   .brand{border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:14px}
   #app.home,#app.picker{padding-top:7vh}
 }
-.setlist{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.setlist{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.sethead{font-size:.85rem;font-weight:700;color:var(--muted);margin:8px 0 0}
+.setgroup{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:0 16px;margin-bottom:6px}
+.setgroup .setrow{background:none;border:0;border-radius:0;padding:14px 0}
+.setgroup .setrow+.setrow{border-top:1px solid var(--border)}
+a.ghlink{display:inline-flex;padding:8px;border-radius:8px;color:var(--text)}a.ghlink:hover{background:var(--surface2)}
+a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .setrow{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .setrow b{font-size:.98rem}.setrow .muted{font-size:.85rem}
 .setrow select{max-width:220px}
@@ -251,7 +257,7 @@ details.btab table td:first-child,details.btab table th:first-child{text-align:l
 "use strict";
 const DATA = __DATA__;
 const APP_TITLE = "In Like Flint - Load Lore";
-// ---------- colour themes (same table as the desktop app) ----------
+// ---------- color themes (same table as the desktop app) ----------
 const THEMES = DATA.themes || {}, THEME_KEY = "cartridge_calc_theme";
 const THEME_VARS = {bg:"--bg",surface:"--surface",surface_2:"--surface2",border:"--border",text:"--text",muted:"--muted",
   accent:"--accent",accent_hover:"--accent-h",on_accent:"--on-accent",side:"--side",danger:"--danger",hand:"--hand"};
@@ -527,14 +533,21 @@ function showHome(){
   <div class="feat">${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
 }
+// GitHub's mark (Octicons mark-github), drawn in the text colour
+const GITHUB_MARK="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z";
 function showSettings(){
   document.title=APP_TITLE;app.classList.remove("wide","home","picker");
   app.innerHTML=`<div class="phead"><h2>Settings</h2></div><div class="setlist">
-    <div class="setrow"><b>Text size</b>${sizeCtl()}</div>
+    <div class="sethead">Display</div><div class="setgroup">
     <div class="setrow"><label for="theme2"><b>Theme</b></label><select id="theme2">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>
+    <div class="setrow"><b>Text size</b>${sizeCtl()}</div>
     <div class="setrow nw"><div><b>S–F grades</b><div class="muted">Show the grades in the Load Dictionary and Head to Head</div></div>${gradesBtn()}</div>
+    </div>
+    <div class="sethead">About</div><div class="setgroup">
+    <div class="setrow nw"><div><b>Source code</b><div class="muted">Free and open source: code, issues and releases on GitHub</div></div><a class="ghlink" href="${esc(DATA.repo||"")}" target="_blank" rel="noopener" title="Open on GitHub" aria-label="Open on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="${GITHUB_MARK}"/></svg></a></div>
     <div class="setrow"><div><b>Disclaimer</b><div class="muted" style="white-space:pre-line">${esc(DATA.about||"")}</div></div></div>
     <div class="setrow"><b>Version</b><span class="muted">${esc(VERSION_TEXT)}</span></div>
+    </div>
   </div>`;
   wireSize(app);wireGrades(app);
   $("#theme2").onchange=e=>applyTheme(e.target.value);
@@ -739,7 +752,7 @@ function openLoads(cat,pane){
   </div>
   <!-- the brand / load filter and sort sit right above the list (issue #26) -->
   <div class="sortrow above"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
-      <select id="ls"><option value="score">Sort: best value</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
+      <select id="ls"><option value="score">Sort: ${GRADES?"best value":"default order"}</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
   <div class="cnt" id="lcnt"></div><div class="lgrid" id="lres"></div>
   <div class="note" id="lnote"></div>`;
   const $$=s=>$(s,pane);
@@ -803,13 +816,13 @@ function openLoads(cat,pane){
     const cmp={score:(a,b)=>(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
       cost:(a,b)=>a.st.cost-b.st.cost,velocity:(a,b)=>b.st.velocity-a.st.velocity,energy:(a,b)=>b.st.energy-a.st.energy,taylor:(a,b)=>b.st.taylor-a.st.taylor,hits:(a,b)=>b.st.hits-a.st.hits,recoil:(a,b)=>a.st.recoil-b.st.recoil}[key];
     rows.sort(cmp);
-    $$("#lcnt").textContent=`${rows.length} of ${out.rows.length} loads at ${g(out.dist)} yards`+(L.purpose!=="All"?` · ${L.purpose} only`:"")+(out.multi?" · ranked within each load type":"");
+    $$("#lcnt").textContent=`${rows.length} of ${out.rows.length} loads at ${g(out.dist)} yards`+(L.purpose!=="All"?` · ${L.purpose} only`:"")+(out.multi&&GRADES?" · ranked within each load type":"");
     box.innerHTML=rows.map((r,n)=>{
       const it=r.it,open=L.open===keyOf(it), edited=!it.handload&&typeof L.prices[priceKey(cat,it)]==="number";
       const badge=(gr)=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
       const fb=k=>GRADES?badge(gradeRel(r.sc[k])):`<span style="width:32px"></span>`;
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
-      return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top"><span class="rk">#${r.rank}</span>
+      return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top">${GRADES?`<span class="rk">#${r.rank}</span>`:""}
         <div class="nm">${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}</div>
         ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}</div>
         ${open?`<div class="det">
@@ -826,7 +839,7 @@ function openLoads(cat,pane){
           <div class="row"><span class="muted">Price</span><span class="v">$${r.st.cost.toFixed(2)}${edited?" ✎":""}</span>${fb("cost")}</div>
           ${cat.terminal?`<div class="row"><span class="muted">Taylor KO</span><span class="v">${r.st.taylor.toFixed(1)}</span>${fb("taylor")}</div>
           <div class="row"><span class="muted">HITS</span><span class="v">${r.st.hits.toFixed(0)} <small class="muted">(${hitsClass(r.st.hits)})</small></span>${fb("hits")}</div>`:""}
-          <div class="muted" style="font-size:.8rem;margin-top:4px">${GRADES?`Overall ${r.grade} · ${r.overall.toFixed(0)} · r`:"R"}anks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}.${GRADES?" Grades compare loads of this cartridge only.":""}</div>
+          ${GRADES?`<div class="muted" style="font-size:.8rem;margin-top:4px">Overall ${r.grade} · ${r.overall.toFixed(0)} · ranks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}. Grades compare loads of this cartridge only.</div>`:""}
           ${ballisticHTML(it,cat,L.btOpen)}
           <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button></div>
           ${it.handload?`<div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn d hdel">Delete</button></div>
@@ -982,7 +995,7 @@ function openH2H(pane){
     let h=`<div class="h2hm">`+rows.map(r=>`<div class="mload${r.it.handload?" hl":""}"><div class="mi">
       <small>${esc(r.it.cartridge)}</small><b>${esc(r.it.label)}</b>${r.it.handload?' <span class="chip">Handload</span>':""}
       <div class="mf">${esc([payload(r),r.cat.grain_style&&r.it.barrel_in?g(r.it.barrel_in)+" in barrel":"",r.it.purpose||r.it.group||""].filter(Boolean).join(" · "))}</div>
-      <div class="mf">Rank #${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads · <span class="${r.best.size===most&&most?"best":""}">best in ${r.best.size} of ${r.keys.length}</span></div></div>
+      <div class="mf">${GRADES?`Rank #${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads · `:""}<span class="${r.best.size===most&&most?"best":""}">best in ${r.best.size} of ${r.keys.length}</span></div></div>
       ${GRADES?`<div class="mo">${badge(r.grade,true)}<span>${r.overall.toFixed(0)}</span></div>`:""}</div>`).join("");
     const bar=(w,b)=>`<div class="mbar"><i class="${b?"b":""}" style="width:${Math.max(3,Math.min(100,100*w)).toFixed(1)}%"></i></div>`;
     for(const k of keys){
@@ -1017,7 +1030,7 @@ function openH2H(pane){
     const most=Math.max(...rows.map(r=>r.best.size));
     let h=`<div class="h2hw"><div class="h2h"><table><thead><tr><th></th>${rows.map(r=>`<th class="${r.it.handload?"hl":""}"><small>${esc(r.it.cartridge)}</small>${esc(r.it.label)}${r.it.handload?" <small>handload</small>":""}</th>`).join("")}</tr></thead><tbody>`;
     if(GRADES)h+=line("Overall",rows.map(r=>`${badge(r.grade,true)} <span class="v" style="margin-left:6px">${r.overall.toFixed(0)}</span>`));
-    h+=line("Rank in its cartridge",rows.map(r=>`#${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads`),"sep");
+    if(GRADES)h+=line("Rank in its cartridge",rows.map(r=>`#${r.rank} of ${r.peers} ${r.group?esc(r.group)+" ":""}loads`),"sep");
     h+=line(new Set(rcats.map(c=>c.payload_row)).size===1?esc(rcats[0].payload_row):"Bullet / payload",rows.map(payload));
     if(rcats.some(c=>c.grain_style))h+=line("Test barrel",rows.map(r=>!r.cat.grain_style?"—":r.it.barrel_in?g(r.it.barrel_in)+" in":"not listed"));
     h+=line("Purpose",rows.map(r=>esc(r.it.purpose||r.it.group||"—")));
