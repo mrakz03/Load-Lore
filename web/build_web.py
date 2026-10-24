@@ -7,7 +7,7 @@ here = os.path.dirname(os.path.abspath(__file__))
 root = os.path.dirname(here)
 sys.path.insert(0, os.path.join(root, "src"))
 import csv
-import cartridge_calculator as c
+import load_lore as c
 data = os.path.join(root, "data")
 cats = []
 for cat in c.CATEGORIES:

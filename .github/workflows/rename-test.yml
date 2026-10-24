@@ -1,0 +1,88 @@
+name: Rename migration test (temporary)
+on:
+  push:
+    branches: [rename-load-lore]
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pyinstaller
+      - run: pyinstaller --onefile --windowed --name LoadLore --icon assets/icon.ico --add-data "assets/icon.png:." src/load_lore.py
+      - run: choco install innosetup -y --no-progress
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $iscc = Get-ChildItem "${env:ProgramFiles(x86)}", "$env:ProgramFiles" -Filter ISCC.exe -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 1
+          & $iscc.FullName "/DAppVersion=1.7.4-test" scripts\windows_installer.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Install v1.7.3-dev, then upgrade with the new installer while the old app closes
+        shell: pwsh
+        run: |
+          $old = "$env:LOCALAPPDATA\Programs\Cartridge Calculator"
+          $new = "$env:LOCALAPPDATA\Programs\Load Lore"
+          Invoke-WebRequest https://github.com/mrakz03/Load-Lore/releases/download/v1.7.3-dev/CartridgeCalculator-Setup.exe -OutFile old-setup.exe
+          Start-Process .\old-setup.exe -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART" -Wait
+          Start-Sleep 3
+          Get-Process CartridgeCalculator -ErrorAction SilentlyContinue | Stop-Process -Force
+          if (-not (Test-Path "$old\CartridgeCalculator.exe")) { throw "old install missing" }
+          "id,cartridge`n1,.308 Winchester" | Set-Content "$old\my_handloads.csv"
+          '{"theme": "Light"}' | Set-Content "$old\settings.json"
+          $app = Start-Process "$old\CartridgeCalculator.exe" -PassThru
+          Start-Sleep 3
+          $setup = Start-Process dist\LoadLore-Setup.exe -ArgumentList "/SILENT","/SUPPRESSMSGBOXES","/NORESTART","/CLOSEAPPLICATIONS","/LOG=$PWD\setup.log" -PassThru
+          Start-Sleep 1
+          Stop-Process -Id $app.Id -Force
+          $setup.WaitForExit()
+          Start-Sleep 3
+          Get-Content setup.log -Tail 30
+          Get-ChildItem $new | Format-Table Name, Length
+          if (-not (Test-Path "$new\LoadLore.exe")) { throw "LoadLore.exe missing" }
+          if (-not (Test-Path "$new\unins000.exe")) { throw "uninstaller missing" }
+          if ((Get-Content "$new\my_handloads.csv" -Raw) -notmatch "308") { throw "handloads not moved" }
+          if ((Get-Content "$new\settings.json" -Raw) -notmatch "Light") { throw "settings not moved" }
+          if (Test-Path $old) { Get-ChildItem $old; throw "old folder still there" }
+          if (-not (Get-Process LoadLore -ErrorAction SilentlyContinue)) { throw "new app was not started" }
+          $lnk = (New-Object -ComObject WScript.Shell).CreateShortcut("$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Load Lore.lnk")
+          "shortcut -> $($lnk.TargetPath)"
+          if ($lnk.TargetPath -ne "$new\LoadLore.exe") { throw "shortcut wrong" }
+          $u = Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{0561EDF5-07C9-425D-9A41-3572B678EB12}_is1"
+          "uninstall entry: $($u.DisplayName) $($u.DisplayVersion) at $($u.InstallLocation)"
+          if ($u.InstallLocation.TrimEnd('\') -ne $new) { throw "uninstall entry wrong" }
+          Get-Process LoadLore -ErrorAction SilentlyContinue | Stop-Process -Force
+          Start-Sleep 2
+          Start-Process "$new\unins000.exe" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES" -Wait
+          Start-Sleep 3
+          "after uninstall:"; Get-ChildItem $new -ErrorAction SilentlyContinue | Format-Table Name
+          if (Test-Path "$new\LoadLore.exe") { throw "uninstall left the exe" }
+          if (-not (Test-Path "$new\my_handloads.csv")) { throw "uninstall removed handloads" }
+          "all good"
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: sudo apt-get update && sudo apt-get install -y python3-tk xvfb
+      - run: pip install pyinstaller
+      - run: pyinstaller --onefile --windowed --name LoadLore --add-data "assets/icon.png:." src/load_lore.py
+      - name: Install v1.7.3-dev, then the new release over it
+        run: |
+          set -x
+          export HOME=$RUNNER_TEMP/h; mkdir -p $HOME
+          mkdir LoadLore && cp dist/LoadLore data/*.csv assets/icon.png LICENSE LEGAL.md LoadLore/ && cp scripts/install_linux.sh LoadLore/install.sh
+          curl -sSL -o old.tar.gz https://github.com/mrakz03/Load-Lore/releases/download/v1.7.3-dev/CartridgeCalculator-Linux.tar.gz
+          mkdir oldrel && tar xzf old.tar.gz -C oldrel && bash oldrel/CartridgeCalculator/install.sh
+          echo "id,cartridge" > $HOME/.local/share/cartridge-calculator/my_handloads.csv
+          echo '{"theme": "Light"}' > $HOME/.local/share/cartridge-calculator/settings.json
+          bash LoadLore/install.sh
+          test ! -e $HOME/.local/share/cartridge-calculator
+          test ! -e $HOME/.local/share/applications/cartridge-calculator.desktop
+          grep -q Light $HOME/.local/share/load-lore/settings.json
+          test -f $HOME/.local/share/load-lore/my_handloads.csv
+          grep Exec $HOME/.local/share/applications/load-lore.desktop
+          timeout 10 xvfb-run -a $HOME/.local/share/load-lore/LoadLore; test $? -eq 124
+          echo "all good"

@@ -13,10 +13,10 @@ fi
 echo "==> Building the app..."
 python3 -m venv .buildenv
 .buildenv/bin/pip install --quiet pyinstaller
-.buildenv/bin/pyinstaller -y --onefile --windowed --name CartridgeCalculator --add-data "assets/icon.png:." src/cartridge_calculator.py
+.buildenv/bin/pyinstaller -y --onefile --windowed --name LoadLore --add-data "assets/icon.png:." src/load_lore.py
 
-rm -rf build/CartridgeCalculator && mkdir -p build/CartridgeCalculator
-cp dist/CartridgeCalculator data/*.csv assets/icon.png LICENSE LEGAL.md build/CartridgeCalculator/
-rm -f build/CartridgeCalculator/my_*.csv
-cp scripts/install_linux.sh build/CartridgeCalculator/install.sh
-bash build/CartridgeCalculator/install.sh
+rm -rf build/LoadLore && mkdir -p build/LoadLore
+cp dist/LoadLore data/*.csv assets/icon.png LICENSE LEGAL.md build/LoadLore/
+rm -f build/LoadLore/my_*.csv
+cp scripts/install_linux.sh build/LoadLore/install.sh
+bash build/LoadLore/install.sh
