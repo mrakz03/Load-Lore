@@ -3681,7 +3681,7 @@ class LoadSearch:
             h.place(x=self.app.px(5), rely=0.5, anchor="w")
 
     def text(self):
-        return self.box.getvar(self.var)
+        return self.box.tk.globalgetvar(self.var)
 
     def _click(self, e):
         if str(self.box.cget("state")) != "disabled":
@@ -3952,7 +3952,7 @@ class LoadSearch:
             return "break"
         name = self.rows[i]
         self.close(refocus=True)
-        self.box.setvar(self.var, self._val(name))
+        self.box.tk.globalsetvar(self.var, self._val(name))
         self.last = self._val(name)
         self.on_pick(name[0] if isinstance(name, tuple) else name)
         self._unselect()
