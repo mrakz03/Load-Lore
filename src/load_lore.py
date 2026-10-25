@@ -2482,7 +2482,7 @@ class LoadsView:
                                                width=max([16] + [len(c) for c in self.cartridges]))
                 self.cart_combo.grid(row=1, column=i, sticky="ew", pady=(4, 0))
                 self.cart_search = LoadSearch(a, self.cart_combo, self.cartridges,
-                                              lambda n: self._on_cartridge())
+                                              lambda n: self._on_cartridge(), hint="Cartridge")
             else:
                 ttk.Entry(top, textvariable=var, font=a.f(12), width=10).grid(
                     row=1, column=i, sticky="ew", pady=(4, 0), padx=(8, 0))
@@ -3231,10 +3231,11 @@ class LoadSearch:
     names: the list. value(name): the box text once a name is picked (default: the name).
     browse: the order to list them in (default: names). head(name): a group heading over the
     rows (optional), label(name): a row's text (default: the name). on_pick(name) gets the
-    pick; last is the box text of the last pick."""
+    pick; last is the box text of the last pick. hint: the grey text an empty box shows, like
+    the web's placeholder (a string, or a function for one that changes)."""
     MAX_ROWS = 14
 
-    def __init__(self, app, box, names, on_pick, value=None, head=None, label=None):
+    def __init__(self, app, box, names, on_pick, value=None, head=None, label=None, hint=None):
         self.app, self.box, self.names, self.on_pick = app, box, names, on_pick
         self.value = value or (lambda n: n)
         self.head, self.label = head, label or (lambda n: n)
@@ -3248,6 +3249,27 @@ class LoadSearch:
         box.bind("<Key>", self._key)
         for ev in ("<<Paste>>", "<<Cut>>", "<<Clear>>"):
             box.bind(ev, lambda e: "break")
+        self.hint = hint
+        self.hint_label = None
+        if hint is not None:
+            self.hint_label = tk.Label(box, bg=SURFACE_2, fg=MUTED, font=box.cget("font"),
+                                       cursor="hand2", padx=0, pady=0)
+            self.hint_label.bind("<Button-1>", self._click)
+            box.tk.call("trace", "add", "variable", self.var, "write",
+                        box.register(lambda *x: self.show_hint()))
+            self.show_hint()
+
+    def show_hint(self):
+        """Shows the hint while the box is empty (call it again when a hint function would
+        give a different text)."""
+        h = self.hint_label
+        if h is None or not h.winfo_exists():
+            return
+        if self.text():
+            h.place_forget()
+        else:
+            h.config(text=self.hint() if callable(self.hint) else self.hint)
+            h.place(x=self.app.px(5), rely=0.5, anchor="w")
 
     def text(self):
         return self.box.getvar(self.var)
@@ -4027,9 +4049,11 @@ class HeadToHeadView:
                                          lambda n, s=slot: self._on_cart_search(s, n),
                                          value=lambda n: self.cart_names[n][1],
                                          head=lambda n: self.cart_names[n][0],
-                                         label=lambda n: self.cart_names[n][1])
+                                         label=lambda n: self.cart_names[n][1], hint="Cartridge")
         slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], font=a.f(11), width=40)
-        slot["search"] = LoadSearch(a, slot["load_box"], [], lambda n, s=slot: self._on_load(s))
+        slot["search"] = LoadSearch(a, slot["load_box"], [], lambda n, s=slot: self._on_load(s),
+                                    hint=lambda s=slot: "Load" if s["cart"].get() else
+                                    "Pick a cartridge first")
         slot["gun_box"] = tk.Frame(self.slot_box, bg=SURFACE)
         ttk.Entry(slot["gun_box"], textvariable=slot["gun"], font=a.f(11), width=6).pack(side="left")
         slot["usual"] = a.label(slot["gun_box"], "", 9, MUTED)
@@ -4058,6 +4082,7 @@ class HeadToHeadView:
         slot["search"].names = names
         if slot["load"].get() not in names:
             slot["load"].set("")
+        slot["search"].show_hint()
         slot["search"].last = slot["load"].get()
 
     def _on_load(self, slot):
