@@ -80,7 +80,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   / handCarts; a cartridge in two categories reads ".44 Magnum (Handgun)"). Cards show the
   dictionary grade via h2h_rows / h2hRows at the dictionary's distance.
   The safety line (tab, form, open handload) is HANDLOAD_NOTE, Zeke's LEGAL.md disclaimer verbatim
-  (web gets it as DATA.hand_note). Back up / Restore use the
+  (web gets it as DATA.hand_note); in the tab it sits at the bottom of the window (pin_note spacer;
+  web .hpage flex column with .hnote margin-top:auto), or under the list once that is taller. Back up / Restore use the
   my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
   replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
   On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open

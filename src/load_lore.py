@@ -4050,10 +4050,27 @@ class HandloadsView:
         self.list = tk.Frame(wrap, bg=BG)
         self.list.grid(row=5, column=0, sticky="ew")
         self.list.columnconfigure(0, weight=1)
+        # the disclaimer sits at the bottom of the window (Zeke), or under the list once it's taller
+        self.spacer = tk.Frame(wrap, bg=BG, height=0)
+        self.spacer.grid(row=6, column=0)
         self.note = a.label(wrap, HANDLOAD_NOTE, 9, MUTED, bg=BG, anchor="w", justify="left")
-        self.note.grid(row=6, column=0, sticky="ew", pady=(14, 0))
-        self.note.bind("<Configure>", lambda e: self.note.configure(wraplength=max(e.width, 1)))
+        self.note.grid(row=7, column=0, sticky="ew", pady=(14, 0))
+        self.note.bind("<Configure>", lambda e: (self.note.configure(wraplength=max(e.width, 1)),
+                                                 self.root.after_idle(self.pin_note)))
         self.draw()
+
+    def pin_note(self):
+        """Grow the spacer above the disclaimer so it lands at the bottom of the window."""
+        if not self.spacer.winfo_exists():
+            return
+        self.root.update_idletasks()
+        a = self.app
+        used = a.stage.winfo_reqheight() - self.spacer.winfo_reqheight()
+        room = max(0, a.canvas.winfo_height() - used)
+        if abs(room - self.spacer.winfo_reqheight()) > 1:
+            self.spacer.configure(height=room)
+
+    fit_table_height = pin_note         # App calls this after a window resize
 
     # ---- data -------------------------------------------------------------- #
     def items(self):
@@ -4079,6 +4096,11 @@ class HandloadsView:
 
     # ---- drawing ------------------------------------------------------------ #
     def draw(self):
+        self._draw_list()
+        self.pin_note()
+        self.app._update_scroll()
+
+    def _draw_list(self):
         a = self.app
         for w in self.chip_row.winfo_children() + self.list.winfo_children():
             w.destroy()
