@@ -732,15 +732,18 @@ function searchBox(box,items,o){
   const close=()=>{list.classList.add("hidden");q.setAttribute("aria-expanded","false");};
   const move=d=>{if(!shown.length)return;at=(at+d+shown.length)%shown.length;list.querySelectorAll("[role=option]").forEach((o,i)=>o.classList.toggle("on",i===at));list.querySelector(".on").scrollIntoView({block:"nearest"});};
   const back=()=>{const c=cur();q.value=c==null?"":o.text(c);};
-  const choose=i=>{const x=shown[i];if(!x)return;close();q.value=o.text(x);o.pick(x);};
-  q.onfocus=()=>{q.select();open(true);};
+  // phones: selecting the text pops Android's Cut / Copy / Select all bar, so the box empties
+  // instead (the pick shows as the placeholder, blur puts it back) and a pick closes the keyboard
+  const touch=matchMedia("(pointer:coarse)").matches,ph=q.placeholder;
+  const choose=i=>{const x=shown[i];if(!x)return;close();q.value=o.text(x);o.pick(x);if(touch)q.blur();};
+  q.onfocus=()=>{if(touch){const c=cur();if(c!=null)q.placeholder=o.text(c);q.value="";}else q.select();open(true);};
   q.oninput=()=>open(!q.value.trim());
   q.onkeydown=e=>{
     if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();if(list.classList.contains("hidden")){const c=cur();open(c!=null&&q.value===o.text(c));}else move(e.key==="ArrowDown"?1:-1);}
     else if(e.key==="Enter"){e.preventDefault();if(!list.classList.contains("hidden"))choose(at);}
     else if(e.key==="Escape"){if(!list.classList.contains("hidden")){e.preventDefault();e.stopPropagation();}close();back();}
   };
-  q.onblur=()=>{close();back();};
+  q.onblur=()=>{close();q.placeholder=ph;back();};
   // mousedown, not click: the box must keep focus until the pick is made
   list.onmousedown=e=>{e.preventDefault();const r=e.target.closest("[role=option]");if(r)choose(+r.dataset.i);};
   back();
