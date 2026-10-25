@@ -633,7 +633,7 @@ function handDialog(cat,rec,cartList,done){
   const [m,close]=modal(`
     <h3 style="margin:0 0 4px">${edit?"Edit":"Add"} handload — ${esc(cat.title)}</h3>
     <label class="l" style="margin-top:12px">CARTRIDGE</label><input id="hc" list="hcl" autocomplete="off"><datalist id="hcl">${cartList.map(c=>`<option value="${esc(c)}">`).join("")}</datalist>
-    <div class="g2"><div><label class="l">BULLET MAKER</label><select id="hbm"></select></div><div><label class="l">BULLET (LIBRARY)</label><select id="hbl"></select></div></div>
+    <div class="g2"><div><label class="l">BULLET MAKER</label><select id="hbm"></select><input id="hbmo" autocomplete="off" placeholder="Type the maker" aria-label="Bullet maker" style="display:none;margin-top:6px"></div><div><label class="l">BULLET (LIBRARY)</label><select id="hbl"></select></div></div>
     <div class="g2"><div><label class="l">BULLET NAME</label><input id="hbn" autocomplete="off" placeholder="e.g. ELD-M"></div><div><label class="l">LOAD NAME (OPTIONAL)</label><input id="hn" autocomplete="off"></div></div>
     <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal"></div></div>
     <div class="g2"><div><label class="l">POWDER</label><input id="hpw" list="hpl" autocomplete="off"><datalist id="hpl">${POWDERS.map(c=>`<option value="${esc(c)}">`).join("")}</datalist></div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div></div>
@@ -648,17 +648,21 @@ function handDialog(cat,rec,cartList,done){
   const q=x=>$(x,m);
   const diaOf=c=>DIAMETERS[c.trim()]||0;
   const val=(id,v)=>{q("#"+id).value=v==null||v===0||v===""?"":v;};
+  // bullets go by diameter, not cartridge: the makers listed are those with a bullet of this
+  // diameter; "Other maker" opens a box to type any maker (#hbmo)
+  const OTHER="__other__",fits=b=>{const d=diaOf(q("#hc").value);return !d||Math.abs(b.diameter-d)<=0.003;};
+  const makerOf=()=>q("#hbm").value===OTHER?q("#hbmo").value.trim():q("#hbm").value;
   const fillMakers=()=>{
-    const d=diaOf(q("#hc").value),list=BULLETS.filter(b=>!d||Math.abs(b.diameter-d)<=0.003);
-    const makers=[...new Set(list.map(b=>b.maker))].sort(),cur=q("#hbm").value;
-    q("#hbm").innerHTML=`<option value="">Other / custom</option>`+makers.map(x=>`<option>${esc(x)}</option>`).join("");
-    q("#hbm").value=makers.includes(cur)?cur:"";
-    fillBullets();
+    const makers=[...new Set(BULLETS.filter(fits).map(b=>b.maker))].sort(),cur=q("#hbm").value;
+    q("#hbm").innerHTML=`<option value="">Choose a maker…</option>`+makers.map(x=>`<option>${esc(x)}</option>`).join("")+`<option value="${OTHER}">Other maker</option>`;
+    q("#hbm").value=makers.includes(cur)||cur===OTHER?cur:"";
+    showOther();fillBullets();
   };
+  const showOther=()=>{q("#hbmo").style.display=q("#hbm").value===OTHER?"":"none";};
   const fillBullets=()=>{
-    const d=diaOf(q("#hc").value),mk=q("#hbm").value;
-    const list=BULLETS.filter(b=>mk&&b.maker===mk&&(!d||Math.abs(b.diameter-d)<=0.003));
-    q("#hbl").innerHTML=`<option value="">${mk?"Choose a bullet…":"—"}</option>`+list.map((b,i)=>`<option value="${BULLETS.indexOf(b)}">${esc(b.name)} · ${g(b.weight)} gr</option>`).join("");
+    const mk=q("#hbm").value;
+    const list=BULLETS.filter(b=>mk&&b.maker===mk&&fits(b));
+    q("#hbl").innerHTML=`<option value="">${mk&&mk!==OTHER?"Choose a bullet…":"—"}</option>`+list.map((b,i)=>`<option value="${BULLETS.indexOf(b)}">${esc(b.name)} · ${g(b.weight)} gr</option>`).join("");
   };
   const showCost=()=>{
     const t=parseFloat(q("#hct").value);let c;
@@ -666,12 +670,16 @@ function handDialog(cat,rec,cartList,done){
     q("#hcost").textContent=c>0?`Cost per round = $${c.toFixed(2)}`:"";
   };
   q("#hc").addEventListener("input",fillMakers);q("#hc").addEventListener("change",fillMakers);
-  q("#hbm").onchange=fillBullets;
+  q("#hbm").onchange=()=>{showOther();fillBullets();if(q("#hbm").value===OTHER)q("#hbmo").focus();};
   q("#hbl").onchange=()=>{const b=BULLETS[+q("#hbl").value];if(!b)return;q("#hbn").value=b.name;q("#hgr").value=g(b.weight);q("#hdm").value=g(b.diameter);q("#hbc").value=g(b.bc);};
   ["hcb","hcp","hcr","hcs","hcu","hct","hpg"].forEach(i=>q("#"+i).addEventListener("input",showCost));
   // prefill
   val("hc",rec.cartridge);fillMakers();
-  if(rec.bullet_maker&&[...q("#hbm").options].some(o=>o.value===rec.bullet_maker)){q("#hbm").value=rec.bullet_maker;fillBullets();}
+  if(rec.bullet_maker){
+    if([...q("#hbm").options].some(o=>o.value===rec.bullet_maker))q("#hbm").value=rec.bullet_maker;
+    else{q("#hbm").value=OTHER;q("#hbmo").value=rec.bullet_maker;}
+    showOther();fillBullets();
+  }
   val("hbn",rec.bullet);val("hn",rec.name);val("hgr",rec.bullet_gr);val("hdm",rec.diameter_in);val("hbc",rec.bc_g1);
   val("hpw",rec.powder);val("hpg",rec.powder_gr);val("hfps",rec.muzzle_fps);val("hbl2",rec.barrel_in);
   q("#hpu").value=rec.purpose||"Hunting";
@@ -699,7 +707,7 @@ function handDialog(cat,rec,cartList,done){
       const tot=num("hct","Total cost",0,null,true);
       const cost=tot>0?tot:costParts(Object.assign({powder_gr:pg},parts)).total;
       if(!(cost>0))throw new Error("Enter a cost per round (a total, or the bullet, powder, primer and brass prices).");
-      const mk=q("#hbm").value,bn=q("#hbn").value.trim(),pw=q("#hpw").value.trim();
+      const mk=makerOf(),bn=q("#hbn").value.trim(),pw=q("#hpw").value.trim();
       let name=q("#hn").value.trim();
       if(!name)name=[mk,bn,g(gr)+" gr"].filter(Boolean).join(" ")+(pw?` + ${pw} ${g(pg)} gr`:` + ${g(pg)} gr`);
       r=Object.assign({id:edit?rec.id:"h"+Date.now()+Math.random().toString(36).slice(2,6),category:cat.title,cartridge:cart,name,bullet_maker:mk,bullet:bn,
