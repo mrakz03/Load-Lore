@@ -32,11 +32,14 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   LoadSearch / searchBox, every typed word must be in the name); so are the cartridge boxes
   (Oct 2026): the dictionary's searches its category, Head to Head's searches every category
   (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings).
-  On touch screens (web, pointer: coarse) these boxes are read-only and a tap opens a bottom
-  sheet (pickSheet: title, search bar that opens the keyboard only when tapped, the list; back
-  button / backdrop / × close it); a cartridge pick doesn't jump to the load box.
-  Head to Head has no category box (Oct 2026): the cartridge box picks it; the desktop menu lists
-  every category's cartridges under "──  Category  ──" headings (cart_menu). The dictionary's brand / load
+  None of these boxes take typing (so their text is never selected): on touch screens (web,
+  pointer: coarse) a tap opens a bottom sheet (pickSheet: title, search bar that opens the
+  keyboard only when tapped, the list; back button / backdrop / × close it); with a mouse /
+  keyboard (desktop LoadSearch, web pickSheet with an anchor) a click, Down, Enter or a typed
+  letter opens a search pop-up under the box (cursor in its search field, Up/Down + Enter, Esc
+  or a click outside closes). A cartridge pick doesn't jump to the load box.
+  Head to Head has no category box (Oct 2026): the cartridge box picks it; its pop-up lists
+  every category's cartridges under category headings (LoadSearch head / searchBox head). The dictionary's brand / load
   filter sits right above the list (issue #26). Beside it, for cartridges that have +P / +P+ loads, a check box each
   (pressure_of / pressureOf reads the load name; Train+Protect and +Peak aren't +P) hides those
   loads from the list without changing any grade; ticked by default, kept per category while the
