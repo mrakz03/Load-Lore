@@ -573,7 +573,7 @@ const NAVS=[["home","Home",ICON.home],["h2h","Head to Head",ICON.h2h],["loads","
 const H2H_MIN=2,H2H_MAX=5,H2H=[],H2H_DISTANCE=100;   // Head to Head picks (pickKey), any category
 const pickKey=(cat,it)=>cat.title+"|"+it.cartridge+"|"+(it.hid||it.label);
 // S-F grades on / off (Settings), shared by both tools and remembered
-let GRADES=true;try{GRADES=localStorage.getItem(GRADES_KEY)!=="0";}catch(e){}
+let GRADES=false;try{GRADES=localStorage.getItem(GRADES_KEY)==="1";}catch(e){}
 function setGrades(on){GRADES=on;try{localStorage.setItem(GRADES_KEY,on?"1":"0");}catch(e){}}
 function h2hText(cat,it){
   const p=H2H;
