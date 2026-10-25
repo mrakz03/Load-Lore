@@ -2536,6 +2536,15 @@ def handload_cartridges(app):
     return {(f"{c} ({cat.title})" if count[c] > 1 else c): (cat, c) for cat, carts in per for c in carts}
 
 
+def disclaimer(app, parent, bg):
+    """The handload safety note under a bold DISCLAIMER heading (Zeke), wrapping to its width."""
+    app.label(parent, "DISCLAIMER", 9, TEXT, True, bg=bg, anchor="w").pack(anchor="w")
+    text = app.label(parent, HANDLOAD_NOTE, 9, MUTED, bg=bg, anchor="w", justify="left",
+                     wraplength=app.px(420))     # until it knows its width; never widens the window
+    text.pack(fill="x", pady=(2, 0))
+    text.bind("<Configure>", lambda e: text.configure(wraplength=max(e.width, 1)))
+
+
 def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=None):
     """The Handloads tab's add / edit form, for any category (the cartridge picks it).
     `existing` is a handload record (dict) to start from."""
@@ -2650,9 +2659,9 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     cost_lbl.grid(row=23, column=0, columnspan=3, sticky="w", padx=18, pady=(8, 0))
     lab("NOTES (OPTIONAL)", 24, 0, 3)
     ent(V["notes"], 25, 0, 3)
-    app.label(body, HANDLOAD_NOTE, 9, MUTED, anchor="w",
-              justify="left", wraplength=560).grid(row=26, column=0, columnspan=3, sticky="w",
-                                                   padx=18, pady=(10, 0))
+    note = tk.Frame(body, bg=body.cget("bg"))
+    note.grid(row=26, column=0, columnspan=3, sticky="ew", padx=18, pady=(10, 0))
+    disclaimer(app, note, body.cget("bg"))
 
     def num(key, label, lo, hi=None, blank=False):
         text = V[key].get().strip().replace("$", "")
@@ -4050,27 +4059,10 @@ class HandloadsView:
         self.list = tk.Frame(wrap, bg=BG)
         self.list.grid(row=5, column=0, sticky="ew")
         self.list.columnconfigure(0, weight=1)
-        # the disclaimer sits at the bottom of the window (Zeke), or under the list once it's taller
-        self.spacer = tk.Frame(wrap, bg=BG, height=0)
-        self.spacer.grid(row=6, column=0)
-        self.note = a.label(wrap, HANDLOAD_NOTE, 9, MUTED, bg=BG, anchor="w", justify="left")
-        self.note.grid(row=7, column=0, sticky="ew", pady=(14, 0))
-        self.note.bind("<Configure>", lambda e: (self.note.configure(wraplength=max(e.width, 1)),
-                                                 self.root.after_idle(self.pin_note)))
+        self.note = tk.Frame(wrap, bg=BG)
+        self.note.grid(row=6, column=0, sticky="ew", pady=(14, 0))
+        disclaimer(a, self.note, BG)
         self.draw()
-
-    def pin_note(self):
-        """Grow the spacer above the disclaimer so it lands at the bottom of the window."""
-        if not self.spacer.winfo_exists():
-            return
-        self.root.update_idletasks()
-        a = self.app
-        used = a.stage.winfo_reqheight() - self.spacer.winfo_reqheight()
-        room = max(0, a.canvas.winfo_height() - used)
-        if abs(room - self.spacer.winfo_reqheight()) > 1:
-            self.spacer.configure(height=room)
-
-    fit_table_height = pin_note         # App calls this after a window resize
 
     # ---- data -------------------------------------------------------------- #
     def items(self):
@@ -4096,11 +4088,6 @@ class HandloadsView:
 
     # ---- drawing ------------------------------------------------------------ #
     def draw(self):
-        self._draw_list()
-        self.pin_note()
-        self.app._update_scroll()
-
-    def _draw_list(self):
         a = self.app
         for w in self.chip_row.winfo_children() + self.list.winfo_children():
             w.destroy()
