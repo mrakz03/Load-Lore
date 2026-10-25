@@ -286,6 +286,13 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .h2h .gap{font-size:.75rem;color:var(--muted);margin-left:6px}.h2h .gap.best{font-weight:700}
 .h2h .badge{display:inline-block;margin-left:8px;min-width:24px;font-size:.75rem;padding:1px 5px}
 .h2h tr.sep td{border-bottom:2px solid var(--border)}
+.h2h table.dr th,.h2h table.dr td{text-align:right;white-space:nowrap}
+.h2h table.dr thead tr+tr th:first-child{position:static;color:var(--muted);font-size:.8rem;min-width:0;text-align:right}
+.h2h table.dr .yd{text-align:left;color:var(--text);min-width:3.5em}
+.h2h table.dr thead th{font-size:.8rem;color:var(--muted);vertical-align:bottom}
+.h2h table.dr thead tr:first-child th.ld{text-align:center;white-space:normal;border-bottom:1px solid var(--border)}
+.h2h table.dr th small{display:block;font-weight:600}
+.h2h table.dr .l0{border-left:1px solid var(--border);padding-left:18px}
 details.btab{margin-top:10px}
 details.btab summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.9rem;padding:6px 0}
 details.btab table th,details.btab table td{text-align:right;padding:7px 8px}
@@ -1389,10 +1396,11 @@ function openH2H(pane){
         return `<span class="v${b?" best":""}">${h2hValue(k,r.st[k])}</span><span class="gap${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?badge(gradeRel(r.sc[k])):""}`;}));
     }
     h+=line("Best in",rows.map(r=>`<span class="${r.best.size===most&&most?"v best":""}">${r.best.size} of ${r.keys.length}</span>`));
-    h+=`</tbody></table></div><div class="sect">DOWNRANGE · velocity (fps) and energy (ft-lbs)</div><div class="h2h"><table><thead><tr><th>Yards</th>${rows.map(r=>`<th style="font-size:.8rem;color:var(--muted)">${esc(r.it.label)}</th>`).join("")}</tr></thead><tbody>`;
+    h+=`</tbody></table></div><div class="sect">DOWNRANGE</div><div class="h2h"><table class="dr"><thead><tr><th rowspan="2" class="yd">Yd</th>${rows.map(r=>`<th colspan="2" class="ld l0${r.it.handload?" hl":""}">${esc(r.it.label)}</th>`).join("")}</tr><tr>${rows.map(()=>`<th class="l0">Velocity<small>fps</small></th><th>Energy<small>ft-lbs</small></th>`).join("")}</tr></thead><tbody>`;
+    // velocity and energy each highlight their own leader at that distance
     for(const [yd,cells] of h2hDownrange(rows.map(r=>[r.cat,r.it]))){
-      const top=Math.max(...cells.filter(Boolean).map(c=>c[1]));
-      h+=`<tr><td>${g(yd)}</td>${cells.map(c=>!c?`<td class="c">—</td>`:`<td class="c${c[1]>=top-1e-9?" v best":""}">${fmt0(c[0])} · ${fmt0(c[1])}</td>`).join("")}</tr>`;
+      const live=cells.filter(Boolean),vTop=Math.max(...live.map(c=>c[0])),eTop=Math.max(...live.map(c=>c[1]));
+      h+=`<tr><td class="yd v">${g(yd)}</td>${cells.map(c=>!c?`<td class="l0 gap">—</td><td class="gap">—</td>`:`<td class="l0${c[0]>=vTop-1e-9?" v best":""}">${fmt0(c[0])}</td><td class="${c[1]>=eTop-1e-9?"v best":""}">${fmt0(c[1])}</td>`).join("")}</tr>`;
     }
     box.innerHTML=h+`</tbody></table></div></div>`+phoneView(rows,dist,keys,most,badge,payload);
     box.querySelectorAll("[data-yd]").forEach(c=>c.onclick=()=>{H.drYd=+c.dataset.yd;render();});
