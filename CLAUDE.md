@@ -78,7 +78,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   dictionary has a "Your handloads ›" link and "Edit in Handloads ›" on an open handload). The form
   (open_handload_dialog / handDialog) takes any category: the cartridge picks it (handload_cartridges
   / handCarts; a cartridge in two categories reads ".44 Magnum (Handgun)"). Cards show the
-  dictionary grade via h2h_rows / h2hRows at the dictionary's distance. Back up / Restore use the
+  dictionary grade via h2h_rows / h2hRows at the dictionary's distance.
+  The safety line (tab, form, open handload) is HANDLOAD_NOTE, Zeke's LEGAL.md disclaimer verbatim
+  (web gets it as DATA.hand_note). Back up / Restore use the
   my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
   replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
   On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open

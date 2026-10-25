@@ -73,6 +73,10 @@ ABOUT_TEXT = ("Calculated figures are estimates from makers' published velocitie
               "reloading. Brand names identify products only. No maker sponsors or endorses this "
               "software or is affiliated with its creator.\n\n"
               "Free software under the MIT License, provided as is, with no warranty.")
+# Shown wherever handloads are (Handloads tab, handload form, an open handload); from LEGAL.md
+HANDLOAD_NOTE = ("Not reloading data. The app DOES NOT check pressure or safety. Powder charges shown "
+                 "are NOT load data. HANDLOAD FIGURES ARE ONLY WHAT YOU TYPE IN. Always confirm with "
+                 "the manufacturer's data and a current load manual before shooting or reloading.")
 GRAINS_PER_OZ = 437.5
 SETTINGS_FILENAME = "settings.json"
 HANDLOAD_FILENAME = "my_handloads.csv"
@@ -268,7 +272,7 @@ SOURCE_NOTES = {
                "powder charge are estimated.",
     "custom": "Your own entry. Anything you left blank was estimated.",
     "typical": "Typical factory-load figures from published specs; approximate, so check the box.",
-    "handload": "Your own handload. Check every figure against a published load manual.",
+    "handload": HANDLOAD_NOTE,
 }
 DEFAULT_SOURCE_NOTE = ("Load data is approximate. Check it against the box or the "
                        "manufacturer, and edit the data file if needed.")
@@ -2646,8 +2650,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     cost_lbl.grid(row=23, column=0, columnspan=3, sticky="w", padx=18, pady=(8, 0))
     lab("NOTES (OPTIONAL)", 24, 0, 3)
     ent(V["notes"], 25, 0, 3)
-    app.label(body, "Handload figures are only as good as your data. Always follow published load "
-                    "manuals; this app doesn't check pressure or safety.", 9, MUTED, anchor="w",
+    app.label(body, HANDLOAD_NOTE, 9, MUTED, anchor="w",
               justify="left", wraplength=560).grid(row=26, column=0, columnspan=3, sticky="w",
                                                    padx=18, pady=(10, 0))
 
@@ -4047,8 +4050,9 @@ class HandloadsView:
         self.list = tk.Frame(wrap, bg=BG)
         self.list.grid(row=5, column=0, sticky="ew")
         self.list.columnconfigure(0, weight=1)
-        a.label(wrap, SOURCE_NOTES["handload"] + " This app doesn't check pressure or safety.", 9,
-                MUTED, bg=BG, anchor="w").grid(row=6, column=0, sticky="w", pady=(14, 0))
+        self.note = a.label(wrap, HANDLOAD_NOTE, 9, MUTED, bg=BG, anchor="w", justify="left")
+        self.note.grid(row=6, column=0, sticky="ew", pady=(14, 0))
+        self.note.bind("<Configure>", lambda e: self.note.configure(wraplength=max(e.width, 1)))
         self.draw()
 
     # ---- data -------------------------------------------------------------- #
