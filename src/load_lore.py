@@ -2459,8 +2459,9 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
         return None
     win.transient(parent)
     win.resizable(False, False)
-    body = tk.Frame(win, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-    body.pack(padx=16, pady=16, fill="both")
+    card = app.card(win, padx=4, pady=4)
+    card.pack(padx=16, pady=16, fill="both")
+    body = card.body
     for c in range(3):
         body.columnconfigure(c, weight=1, uniform="c")
     ex = dict(existing or {})
@@ -2487,11 +2488,11 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     def ent(var, row, col, span=1, kind="entry", values=(), state=None):
         px = dict(padx=(18 if col == 0 else 6, 6 if col + span < 3 else 18))
         if kind == "combo":
-            w = ttk.Combobox(body, textvariable=var, values=list(values), font=app.f(11),
-                             state=state or "normal")
+            box, w = app.field(body, ttk.Combobox, textvariable=var, values=list(values),
+                               font=app.f(11), state=state or "normal", width=8)
         else:
-            w = ttk.Entry(body, textvariable=var, font=app.f(11))
-        w.grid(row=row, column=col, columnspan=span, sticky="ew", **px)
+            box, w = app.field(body, ttk.Entry, textvariable=var, font=app.f(11), width=8)
+        box.grid(row=row, column=col, columnspan=span, sticky="ew", **px)
         return w
 
     def section(text, row):
@@ -2798,7 +2799,7 @@ class LoadsView:
         self.src_row = tk.Frame(card, bg=SURFACE)
         self.src_row.grid(row=6, column=0, sticky="w", pady=(a.px(6), 0), **pad)
         self.status = a.label(card, "", 10, DANGER, anchor="w")
-        self.status.grid(row=1, column=0, sticky="w", pady=(8, 0), **pad)
+        self.status.grid(row=1, column=0, sticky="w", **pad)
         self.weights_toggle = tk.Label(card, text="▸  Scoring weights", bg=SURFACE, fg=MUTED,
                                        font=a.f(10, True), cursor="hand2")
         self.weights_toggle.grid(row=7, column=0, sticky="w", pady=(a.px(10), 0), **pad)
@@ -4174,8 +4175,9 @@ class HandloadsView:
         win.configure(bg=BG)
         win.title("Restore handloads")
         win.transient(self.root)
-        body = tk.Frame(win, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        body.pack(padx=16, pady=16, fill="both", expand=True)
+        card = a.card(win, padx=4, pady=4)
+        card.pack(padx=16, pady=16, fill="both", expand=True)
+        body = card.body
         a.label(body, "Open a back up file (or a my_handloads.csv), or paste a back up copied on "
                       "the phone. Handloads you already have are kept; ones in the back up are "
                       "added, or updated if they came from here.", 10, MUTED, anchor="w",

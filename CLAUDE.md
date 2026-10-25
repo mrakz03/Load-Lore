@@ -123,6 +123,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   sharp_on_windows() declares DPI awareness before Tk starts, otherwise Windows stretches the
   window and it looks blurry (issue #5).
 
+- Desktop look follows the web (Oct 2026): rounded boxes are RoundBox (a canvas behind a .body
+  Frame, smooth corners from corner_png, keep some padding or the body covers the corners), with
+  App.card / App.button / App.chip (Pill) / App.field (rounded entry or drop-down, accent outline
+  on focus) / Badge / close_button. Sidebar icons are the web's ICONS drawn by icon_png (stdlib PNG).
+
 - App icon: scripts/make_icons.py (needs Pillow) draws assets/icon.png, icon.ico and the Android
   launcher icons in assets/android/res. CI bakes icon.ico into the .exe/installer, bundles
   icon.png for the window icon (icon_path), ships it in the Linux tar for the .desktop entry,
