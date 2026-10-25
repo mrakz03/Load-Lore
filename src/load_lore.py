@@ -3213,6 +3213,14 @@ class LoadsView:
                 break
 
 
+def rounded_rect(canvas, x1, y1, x2, y2, r, **kw):
+    """A rectangle with rounded corners on a Canvas (a smoothed polygon)."""
+    r = max(0, min(r, (x2 - x1) / 2, (y2 - y1) / 2))
+    pts = (x1 + r, y1, x2 - r, y1, x2, y1, x2, y1 + r, x2, y2 - r, x2, y2, x2 - r, y2,
+           x1 + r, y2, x1, y2, x1, y2 - r, x1, y1 + r, x1, y1)
+    return canvas.create_polygon(pts, smooth=True, **kw)
+
+
 class LoadSearch:
     """A cartridge or load box that opens a search pop-up (issue #24; a pop-up since Oct 2026,
     the desktop match for the phone's bottom sheet): a click, Down, Enter or a typed letter on
@@ -3232,8 +3240,9 @@ class LoadSearch:
         self.head, self.label = head, label or (lambda n: n)
         self.browse = None                # None: the same as names
         self.var = box.cget("textvariable")
-        self.popup = self.listbox = self.entry = self.canvas = None
-        self.rows, self.cells, self.at = [], [], None   # rows: a name, or None for a heading
+        self.popup = self.listbox = self.entry = self.canvas = self.bar = None
+        self.rows, self.texts, self.tops, self.at, self.total = [], [], [], None, 0
+        # rows: a name, or None for a heading / the no-match line; tops: each row's y
         self.last = ""
         box.bind("<Button-1>", self._click)
         box.bind("<Key>", self._key)
@@ -3267,33 +3276,54 @@ class LoadSearch:
         if self.popup is not None or not self.names:
             return
         a = self.app
-        # drawn like the web version's pop-up: a search field over rows split by thin lines,
-        # category headings on a darker band, the highlighted row in the accent colour
+        # drawn like a refined menu (and like the web version): a rounded search field with a
+        # magnifier, rows without lines, a rounded highlight set in from the edges, a check on
+        # the current pick, quiet headings, and a thin scrollbar in the theme's colours
+        self.font, self.head_font = tkfont.Font(font=a.f(11)), tkfont.Font(font=a.f(8, True))
+        self.row_h, self.head_h = a.px(34), a.px(30)
         self.popup = tk.Toplevel(self.box)
         self.popup.wm_overrideredirect(True)
         self.popup.config(bg=BORDER)
         frame = tk.Frame(self.popup, bg=SURFACE)
         frame.pack(fill="both", expand=True, padx=1, pady=1)
-        field = tk.Frame(frame, bg=SURFACE_2, highlightthickness=1, highlightbackground=ACCENT,
-                         highlightcolor=ACCENT)
-        field.pack(fill="x", padx=a.px(10), pady=(a.px(10), a.px(8)))
+        field = tk.Canvas(frame, bg=SURFACE, height=a.px(38), highlightthickness=0, borderwidth=0)
+        field.pack(fill="x", padx=a.px(8), pady=(a.px(8), a.px(6)))
         self.query = tk.StringVar(value=typed)
         self.entry = tk.Entry(field, textvariable=self.query, bg=SURFACE_2, fg=TEXT,
                               insertbackground=TEXT, relief="flat", font=a.f(11),
                               highlightthickness=0, borderwidth=0)
-        self.entry.pack(fill="x", padx=a.px(10), pady=a.px(7))
         hint = tk.Label(field, text="Search", bg=SURFACE_2, fg=MUTED, font=a.f(11), anchor="w")
+        def draw_field(e=None):
+            w, h, r = field.winfo_width(), field.winfo_height(), a.px(8)
+            field.delete("deco")
+            rounded_rect(field, 1, 1, w - 2, h - 2, r, fill=SURFACE_2, outline=ACCENT, tags="deco")
+            cx, cy, cr = a.px(17), h / 2 - a.px(1), a.px(5)
+            field.create_oval(cx - cr, cy - cr, cx + cr, cy + cr, outline=MUTED, width=a.px(2) / 1.2,
+                              tags="deco")
+            field.create_line(cx + cr * 0.7, cy + cr * 0.7, cx + cr * 1.7, cy + cr * 1.7,
+                              fill=MUTED, width=a.px(2), capstyle="round", tags="deco")
+            field.coords("entry", a.px(32), h / 2)
+            field.itemconfig("entry", width=max(10, w - a.px(42)))
+        field.create_window(a.px(32), a.px(19), window=self.entry, anchor="w", tags="entry")
+        field.bind("<Configure>", draw_field)
+        field.bind("<Button-1>", lambda e: self.entry.focus_set())
         show_hint = lambda *x: (hint.place_forget() if self.query.get() else
                                 hint.place(in_=self.entry, x=0, rely=0.5, anchor="w"))
         hint.bind("<Button-1>", lambda e: self.entry.focus_set())
-        tk.Frame(frame, bg=BORDER, height=1).pack(fill="x")
         body = tk.Frame(frame, bg=SURFACE)
-        body.pack(fill="both", expand=True)
-        self.canvas = tk.Canvas(body, bg=SURFACE, highlightthickness=0, borderwidth=0)
-        self.inner = tk.Frame(self.canvas, bg=SURFACE)
-        self.canvas.create_window(0, 0, window=self.inner, anchor="nw", tags="inner")
-        self.canvas.bind("<Configure>", lambda e: self.canvas.itemconfig("inner", width=e.width))
-        self.canvas.pack(fill="both", expand=True)
+        body.pack(fill="both", expand=True, pady=(0, a.px(6)))
+        self.canvas = tk.Canvas(body, bg=SURFACE, highlightthickness=0, borderwidth=0,
+                                yscrollincrement=self.row_h // 2)
+        self.bar = tk.Canvas(body, bg=SURFACE, width=a.px(10), highlightthickness=0, borderwidth=0)
+        self.bar.pack(side="right", fill="y", padx=(0, a.px(3)))
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.canvas.config(yscrollcommand=lambda f, l: self._draw_bar(float(f), float(l)))
+        self.canvas.bind("<Configure>", lambda e: self._draw())
+        self.canvas.bind("<Motion>", self._hover)
+        self.canvas.bind("<ButtonRelease-1>", lambda e: self._pick(self._row_at(e.y)))
+        self.bar.bind("<Button-1>", self._bar_press)
+        self.bar.bind("<B1-Motion>", self._bar_drag)
+        self.bar.bind("<Configure>", lambda e: self._draw_bar(*self.canvas.yview()))
         self.listbox = self.canvas            # App._on_wheel: the wheel scrolls the pop-up
         for key, step in (("<Down>", 1), ("<Up>", -1), ("<Next>", 10), ("<Prior>", -10)):
             self.entry.bind(key, lambda e, s=step: self._move(s))
@@ -3316,65 +3346,109 @@ class LoadSearch:
         self.entry.icursor("end")
 
     def _fill(self, first=False):
+        """Work out the rows (a name, or None for a heading / the no-match line) and draw them."""
         if self.popup is None:
             return
-        a = self.app
-        for w in self.inner.winfo_children():
-            w.destroy()
         matches = self._find(self.query.get())
         cur = self.text()
-        self.rows, self.cells, self.at, last = [], [], None, object()
-        def add(text, name, heading=False):
-            if self.rows:
-                tk.Frame(self.inner, bg=BORDER, height=1).pack(fill="x")
-            if heading:
-                cell = tk.Label(self.inner, text=text.upper(), bg=SURFACE_2, fg=MUTED,
-                                font=a.f(8, True), anchor="w", padx=a.px(14), pady=a.px(5))
-            else:
-                cell = tk.Label(self.inner, text=text, bg=SURFACE, anchor="w", font=a.f(11),
-                                fg=ACCENT if name is not None and self.value(name) == cur else TEXT,
-                                padx=a.px(14), pady=a.px(8), cursor="hand2" if name else "")
-                if name is not None:
-                    i = len(self.rows)
-                    cell.bind("<Motion>", lambda e, i=i: self.at != i and self._select(i, see=False))
-                    cell.bind("<ButtonRelease-1>", lambda e, i=i: self._pick(i))
-            cell.pack(fill="x")
-            self.rows.append(name)
-            self.cells.append(cell)
+        self.rows, self.texts, self.tops, self.at = [], [], [], None
+        y, last = 0, object()
         for n in matches:
             h = self.head(n) if self.head else None
             if h is not None and h != last:
-                add(h, None, heading=True)
+                self.rows.append(None)
+                self.texts.append(h.upper())
+                self.tops.append(y)
+                y += self.head_h
             last = h
-            add(self.label(n), n)
+            self.rows.append(n)
+            self.texts.append(self.label(n))
+            self.tops.append(y)
+            y += self.row_h
             if first and self.at is None and self.value(n) == cur:
                 self.at = len(self.rows) - 1
         if not matches:
-            add(f"No matches for \u201c{self.query.get().strip()}\u201d", None)
-            self.cells[-1].config(fg=MUTED)
+            self.rows.append(None)
+            self.texts.append(f"No matches for \u201c{self.query.get().strip()}\u201d")
+            self.tops.append(y)
+            y += self.row_h
+        self.total = y
         if self.at is None:
             self.at = next((i for i, r in enumerate(self.rows) if r is not None), None)
-        self._paint()
-        self.inner.update_idletasks()
-        self.canvas.config(scrollregion=(0, 0, 0, self.inner.winfo_reqheight()))
         self.canvas.yview_moveto(0)
+        self._draw()
 
-    def _paint(self):
-        cur = self.text()
-        for i, (name, cell) in enumerate(zip(self.rows, self.cells)):
+    def _draw(self):
+        c, a = self.canvas, self.app
+        if c is None:
+            return
+        c.delete("all")
+        w, cur, pad = max(c.winfo_width(), a.px(200)), self.text(), a.px(6)
+        for i, (name, text, top) in enumerate(zip(self.rows, self.texts, self.tops)):
             if name is None:
+                if text.startswith("No matches"):
+                    c.create_text(a.px(14), top + self.row_h / 2, text=text, anchor="w",
+                                  fill=MUTED, font=self.font)
+                else:                         # a heading: small muted capitals, a little air above
+                    c.create_text(a.px(14), top + self.head_h * 0.62, text=text, anchor="w",
+                                  fill=MUTED, font=self.head_font)
                 continue
             on = i == self.at
-            cell.config(bg=ACCENT if on else SURFACE,
-                        fg=ON_ACCENT if on else ACCENT if self.value(name) == cur else TEXT)
+            if on:
+                rounded_rect(c, pad, top + a.px(2), w - pad, top + self.row_h - a.px(2), a.px(6),
+                             fill=ACCENT, outline="")
+            c.create_text(a.px(14), top + self.row_h / 2, text=text, anchor="w",
+                          fill=ON_ACCENT if on else TEXT, font=self.font)
+            if self.value(name) == cur:       # the current pick
+                c.create_text(w - a.px(16), top + self.row_h / 2, text="\u2713", anchor="e",
+                              fill=ON_ACCENT if on else ACCENT, font=self.font)
+        c.config(scrollregion=(0, 0, w, self.total))
+
+    def _draw_bar(self, first, last):
+        b, a = self.bar, self.app
+        if b is None:
+            return
+        b.delete("all")
+        if last - first >= 0.999:             # everything fits: no scrollbar
+            return
+        h, w = b.winfo_height(), b.winfo_width()
+        top, bottom = first * h, max(first * h + a.px(24), last * h)
+        rounded_rect(b, a.px(2), top + a.px(2), w - a.px(2), bottom - a.px(2), (w - a.px(4)) / 2,
+                     fill=MUTED, outline="")
+
+    def _bar_press(self, e):
+        first, last = self.canvas.yview()
+        h = max(1, self.bar.winfo_height())
+        if first * h <= e.y <= last * h:      # on the thumb: drag it
+            self._drag_from = (e.y, first)
+        else:                                 # on the track: jump there
+            self.canvas.yview_moveto(max(0, e.y / h - (last - first) / 2))
+            self._drag_from = (e.y, self.canvas.yview()[0])
+
+    def _bar_drag(self, e):
+        y0, f0 = getattr(self, "_drag_from", (e.y, 0))
+        self.canvas.yview_moveto(f0 + (e.y - y0) / max(1, self.bar.winfo_height()))
+
+    def _row_at(self, y):
+        y = self.canvas.canvasy(y)
+        for i, top in enumerate(self.tops):
+            if top <= y < top + (self.row_h if self.rows[i] is not None else self.head_h):
+                return i
+        return -1
+
+    def _hover(self, e):
+        i = self._row_at(e.y)
+        if i != self.at and 0 <= i < len(self.rows) and self.rows[i] is not None:
+            self.at = i
+            self._draw()
+        self.canvas.config(cursor="hand2" if 0 <= i < len(self.rows) and self.rows[i] else "")
 
     def _place(self):
-        self.popup.update_idletasks()
         box, a = self.box, self.app
-        rows_h = self.inner.winfo_reqheight()
-        self.canvas.config(height=min(rows_h, a.px(430)), width=1)
+        widest = max([self.font.measure(t) for t in self.texts] + [0])
+        w = max(box.winfo_width(), min(widest + a.px(64), a.px(640)), a.px(320))
+        self.canvas.config(height=min(self.total, a.px(420)), width=w - a.px(16))
         self.popup.update_idletasks()
-        w = max(box.winfo_width(), min(self.inner.winfo_reqwidth() + a.px(20), a.px(640)), a.px(320))
         h = self.popup.winfo_reqheight()
         x, y = box.winfo_rootx(), box.winfo_rooty() + box.winfo_height() + a.px(4)
         if y + h > box.winfo_screenheight() and box.winfo_rooty() - h - a.px(4) > 0:
@@ -3382,30 +3456,33 @@ class LoadSearch:
         x = max(0, min(x, box.winfo_screenwidth() - w))
         self.popup.wm_geometry(f"{w}x{h}+{x}+{y}")
         self.popup.lift()
+        self.popup.update_idletasks()
+        self._draw()
 
     def scroll(self, step):
-        self.canvas.yview_scroll(step * 2, "units")
+        self.canvas.yview_scroll(step * 3, "units")
 
     def _see(self, i, center=False):
-        if i is None or self.popup is None:
+        if i is None or self.popup is None or self.total <= 0:
             return
-        self.popup.update_idletasks()
-        cell, total = self.cells[i], max(1, self.inner.winfo_reqheight())
-        top, bottom = cell.winfo_y(), cell.winfo_y() + cell.winfo_height()
+        top = self.tops[i]
+        if i > 0 and self.rows[i - 1] is None:
+            top = self.tops[i - 1]            # keep the row's heading in view too
+        bottom = self.tops[i] + self.row_h
         view = self.canvas.winfo_height()
         y0 = self.canvas.canvasy(0)
         if center:
-            self.canvas.yview_moveto(max(0, top - view / 2) / total)
+            self.canvas.yview_moveto(max(0, top - view / 2 + self.row_h) / self.total)
         elif top < y0:
-            self.canvas.yview_moveto(top / total)
+            self.canvas.yview_moveto(top / self.total)
         elif bottom > y0 + view:
-            self.canvas.yview_moveto((bottom - view) / total)
+            self.canvas.yview_moveto((bottom - view) / self.total)
 
     def _select(self, i, see=True):
         if not (0 <= i < len(self.rows)) or self.rows[i] is None:
             return
         self.at = i
-        self._paint()
+        self._draw()
         if see:
             self._see(i)
 
@@ -3454,7 +3531,7 @@ class LoadSearch:
                 self.popup.destroy()
             except tk.TclError:
                 pass
-            self.popup = self.listbox = self.entry = self.canvas = None
+            self.popup = self.listbox = self.entry = self.canvas = self.bar = None
             if refocus:
                 try:
                     self.box.focus_force()        # back from the pop-up's own window
