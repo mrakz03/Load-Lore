@@ -2474,12 +2474,11 @@ class LoadsView:
             a.label(top, text, 9, MUTED, True).grid(row=0, column=i, sticky="w",
                                                      padx=(0 if i == 0 else 8, 0))
             if var is None:
-                # the cartridge menu is a search too: type "6.5" or "mag" to narrow it down
+                # the cartridge menu opens a search pop-up: type "6.5" or "mag" to narrow it down
                 self.cart_combo = ttk.Combobox(top, textvariable=self.cart_var,
                                                values=self.cartridges, font=a.f(12),
                                                width=max([16] + [len(c) for c in self.cartridges]))
                 self.cart_combo.grid(row=1, column=i, sticky="ew", pady=(4, 0))
-                self.cart_combo.bind("<<ComboboxSelected>>", lambda e: self._on_cartridge())
                 self.cart_search = LoadSearch(a, self.cart_combo, self.cartridges,
                                               lambda n: self._on_cartridge())
             else:
@@ -3213,118 +3212,193 @@ class LoadsView:
 
 
 class LoadSearch:
-    """Type into a load or cartridge menu to search it (issue #24; cartridges too since Oct
-    2026). The matches show in a list under the box while the box keeps the keyboard: every
-    typed word must appear in the name (brand, bullet, weight...), Up/Down move, Enter or a
-    click picks, Esc closes.
-    names: the searched list. value(name): the box text once a name is picked (default: the
-    name). valid: the box texts that count as a pick; browse: what Down lists with nothing typed
-    (both default to names). on_pick(name) gets the picked name from the list."""
-    MAX_ROWS = 12
+    """A cartridge or load box that opens a search pop-up (issue #24; a pop-up since Oct 2026,
+    the desktop match for the phone's bottom sheet): a click, Down, Enter or a typed letter on
+    the box opens a panel under it with a search field (the cursor in it) over the list. Every
+    typed word must appear in the name (brand, bullet, weight...); Up/Down move, Enter or a
+    click picks, Esc or a click outside closes. The box itself takes no typing, so its text is
+    never selected.
+    names: the list. value(name): the box text once a name is picked (default: the name).
+    browse: the order to list them in (default: names). head(name): a group heading over the
+    rows (optional), label(name): a row's text (default: the name). on_pick(name) gets the
+    pick; last is the box text of the last pick."""
+    MAX_ROWS = 14
 
-    def __init__(self, app, box, names, on_pick, value=None):
+    def __init__(self, app, box, names, on_pick, value=None, head=None, label=None):
         self.app, self.box, self.names, self.on_pick = app, box, names, on_pick
         self.value = value or (lambda n: n)
-        self.valid = self.browse = None   # None: the same as names
+        self.head, self.label = head, label or (lambda n: n)
+        self.browse = None                # None: the same as names
         self.var = box.cget("textvariable")
-        self.popup = self.listbox = None
-        self.matches = []
-        self.last = ""                    # the pick before the typing started
-        box.bind("<KeyRelease>", self._typed)
-        box.bind("<Down>", lambda e: self._move(1))
-        box.bind("<Up>", lambda e: self._move(-1))
-        box.bind("<Return>", lambda e: self._pick())
-        box.bind("<Escape>", lambda e: self.close())
-        box.bind("<FocusIn>", lambda e: box.select_range(0, "end"))
-        box.bind("<FocusOut>", lambda e: box.after(150, self._left))
+        self.popup = self.listbox = self.entry = None
+        self.rows = []                    # the list's rows: a name, or None for a heading
+        self.last = ""
+        box.bind("<Button-1>", self._click)
+        box.bind("<Key>", self._key)
+        for ev in ("<<Paste>>", "<<Cut>>", "<<Clear>>"):
+            box.bind(ev, lambda e: "break")
 
     def text(self):
         return self.box.getvar(self.var)
 
-    def _typed(self, e):
-        if e.keysym in ("Down", "Up", "Return", "KP_Enter", "Escape", "Tab", "ISO_Left_Tab"):
-            return
-        if self._ok(self.text()):
-            self.close()
-            return
-        self.matches = self._find(self.text())
-        self._show()
+    def _click(self, e):
+        if str(self.box.cget("state")) != "disabled":
+            self.box.focus_set()
+            self.open()
+        return "break"
 
-    def _ok(self, text):
-        return text in (self.names if self.valid is None else self.valid)
+    def _key(self, e):
+        if e.keysym in ("Tab", "ISO_Left_Tab", "Escape") or str(self.box.cget("state")) == "disabled":
+            return None
+        if e.keysym in ("Down", "Up", "Return", "KP_Enter", "space"):
+            self.open()
+        elif e.char and e.char.isprintable() and not e.state & 0x4:   # a letter starts a search
+            self.open(e.char)
+        return "break"
 
     def _find(self, text):
         words = text.lower().split()
-        return [n for n in self.names if all(w in n.lower() for w in words)]
+        order = self.names if self.browse is None else self.browse
+        return [n for n in order if all(w in n.lower() for w in words)]
 
-    def _show(self):
-        if not self.matches:
-            self.close()
+    def open(self, typed=""):
+        if self.popup is not None or not self.names:
             return
         a = self.app
-        if self.popup is None:
-            self.popup = tk.Toplevel(self.box)
-            self.popup.wm_overrideredirect(True)
-            self.listbox = tk.Listbox(self.popup, bg=SURFACE_2, fg=TEXT, selectbackground=ACCENT,
-                                      selectforeground=ON_ACCENT, font=a.f(11), activestyle="none",
-                                      highlightthickness=1, highlightbackground=BORDER,
-                                      borderwidth=0, takefocus=0, exportselection=False)
-            self.listbox.pack(fill="both", expand=True)
-            self.listbox.bind("<ButtonRelease-1>", lambda e: self._pick(self.listbox.nearest(e.y)))
-            a.search_popup = self
+        self.popup = tk.Toplevel(self.box)
+        self.popup.wm_overrideredirect(True)
+        frame = tk.Frame(self.popup, bg=SURFACE_2, highlightthickness=1, highlightbackground=BORDER)
+        frame.pack(fill="both", expand=True)
+        top = tk.Frame(frame, bg=SURFACE_2)
+        top.pack(fill="x", padx=8, pady=(8, 6))
+        tk.Label(top, text="Search", bg=SURFACE_2, fg=MUTED, font=a.f(9, True)).pack(side="left")
+        self.query = tk.StringVar(value=typed)
+        self.entry = tk.Entry(top, textvariable=self.query, bg=SURFACE, fg=TEXT, insertbackground=TEXT,
+                              relief="flat", font=a.f(11), highlightthickness=1,
+                              highlightbackground=BORDER, highlightcolor=ACCENT)
+        self.entry.pack(side="left", fill="x", expand=True, padx=(8, 0), ipady=3)
+        body = tk.Frame(frame, bg=SURFACE_2)
+        body.pack(fill="both", expand=True)
+        self.listbox = tk.Listbox(body, bg=SURFACE_2, fg=TEXT, selectbackground=ACCENT,
+                                  selectforeground=ON_ACCENT, font=a.f(11), activestyle="none",
+                                  highlightthickness=0, borderwidth=0, takefocus=0,
+                                  exportselection=False)
+        bar = ttk.Scrollbar(body, orient="vertical", command=self.listbox.yview)
+        self.listbox.config(yscrollcommand=bar.set)
+        self.listbox.pack(side="left", fill="both", expand=True)
+        bar.pack(side="right", fill="y")
+        self.listbox.bind("<ButtonRelease-1>", lambda e: self._pick(self.listbox.nearest(e.y)))
+        self.listbox.bind("<Motion>", lambda e: self._select(self.listbox.nearest(e.y), see=False))
+        self.entry.bind("<Down>", lambda e: self._move(1))
+        self.entry.bind("<Up>", lambda e: self._move(-1))
+        self.entry.bind("<Next>", lambda e: self._move(self.MAX_ROWS))
+        self.entry.bind("<Prior>", lambda e: self._move(-self.MAX_ROWS))
+        self.entry.bind("<Return>", lambda e: self._pick())
+        self.entry.bind("<KP_Enter>", lambda e: self._pick())
+        self.entry.bind("<Escape>", lambda e: self.close(refocus=True))
+        self.entry.bind("<Tab>", lambda e: self.close(refocus=True))
+        self.popup.bind("<Button-1>", self._click_out)
+        self.query.trace_add("write", lambda *x: self._fill())
+        a.search_popup = self
+        self._fill(first=True)
+        self._place()
+        if self._at:                          # the current pick, a few rows down
+            self.popup.update_idletasks()
+            self.listbox.see(max(0, self._at - 3))
+            self.listbox.see(self._at)
+        try:
+            self.popup.grab_set()             # a click outside reaches the pop-up, which closes
+        except tk.TclError:
+            pass
+        self.entry.focus_force()
+        self.entry.icursor("end")
+
+    def _fill(self, first=False):
+        if self.listbox is None:
+            return
+        matches = self._find(self.query.get())
+        cur = self.text()
+        self.rows, last = [], object()
         self.listbox.delete(0, "end")
-        for n in self.matches:
-            self.listbox.insert("end", n)
-        self.listbox.config(height=min(len(self.matches), self.MAX_ROWS))
-        self.listbox.selection_clear(0, "end")
-        self.listbox.selection_set(0)
-        self.popup.wm_geometry(f"+{self.box.winfo_rootx()}+{self.box.winfo_rooty() + self.box.winfo_height()}")
+        at = None
+        for n in matches:
+            h = self.head(n) if self.head else None
+            if h is not None and h != last:
+                self.rows.append(None)
+                self.listbox.insert("end", f"  {h.upper()}")
+                self.listbox.itemconfig("end", fg=MUTED, selectbackground=SURFACE_2,
+                                        selectforeground=MUTED)
+            last = h
+            self.rows.append(n)
+            self.listbox.insert("end", "  " + self.label(n))
+            if self.value(n) == cur:
+                self.listbox.itemconfig("end", fg=ACCENT)
+                if at is None:
+                    at = len(self.rows) - 1
+        if not matches:
+            self.rows.append(None)
+            self.listbox.insert("end", f"  No matches for “{self.query.get().strip()}”")
+            self.listbox.itemconfig("end", fg=MUTED, selectbackground=SURFACE_2, selectforeground=MUTED)
+        if at is None or not first:
+            at = next((i for i, r in enumerate(self.rows) if r is not None), None)
+        self.listbox.config(height=min(max(len(self.rows), 1), self.MAX_ROWS))
+        self.listbox.yview_moveto(0)
+        if at is not None:
+            self._select(at, see=not first)
+        self._at = at if first else None
+
+    def _place(self):
         self.popup.update_idletasks()
-        self.popup.wm_geometry(f"{max(self.box.winfo_width(), self.listbox.winfo_reqwidth())}x"
-                               f"{self.listbox.winfo_reqheight()}")
+        box = self.box
+        w = max(box.winfo_width(), self.popup.winfo_reqwidth(), self.app.px(320))
+        h = self.popup.winfo_reqheight()
+        x, y = box.winfo_rootx(), box.winfo_rooty() + box.winfo_height() + 2
+        if y + h > box.winfo_screenheight() and box.winfo_rooty() - h - 2 > 0:
+            y = box.winfo_rooty() - h - 2     # no room below: open above the box
+        x = max(0, min(x, box.winfo_screenwidth() - w))
+        self.popup.wm_geometry(f"{w}x{h}+{x}+{y}")
         self.popup.lift()
 
-    def _move(self, step):
-        if self.popup is None:
-            self.matches = list(self.names if self.browse is None else self.browse) \
-                if self._ok(self.text()) or not self.text().strip() else self._find(self.text())
-            self._show()
-            return "break"
-        cur = self.listbox.curselection()
-        i = min(max((cur[0] if cur else -1) + step, 0), len(self.matches) - 1)
+    def _select(self, i, see=True):
+        if not (0 <= i < len(self.rows)) or self.rows[i] is None:
+            return
         self.listbox.selection_clear(0, "end")
         self.listbox.selection_set(i)
-        self.listbox.see(i)
-        return "break"
+        if see:
+            self.listbox.see(i)
 
-    def _typed_pick(self):
-        """The name whose box text was typed out in full instead of picked from the list (the
-        list closes then), or None if the text is no pick or the one already made."""
-        text = self.text()
-        if text == self.last or not self._ok(text):
-            return None
-        return next((n for n in (self.names if self.browse is None else self.browse)
-                     if self.value(n) == text), None)
+    def _move(self, step):
+        cur = self.listbox.curselection()
+        i = cur[0] if cur else -1
+        names = [k for k, r in enumerate(self.rows) if r is not None]
+        if names:
+            ahead = [k for k in names if (k > i if step > 0 else k < i)]
+            if ahead:
+                n = min(abs(step), len(ahead))
+                i = ahead[n - 1] if step > 0 else ahead[-n]
+            self._select(i)
+        return "break"
 
     def _pick(self, i=None):
-        if self.popup is None:                # a name typed out in full + Enter picks it too
-            name = self._typed_pick()
-            if name is not None:
-                self.on_pick(name)
-        elif self.matches:
-            if i is None:
-                cur = self.listbox.curselection()
-                i = cur[0] if cur else 0
-            name = self.matches[i]
-            self.box.setvar(self.var, self.value(name))
-            self.close()
-            self.box.focus_set()
-            self.box.icursor("end")
-            self.on_pick(name)
-            # focus coming back from the list selects the text (FocusIn): a pick shouldn't
-            self._unselect()
-            self.box.after(50, self._unselect)
+        if self.listbox is None:
+            return "break"
+        if i is None:
+            cur = self.listbox.curselection()
+            i = cur[0] if cur else -1
+        if not (0 <= i < len(self.rows)) or self.rows[i] is None:
+            return "break"
+        name = self.rows[i]
+        self.close(refocus=True)
+        self.box.setvar(self.var, self.value(name))
+        self.last = self.value(name)
+        self.on_pick(name)
+        self._unselect()
         return "break"
+
+    def _click_out(self, e):
+        w = self.popup.winfo_containing(e.x_root, e.y_root)
+        if w is None or str(w).find(str(self.popup)) != 0:
+            self.close()
 
     def _unselect(self):
         try:
@@ -3333,33 +3407,23 @@ class LoadSearch:
         except tk.TclError:
             pass
 
-    def _left(self):
-        """Focus left the box: drop typing that isn't a pick (the pick before it stays)."""
-        try:
-            if not self.box.winfo_exists():
-                return
-            focus = self.box.focus_get()
-        except (KeyError, tk.TclError):
-            focus = None
-        if focus is self.box or (focus is not None and focus is self.listbox):
-            return
-        self.close()
-        if not self._ok(self.text()):
-            self.box.setvar(self.var, self.last if self._ok(self.last) else "")
-            return
-        name = self._typed_pick()             # typed out in full: the table follows the box
-        if name is not None:
-            self.on_pick(name)
-
-    def close(self):
+    def close(self, refocus=False):
         if self.popup is not None:
             try:
+                self.popup.grab_release()
                 self.popup.destroy()
             except tk.TclError:
                 pass
-            self.popup = self.listbox = None
+            self.popup = self.listbox = self.entry = None
+            if refocus:
+                try:
+                    self.box.focus_force()        # back from the pop-up's own window
+                    self._unselect()
+                except tk.TclError:
+                    pass
         if getattr(self.app, "search_popup", None) is self:
             self.app.search_popup = None
+        return "break"
 
 
 class HandloadsView:
@@ -3744,16 +3808,6 @@ class HeadToHeadView:
         # the cartridge search covers every category: "6.5 Creedmoor  ·  Rifle" -> (category, cartridge)
         self.cart_names = {f"{cart}  ·  {t}": (t, cart) for t, carts in self.cartridges.items()
                            for cart in carts}
-        # the cartridge menu: every category's cartridges under a "──  Category  ──" heading;
-        # a cartridge in two categories (.44 Magnum) names its category: text -> (category,
-        # cartridge), None for a heading
-        twice = {c for c in (c for carts in self.cartridges.values() for c in carts)
-                 if sum(c in carts for carts in self.cartridges.values()) > 1}
-        self.cart_menu = {}
-        for t, carts in self.cartridges.items():
-            self.cart_menu[f"──  {t}  ──"] = None
-            for cart in carts:
-                self.cart_menu[f"{cart} ({t})" if cart in twice else cart] = (t, cart)
         self.choices = {}                 # (category, cartridge) -> {text in the load menu: Load}
         for key, items in self.groups.items():
             self.choices[key] = {x.label + ("  (handload)" if x.handload else ""): x for x in items}
@@ -3801,8 +3855,7 @@ class HeadToHeadView:
         card.grid(row=1, column=0, sticky="ew")
         card.columnconfigure(0, weight=1)
         pad = dict(padx=18)
-        a.label(card, "LOADS TO COMPARE  ·  any category  ·  type in a cartridge or load box "
-                "to search", 9, MUTED, True).grid(row=0, column=0, sticky="w", pady=(16, 0), **pad)
+        a.label(card, "LOADS TO COMPARE  ·  any category", 9, MUTED, True).grid(row=0, column=0, sticky="w", pady=(16, 0), **pad)
         self.slot_box = tk.Frame(card, bg=SURFACE)
         self.slot_box.grid(row=1, column=0, sticky="ew", pady=(6, 0), **pad)
         self.slot_box.columnconfigure(3, weight=1)
@@ -3852,10 +3905,12 @@ class HeadToHeadView:
         widest = max([16] + [len(c) for carts in self.cartridges.values() for c in carts])
         slot["num"] = a.label(self.slot_box, "", 11, MUTED, True)
         slot["cart_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cart"],
-                                        values=list(self.cart_menu), font=a.f(11), width=widest)
+                                        font=a.f(11), width=widest)
         slot["cart_search"] = LoadSearch(a, slot["cart_box"], list(self.cart_names),
                                          lambda n, s=slot: self._on_cart_search(s, n),
-                                         value=lambda n: self.cart_names[n][1])
+                                         value=lambda n: self.cart_names[n][1],
+                                         head=lambda n: self.cart_names[n][0],
+                                         label=lambda n: self.cart_names[n][1])
         slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], font=a.f(11), width=40)
         slot["search"] = LoadSearch(a, slot["load_box"], [], lambda n, s=slot: self._on_load(s))
         slot["gun_box"] = tk.Frame(self.slot_box, bg=SURFACE)
@@ -3865,8 +3920,6 @@ class HeadToHeadView:
         slot["gun"].trace_add("write", self._schedule)
         slot["x"] = tk.Label(self.slot_box, text="✕", bg=SURFACE, fg=MUTED, font=a.f(12, True),
                              padx=10, pady=2, cursor="hand2")
-        slot["cart_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cart_menu(s))
-        slot["load_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_load(s))
         slot["x"].bind("<Button-1>", lambda e, s=slot: self._remove_slot(s))
         slot["x"].bind("<Enter>", lambda e, s=slot: s["x"].config(fg=TEXT, bg=SURFACE_2))
         slot["x"].bind("<Leave>", lambda e, s=slot: s["x"].config(fg=MUTED, bg=SURFACE))
@@ -3877,15 +3930,14 @@ class HeadToHeadView:
             slot["load_box" if slot["cart"].get() else "cart_box"].focus_set()
 
     def _fill_loads(self, slot):
-        # the cartridge search: any category's cartridge can be typed (the row's category
-        # first, for a cartridge in two); with nothing typed, Down lists them all
+        # the cartridge pop-up lists every category's cartridges under its heading, the row's
+        # category first
         t = slot["cat"].get()
         cs = slot["cart_search"]
-        cs.valid = [c for _, c in self.cart_names.values()]
         cs.browse = sorted(self.cart_names, key=lambda n: self.cart_names[n][0] != t)
         cs.last = slot["cart"].get()
         names = list(self.choices.get((slot["cat"].get(), slot["cart"].get()), {}))
-        slot["load_box"].config(values=names, width=max([40] + [min(len(n), 64) for n in names]))
+        slot["load_box"].config(width=max([40] + [min(len(n), 64) for n in names]))
         slot["search"].names = names
         if slot["load"].get() not in names:
             slot["load"].set("")
@@ -3925,16 +3977,6 @@ class HeadToHeadView:
             self.add_link.grid_remove()
         else:
             self.add_link.grid()
-
-    def _on_cart_menu(self, slot):
-        """A cartridge was picked from the menu; a category heading picks nothing."""
-        pick = self.cart_menu.get(slot["cart"].get())
-        if pick is None:
-            slot["cart"].set(slot["cart_search"].last)
-            return
-        slot["cat"].set(pick[0])
-        slot["cart"].set(pick[1])
-        self._on_cart(slot)
 
     def _on_cart_search(self, slot, name):
         """A cartridge was picked from the search list, maybe from another category."""
