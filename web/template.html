@@ -1018,7 +1018,7 @@ function openH2H(pane){
       const s=slots[+row.dataset.i];
       const ci=cartItems.find(x=>x.cat===s.cat&&x.cart===s.cart);
       searchBox(row.querySelector(".cs"),cartItems,{text:cartText,find:x=>x.cart+" "+x.cat,head:x=>x.cat,none:"cartridge",cur:()=>ci,
-        pick:x=>{if(x===ci)return;s.cat=x.cat;s.cart=x.cart;s.key="";s.gun="";drawSlots();changed();const nr=$$("#hs").querySelectorAll(".slot")[slots.indexOf(s)];if(nr)nr.querySelector(".ls .lq").focus();}});
+        pick:x=>{if(x===ci)return;s.cat=x.cat;s.cart=x.cart;s.key="";s.gun="";drawSlots();changed();}});
       const li=groups.get(s.cat+"|"+s.cart)||[],lc=li.find(x=>(x.hid||x.label)===s.key);
       searchBox(row.querySelector(".ls"),li,{text:optText,none:"load",cur:()=>lc,pick:x=>{s.key=x.hid||x.label;drawSlots();changed();}});
       row.querySelector(".gn").addEventListener("input",e=>{s.gun=e.target.value;render();});
