@@ -32,6 +32,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   LoadSearch / searchBox, every typed word must be in the name); so are the cartridge boxes
   (Oct 2026): the dictionary's searches its category, Head to Head's searches every category
   (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings).
+  On touch screens (web, pointer: coarse) these boxes are read-only until the magnifier beside the
+  arrow is tapped: a tap only opens the list to scroll (no keyboard, no text selection), and a
+  pick closes the keyboard; a cartridge pick doesn't jump to the load box.
   Head to Head has no category box (Oct 2026): the cartridge box picks it; the desktop menu lists
   every category's cartridges under "──  Category  ──" headings (cart_menu). The dictionary's brand / load
   filter sits right above the list (issue #26). Beside it, for cartridges that have +P / +P+ loads, a check box each
