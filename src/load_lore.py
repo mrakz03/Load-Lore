@@ -236,8 +236,10 @@ DEFAULT_THEME = "Classic"
 def apply_theme(name):
     """Point the palette globals at a theme; screens built afterwards use it."""
     global BG, SURFACE, SURFACE_2, BORDER, TEXT, MUTED, ACCENT, ACCENT_HOVER, ON_ACCENT, DANGER, HAND_FG
+    global SIDE
     t = THEMES.get(name) or THEMES[DEFAULT_THEME]
     BG, SURFACE, SURFACE_2, BORDER = t["bg"], t["surface"], t["surface_2"], t["border"]
+    SIDE = t["side"]
     TEXT, MUTED, ACCENT, ACCENT_HOVER = t["text"], t["muted"], t["accent"], t["accent_hover"]
     ON_ACCENT, DANGER, HAND_FG = t["on_accent"], t["danger"], t["hand"]
 
@@ -829,12 +831,84 @@ def github_mark_png(size, colour):
             cells = [src[j * n + i] for j in range(y0, y1) for i in range(x0, x1)]
             raw += bytes((r, g, b, sum(cells) // len(cells)))
 
+    return rgba_png(size, size, raw)
+
+
+def rgba_png(w, h, raw):
+    """A base64 RGBA PNG from rows of RGBA bytes, each row starting with a 0 (filter: none)."""
     def chunk(kind, data):
         return (struct.pack(">I", len(data)) + kind + data
                 + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF))
-    png = (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0))
+    png = (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 6, 0, 0, 0))
            + chunk(b"IDAT", zlib.compress(bytes(raw))) + chunk(b"IEND", b""))
     return base64.b64encode(png).decode("ascii")
+
+
+def _rgb(colour):
+    return tuple(int(colour[i:i + 2], 16) for i in (1, 3, 5))
+
+
+# The web version's sidebar icons (24 x 24 SVG strokes), as point lists: lines and circles
+# (centre, radius). Drawn smooth by icon_png, since a Tk canvas draws lines without anti-aliasing.
+def _arc(cx, cy, r, a0, a1, n=10):
+    return [(cx + r * math.cos(math.radians(a0 + (a1 - a0) * i / n)),
+             cy + r * math.sin(math.radians(a0 + (a1 - a0) * i / n))) for i in range(n + 1)]
+
+
+ICONS = {
+    "home": [[(3, 11.5), (12, 4), (21, 11.5)], [(5.5, 10), (5.5, 19.5), (18.5, 19.5), (18.5, 10)]],
+    "h2h": [[(12, 3), (12, 21)], [(5, 7), (19, 7)],
+            [(4, 14), (7, 7), (10, 14)] + _arc(7, 14, 3, 0, 180), 
+            [(14, 14), (17, 7), (20, 14)] + _arc(17, 14, 3, 0, 180)],
+    "loads": [[(5, 6), (19, 6)], [(5, 12), (19, 12)], [(5, 18), (14, 18)]],
+    "hand": [[(9.5, 3), (14.5, 3), (14.5, 7.5), (16.5, 10.5), (16.5, 21), (7.5, 21), (7.5, 10.5),
+              (9.5, 7.5), (9.5, 3)], [(7.5, 14), (16.5, 14)]],
+    "settings": [[(4, 7), (14, 7)], [(18, 7), (20, 7)], [(4, 17), (8, 17)], [(12, 17), (20, 17)],
+                 _arc(16, 7, 2, 0, 360, 16), _arc(10, 17, 2, 0, 360, 16)],
+}
+
+
+def icon_png(name, size, colour):
+    """One of ICONS as a base64 PNG, `size` px square: round-capped 1.8 px strokes on 24 px."""
+    k = size / 24.0
+    segs = [((x0 * k, y0 * k), (x1 * k, y1 * k)) for line in ICONS[name]
+            for (x0, y0), (x1, y1) in zip(line, line[1:])]
+    half = 0.9 * k
+    r, g, b = _rgb(colour)
+    raw = bytearray()
+    for y in range(size):
+        raw.append(0)
+        py = y + 0.5
+        for x in range(size):
+            px, d = x + 0.5, 1e9
+            for (ax, ay), (bx, by) in segs:
+                dx, dy = bx - ax, by - ay
+                ll = dx * dx + dy * dy
+                t = 0.0 if ll == 0 else max(0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / ll))
+                d = min(d, math.hypot(px - ax - t * dx, py - ay - t * dy))
+            raw += bytes((r, g, b, int(255 * max(0.0, min(1.0, half - d + 0.5)))))
+    return rgba_png(size, size, raw)
+
+
+def corner_png(radius, fill, border, outside, width=1):
+    """The top-left corner of a rounded box, smooth: `fill` inside a `width` px `border` line,
+    `outside` around it. Rotate by drawing it with other corners (RoundBox flips the maths)."""
+    out = []
+    for flip in ((False, False), (True, False), (False, True), (True, True)):   # tl tr bl br
+        raw = bytearray()
+        for y in range(radius):
+            raw.append(0)
+            for x in range(radius):
+                cx = radius - (radius - x - 0.5 if flip[0] else x + 0.5)
+                cy = radius - (radius - y - 0.5 if flip[1] else y + 0.5)
+                d = math.hypot(cx, cy)
+                shape = max(0.0, min(1.0, radius - d + 0.5))
+                inner = max(0.0, min(1.0, radius - width - d + 0.5))
+                px = [o * (1 - shape) + bd * (shape - inner) + f * inner
+                      for o, bd, f in zip(_rgb(outside), _rgb(border), _rgb(fill))]
+                raw += bytes([int(round(v)) for v in px] + [255])
+        out.append(rgba_png(radius, radius, raw))
+    return out
 
 
 
@@ -1239,12 +1313,156 @@ def metric_score(value, ref, higher_better):
 # --------------------------------------------------------------------------- #
 # GUI
 # --------------------------------------------------------------------------- #
+_CORNERS = {}           # (radius, fill, border, outside) -> four PhotoImages, shared by every box
+
+
+class RoundBox(tk.Frame if tk else object):
+    """A box with rounded corners like the web version's cards, chips and fields: a canvas
+    behind `body` (a Frame to fill) draws the rounded outline, with smooth corners from
+    corner_png. The box is as big as `body` needs plus the padding, or whatever the layout
+    stretches it to. Keep some padding: `body` is square and would cover the corners.
+    recolour() repaints it (hover, selected, focus)."""
+
+    def __init__(self, parent, app, fill, border=None, outside=None, radius=12, padx=0, pady=0,
+                 cursor=""):
+        outside = outside if outside is not None else parent.cget("bg")
+        super().__init__(parent, bg=outside, cursor=cursor)
+        self.app, self.r = app, max(2, app.px(radius))
+        self.fill, self.border, self.outside = fill, border or fill, outside
+        self.canvas = tk.Canvas(self, bg=outside, highlightthickness=0, bd=0, cursor=cursor,
+                                width=1, height=1)
+        self.canvas.place(x=0, y=0, relwidth=1, relheight=1)      # under body: made first
+        self.body = tk.Frame(self, bg=fill, cursor=cursor)
+        self.body.pack(fill="both", expand=True, padx=app.px(padx), pady=app.px(pady))
+        self.canvas.bind("<Configure>", lambda e: self._draw(e.width, e.height))
+
+    def _draw(self, w=None, h=None):
+        c = self.canvas
+        w = w or c.winfo_width()
+        h = h or c.winfo_height()
+        c.delete("box")
+        r = min(self.r, w // 2, h // 2)
+        if r < 2:
+            return
+        key = (r, self.fill, self.border, self.outside)
+        if key not in _CORNERS:
+            _CORNERS[key] = [tk.PhotoImage(data=d) for d in
+                             corner_png(r, self.fill, self.border, self.outside)]
+        tl, tr, bl, br = _CORNERS[key]
+        f, b = self.fill, self.border
+        c.create_rectangle(r, 0, w - r, h, fill=f, outline="", tags="box")
+        c.create_rectangle(0, r, w, h - r, fill=f, outline="", tags="box")
+        for x0, y0, x1, y1 in ((r, 0, w - r, 1), (r, h - 1, w - r, h), (0, r, 1, h - r),
+                               (w - 1, r, w, h - r)):
+            c.create_rectangle(x0, y0, x1, y1, fill=b, outline="", tags="box")
+        for img, x, y in ((tl, 0, 0), (tr, w - r, 0), (bl, 0, h - r), (br, w - r, h - r)):
+            c.create_image(x, y, image=img, anchor="nw", tags="box")
+
+    def recolour(self, fill=None, border=None, widgets=()):
+        """New fill / outline colours; `widgets` inside the box take the new fill as background."""
+        if fill is not None:
+            self.fill = fill
+            for w in (self.body, *widgets):
+                w.configure(bg=fill)
+        if border is not None:
+            self.border = border
+        self._draw()
+
+    def on_click(self, command, widgets=()):
+        for w in (self, self.canvas, self.body, *widgets):
+            w.bind("<Button-1>", lambda e: command())
+
+
+class Pill(RoundBox):
+    """A rounded button / chip with one line of text (the web's .btn, .chips button, .tgl)."""
+
+    def __init__(self, parent, app, text, command, kind="secondary", size=11, padx=16, pady=8,
+                 radius=8, outside=None, note=None):
+        self.kind, self.enabled = kind, True
+        bg, fg, _ = self._colours(kind)
+        super().__init__(parent, app, bg, bg, outside=outside, radius=radius, padx=padx,
+                         pady=pady, cursor="hand2")
+        # the padding is the box's, not the label's: a label would cover the rounded corners
+        self.text = tk.Label(self.body, text=text, bg=bg, fg=fg, font=app.f(size, True),
+                             cursor="hand2", padx=0, pady=0)
+        self.text.pack(side="left")
+        # a chip's count, smaller, after its name ("Hunting 3" like the web)
+        self.note = tk.Label(self.body, text=note or "", bg=bg, fg=fg, font=app.f(size - 2, True),
+                             cursor="hand2", padx=0, pady=0)
+        if note is not None:
+            self.note.pack(side="left", padx=(app.px(4), 0), pady=(app.px(1), 0))
+        self.command = command
+        if kind == "chip":
+            self.recolour(border=BORDER)
+        for w in (self, self.canvas, self.body, self.text, self.note):
+            w.bind("<Button-1>", lambda e: self.enabled and self.command and self.command())
+            w.bind("<Enter>", lambda e: self._hover(True))
+            w.bind("<Leave>", lambda e: self._hover(False))
+
+    @staticmethod
+    def _colours(kind):
+        if kind == "primary" or kind == "on":
+            return ACCENT, ON_ACCENT, ACCENT_HOVER
+        if kind == "chip":
+            return SURFACE_2, TEXT, BORDER
+        return SURFACE_2, TEXT, BORDER
+
+    def _hover(self, inside):
+        if not self.enabled:
+            return
+        bg, _, hover = self._colours(self.kind)
+        c = hover if inside else bg
+        self.recolour(c, BORDER if self.kind == "chip" and not inside else c, (self.text, self.note))
+
+    def set(self, text=None, kind=None, enabled=None, note=None):
+        if text is not None:
+            self.text.configure(text=text)
+        if note is not None:
+            self.note.configure(text=note)
+        if enabled is not None:
+            self.enabled = enabled
+            cur = "hand2" if enabled else ""
+            for w in (self, self.canvas, self.body, self.text, self.note):
+                w.configure(cursor=cur)
+        if kind is not None:
+            self.kind = kind
+        bg, fg, _ = self._colours(self.kind)
+        self.text.configure(fg=fg if self.enabled else MUTED)
+        self.note.configure(fg=fg if self.enabled else MUTED)
+        self.recolour(bg, BORDER if self.kind == "chip" else bg, (self.text, self.note))
+
+    def config(self, **kw):            # tk.Button-style text= / state= for older callers
+        if "text" in kw or "state" in kw:
+            self.set(text=kw.pop("text", None),
+                     enabled=None if "state" not in kw else kw.pop("state") != "disabled")
+        kw.pop("cursor", None)
+        if kw:
+            super().configure(**kw)
+    configure = config
+
+
+class Badge(RoundBox):
+    """An S-F grade in a small rounded box (the web's .badge)."""
+
+    def __init__(self, parent, app, grade="", size=10):
+        super().__init__(parent, app, SURFACE, outside=parent.cget("bg"), radius=6, padx=4, pady=1)
+        self.text = tk.Label(self.body, width=2, font=app.f(size, True), bd=0, padx=0, pady=0)
+        self.text.pack()
+        if grade:
+            self.set(grade)
+
+    def set(self, grade):
+        bg, fg = GRADE_COLORS[grade]
+        self.text.configure(text=grade, fg=fg)
+        self.recolour(bg, bg, (self.text,))
+
+
 class App:
     """Owns the window, the theme, and switching between the picker and calculators."""
 
     WIN_W, WIN_H = 1360, 860      # default window size (clamped to small screens); resizable
     MIN_W, MIN_H = 980, 600
-    SIDEBAR_W = 210
+    SIDEBAR_W = 240
 
     def __init__(self, root):
         self.root = root
@@ -1495,10 +1713,29 @@ class App:
               arrowcolor=[("active", TEXT)])
         s.map("TEntry", bordercolor=[("focus", ACCENT)])
         s.map("TSpinbox", bordercolor=[("focus", ACCENT)], arrowcolor=[("active", TEXT)])
+        # inside a rounded App.field box, which draws the outline
+        flat = dict(field, bordercolor=SURFACE_2, padding=(4, 5))
+        for name in ("TCombobox", "TEntry", "TSpinbox"):
+            s.configure("Flat." + name, **flat)
+            s.map("Flat." + name, bordercolor=[("focus", SURFACE_2)],
+                  lightcolor=[("focus", SURFACE_2)], darkcolor=[("focus", SURFACE_2)],
+                  fieldbackground=[("readonly", SURFACE_2)], foreground=[("readonly", TEXT)],
+                  selectbackground=[("readonly", SURFACE_2)], selectforeground=[("readonly", TEXT)],
+                  arrowcolor=[("active", TEXT)])
         s.configure("Treeview", background=SURFACE, fieldbackground=SURFACE, foreground=TEXT,
-                    bordercolor=BORDER, rowheight=self.px(28), font=self.f(10))
-        s.configure("Treeview.Heading", background=SURFACE_2, foreground=TEXT,
-                    relief="flat", font=self.f(10, True), padding=6)
+                    bordercolor=SURFACE, lightcolor=SURFACE, darkcolor=SURFACE, borderwidth=0,
+                    rowheight=self.px(30), font=self.f(10))
+        s.layout("Treeview", [("Treeview.treearea", {"sticky": "nswe"})])   # the box draws the edge
+        s.configure("Treeview.Heading", background=SURFACE_2, foreground=MUTED, borderwidth=0,
+                    bordercolor=SURFACE_2, lightcolor=SURFACE_2, darkcolor=SURFACE_2,
+                    relief="flat", font=self.f(9, True), padding=(6, 7))
+        # thin flat scroll bars in the theme's colours
+        for name in ("Vertical.TScrollbar", "Horizontal.TScrollbar"):
+            s.configure(name, background=BORDER, troughcolor=SURFACE, bordercolor=SURFACE,
+                        lightcolor=BORDER, darkcolor=BORDER, arrowcolor=MUTED, relief="flat",
+                        gripcount=0, arrowsize=self.px(12))
+            s.map(name, background=[("active", MUTED)], lightcolor=[("active", MUTED)],
+                  darkcolor=[("active", MUTED)])
         s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", ON_ACCENT)])
         s.map("Treeview.Heading", background=[("active", BORDER)])
 
@@ -1506,17 +1743,31 @@ class App:
         return tk.Label(parent, text=text, bg=SURFACE if bg is None else bg,
                         fg=TEXT if color is None else color, font=self.f(size, bold), **kw)
 
-    def button(self, parent, text, command, kind="secondary"):
-        if kind == "primary":
-            bg, fg, hover = ACCENT, ON_ACCENT, ACCENT_HOVER
-        else:
-            bg, fg, hover = SURFACE_2, TEXT, BORDER
-        b = tk.Button(parent, text=text, command=command, bg=bg, fg=fg, activebackground=hover,
-                      activeforeground=fg, relief="flat", bd=0, highlightthickness=0,
-                      font=self.f(11, True), padx=16, pady=8, cursor="hand2")
-        b.bind("<Enter>", lambda e: b.config(bg=hover))
-        b.bind("<Leave>", lambda e: b.config(bg=bg))
-        return b
+    def button(self, parent, text, command, kind="secondary", size=11, padx=16, pady=8):
+        """A rounded button like the web's .btn (primary = accent)."""
+        return Pill(parent, self, text, command, kind, size=size, padx=padx, pady=pady)
+
+    def chip(self, parent, text, command, on=False, note=None):
+        """A pill-shaped filter chip like the web's .chips buttons; `note` is its count."""
+        return Pill(parent, self, text, command, "on" if on else "chip", size=10, padx=13, pady=7,
+                    radius=99, note=note)
+
+    def card(self, parent, fill=None, border=None, radius=12, padx=0, pady=0, outside=None):
+        """A rounded card like the web's .card / .lc: draw into its .body."""
+        return RoundBox(parent, self, SURFACE if fill is None else fill,
+                        BORDER if border is None else border, outside=outside, radius=radius,
+                        padx=padx, pady=pady)
+
+    def field(self, parent, widget, *args, **kw):
+        """An entry or drop-down in a rounded box like the web's inputs: the box outline turns
+        the accent colour while it has the focus. Returns (box, widget)."""
+        box = RoundBox(parent, self, SURFACE_2, BORDER, radius=8, padx=4, pady=3)
+        w = widget(box.body, *args, style="Flat.T" + widget.__name__, **kw)
+        w.pack(fill="both", expand=True)
+        w.bind("<FocusIn>", lambda e: box.recolour(border=ACCENT), add="+")
+        w.bind("<FocusOut>", lambda e: box.recolour(border=BORDER), add="+")
+        box.widget = w
+        return box, w
 
     def fit_columns(self, tree, cols, rows, stretch_col, known=None):
         """Size table columns from the real text width (fonts grow with screen DPI, pixel
@@ -1639,14 +1890,14 @@ class App:
         self.shell = tk.Frame(self.root, bg=BG)
         self.shell.pack(fill="both", expand=True)
 
-        self.sidebar = tk.Frame(self.shell, bg=SURFACE, width=self._sidebar_width())
+        self.sidebar = tk.Frame(self.shell, bg=SIDE, width=self._sidebar_width())
         self.sidebar.pack(side="left", fill="y")
         self.sidebar.pack_propagate(False)
         tk.Frame(self.shell, bg=BORDER, width=1).pack(side="left", fill="y")
-        self.foot = tk.Frame(self.sidebar, bg=SURFACE)     # Settings, at the bottom left
-        self.foot.pack(side="bottom", fill="x", padx=12, pady=14)
-        self.nav = tk.Frame(self.sidebar, bg=SURFACE)
-        self.nav.pack(fill="x", padx=12, pady=(22, 0))
+        self.foot = tk.Frame(self.sidebar, bg=SIDE)        # Settings, at the bottom left
+        self.foot.pack(side="bottom", fill="x", padx=self.px(14), pady=(0, self.px(22)))
+        self.nav = tk.Frame(self.sidebar, bg=SIDE)
+        self.nav.pack(fill="x", padx=self.px(14), pady=(self.px(22), 0))
 
         self.main = tk.Frame(self.shell, bg=BG)
         self.main.pack(side="left", fill="both", expand=True)
@@ -1670,13 +1921,15 @@ class App:
         self._draw_chrome()
 
     def _sidebar_width(self):
-        """Wide enough for the longest menu entry at the current text size and screen DPI."""
+        """Wide enough for the longest menu entry at the current text size and screen DPI
+        (240 px like the web's sidebar at normal size)."""
         main, sub = tkfont.Font(font=self.f(11, True)), tkfont.Font(font=self.f(10, True))
-        title, ver = tkfont.Font(font=self.f(17, True)), tkfont.Font(font=self.f(8))
-        need = max([main.measure(t) for _, t, _ in TOOLS] + [title.measure("Load Lore") - 12]
-                   + [ver.measure(version_text()) - 12]
-                   + [sub.measure(cat.title) + 16 for cat in CATEGORIES])
-        return max(self.px(self.SIDEBAR_W), need + 2 * 12 + 2 * 12 + 10)   # label + nav padding
+        title, ver = tkfont.Font(font=self.f(15, True)), tkfont.Font(font=self.f(8))
+        icon = self.px(22) + self.px(12)
+        need = max([main.measure(t) + icon for _, t, _ in TOOLS] + [title.measure("Load Lore")]
+                   + [ver.measure(version_text())]
+                   + [sub.measure(cat.title) + self.px(24 + 9 + 10) for cat in CATEGORIES])
+        return max(self.px(self.SIDEBAR_W), need + 2 * self.px(14) + 2 * self.px(12) + 4)
 
     def _on_wheel(self, e):
         """Scroll the page with the mouse wheel (tables and lists keep their own wheel)."""
@@ -1699,46 +1952,70 @@ class App:
         step = -1 if (getattr(e, "num", 0) == 4 or getattr(e, "delta", 0) > 0) else 1
         self.canvas.yview_scroll(step * 3, "units")
 
-    def _nav_button(self, text, command, active, sub=False, parent=None):
-        bg = ACCENT if active else SURFACE
-        hover = ACCENT if active else SURFACE_2
-        fg = ON_ACCENT if active else (MUTED if sub else TEXT)
-        box = tk.Frame(parent or self.nav, bg=bg, cursor="hand2")
-        box.pack(fill="x", pady=(1 if sub else 3), padx=(16, 0) if sub else (0, 0))
-        t = tk.Label(box, text=text, bg=bg, fg=fg, font=self.f(10 if sub else 11, not sub or active),
-                     anchor="w")
-        t.pack(fill="x", padx=12, pady=(6 if sub else 9))
-        for w in (box, t):
-            w.bind("<Button-1>", lambda e: command())
-            w.bind("<Enter>", lambda e: [x.config(bg=hover) for x in (box, t)])
-            w.bind("<Leave>", lambda e: [x.config(bg=bg) for x in (box, t)])
+    def icon(self, name, colour, size=22):
+        """A sidebar / home-card icon (ICONS) as a PhotoImage, drawn once per colour and size."""
+        key = (name, colour, self.px(size))
+        cache = self.__dict__.setdefault("_icons_img", {})
+        if key not in cache:
+            cache[key] = tk.PhotoImage(data=icon_png(name, self.px(size), colour))
+        return cache[key]
+
+    def _nav_button(self, text, command, active, sub=False, parent=None, icon=None):
+        """A sidebar entry like the web's: icon + bold name, rounded accent fill when it's the
+        open page; category entries sit indented behind a thin line, the open one grey-filled."""
+        parent = parent or self.nav
+        if sub:
+            bg, fg, hover = (SURFACE_2, TEXT, SURFACE_2) if active else (SIDE, MUTED, SURFACE)
+        else:
+            bg, fg, hover = (ACCENT, ON_ACCENT, ACCENT) if active else (SIDE, MUTED, SURFACE)
+        box = RoundBox(parent, self, bg, bg, outside=SIDE, radius=8 if sub else 10,
+                       padx=10 if sub else 12, pady=6 if sub else 9, cursor="hand2")
+        box.pack(fill="x", pady=(0, self.px(2 if sub else 4)))
+        parts = []
+        if icon:
+            i = tk.Label(box.body, image=self.icon(icon, fg), bg=bg, cursor="hand2")
+            i.pack(side="left", padx=(0, self.px(12)))
+            parts.append(i)
+        t = tk.Label(box.body, text=text, bg=bg, fg=fg, cursor="hand2", anchor="w",
+                     font=self.f(10 if sub else 11, active or not sub))
+        t.pack(side="left", fill="x", expand=True)
+        parts.append(t)
+        box.on_click(command, parts)
+        for w in (box, box.canvas, box.body, *parts):
+            w.bind("<Enter>", lambda e: box.recolour(hover, hover, parts))
+            w.bind("<Leave>", lambda e: box.recolour(bg, bg, parts))
         return box
 
     def _draw_chrome(self):
         """(Re)draw the sidebar: Home, the two features, and the categories of the open feature."""
         for w in self.nav.winfo_children() + self.foot.winfo_children():
             w.destroy()
-        self.label(self.nav, "In Like Flint", 11, MUTED, True, bg=SURFACE, anchor="w").pack(
-            anchor="w", padx=6)
-        self.label(self.nav, "Load Lore", 17, TEXT, True, bg=SURFACE, anchor="w").pack(
-            anchor="w", padx=6)
-        self.label(self.nav, version_text(), 8, MUTED, bg=SURFACE, anchor="w").pack(
-            anchor="w", padx=6, pady=(2, 18))
+        brand = tk.Frame(self.nav, bg=SIDE)
+        brand.pack(fill="x", padx=self.px(6), pady=(0, self.px(18)))
+        self.label(brand, "In Like Flint", 8, MUTED, True, bg=SIDE, anchor="w").pack(anchor="w")
+        self.label(brand, "Load Lore", 15, TEXT, True, bg=SIDE, anchor="w").pack(anchor="w")
+        self.label(brand, version_text(), 8, MUTED, bg=SIDE, anchor="w").pack(anchor="w", pady=(1, 0))
         self._nav_button("Settings", self.show_settings, self.mode == "settings",
-                         parent=self.foot)
-        self._nav_button("Home", self.show_launcher, self.mode == "home")
+                         parent=self.foot, icon="settings")
+        self._nav_button("Home", self.show_launcher, self.mode == "home", icon="home")
         for key in NAV_ORDER:
             text = tool_title(key)
             if key in ("h2h", "hand"):        # one page for every category: no category list
                 self._nav_button(text, self.show_h2h if key == "h2h" else self.show_hand,
-                                 self.mode == key)
+                                 self.mode == key, icon=key)
                 continue
-            on_picker = self.mode == key and self.cat is None
-            self._nav_button(text, lambda k=key: self.show_picker(k), on_picker)
+            self._nav_button(text, lambda k=key: self.show_picker(k), self.mode == key, icon=key)
             if self.mode == key:
+                # the web's sub-list: indented, a thin line down its left side
+                subs = tk.Frame(self.nav, bg=SIDE)
+                subs.pack(fill="x", padx=(self.px(24), 0), pady=(0, self.px(8)))
+                tk.Frame(subs, bg=BORDER, width=1).pack(side="left", fill="y")
+                inner = tk.Frame(subs, bg=SIDE)
+                inner.pack(side="left", fill="x", expand=True, padx=(self.px(8), 0))
                 for cat in CATEGORIES:
                     on = self.cat is not None and cat.title == self.cat.title
-                    self._nav_button(cat.title, lambda c=cat, k=key: self.go(c, k), on, sub=True)
+                    self._nav_button(cat.title, lambda c=cat, k=key: self.go(c, k), on, sub=True,
+                                     parent=inner)
 
     # ---- screens --------------------------------------------------------- #
     def _new_stage(self):
@@ -1764,30 +2041,42 @@ class App:
         self.root.title(APP_TITLE)
         self._draw_chrome()
         wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(fill="x", padx=36, pady=(40, 28))
-        self.label(wrap, "In Like Flint", 15, MUTED, True, bg=BG, anchor="w").pack(anchor="w")
-        self.label(wrap, "Load Lore", 26, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
+        wrap.pack(anchor="w", padx=self.px(34), pady=(self.px(26), self.px(28)))
+        self.label(wrap, "In Like Flint", 11, MUTED, True, bg=BG, anchor="w").pack(anchor="w")
+        self.label(wrap, "Load Lore", 20, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
         self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
-                   "loads head to head.", 12, MUTED,
-                   bg=BG, anchor="w").pack(anchor="w", pady=(4, 26))
+                   "loads head to head.", 11, MUTED,
+                   bg=BG, anchor="w").pack(anchor="w", pady=(self.px(8), self.px(18)))
         feats = tk.Frame(wrap, bg=BG)
         feats.pack(fill="x")
-        feats.columnconfigure((0, 1), weight=1, uniform="f")
+        feats.columnconfigure((0, 1), weight=1, uniform="f", minsize=self.px(350))
         for i, (key, title, blurb) in enumerate(TOOLS):
-            card = tk.Frame(feats, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
-                            cursor="hand2")
-            card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=(0, 16),
-                      padx=(0, 8) if i % 2 == 0 else (8, 0))
-            t = tk.Label(card, text=title, bg=SURFACE, fg=TEXT, font=self.f(17, True), anchor="w",
-                         cursor="hand2")
-            t.pack(fill="x", padx=24, pady=(26, 4))
-            d = tk.Label(card, text=blurb, bg=SURFACE, fg=MUTED, font=self.f(11), anchor="w",
-                         justify="left", wraplength=self.px(330), cursor="hand2")
-            d.pack(fill="x", padx=24, pady=(0, 26))
-            for w in (card, t, d):
-                w.bind("<Button-1>", lambda e, k=key: self.show_picker(k))
-            self._card_hover([card, t, d], SURFACE, SURFACE_2)
+            self._feature_card(feats, key, title, blurb, lambda k=key: self.show_picker(k)).grid(
+                row=i // 2, column=i % 2, sticky="nsew", pady=(0, self.px(12)),
+                padx=(0, self.px(6)) if i % 2 == 0 else (self.px(6), 0))
         self._update_scroll()
+
+    def _feature_card(self, parent, key, title, blurb, command):
+        """A Home card like the web's .fcard: accent icon tile, title, a line about it."""
+        card = RoundBox(parent, self, SURFACE, BORDER, radius=14, padx=20, pady=20, cursor="hand2")
+        tile = RoundBox(card.body, self, ACCENT, ACCENT, radius=10, padx=9, pady=9, cursor="hand2")
+        tile.pack(anchor="w")
+        ic = tk.Label(tile.body, image=self.icon(key, ON_ACCENT), bg=ACCENT, cursor="hand2",
+                      bd=0, padx=0, pady=0)
+        ic.pack()
+        t = tk.Label(card.body, text=title, bg=SURFACE, fg=TEXT, font=self.f(13, True), anchor="w",
+                     cursor="hand2")
+        t.pack(fill="x", pady=(self.px(8), 0))
+        d = tk.Label(card.body, text=blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
+                     justify="left", wraplength=self.px(300), cursor="hand2")
+        d.pack(fill="x", pady=(self.px(6), 0))
+        parts = (t, d)
+        card.on_click(command, (tile, tile.canvas, tile.body, ic, *parts))
+        for w in (card, card.canvas, card.body, tile, tile.canvas, tile.body, ic,
+                  *parts):
+            w.bind("<Enter>", lambda e: card.recolour(SURFACE_2, ACCENT, parts))
+            w.bind("<Leave>", lambda e: card.recolour(SURFACE, BORDER, parts))
+        return card
 
     # ---- updates (Settings > Updates) -------------------------------------- #
     @property
@@ -1910,18 +2199,15 @@ class App:
                 b.config(state="disabled", cursor="")
             b.pack(side="left", padx=(0, 10))
         self.label(box, "Check at start", 10, MUTED, bg=SURFACE).pack(side="left", padx=(6, 6))
-        chip = tk.Label(box, font=self.f(10, True), padx=10, pady=3, cursor="hand2", width=4)
-
-        def flip(e=None):
+        def flip():
             self.set_check_on_start(not self.check_on_start)
             paint()
 
         def paint():
             on = self.check_on_start
-            chip.config(text="On" if on else "Off", bg=ACCENT if on else SURFACE_2,
-                        fg=ON_ACCENT if on else TEXT)
+            chip.set(text="On" if on else "Off", kind="on" if on else "chip")
+        chip = toggle(self, box, flip)
         paint()
-        chip.bind("<Button-1>", flip)
         chip.pack(side="left")
 
     def _github_button(self, parent):
@@ -1943,48 +2229,50 @@ class App:
         self.root.title(f"{APP_TITLE} — Settings")
         self._draw_chrome()
         wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(fill="x", padx=36, pady=(32, 28))
-        self.label(wrap, "Settings", 22, TEXT, True, bg=BG, anchor="w").pack(anchor="w", pady=(0, 6))
+        wrap.pack(anchor="w", padx=self.px(34), pady=(self.px(26), self.px(28)))
+        tk.Frame(wrap, bg=BG, width=self.px(640), height=0).pack()   # the web's page width
+        self.label(wrap, "Settings", 17, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
 
         def section(title):
             """A titled box; its rows are split by thin lines instead of each having a box."""
-            self.label(wrap, title, 11, MUTED, True, bg=BG, anchor="w").pack(
-                anchor="w", pady=(10, 6))
-            card = tk.Frame(wrap, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-            card.pack(fill="x", pady=(0, 12))
+            self.label(wrap, title, 10, MUTED, True, bg=BG, anchor="w").pack(
+                anchor="w", pady=(self.px(10), self.px(6)))
+            box = self.card(wrap, padx=16, pady=2)
+            box.pack(fill="x", pady=(0, self.px(6)))
+            card = box.body
             card.rows = 0
             return card
 
         def line(card):
             if card.rows:
-                tk.Frame(card, bg=BORDER, height=1).pack(fill="x", padx=20)
+                tk.Frame(card, bg=BORDER, height=1).pack(fill="x")
             card.rows += 1
 
-        def row(title, note):
+        def row(title, note=None):
             line(card)
             r = tk.Frame(card, bg=SURFACE)
             r.pack(fill="x")
             text = tk.Frame(r, bg=SURFACE)
-            text.pack(side="left", fill="x", expand=True, padx=20, pady=14)
-            self.label(text, title, 12, TEXT, True, bg=SURFACE, anchor="w").pack(anchor="w")
-            self.label(text, note, 10, MUTED, bg=SURFACE, anchor="w").pack(anchor="w", pady=(2, 0))
+            text.pack(side="left", fill="x", expand=True, pady=self.px(12))
+            self.label(text, title, 11, TEXT, True, bg=SURFACE, anchor="w").pack(anchor="w")
+            if note:
+                self.label(text, note, 9, MUTED, bg=SURFACE, anchor="w").pack(anchor="w")
             right = tk.Frame(r, bg=SURFACE)
-            right.pack(side="right", padx=20, pady=14)
+            right.pack(side="right", pady=self.px(10))
             return right
 
         card = section("Display")
         theme_var = tk.StringVar(value=self.theme)
-        pick = ttk.Combobox(row("Theme", "Colors for the whole app"), textvariable=theme_var,
-                            values=list(THEMES), state="readonly", font=self.f(11),
-                            width=max(len(n) for n in THEMES) + 2)
-        pick.pack()
+        pbox, pick = self.field(row("Theme"), ttk.Combobox, textvariable=theme_var,
+                                values=list(THEMES), state="readonly", font=self.f(11),
+                                width=max(len(n) for n in THEMES) + 2)
+        pbox.pack()
         pick.bind("<<ComboboxSelected>>", lambda e: self.set_theme(theme_var.get()))
         box = row("Text size", f"{round(self.scale * 100)}%")
         for text, delta in (("A−", -0.15), ("A+", 0.15)):
-            b = tk.Label(box, text=text, bg=SURFACE_2, fg=TEXT, font=self.f(11, True),
-                         padx=12, pady=4, cursor="hand2")
-            b.pack(side="left", padx=2)
-            b.bind("<Button-1>", lambda e, d=delta: self.set_scale(self.scale + d))
+            self.button(box, text, lambda d=delta: self.set_scale(self.scale + d), size=11,
+                        padx=13, pady=6).pack(side="left", padx=(self.px(6), 0))
+
         def flip():
             self.set_show_grades(not self.show_grades)
             style_grades_chip(self, chip)
@@ -1996,12 +2284,12 @@ class App:
         self._github_button(row("Source code", "Free and open source: code, issues and "
                                 "releases on GitHub")).pack()
         line(card)
-        self.label(card, "Disclaimer", 12, TEXT, True, bg=SURFACE, anchor="w").pack(
-            anchor="w", padx=20, pady=(14, 0))
-        about = self.label(card, ABOUT_TEXT, 10, MUTED, bg=SURFACE, anchor="w", justify="left")
-        about.pack(fill="x", padx=20, pady=(2, 14))
-        about.bind("<Configure>", lambda e: about.configure(wraplength=max(e.width, 1)))
-        self.label(wrap, version_text(), 10, MUTED, bg=BG, anchor="w").pack(anchor="w", pady=(2, 0))
+        self.label(card, "Disclaimer", 11, TEXT, True, bg=SURFACE, anchor="w").pack(
+            anchor="w", pady=(self.px(12), 0))
+        about = self.label(card, ABOUT_TEXT, 9, MUTED, bg=SURFACE, anchor="w", justify="left",
+                           wraplength=self.px(640 - 2 * 16 - 4))
+        about.pack(fill="x", pady=(self.px(2), self.px(12)))
+        self.label(row("Version"), version_text(), 9, MUTED, bg=SURFACE).pack()
         self._update_scroll()
 
     def _stash(self):
@@ -2047,14 +2335,14 @@ class App:
         self.root.title(f"{APP_TITLE} — {tool_title(mode)}")
         self._draw_chrome()
         wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(fill="x", padx=36, pady=(32, 28))
-        self.label(wrap, tool_title(mode), 22,
+        wrap.pack(anchor="w", padx=self.px(34), pady=(self.px(26), self.px(28)))
+        self.label(wrap, tool_title(mode), 17,
                    TEXT, True, bg=BG, anchor="w").pack(anchor="w")
-        self.label(wrap, "Choose a category", 12, MUTED, bg=BG, anchor="w").pack(
-            anchor="w", pady=(2, 20))
+        self.label(wrap, "Choose a category.", 11, MUTED, bg=BG, anchor="w").pack(
+            anchor="w", pady=(self.px(4), self.px(18)))
         grid = tk.Frame(wrap, bg=BG)
         grid.pack(fill="x")
-        grid.columnconfigure((0, 1), weight=1, uniform="g")
+        grid.columnconfigure((0, 1), weight=1, uniform="g", minsize=self.px(270))
         for i, cat in enumerate(CATEGORIES):
             info = self.data[cat.title]
             if info["error"]:
@@ -2064,37 +2352,39 @@ class App:
                 carts = {x.cartridge for x in shown}
                 if cat.grain_style:                          # + cartridges open to handloads only
                     carts |= {x.cartridge for x in info["loads"]}
-                caption = f"{len(carts)} cartridges  ·  {len(shown):,} loads"
-            card = tk.Frame(grid, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
+                caption = f"{len(carts)} cartridges · {len(shown):,} loads"
+            card = RoundBox(grid, self, SURFACE, BORDER, radius=12, padx=16, pady=16,
                             cursor="hand2")
-            card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=6,
-                      padx=(0 if i % 2 == 0 else 6, 6 if i % 2 == 0 else 0))
-            t = tk.Label(card, text=cat.title, bg=SURFACE, fg=TEXT, font=self.f(15, True),
+            card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=(0, self.px(12)),
+                      padx=(0 if i % 2 == 0 else self.px(6), self.px(6) if i % 2 == 0 else 0))
+            t = tk.Label(card.body, text=cat.title, bg=SURFACE, fg=TEXT, font=self.f(12, True),
                          anchor="w", cursor="hand2")
-            t.pack(fill="x", padx=22, pady=(20, 2))
-            c = tk.Label(card, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(10, True),
-                         anchor="w", cursor="hand2")
-            c.pack(fill="x", padx=22)
-            d = tk.Label(card, text=cat.blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
+            t.pack(fill="x")
+            d = tk.Label(card.body, text=cat.blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
                          cursor="hand2")
-            d.pack(fill="x", padx=22, pady=(4, 20))
-            for w in (card, t, c, d):
-                w.bind("<Button-1>", lambda e, ct=cat: self.go(ct, mode))
-            self._card_hover([card, t, c, d], SURFACE, SURFACE_2)
+            d.pack(fill="x", pady=(self.px(4), self.px(22)))
+            c = tk.Label(card.body, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(9, True),
+                         anchor="w", cursor="hand2")
+            c.pack(fill="x")
+            parts = (t, d, c)
+            card.on_click(lambda ct=cat: self.go(ct, mode), parts)
+            for w in (card, card.canvas, card.body, *parts):
+                w.bind("<Enter>", lambda e, cd=card, p=parts: cd.recolour(SURFACE_2, ACCENT, p))
+                w.bind("<Leave>", lambda e, cd=card, p=parts: cd.recolour(SURFACE, BORDER, p))
         self._update_scroll()
 
     def header(self, parent, cat, active):
         """Back link and the page title."""
         box = tk.Frame(parent, bg=BG)
-        back = tk.Label(box, text="‹  Categories", bg=BG, fg=MUTED, font=self.f(10, True),
+        back = tk.Label(box, text="‹  Categories", bg=BG, fg=ACCENT, font=self.f(10, True),
                         cursor="hand2")
         back.grid(row=0, column=0, sticky="w")
         back.bind("<Button-1>", lambda e: self.show_picker(active))
-        back.bind("<Enter>", lambda e: back.config(fg=TEXT))
-        back.bind("<Leave>", lambda e: back.config(fg=MUTED))
+        back.bind("<Enter>", lambda e: back.config(fg=ACCENT_HOVER))
+        back.bind("<Leave>", lambda e: back.config(fg=ACCENT))
         title = tool_title(active)
-        self.label(box, f"{title}  ·  {cat.title}", 20, TEXT, True, bg=BG).grid(
-            row=1, column=0, sticky="w", pady=(6, 0))
+        self.label(box, f"{title} · {cat.title}", 17, TEXT, True, bg=BG).grid(
+            row=1, column=0, sticky="w", pady=(self.px(4), 0))
         return box
 
     def go(self, cat, tab):
@@ -2169,8 +2459,9 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
         return None
     win.transient(parent)
     win.resizable(False, False)
-    body = tk.Frame(win, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-    body.pack(padx=16, pady=16, fill="both")
+    card = app.card(win, padx=4, pady=4)
+    card.pack(padx=16, pady=16, fill="both")
+    body = card.body
     for c in range(3):
         body.columnconfigure(c, weight=1, uniform="c")
     ex = dict(existing or {})
@@ -2197,11 +2488,11 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     def ent(var, row, col, span=1, kind="entry", values=(), state=None):
         px = dict(padx=(18 if col == 0 else 6, 6 if col + span < 3 else 18))
         if kind == "combo":
-            w = ttk.Combobox(body, textvariable=var, values=list(values), font=app.f(11),
-                             state=state or "normal")
+            box, w = app.field(body, ttk.Combobox, textvariable=var, values=list(values),
+                               font=app.f(11), state=state or "normal", width=8)
         else:
-            w = ttk.Entry(body, textvariable=var, font=app.f(11))
-        w.grid(row=row, column=col, columnspan=span, sticky="ew", **px)
+            box, w = app.field(body, ttk.Entry, textvariable=var, font=app.f(11), width=8)
+        box.grid(row=row, column=col, columnspan=span, sticky="ew", **px)
         return w
 
     def section(text, row):
@@ -2391,16 +2682,32 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
 
 def grades_chip(app, parent, command):
     """The 'S-F grades  On / Off' switch on the Settings page (both tools; remembered)."""
-    chip = tk.Label(parent, text="", font=app.f(10, True), padx=10, pady=3, cursor="hand2")
-    chip.bind("<Button-1>", lambda e: command())
+    chip = toggle(app, parent, command)
     style_grades_chip(app, chip)
     return chip
 
 
 def style_grades_chip(app, chip):
-    on = app.show_grades
-    chip.config(text="On" if on else "Off", width=4,
-                bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
+    chip.set(text="On" if app.show_grades else "Off", kind="on" if app.show_grades else "chip")
+
+
+def toggle(app, parent, command):
+    """An On / Off pill like the web's .tgl switch."""
+    return Pill(parent, app, "Off", command, "chip", size=9, padx=12, pady=5, radius=99)
+
+
+def close_button(app, parent, command):
+    """A ✕ that gets a rounded grey square under the pointer (the web's .x buttons)."""
+    bg = parent.cget("bg")
+    box = RoundBox(parent, app, bg, outside=bg, radius=8, padx=6, pady=2, cursor="hand2")
+    x = tk.Label(box.body, text="✕", bg=bg, fg=MUTED, font=app.f(12, True), cursor="hand2",
+                 bd=0, padx=2, pady=0)
+    x.pack()
+    box.on_click(command, (x,))
+    for w in (box, box.canvas, box.body, x):
+        w.bind("<Enter>", lambda e: (box.recolour(SURFACE_2, SURFACE_2, (x,)), x.config(fg=TEXT)))
+        w.bind("<Leave>", lambda e: (box.recolour(bg, bg, (x,)), x.config(fg=MUTED)))
+    return box
 
 
 class LoadsView:
@@ -2453,68 +2760,69 @@ class LoadsView:
         outer.columnconfigure(0, weight=1)
         a.header(outer, cat, "loads").grid(row=0, column=0, sticky="ew", pady=(0, 16))
         if error or not self.loads:
-            msg = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-            msg.grid(row=3, column=0, sticky="ew")
+            mbox = a.card(outer, padx=4, pady=4)
+            mbox.grid(row=3, column=0, sticky="ew")
+            msg = mbox.body
             a.label(msg, error or "No loads found.", 11, TEXT, True, anchor="w").pack(
                 anchor="w", padx=18, pady=(16, 4))
             a.label(msg, f"Put {cat.loads_filename} next to the program to use this tab.",
                     10, MUTED, anchor="w").pack(anchor="w", padx=18, pady=(0, 16))
             return
 
-        card = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        card.grid(row=3, column=0, sticky="ew")
+        box = a.card(outer, padx=18, pady=16)
+        box.grid(row=3, column=0, sticky="ew")
+        card = box.body
         card.columnconfigure(0, weight=1)
-        pad = dict(padx=18)
+        pad = dict(padx=0)
+        # the web's layout: the cartridge on its own line, distance and gun weight under it
         top = tk.Frame(card, bg=SURFACE)
-        top.grid(row=0, column=0, sticky="ew", pady=(16, 0), **pad)
-        top.columnconfigure(0, weight=3, minsize=a.px(300))
-        for i in (1, 2):
-            top.columnconfigure(i, weight=1)
-        fields = ((cat.cartridge_label, None), ("DISTANCE (YD)", self.dist_var),
-                  (cat.gun_label, self.gun_var))
-        for i, (text, var) in enumerate(fields):
-            a.label(top, text, 9, MUTED, True).grid(row=0, column=i, sticky="w",
-                                                     padx=(0 if i == 0 else 8, 0))
-            if var is None:
-                # the cartridge menu opens a search pop-up: type "6.5" or "mag" to narrow it down
-                self.cart_combo = ttk.Combobox(top, textvariable=self.cart_var,
-                                               values=self.cartridges, font=a.f(12),
-                                               width=max([16] + [len(c) for c in self.cartridges]))
-                self.cart_combo.grid(row=1, column=i, sticky="ew", pady=(4, 0))
-                self.cart_search = LoadSearch(a, self.cart_combo, self.cartridges,
-                                              lambda n: self._on_cartridge(), hint="Cartridge")
-            else:
-                ttk.Entry(top, textvariable=var, font=a.f(12), width=10).grid(
-                    row=1, column=i, sticky="ew", pady=(4, 0), padx=(8, 0))
+        top.grid(row=0, column=0, sticky="ew")
+        top.columnconfigure((0, 1), weight=1, uniform="n")
+        a.label(top, cat.cartridge_label, 8, MUTED, True).grid(row=0, column=0, columnspan=2,
+                                                                sticky="w")
+        # the cartridge menu opens a search pop-up: type "6.5" or "mag" to narrow it down
+        cbox, self.cart_combo = a.field(top, ttk.Combobox, textvariable=self.cart_var,
+                                        values=self.cartridges, font=a.f(12),
+                                        width=max([16] + [len(c) for c in self.cartridges]))
+        cbox.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(a.px(5), 0))
+        self.cart_search = LoadSearch(a, self.cart_combo, self.cartridges,
+                                      lambda n: self._on_cartridge(), hint="Cartridge")
+        for i, (text, var) in enumerate((("DISTANCE (YD)", self.dist_var),
+                                         (cat.gun_label, self.gun_var))):
+            gap = (0, a.px(4)) if i == 0 else (a.px(4), 0)
+            a.label(top, text, 8, MUTED, True).grid(row=2, column=i, sticky="w", padx=gap,
+                                                     pady=(a.px(14), 0))
+            fbox, _ = a.field(top, ttk.Entry, textvariable=var, font=a.f(12), width=10)
+            fbox.grid(row=3, column=i, sticky="ew", padx=gap, pady=(a.px(5), 0))
         self.chip_row = tk.Frame(card, bg=SURFACE)
-        self.chip_row.grid(row=5, column=0, sticky="w", pady=(12, 0), **pad)
+        self.chip_row.grid(row=5, column=0, sticky="w", pady=(a.px(12), 0), **pad)
         self.src_row = tk.Frame(card, bg=SURFACE)
-        self.src_row.grid(row=6, column=0, sticky="w", pady=(8, 16), **pad)
+        self.src_row.grid(row=6, column=0, sticky="w", pady=(a.px(6), 0), **pad)
         self.status = a.label(card, "", 10, DANGER, anchor="w")
-        self.status.grid(row=1, column=0, sticky="w", pady=(8, 0), **pad)
+        self.status.grid(row=1, column=0, sticky="w", **pad)
         self.weights_toggle = tk.Label(card, text="▸  Scoring weights", bg=SURFACE, fg=MUTED,
                                        font=a.f(10, True), cursor="hand2")
-        self.weights_toggle.grid(row=2, column=0, sticky="w", pady=(8, 0), **pad)
+        self.weights_toggle.grid(row=7, column=0, sticky="w", pady=(a.px(10), 0), **pad)
         self.weights_toggle.bind("<Button-1>", lambda e: self._toggle_weights())
         right = tk.Frame(card, bg=SURFACE)
-        right.grid(row=2, column=0, sticky="e", pady=(8, 0), **pad)
+        right.grid(row=7, column=0, sticky="e", pady=(a.px(10), 0), **pad)
         if cat.grain_style:
-            add = tk.Label(right, text="Your handloads  ›", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
+            add = tk.Label(right, text="Your handloads ›", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
                            cursor="hand2")                 # adding / editing lives in the Handloads tab
             add.pack(side="left")
             add.bind("<Button-1>", lambda e: a.show_hand())
         self.weights_frame = tk.Frame(card, bg=SURFACE)
         for i, key in enumerate(self.keys):
-            a.label(self.weights_frame, METRICS[key][0], 10, MUTED).grid(
-                row=0, column=i * 2, padx=(0 if i == 0 else 14, 6))
-            ttk.Spinbox(self.weights_frame, from_=0, to=10, increment=1, width=3,
-                        textvariable=self.weight_vars[key], font=a.f(11)).grid(
-                row=0, column=i * 2 + 1)
+            a.label(self.weights_frame, METRICS[key][0], 9, MUTED).grid(
+                row=0, column=i, sticky="w", padx=(0 if i == 0 else a.px(8), 0))
+            wbox, _ = a.field(self.weights_frame, ttk.Spinbox, from_=0, to=10, increment=1, width=3,
+                              textvariable=self.weight_vars[key], font=a.f(11))
+            wbox.grid(row=1, column=i, sticky="ew", padx=(0 if i == 0 else a.px(8), 0),
+                      pady=(a.px(4), 0))
         self.weight_note = a.label(self.weights_frame, "", 9, TEXT, True)
-        self.weight_note.grid(row=1, column=0, columnspan=12, sticky="w", pady=(8, 0))
-        self.weights_frame.grid(row=3, column=0, sticky="w", pady=(8, 0), **pad)
+        self.weight_note.grid(row=2, column=0, columnspan=12, sticky="w", pady=(8, 0))
+        self.weights_frame.grid(row=8, column=0, sticky="w", pady=(8, 0), **pad)
         self.weights_frame.grid_remove()
-        a.label(card, "", 4).grid(row=4, column=0)
 
         # ---- ranked table
         tbl = tk.Frame(outer, bg=BG)
@@ -2525,10 +2833,11 @@ class LoadsView:
         above = tk.Frame(tbl, bg=BG)
         above.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         above.columnconfigure(1, weight=1)
-        a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).grid(row=0, column=0, sticky="w")
+        a.label(above, "FILTER BRAND / LOAD", 8, MUTED, True, bg=BG).grid(row=0, column=0, sticky="w")
         fl = tk.Frame(above, bg=BG)
-        fl.grid(row=1, column=0, sticky="w", pady=(4, 0))
-        ttk.Entry(fl, textvariable=self.filter_var, font=a.f(10), width=28).pack(side="left")
+        fl.grid(row=1, column=0, sticky="w", pady=(a.px(5), 0))
+        a.field(fl, ttk.Entry, textvariable=self.filter_var, font=a.f(11), width=28)[0].pack(
+            side="left")
         # +P / +P+ check boxes, only for cartridges that have such loads
         self.press_row = tk.Frame(fl, bg=BG)
         self.press_row.pack(side="left", padx=(14, 0))
@@ -2543,9 +2852,12 @@ class LoadsView:
         if cat.terminal:
             self.cols += ["Taylor", "HITS"]
         self.cols += ["Price", "Score", "Grade"]
-        frame = tk.Frame(tbl, bg=BG)
-        frame.grid(row=1, column=0, sticky="nsew")
+        # the table sits in a rounded box like the web's tables
+        tbox = a.card(tbl, radius=10, padx=3, pady=3)
+        tbox.grid(row=1, column=0, sticky="nsew")
+        frame = tbox.body
         frame.columnconfigure(0, weight=1)
+        frame.rowconfigure(0, weight=1)
         self.tree = ttk.Treeview(frame, columns=self.cols, show="headings", height=12,
                                  selectmode="browse")
         scroll = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
@@ -2573,22 +2885,19 @@ class LoadsView:
         self.tree.bind("<<TreeviewSelect>>", lambda e: self._on_select())
 
         # ---- selected load
-        self.detail = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        self.detail.columnconfigure(0, weight=1)
-        self.d_title = a.label(self.detail, "", 16, TEXT, True, anchor="w", justify="left",
+        self.detail = a.card(outer, padx=4, pady=4)
+        d = self.detail.body
+        d.columnconfigure(0, weight=1)
+        self.d_title = a.label(d, "", 16, TEXT, True, anchor="w", justify="left",
                                wraplength=a.px(820))
         self.d_title.grid(row=0, column=0, sticky="w", padx=18, pady=(14, 2))
-        close = tk.Label(self.detail, text="✕", bg=SURFACE, fg=MUTED, font=a.f(15, True),
-                         padx=8, pady=2, cursor="hand2")
-        close.grid(row=0, column=1, sticky="ne", padx=(0, 10), pady=(10, 0))
-        close.bind("<Button-1>", lambda e: self._close_detail())
-        close.bind("<Enter>", lambda e: close.config(fg=TEXT, bg=SURFACE_2))
-        close.bind("<Leave>", lambda e: close.config(fg=MUTED, bg=SURFACE))
-        self.d_info = a.label(self.detail, "", 12, MUTED, anchor="w", justify="left",
+        close_button(a, d, self._close_detail).grid(row=0, column=1, sticky="ne", padx=(0, 10),
+                                                    pady=(10, 0))
+        self.d_info = a.label(d, "", 12, MUTED, anchor="w", justify="left",
                               wraplength=a.px(820))
         self.d_info.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
         # the four factors sit side by side, packed to the left (no stretched columns)
-        factors = tk.Frame(self.detail, bg=SURFACE)
+        factors = tk.Frame(d, bg=SURFACE)
         factors.grid(row=2, column=0, sticky="w", padx=18)
         self.d_badges = {}
         for i, key in enumerate(self.keys):
@@ -2599,32 +2908,32 @@ class LoadsView:
             line.pack(anchor="w", pady=(4, 0))
             val = a.label(line, "", 16, TEXT, True)
             val.pack(side="left")
-            badge = tk.Label(line, text="", width=2, font=a.f(13, True))
+            badge = Badge(line, a, "", 12)
             badge.pack(side="left", padx=(6, 0))
             self.d_badges[key] = (val, badge)
-        priceline = tk.Frame(self.detail, bg=SURFACE)
+        priceline = tk.Frame(d, bg=SURFACE)
         self.priceline = priceline
         priceline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
-        self.handline = tk.Frame(self.detail, bg=SURFACE)
+        self.handline = tk.Frame(d, bg=SURFACE)
         self.handline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
         a.button(self.handline, "Edit in Handloads  ›",
                  lambda: a.show_hand(self.selected.hid if self.selected else None)).pack(side="left")
         self.handline.grid_remove()
-        self.h2h_btn = a.button(self.detail, "", self._h2h_click)
+        self.h2h_btn = a.button(d, "", self._h2h_click)
         self.h2h_btn.grid(row=3, column=0, columnspan=2, sticky="e", padx=18, pady=(14, 0))
         a.label(priceline, "YOUR PRICE PER ROUND ($)", 9, MUTED, True).pack(side="left")
-        ttk.Entry(priceline, textvariable=self.price_var, width=8, font=a.f(11)).pack(
+        a.field(priceline, ttk.Entry, textvariable=self.price_var, width=8, font=a.f(11))[0].pack(
             side="left", padx=8)
         a.button(priceline, "Set price", self._set_price, "primary").pack(side="left")
         a.button(priceline, "Use catalog estimate", self._reset_price).pack(side="left", padx=8)
-        self.d_note = a.label(self.detail, "", 10, MUTED, anchor="w", justify="left",
+        self.d_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
                               wraplength=a.px(820))
         self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 6))
-        self.bt_toggle = tk.Label(self.detail, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
+        self.bt_toggle = tk.Label(d, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
                                   cursor="hand2")
         self.bt_toggle.grid(row=5, column=0, sticky="w", padx=18, pady=(4, 14))
         self.bt_toggle.bind("<Button-1>", lambda e: self._toggle_ballistics())
-        self.bt_frame = tk.Frame(self.detail, bg=SURFACE)
+        self.bt_frame = tk.Frame(d, bg=SURFACE)
         self.bt_frame.grid(row=6, column=0, columnspan=2, sticky="w", padx=18, pady=(0, 16))
         self.bt_frame.grid_remove()
         self.detail.grid(row=5, column=0, sticky="ew", pady=(14, 0))
@@ -2828,12 +3137,10 @@ class LoadsView:
             self.src_row.grid_remove()
             return
         self.src_row.grid()
-        self.app.label(self.src_row, "SHOW", 9, MUTED, True).pack(side="left", padx=(0, 10))
         for name, n in (("All", len(items)), ("Factory", len(items) - nh), ("Handloads", nh)):
-            chip = tk.Label(self.src_row, text=f"{name} ({n})", font=self.app.f(10, True),
-                            padx=10, pady=4, cursor="hand2")
-            chip.pack(side="left", padx=(0, 6))
-            chip.bind("<Button-1>", lambda e, nm=name: self._pick_source(nm))
+            chip = self.app.chip(self.src_row, name, lambda nm=name: self._pick_source(nm),
+                                 note=str(n))
+            chip.pack(side="left", padx=(0, self.app.px(6)))
             self.src_chips[name] = chip
         self._style_chips()
 
@@ -2849,11 +3156,15 @@ class LoadsView:
             # drawn as a box + text (ttk's clam check box is a tiny X that's hard to see)
             row = tk.Frame(self.press_row, bg=BG, cursor="hand2")
             row.pack(side="left", padx=(0, 16))
-            mark = tk.Label(row, width=2, font=self.app.f(10, True), highlightthickness=1)
+            mark = RoundBox(row, self.app, BG, MUTED, radius=5, padx=2, pady=0, cursor="hand2")
             mark.pack(side="left")
+            tick = tk.Label(mark.body, width=2, font=self.app.f(9, True), bg=BG, fg=ON_ACCENT,
+                            bd=0, padx=0, pady=0, cursor="hand2")
+            tick.pack()
+            mark.tick = tick
             text = self.app.label(row, p, 10, TEXT, True, bg=BG)
-            text.pack(side="left", padx=(6, 0))
-            for w in (row, mark, text):
+            text.pack(side="left", padx=(self.app.px(7), 0))
+            for w in (row, mark, mark.canvas, mark.body, tick, text):
                 w.bind("<Button-1>", lambda e, pr=p: self._pick_pressure(pr))
             self.press_boxes[p] = (mark, text)
         self._style_pressure()
@@ -2861,8 +3172,8 @@ class LoadsView:
     def _style_pressure(self):
         for p, (mark, _) in self.press_boxes.items():
             on = self.press_vars[p].get()
-            mark.config(text="✓" if on else "", bg=ACCENT if on else SURFACE_2,
-                        fg=ON_ACCENT, highlightbackground=ACCENT if on else MUTED)
+            mark.tick.configure(text="✓" if on else "")
+            mark.recolour(ACCENT if on else BG, ACCENT if on else MUTED, (mark.tick,))
 
     def _pick_pressure(self, p=None):
         if p is not None:
@@ -2893,13 +3204,11 @@ class LoadsView:
         names = self._purposes_of(cart)
         if len(names) <= 2:                      # only one purpose: nothing to pick between
             return
-        self.app.label(self.chip_row, "PURPOSE", 9, MUTED, True).pack(side="left", padx=(0, 10))
         for name in names:
             n = len(items) if name == "All" else sum(self._purpose_of(x) == name for x in items)
-            chip = tk.Label(self.chip_row, text=f"{name} ({n})", font=self.app.f(10, True),
-                            padx=10, pady=4, cursor="hand2")
-            chip.pack(side="left", padx=(0, 6))
-            chip.bind("<Button-1>", lambda e, nm=name: self._pick_purpose(nm))
+            chip = self.app.chip(self.chip_row, name, lambda nm=name: self._pick_purpose(nm),
+                                 note=str(n))
+            chip.pack(side="left", padx=(0, self.app.px(6)))
             self.chips[name] = chip
         self._style_chips()
 
@@ -2914,19 +3223,17 @@ class LoadsView:
         items = [x for x in items if self._press_ok(x)]
         for name, chip in self.src_chips.items():
             n = sum(name == "All" or x.handload == (name == "Handloads") for x in items)
-            chip.config(text=f"{name} ({n})")
+            chip.set(note=str(n))
         shown = [x for x in items if self.source == "All" or x.handload == (self.source == "Handloads")]
         for name, chip in self.chips.items():
             n = len(shown) if name == "All" else sum(self._purpose_of(x) == name for x in shown)
-            chip.config(text=f"{name} ({n})")
+            chip.set(note=str(n))
 
     def _style_chips(self):
         for name, chip in self.chips.items():
-            on = name == self.purpose
-            chip.config(bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
+            chip.set(kind="on" if name == self.purpose else "chip")
         for name, chip in self.src_chips.items():
-            on = name == self.source
-            chip.config(bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
+            chip.set(kind="on" if name == self.source else "chip")
 
     def _pick_purpose(self, name):
         self.purpose = name
@@ -3088,10 +3395,9 @@ class LoadsView:
                 "hits": f"{st['hits']:.0f} ({hits_class(st['hits'])})"}
         for key, (val, badge) in self.d_badges.items():
             grade = grade_relative(row["scores"][key])
-            bg, fg = GRADE_COLORS[grade]
             val.config(text=vals[key])
             if self.app.show_grades:
-                badge.config(text=grade, bg=bg, fg=fg)
+                badge.set(grade)
                 badge.pack(side="left", padx=(6, 0))
             else:
                 badge.pack_forget()
@@ -3163,7 +3469,7 @@ class LoadsView:
             last = self.detail if self.selected is not None else self.footnote
             if not last.winfo_ismapped():
                 return a.fit_window()
-            rowh = a.px(28)
+            rowh = a.px(30)
             rows_now = int(self.tree.cget("height"))
             bottom = last.winfo_rooty() + last.winfo_height() - a.stage.winfo_rooty()
             spare = a.canvas.winfo_height() - a.px(22) - (bottom - rows_now * rowh)
@@ -3578,9 +3884,9 @@ class HandloadsView:
         self.scroll_to_open = open_id is not None
         a = app
         wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(fill="both", expand=True, padx=36, pady=(32, 28))
+        wrap.pack(fill="both", expand=True, padx=a.px(34), pady=(a.px(26), a.px(28)))
         wrap.columnconfigure(0, weight=1)
-        a.label(wrap, tool_title("hand"), 22, TEXT, True, bg=BG, anchor="w").grid(row=0, column=0, sticky="w")
+        a.label(wrap, tool_title("hand"), 17, TEXT, True, bg=BG, anchor="w").grid(row=0, column=0, sticky="w")
         blurb = a.label(wrap, "Your own reloads, from every category. Each one is graded against the "
                               "factory loads of its cartridge, the same as in the Load Dictionary, "
                               "and can go head to head.", 11, MUTED, bg=BG, anchor="w", justify="left")
@@ -3596,9 +3902,9 @@ class HandloadsView:
         self.search_row = tk.Frame(wrap, bg=BG)
         self.search_row.grid(row=3, column=0, sticky="ew", pady=(12, 0))
         self.q_var = tk.StringVar()
-        a.label(self.search_row, "SEARCH  (name, cartridge, bullet or powder)", 9, MUTED, True, bg=BG,
-                anchor="w").pack(anchor="w", pady=(0, 3))
-        ttk.Entry(self.search_row, textvariable=self.q_var, font=a.f(11)).pack(fill="x")
+        a.label(self.search_row, "SEARCH (NAME, CARTRIDGE, BULLET OR POWDER)", 8, MUTED, True, bg=BG,
+                anchor="w").pack(anchor="w", pady=(0, a.px(5)))
+        a.field(self.search_row, ttk.Entry, textvariable=self.q_var, font=a.f(11))[0].pack(fill="x")
         self.q_var.trace_add("write", lambda *_: self.draw())
         self.chip_row = tk.Frame(wrap, bg=BG)
         self.chip_row.grid(row=4, column=0, sticky="w", pady=(10, 0))
@@ -3643,18 +3949,16 @@ class HandloadsView:
         if len(cats) > 1:
             for name in ["All"] + cats:
                 n = len(items) if name == "All" else sum(c.title == name for c, _ in items)
-                on = name == self.cat_on
-                chip = tk.Label(self.chip_row, text=f"{name} ({n})", font=a.f(10, True), padx=10,
-                                pady=4, cursor="hand2", bg=ACCENT if on else SURFACE_2,
-                                fg=ON_ACCENT if on else TEXT)
-                chip.pack(side="left", padx=(0, 6))
-                chip.bind("<Button-1>", lambda e, nm=name: self._pick_cat(nm))
+                chip = a.chip(self.chip_row, name, lambda nm=name: self._pick_cat(nm),
+                              on=name == self.cat_on, note=str(n))
+                chip.pack(side="left", padx=(0, a.px(6)))
         if items:
             self.search_row.grid()
         else:
             self.search_row.grid_remove()
-            box = tk.Frame(self.list, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-            box.grid(row=0, column=0, sticky="ew", pady=(16, 0))
+            card = a.card(self.list, padx=4, pady=4)
+            card.grid(row=0, column=0, sticky="ew", pady=(a.px(16), 0))
+            box = card.body
             a.label(box, "No handloads yet", 13, TEXT, True).pack(pady=(22, 4))
             a.label(box, "Click “+  New handload” to add your first. It's graded against the "
                          "factory loads of its cartridge.", 10, MUTED).pack(pady=(0, 22), padx=20)
@@ -3696,36 +4000,36 @@ class HandloadsView:
         a, rec = self.app, it.info
         r = self.grade(cat, it)
         is_open = self.open_id == it.hid
-        card = tk.Frame(self.list, bg=SURFACE, highlightthickness=1,
-                        highlightbackground=ACCENT if is_open else BORDER, cursor="hand2")
+        box = a.card(self.list, border=ACCENT if is_open else BORDER, padx=4, pady=4)
+        box.configure(cursor="hand2")
+        card = box.body
         card.columnconfigure(0, weight=1)
         name = a.label(card, it.load, 12, TEXT, True, anchor="w", justify="left")
-        name.grid(row=0, column=0, sticky="w", padx=(16, 8), pady=(12, 0))
-        clickable = [card, name]
+        name.grid(row=0, column=0, sticky="w", padx=(12, 8), pady=(8, 0))
+        clickable = [box, box.canvas, card, name]
         if a.show_grades:
             gbox = tk.Frame(card, bg=SURFACE)
-            gbox.grid(row=0, column=1, rowspan=2, sticky="ne", padx=16, pady=(12, 0))
-            bg, fg = GRADE_COLORS[r["grade"]]
-            tk.Label(gbox, text=r["grade"], bg=bg, fg=fg, font=a.f(10, True), padx=7).pack(anchor="e")
+            gbox.grid(row=0, column=1, rowspan=2, sticky="ne", padx=12, pady=(8, 0))
+            Badge(gbox, a, r["grade"], 10).pack(anchor="e")
             rk = a.label(gbox, f"#{r['rank']} of {r['peers']}", 9, MUTED)
             rk.pack(anchor="e", pady=(2, 0))
             clickable += [gbox, rk]
         st = r["stats"]
         stats = a.label(card, f"{st['velocity']:.0f} fps    {st['energy']:.0f} ft-lbs    "
                               f"${st['cost']:.2f} a round    at {r['dist']:g} yd", 10, MUTED, anchor="w")
-        stats.grid(row=1, column=0, sticky="w", padx=16, pady=(2, 12))
+        stats.grid(row=1, column=0, sticky="w", padx=12, pady=(2, 8))
         clickable.append(stats)
         for w in clickable:
             w.bind("<Button-1>", lambda e, h=it.hid: self._toggle(h))
         if is_open:
             self._details(card, cat, it, r)
-        return card
+        return box
 
     def _details(self, card, cat, it, r):
         a, rec = self.app, it.info
-        tk.Frame(card, bg=BORDER, height=1).grid(row=2, column=0, columnspan=2, sticky="ew", padx=16)
+        tk.Frame(card, bg=BORDER, height=1).grid(row=2, column=0, columnspan=2, sticky="ew", padx=12)
         det = tk.Frame(card, bg=SURFACE)
-        det.grid(row=3, column=0, columnspan=2, sticky="ew", padx=16, pady=(10, 0))
+        det.grid(row=3, column=0, columnspan=2, sticky="ew", padx=12, pady=(10, 0))
         bullet = " ".join(x for x in (rec.get("bullet_maker", ""), rec.get("bullet", "")) if x) or "Bullet"
         parts = [bullet, f"{it.bullet_gr:g} gr"]
         if it.diameter_in:
@@ -3773,12 +4077,15 @@ class HandloadsView:
                          f"{it.cartridge} loads in the Load Dictionary", 10, TEXT, anchor="w").grid(
                 row=n, column=1, sticky="w", pady=2)
         btns = tk.Frame(card, bg=SURFACE)
-        btns.grid(row=4, column=0, columnspan=2, sticky="w", padx=16, pady=(12, 4))
-        a.button(btns, "Edit", lambda: self._edit(it), "primary").pack(side="left")
-        a.button(btns, "Duplicate", lambda: self._duplicate(it)).pack(side="left", padx=8)
-        a.button(btns, "Delete", lambda: self._delete(cat, it)).pack(side="left")
+        btns.grid(row=4, column=0, columnspan=2, sticky="w", padx=12, pady=(12, 4))
+        small = dict(size=10, padx=14, pady=7)
+        a.button(btns, "Edit", lambda: self._edit(it), "primary", **small).pack(side="left")
+        a.button(btns, "Duplicate", lambda: self._duplicate(it), **small).pack(side="left", padx=8)
+        delete = a.button(btns, "Delete", lambda: self._delete(cat, it), **small)
+        delete.text.configure(fg=DANGER)              # the web's red Delete
+        delete.pack(side="left")
         links = tk.Frame(card, bg=SURFACE)
-        links.grid(row=5, column=0, columnspan=2, sticky="w", padx=16, pady=(4, 12))
+        links.grid(row=5, column=0, columnspan=2, sticky="w", padx=12, pady=(4, 8))
         key = pick_key(cat, it)
         h2h = (f"In Head to Head ({len(a.h2h)} of {H2H_MAX})  ›" if key in a.h2h else
                f"Head to Head is full ({H2H_MAX})  ›" if len(a.h2h) >= H2H_MAX else "+  Head to Head")
@@ -3868,8 +4175,9 @@ class HandloadsView:
         win.configure(bg=BG)
         win.title("Restore handloads")
         win.transient(self.root)
-        body = tk.Frame(win, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        body.pack(padx=16, pady=16, fill="both", expand=True)
+        card = a.card(win, padx=4, pady=4)
+        card.pack(padx=16, pady=16, fill="both", expand=True)
+        body = card.body
         a.label(body, "Open a back up file (or a my_handloads.csv), or paste a back up copied on "
                       "the phone. Handloads you already have are kept; ones in the back up are "
                       "added, or updated if they came from here.", 10, MUTED, anchor="w",
@@ -3979,22 +4287,25 @@ class HeadToHeadView:
         outer = tk.Frame(stage, bg=BG)
         outer.pack(fill="both", expand=True, padx=24, pady=22)
         outer.columnconfigure(0, weight=1)
-        a.label(outer, tool_title("h2h"), 20, TEXT, True, bg=BG).grid(
-            row=0, column=0, sticky="w", pady=(6, 16))
+        a.label(outer, tool_title("h2h"), 17, TEXT, True, bg=BG).grid(
+            row=0, column=0, sticky="w", pady=(0, a.px(12)))
         if not self.groups:
-            msg = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-            msg.grid(row=1, column=0, sticky="ew")
+            mbox = a.card(outer, padx=4, pady=4)
+            mbox.grid(row=1, column=0, sticky="ew")
+            msg = mbox.body
             a.label(msg, "No loads found.", 11, TEXT, True, anchor="w").pack(
                 anchor="w", padx=18, pady=(16, 4))
             a.label(msg, "Put the loads_*.csv files next to the program to use this tab.",
                     10, MUTED, anchor="w").pack(anchor="w", padx=18, pady=(0, 16))
             return
 
-        card = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        card.grid(row=1, column=0, sticky="ew")
+        box = a.card(outer, padx=18, pady=14)
+        box.grid(row=1, column=0, sticky="ew")
+        card = box.body
         card.columnconfigure(0, weight=1)
-        pad = dict(padx=18)
-        a.label(card, "LOADS TO COMPARE  ·  any category", 9, MUTED, True).grid(row=0, column=0, sticky="w", pady=(16, 0), **pad)
+        pad = dict(padx=0)
+        a.label(card, "LOADS TO COMPARE · ANY CATEGORY", 8, MUTED, True).grid(
+            row=0, column=0, sticky="w", **pad)
         self.slot_box = tk.Frame(card, bg=SURFACE)
         self.slot_box.grid(row=1, column=0, sticky="ew", pady=(6, 0), **pad)
         self.slot_box.columnconfigure(3, weight=1)
@@ -4004,18 +4315,17 @@ class HeadToHeadView:
         self.add_link.bind("<Button-1>", lambda e: self._add_slot(focus=True))
 
         top = tk.Frame(card, bg=SURFACE)
-        top.grid(row=3, column=0, sticky="ew", pady=(16, 0), **pad)
-        a.label(top, "DISTANCE (YD)", 9, MUTED, True).grid(row=0, column=0, sticky="w")
-        ttk.Entry(top, textvariable=self.dist_var, font=a.f(12), width=10).grid(
-            row=1, column=0, sticky="w", pady=(4, 0))
+        top.grid(row=3, column=0, sticky="ew", pady=(a.px(12), 0), **pad)
+        a.label(top, "DISTANCE (YD)", 8, MUTED, True).grid(row=0, column=0, sticky="w")
+        a.field(top, ttk.Entry, textvariable=self.dist_var, font=a.f(12), width=8)[0].grid(
+            row=1, column=0, sticky="w", pady=(a.px(5), 0))
         # opens a gun weight box on each load's row
         self.gun_link = tk.Label(top, text="", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
                                  cursor="hand2")
         self.gun_link.grid(row=1, column=1, sticky="w", padx=(24, 0), pady=(4, 0))
         self.gun_link.bind("<Button-1>", lambda e: self._toggle_gun())
         self.status = a.label(card, "", 10, DANGER, anchor="w")
-        self.status.grid(row=4, column=0, sticky="w", pady=(8, 0), **pad)
-        a.label(card, "", 4).grid(row=5, column=0)
+        self.status.grid(row=4, column=0, sticky="w", **pad)
 
         self.results = tk.Frame(outer, bg=BG)
         self.results.grid(row=2, column=0, sticky="ew", pady=(14, 0))
@@ -4043,27 +4353,27 @@ class HeadToHeadView:
                 slot["cart"].set(last)
         widest = max([16] + [len(c) for carts in self.cartridges.values() for c in carts])
         slot["num"] = a.label(self.slot_box, "", 11, MUTED, True)
-        slot["cart_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cart"],
-                                        font=a.f(11), width=widest)
+        slot["cart_wrap"], slot["cart_box"] = a.field(self.slot_box, ttk.Combobox,
+                                                      textvariable=slot["cart"], font=a.f(11),
+                                                      width=widest)
         slot["cart_search"] = LoadSearch(a, slot["cart_box"], list(self.cart_names),
                                          lambda n, s=slot: self._on_cart_search(s, n),
                                          value=lambda n: self.cart_names[n][1],
                                          head=lambda n: self.cart_names[n][0],
                                          label=lambda n: self.cart_names[n][1], hint="Cartridge")
-        slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], font=a.f(11), width=40)
+        slot["load_wrap"], slot["load_box"] = a.field(self.slot_box, ttk.Combobox,
+                                                      textvariable=slot["load"], font=a.f(11),
+                                                      width=40)
         slot["search"] = LoadSearch(a, slot["load_box"], [], lambda n, s=slot: self._on_load(s),
                                     hint=lambda s=slot: "Load" if s["cart"].get() else
                                     "Pick a cartridge first")
         slot["gun_box"] = tk.Frame(self.slot_box, bg=SURFACE)
-        ttk.Entry(slot["gun_box"], textvariable=slot["gun"], font=a.f(11), width=6).pack(side="left")
+        a.field(slot["gun_box"], ttk.Entry, textvariable=slot["gun"], font=a.f(11),
+                width=6)[0].pack(side="left")
         slot["usual"] = a.label(slot["gun_box"], "", 9, MUTED)
         slot["usual"].pack(side="left", padx=(6, 0))
         slot["gun"].trace_add("write", self._schedule)
-        slot["x"] = tk.Label(self.slot_box, text="✕", bg=SURFACE, fg=MUTED, font=a.f(12, True),
-                             padx=10, pady=2, cursor="hand2")
-        slot["x"].bind("<Button-1>", lambda e, s=slot: self._remove_slot(s))
-        slot["x"].bind("<Enter>", lambda e, s=slot: s["x"].config(fg=TEXT, bg=SURFACE_2))
-        slot["x"].bind("<Leave>", lambda e, s=slot: s["x"].config(fg=MUTED, bg=SURFACE))
+        slot["x"] = close_button(a, self.slot_box, lambda s=slot: self._remove_slot(s))
         self.slots.append(slot)
         self._fill_loads(slot)
         self._layout_slots()
@@ -4103,8 +4413,8 @@ class HeadToHeadView:
         for n, slot in enumerate(self.slots, start=1):
             slot["num"].config(text=f"{n}")
             slot["num"].grid(row=n, column=0, sticky="w", padx=(0, 10), pady=3)
-            slot["cart_box"].grid(row=n, column=2, sticky="w", pady=3)
-            slot["load_box"].grid(row=n, column=3, sticky="ew", padx=(8, 0), pady=3)
+            slot["cart_wrap"].grid(row=n, column=2, sticky="w", pady=3)
+            slot["load_wrap"].grid(row=n, column=3, sticky="ew", padx=(8, 0), pady=3)
             if self.gun_open:
                 t, cart = slot["cat"].get(), slot["cart"].get()
                 slot["usual"].config(text=f"usual {typical_gun_lb(self.cats[t], cart):g}"
@@ -4143,7 +4453,7 @@ class HeadToHeadView:
             return
         slot["search"].close()
         slot["cart_search"].close()
-        for key in ("num", "cart_box", "load_box", "gun_box", "x"):
+        for key in ("num", "cart_wrap", "load_wrap", "gun_box", "x"):
             slot[key].destroy()
         self.slots.remove(slot)
         while len(self.slots) < H2H_MIN:
@@ -4258,8 +4568,9 @@ class HeadToHeadView:
         n = len(rows)
         cats = list({row["cat"].title: row["cat"] for row in rows}.values())
         keys = h2h_keys(cats)
-        card = tk.Frame(self.results, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        card.grid(row=0, column=0, sticky="ew")
+        box = a.card(self.results, padx=4, pady=4)
+        box.grid(row=0, column=0, sticky="ew")
+        card = box.body
         card.columnconfigure(0, weight=0, minsize=self._label_w())
         for c in range(1, n + 1):
             card.columnconfigure(c, weight=1, uniform="load")
@@ -4281,8 +4592,7 @@ class HeadToHeadView:
             for c, row in enumerate(rows, start=1):
                 box = tk.Frame(card, bg=SURFACE)
                 box.grid(row=r, column=c, sticky="w", padx=12, pady=5)
-                bg, fg = GRADE_COLORS[row["grade"]]
-                tk.Label(box, text=row["grade"], bg=bg, fg=fg, width=2, font=a.f(13, True)).pack(side="left")
+                Badge(box, a, row["grade"], 12).pack(side="left")
                 a.label(box, f"{row['overall']:.0f}", 12, TEXT, True).pack(side="left", padx=(8, 0))
             r += 1
         if grades:
@@ -4324,9 +4634,7 @@ class HeadToHeadView:
                     gap += f"  at {row['dist']:g} yd"
                 a.label(box, gap, 9, ACCENT if best else MUTED, best).pack(side="left", padx=(6, 0))
                 if grades:
-                    g = grade_relative(row["scores"][key])
-                    bg, fg = GRADE_COLORS[g]
-                    tk.Label(box, text=g, bg=bg, fg=fg, width=2, font=a.f(9, True)).pack(
+                    Badge(box, a, grade_relative(row["scores"][key]), 9).pack(
                         side="left", padx=(8, 0))
             r += 1
         self._cell(card, r, 0, "Best in", 10, MUTED, True)
@@ -4339,10 +4647,11 @@ class HeadToHeadView:
         a.label(card, "", 4).grid(row=r, column=0)
 
         # downrange
-        a.label(self.results, "DOWNRANGE  ·  velocity (fps) and energy (ft-lbs)", 9, MUTED, True,
+        a.label(self.results, "DOWNRANGE · VELOCITY (FPS) AND ENERGY (FT-LBS)", 8, MUTED, True,
                 bg=BG, anchor="w").grid(row=1, column=0, sticky="w", pady=(16, 6))
-        dr = tk.Frame(self.results, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        dr.grid(row=2, column=0, sticky="ew")
+        box = a.card(self.results, padx=4, pady=4)
+        box.grid(row=2, column=0, sticky="ew")
+        dr = box.body
         dr.columnconfigure(0, minsize=self._label_w())
         for c in range(1, n + 1):
             dr.columnconfigure(c, weight=1, uniform="load")
