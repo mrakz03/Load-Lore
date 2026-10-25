@@ -4807,32 +4807,33 @@ class HeadToHeadView:
         heads = ("Velocity (fps)", "Energy (ft-lbs)")
         hf, nf = tkfont.Font(font=a.f(10, True)), tkfont.Font(font=a.f(11, True))
         col_w = max([hf.measure(h) for h in heads] + [nf.measure("00,000")])
-        pad = a.px(18)
+        pad = a.px(14)
         for c in range(n):
             dr.columnconfigure(3 * c + 1, minsize=1)                     # the line between loads
             for k in (2, 3):
                 dr.columnconfigure(3 * c + k, minsize=col_w + 2 * pad, uniform="dr")
 
-        def cell(r, c, text, color=TEXT, bold=False, size=11, py=1):
+        def cell(r, c, text, color=TEXT, bold=False, size=11, py=3):
             a.label(dr, text, size, color, bold, bg=SURFACE, anchor="e").grid(
                 row=r, column=c, sticky="nsew", padx=pad, pady=py)
 
         table = h2h_downrange([(row["cat"], row["item"]) for row in rows])
         last = len(table) + 3
         a.label(dr, "Yards", 10, MUTED, True, bg=SURFACE, anchor="e").grid(
-            row=1, column=0, sticky="nsew", padx=pad, pady=(0, 4))
+            row=1, column=0, sticky="nsew", padx=pad, pady=(0, 6))
         for c, row in enumerate(rows):
             tk.Frame(dr, bg=BORDER, width=1).grid(row=0, column=3 * c + 1, rowspan=last, sticky="ns")
-            # "Load  ·  124 gr" -> the name on one line, the weight in grey type beside it
+            # "Load  ·  124 gr" -> the name on one line (the columns widen for it; only a very
+            # long name wraps), the weight in small grey type under it
             name, _, weight = row["item"].label.rpartition("  ·  ")
             head = tk.Frame(dr, bg=SURFACE)
-            head.grid(row=0, column=3 * c + 2, columnspan=2, padx=pad, pady=(6, 2))
+            head.grid(row=0, column=3 * c + 2, columnspan=2, sticky="s", padx=pad, pady=(8, 6))
             a.label(head, name or weight, 10, HAND_FG if row["item"].handload else TEXT, True,
-                    bg=SURFACE, justify="center", wraplength=a.px(300)).pack(side="left")
+                    bg=SURFACE, justify="center", wraplength=a.px(420)).pack()
             if name:
-                a.label(head, weight, 9, MUTED, bg=SURFACE).pack(side="left", padx=(8, 0))
-            cell(1, 3 * c + 2, heads[0], MUTED, True, 10, (0, 4))
-            cell(1, 3 * c + 3, heads[1], MUTED, True, 10, (0, 4))
+                a.label(head, weight, 9, MUTED, bg=SURFACE).pack()
+            cell(1, 3 * c + 2, heads[0], MUTED, True, 10, (0, 6))
+            cell(1, 3 * c + 3, heads[1], MUTED, True, 10, (0, 6))
         tk.Frame(dr, bg=BORDER, height=1).grid(row=2, column=0, columnspan=3 * n + 1, sticky="ew")
         for i, (yd, cells) in enumerate(table, start=3):
             cell(i, 0, f"{yd:g}", TEXT, True)
