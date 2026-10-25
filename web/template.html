@@ -203,6 +203,11 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 /* Handloads tab */
 .htools{display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center}
 .htools .sp{flex:1}
+/* the disclaimer sits at the bottom of the page (Zeke), or under the list once it's taller */
+.main:has(.hpage){display:flex;flex-direction:column}
+#app:has(>.hpage){flex:1;display:flex;flex-direction:column}
+.hpage{flex:1;display:flex;flex-direction:column}
+.hnote{margin-top:auto;padding-top:14px}
 .hgrp{margin:20px 0 8px;font-size:1rem}.hgrp small{color:var(--muted);font-weight:600}
 .hdet{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 16px;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;font-size:.92rem}
 .hdet>span:nth-child(odd){color:var(--muted)}
@@ -354,7 +359,7 @@ const SOURCE_NOTES = {
   partial:"Weight and velocity are manufacturer-published; ballistic coefficient and powder charge are estimated.",
   custom:"Your own entry. Anything you left blank was estimated.",
   typical:"Typical factory-load figures from published specs; approximate, so check the box.",
-  handload:"Your own handload. Check every figure against a published load manual."};
+  handload:DATA.hand_note};
 const DEFAULT_SOURCE_NOTE = "Load data is approximate. Check it against the box or the manufacturer.";
 const REL_CENTER=70, REL_SPREAD=10, REL_BANDS=[[85,"S"],[77,"A"],[66,"B"],[55,"C"],[45,"D"]];
 // saved data may use cartridge names from before a rename (e.g. "7.62x54R" -> "7.62x54mmR")
@@ -710,12 +715,12 @@ function showHand(openId){
   document.title=`${APP_TITLE} — ${toolTitle("hand")}`;
   app.classList.remove("home","picker");app.classList.add("wide");
   const H={open:openId||null,q:"",cat:"All"};
-  app.innerHTML=`<div class="phead"><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
+  app.innerHTML=`<div class="hpage"><div class="phead"><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
     <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button><span class="sp"></span><button class="link" id="hbak">Back up</button><button class="link" id="hres">Restore</button></div>
     <div id="hsearch" style="margin-top:12px"><input id="hq" type="search" placeholder="Search: name, cartridge, bullet or powder" autocomplete="off" aria-label="Search your handloads"></div>
     <div class="chips" id="hcats" role="group" aria-label="Category"></div>
     <div id="hlist"></div>
-    <div class="note">${esc(SOURCE_NOTES.handload)} This app doesn't check pressure or safety.</div>`;
+    <div class="note hnote">${esc(SOURCE_NOTES.handload)}</div></div>`;
   const items=()=>{
     const out=[];
     for(const c of CATEGORIES.filter(c=>c.grain_style&&state.detail[c.title])){syncHand(c);for(const it of state.detail[c.title])if(it.handload)out.push([c,it]);}
@@ -868,7 +873,7 @@ function handDialog(rec,done){
     <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div>
     <div class="costlbl" id="hcost"></div>
     <label class="l" style="margin-top:14px">NOTES</label><input id="hno" autocomplete="off">
-    <div class="safety">Handload figures are only as good as your data. Always follow published load manuals; this app doesn't check pressure or safety.</div>
+    <div class="safety">${esc(SOURCE_NOTES.handload)}</div>
     <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button></div>`);
   const q=x=>$(x,m);
   const diaOf=c=>{const o=pickOf(c);return o?DIAMETERS[o.cart]||0:0;};
