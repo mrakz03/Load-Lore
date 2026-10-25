@@ -2067,7 +2067,7 @@ class App:
                    bg=BG, anchor="w").pack(anchor="w", pady=(self.px(8), self.px(18)))
         feats = tk.Frame(wrap, bg=BG)
         feats.pack(fill="x")
-        feats.columnconfigure((0, 1), weight=1, uniform="f", minsize=self.px(350))
+        feats.columnconfigure((0, 1), weight=1, uniform="f", minsize=self.px(440))
         for i, (key, title, blurb) in enumerate(TOOLS):
             self._feature_card(feats, key, title, blurb, lambda k=key: self.show_picker(k)).grid(
                 row=i // 2, column=i % 2, sticky="nsew", pady=(0, self.px(12)),
@@ -2076,18 +2076,19 @@ class App:
 
     def _feature_card(self, parent, key, title, blurb, command):
         """A Home card like the web's .fcard: accent icon tile, title, a line about it."""
-        card = RoundBox(parent, self, SURFACE, BORDER, radius=14, padx=20, pady=20, cursor="hand2")
-        tile = RoundBox(card.body, self, ACCENT, ACCENT, radius=10, padx=9, pady=9, cursor="hand2")
+        # a size up from the web's cards: a PC window has the room (Zeke, Oct 2026)
+        card = RoundBox(parent, self, SURFACE, BORDER, radius=16, padx=26, pady=26, cursor="hand2")
+        tile = RoundBox(card.body, self, ACCENT, ACCENT, radius=12, padx=11, pady=11, cursor="hand2")
         tile.pack(anchor="w")
-        ic = tk.Label(tile.body, image=self.icon(key, ON_ACCENT), bg=ACCENT, cursor="hand2",
+        ic = tk.Label(tile.body, image=self.icon(key, ON_ACCENT, 28), bg=ACCENT, cursor="hand2",
                       bd=0, padx=0, pady=0)
         ic.pack()
-        t = tk.Label(card.body, text=title, bg=SURFACE, fg=TEXT, font=self.f(13, True), anchor="w",
+        t = tk.Label(card.body, text=title, bg=SURFACE, fg=TEXT, font=self.f(16, True), anchor="w",
                      cursor="hand2")
-        t.pack(fill="x", pady=(self.px(8), 0))
-        d = tk.Label(card.body, text=blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
-                     justify="left", wraplength=self.px(300), cursor="hand2")
-        d.pack(fill="x", pady=(self.px(6), 0))
+        t.pack(fill="x", pady=(self.px(12), 0))
+        d = tk.Label(card.body, text=blurb, bg=SURFACE, fg=MUTED, font=self.f(12), anchor="w",
+                     justify="left", wraplength=self.px(380), cursor="hand2")
+        d.pack(fill="x", pady=(self.px(8), 0))
         parts = (t, d)
         card.on_click(command, (tile, tile.canvas, tile.body, ic, *parts))
         for w in (card, card.canvas, card.body, tile, tile.canvas, tile.body, ic,
@@ -2360,7 +2361,7 @@ class App:
             anchor="w", pady=(self.px(4), self.px(18)))
         grid = tk.Frame(wrap, bg=BG)
         grid.pack(fill="x")
-        grid.columnconfigure((0, 1), weight=1, uniform="g", minsize=self.px(270))
+        grid.columnconfigure((0, 1), weight=1, uniform="g", minsize=self.px(360))
         for i, cat in enumerate(CATEGORIES):
             info = self.data[cat.title]
             if info["error"]:
@@ -2371,17 +2372,17 @@ class App:
                 if cat.grain_style:                          # + cartridges open to handloads only
                     carts |= {x.cartridge for x in info["loads"]}
                 caption = f"{len(carts)} cartridges · {len(shown):,} loads"
-            card = RoundBox(grid, self, SURFACE, BORDER, radius=12, padx=16, pady=16,
+            card = RoundBox(grid, self, SURFACE, BORDER, radius=14, padx=24, pady=22,
                             cursor="hand2")
             card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=(0, self.px(12)),
                       padx=(0 if i % 2 == 0 else self.px(6), self.px(6) if i % 2 == 0 else 0))
-            t = tk.Label(card.body, text=cat.title, bg=SURFACE, fg=TEXT, font=self.f(12, True),
+            t = tk.Label(card.body, text=cat.title, bg=SURFACE, fg=TEXT, font=self.f(15, True),
                          anchor="w", cursor="hand2")
             t.pack(fill="x")
-            d = tk.Label(card.body, text=cat.blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
+            d = tk.Label(card.body, text=cat.blurb, bg=SURFACE, fg=MUTED, font=self.f(12), anchor="w",
                          cursor="hand2")
-            d.pack(fill="x", pady=(self.px(4), self.px(22)))
-            c = tk.Label(card.body, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(9, True),
+            d.pack(fill="x", pady=(self.px(6), self.px(26)))
+            c = tk.Label(card.body, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(11, True),
                          anchor="w", cursor="hand2")
             c.pack(fill="x")
             parts = (t, d, c)
