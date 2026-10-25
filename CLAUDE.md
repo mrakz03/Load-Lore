@@ -87,8 +87,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), Handloads, Settings; the PC sidebar (NAV_ORDER; web: CSS order at >=900 px, Oct 25) has
   the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
-- PC Home, category list and Settings (Oct 25 2026, Zeke): top left, cards in one column, zoomed
-  with the window up to 1.4x (desktop App._menu_layout / _zoomed, re-laid out on resize; web
+- PC Home, category list and Settings (Oct 25 2026, Zeke): top left, compact cards in one column (icon beside the text), zoomed
+  with the window up to 1.15x (desktop App._menu_layout / _zoomed, re-laid out on resize; web
   fitMenu sets CSS zoom at >=900 px). Phones keep their centred layout.
 - Handload bullets go by diameter, not cartridge (one .257 bullet fits .250 Savage, .25-06, .257
   Roberts): the form lists only makers with a bullets.csv bullet of the cartridge's DIAMETERS
