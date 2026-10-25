@@ -1248,6 +1248,10 @@ class App:
 
     def __init__(self, root):
         self.root = root
+        # ttk selects a combobox's whole text after a pick from its drop-down; leave it plain
+        # (class binding: runs after each box's own <<ComboboxSelected>>)
+        root.bind_class("TCombobox", "<<ComboboxSelected>>",
+                        lambda e: e.widget.selection_clear(), add="+")
         self.settings = read_settings()
         self.theme = self.settings.get("theme") if self.settings.get("theme") in THEMES else DEFAULT_THEME
         apply_theme(self.theme)
@@ -3317,7 +3321,17 @@ class LoadSearch:
             self.box.focus_set()
             self.box.icursor("end")
             self.on_pick(name)
+            # focus coming back from the list selects the text (FocusIn): a pick shouldn't
+            self._unselect()
+            self.box.after(50, self._unselect)
         return "break"
+
+    def _unselect(self):
+        try:
+            if self.box.winfo_exists():
+                self.box.selection_clear()
+        except tk.TclError:
+            pass
 
     def _left(self):
         """Focus left the box: drop typing that isn't a pick (the pick before it stays)."""
