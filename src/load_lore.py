@@ -1680,10 +1680,12 @@ class App:
 
     def _on_wheel(self, e):
         """Scroll the page with the mouse wheel (tables and lists keep their own wheel)."""
-        if getattr(self, "search_popup", None) is not None:
-            if isinstance(e.widget, tk.Listbox) and e.widget is self.search_popup.listbox:
+        pop = getattr(self, "search_popup", None)
+        if pop is not None:
+            if pop.popup is not None and str(e.widget).startswith(str(pop.popup)):
+                pop.scroll(-1 if (getattr(e, "num", 0) == 4 or getattr(e, "delta", 0) > 0) else 1)
                 return
-            self.search_popup.close()         # the load search list would stay put as the page moved
+            pop.close()                       # the search pop-up would stay put as the page moved
         try:
             w = self.root.winfo_containing(e.x_root, e.y_root)
         except Exception:
@@ -3230,8 +3232,8 @@ class LoadSearch:
         self.head, self.label = head, label or (lambda n: n)
         self.browse = None                # None: the same as names
         self.var = box.cget("textvariable")
-        self.popup = self.listbox = self.entry = None
-        self.rows = []                    # the list's rows: a name, or None for a heading
+        self.popup = self.listbox = self.entry = self.canvas = None
+        self.rows, self.cells, self.at = [], [], None   # rows: a name, or None for a heading
         self.last = ""
         box.bind("<Button-1>", self._click)
         box.bind("<Key>", self._key)
@@ -3265,47 +3267,47 @@ class LoadSearch:
         if self.popup is not None or not self.names:
             return
         a = self.app
+        # drawn like the web version's pop-up: a search field over rows split by thin lines,
+        # category headings on a darker band, the highlighted row in the accent colour
         self.popup = tk.Toplevel(self.box)
         self.popup.wm_overrideredirect(True)
-        frame = tk.Frame(self.popup, bg=SURFACE_2, highlightthickness=1, highlightbackground=BORDER)
-        frame.pack(fill="both", expand=True)
-        top = tk.Frame(frame, bg=SURFACE_2)
-        top.pack(fill="x", padx=8, pady=(8, 6))
-        tk.Label(top, text="Search", bg=SURFACE_2, fg=MUTED, font=a.f(9, True)).pack(side="left")
+        self.popup.config(bg=BORDER)
+        frame = tk.Frame(self.popup, bg=SURFACE)
+        frame.pack(fill="both", expand=True, padx=1, pady=1)
+        field = tk.Frame(frame, bg=SURFACE_2, highlightthickness=1, highlightbackground=ACCENT,
+                         highlightcolor=ACCENT)
+        field.pack(fill="x", padx=a.px(10), pady=(a.px(10), a.px(8)))
         self.query = tk.StringVar(value=typed)
-        self.entry = tk.Entry(top, textvariable=self.query, bg=SURFACE, fg=TEXT, insertbackground=TEXT,
-                              relief="flat", font=a.f(11), highlightthickness=1,
-                              highlightbackground=BORDER, highlightcolor=ACCENT)
-        self.entry.pack(side="left", fill="x", expand=True, padx=(8, 0), ipady=3)
-        body = tk.Frame(frame, bg=SURFACE_2)
+        self.entry = tk.Entry(field, textvariable=self.query, bg=SURFACE_2, fg=TEXT,
+                              insertbackground=TEXT, relief="flat", font=a.f(11),
+                              highlightthickness=0, borderwidth=0)
+        self.entry.pack(fill="x", padx=a.px(10), pady=a.px(7))
+        hint = tk.Label(field, text="Search", bg=SURFACE_2, fg=MUTED, font=a.f(11), anchor="w")
+        show_hint = lambda *x: (hint.place_forget() if self.query.get() else
+                                hint.place(in_=self.entry, x=0, rely=0.5, anchor="w"))
+        hint.bind("<Button-1>", lambda e: self.entry.focus_set())
+        tk.Frame(frame, bg=BORDER, height=1).pack(fill="x")
+        body = tk.Frame(frame, bg=SURFACE)
         body.pack(fill="both", expand=True)
-        self.listbox = tk.Listbox(body, bg=SURFACE_2, fg=TEXT, selectbackground=ACCENT,
-                                  selectforeground=ON_ACCENT, font=a.f(11), activestyle="none",
-                                  highlightthickness=0, borderwidth=0, takefocus=0,
-                                  exportselection=False)
-        bar = ttk.Scrollbar(body, orient="vertical", command=self.listbox.yview)
-        self.listbox.config(yscrollcommand=bar.set)
-        self.listbox.pack(side="left", fill="both", expand=True)
-        bar.pack(side="right", fill="y")
-        self.listbox.bind("<ButtonRelease-1>", lambda e: self._pick(self.listbox.nearest(e.y)))
-        self.listbox.bind("<Motion>", lambda e: self._select(self.listbox.nearest(e.y), see=False))
-        self.entry.bind("<Down>", lambda e: self._move(1))
-        self.entry.bind("<Up>", lambda e: self._move(-1))
-        self.entry.bind("<Next>", lambda e: self._move(self.MAX_ROWS))
-        self.entry.bind("<Prior>", lambda e: self._move(-self.MAX_ROWS))
+        self.canvas = tk.Canvas(body, bg=SURFACE, highlightthickness=0, borderwidth=0)
+        self.inner = tk.Frame(self.canvas, bg=SURFACE)
+        self.canvas.create_window(0, 0, window=self.inner, anchor="nw", tags="inner")
+        self.canvas.bind("<Configure>", lambda e: self.canvas.itemconfig("inner", width=e.width))
+        self.canvas.pack(fill="both", expand=True)
+        self.listbox = self.canvas            # App._on_wheel: the wheel scrolls the pop-up
+        for key, step in (("<Down>", 1), ("<Up>", -1), ("<Next>", 10), ("<Prior>", -10)):
+            self.entry.bind(key, lambda e, s=step: self._move(s))
         self.entry.bind("<Return>", lambda e: self._pick())
         self.entry.bind("<KP_Enter>", lambda e: self._pick())
         self.entry.bind("<Escape>", lambda e: self.close(refocus=True))
         self.entry.bind("<Tab>", lambda e: self.close(refocus=True))
         self.popup.bind("<Button-1>", self._click_out)
-        self.query.trace_add("write", lambda *x: self._fill())
+        self.query.trace_add("write", lambda *x: (show_hint(), self._fill()))
         a.search_popup = self
+        show_hint()
         self._fill(first=True)
         self._place()
-        if self._at:                          # the current pick, a few rows down
-            self.popup.update_idletasks()
-            self.listbox.see(max(0, self._at - 3))
-            self.listbox.see(self._at)
+        self._see(self.at, center=True)
         try:
             self.popup.grab_set()             # a click outside reaches the pop-up, which closes
         except tk.TclError:
@@ -3314,62 +3316,101 @@ class LoadSearch:
         self.entry.icursor("end")
 
     def _fill(self, first=False):
-        if self.listbox is None:
+        if self.popup is None:
             return
+        a = self.app
+        for w in self.inner.winfo_children():
+            w.destroy()
         matches = self._find(self.query.get())
         cur = self.text()
-        self.rows, last = [], object()
-        self.listbox.delete(0, "end")
-        at = None
+        self.rows, self.cells, self.at, last = [], [], None, object()
+        def add(text, name, heading=False):
+            if self.rows:
+                tk.Frame(self.inner, bg=BORDER, height=1).pack(fill="x")
+            if heading:
+                cell = tk.Label(self.inner, text=text.upper(), bg=SURFACE_2, fg=MUTED,
+                                font=a.f(8, True), anchor="w", padx=a.px(14), pady=a.px(5))
+            else:
+                cell = tk.Label(self.inner, text=text, bg=SURFACE, anchor="w", font=a.f(11),
+                                fg=ACCENT if name is not None and self.value(name) == cur else TEXT,
+                                padx=a.px(14), pady=a.px(8), cursor="hand2" if name else "")
+                if name is not None:
+                    i = len(self.rows)
+                    cell.bind("<Motion>", lambda e, i=i: self.at != i and self._select(i, see=False))
+                    cell.bind("<ButtonRelease-1>", lambda e, i=i: self._pick(i))
+            cell.pack(fill="x")
+            self.rows.append(name)
+            self.cells.append(cell)
         for n in matches:
             h = self.head(n) if self.head else None
             if h is not None and h != last:
-                self.rows.append(None)
-                self.listbox.insert("end", f"  {h.upper()}")
-                self.listbox.itemconfig("end", fg=MUTED, selectbackground=SURFACE_2,
-                                        selectforeground=MUTED)
+                add(h, None, heading=True)
             last = h
-            self.rows.append(n)
-            self.listbox.insert("end", "  " + self.label(n))
-            if self.value(n) == cur:
-                self.listbox.itemconfig("end", fg=ACCENT)
-                if at is None:
-                    at = len(self.rows) - 1
+            add(self.label(n), n)
+            if first and self.at is None and self.value(n) == cur:
+                self.at = len(self.rows) - 1
         if not matches:
-            self.rows.append(None)
-            self.listbox.insert("end", f"  No matches for “{self.query.get().strip()}”")
-            self.listbox.itemconfig("end", fg=MUTED, selectbackground=SURFACE_2, selectforeground=MUTED)
-        if at is None or not first:
-            at = next((i for i, r in enumerate(self.rows) if r is not None), None)
-        self.listbox.config(height=min(max(len(self.rows), 1), self.MAX_ROWS))
-        self.listbox.yview_moveto(0)
-        if at is not None:
-            self._select(at, see=not first)
-        self._at = at if first else None
+            add(f"No matches for \u201c{self.query.get().strip()}\u201d", None)
+            self.cells[-1].config(fg=MUTED)
+        if self.at is None:
+            self.at = next((i for i, r in enumerate(self.rows) if r is not None), None)
+        self._paint()
+        self.inner.update_idletasks()
+        self.canvas.config(scrollregion=(0, 0, 0, self.inner.winfo_reqheight()))
+        self.canvas.yview_moveto(0)
+
+    def _paint(self):
+        cur = self.text()
+        for i, (name, cell) in enumerate(zip(self.rows, self.cells)):
+            if name is None:
+                continue
+            on = i == self.at
+            cell.config(bg=ACCENT if on else SURFACE,
+                        fg=ON_ACCENT if on else ACCENT if self.value(name) == cur else TEXT)
 
     def _place(self):
         self.popup.update_idletasks()
-        box = self.box
-        w = max(box.winfo_width(), self.popup.winfo_reqwidth(), self.app.px(320))
+        box, a = self.box, self.app
+        rows_h = self.inner.winfo_reqheight()
+        self.canvas.config(height=min(rows_h, a.px(430)), width=1)
+        self.popup.update_idletasks()
+        w = max(box.winfo_width(), min(self.inner.winfo_reqwidth() + a.px(20), a.px(640)), a.px(320))
         h = self.popup.winfo_reqheight()
-        x, y = box.winfo_rootx(), box.winfo_rooty() + box.winfo_height() + 2
-        if y + h > box.winfo_screenheight() and box.winfo_rooty() - h - 2 > 0:
-            y = box.winfo_rooty() - h - 2     # no room below: open above the box
+        x, y = box.winfo_rootx(), box.winfo_rooty() + box.winfo_height() + a.px(4)
+        if y + h > box.winfo_screenheight() and box.winfo_rooty() - h - a.px(4) > 0:
+            y = box.winfo_rooty() - h - a.px(4)   # no room below: open above the box
         x = max(0, min(x, box.winfo_screenwidth() - w))
         self.popup.wm_geometry(f"{w}x{h}+{x}+{y}")
         self.popup.lift()
 
+    def scroll(self, step):
+        self.canvas.yview_scroll(step * 2, "units")
+
+    def _see(self, i, center=False):
+        if i is None or self.popup is None:
+            return
+        self.popup.update_idletasks()
+        cell, total = self.cells[i], max(1, self.inner.winfo_reqheight())
+        top, bottom = cell.winfo_y(), cell.winfo_y() + cell.winfo_height()
+        view = self.canvas.winfo_height()
+        y0 = self.canvas.canvasy(0)
+        if center:
+            self.canvas.yview_moveto(max(0, top - view / 2) / total)
+        elif top < y0:
+            self.canvas.yview_moveto(top / total)
+        elif bottom > y0 + view:
+            self.canvas.yview_moveto((bottom - view) / total)
+
     def _select(self, i, see=True):
         if not (0 <= i < len(self.rows)) or self.rows[i] is None:
             return
-        self.listbox.selection_clear(0, "end")
-        self.listbox.selection_set(i)
+        self.at = i
+        self._paint()
         if see:
-            self.listbox.see(i)
+            self._see(i)
 
     def _move(self, step):
-        cur = self.listbox.curselection()
-        i = cur[0] if cur else -1
+        i = -1 if self.at is None else self.at
         names = [k for k, r in enumerate(self.rows) if r is not None]
         if names:
             ahead = [k for k in names if (k > i if step > 0 else k < i)]
@@ -3380,11 +3421,10 @@ class LoadSearch:
         return "break"
 
     def _pick(self, i=None):
-        if self.listbox is None:
+        if self.popup is None:
             return "break"
         if i is None:
-            cur = self.listbox.curselection()
-            i = cur[0] if cur else -1
+            i = -1 if self.at is None else self.at
         if not (0 <= i < len(self.rows)) or self.rows[i] is None:
             return "break"
         name = self.rows[i]
@@ -3414,7 +3454,7 @@ class LoadSearch:
                 self.popup.destroy()
             except tk.TclError:
                 pass
-            self.popup = self.listbox = self.entry = None
+            self.popup = self.listbox = self.entry = self.canvas = None
             if refocus:
                 try:
                     self.box.focus_force()        # back from the pop-up's own window
