@@ -218,6 +218,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lsearch .lq::-webkit-search-cancel-button{display:none}
 .lsearch .lq:disabled{opacity:.6}
 .lsearch.touch .lq{caret-color:transparent;cursor:pointer}
+.selcover{position:absolute;inset:0;background:none;border:0;padding:0;cursor:pointer}
 .sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:flex;align-items:flex-end}
 .sheet{width:100%;max-height:85vh;max-height:85dvh;display:flex;flex-direction:column;background:var(--surface);border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.35);padding-bottom:env(safe-area-inset-bottom);animation:sheetup .18s ease-out}
 @keyframes sheetup{from{transform:translateY(40%);opacity:.4}}
@@ -831,6 +832,18 @@ function handDialog(rec,done){
   const q=x=>$(x,m);
   const diaOf=c=>{const o=pickOf(c);return o?DIAMETERS[o.cart]||0:0;};
   const val=(id,v)=>{q("#"+id).value=v==null||v===0||v===""?"":v;};
+  // phones: the form's pickers open the bottom sheet (pickSheet) instead of the system list
+  const touch=matchMedia("(pointer:coarse)").matches;
+  const sheetSelect=(id,none)=>{   // a <select>: a clear button over it opens the sheet of its options
+    const sel=q("#"+id),wrap=sel.parentElement,b=document.createElement("button");
+    b.type="button";b.className="selcover";b.setAttribute("aria-label","Choose a "+none);
+    wrap.style.position="relative";sel.tabIndex=-1;wrap.appendChild(b);
+    b.onclick=()=>{
+      const opts=[...sel.options].filter(x=>x.value!=="");
+      if(!opts.length)return;
+      pickSheet(opts,{text:x=>x.textContent,none,cur:()=>opts.find(x=>x.value===sel.value),pick:x=>{sel.value=x.value;sel.dispatchEvent(new Event("change"));}});
+    };
+  };
   // bullets go by diameter, not cartridge: the makers listed are those with a bullet of this
   // diameter; "Other maker" opens a box to type any maker (#hbmo)
   const OTHER="__other__",fits=b=>{const d=diaOf(q("#hc").value);return !d||Math.abs(b.diameter-d)<=0.003;};
@@ -856,6 +869,19 @@ function handDialog(rec,done){
   q("#hbm").onchange=()=>{showOther();fillBullets();if(q("#hbm").value===OTHER)q("#hbmo").focus();};
   q("#hbl").onchange=()=>{const b=BULLETS[+q("#hbl").value];if(!b)return;q("#hbn").value=b.name;q("#hgr").value=g(b.weight);q("#hdm").value=g(b.diameter);q("#hbc").value=g(b.bc);};
   ["hcb","hcp","hcr","hcs","hcu","hct","hpg"].forEach(i=>q("#"+i).addEventListener("input",showCost));
+  if(touch){
+    const hc=q("#hc"),pw=q("#hpw");
+    hc.readOnly=true;hc.placeholder="Choose a cartridge";
+    hc.onfocus=()=>{hc.blur();pickSheet(opts,{text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>o.cat.title,none:"cartridge",
+      cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;fillMakers();}});};
+    // powder: the list, or "Other powder" to type one that isn't in it
+    const OTHERP={other:true};
+    pw.readOnly=true;
+    pw.onfocus=()=>{if(!pw.readOnly)return;pw.blur();pickSheet(POWDERS.concat([OTHERP]),{text:x=>x===OTHERP?"Other powder (type it)":x,none:"powder",
+      cur:()=>POWDERS.find(x=>x===pw.value.trim()),pick:x=>{if(x===OTHERP){pw.readOnly=false;pw.value="";pw.focus();}else pw.value=x;}});};
+    pw.onblur=()=>{pw.readOnly=true;};
+    sheetSelect("hbm","bullet maker");sheetSelect("hbl","bullet");sheetSelect("hpu","purpose");
+  }
   // prefill
   const o0=opts.find(o=>o.cart===rec.cartridge&&o.cat.title===rec.category)||opts.find(o=>o.cart===rec.cartridge);
   val("hc",o0?o0.text:rec.cartridge);fillMakers();
@@ -904,7 +930,7 @@ function handDialog(rec,done){
     if(!writeHand(rows)){alert("Couldn't save: browser storage isn't available.");return;}
     close();done(r);
   };
-  q("#hc").focus();
+  if(!touch)q("#hc").focus();
 }
 
 // ---------- Load Dictionary tab ----------
@@ -953,7 +979,7 @@ function searchBox(box,items,o){
 // keyboard opens only when it's tapped) and the list; a tap picks and closes it, so do the
 // backdrop, × and the Android back button
 function pickSheet(items,o){
-  const find=o.find||o.text,c=o.cur();
+  const find=o.find||o.text,c=o.cur(),under=openModalClose;   // a dialog it opened over keeps its back button
   const m=document.createElement("div");m.className="sheetbg";
   m.innerHTML=`<div class="sheet" role="dialog" aria-label="Choose a ${esc(o.none)}"><div class="shead"><b>Choose a ${esc(o.none)}</b><button class="sx" aria-label="Close">×</button></div>
     <input class="sq" type="search" placeholder="Search" autocomplete="off" aria-label="Search"><div class="slist" role="listbox"></div></div>`;
@@ -966,7 +992,7 @@ function pickSheet(items,o){
     list.innerHTML=shown.length?shown.map((x,i)=>{const h=o.head?o.head(x):null,top=h!==last?`<div class="hd">${esc(h)}</div>`:"";last=h;
       return `${top}<div role="option" class="${x===c?"cur":""}" aria-selected="${x===c}" data-i="${i}">${esc(o.text(x))}</div>`;}).join(""):`<div class="none">No ${o.none} matches “${esc(sq.value.trim())}”</div>`;
   };
-  const close=()=>{m.remove();document.body.style.overflow="";if(openModalClose===close)openModalClose=null;};
+  const close=()=>{m.remove();document.body.style.overflow=under?"hidden":"";if(openModalClose===close)openModalClose=under;};
   draw();
   m.onclick=e=>{
     if(e.target===m||e.target.closest(".sx")){close();return;}
