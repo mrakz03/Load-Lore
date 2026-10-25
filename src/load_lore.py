@@ -2069,7 +2069,6 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
         V["total"].set(ex["cost"])
     if duplicate and V["name"].get():
         V["name"].set(V["name"].get() + " (copy)")
-    OTHER = "Other / custom"
     bullets = app.bullets
 
     def lab(text, row, col, span=1, pady=(10, 3)):
@@ -2103,17 +2102,16 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
     section("BULLET", 4)
     lab("MAKER", 6, 0, 1, (6, 3))
     lab("BULLET", 6, 1, 2, (6, 3))
-    makers = sorted({b["maker"] for b in bullets}) + [OTHER]
-    maker_box = ent(V["bullet_maker"], 7, 0, 1, "combo", makers, "readonly")
-    bullet_box = ent(V["bullet"], 7, 1, 2, "combo", [], "readonly")
+    maker_box = ent(V["bullet_maker"], 7, 0, 1, "combo")      # pick from the library or type your own
+    bullet_box = ent(V["bullet"], 7, 1, 2, "combo")
     lab("WEIGHT (GR)", 8, 0)
     lab("DIAMETER (IN)", 8, 1)
     lab("BC (G1)", 8, 2)
     ent(V["bullet_gr"], 9, 0)
     ent(V["diameter_in"], 9, 1)
     ent(V["bc_g1"], 9, 2)
-    note = app.label(body, "Pick a bullet to fill these in, or just type your own. Leave diameter / "
-                           "BC blank to estimate them.", 9, MUTED, anchor="w")
+    note = app.label(body, "Pick a maker and bullet to fill these in, or type your own. Leave "
+                           "diameter / BC blank to estimate them.", 9, MUTED, anchor="w")
     note.grid(row=10, column=0, columnspan=3, sticky="w", padx=18, pady=(4, 0))
 
     section("POWDER AND PERFORMANCE", 11)
@@ -2175,24 +2173,22 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
             c = None
         cost_lbl.config(text="" if not c else f"Cost per round: ${c:.2f}")
 
-    def refresh_bullets(*_):
+    def fits(b):
+        """The library bullet is the cartridge's diameter (bullets go by diameter, not cartridge)."""
         d = DIAMETERS.get(V["cartridge"].get().strip())
-        maker = V["bullet_maker"].get()
-        names = []
-        for b in bullets:
-            if maker and maker != OTHER and b["maker"] != maker:
-                continue
-            if d and abs(b["diameter"] - d) > 0.003:
-                continue
-            names.append(f"{b['name']} · {b['weight']:g} gr")
-        bullet_box.config(values=names, state="readonly" if maker and maker != OTHER else "disabled")
+        return not d or abs(b["diameter"] - d) <= 0.003
+
+    def refresh_bullets(*_):
+        """Makers list only those with a bullet of this diameter; bullets only the picked maker's."""
+        maker = V["bullet_maker"].get().strip()
+        maker_box.config(values=sorted({b["maker"] for b in bullets if fits(b)}))
+        bullet_box.config(values=[f"{b['name']} · {b['weight']:g} gr" for b in bullets
+                                  if b["maker"] == maker and fits(b)])
 
     def pick_bullet(*_):
-        maker, label = V["bullet_maker"].get(), V["bullet"].get()
-        d = DIAMETERS.get(V["cartridge"].get().strip())
+        maker, label = V["bullet_maker"].get().strip(), V["bullet"].get()
         for b in bullets:
-            if b["maker"] == maker and f"{b['name']} · {b['weight']:g} gr" == label and (
-                    not d or abs(b["diameter"] - d) <= 0.003):
+            if b["maker"] == maker and f"{b['name']} · {b['weight']:g} gr" == label and fits(b):
                 V["bullet_gr"].set(f"{b['weight']:g}")
                 V["diameter_in"].set(f"{b['diameter']:g}")
                 V["bc_g1"].set(f"{b['bc']:g}")
@@ -2203,6 +2199,7 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
     bullet_box.bind("<<ComboboxSelected>>", pick_bullet)
     cart_box.bind("<<ComboboxSelected>>", refresh_bullets)
     V["cartridge"].trace_add("write", refresh_bullets)
+    V["bullet_maker"].trace_add("write", refresh_bullets)
     for k in ("bullet_cost", "powder_cost_lb", "powder_gr", "primer_cost", "brass_cost",
               "brass_reuse", "total"):
         V[k].trace_add("write", update_cost)
@@ -2235,8 +2232,8 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
             return
         row = dict(id=ex.get("id") if existing and not duplicate else new_handload_id(),
                    category=cat.title, cartridge=cart, name=V["name"].get().strip(),
-                   bullet_maker=V["bullet_maker"].get() if V["bullet_maker"].get() != OTHER else "",
-                   bullet=V["bullet"].get().split(" · ")[0] if V["bullet"].get() else "",
+                   bullet_maker=V["bullet_maker"].get().strip(),
+                   bullet=V["bullet"].get().split(" · ")[0].strip(),
                    bullet_gr=f"{gr:g}", diameter_in=f"{dia:g}", bc_g1=f"{bc:g}",
                    powder=V["powder"].get().strip(), powder_gr=f"{charge:g}", muzzle_fps=f"{fps:g}",
                    barrel_in=f"{barrel:g}" if barrel else "", purpose=V["purpose"].get(),
