@@ -3721,10 +3721,10 @@ class LoadSearch:
         # the current pick, quiet headings, and a thin scrollbar in the theme's colours
         self.font, self.head_font = tkfont.Font(font=a.f(11)), tkfont.Font(font=a.f(8, True))
         self.row_h, self.head_h = a.px(34), a.px(30)
-        self.pop_w = 0
-        self.popup = tk.Toplevel(self.box)
-        self.popup.wm_overrideredirect(True)
-        self.popup.config(bg=BORDER)
+        self.pop_w, self.up = 0, None
+        # drawn inside the box's own window (not a window of its own), so it moves with the
+        # window and never floats over other apps after Alt+Tab
+        self.popup = tk.Frame(self.box.winfo_toplevel(), bg=BORDER)
         frame = tk.Frame(self.popup, bg=SURFACE)
         frame.pack(fill="both", expand=True, padx=1, pady=1)
         field = tk.Canvas(frame, bg=SURFACE, height=a.px(38), highlightthickness=0, borderwidth=0)
@@ -3898,17 +3898,27 @@ class LoadSearch:
 
     def _place(self):
         box, a = self.box, self.app
+        top = box.winfo_toplevel()
+        tw, th = top.winfo_width(), top.winfo_height()
         widest = max([self.font.measure(t) for t in self.texts] + [0])
         w = max(box.winfo_width(), min(widest + a.px(64), a.px(640)), a.px(320), self.pop_w)
+        w = min(w, tw - a.px(8))
         self.pop_w = w                        # never narrower while typing
-        self.canvas.config(height=min(self.total, a.px(420)), width=w - a.px(16))
+        gap = a.px(4)
+        bx, by = box.winfo_rootx() - top.winfo_rootx(), box.winfo_rooty() - top.winfo_rooty()
+        below, above = th - (by + box.winfo_height() + gap) - gap, by - 2 * gap
+        self.popup.update_idletasks()
+        extra = self.popup.winfo_reqheight() - self.canvas.winfo_reqheight()   # field + edges
+        want = min(self.total, a.px(420))
+        if self.up is None:                   # pick a side once: below, unless above has more room
+            self.up = want + extra > below and above > below
+        room = (above if self.up else below) - extra
+        self.canvas.config(height=max(min(want, room), self.row_h), width=w - a.px(16))
         self.popup.update_idletasks()
         h = self.popup.winfo_reqheight()
-        x, y = box.winfo_rootx(), box.winfo_rooty() + box.winfo_height() + a.px(4)
-        if y + h > box.winfo_screenheight() and box.winfo_rooty() - h - a.px(4) > 0:
-            y = box.winfo_rooty() - h - a.px(4)   # no room below: open above the box
-        x = max(0, min(x, box.winfo_screenwidth() - w))
-        self.popup.wm_geometry(f"{w}x{h}+{x}+{y}")
+        y = by - h - gap if self.up else by + box.winfo_height() + gap
+        x = max(0, min(bx, tw - w))
+        self.popup.place(x=x, y=max(0, y), width=w, height=h)
         self.popup.lift()
         self.popup.update_idletasks()
         self._draw()

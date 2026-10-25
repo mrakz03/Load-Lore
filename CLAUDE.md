@@ -36,7 +36,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   pointer: coarse) a tap opens a bottom sheet (pickSheet: title, search bar that opens the
   keyboard only when tapped, the list; back button / backdrop / × close it); with a mouse /
   keyboard (desktop LoadSearch, web pickSheet with an anchor) a click, Down, Enter or a typed
-  letter opens a search pop-up under the box (cursor in its search field, Up/Down + Enter, Esc
+  letter opens a search pop-up under the box (desktop: a Frame placed inside the box's own window,
+  not a window of its own, so it can't float over other apps after Alt+Tab; cursor in its search field, Up/Down + Enter, Esc
   or a click outside closes, so do moving / resizing / minimising the window or switching apps:
   App._window_moved, LoadSearch._focus_left; rounded field with a magnifier, accent highlight, ✓ on the current
   pick, thin MUTED scrollbar: drawn on a Canvas on desktop, scrollbar-color on web). Empty boxes
