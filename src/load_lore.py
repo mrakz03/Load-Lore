@@ -32,6 +32,7 @@ import bisect
 import csv
 import glob
 import hashlib
+import io
 import json
 import math
 import os
@@ -177,11 +178,14 @@ def metric_keys(cat):
     return [k for k in METRICS if cat.terminal or k not in TERMINAL_KEYS]
 
 
-# The two tools: (key, title, blurb on the Home screen)
+# The tools: (key, title, blurb on the Home screen)
 TOOLS = (("loads", "Load Dictionary", "Every load of a cartridge, factory or your own handload, "
                                       "graded against each other."),
          ("h2h", "Head to Head", "Put 2 to 5 loads side by side, even from different cartridges "
-                                 "or categories."))
+                                 "or categories."),
+         ("hand", "Handloads", "Build and save your own reloads. They're graded in the Load "
+                               "Dictionary and can go head to head."))
+NAV_ORDER = ("h2h", "loads", "hand")     # the sidebar: the Load Dictionary, the main tool, in the middle
 H2H_MIN, H2H_MAX = 2, 5
 H2H_DISTANCE = 100       # Head to Head's starting distance (yd); each load is capped at its category's max
 
@@ -1026,6 +1030,63 @@ def write_handload_rows(rows):
         writer.writerows(rows)
 
 
+def handload_csv_text(rows):
+    """Handloads as CSV text, the my_handloads.csv format (the Handloads tab's back up)."""
+    out = io.StringIO()
+    writer = csv.DictWriter(out, fieldnames=HANDLOAD_FIELDS, extrasaction="ignore", lineterminator="\r\n")
+    writer.writeheader()
+    writer.writerows(rows)
+    return out.getvalue()
+
+
+HANDLOAD_NUMBERS = ("bullet_gr", "diameter_in", "bc_g1", "powder_gr", "muzzle_fps", "barrel_in", "cost",
+                    "bullet_cost", "powder_cost_lb", "primer_cost", "brass_cost", "brass_reuse")
+
+
+def merge_handload_rows(rows, text, categories):
+    """Restore a back up (CSV text, my_handloads.csv or the phone's) into `rows`: a handload with
+    the same id is replaced, a new one added. Rows that aren't for one of `categories` (titles)
+    or lack a figure are skipped. Returns (rows, added, replaced, skipped); raises ValueError if
+    the text isn't a handload back up. Same rules as mergeHand in the web version."""
+    reader = csv.DictReader(io.StringIO(text.lstrip("\ufeff")))
+    head = [(k or "").strip().lower() for k in (reader.fieldnames or [])]
+    if not all(k in head for k in ("cartridge", "bullet_gr", "muzzle_fps")):
+        raise ValueError("That isn't a handload back up (no cartridge / bullet_gr / muzzle_fps "
+                         "columns).")
+    out, added, replaced, skipped = [dict(r) for r in rows], 0, 0, 0
+    for raw in reader:
+        row = {(k or "").strip().lower(): (v or "").strip() for k, v in raw.items() if k}
+        if not any(row.values()):
+            continue
+        row["cartridge"] = canonical_name(row.get("cartridge", ""))
+        try:
+            ok = (row.get("category") in categories and row["cartridge"] and
+                  all(float(row.get(k) or 0) > 0 for k in ("bullet_gr", "muzzle_fps", "bc_g1",
+                                                            "powder_gr", "cost")))
+        except ValueError:
+            ok = False
+        if not ok:
+            skipped += 1
+            continue
+        for k in HANDLOAD_NUMBERS:                    # "0" from the phone means blank
+            try:
+                if float(row.get(k) or 0) == 0:
+                    row[k] = ""
+            except ValueError:
+                row[k] = ""
+        row["brass_reuse"] = row.get("brass_reuse") or "5"
+        row["id"] = row.get("id") or new_handload_id()
+        for i, r in enumerate(out):
+            if r.get("id") == row["id"]:
+                out[i] = row
+                replaced += 1
+                break
+        else:
+            out.append(row)
+            added += 1
+    return out, added, replaced, skipped
+
+
 def new_handload_id():
     import time
     import random
@@ -1224,7 +1285,7 @@ class App:
             self.data[cat.title] = self._load_category(cat)
 
         self.stage = None
-        self.mode = "home"                # home / loads / h2h
+        self.mode = "home"                # home / loads / h2h / hand / settings
         self.cat = None
         self.carry = {}                   # per category: what each tab knew when you left it
         self.h2h = []                     # the Head to Head picks (pick_key), any category
@@ -1234,6 +1295,7 @@ class App:
         self.show_launcher()
         root.bind_all("<Control-Key-1>", lambda e: self.go_mode("loads"))
         root.bind_all("<Control-Key-2>", lambda e: self.show_h2h())
+        root.bind_all("<Control-Key-3>", lambda e: self.show_hand())
         root.bind_all("<Control-Key-0>", lambda e: self.show_launcher())
         self.upd = {"state": "idle"}      # Settings > Updates: idle/checking/latest/available/downloading/error
         if self.check_on_start and version_tuple(APP_VERSION):
@@ -1659,9 +1721,11 @@ class App:
         self._nav_button("Settings", self.show_settings, self.mode == "settings",
                          parent=self.foot)
         self._nav_button("Home", self.show_launcher, self.mode == "home")
-        for key, text, _ in TOOLS:
-            if key == "h2h":                  # one page for every category: no category list
-                self._nav_button(text, self.show_h2h, self.mode == key)
+        for key in NAV_ORDER:
+            text = tool_title(key)
+            if key in ("h2h", "hand"):        # one page for every category: no category list
+                self._nav_button(text, self.show_h2h if key == "h2h" else self.show_hand,
+                                 self.mode == key)
                 continue
             on_picker = self.mode == key and self.cat is None
             self._nav_button(text, lambda k=key: self.show_picker(k), on_picker)
@@ -1706,7 +1770,8 @@ class App:
         for i, (key, title, blurb) in enumerate(TOOLS):
             card = tk.Frame(feats, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
                             cursor="hand2")
-            card.grid(row=0, column=i, sticky="nsew", padx=(0 if i == 0 else 8, 8 if i == 0 else 0))
+            card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=(0, 16),
+                      padx=(0, 8) if i % 2 == 0 else (8, 0))
             t = tk.Label(card, text=title, bg=SURFACE, fg=TEXT, font=self.f(17, True), anchor="w",
                          cursor="hand2")
             t.pack(fill="x", padx=24, pady=(26, 4))
@@ -1937,6 +2002,8 @@ class App:
         """Remember what the open tool has on screen, for when you come back to it."""
         if self.view is None:
             return
+        if self.view.tab == "hand":
+            return
         if self.view.tab == "h2h":
             self.h2h_snap.update(self.view.snapshot())
         elif self.cat is not None:
@@ -1952,10 +2019,22 @@ class App:
         self.view = HeadToHeadView(self, stage, dict(self.h2h_snap) or None)
         self._update_scroll()
 
+    def show_hand(self, open_id=None):
+        """The Handloads tab: every handload of every category; `open_id` opens that one."""
+        self._stash()
+        self.mode, self.cat, self.view = "hand", None, None
+        stage = self._new_stage()
+        self.root.title(f"{APP_TITLE} — {tool_title('hand')}")
+        self._draw_chrome()
+        self.view = HandloadsView(self, stage, open_id)
+        self._update_scroll()
+
     def show_picker(self, mode):
         """Choose a category for the Load Dictionary (Head to Head has no categories)."""
         if mode == "h2h":
             return self.show_h2h()
+        if mode == "hand":
+            return self.show_hand()
         self._stash()
         self.mode, self.cat, self.view = mode, None, None
         stage = self._new_stage()
@@ -2046,12 +2125,42 @@ class App:
         self._update_scroll()
 
 
-def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=False, on_saved=None):
-    """Add / edit a handload. `existing` is a handload record (dict) to start from."""
+def handload_cartridges(app):
+    """Every cartridge a handload can be for, across the bullet categories: {text: (category,
+    cartridge)}; a cartridge in two categories (.44 Magnum) names its category in brackets."""
+    per = []
+    for cat in CATEGORIES:
+        info = app.data.get(cat.title, {})
+        if not cat.grain_style or info.get("error"):
+            continue
+        groups = with_handload_only(group_by_cartridge(info["detail"] + app.hand_loads(cat), True),
+                                    info["loads"])
+        per.append((cat, list(groups)))
+    count = {}
+    for _, carts in per:
+        for c in carts:
+            count[c] = count.get(c, 0) + 1
+    return {(f"{c} ({cat.title})" if count[c] > 1 else c): (cat, c) for cat, carts in per for c in carts}
+
+
+def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=None):
+    """The Handloads tab's add / edit form, for any category (the cartridge picks it).
+    `existing` is a handload record (dict) to start from."""
     win = tk.Toplevel(parent)
     win.configure(bg=BG)
-    verb = "Edit" if existing and not duplicate else "Add"
-    win.title(f"{verb} handload — {cat.title}")
+    win.title("Edit handload" if existing and not duplicate else "New handload")
+    opts = handload_cartridges(app)
+
+    def pick_of(text):
+        text = text.strip()
+        low = text.lower()
+        for t, v in opts.items():
+            if t == text:
+                return v
+        for t, v in opts.items():
+            if t.lower() == low or v[1].lower() == low:
+                return v
+        return None
     win.transient(parent)
     win.resizable(False, False)
     body = tk.Frame(win, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
@@ -2059,6 +2168,9 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
     for c in range(3):
         body.columnconfigure(c, weight=1, uniform="c")
     ex = dict(existing or {})
+    if ex.get("cartridge"):                           # its text in the cartridge list
+        ex["cartridge"] = next((t for t, (c, x) in opts.items() if x == ex["cartridge"] and
+                                c.title == ex.get("category")), ex["cartridge"])
     V = {k: tk.StringVar(value=str(ex.get(k, ""))) for k in (
         "cartridge", "name", "bullet_maker", "bullet", "bullet_gr", "diameter_in", "bc_g1",
         "powder", "powder_gr", "muzzle_fps", "barrel_in", "purpose", "bullet_cost",
@@ -2094,7 +2206,7 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
 
     lab("CARTRIDGE", 0, 0, 2, (16, 3))
     lab("PURPOSE", 0, 2, 1, (16, 3))
-    cart_box = ent(V["cartridge"], 1, 0, 2, "combo", cartridges)
+    cart_box = ent(V["cartridge"], 1, 0, 2, "combo", list(opts))
     ent(V["purpose"], 1, 2, 1, "combo", PURPOSES, "readonly")
     lab("LOAD NAME (OPTIONAL)", 2, 0, 3)
     ent(V["name"], 3, 0, 3)
@@ -2175,7 +2287,8 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
 
     def fits(b):
         """The library bullet is the cartridge's diameter (bullets go by diameter, not cartridge)."""
-        d = DIAMETERS.get(V["cartridge"].get().strip())
+        pick = pick_of(V["cartridge"].get())
+        d = DIAMETERS.get(pick[1]) if pick else None
         return not d or abs(b["diameter"] - d) <= 0.003
 
     def refresh_bullets(*_):
@@ -2208,9 +2321,11 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
 
     def save(_e=None):
         try:
-            cart = V["cartridge"].get().strip()
-            if not cart:
-                raise ValueError("Enter a cartridge.")
+            pick = pick_of(V["cartridge"].get())
+            if pick is None:
+                raise ValueError("Pick a cartridge from the list." if V["cartridge"].get().strip()
+                                 else "Enter a cartridge.")
+            cat, cart = pick
             gr = num("bullet_gr", "Bullet weight", 1, 2000)
             fps = num("muzzle_fps", "Muzzle velocity", 100, 5500)
             charge = num("powder_gr", "Powder charge", 0.1, 300)
@@ -2379,10 +2494,10 @@ class LoadsView:
         right = tk.Frame(card, bg=SURFACE)
         right.grid(row=2, column=0, sticky="e", pady=(8, 0), **pad)
         if cat.grain_style:
-            add = tk.Label(right, text="+  Add handload", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
-                           cursor="hand2")
+            add = tk.Label(right, text="Your handloads  ›", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
+                           cursor="hand2")                 # adding / editing lives in the Handloads tab
             add.pack(side="left")
-            add.bind("<Button-1>", lambda e: self._open_handload())
+            add.bind("<Button-1>", lambda e: a.show_hand())
         self.weights_frame = tk.Frame(card, bg=SURFACE)
         for i, key in enumerate(self.keys):
             a.label(self.weights_frame, METRICS[key][0], 10, MUTED).grid(
@@ -2487,10 +2602,8 @@ class LoadsView:
         priceline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
         self.handline = tk.Frame(self.detail, bg=SURFACE)
         self.handline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
-        a.button(self.handline, "Edit", lambda: self._open_handload(self.selected)).pack(side="left")
-        a.button(self.handline, "Duplicate",
-                 lambda: self._open_handload(self.selected, duplicate=True)).pack(side="left", padx=8)
-        a.button(self.handline, "Delete", self._delete_handload).pack(side="left")
+        a.button(self.handline, "Edit in Handloads  ›",
+                 lambda: a.show_hand(self.selected.hid if self.selected else None)).pack(side="left")
         self.handline.grid_remove()
         self.h2h_btn = a.button(self.detail, "", self._h2h_click)
         self.h2h_btn.grid(row=3, column=0, columnspan=2, sticky="e", padx=18, pady=(14, 0))
@@ -2684,33 +2797,6 @@ class LoadsView:
                     self._reselect()
                     break
 
-    def _open_handload(self, item=None, duplicate=False):
-        carts = [c for c in self.cartridges]
-        for b in self.app.data[self.cat.title]["loads"]:
-            if b.cartridge not in carts:
-                carts.append(b.cartridge)
-        existing = dict(item.info) if item is not None and item.handload else None
-
-        def saved(row):
-            new = load_from_handload_row(row, self.cat.grain_style)
-            self.purpose = "All"
-            self.source = "All"
-            self._reload_loads(select=new)
-        open_handload_dialog(self.app, self.cat, self.root, carts, existing, duplicate, saved)
-
-    def _delete_handload(self):
-        item = self.selected
-        if item is None or not item.handload:
-            return
-        if not messagebox.askyesno("Delete handload", f"Delete \"{item.load}\" from your handloads?"):
-            return
-        try:
-            self.app.delete_handload(item.hid)
-        except OSError as exc:
-            messagebox.showerror("Couldn't delete", f"Could not write {HANDLOAD_FILENAME}:\n{exc}")
-            return
-        self._reload_loads()
-
     # ---- purpose chips ---------------------------------------------------- #
     def _purpose_of(self, item):
         return item.purpose or item.group or ""
@@ -2864,8 +2950,8 @@ class LoadsView:
             self.rows = []
             self.selected = None
             self.detail.grid_remove()
-            self.count_lbl.config(text=f"No factory loads listed for {cart}. Use \"+ Add handload\" "
-                                       "to grade your own.")
+            self.count_lbl.config(text=f"No factory loads listed for {cart}. Add your own in the "
+                                       "Handloads tab to grade it.")
             return
         if self.purpose != "All":
             items = [x for x in items if self._purpose_of(x) == self.purpose]
@@ -3260,6 +3346,359 @@ class LoadSearch:
             self.popup = self.listbox = None
         if getattr(self.app, "search_popup", None) is self:
             self.app.search_popup = None
+
+
+class HandloadsView:
+    """The Handloads tab: every handload of every category in one place, to add, edit,
+    duplicate, delete, back up and restore. Each card shows the load's Load Dictionary grade
+    (against every load of its cartridge, with that category's dictionary weights and distance)."""
+    tab = "hand"
+    cat = None
+
+    def __init__(self, app, stage, open_id=None):
+        self.app, self.root = app, app.root
+        self.open_id, self.cat_on = open_id, "All"
+        self.scroll_to_open = open_id is not None
+        a = app
+        wrap = tk.Frame(stage, bg=BG)
+        wrap.pack(fill="both", expand=True, padx=36, pady=(32, 28))
+        wrap.columnconfigure(0, weight=1)
+        a.label(wrap, tool_title("hand"), 22, TEXT, True, bg=BG, anchor="w").grid(row=0, column=0, sticky="w")
+        blurb = a.label(wrap, "Your own reloads, from every category. Each one is graded against the "
+                              "factory loads of its cartridge, the same as in the Load Dictionary, "
+                              "and can go head to head.", 11, MUTED, bg=BG, anchor="w", justify="left")
+        blurb.grid(row=1, column=0, sticky="ew", pady=(2, 14))
+        blurb.bind("<Configure>", lambda e: blurb.configure(wraplength=max(e.width, 1)))
+        bar = tk.Frame(wrap, bg=BG)
+        bar.grid(row=2, column=0, sticky="ew")
+        a.button(bar, "+  New handload", self._new, "primary").pack(side="left")
+        for text, cmd in (("Restore…", self._restore), ("Back up…", self._backup)):
+            link = tk.Label(bar, text=text, bg=BG, fg=ACCENT, font=a.f(10, True), cursor="hand2")
+            link.pack(side="right", padx=(14, 0))
+            link.bind("<Button-1>", lambda e, c=cmd: c())
+        self.search_row = tk.Frame(wrap, bg=BG)
+        self.search_row.grid(row=3, column=0, sticky="ew", pady=(12, 0))
+        self.q_var = tk.StringVar()
+        a.label(self.search_row, "SEARCH  (name, cartridge, bullet or powder)", 9, MUTED, True, bg=BG,
+                anchor="w").pack(anchor="w", pady=(0, 3))
+        ttk.Entry(self.search_row, textvariable=self.q_var, font=a.f(11)).pack(fill="x")
+        self.q_var.trace_add("write", lambda *_: self.draw())
+        self.chip_row = tk.Frame(wrap, bg=BG)
+        self.chip_row.grid(row=4, column=0, sticky="w", pady=(10, 0))
+        self.list = tk.Frame(wrap, bg=BG)
+        self.list.grid(row=5, column=0, sticky="ew")
+        self.list.columnconfigure(0, weight=1)
+        a.label(wrap, SOURCE_NOTES["handload"] + " This app doesn't check pressure or safety.", 9,
+                MUTED, bg=BG, anchor="w").grid(row=6, column=0, sticky="w", pady=(14, 0))
+        self.draw()
+
+    # ---- data -------------------------------------------------------------- #
+    def items(self):
+        """[(category, handload Load)] of every bullet category."""
+        out = []
+        for c in CATEGORIES:
+            if c.grain_style and not self.app.data[c.title]["error"]:
+                out += [(c, it) for it in self.app.hand_loads(c)]
+        return out
+
+    def grade(self, cat, item):
+        """Its Load Dictionary row: against every load of its cartridge, at the dictionary's distance."""
+        app = self.app
+        loads = [x for x in app.data[cat.title]["detail"] + app.hand_loads(cat)
+                 if x.cartridge == item.cartridge]
+        item = next(x for x in loads if x.handload and x.hid == item.hid)
+        try:
+            dist = float(app.carry.get(cat.title, {}).get("dist", cat.default_distance))
+        except (TypeError, ValueError):
+            dist = cat.default_distance
+        return h2h_rows([(cat, item)], dist, None, app.dict_weights, app.price_for,
+                        {(cat.title, item.cartridge): loads})[0]
+
+    # ---- drawing ------------------------------------------------------------ #
+    def draw(self):
+        a = self.app
+        for w in self.chip_row.winfo_children() + self.list.winfo_children():
+            w.destroy()
+        items = self.items()
+        cats = list(dict.fromkeys(c.title for c, _ in items))
+        if self.cat_on not in cats:
+            self.cat_on = "All"
+        if len(cats) > 1:
+            for name in ["All"] + cats:
+                n = len(items) if name == "All" else sum(c.title == name for c, _ in items)
+                on = name == self.cat_on
+                chip = tk.Label(self.chip_row, text=f"{name} ({n})", font=a.f(10, True), padx=10,
+                                pady=4, cursor="hand2", bg=ACCENT if on else SURFACE_2,
+                                fg=ON_ACCENT if on else TEXT)
+                chip.pack(side="left", padx=(0, 6))
+                chip.bind("<Button-1>", lambda e, nm=name: self._pick_cat(nm))
+        if items:
+            self.search_row.grid()
+        else:
+            self.search_row.grid_remove()
+            box = tk.Frame(self.list, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
+            box.grid(row=0, column=0, sticky="ew", pady=(16, 0))
+            a.label(box, "No handloads yet", 13, TEXT, True).pack(pady=(22, 4))
+            a.label(box, "Click “+  New handload” to add your first. It's graded against the "
+                         "factory loads of its cartridge.", 10, MUTED).pack(pady=(0, 22), padx=20)
+            return a._update_scroll()
+        words = self.q_var.get().lower().split()
+        shown = [(c, it) for c, it in items
+                 if (self.cat_on == "All" or c.title == self.cat_on) and all(
+                     w in " ".join([it.label, it.cartridge] + [it.info.get(k, "") for k in (
+                         "bullet_maker", "bullet", "powder", "notes")]).lower() for w in words)]
+        if not shown:
+            a.label(self.list, "No handloads match.", 11, MUTED, bg=BG, anchor="w").grid(
+                row=0, column=0, sticky="w", pady=(14, 0))
+            return a._update_scroll()
+        order = {c.title: i for i, c in enumerate(CATEGORIES)}
+        shown.sort(key=lambda p: (order[p[0].title], p[1].cartridge.lower(), p[1].label.lower()))
+        row, last, open_card = 0, None, None
+        for c, it in shown:
+            if (c.title, it.cartridge) != last:
+                last = (c.title, it.cartridge)
+                head = tk.Frame(self.list, bg=BG)
+                head.grid(row=row, column=0, sticky="w", pady=(18, 6))
+                a.label(head, it.cartridge, 12, TEXT, True, bg=BG).pack(side="left")
+                a.label(head, f"  ·  {c.title}", 10, MUTED, True, bg=BG).pack(side="left")
+                row += 1
+            card = self._card(c, it)
+            card.grid(row=row, column=0, sticky="ew", pady=(0, 8))
+            if it.hid == self.open_id:
+                open_card = card
+            row += 1
+        a._update_scroll()
+        if open_card is not None and self.scroll_to_open:    # opened from the Load Dictionary
+            self.scroll_to_open = False
+            self.root.update_idletasks()
+            total = max(1, a.stage.winfo_reqheight())
+            y = open_card.winfo_rooty() - a.stage.winfo_rooty()
+            a.canvas.yview_moveto(max(0.0, (y - a.px(80)) / total))
+
+    def _card(self, cat, it):
+        a, rec = self.app, it.info
+        r = self.grade(cat, it)
+        is_open = self.open_id == it.hid
+        card = tk.Frame(self.list, bg=SURFACE, highlightthickness=1,
+                        highlightbackground=ACCENT if is_open else BORDER, cursor="hand2")
+        card.columnconfigure(0, weight=1)
+        name = a.label(card, it.load, 12, TEXT, True, anchor="w", justify="left")
+        name.grid(row=0, column=0, sticky="w", padx=(16, 8), pady=(12, 0))
+        clickable = [card, name]
+        if a.show_grades:
+            gbox = tk.Frame(card, bg=SURFACE)
+            gbox.grid(row=0, column=1, rowspan=2, sticky="ne", padx=16, pady=(12, 0))
+            bg, fg = GRADE_COLORS[r["grade"]]
+            tk.Label(gbox, text=r["grade"], bg=bg, fg=fg, font=a.f(10, True), padx=7).pack(anchor="e")
+            rk = a.label(gbox, f"#{r['rank']} of {r['peers']}", 9, MUTED)
+            rk.pack(anchor="e", pady=(2, 0))
+            clickable += [gbox, rk]
+        st = r["stats"]
+        stats = a.label(card, f"{st['velocity']:.0f} fps    {st['energy']:.0f} ft-lbs    "
+                              f"${st['cost']:.2f} a round    at {r['dist']:g} yd", 10, MUTED, anchor="w")
+        stats.grid(row=1, column=0, sticky="w", padx=16, pady=(2, 12))
+        clickable.append(stats)
+        for w in clickable:
+            w.bind("<Button-1>", lambda e, h=it.hid: self._toggle(h))
+        if is_open:
+            self._details(card, cat, it, r)
+        return card
+
+    def _details(self, card, cat, it, r):
+        a, rec = self.app, it.info
+        tk.Frame(card, bg=BORDER, height=1).grid(row=2, column=0, columnspan=2, sticky="ew", padx=16)
+        det = tk.Frame(card, bg=SURFACE)
+        det.grid(row=3, column=0, columnspan=2, sticky="ew", padx=16, pady=(10, 0))
+        bullet = " ".join(x for x in (rec.get("bullet_maker", ""), rec.get("bullet", "")) if x) or "Bullet"
+        parts = [bullet, f"{it.bullet_gr:g} gr"]
+        if it.diameter_in:
+            parts.append(f"{it.diameter_in:g} in")
+        parts.append(f"BC {it.bc_g1:g}")
+        lines = [("Bullet", "  ·  ".join(parts)),
+                 ("Powder", "  ·  ".join(x for x in (rec.get("powder", ""), f"{it.powder_gr:g} gr") if x)),
+                 ("Velocity", f"{it.muzzle_fps:g} fps" + (f" from a {it.barrel_in:g} in barrel"
+                                                          if it.barrel_in else ""))]
+        if it.purpose:
+            lines.append(("Purpose", it.purpose))
+        n = 0
+        for n, (k, v) in enumerate(lines):
+            a.label(det, k, 10, MUTED, anchor="w").grid(row=n, column=0, sticky="nw", padx=(0, 16), pady=2)
+            a.label(det, v, 10, TEXT, True, anchor="w").grid(row=n, column=1, sticky="w", pady=2)
+        n += 1
+        a.label(det, "Cost", 10, MUTED, anchor="w").grid(row=n, column=0, sticky="nw", padx=(0, 16), pady=2)
+        get = lambda k: float(rec.get(k) or 0)
+        parts = [("Bullet", get("bullet_cost")), ("Powder", get("powder_gr") / 7000.0 * get("powder_cost_lb")),
+                 ("Primer", get("primer_cost")),
+                 ("Brass" + (f" (÷{get('brass_reuse'):g} reloads)" if get("brass_reuse") > 1 else ""),
+                  get("brass_cost") / max(1.0, get("brass_reuse") or 1))]
+        if any(v for _, v in parts):
+            cost = tk.Frame(det, bg=SURFACE)
+            cost.grid(row=n, column=1, sticky="w", pady=2)
+            for i, (k, v) in enumerate(parts):
+                a.label(cost, k, 10, TEXT, True).grid(row=i, column=0, sticky="w", padx=(0, 18))
+                a.label(cost, f"${v:.2f}", 10, TEXT).grid(row=i, column=1, sticky="e")
+            n_parts = len(parts)
+            tk.Frame(cost, bg=BORDER, height=1).grid(row=n_parts, column=0, columnspan=2, sticky="ew", pady=2)
+            a.label(cost, "Per round", 10, TEXT, True).grid(row=n_parts + 1, column=0, sticky="w")
+            a.label(cost, f"${it.default_cost:.2f}", 10, TEXT, True).grid(row=n_parts + 1, column=1, sticky="e")
+        else:
+            a.label(det, f"${it.default_cost:.2f} a round", 10, TEXT, True, anchor="w").grid(
+                row=n, column=1, sticky="w", pady=2)
+        if rec.get("notes"):
+            n += 1
+            a.label(det, "Notes", 10, MUTED, anchor="w").grid(row=n, column=0, sticky="nw", padx=(0, 16), pady=2)
+            a.label(det, rec["notes"], 10, TEXT, anchor="w", justify="left", wraplength=a.px(520)).grid(
+                row=n, column=1, sticky="w", pady=2)
+        if a.show_grades:
+            n += 1
+            a.label(det, "Grade", 10, MUTED, anchor="w").grid(row=n, column=0, sticky="nw", padx=(0, 16), pady=2)
+            a.label(det, f"{r['grade']}  ·  {r['overall']:.0f}, ranks #{r['rank']} of {r['peers']} "
+                         f"{it.cartridge} loads in the Load Dictionary", 10, TEXT, anchor="w").grid(
+                row=n, column=1, sticky="w", pady=2)
+        btns = tk.Frame(card, bg=SURFACE)
+        btns.grid(row=4, column=0, columnspan=2, sticky="w", padx=16, pady=(12, 4))
+        a.button(btns, "Edit", lambda: self._edit(it), "primary").pack(side="left")
+        a.button(btns, "Duplicate", lambda: self._duplicate(it)).pack(side="left", padx=8)
+        a.button(btns, "Delete", lambda: self._delete(cat, it)).pack(side="left")
+        links = tk.Frame(card, bg=SURFACE)
+        links.grid(row=5, column=0, columnspan=2, sticky="w", padx=16, pady=(4, 12))
+        key = pick_key(cat, it)
+        h2h = (f"In Head to Head ({len(a.h2h)} of {H2H_MAX})  ›" if key in a.h2h else
+               f"Head to Head is full ({H2H_MAX})  ›" if len(a.h2h) >= H2H_MAX else "+  Head to Head")
+        for text, cmd in (("Open in Load Dictionary  ›", lambda: self._to_dict(cat, it)),
+                          (h2h, lambda: self._to_h2h(cat, it))):
+            link = tk.Label(links, text=text, bg=SURFACE, fg=ACCENT, font=a.f(10, True), cursor="hand2")
+            link.pack(side="left", padx=(0, 20))
+            link.bind("<Button-1>", lambda e, c=cmd: c())
+
+    # ---- actions ------------------------------------------------------------ #
+    def _pick_cat(self, name):
+        self.cat_on = name
+        self.draw()
+
+    def _toggle(self, hid):
+        self.open_id = None if self.open_id == hid else hid
+        self.draw()
+
+    def _new(self):
+        open_handload_dialog(self.app, self.root, on_saved=self._saved)
+
+    def _edit(self, it):
+        open_handload_dialog(self.app, self.root, dict(it.info), on_saved=self._saved)
+
+    def _saved(self, row):
+        self.open_id = row["id"]
+        self.q_var.set("")
+        self.draw()
+
+    def _duplicate(self, it):
+        row = dict(it.info, id=new_handload_id(), name=(it.info.get("name") or it.load) + " (copy)")
+        try:
+            self.app.save_handload(row)
+        except OSError as exc:
+            return messagebox.showerror("Couldn't save", f"Could not write {HANDLOAD_FILENAME}:\n{exc}")
+        self._saved(row)
+
+    def _delete(self, cat, it):
+        if not messagebox.askyesno("Delete handload", f"Delete \"{it.load}\" from your handloads?"):
+            return
+        try:
+            self.app.delete_handload(it.hid)
+        except OSError as exc:
+            return messagebox.showerror("Couldn't delete", f"Could not write {HANDLOAD_FILENAME}:\n{exc}")
+        key = pick_key(cat, it)
+        if key in self.app.h2h:
+            self.app.h2h.remove(key)
+        self.open_id = None
+        self.draw()
+
+    def _to_dict(self, cat, it):
+        """Open the load in its Load Dictionary: its cartridge, the load selected."""
+        app = self.app
+        app.carry.setdefault(cat.title, {}).update(cart=it.cartridge, purpose="All", source="All")
+        app.go(cat, "loads")
+        view = app.view
+        if isinstance(view, LoadsView) and view.cat is cat:
+            view._reload_loads(select=it)
+
+    def _to_h2h(self, cat, it):
+        if self.app.add_to_h2h(cat, it) is None:
+            return self.app.show_h2h()
+        self.draw()
+
+    def _backup(self):
+        rows = self.app.hand_rows
+        if not rows:
+            return messagebox.showinfo("Back up", "You have no handloads to back up yet.")
+        from tkinter import filedialog
+        path = filedialog.asksaveasfilename(
+            parent=self.root, title="Back up handloads", defaultextension=".csv",
+            initialfile="my_handloads-backup.csv", filetypes=[("CSV files", "*.csv"), ("All files", "*")])
+        if not path:
+            return
+        try:
+            with open(path, "w", newline="", encoding="utf-8") as fh:
+                fh.write(handload_csv_text(rows))
+        except OSError as exc:
+            return messagebox.showerror("Couldn't back up", f"Could not write {path}:\n{exc}")
+        messagebox.showinfo("Backed up", f"{len(rows)} handload{'s' if len(rows) != 1 else ''} saved to\n"
+                                         f"{path}\n\nRestore it on any computer or phone with “Restore”.")
+
+    def _restore(self):
+        """A file, or a back up pasted from the phone, merged into the saved handloads."""
+        a = self.app
+        win = tk.Toplevel(self.root)
+        win.configure(bg=BG)
+        win.title("Restore handloads")
+        win.transient(self.root)
+        body = tk.Frame(win, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
+        body.pack(padx=16, pady=16, fill="both", expand=True)
+        a.label(body, "Open a back up file (or a my_handloads.csv), or paste a back up copied on "
+                      "the phone. Handloads you already have are kept; ones in the back up are "
+                      "added, or updated if they came from here.", 10, MUTED, anchor="w",
+                justify="left", wraplength=a.px(460)).pack(fill="x", padx=18, pady=(16, 10))
+        text = tk.Text(body, height=10, width=60, bg=SURFACE_2, fg=TEXT, insertbackground=TEXT,
+                       relief="flat", font=a.f(9))
+        text.pack(fill="both", expand=True, padx=18)
+
+        def open_file():
+            from tkinter import filedialog
+            path = filedialog.askopenfilename(parent=win, title="Open a handload back up",
+                                              filetypes=[("CSV files", "*.csv"), ("All files", "*")])
+            if not path:
+                return
+            try:
+                with open(path, encoding="utf-8-sig") as fh:
+                    data = fh.read()
+            except (OSError, UnicodeDecodeError) as exc:
+                return messagebox.showerror("Couldn't open", str(exc), parent=win)
+            text.delete("1.0", "end")
+            text.insert("1.0", data)
+
+        def go():
+            cats = {c.title for c in CATEGORIES if c.grain_style}
+            try:
+                rows, add, rep, skip = merge_handload_rows(a.hand_rows, text.get("1.0", "end"), cats)
+                write_handload_rows(rows)
+            except ValueError as exc:
+                return messagebox.showerror("Can't restore", str(exc), parent=win)
+            except OSError as exc:
+                return messagebox.showerror("Couldn't save", f"Could not write {HANDLOAD_FILENAME}:\n{exc}",
+                                            parent=win)
+            a.hand_rows = rows
+            win.destroy()
+            messagebox.showinfo("Restored", f"{add} new, {rep} updated" + (
+                f", {skip} skipped (not a rifle, handgun or rimfire handload, or missing figures)"
+                if skip else "") + ".")
+            self.draw()
+
+        btns = tk.Frame(body, bg=SURFACE)
+        btns.pack(fill="x", padx=18, pady=(12, 16))
+        a.button(btns, "Restore", go, "primary").pack(side="left")
+        a.button(btns, "Open file…", open_file).pack(side="left", padx=8)
+        a.button(btns, "Cancel", win.destroy).pack(side="left")
+        win.bind("<Escape>", lambda e: win.destroy())
+        text.focus_set()
 
 
 class HeadToHeadView:

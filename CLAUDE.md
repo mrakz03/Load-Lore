@@ -19,7 +19,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 ## Rules
 - Desktop and web scoring must stay in parity (same formulas, same data).
 - Data lives in data/*.csv. After editing any CSV or the template, rebuild the web version.
-- Two tools (Oct 2026; Compare Cartridges and "Add your own caliber" were removed): Load
+- Two tools plus Handloads (Oct 2026; Compare Cartridges and "Add your own caliber" were removed): Load
   Dictionary (LoadsView / openLoads, the old Compare Loads, plus an S-F grades on/off switch kept
   in settings.json show_grades / localStorage) and Head to Head (HeadToHeadView / openH2H, 2-5
   loads side by side, from any category (Oct 2026): picks are (category, load) pairs, pick_key /
@@ -67,6 +67,16 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   keys from the old weight-first format are converted on read (_rename_price_key / readPrices).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
   (my_calibers.csv, my_handloads.csv, settings.json).
+- Handloads tab (Oct 2026: HandloadsView / show_hand, showHand in web): every handload of every
+  bullet category; adding / editing / duplicating / deleting happen ONLY there (Zeke's call; the
+  dictionary has a "Your handloads ›" link and "Edit in Handloads ›" on an open handload). The form
+  (open_handload_dialog / handDialog) takes any category: the cartridge picks it (handload_cartridges
+  / handCarts; a cartridge in two categories reads ".44 Magnum (Handgun)"). Cards show the
+  dictionary grade via h2h_rows / h2hRows at the dictionary's distance. Back up / Restore use the
+  my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
+  replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
+- Tab order (Oct 2026, Zeke): Home, Head to Head, Load Dictionary (the main tool, in the middle),
+  Handloads, Settings (NAV_ORDER / NAVS); Home cards keep the Load Dictionary first (TOOLS).
 - Handload bullets go by diameter, not cartridge (one .257 bullet fits .250 Savage, .25-06, .257
   Roberts): the form lists only makers with a bullets.csv bullet of the cartridge's DIAMETERS
   size, then that maker's bullets; any other maker can be typed (desktop: editable boxes; web:
