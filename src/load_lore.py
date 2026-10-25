@@ -1519,6 +1519,11 @@ class App:
         root.bind_all("<Control-Key-2>", lambda e: self.show_h2h())
         root.bind_all("<Control-Key-3>", lambda e: self.show_hand())
         root.bind_all("<Control-Key-0>", lambda e: self.show_launcher())
+        # the search pop-up is its own window: close it when its window moves, resizes or is
+        # minimised, or the app loses the focus, like a menu (it would stay put on screen)
+        for cls in ("Tk", "Toplevel"):
+            for seq in ("<Configure>", "<Unmap>"):
+                root.bind_class(cls, seq, self._window_moved, add="+")
         self.upd = {"state": "idle"}      # Settings > Updates: idle/checking/latest/available/downloading/error
         if self.check_on_start and version_tuple(APP_VERSION):
             root.after(2000, lambda: self.check_updates(on_start=True))
@@ -1930,6 +1935,19 @@ class App:
                    + [ver.measure(version_text())]
                    + [sub.measure(cat.title) + self.px(24 + 9 + 10) for cat in CATEGORIES])
         return max(self.px(self.SIDEBAR_W), need + 2 * self.px(14) + 2 * self.px(12) + 4)
+
+    def _window_moved(self, e):
+        pop = getattr(self, "search_popup", None)
+        if pop is None or pop.popup is None:
+            return
+        try:
+            top = pop.box.winfo_toplevel()
+            if str(e.widget) != str(top):
+                return
+            if str(e.type) == "Unmap" or pop.window_at() != pop.opened_at:
+                pop.close()
+        except tk.TclError:
+            pop.close()
 
     def _on_wheel(self, e):
         """Scroll the page with the mouse wheel (tables and lists keep their own wheel)."""
@@ -3666,6 +3684,8 @@ class LoadSearch:
         self._fill(first=True)
         self._place()
         self._see(self.at, center=True)
+        self.opened_at = self.window_at()
+        self.entry.bind("<FocusOut>", lambda e: self.box.after(80, self._focus_left))
         try:
             self.popup.grab_set()             # a click outside reaches the pop-up, which closes
         except tk.TclError:
@@ -3839,6 +3859,18 @@ class LoadSearch:
         self.on_pick(name)
         self._unselect()
         return "break"
+
+    def window_at(self):
+        """Where the box's window is on screen and its size (the pop-up closes when it changes)."""
+        top = self.box.winfo_toplevel()
+        return top.winfo_rootx(), top.winfo_rooty(), top.winfo_width(), top.winfo_height()
+
+    def _focus_left(self):
+        try:
+            if self.popup is not None and self.box.focus_get() is None:
+                self.close()                  # another app has the focus now
+        except (tk.TclError, KeyError):
+            pass
 
     def _click_out(self, e):
         w = self.popup.winfo_containing(e.x_root, e.y_root)

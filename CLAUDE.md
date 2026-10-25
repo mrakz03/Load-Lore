@@ -37,7 +37,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   keyboard only when tapped, the list; back button / backdrop / × close it); with a mouse /
   keyboard (desktop LoadSearch, web pickSheet with an anchor) a click, Down, Enter or a typed
   letter opens a search pop-up under the box (cursor in its search field, Up/Down + Enter, Esc
-  or a click outside closes; rounded field with a magnifier, accent highlight, ✓ on the current
+  or a click outside closes, so do moving / resizing / minimising the window or switching apps:
+  App._window_moved, LoadSearch._focus_left; rounded field with a magnifier, accent highlight, ✓ on the current
   pick, thin MUTED scrollbar: drawn on a Canvas on desktop, scrollbar-color on web). Empty boxes
   show the web's placeholder on desktop too (LoadSearch hint: Cartridge / Load / Pick a cartridge first). A cartridge pick doesn't jump to the load box.
   Head to Head has no category box (Oct 2026): the cartridge box picks it; its pop-up lists
