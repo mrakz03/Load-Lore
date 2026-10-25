@@ -219,11 +219,22 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lsearch .lq:disabled{opacity:.6}
 .lsearch.picker .lq{caret-color:transparent;cursor:pointer}
 .popbg{position:fixed;inset:0;z-index:40}
-.sheet.pop{position:fixed;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.45);padding-bottom:0;animation:none;max-height:480px}
-.sheet.pop .sq{margin:10px 10px 8px}
-.sheet.pop .slist [role=option]{padding:9px 14px}
+.sheet.pop{position:fixed;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.45);padding-bottom:6px;animation:none;max-height:480px}
+/* the pop-up, drawn like a refined menu: no lines between rows, a rounded highlight set in from
+   the edges, a check on the current pick, quiet headings, a thin scrollbar in the theme colours */
+.sheet.pop .sqw{position:relative;margin:8px 8px 6px}
+.sheet.pop .sqw svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
+.sheet.pop .sq{margin:0;width:100%;padding-left:34px;border-radius:8px;border-color:var(--accent)}
+.sheet.pop .slist{border-top:0;padding:0 6px;scrollbar-width:thin;scrollbar-color:var(--muted) transparent}
+.sheet.pop .slist::-webkit-scrollbar{width:8px}
+.sheet.pop .slist::-webkit-scrollbar-track{background:transparent}
+.sheet.pop .slist::-webkit-scrollbar-thumb{background:var(--muted);border-radius:4px;border:2px solid var(--surface)}
+.sheet.pop .slist [role=option]{padding:8px 10px;border-bottom:0;border-radius:6px;margin:2px 0;display:flex;justify-content:space-between;gap:12px}
+.sheet.pop .slist [role=option].cur{color:var(--text);font-weight:400}
+.sheet.pop .slist [role=option].cur::after{content:"\2713";color:var(--accent)}
 .sheet.pop .slist [role=option].on{background:var(--accent);color:var(--on-accent)}
-.sheet.pop .slist .hd{padding:6px 14px 4px}
+.sheet.pop .slist [role=option].on.cur::after{color:var(--on-accent)}
+.sheet.pop .slist .hd{position:static;padding:12px 10px 4px;background:none;border-bottom:0;font-size:.68rem}
 .selcover{position:absolute;inset:0;background:none;border:0;padding:0;cursor:pointer}
 .sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:flex;align-items:flex-end}
 .sheet{width:100%;max-height:85vh;max-height:85dvh;display:flex;flex-direction:column;background:var(--surface);border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.35);padding-bottom:env(safe-area-inset-bottom);animation:sheetup .18s ease-out}
@@ -966,7 +977,7 @@ function pickSheet(items,o,anchor){
   const find=o.find||o.text,c=o.cur(),under=openModalClose;   // a dialog it opened over keeps its back button
   const m=document.createElement("div");m.className=anchor?"popbg":"sheetbg";
   m.innerHTML=`<div class="sheet${anchor?" pop":""}" role="dialog" aria-label="Choose a ${esc(o.none)}">${anchor?"":`<div class="shead"><b>Choose a ${esc(o.none)}</b><button class="sx" aria-label="Close">×</button></div>`}
-    <input class="sq" type="search" placeholder="Search" autocomplete="off" aria-label="Search"><div class="slist" role="listbox"></div></div>`;
+    ${anchor?'<div class="sqw"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>':""}<input class="sq" type="search" placeholder="Search" autocomplete="off" aria-label="Search">${anchor?"</div>":""}<div class="slist" role="listbox"></div></div>`;
   const sq=m.querySelector(".sq"),list=m.querySelector(".slist");
   let shown=[],at=-1;
   const mark=()=>list.querySelectorAll("[role=option]").forEach((r,i)=>r.classList.toggle("on",i===at));
