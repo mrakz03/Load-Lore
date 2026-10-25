@@ -203,11 +203,15 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 /* Handloads tab */
 .htools{display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center}
 .htools .sp{flex:1}
-/* the disclaimer sits at the bottom of the page (Zeke), or under the list once it's taller */
-.main:has(.hpage){display:flex;flex-direction:column}
-#app:has(>.hpage){flex:1;display:flex;flex-direction:column}
-.hpage{flex:1;display:flex;flex-direction:column}
-.hnote{margin-top:auto;padding-top:14px}
+/* phones: the disclaimer sits at the bottom of the page, or under the list once it's taller;
+   PC keeps it right under the list (Zeke) */
+@media(max-width:899px){
+  .main:has(.hpage){display:flex;flex-direction:column}
+  #app:has(>.hpage){flex:1;display:flex;flex-direction:column}
+  .hpage{flex:1;display:flex;flex-direction:column}
+  .hnote{margin-top:auto;padding-top:14px;text-align:center}
+}
+.dis{display:block;color:var(--text);margin-bottom:2px}
 .hgrp{margin:20px 0 8px;font-size:1rem}.hgrp small{color:var(--muted);font-weight:600}
 .hdet{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 16px;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;font-size:.92rem}
 .hdet>span:nth-child(odd){color:var(--muted)}
@@ -720,7 +724,7 @@ function showHand(openId){
     <div id="hsearch" style="margin-top:12px"><input id="hq" type="search" placeholder="Search: name, cartridge, bullet or powder" autocomplete="off" aria-label="Search your handloads"></div>
     <div class="chips" id="hcats" role="group" aria-label="Category"></div>
     <div id="hlist"></div>
-    <div class="note hnote">${esc(SOURCE_NOTES.handload)}</div></div>`;
+    <div class="note hnote"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div></div>`;
   const items=()=>{
     const out=[];
     for(const c of CATEGORIES.filter(c=>c.grain_style&&state.detail[c.title])){syncHand(c);for(const it of state.detail[c.title])if(it.handload)out.push([c,it]);}
@@ -873,7 +877,7 @@ function handDialog(rec,done){
     <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div>
     <div class="costlbl" id="hcost"></div>
     <label class="l" style="margin-top:14px">NOTES</label><input id="hno" autocomplete="off">
-    <div class="safety">${esc(SOURCE_NOTES.handload)}</div>
+    <div class="safety"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div>
     <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button></div>`);
   const q=x=>$(x,m);
   const diaOf=c=>{const o=pickOf(c);return o?DIAMETERS[o.cart]||0:0;};
