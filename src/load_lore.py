@@ -46,6 +46,7 @@ import sys
 import tarfile
 import tempfile
 import threading
+import time
 import urllib.error
 import urllib.request
 import webbrowser
@@ -2282,10 +2283,10 @@ class App:
         card = section("Display")
         theme_var = tk.StringVar(value=self.theme)
         pbox, pick = self.field(row("Theme"), ttk.Combobox, textvariable=theme_var,
-                                values=list(THEMES), state="readonly", font=self.f(11),
-                                width=max(len(n) for n in THEMES) + 2)
+                                font=self.f(11), width=max(len(n) for n in THEMES) + 2)
         pbox.pack()
-        pick.bind("<<ComboboxSelected>>", lambda e: self.set_theme(theme_var.get()))
+        pick.theme_var = theme_var                    # keep the variable alive with its box
+        LoadSearch(self, pick, list(THEMES), self.set_theme)
         box = row("Text size", f"{round(self.scale * 100)}%")
         for text, delta in (("A−", -0.15), ("A+", 0.15)):
             self.button(box, text, lambda d=delta: self.set_scale(self.scale + d), size=11,
@@ -2503,11 +2504,10 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
             row=row, column=col, columnspan=span, sticky="w", pady=pady,
             padx=(18 if col == 0 else 6, 6 if col + span < 3 else 18))
 
-    def ent(var, row, col, span=1, kind="entry", values=(), state=None):
+    def ent(var, row, col, span=1, kind="entry"):
         px = dict(padx=(18 if col == 0 else 6, 6 if col + span < 3 else 18))
-        if kind == "combo":
-            box, w = app.field(body, ttk.Combobox, textvariable=var, values=list(values),
-                               font=app.f(11), state=state or "normal", width=8)
+        if kind == "combo":                           # a box that opens a search pop-up
+            box, w = app.field(body, ttk.Combobox, textvariable=var, font=app.f(11), width=8)
         else:
             box, w = app.field(body, ttk.Entry, textvariable=var, font=app.f(11), width=8)
         box.grid(row=row, column=col, columnspan=span, sticky="ew", **px)
@@ -2521,16 +2521,23 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
 
     lab("CARTRIDGE", 0, 0, 2, (16, 3))
     lab("PURPOSE", 0, 2, 1, (16, 3))
-    cart_box = ent(V["cartridge"], 1, 0, 2, "combo", list(opts))
-    ent(V["purpose"], 1, 2, 1, "combo", PURPOSES, "readonly")
+    cart_box = ent(V["cartridge"], 1, 0, 2, "combo")
+    LoadSearch(app, cart_box, list(opts), lambda n: refresh_bullets(),
+               head=lambda t: opts[t][0].title, hint="Cartridge")
+    LoadSearch(app, ent(V["purpose"], 1, 2, 1, "combo"), list(PURPOSES), lambda n: None,
+               hint="Purpose")
     lab("LOAD NAME (OPTIONAL)", 2, 0, 3)
     ent(V["name"], 3, 0, 3)
 
     section("BULLET", 4)
     lab("MAKER", 6, 0, 1, (6, 3))
     lab("BULLET", 6, 1, 2, (6, 3))
-    maker_box = ent(V["bullet_maker"], 7, 0, 1, "combo")      # pick from the library or type your own
-    bullet_box = ent(V["bullet"], 7, 1, 2, "combo")
+    # pick from the library, or type your own maker / bullet / powder
+    maker_search = LoadSearch(app, ent(V["bullet_maker"], 7, 0, 1, "combo"), [],
+                              lambda n: (V["bullet"].set(""), refresh_bullets()),
+                              hint="Bullet maker", own=True)
+    bullet_search = LoadSearch(app, ent(V["bullet"], 7, 1, 2, "combo"), [],
+                               lambda n: pick_bullet(), hint="Bullet", own=True)
     lab("WEIGHT (GR)", 8, 0)
     lab("DIAMETER (IN)", 8, 1)
     lab("BC (G1)", 8, 2)
@@ -2545,7 +2552,8 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     lab("POWDER", 13, 0, 1, (6, 3))
     lab("CHARGE (GR)", 13, 1, 1, (6, 3))
     lab("MUZZLE VELOCITY (FPS)", 13, 2, 1, (6, 3))
-    ent(V["powder"], 14, 0, 1, "combo", POWDERS)
+    LoadSearch(app, ent(V["powder"], 14, 0, 1, "combo"), list(POWDERS), lambda n: None,
+               hint="Powder", own=True)
     ent(V["powder_gr"], 14, 1)
     ent(V["muzzle_fps"], 14, 2)
     lab("BARREL LENGTH (IN, OPTIONAL)", 15, 0, 2)
@@ -2609,9 +2617,9 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     def refresh_bullets(*_):
         """Makers list only those with a bullet of this diameter; bullets only the picked maker's."""
         maker = V["bullet_maker"].get().strip()
-        maker_box.config(values=sorted({b["maker"] for b in bullets if fits(b)}))
-        bullet_box.config(values=[f"{b['name']} · {b['weight']:g} gr" for b in bullets
-                                  if b["maker"] == maker and fits(b)])
+        maker_search.names = sorted({b["maker"] for b in bullets if fits(b)})
+        bullet_search.names = [f"{b['name']} · {b['weight']:g} gr" for b in bullets
+                               if b["maker"] == maker and fits(b)]
 
     def pick_bullet(*_):
         maker, label = V["bullet_maker"].get().strip(), V["bullet"].get()
@@ -2623,9 +2631,6 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
                 V["bullet"].set(label)
                 break
 
-    maker_box.bind("<<ComboboxSelected>>", lambda e: (V["bullet"].set(""), refresh_bullets()))
-    bullet_box.bind("<<ComboboxSelected>>", pick_bullet)
-    cart_box.bind("<<ComboboxSelected>>", refresh_bullets)
     V["cartridge"].trace_add("write", refresh_bullets)
     V["bullet_maker"].trace_add("write", refresh_bullets)
     for k in ("bullet_cost", "powder_cost_lb", "powder_gr", "primer_cost", "brass_cost",
@@ -3556,10 +3561,13 @@ class LoadSearch:
     browse: the order to list them in (default: names). head(name): a group heading over the
     rows (optional), label(name): a row's text (default: the name). on_pick(name) gets the
     pick; last is the box text of the last pick. hint: the grey text an empty box shows, like
-    the web's placeholder (a string, or a function for one that changes)."""
+    the web's placeholder (a string, or a function for one that changes). own: lets the user
+    keep what they typed when it isn't in the list (a last row 'Use "..."'; makers, bullets and
+    powders in the handload form)."""
     MAX_ROWS = 14
 
-    def __init__(self, app, box, names, on_pick, value=None, head=None, label=None, hint=None):
+    def __init__(self, app, box, names, on_pick, value=None, head=None, label=None, hint=None,
+                 own=False):
         self.app, self.box, self.names, self.on_pick = app, box, names, on_pick
         self.value = value or (lambda n: n)
         self.head, self.label = head, label or (lambda n: n)
@@ -3573,7 +3581,7 @@ class LoadSearch:
         box.bind("<Key>", self._key)
         for ev in ("<<Paste>>", "<<Cut>>", "<<Clear>>"):
             box.bind(ev, lambda e: "break")
-        self.hint = hint
+        self.hint, self.own = hint, own
         self.hint_label = None
         if hint is not None:
             self.hint_label = tk.Label(box, bg=SURFACE_2, fg=MUTED, font=box.cget("font"),
@@ -3619,7 +3627,7 @@ class LoadSearch:
         return [n for n in order if all(w in n.lower() for w in words)]
 
     def open(self, typed=""):
-        if self.popup is not None or not self.names:
+        if self.popup is not None or not (self.names or self.own):
             return
         a = self.app
         # drawn like a refined menu (and like the web version): a rounded search field with a
@@ -3627,6 +3635,7 @@ class LoadSearch:
         # the current pick, quiet headings, and a thin scrollbar in the theme's colours
         self.font, self.head_font = tkfont.Font(font=a.f(11)), tkfont.Font(font=a.f(8, True))
         self.row_h, self.head_h = a.px(34), a.px(30)
+        self.pop_w = 0
         self.popup = tk.Toplevel(self.box)
         self.popup.wm_overrideredirect(True)
         self.popup.config(bg=BORDER)
@@ -3660,7 +3669,7 @@ class LoadSearch:
         body.pack(fill="both", expand=True, pady=(0, a.px(6)))
         self.canvas = tk.Canvas(body, bg=SURFACE, highlightthickness=0, borderwidth=0,
                                 yscrollincrement=self.row_h // 2)
-        self.bar = tk.Canvas(body, bg=SURFACE, width=a.px(10), highlightthickness=0, borderwidth=0)
+        self.bar = tk.Canvas(body, bg=SURFACE, width=a.px(10), height=1, highlightthickness=0, borderwidth=0)
         self.bar.pack(side="right", fill="y", padx=(0, a.px(3)))
         self.canvas.pack(side="left", fill="both", expand=True)
         self.canvas.config(yscrollcommand=lambda f, l: self._draw_bar(float(f), float(l)))
@@ -3687,6 +3696,7 @@ class LoadSearch:
         self.opened_at = self.window_at()
         self.entry.bind("<FocusOut>", lambda e: self.box.after(80, self._focus_left))
         try:
+            self.prev_grab = self.box.grab_current()   # a dialog's own grab, given back on close
             self.popup.grab_set()             # a click outside reaches the pop-up, which closes
         except tk.TclError:
             pass
@@ -3715,16 +3725,25 @@ class LoadSearch:
             y += self.row_h
             if first and self.at is None and self.value(n) == cur:
                 self.at = len(self.rows) - 1
-        if not matches:
+        q = self.query.get().strip()
+        if self.own and q and not any(self.value(n).lower() == q.lower() for n in matches):
+            self.rows.append((q,))            # the user's own text, not a list entry
+            self.texts.append(f"Use \u201c{q}\u201d")
+            self.tops.append(y)
+            y += self.row_h
+        elif not matches:
             self.rows.append(None)
-            self.texts.append(f"No matches for \u201c{self.query.get().strip()}\u201d")
+            self.texts.append(f"No matches for \u201c{q}\u201d")
             self.tops.append(y)
             y += self.row_h
         self.total = y
         if self.at is None:
             self.at = next((i for i, r in enumerate(self.rows) if r is not None), None)
         self.canvas.yview_moveto(0)
-        self._draw()
+        if first:
+            self._draw()
+        else:
+            self._place()                     # the list shrinks to fit what's left
 
     def _draw(self):
         c, a = self.canvas, self.app
@@ -3747,7 +3766,7 @@ class LoadSearch:
                              fill=ACCENT, outline="")
             c.create_text(a.px(14), top + self.row_h / 2, text=text, anchor="w",
                           fill=ON_ACCENT if on else TEXT, font=self.font)
-            if self.value(name) == cur:       # the current pick
+            if self._val(name) == cur:        # the current pick
                 c.create_text(w - a.px(16), top + self.row_h / 2, text="\u2713", anchor="e",
                               fill=ON_ACCENT if on else ACCENT, font=self.font)
         c.config(scrollregion=(0, 0, w, self.total))
@@ -3794,7 +3813,8 @@ class LoadSearch:
     def _place(self):
         box, a = self.box, self.app
         widest = max([self.font.measure(t) for t in self.texts] + [0])
-        w = max(box.winfo_width(), min(widest + a.px(64), a.px(640)), a.px(320))
+        w = max(box.winfo_width(), min(widest + a.px(64), a.px(640)), a.px(320), self.pop_w)
+        self.pop_w = w                        # never narrower while typing
         self.canvas.config(height=min(self.total, a.px(420)), width=w - a.px(16))
         self.popup.update_idletasks()
         h = self.popup.winfo_reqheight()
@@ -3806,6 +3826,7 @@ class LoadSearch:
         self.popup.lift()
         self.popup.update_idletasks()
         self._draw()
+        self.placed = time.monotonic()        # resizing the window can drop its focus
 
     def scroll(self, step):
         self.canvas.yview_scroll(step * 3, "units")
@@ -3854,11 +3875,14 @@ class LoadSearch:
             return "break"
         name = self.rows[i]
         self.close(refocus=True)
-        self.box.setvar(self.var, self.value(name))
-        self.last = self.value(name)
-        self.on_pick(name)
+        self.box.setvar(self.var, self._val(name))
+        self.last = self._val(name)
+        self.on_pick(name[0] if isinstance(name, tuple) else name)
         self._unselect()
         return "break"
+
+    def _val(self, name):
+        return name[0] if isinstance(name, tuple) else self.value(name)
 
     def window_at(self):
         """Where the box's window is on screen and its size (the pop-up closes when it changes)."""
@@ -3868,7 +3892,10 @@ class LoadSearch:
     def _focus_left(self):
         try:
             if self.popup is not None and self.box.focus_get() is None:
-                self.close()                  # another app has the focus now
+                if time.monotonic() - getattr(self, "placed", 0) < 0.5:
+                    self.entry.focus_force()  # lost to the pop-up's own resize, not another app
+                else:
+                    self.close()              # another app has the focus now
         except (tk.TclError, KeyError):
             pass
 
@@ -3889,6 +3916,9 @@ class LoadSearch:
             try:
                 self.popup.grab_release()
                 self.popup.destroy()
+                prev = getattr(self, "prev_grab", None)
+                if prev is not None and prev.winfo_exists():
+                    prev.grab_set()
             except tk.TclError:
                 pass
             self.popup = self.listbox = self.entry = self.canvas = self.bar = None

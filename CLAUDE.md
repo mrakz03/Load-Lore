@@ -88,8 +88,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   Handloads, Settings (NAV_ORDER / NAVS); Home cards keep the Load Dictionary first (TOOLS).
 - Handload bullets go by diameter, not cartridge (one .257 bullet fits .250 Savage, .25-06, .257
   Roberts): the form lists only makers with a bullets.csv bullet of the cartridge's DIAMETERS
-  size, then that maker's bullets; any other maker can be typed (desktop: editable boxes; web:
-  "Other maker" opens a text box). Oct 2026: 61 bullets added for the diameters that had none
+  size, then that maker's bullets; any other maker can be typed (web:
+  "Other maker" opens a text box; desktop: the form's pickers and the Settings theme box are
+  LoadSearch pop-ups too, maker / bullet / powder with own=True, a last row 'Use "typed text"'). Oct 2026: 61 bullets added for the diameters that had none
   (.257, .311/.312, .321, .323, .348, .365, .366, .410, .416, .475, .500, .510, .251), sources in
   research/added_bullets_sources.tsv (Nosler 2024 and Speer charts, Sierra pages, or the BC printed
   for the factory load with the same bullet). .221 (5.45x39mm) still has none.
