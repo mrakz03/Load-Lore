@@ -3498,7 +3498,6 @@ class HeadToHeadView:
         slot["gun"].set("")                       # another cartridge: back to its usual gun
         self._fill_loads(slot)
         self._layout_slots()
-        slot["load_box"].focus_set()
         self._changed()
 
     def _remove_slot(self, slot):
