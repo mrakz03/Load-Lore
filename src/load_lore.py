@@ -1605,7 +1605,7 @@ class App:
     # ---- S-F grades on / off (both tools; remembered) ---------------------- #
     @property
     def show_grades(self):
-        return self.settings.get("show_grades", True) is not False
+        return self.settings.get("show_grades", False) is True
 
     def set_show_grades(self, on):
         self.settings["show_grades"] = bool(on)

@@ -21,7 +21,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Data lives in data/*.csv. After editing any CSV or the template, rebuild the web version.
 - Two tools plus Handloads (Oct 2026; Compare Cartridges and "Add your own caliber" were removed): Load
   Dictionary (LoadsView / openLoads, the old Compare Loads, plus an S-F grades on/off switch kept
-  in settings.json show_grades / localStorage) and Head to Head (HeadToHeadView / openH2H, 2-5
+  in settings.json show_grades / localStorage, off by default (Oct 25 2026); a saved choice is kept) and Head to Head (HeadToHeadView / openH2H, 2-5
   loads side by side, from any category (Oct 2026): picks are (category, load) pairs, pick_key /
   pickKey include the category title, in App.h2h / H2H (one list), in memory only). Head to Head is
   one page (show_h2h / showH2H; no category picker, no sidebar sub-list, no weights panel): each
