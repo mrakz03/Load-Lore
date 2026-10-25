@@ -2055,13 +2055,12 @@ class App:
             w.bind("<Leave>", lambda e: [x.config(bg=base) for x in widgets])
 
     # ---- Home, category list and Settings: sized to the window ------------ #
-    # Each page has a size it is drawn for at zoom 1 (MENU_PAGES: content width, height, the
-    # vertical centring). A bigger window zooms the whole page up to MENU_ZOOM_MAX (text, cards,
-    # icons: App.scale is raised while it is built), the column is centred, and a window too
-    # narrow for two card columns gets one. Resizing re-lays it out (_menu_resized).
-    MENU_PAGES = {"home": (900, 520, True), "picker": (840, 430, True), "settings": (680, 760, False)}
+    # Each page has a size it is drawn for at zoom 1 (MENU_PAGES: content width, height). A bigger
+    # window zooms the whole page up to MENU_ZOOM_MAX (text, cards, icons: App.scale is raised
+    # while it is built); it stays in the top left with its cards in one column (Zeke, Oct 25
+    # 2026). Resizing re-lays it out (_menu_resized).
+    MENU_PAGES = {"home": (620, 780), "picker": (620, 760), "settings": (680, 700)}
     MENU_ZOOM_MAX = 1.4
-    MENU_CARD_MIN = 290                 # a Home card's narrowest width in a row of three
     MENU_SIDE = 34                      # the page's side margin at zoom 1
 
     def _menu_page(self):
@@ -2072,8 +2071,7 @@ class App:
         return None
 
     def _menu_layout(self, page):
-        """(zoom, column width, card columns) for `page` in the window's current page area.
-        Home's three cards go in one row when each still gets MENU_CARD_MIN."""
+        """(zoom, column width) for `page` in the window's current page area."""
         self.root.update_idletasks()
         box = self.canvas.master
         w = box.winfo_width() - self.vbar.winfo_reqwidth()     # the same with or without the bar
@@ -2081,15 +2079,12 @@ class App:
         if w <= 1 or h <= 1:                                   # not drawn yet
             w = self.root.winfo_width() - self.sidebar.winfo_reqwidth() - 1
             h = self.root.winfo_height()
-        dw, dh, _ = self.MENU_PAGES[page]
+        dw, dh = self.MENU_PAGES[page]
         side = 2 * self.px(self.MENU_SIDE)
         k = min((w - side) / self.px(dw), (h - self.px(54)) / self.px(dh), self.MENU_ZOOM_MAX)
         k = max(1.0, math.floor(k * 20) / 20)                  # steps of 5%
         width = max(self.px(260), min(w - side, round(self.px(dw) * k)))
-        cols = 2 if width >= self.px(560) else 1
-        if page == "home" and width >= 3 * round(self.px(self.MENU_CARD_MIN) * k):
-            cols = 3
-        return k, width, cols
+        return k, width
 
     @contextlib.contextmanager
     def _zoomed(self, k):
@@ -2102,25 +2097,12 @@ class App:
         finally:
             self.scale = base
 
-    def _menu_wrap(self, stage, page, width):
-        """The page's centred column, `width` wide."""
+    def _menu_wrap(self, stage, width):
+        """The page's column in the top left, `width` wide."""
         wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(anchor="n", pady=(self.px(26), self.px(28)))
+        wrap.pack(anchor="nw", padx=self.px(self.MENU_SIDE), pady=(self.px(26), self.px(28)))
         tk.Frame(wrap, bg=BG, width=width, height=0).pack()
-        self._menu = (page, wrap)
         return wrap
-
-    def _menu_centre(self):
-        """Home and the category list sit in the middle of a window taller than they are."""
-        page, wrap = getattr(self, "_menu", (None, None))
-        if page is None or not self.MENU_PAGES[page][2] or not wrap.winfo_exists():
-            return
-        self.root.update_idletasks()
-        room = self.canvas.winfo_height() - wrap.winfo_reqheight()
-        top = max(self.px(26), room // 2)
-        if wrap.pack_info().get("pady") != (top, max(self.px(28), room - top)):
-            wrap.pack_configure(pady=(top, max(self.px(28), room - top)))
-        self._update_scroll()
 
     def _menu_resized(self):
         """Window resized: once it settles, re-lay out Home / the category list / Settings."""
@@ -2137,8 +2119,6 @@ class App:
             if self._menu_layout(page) != getattr(self, "_menu_fit", None):
                 {"home": self.show_launcher, "settings": self.show_settings,
                  "picker": lambda: self.show_picker(self.mode)}[page]()
-            else:
-                self._menu_centre()
         self._menu_job = self.root.after(150, run)
 
     def show_launcher(self):
@@ -2148,26 +2128,18 @@ class App:
         stage = self._new_stage()
         self.root.title(APP_TITLE)
         self._draw_chrome()
-        k, width, cols = self._menu_fit = self._menu_layout("home")
+        k, width = self._menu_fit = self._menu_layout("home")
         with self._zoomed(k):
-            gap = self.px(12)
-            wrap = self._menu_wrap(stage, "home", width)
+            wrap = self._menu_wrap(stage, width)
             self.label(wrap, "In Like Flint", 11, MUTED, True, bg=BG, anchor="w").pack(anchor="w")
             self.label(wrap, "Load Lore", 20, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
             self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
                        "loads head to head.", 11, MUTED, bg=BG, anchor="w", justify="left",
                        wraplength=width).pack(anchor="w", pady=(self.px(8), self.px(18)))
-            feats = tk.Frame(wrap, bg=BG)
-            feats.pack(fill="x")
-            feats.columnconfigure(tuple(range(cols)), weight=1, uniform="f")
-            col_w = (width - gap * (cols - 1)) // cols
-            for i, (key, title, blurb) in enumerate(TOOLS):
-                col = i % cols
-                self._feature_card(feats, key, title, blurb, lambda t=key: self.show_picker(t),
-                                   col_w).grid(
-                    row=i // cols, column=col, sticky="nsew", pady=(0, gap),
-                    padx=(0 if col == 0 else gap // 2, 0 if col == cols - 1 else gap - gap // 2))
-        self._menu_centre()
+            for key, title, blurb in TOOLS:
+                self._feature_card(wrap, key, title, blurb, lambda t=key: self.show_picker(t),
+                                   width).pack(fill="x", pady=(0, self.px(12)))
+        self._update_scroll()
 
     def _feature_card(self, parent, key, title, blurb, command, width):
         """A Home card like the web's .fcard: accent icon tile, title, a line about it."""
@@ -2342,14 +2314,14 @@ class App:
         stage = self._new_stage()
         self.root.title(f"{APP_TITLE} — Settings")
         self._draw_chrome()
-        k, width, _ = self._menu_fit = self._menu_layout("settings")
+        k, width = self._menu_fit = self._menu_layout("settings")
         text_size = f"{round(self.scale * 100)}%"
         with self._zoomed(k):
             self._settings_page(stage, width, text_size)
         self._update_scroll()
 
     def _settings_page(self, stage, width, text_size):
-        wrap = self._menu_wrap(stage, "settings", width)
+        wrap = self._menu_wrap(stage, width)
         self.label(wrap, "Settings", 17, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
 
         def section(title):
@@ -2452,23 +2424,18 @@ class App:
         stage = self._new_stage()
         self.root.title(f"{APP_TITLE} — {tool_title(mode)}")
         self._draw_chrome()
-        k, width, cols = self._menu_fit = self._menu_layout("picker")
+        k, width = self._menu_fit = self._menu_layout("picker")
         with self._zoomed(k):
-            self._picker_page(stage, mode, width, cols)
-        self._menu_centre()
+            self._picker_page(stage, mode, width)
+        self._update_scroll()
 
-    def _picker_page(self, stage, mode, width, cols):
-        wrap = self._menu_wrap(stage, "picker", width)
+    def _picker_page(self, stage, mode, width):
+        wrap = self._menu_wrap(stage, width)
         self.label(wrap, tool_title(mode), 17,
                    TEXT, True, bg=BG, anchor="w").pack(anchor="w")
         self.label(wrap, "Choose a category.", 11, MUTED, bg=BG, anchor="w").pack(
             anchor="w", pady=(self.px(4), self.px(18)))
-        grid = tk.Frame(wrap, bg=BG)
-        grid.pack(fill="x")
-        grid.columnconfigure(tuple(range(cols)), weight=1, uniform="g")
-        gap = self.px(12)
-        col_w = (width - gap * (cols - 1)) // cols
-        for i, cat in enumerate(CATEGORIES):
+        for cat in CATEGORIES:
             info = self.data[cat.title]
             if info["error"]:
                 caption = "Data file missing" if "not found" in info["error"] else "Data problem"
@@ -2478,16 +2445,14 @@ class App:
                 if cat.grain_style:                          # + cartridges open to handloads only
                     carts |= {x.cartridge for x in info["loads"]}
                 caption = f"{len(carts)} cartridges · {len(shown):,} loads"
-            card = RoundBox(grid, self, SURFACE, BORDER, radius=14, padx=24, pady=22,
+            card = RoundBox(wrap, self, SURFACE, BORDER, radius=14, padx=24, pady=22,
                             cursor="hand2")
-            col = i % cols
-            card.grid(row=i // cols, column=col, sticky="nsew", pady=(0, gap),
-                      padx=(0 if col == 0 else gap // 2, 0 if col == cols - 1 else gap - gap // 2))
+            card.pack(fill="x", pady=(0, self.px(12)))
             t = tk.Label(card.body, text=cat.title, bg=SURFACE, fg=TEXT, font=self.f(15, True),
                          anchor="w", cursor="hand2")
             t.pack(fill="x")
             d = tk.Label(card.body, text=cat.blurb, bg=SURFACE, fg=MUTED, font=self.f(12), anchor="w",
-                         justify="left", wraplength=col_w - 2 * self.px(24) - 4, cursor="hand2")
+                         justify="left", wraplength=width - 2 * self.px(24) - 4, cursor="hand2")
             d.pack(fill="x", pady=(self.px(6), self.px(26)))
             c = tk.Label(card.body, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(11, True),
                          anchor="w", cursor="hand2")

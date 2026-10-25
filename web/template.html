@@ -61,7 +61,17 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .nav .sub button.on{color:var(--text);background:var(--surface2);font-weight:700}
   .main{padding:26px 34px 48px;min-width:0}
   .wrap.wide{max-width:1040px}.wrap{margin:0}
-  .wrap.home{max-width:760px}
+  .wrap.home,.wrap.picker{max-width:620px}
+  /* PC (Zeke, Oct 25 2026): Load Dictionary above Head to Head in the sidebar (phones keep NAVS),
+     Home and category cards in one column at the desktop app's sizes; fitMenu zooms the page */
+  .nav>button[data-nav=h2h]{order:1}.nav>button[data-nav=hand]{order:2}.nav>button[data-nav=settings]{order:3}
+  .feat,.pick{grid-template-columns:1fr}
+  .hero p{max-width:none}
+  .fcard{padding:26px;gap:10px}
+  .fcard .ic{width:50px;height:50px;border-radius:12px;margin-bottom:4px}.fcard .ic svg{width:28px;height:28px}
+  .fcard b{font-size:1.35rem}.fcard span{font-size:1.05rem}
+  .cat{padding:22px 24px;min-height:0;gap:8px}
+  .cat b{font-size:1.25rem}.cat span.b{font-size:1rem}.cat span.c{font-size:.92rem;margin-top:18px}
 }
 .lgrid{align-items:start;display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-top:12px}
 @media(min-width:720px){.lgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
@@ -533,7 +543,7 @@ function applyTS(){document.documentElement.style.setProperty("--ts",TS);}
 function setTS(d,after){TS=Math.round(Math.min(1.6,Math.max(.85,TS+d))*100)/100;applyTS();try{localStorage.setItem("cartridge_calc_ts",TS);}catch(e){}if(after)after();}
 applyTS();
 const sizeCtl=()=>`<div class="size">Text size <button data-ts="-.15" aria-label="Smaller text">A−</button><button data-ts=".15" aria-label="Larger text">A+</button></div>`;
-function wireSize(root){root.querySelectorAll("[data-ts]").forEach(b=>b.onclick=()=>setTS(+b.dataset.ts));}
+function wireSize(root){root.querySelectorAll("[data-ts]").forEach(b=>b.onclick=()=>{setTS(+b.dataset.ts);fitMenu();});}
 // ---------- views ----------
 const app=$("#app");
 const ICON={
@@ -587,7 +597,22 @@ function navigate(mode,cat,hid){   // hid: the handload the Handloads tab opens
   drawChrome();
   if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="hand")showHand(hid);else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
   window.scrollTo(0,0);
+  fitMenu();
 }
+// PC: Home, the category list and Settings zoom with the window (up to 1.4x, steps of 5%),
+// like the desktop app's App._menu_layout; the rest of the app keeps its size
+const MENU_W={home:620,picker:620,settings:680};
+function fitMenu(){
+  const page=NAV.mode==="home"||NAV.mode==="settings"?NAV.mode:NAV.mode==="loads"&&!NAV.cat?"picker":null;
+  app.style.zoom="";app.style.maxWidth="";
+  if(!page||!matchMedia("(min-width:900px)").matches)return;
+  app.style.maxWidth=MENU_W[page]+"px";
+  const w=app.parentElement.clientWidth-68,h=innerHeight-74,nat=app.offsetHeight||1;
+  const k=Math.max(1,Math.floor(Math.min(w/MENU_W[page],h/nat,1.4)*20)/20);
+  if(k>1)app.style.zoom=k;
+}
+let fitMenuJob=0;
+addEventListener("resize",()=>{clearTimeout(fitMenuJob);fitMenuJob=setTimeout(fitMenu,150);});
 function showHome(){
   document.title=APP_TITLE;app.classList.remove("wide","picker");app.classList.add("home");
   app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost, or put loads head to head.</p></div>
