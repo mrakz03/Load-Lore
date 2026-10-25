@@ -47,7 +47,9 @@ Pick 2 to 5 loads from any cartridges, for example a .308 Winchester load agains
 On a phone this is laid out as cards: one per load, then one per factor with a bar for each load, then downrange at the distance you pick.
 
 ### Handloads
-In the Load Dictionary (rifle and handgun), **+ Add handload** opens a form for your own load: bullet (pick from the built-in bullet library or type your own), powder and charge, velocity, barrel length, purpose and cost per round (a total, or bullet + powder + primer + brass with the number of times you reuse the brass). Handloads are graded alongside the factory loads, marked in a different color, and can be edited, duplicated or deleted.
+The **Handloads** tab keeps all your own loads, from every category, in one place. **+ New handload** opens a form for your own load: cartridge (any rifle, handgun or rimfire cartridge), bullet (pick a maker and bullet from the built-in library, which goes by bullet diameter, or type your own), powder and charge, velocity, barrel length, purpose and cost per round (a total, or bullet + powder + primer + brass with the number of times you reuse the brass). Each handload shows its grade against the factory loads of its cartridge and can be edited, duplicated, deleted, opened in the Load Dictionary (where it's listed with the factory loads, marked in a different color) or put head to head.
+
+**Back up** saves your handloads as a CSV file (on the phone: copies it, to paste into a note or email), and **Restore** reads one back, so you can move handloads between the computer and the phone.
 
 Handload figures are only as good as your data. The app does not check pressure or safety: always follow a published load manual.
 
