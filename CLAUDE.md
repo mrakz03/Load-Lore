@@ -75,6 +75,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   dictionary grade via h2h_rows / h2hRows at the dictionary's distance. Back up / Restore use the
   my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
   replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
+  On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open
+  pickSheet too (sheetSelect puts a clear button over a <select>; powder has "Other powder (type
+  it)"); pickSheet over a dialog hands the back button back to the dialog when it closes.
 - Tab order (Oct 2026, Zeke): Home, Head to Head, Load Dictionary (the main tool, in the middle),
   Handloads, Settings (NAV_ORDER / NAVS); Home cards keep the Load Dictionary first (TOOLS).
 - Handload bullets go by diameter, not cartridge (one .257 bullet fits .250 Savage, .25-06, .257
