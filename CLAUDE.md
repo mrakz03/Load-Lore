@@ -19,21 +19,31 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 ## Rules
 - Desktop and web scoring must stay in parity (same formulas, same data).
 - Data lives in data/*.csv. After editing any CSV or the template, rebuild the web version.
-- Two tools (Oct 2026; Compare Cartridges and "Add your own caliber" were removed): Load
+- Two tools plus Handloads (Oct 2026; Compare Cartridges and "Add your own caliber" were removed): Load
   Dictionary (LoadsView / openLoads, the old Compare Loads, plus an S-F grades on/off switch kept
-  in settings.json show_grades / localStorage) and Head to Head (HeadToHeadView / openH2H, 2-5
+  in settings.json show_grades / localStorage, off by default (Oct 25 2026); a saved choice is kept) and Head to Head (HeadToHeadView / openH2H, 2-5
   loads side by side, from any category (Oct 2026): picks are (category, load) pairs, pick_key /
   pickKey include the category title, in App.h2h / H2H (one list), in memory only). Head to Head is
   one page (show_h2h / showH2H; no category picker, no sidebar sub-list, no weights panel): each
   load is graded with its own category's Load Dictionary weights (dict_weights / dictWeights),
-  factors it lacks show "—", downrange steps come from the picked category with the largest step. Phones (<=600 px)
+  factors it lacks show "—", downrange steps come from the picked category with the largest step. Its downrange table (Oct 2026) looks like the dictionary's ballistic table: compact (sized to its figures, not stretched to the window), each load's cartridge in small grey type, then its name on one line (only a very long name wraps), weight in small grey type under it, over its own right-aligned Velocity (fps) and Energy (ft-lbs) columns, a thin line between loads, each column highlighting its own leader at that distance. Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
   always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
   LoadSearch / searchBox, every typed word must be in the name); so are the cartridge boxes
   (Oct 2026): the dictionary's searches its category, Head to Head's searches every category
   (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings).
-  Head to Head has no category box (Oct 2026): the cartridge box picks it; the desktop menu lists
-  every category's cartridges under "──  Category  ──" headings (cart_menu). The dictionary's brand / load
+  None of these boxes take typing (so their text is never selected): on touch screens (web,
+  pointer: coarse) a tap opens a bottom sheet (pickSheet: title, search bar that opens the
+  keyboard only when tapped, the list; back button / backdrop / × close it); with a mouse /
+  keyboard (desktop LoadSearch, web pickSheet with an anchor) a click, Down, Enter or a typed
+  letter opens a search pop-up under the box (desktop: a Frame placed inside the box's own window,
+  not a window of its own, so it can't float over other apps after Alt+Tab; cursor in its search field, Up/Down + Enter, Esc
+  or a click outside closes, so do moving / resizing / minimising the window or switching apps:
+  App._window_moved, LoadSearch._focus_left; rounded field with a magnifier, accent highlight, ✓ on the current
+  pick, thin MUTED scrollbar: drawn on a Canvas on desktop, scrollbar-color on web). Empty boxes
+  show the web's placeholder on desktop too (LoadSearch hint: Cartridge / Load / Pick a cartridge first). A cartridge pick doesn't jump to the load box.
+  Head to Head has no category box (Oct 2026): the cartridge box picks it; its pop-up lists
+  every category's cartridges under category headings (LoadSearch head / searchBox head). The dictionary's brand / load
   filter sits right above the list (issue #26). Beside it, for cartridges that have +P / +P+ loads, a check box each
   (pressure_of / pressureOf reads the load name; Train+Protect and +Peak aren't +P) hides those
   loads from the list without changing any grade; ticked by default, kept per category while the
@@ -64,6 +74,35 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   keys from the old weight-first format are converted on read (_rename_price_key / readPrices).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
   (my_calibers.csv, my_handloads.csv, settings.json).
+- Handloads tab (Oct 2026: HandloadsView / show_hand, showHand in web): every handload of every
+  bullet category; adding / editing / duplicating / deleting happen ONLY there (Zeke's call; the
+  dictionary has a "Your handloads ›" link and "Edit in Handloads ›" on an open handload). The form
+  (open_handload_dialog / handDialog) takes any category: the cartridge picks it (handload_cartridges
+  / handCarts; a cartridge in two categories reads ".44 Magnum (Handgun)"). Cards show the
+  dictionary grade via h2h_rows / h2hRows at the dictionary's distance.
+  The safety line (tab, form, open handload) is HANDLOAD_NOTE, Zeke's LEGAL.md disclaimer verbatim
+  (web gets it as DATA.hand_note), under a bold "DISCLAIMER" heading in the tab and form (disclaimer() /
+  .dis). PC (desktop, web >=900 px) shows it right under the list; phones pin it to the bottom of
+  the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore use the
+  my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
+  replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
+  On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open
+  pickSheet too (sheetSelect puts a clear button over a <select>; powder has "Other powder (type
+  it)"); pickSheet over a dialog hands the back button back to the dialog when it closes.
+- Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
+  middle), Handloads, Settings; the PC sidebar (NAV_ORDER; web: CSS order at >=900 px, Oct 25) has
+  the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
+- PC Home, category list and Settings (Oct 25 2026, Zeke): top left, compact cards in one column (icon beside the text), zoomed
+  with the window up to 1.15x (desktop App._menu_layout / _zoomed, re-laid out on resize; web
+  fitMenu sets CSS zoom at >=900 px). Phones keep their centred layout.
+- Handload bullets go by diameter, not cartridge (one .257 bullet fits .250 Savage, .25-06, .257
+  Roberts): the form lists only makers with a bullets.csv bullet of the cartridge's DIAMETERS
+  size, then that maker's bullets; any other maker can be typed (web:
+  "Other maker" opens a text box; desktop: the form's pickers and the Settings theme box are
+  LoadSearch pop-ups too, maker / bullet / powder with own=True, a last row 'Use "typed text"'). Oct 2026: 61 bullets added for the diameters that had none
+  (.257, .311/.312, .321, .323, .348, .365, .366, .410, .416, .475, .500, .510, .251), sources in
+  research/added_bullets_sources.tsv (Nosler 2024 and Speer charts, Sierra pages, or the BC printed
+  for the factory load with the same bullet). .221 (5.45x39mm) still has none.
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
 - Recoil (recoil_ftlbs / recoil): standard free recoil, bullet + powder gas at GAS_FPS 4000, gas counted
   once (a 1.75x gas factor read 40-60% high; fixed Oct 2026 against Chuck Hawks' recoil table).
@@ -94,6 +133,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   App.px() scales by text size AND screen DPI (self.dpi, 96 dpi = 1.0). On Windows,
   sharp_on_windows() declares DPI awareness before Tk starts, otherwise Windows stretches the
   window and it looks blurry (issue #5).
+
+- Desktop look follows the web (Oct 2026): rounded boxes are RoundBox (a canvas behind a .body
+  Frame, smooth corners from corner_png, keep some padding or the body covers the corners), with
+  App.card / App.button / App.chip (Pill) / App.field (rounded entry or drop-down, accent outline
+  on focus) / Badge / close_button. Sidebar icons are the web's ICONS drawn by icon_png (stdlib PNG).
 
 - App icon: scripts/make_icons.py (needs Pillow) draws assets/icon.png, icon.ico and the Android
   launcher icons in assets/android/res. CI bakes icon.ico into the .exe/installer, bundles

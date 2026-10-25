@@ -36,5 +36,5 @@ bullets = [dict(maker=r["maker"], name=r["name"], diameter=float(r["diameter_in"
 tpl = open(os.path.join(here, "template.html"), encoding="utf-8").read()
 os.makedirs(os.path.join(here, "www"), exist_ok=True)
 with open(os.path.join(here, "www", "index.html"), "w", encoding="utf-8") as f:
-    f.write(tpl.replace("__DATA__", json.dumps({"version": c.APP_VERSION, "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS}, ensure_ascii=False)))
+    f.write(tpl.replace("__DATA__", json.dumps({"version": c.APP_VERSION, "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS, "hand_fields": c.HANDLOAD_FIELDS, "hand_note": c.HANDLOAD_NOTE}, ensure_ascii=False)))
 print("wrote www/index.html")

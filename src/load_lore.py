@@ -28,10 +28,12 @@ for Windows and macOS).
 """
 
 import base64
+import contextlib
 import bisect
 import csv
 import glob
 import hashlib
+import io
 import json
 import math
 import os
@@ -45,6 +47,7 @@ import sys
 import tarfile
 import tempfile
 import threading
+import time
 import urllib.error
 import urllib.request
 import webbrowser
@@ -70,6 +73,10 @@ ABOUT_TEXT = ("Calculated figures are estimates from makers' published velocitie
               "reloading. Brand names identify products only. No maker sponsors or endorses this "
               "software or is affiliated with its creator.\n\n"
               "Free software under the MIT License, provided as is, with no warranty.")
+# Shown wherever handloads are (Handloads tab, handload form, an open handload); from LEGAL.md
+HANDLOAD_NOTE = ("Not reloading data. The app DOES NOT check pressure or safety. Powder charges shown "
+                 "are NOT load data. HANDLOAD FIGURES ARE ONLY WHAT YOU TYPE IN. Always confirm with "
+                 "the manufacturer's data and a current load manual before shooting or reloading.")
 GRAINS_PER_OZ = 437.5
 SETTINGS_FILENAME = "settings.json"
 HANDLOAD_FILENAME = "my_handloads.csv"
@@ -177,11 +184,14 @@ def metric_keys(cat):
     return [k for k in METRICS if cat.terminal or k not in TERMINAL_KEYS]
 
 
-# The two tools: (key, title, blurb on the Home screen)
+# The tools: (key, title, blurb on the Home screen)
 TOOLS = (("loads", "Load Dictionary", "Every load of a cartridge, factory or your own handload, "
                                       "graded against each other."),
          ("h2h", "Head to Head", "Put 2 to 5 loads side by side, even from different cartridges "
-                                 "or categories."))
+                                 "or categories."),
+         ("hand", "Handloads", "Build and save your own reloads. They're graded in the Load "
+                               "Dictionary and can go head to head."))
+NAV_ORDER = ("loads", "h2h", "hand")     # the PC sidebar (Zeke, Oct 25 2026): Load Dictionary first; phones keep NAVS
 H2H_MIN, H2H_MAX = 2, 5
 H2H_DISTANCE = 100       # Head to Head's starting distance (yd); each load is capped at its category's max
 
@@ -232,8 +242,10 @@ DEFAULT_THEME = "Classic"
 def apply_theme(name):
     """Point the palette globals at a theme; screens built afterwards use it."""
     global BG, SURFACE, SURFACE_2, BORDER, TEXT, MUTED, ACCENT, ACCENT_HOVER, ON_ACCENT, DANGER, HAND_FG
+    global SIDE
     t = THEMES.get(name) or THEMES[DEFAULT_THEME]
     BG, SURFACE, SURFACE_2, BORDER = t["bg"], t["surface"], t["surface_2"], t["border"]
+    SIDE = t["side"]
     TEXT, MUTED, ACCENT, ACCENT_HOVER = t["text"], t["muted"], t["accent"], t["accent_hover"]
     ON_ACCENT, DANGER, HAND_FG = t["on_accent"], t["danger"], t["hand"]
 
@@ -260,7 +272,7 @@ SOURCE_NOTES = {
                "powder charge are estimated.",
     "custom": "Your own entry. Anything you left blank was estimated.",
     "typical": "Typical factory-load figures from published specs; approximate, so check the box.",
-    "handload": "Your own handload. Check every figure against a published load manual.",
+    "handload": HANDLOAD_NOTE,
 }
 DEFAULT_SOURCE_NOTE = ("Load data is approximate. Check it against the box or the "
                        "manufacturer, and edit the data file if needed.")
@@ -825,12 +837,84 @@ def github_mark_png(size, colour):
             cells = [src[j * n + i] for j in range(y0, y1) for i in range(x0, x1)]
             raw += bytes((r, g, b, sum(cells) // len(cells)))
 
+    return rgba_png(size, size, raw)
+
+
+def rgba_png(w, h, raw):
+    """A base64 RGBA PNG from rows of RGBA bytes, each row starting with a 0 (filter: none)."""
     def chunk(kind, data):
         return (struct.pack(">I", len(data)) + kind + data
                 + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF))
-    png = (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0))
+    png = (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 6, 0, 0, 0))
            + chunk(b"IDAT", zlib.compress(bytes(raw))) + chunk(b"IEND", b""))
     return base64.b64encode(png).decode("ascii")
+
+
+def _rgb(colour):
+    return tuple(int(colour[i:i + 2], 16) for i in (1, 3, 5))
+
+
+# The web version's sidebar icons (24 x 24 SVG strokes), as point lists: lines and circles
+# (centre, radius). Drawn smooth by icon_png, since a Tk canvas draws lines without anti-aliasing.
+def _arc(cx, cy, r, a0, a1, n=10):
+    return [(cx + r * math.cos(math.radians(a0 + (a1 - a0) * i / n)),
+             cy + r * math.sin(math.radians(a0 + (a1 - a0) * i / n))) for i in range(n + 1)]
+
+
+ICONS = {
+    "home": [[(3, 11.5), (12, 4), (21, 11.5)], [(5.5, 10), (5.5, 19.5), (18.5, 19.5), (18.5, 10)]],
+    "h2h": [[(12, 3), (12, 21)], [(5, 7), (19, 7)],
+            [(4, 14), (7, 7), (10, 14)] + _arc(7, 14, 3, 0, 180), 
+            [(14, 14), (17, 7), (20, 14)] + _arc(17, 14, 3, 0, 180)],
+    "loads": [[(5, 6), (19, 6)], [(5, 12), (19, 12)], [(5, 18), (14, 18)]],
+    "hand": [[(9.5, 3), (14.5, 3), (14.5, 7.5), (16.5, 10.5), (16.5, 21), (7.5, 21), (7.5, 10.5),
+              (9.5, 7.5), (9.5, 3)], [(7.5, 14), (16.5, 14)]],
+    "settings": [[(4, 7), (14, 7)], [(18, 7), (20, 7)], [(4, 17), (8, 17)], [(12, 17), (20, 17)],
+                 _arc(16, 7, 2, 0, 360, 16), _arc(10, 17, 2, 0, 360, 16)],
+}
+
+
+def icon_png(name, size, colour):
+    """One of ICONS as a base64 PNG, `size` px square: round-capped 1.8 px strokes on 24 px."""
+    k = size / 24.0
+    segs = [((x0 * k, y0 * k), (x1 * k, y1 * k)) for line in ICONS[name]
+            for (x0, y0), (x1, y1) in zip(line, line[1:])]
+    half = 0.9 * k
+    r, g, b = _rgb(colour)
+    raw = bytearray()
+    for y in range(size):
+        raw.append(0)
+        py = y + 0.5
+        for x in range(size):
+            px, d = x + 0.5, 1e9
+            for (ax, ay), (bx, by) in segs:
+                dx, dy = bx - ax, by - ay
+                ll = dx * dx + dy * dy
+                t = 0.0 if ll == 0 else max(0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / ll))
+                d = min(d, math.hypot(px - ax - t * dx, py - ay - t * dy))
+            raw += bytes((r, g, b, int(255 * max(0.0, min(1.0, half - d + 0.5)))))
+    return rgba_png(size, size, raw)
+
+
+def corner_png(radius, fill, border, outside, width=1):
+    """The top-left corner of a rounded box, smooth: `fill` inside a `width` px `border` line,
+    `outside` around it. Rotate by drawing it with other corners (RoundBox flips the maths)."""
+    out = []
+    for flip in ((False, False), (True, False), (False, True), (True, True)):   # tl tr bl br
+        raw = bytearray()
+        for y in range(radius):
+            raw.append(0)
+            for x in range(radius):
+                cx = radius - (radius - x - 0.5 if flip[0] else x + 0.5)
+                cy = radius - (radius - y - 0.5 if flip[1] else y + 0.5)
+                d = math.hypot(cx, cy)
+                shape = max(0.0, min(1.0, radius - d + 0.5))
+                inner = max(0.0, min(1.0, radius - width - d + 0.5))
+                px = [o * (1 - shape) + bd * (shape - inner) + f * inner
+                      for o, bd, f in zip(_rgb(outside), _rgb(border), _rgb(fill))]
+                raw += bytes([int(round(v)) for v in px] + [255])
+        out.append(rgba_png(radius, radius, raw))
+    return out
 
 
 
@@ -1026,6 +1110,63 @@ def write_handload_rows(rows):
         writer.writerows(rows)
 
 
+def handload_csv_text(rows):
+    """Handloads as CSV text, the my_handloads.csv format (the Handloads tab's back up)."""
+    out = io.StringIO()
+    writer = csv.DictWriter(out, fieldnames=HANDLOAD_FIELDS, extrasaction="ignore", lineterminator="\r\n")
+    writer.writeheader()
+    writer.writerows(rows)
+    return out.getvalue()
+
+
+HANDLOAD_NUMBERS = ("bullet_gr", "diameter_in", "bc_g1", "powder_gr", "muzzle_fps", "barrel_in", "cost",
+                    "bullet_cost", "powder_cost_lb", "primer_cost", "brass_cost", "brass_reuse")
+
+
+def merge_handload_rows(rows, text, categories):
+    """Restore a back up (CSV text, my_handloads.csv or the phone's) into `rows`: a handload with
+    the same id is replaced, a new one added. Rows that aren't for one of `categories` (titles)
+    or lack a figure are skipped. Returns (rows, added, replaced, skipped); raises ValueError if
+    the text isn't a handload back up. Same rules as mergeHand in the web version."""
+    reader = csv.DictReader(io.StringIO(text.lstrip("\ufeff")))
+    head = [(k or "").strip().lower() for k in (reader.fieldnames or [])]
+    if not all(k in head for k in ("cartridge", "bullet_gr", "muzzle_fps")):
+        raise ValueError("That isn't a handload back up (no cartridge / bullet_gr / muzzle_fps "
+                         "columns).")
+    out, added, replaced, skipped = [dict(r) for r in rows], 0, 0, 0
+    for raw in reader:
+        row = {(k or "").strip().lower(): (v or "").strip() for k, v in raw.items() if k}
+        if not any(row.values()):
+            continue
+        row["cartridge"] = canonical_name(row.get("cartridge", ""))
+        try:
+            ok = (row.get("category") in categories and row["cartridge"] and
+                  all(float(row.get(k) or 0) > 0 for k in ("bullet_gr", "muzzle_fps", "bc_g1",
+                                                            "powder_gr", "cost")))
+        except ValueError:
+            ok = False
+        if not ok:
+            skipped += 1
+            continue
+        for k in HANDLOAD_NUMBERS:                    # "0" from the phone means blank
+            try:
+                if float(row.get(k) or 0) == 0:
+                    row[k] = ""
+            except ValueError:
+                row[k] = ""
+        row["brass_reuse"] = row.get("brass_reuse") or "5"
+        row["id"] = row.get("id") or new_handload_id()
+        for i, r in enumerate(out):
+            if r.get("id") == row["id"]:
+                out[i] = row
+                replaced += 1
+                break
+        else:
+            out.append(row)
+            added += 1
+    return out, added, replaced, skipped
+
+
 def new_handload_id():
     import time
     import random
@@ -1178,15 +1319,163 @@ def metric_score(value, ref, higher_better):
 # --------------------------------------------------------------------------- #
 # GUI
 # --------------------------------------------------------------------------- #
+_CORNERS = {}           # (radius, fill, border, outside) -> four PhotoImages, shared by every box
+
+
+class RoundBox(tk.Frame if tk else object):
+    """A box with rounded corners like the web version's cards, chips and fields: a canvas
+    behind `body` (a Frame to fill) draws the rounded outline, with smooth corners from
+    corner_png. The box is as big as `body` needs plus the padding, or whatever the layout
+    stretches it to. Keep some padding: `body` is square and would cover the corners.
+    recolour() repaints it (hover, selected, focus)."""
+
+    def __init__(self, parent, app, fill, border=None, outside=None, radius=12, padx=0, pady=0,
+                 cursor=""):
+        outside = outside if outside is not None else parent.cget("bg")
+        super().__init__(parent, bg=outside, cursor=cursor)
+        self.app, self.r = app, max(2, app.px(radius))
+        self.fill, self.border, self.outside = fill, border or fill, outside
+        self.canvas = tk.Canvas(self, bg=outside, highlightthickness=0, bd=0, cursor=cursor,
+                                width=1, height=1)
+        self.canvas.place(x=0, y=0, relwidth=1, relheight=1)      # under body: made first
+        self.body = tk.Frame(self, bg=fill, cursor=cursor)
+        self.body.pack(fill="both", expand=True, padx=app.px(padx), pady=app.px(pady))
+        self.canvas.bind("<Configure>", lambda e: self._draw(e.width, e.height))
+
+    def _draw(self, w=None, h=None):
+        c = self.canvas
+        w = w or c.winfo_width()
+        h = h or c.winfo_height()
+        c.delete("box")
+        r = min(self.r, w // 2, h // 2)
+        if r < 2:
+            return
+        key = (r, self.fill, self.border, self.outside)
+        if key not in _CORNERS:
+            _CORNERS[key] = [tk.PhotoImage(data=d) for d in
+                             corner_png(r, self.fill, self.border, self.outside)]
+        tl, tr, bl, br = _CORNERS[key]
+        f, b = self.fill, self.border
+        c.create_rectangle(r, 0, w - r, h, fill=f, outline="", tags="box")
+        c.create_rectangle(0, r, w, h - r, fill=f, outline="", tags="box")
+        for x0, y0, x1, y1 in ((r, 0, w - r, 1), (r, h - 1, w - r, h), (0, r, 1, h - r),
+                               (w - 1, r, w, h - r)):
+            c.create_rectangle(x0, y0, x1, y1, fill=b, outline="", tags="box")
+        for img, x, y in ((tl, 0, 0), (tr, w - r, 0), (bl, 0, h - r), (br, w - r, h - r)):
+            c.create_image(x, y, image=img, anchor="nw", tags="box")
+
+    def recolour(self, fill=None, border=None, widgets=()):
+        """New fill / outline colours; `widgets` inside the box take the new fill as background."""
+        if fill is not None:
+            self.fill = fill
+            for w in (self.body, *widgets):
+                w.configure(bg=fill)
+        if border is not None:
+            self.border = border
+        self._draw()
+
+    def on_click(self, command, widgets=()):
+        for w in (self, self.canvas, self.body, *widgets):
+            w.bind("<Button-1>", lambda e: command())
+
+
+class Pill(RoundBox):
+    """A rounded button / chip with one line of text (the web's .btn, .chips button, .tgl)."""
+
+    def __init__(self, parent, app, text, command, kind="secondary", size=11, padx=16, pady=8,
+                 radius=8, outside=None, note=None):
+        self.kind, self.enabled = kind, True
+        bg, fg, _ = self._colours(kind)
+        super().__init__(parent, app, bg, bg, outside=outside, radius=radius, padx=padx,
+                         pady=pady, cursor="hand2")
+        # the padding is the box's, not the label's: a label would cover the rounded corners
+        self.text = tk.Label(self.body, text=text, bg=bg, fg=fg, font=app.f(size, True),
+                             cursor="hand2", padx=0, pady=0)
+        self.text.pack(side="left")
+        # a chip's count, smaller, after its name ("Hunting 3" like the web)
+        self.note = tk.Label(self.body, text=note or "", bg=bg, fg=fg, font=app.f(size - 2, True),
+                             cursor="hand2", padx=0, pady=0)
+        if note is not None:
+            self.note.pack(side="left", padx=(app.px(4), 0), pady=(app.px(1), 0))
+        self.command = command
+        if kind == "chip":
+            self.recolour(border=BORDER)
+        for w in (self, self.canvas, self.body, self.text, self.note):
+            w.bind("<Button-1>", lambda e: self.enabled and self.command and self.command())
+            w.bind("<Enter>", lambda e: self._hover(True))
+            w.bind("<Leave>", lambda e: self._hover(False))
+
+    @staticmethod
+    def _colours(kind):
+        if kind == "primary" or kind == "on":
+            return ACCENT, ON_ACCENT, ACCENT_HOVER
+        if kind == "chip":
+            return SURFACE_2, TEXT, BORDER
+        return SURFACE_2, TEXT, BORDER
+
+    def _hover(self, inside):
+        if not self.enabled:
+            return
+        bg, _, hover = self._colours(self.kind)
+        c = hover if inside else bg
+        self.recolour(c, BORDER if self.kind == "chip" and not inside else c, (self.text, self.note))
+
+    def set(self, text=None, kind=None, enabled=None, note=None):
+        if text is not None:
+            self.text.configure(text=text)
+        if note is not None:
+            self.note.configure(text=note)
+        if enabled is not None:
+            self.enabled = enabled
+            cur = "hand2" if enabled else ""
+            for w in (self, self.canvas, self.body, self.text, self.note):
+                w.configure(cursor=cur)
+        if kind is not None:
+            self.kind = kind
+        bg, fg, _ = self._colours(self.kind)
+        self.text.configure(fg=fg if self.enabled else MUTED)
+        self.note.configure(fg=fg if self.enabled else MUTED)
+        self.recolour(bg, BORDER if self.kind == "chip" else bg, (self.text, self.note))
+
+    def config(self, **kw):            # tk.Button-style text= / state= for older callers
+        if "text" in kw or "state" in kw:
+            self.set(text=kw.pop("text", None),
+                     enabled=None if "state" not in kw else kw.pop("state") != "disabled")
+        kw.pop("cursor", None)
+        if kw:
+            super().configure(**kw)
+    configure = config
+
+
+class Badge(RoundBox):
+    """An S-F grade in a small rounded box (the web's .badge)."""
+
+    def __init__(self, parent, app, grade="", size=10):
+        super().__init__(parent, app, SURFACE, outside=parent.cget("bg"), radius=6, padx=4, pady=1)
+        self.text = tk.Label(self.body, width=2, font=app.f(size, True), bd=0, padx=0, pady=0)
+        self.text.pack()
+        if grade:
+            self.set(grade)
+
+    def set(self, grade):
+        bg, fg = GRADE_COLORS[grade]
+        self.text.configure(text=grade, fg=fg)
+        self.recolour(bg, bg, (self.text,))
+
+
 class App:
     """Owns the window, the theme, and switching between the picker and calculators."""
 
     WIN_W, WIN_H = 1360, 860      # default window size (clamped to small screens); resizable
     MIN_W, MIN_H = 980, 600
-    SIDEBAR_W = 210
+    SIDEBAR_W = 240
 
     def __init__(self, root):
         self.root = root
+        # ttk selects a combobox's whole text after a pick from its drop-down; leave it plain
+        # (class binding: runs after each box's own <<ComboboxSelected>>)
+        root.bind_class("TCombobox", "<<ComboboxSelected>>",
+                        lambda e: e.widget.selection_clear(), add="+")
         self.settings = read_settings()
         self.theme = self.settings.get("theme") if self.settings.get("theme") in THEMES else DEFAULT_THEME
         apply_theme(self.theme)
@@ -1224,7 +1513,7 @@ class App:
             self.data[cat.title] = self._load_category(cat)
 
         self.stage = None
-        self.mode = "home"                # home / loads / h2h
+        self.mode = "home"                # home / loads / h2h / hand / settings
         self.cat = None
         self.carry = {}                   # per category: what each tab knew when you left it
         self.h2h = []                     # the Head to Head picks (pick_key), any category
@@ -1234,7 +1523,13 @@ class App:
         self.show_launcher()
         root.bind_all("<Control-Key-1>", lambda e: self.go_mode("loads"))
         root.bind_all("<Control-Key-2>", lambda e: self.show_h2h())
+        root.bind_all("<Control-Key-3>", lambda e: self.show_hand())
         root.bind_all("<Control-Key-0>", lambda e: self.show_launcher())
+        # the search pop-up is its own window: close it when its window moves, resizes or is
+        # minimised, or the app loses the focus, like a menu (it would stay put on screen)
+        for cls in ("Tk", "Toplevel"):
+            for seq in ("<Configure>", "<Unmap>"):
+                root.bind_class(cls, seq, self._window_moved, add="+")
         self.upd = {"state": "idle"}      # Settings > Updates: idle/checking/latest/available/downloading/error
         if self.check_on_start and version_tuple(APP_VERSION):
             root.after(2000, lambda: self.check_updates(on_start=True))
@@ -1310,7 +1605,7 @@ class App:
     # ---- S-F grades on / off (both tools; remembered) ---------------------- #
     @property
     def show_grades(self):
-        return self.settings.get("show_grades", True) is not False
+        return self.settings.get("show_grades", False) is True
 
     def set_show_grades(self, on):
         self.settings["show_grades"] = bool(on)
@@ -1429,10 +1724,29 @@ class App:
               arrowcolor=[("active", TEXT)])
         s.map("TEntry", bordercolor=[("focus", ACCENT)])
         s.map("TSpinbox", bordercolor=[("focus", ACCENT)], arrowcolor=[("active", TEXT)])
+        # inside a rounded App.field box, which draws the outline
+        flat = dict(field, bordercolor=SURFACE_2, padding=(4, 5))
+        for name in ("TCombobox", "TEntry", "TSpinbox"):
+            s.configure("Flat." + name, **flat)
+            s.map("Flat." + name, bordercolor=[("focus", SURFACE_2)],
+                  lightcolor=[("focus", SURFACE_2)], darkcolor=[("focus", SURFACE_2)],
+                  fieldbackground=[("readonly", SURFACE_2)], foreground=[("readonly", TEXT)],
+                  selectbackground=[("readonly", SURFACE_2)], selectforeground=[("readonly", TEXT)],
+                  arrowcolor=[("active", TEXT)])
         s.configure("Treeview", background=SURFACE, fieldbackground=SURFACE, foreground=TEXT,
-                    bordercolor=BORDER, rowheight=self.px(28), font=self.f(10))
-        s.configure("Treeview.Heading", background=SURFACE_2, foreground=TEXT,
-                    relief="flat", font=self.f(10, True), padding=6)
+                    bordercolor=SURFACE, lightcolor=SURFACE, darkcolor=SURFACE, borderwidth=0,
+                    rowheight=self.px(30), font=self.f(10))
+        s.layout("Treeview", [("Treeview.treearea", {"sticky": "nswe"})])   # the box draws the edge
+        s.configure("Treeview.Heading", background=SURFACE_2, foreground=MUTED, borderwidth=0,
+                    bordercolor=SURFACE_2, lightcolor=SURFACE_2, darkcolor=SURFACE_2,
+                    relief="flat", font=self.f(9, True), padding=(6, 7))
+        # thin flat scroll bars in the theme's colours
+        for name in ("Vertical.TScrollbar", "Horizontal.TScrollbar"):
+            s.configure(name, background=BORDER, troughcolor=SURFACE, bordercolor=SURFACE,
+                        lightcolor=BORDER, darkcolor=BORDER, arrowcolor=MUTED, relief="flat",
+                        gripcount=0, arrowsize=self.px(12))
+            s.map(name, background=[("active", MUTED)], lightcolor=[("active", MUTED)],
+                  darkcolor=[("active", MUTED)])
         s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", ON_ACCENT)])
         s.map("Treeview.Heading", background=[("active", BORDER)])
 
@@ -1440,17 +1754,31 @@ class App:
         return tk.Label(parent, text=text, bg=SURFACE if bg is None else bg,
                         fg=TEXT if color is None else color, font=self.f(size, bold), **kw)
 
-    def button(self, parent, text, command, kind="secondary"):
-        if kind == "primary":
-            bg, fg, hover = ACCENT, ON_ACCENT, ACCENT_HOVER
-        else:
-            bg, fg, hover = SURFACE_2, TEXT, BORDER
-        b = tk.Button(parent, text=text, command=command, bg=bg, fg=fg, activebackground=hover,
-                      activeforeground=fg, relief="flat", bd=0, highlightthickness=0,
-                      font=self.f(11, True), padx=16, pady=8, cursor="hand2")
-        b.bind("<Enter>", lambda e: b.config(bg=hover))
-        b.bind("<Leave>", lambda e: b.config(bg=bg))
-        return b
+    def button(self, parent, text, command, kind="secondary", size=11, padx=16, pady=8):
+        """A rounded button like the web's .btn (primary = accent)."""
+        return Pill(parent, self, text, command, kind, size=size, padx=padx, pady=pady)
+
+    def chip(self, parent, text, command, on=False, note=None):
+        """A pill-shaped filter chip like the web's .chips buttons; `note` is its count."""
+        return Pill(parent, self, text, command, "on" if on else "chip", size=10, padx=13, pady=7,
+                    radius=99, note=note)
+
+    def card(self, parent, fill=None, border=None, radius=12, padx=0, pady=0, outside=None):
+        """A rounded card like the web's .card / .lc: draw into its .body."""
+        return RoundBox(parent, self, SURFACE if fill is None else fill,
+                        BORDER if border is None else border, outside=outside, radius=radius,
+                        padx=padx, pady=pady)
+
+    def field(self, parent, widget, *args, **kw):
+        """An entry or drop-down in a rounded box like the web's inputs: the box outline turns
+        the accent colour while it has the focus. Returns (box, widget)."""
+        box = RoundBox(parent, self, SURFACE_2, BORDER, radius=8, padx=4, pady=3)
+        w = widget(box.body, *args, style="Flat.T" + widget.__name__, **kw)
+        w.pack(fill="both", expand=True)
+        w.bind("<FocusIn>", lambda e: box.recolour(border=ACCENT), add="+")
+        w.bind("<FocusOut>", lambda e: box.recolour(border=BORDER), add="+")
+        box.widget = w
+        return box, w
 
     def fit_columns(self, tree, cols, rows, stretch_col, known=None):
         """Size table columns from the real text width (fonts grow with screen DPI, pixel
@@ -1573,14 +1901,14 @@ class App:
         self.shell = tk.Frame(self.root, bg=BG)
         self.shell.pack(fill="both", expand=True)
 
-        self.sidebar = tk.Frame(self.shell, bg=SURFACE, width=self._sidebar_width())
+        self.sidebar = tk.Frame(self.shell, bg=SIDE, width=self._sidebar_width())
         self.sidebar.pack(side="left", fill="y")
         self.sidebar.pack_propagate(False)
         tk.Frame(self.shell, bg=BORDER, width=1).pack(side="left", fill="y")
-        self.foot = tk.Frame(self.sidebar, bg=SURFACE)     # Settings, at the bottom left
-        self.foot.pack(side="bottom", fill="x", padx=12, pady=14)
-        self.nav = tk.Frame(self.sidebar, bg=SURFACE)
-        self.nav.pack(fill="x", padx=12, pady=(22, 0))
+        self.foot = tk.Frame(self.sidebar, bg=SIDE)        # Settings, at the bottom left
+        self.foot.pack(side="bottom", fill="x", padx=self.px(14), pady=(0, self.px(22)))
+        self.nav = tk.Frame(self.sidebar, bg=SIDE)
+        self.nav.pack(fill="x", padx=self.px(14), pady=(self.px(22), 0))
 
         self.main = tk.Frame(self.shell, bg=BG)
         self.main.pack(side="left", fill="both", expand=True)
@@ -1595,7 +1923,8 @@ class App:
         win_id = self.canvas.create_window((0, 0), window=self.stage, anchor="nw")
         self.stage.bind("<Configure>", lambda e: self._update_scroll())
         self.canvas.bind("<Configure>", lambda e: (self.canvas.itemconfigure(win_id, width=e.width),
-                                                   self._update_scroll(), self._refit_soon()))
+                                                   self._update_scroll(), self._refit_soon(),
+                                                   self._menu_resized()))
         for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
             self.root.bind_all(seq, self._on_wheel)
             # Tk's dropdowns step their value on every wheel tick, and each step re-ran the
@@ -1604,20 +1933,37 @@ class App:
         self._draw_chrome()
 
     def _sidebar_width(self):
-        """Wide enough for the longest menu entry at the current text size and screen DPI."""
+        """Wide enough for the longest menu entry at the current text size and screen DPI
+        (240 px like the web's sidebar at normal size)."""
         main, sub = tkfont.Font(font=self.f(11, True)), tkfont.Font(font=self.f(10, True))
-        title, ver = tkfont.Font(font=self.f(17, True)), tkfont.Font(font=self.f(8))
-        need = max([main.measure(t) for _, t, _ in TOOLS] + [title.measure("Load Lore") - 12]
-                   + [ver.measure(version_text()) - 12]
-                   + [sub.measure(cat.title) + 16 for cat in CATEGORIES])
-        return max(self.px(self.SIDEBAR_W), need + 2 * 12 + 2 * 12 + 10)   # label + nav padding
+        title, ver = tkfont.Font(font=self.f(15, True)), tkfont.Font(font=self.f(8))
+        icon = self.px(22) + self.px(12)
+        need = max([main.measure(t) + icon for _, t, _ in TOOLS] + [title.measure("Load Lore")]
+                   + [ver.measure(version_text())]
+                   + [sub.measure(cat.title) + self.px(24 + 9 + 10) for cat in CATEGORIES])
+        return max(self.px(self.SIDEBAR_W), need + 2 * self.px(14) + 2 * self.px(12) + 4)
+
+    def _window_moved(self, e):
+        pop = getattr(self, "search_popup", None)
+        if pop is None or pop.popup is None:
+            return
+        try:
+            top = pop.box.winfo_toplevel()
+            if str(e.widget) != str(top):
+                return
+            if str(e.type) == "Unmap" or pop.window_at() != pop.opened_at:
+                pop.close()
+        except tk.TclError:
+            pop.close()
 
     def _on_wheel(self, e):
         """Scroll the page with the mouse wheel (tables and lists keep their own wheel)."""
-        if getattr(self, "search_popup", None) is not None:
-            if isinstance(e.widget, tk.Listbox) and e.widget is self.search_popup.listbox:
+        pop = getattr(self, "search_popup", None)
+        if pop is not None:
+            if pop.popup is not None and str(e.widget).startswith(str(pop.popup)):
+                pop.scroll(-1 if (getattr(e, "num", 0) == 4 or getattr(e, "delta", 0) > 0) else 1)
                 return
-            self.search_popup.close()         # the load search list would stay put as the page moved
+            pop.close()                       # the search pop-up would stay put as the page moved
         try:
             w = self.root.winfo_containing(e.x_root, e.y_root)
         except Exception:
@@ -1631,44 +1977,70 @@ class App:
         step = -1 if (getattr(e, "num", 0) == 4 or getattr(e, "delta", 0) > 0) else 1
         self.canvas.yview_scroll(step * 3, "units")
 
-    def _nav_button(self, text, command, active, sub=False, parent=None):
-        bg = ACCENT if active else SURFACE
-        hover = ACCENT if active else SURFACE_2
-        fg = ON_ACCENT if active else (MUTED if sub else TEXT)
-        box = tk.Frame(parent or self.nav, bg=bg, cursor="hand2")
-        box.pack(fill="x", pady=(1 if sub else 3), padx=(16, 0) if sub else (0, 0))
-        t = tk.Label(box, text=text, bg=bg, fg=fg, font=self.f(10 if sub else 11, not sub or active),
-                     anchor="w")
-        t.pack(fill="x", padx=12, pady=(6 if sub else 9))
-        for w in (box, t):
-            w.bind("<Button-1>", lambda e: command())
-            w.bind("<Enter>", lambda e: [x.config(bg=hover) for x in (box, t)])
-            w.bind("<Leave>", lambda e: [x.config(bg=bg) for x in (box, t)])
+    def icon(self, name, colour, size=22):
+        """A sidebar / home-card icon (ICONS) as a PhotoImage, drawn once per colour and size."""
+        key = (name, colour, self.px(size))
+        cache = self.__dict__.setdefault("_icons_img", {})
+        if key not in cache:
+            cache[key] = tk.PhotoImage(data=icon_png(name, self.px(size), colour))
+        return cache[key]
+
+    def _nav_button(self, text, command, active, sub=False, parent=None, icon=None):
+        """A sidebar entry like the web's: icon + bold name, rounded accent fill when it's the
+        open page; category entries sit indented behind a thin line, the open one grey-filled."""
+        parent = parent or self.nav
+        if sub:
+            bg, fg, hover = (SURFACE_2, TEXT, SURFACE_2) if active else (SIDE, MUTED, SURFACE)
+        else:
+            bg, fg, hover = (ACCENT, ON_ACCENT, ACCENT) if active else (SIDE, MUTED, SURFACE)
+        box = RoundBox(parent, self, bg, bg, outside=SIDE, radius=8 if sub else 10,
+                       padx=10 if sub else 12, pady=6 if sub else 9, cursor="hand2")
+        box.pack(fill="x", pady=(0, self.px(2 if sub else 4)))
+        parts = []
+        if icon:
+            i = tk.Label(box.body, image=self.icon(icon, fg), bg=bg, cursor="hand2")
+            i.pack(side="left", padx=(0, self.px(12)))
+            parts.append(i)
+        t = tk.Label(box.body, text=text, bg=bg, fg=fg, cursor="hand2", anchor="w",
+                     font=self.f(10 if sub else 11, active or not sub))
+        t.pack(side="left", fill="x", expand=True)
+        parts.append(t)
+        box.on_click(command, parts)
+        for w in (box, box.canvas, box.body, *parts):
+            w.bind("<Enter>", lambda e: box.recolour(hover, hover, parts))
+            w.bind("<Leave>", lambda e: box.recolour(bg, bg, parts))
         return box
 
     def _draw_chrome(self):
         """(Re)draw the sidebar: Home, the two features, and the categories of the open feature."""
         for w in self.nav.winfo_children() + self.foot.winfo_children():
             w.destroy()
-        self.label(self.nav, "In Like Flint", 11, MUTED, True, bg=SURFACE, anchor="w").pack(
-            anchor="w", padx=6)
-        self.label(self.nav, "Load Lore", 17, TEXT, True, bg=SURFACE, anchor="w").pack(
-            anchor="w", padx=6)
-        self.label(self.nav, version_text(), 8, MUTED, bg=SURFACE, anchor="w").pack(
-            anchor="w", padx=6, pady=(2, 18))
+        brand = tk.Frame(self.nav, bg=SIDE)
+        brand.pack(fill="x", padx=self.px(6), pady=(0, self.px(18)))
+        self.label(brand, "In Like Flint", 8, MUTED, True, bg=SIDE, anchor="w").pack(anchor="w")
+        self.label(brand, "Load Lore", 15, TEXT, True, bg=SIDE, anchor="w").pack(anchor="w")
+        self.label(brand, version_text(), 8, MUTED, bg=SIDE, anchor="w").pack(anchor="w", pady=(1, 0))
         self._nav_button("Settings", self.show_settings, self.mode == "settings",
-                         parent=self.foot)
-        self._nav_button("Home", self.show_launcher, self.mode == "home")
-        for key, text, _ in TOOLS:
-            if key == "h2h":                  # one page for every category: no category list
-                self._nav_button(text, self.show_h2h, self.mode == key)
+                         parent=self.foot, icon="settings")
+        self._nav_button("Home", self.show_launcher, self.mode == "home", icon="home")
+        for key in NAV_ORDER:
+            text = tool_title(key)
+            if key in ("h2h", "hand"):        # one page for every category: no category list
+                self._nav_button(text, self.show_h2h if key == "h2h" else self.show_hand,
+                                 self.mode == key, icon=key)
                 continue
-            on_picker = self.mode == key and self.cat is None
-            self._nav_button(text, lambda k=key: self.show_picker(k), on_picker)
+            self._nav_button(text, lambda k=key: self.show_picker(k), self.mode == key, icon=key)
             if self.mode == key:
+                # the web's sub-list: indented, a thin line down its left side
+                subs = tk.Frame(self.nav, bg=SIDE)
+                subs.pack(fill="x", padx=(self.px(24), 0), pady=(0, self.px(8)))
+                tk.Frame(subs, bg=BORDER, width=1).pack(side="left", fill="y")
+                inner = tk.Frame(subs, bg=SIDE)
+                inner.pack(side="left", fill="x", expand=True, padx=(self.px(8), 0))
                 for cat in CATEGORIES:
                     on = self.cat is not None and cat.title == self.cat.title
-                    self._nav_button(cat.title, lambda c=cat, k=key: self.go(c, k), on, sub=True)
+                    self._nav_button(cat.title, lambda c=cat, k=key: self.go(c, k), on, sub=True,
+                                     parent=inner)
 
     # ---- screens --------------------------------------------------------- #
     def _new_stage(self):
@@ -1686,6 +2058,73 @@ class App:
             w.bind("<Enter>", lambda e: [x.config(bg=hover) for x in widgets])
             w.bind("<Leave>", lambda e: [x.config(bg=base) for x in widgets])
 
+    # ---- Home, category list and Settings: sized to the window ------------ #
+    # Each page has a size it is drawn for at zoom 1 (MENU_PAGES: content width, height). A bigger
+    # window zooms the whole page up to MENU_ZOOM_MAX (text, cards, icons: App.scale is raised
+    # while it is built); it stays in the top left with its cards in one column (Zeke, Oct 25
+    # 2026). Resizing re-lays it out (_menu_resized).
+    MENU_PAGES = {"home": (560, 460), "picker": (560, 540), "settings": (680, 680)}
+    MENU_ZOOM_MAX = 1.15
+    MENU_SIDE = 34                      # the page's side margin at zoom 1
+
+    def _menu_page(self):
+        if self.mode in ("home", "settings"):
+            return self.mode
+        if self.mode == "loads" and self.cat is None and self.view is None:
+            return "picker"
+        return None
+
+    def _menu_layout(self, page):
+        """(zoom, column width) for `page` in the window's current page area."""
+        self.root.update_idletasks()
+        box = self.canvas.master
+        w = box.winfo_width() - self.vbar.winfo_reqwidth()     # the same with or without the bar
+        h = box.winfo_height()
+        if w <= 1 or h <= 1:                                   # not drawn yet
+            w = self.root.winfo_width() - self.sidebar.winfo_reqwidth() - 1
+            h = self.root.winfo_height()
+        dw, dh = self.MENU_PAGES[page]
+        side = 2 * self.px(self.MENU_SIDE)
+        k = min((w - side) / self.px(dw), (h - self.px(54)) / self.px(dh), self.MENU_ZOOM_MAX)
+        k = max(1.0, math.floor(k * 20) / 20)                  # steps of 5%
+        width = max(self.px(260), min(w - side, round(self.px(dw) * k)))
+        return k, width
+
+    @contextlib.contextmanager
+    def _zoomed(self, k):
+        """Build with every px() / f() / icon k times bigger (the window's zoom, not the text
+        size setting: that is put back when the page is built)."""
+        base = self.scale
+        self.scale = base * k
+        try:
+            yield
+        finally:
+            self.scale = base
+
+    def _menu_wrap(self, stage, width):
+        """The page's column in the top left, `width` wide."""
+        wrap = tk.Frame(stage, bg=BG)
+        wrap.pack(anchor="nw", padx=self.px(self.MENU_SIDE), pady=(self.px(26), self.px(28)))
+        tk.Frame(wrap, bg=BG, width=width, height=0).pack()
+        return wrap
+
+    def _menu_resized(self):
+        """Window resized: once it settles, re-lay out Home / the category list / Settings."""
+        if self._menu_page() is None:
+            return
+        if getattr(self, "_menu_job", None):
+            self.root.after_cancel(self._menu_job)
+
+        def run():
+            self._menu_job = None
+            page = self._menu_page()
+            if page is None:
+                return
+            if self._menu_layout(page) != getattr(self, "_menu_fit", None):
+                {"home": self.show_launcher, "settings": self.show_settings,
+                 "picker": lambda: self.show_picker(self.mode)}[page]()
+        self._menu_job = self.root.after(150, run)
+
     def show_launcher(self):
         """Home screen: the two things you can do."""
         self._stash()
@@ -1693,30 +2132,44 @@ class App:
         stage = self._new_stage()
         self.root.title(APP_TITLE)
         self._draw_chrome()
-        wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(fill="x", padx=36, pady=(40, 28))
-        self.label(wrap, "In Like Flint", 15, MUTED, True, bg=BG, anchor="w").pack(anchor="w")
-        self.label(wrap, "Load Lore", 26, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
-        self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
-                   "loads head to head.", 12, MUTED,
-                   bg=BG, anchor="w").pack(anchor="w", pady=(4, 26))
-        feats = tk.Frame(wrap, bg=BG)
-        feats.pack(fill="x")
-        feats.columnconfigure((0, 1), weight=1, uniform="f")
-        for i, (key, title, blurb) in enumerate(TOOLS):
-            card = tk.Frame(feats, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
-                            cursor="hand2")
-            card.grid(row=0, column=i, sticky="nsew", padx=(0 if i == 0 else 8, 8 if i == 0 else 0))
-            t = tk.Label(card, text=title, bg=SURFACE, fg=TEXT, font=self.f(17, True), anchor="w",
-                         cursor="hand2")
-            t.pack(fill="x", padx=24, pady=(26, 4))
-            d = tk.Label(card, text=blurb, bg=SURFACE, fg=MUTED, font=self.f(11), anchor="w",
-                         justify="left", wraplength=self.px(330), cursor="hand2")
-            d.pack(fill="x", padx=24, pady=(0, 26))
-            for w in (card, t, d):
-                w.bind("<Button-1>", lambda e, k=key: self.show_picker(k))
-            self._card_hover([card, t, d], SURFACE, SURFACE_2)
+        k, width = self._menu_fit = self._menu_layout("home")
+        with self._zoomed(k):
+            wrap = self._menu_wrap(stage, width)
+            self.label(wrap, "In Like Flint", 11, MUTED, True, bg=BG, anchor="w").pack(anchor="w")
+            self.label(wrap, "Load Lore", 20, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
+            self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
+                       "loads head to head.", 11, MUTED, bg=BG, anchor="w", justify="left",
+                       wraplength=width).pack(anchor="w", pady=(self.px(8), self.px(18)))
+            for key, title, blurb in TOOLS:
+                self._feature_card(wrap, key, title, blurb, lambda t=key: self.show_picker(t),
+                                   width).pack(fill="x", pady=(0, self.px(10)))
         self._update_scroll()
+
+    def _feature_card(self, parent, key, title, blurb, command, width):
+        """A Home card like the web's .fcard on a PC: accent icon tile beside the title and a
+        line about it (desktop-app sized, Zeke, Oct 25 2026)."""
+        card = RoundBox(parent, self, SURFACE, BORDER, radius=12, padx=18, pady=16, cursor="hand2")
+        tile = RoundBox(card.body, self, ACCENT, ACCENT, radius=9, padx=8, pady=8, cursor="hand2")
+        tile.pack(side="left", anchor="n")
+        ic = tk.Label(tile.body, image=self.icon(key, ON_ACCENT, 20), bg=ACCENT, cursor="hand2",
+                      bd=0, padx=0, pady=0)
+        ic.pack()
+        text = tk.Frame(card.body, bg=SURFACE, cursor="hand2")
+        text.pack(side="left", fill="x", expand=True, padx=(self.px(14), 0))
+        t = tk.Label(text, text=title, bg=SURFACE, fg=TEXT, font=self.f(12, True), anchor="w",
+                     cursor="hand2")
+        t.pack(fill="x")
+        d = tk.Label(text, text=blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
+                     justify="left", cursor="hand2",
+                     wraplength=width - 2 * self.px(18) - self.px(36 + 14) - 4)
+        d.pack(fill="x", pady=(self.px(2), 0))
+        parts = (text, t, d)
+        card.on_click(command, (tile, tile.canvas, tile.body, ic, *parts))
+        for w in (card, card.canvas, card.body, tile, tile.canvas, tile.body, ic,
+                  *parts):
+            w.bind("<Enter>", lambda e: card.recolour(SURFACE_2, ACCENT, parts))
+            w.bind("<Leave>", lambda e: card.recolour(SURFACE, BORDER, parts))
+        return card
 
     # ---- updates (Settings > Updates) -------------------------------------- #
     @property
@@ -1839,18 +2292,15 @@ class App:
                 b.config(state="disabled", cursor="")
             b.pack(side="left", padx=(0, 10))
         self.label(box, "Check at start", 10, MUTED, bg=SURFACE).pack(side="left", padx=(6, 6))
-        chip = tk.Label(box, font=self.f(10, True), padx=10, pady=3, cursor="hand2", width=4)
-
-        def flip(e=None):
+        def flip():
             self.set_check_on_start(not self.check_on_start)
             paint()
 
         def paint():
             on = self.check_on_start
-            chip.config(text="On" if on else "Off", bg=ACCENT if on else SURFACE_2,
-                        fg=ON_ACCENT if on else TEXT)
+            chip.set(text="On" if on else "Off", kind="on" if on else "chip")
+        chip = toggle(self, box, flip)
         paint()
-        chip.bind("<Button-1>", flip)
         chip.pack(side="left")
 
     def _github_button(self, parent):
@@ -1871,49 +2321,56 @@ class App:
         stage = self._new_stage()
         self.root.title(f"{APP_TITLE} — Settings")
         self._draw_chrome()
-        wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(fill="x", padx=36, pady=(32, 28))
-        self.label(wrap, "Settings", 22, TEXT, True, bg=BG, anchor="w").pack(anchor="w", pady=(0, 6))
+        k, width = self._menu_fit = self._menu_layout("settings")
+        text_size = f"{round(self.scale * 100)}%"
+        with self._zoomed(k):
+            self._settings_page(stage, width, text_size)
+        self._update_scroll()
+
+    def _settings_page(self, stage, width, text_size):
+        wrap = self._menu_wrap(stage, width)
+        self.label(wrap, "Settings", 17, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
 
         def section(title):
             """A titled box; its rows are split by thin lines instead of each having a box."""
-            self.label(wrap, title, 11, MUTED, True, bg=BG, anchor="w").pack(
-                anchor="w", pady=(10, 6))
-            card = tk.Frame(wrap, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-            card.pack(fill="x", pady=(0, 12))
+            self.label(wrap, title, 10, MUTED, True, bg=BG, anchor="w").pack(
+                anchor="w", pady=(self.px(10), self.px(6)))
+            box = self.card(wrap, padx=16, pady=2)
+            box.pack(fill="x", pady=(0, self.px(6)))
+            card = box.body
             card.rows = 0
             return card
 
         def line(card):
             if card.rows:
-                tk.Frame(card, bg=BORDER, height=1).pack(fill="x", padx=20)
+                tk.Frame(card, bg=BORDER, height=1).pack(fill="x")
             card.rows += 1
 
-        def row(title, note):
+        def row(title, note=None):
             line(card)
             r = tk.Frame(card, bg=SURFACE)
             r.pack(fill="x")
             text = tk.Frame(r, bg=SURFACE)
-            text.pack(side="left", fill="x", expand=True, padx=20, pady=14)
-            self.label(text, title, 12, TEXT, True, bg=SURFACE, anchor="w").pack(anchor="w")
-            self.label(text, note, 10, MUTED, bg=SURFACE, anchor="w").pack(anchor="w", pady=(2, 0))
+            text.pack(side="left", fill="x", expand=True, pady=self.px(12))
+            self.label(text, title, 11, TEXT, True, bg=SURFACE, anchor="w").pack(anchor="w")
+            if note:
+                self.label(text, note, 9, MUTED, bg=SURFACE, anchor="w").pack(anchor="w")
             right = tk.Frame(r, bg=SURFACE)
-            right.pack(side="right", padx=20, pady=14)
+            right.pack(side="right", pady=self.px(10))
             return right
 
         card = section("Display")
         theme_var = tk.StringVar(value=self.theme)
-        pick = ttk.Combobox(row("Theme", "Colors for the whole app"), textvariable=theme_var,
-                            values=list(THEMES), state="readonly", font=self.f(11),
-                            width=max(len(n) for n in THEMES) + 2)
-        pick.pack()
-        pick.bind("<<ComboboxSelected>>", lambda e: self.set_theme(theme_var.get()))
-        box = row("Text size", f"{round(self.scale * 100)}%")
+        pbox, pick = self.field(row("Theme"), ttk.Combobox, textvariable=theme_var,
+                                font=self.f(11), width=max(len(n) for n in THEMES) + 2)
+        pbox.pack()
+        pick.theme_var = theme_var                    # keep the variable alive with its box
+        LoadSearch(self, pick, list(THEMES), self.set_theme)
+        box = row("Text size", text_size)
         for text, delta in (("A−", -0.15), ("A+", 0.15)):
-            b = tk.Label(box, text=text, bg=SURFACE_2, fg=TEXT, font=self.f(11, True),
-                         padx=12, pady=4, cursor="hand2")
-            b.pack(side="left", padx=2)
-            b.bind("<Button-1>", lambda e, d=delta: self.set_scale(self.scale + d))
+            self.button(box, text, lambda d=delta: self.set_scale(self.scale + d), size=11,
+                        padx=13, pady=6).pack(side="left", padx=(self.px(6), 0))
+
         def flip():
             self.set_show_grades(not self.show_grades)
             style_grades_chip(self, chip)
@@ -1925,17 +2382,18 @@ class App:
         self._github_button(row("Source code", "Free and open source: code, issues and "
                                 "releases on GitHub")).pack()
         line(card)
-        self.label(card, "Disclaimer", 12, TEXT, True, bg=SURFACE, anchor="w").pack(
-            anchor="w", padx=20, pady=(14, 0))
-        about = self.label(card, ABOUT_TEXT, 10, MUTED, bg=SURFACE, anchor="w", justify="left")
-        about.pack(fill="x", padx=20, pady=(2, 14))
-        about.bind("<Configure>", lambda e: about.configure(wraplength=max(e.width, 1)))
-        self.label(wrap, version_text(), 10, MUTED, bg=BG, anchor="w").pack(anchor="w", pady=(2, 0))
-        self._update_scroll()
+        self.label(card, "Disclaimer", 11, TEXT, True, bg=SURFACE, anchor="w").pack(
+            anchor="w", pady=(self.px(12), 0))
+        about = self.label(card, ABOUT_TEXT, 9, MUTED, bg=SURFACE, anchor="w", justify="left",
+                           wraplength=width - 2 * self.px(16) - 4)
+        about.pack(fill="x", pady=(self.px(2), self.px(12)))
+        self.label(row("Version"), version_text(), 9, MUTED, bg=SURFACE).pack()
 
     def _stash(self):
         """Remember what the open tool has on screen, for when you come back to it."""
         if self.view is None:
+            return
+        if self.view.tab == "hand":
             return
         if self.view.tab == "h2h":
             self.h2h_snap.update(self.view.snapshot())
@@ -1952,25 +2410,39 @@ class App:
         self.view = HeadToHeadView(self, stage, dict(self.h2h_snap) or None)
         self._update_scroll()
 
+    def show_hand(self, open_id=None):
+        """The Handloads tab: every handload of every category; `open_id` opens that one."""
+        self._stash()
+        self.mode, self.cat, self.view = "hand", None, None
+        stage = self._new_stage()
+        self.root.title(f"{APP_TITLE} — {tool_title('hand')}")
+        self._draw_chrome()
+        self.view = HandloadsView(self, stage, open_id)
+        self._update_scroll()
+
     def show_picker(self, mode):
         """Choose a category for the Load Dictionary (Head to Head has no categories)."""
         if mode == "h2h":
             return self.show_h2h()
+        if mode == "hand":
+            return self.show_hand()
         self._stash()
         self.mode, self.cat, self.view = mode, None, None
         stage = self._new_stage()
         self.root.title(f"{APP_TITLE} — {tool_title(mode)}")
         self._draw_chrome()
-        wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(fill="x", padx=36, pady=(32, 28))
-        self.label(wrap, tool_title(mode), 22,
+        k, width = self._menu_fit = self._menu_layout("picker")
+        with self._zoomed(k):
+            self._picker_page(stage, mode, width)
+        self._update_scroll()
+
+    def _picker_page(self, stage, mode, width):
+        wrap = self._menu_wrap(stage, width)
+        self.label(wrap, tool_title(mode), 17,
                    TEXT, True, bg=BG, anchor="w").pack(anchor="w")
-        self.label(wrap, "Choose a category", 12, MUTED, bg=BG, anchor="w").pack(
-            anchor="w", pady=(2, 20))
-        grid = tk.Frame(wrap, bg=BG)
-        grid.pack(fill="x")
-        grid.columnconfigure((0, 1), weight=1, uniform="g")
-        for i, cat in enumerate(CATEGORIES):
+        self.label(wrap, "Choose a category.", 11, MUTED, bg=BG, anchor="w").pack(
+            anchor="w", pady=(self.px(4), self.px(18)))
+        for cat in CATEGORIES:
             info = self.data[cat.title]
             if info["error"]:
                 caption = "Data file missing" if "not found" in info["error"] else "Data problem"
@@ -1979,37 +2451,37 @@ class App:
                 carts = {x.cartridge for x in shown}
                 if cat.grain_style:                          # + cartridges open to handloads only
                     carts |= {x.cartridge for x in info["loads"]}
-                caption = f"{len(carts)} cartridges  ·  {len(shown):,} loads"
-            card = tk.Frame(grid, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER,
+                caption = f"{len(carts)} cartridges · {len(shown):,} loads"
+            card = RoundBox(wrap, self, SURFACE, BORDER, radius=12, padx=18, pady=14,
                             cursor="hand2")
-            card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=6,
-                      padx=(0 if i % 2 == 0 else 6, 6 if i % 2 == 0 else 0))
-            t = tk.Label(card, text=cat.title, bg=SURFACE, fg=TEXT, font=self.f(15, True),
+            card.pack(fill="x", pady=(0, self.px(10)))
+            t = tk.Label(card.body, text=cat.title, bg=SURFACE, fg=TEXT, font=self.f(12, True),
                          anchor="w", cursor="hand2")
-            t.pack(fill="x", padx=22, pady=(20, 2))
-            c = tk.Label(card, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(10, True),
+            t.pack(fill="x")
+            d = tk.Label(card.body, text=cat.blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
+                         justify="left", wraplength=width - 2 * self.px(18) - 4, cursor="hand2")
+            d.pack(fill="x", pady=(self.px(2), self.px(8)))
+            c = tk.Label(card.body, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(9, True),
                          anchor="w", cursor="hand2")
-            c.pack(fill="x", padx=22)
-            d = tk.Label(card, text=cat.blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
-                         cursor="hand2")
-            d.pack(fill="x", padx=22, pady=(4, 20))
-            for w in (card, t, c, d):
-                w.bind("<Button-1>", lambda e, ct=cat: self.go(ct, mode))
-            self._card_hover([card, t, c, d], SURFACE, SURFACE_2)
-        self._update_scroll()
+            c.pack(fill="x")
+            parts = (t, d, c)
+            card.on_click(lambda ct=cat: self.go(ct, mode), parts)
+            for w in (card, card.canvas, card.body, *parts):
+                w.bind("<Enter>", lambda e, cd=card, p=parts: cd.recolour(SURFACE_2, ACCENT, p))
+                w.bind("<Leave>", lambda e, cd=card, p=parts: cd.recolour(SURFACE, BORDER, p))
 
     def header(self, parent, cat, active):
         """Back link and the page title."""
         box = tk.Frame(parent, bg=BG)
-        back = tk.Label(box, text="‹  Categories", bg=BG, fg=MUTED, font=self.f(10, True),
+        back = tk.Label(box, text="‹  Categories", bg=BG, fg=ACCENT, font=self.f(10, True),
                         cursor="hand2")
         back.grid(row=0, column=0, sticky="w")
         back.bind("<Button-1>", lambda e: self.show_picker(active))
-        back.bind("<Enter>", lambda e: back.config(fg=TEXT))
-        back.bind("<Leave>", lambda e: back.config(fg=MUTED))
+        back.bind("<Enter>", lambda e: back.config(fg=ACCENT_HOVER))
+        back.bind("<Leave>", lambda e: back.config(fg=ACCENT))
         title = tool_title(active)
-        self.label(box, f"{title}  ·  {cat.title}", 20, TEXT, True, bg=BG).grid(
-            row=1, column=0, sticky="w", pady=(6, 0))
+        self.label(box, f"{title} · {cat.title}", 17, TEXT, True, bg=BG).grid(
+            row=1, column=0, sticky="w", pady=(self.px(4), 0))
         return box
 
     def go(self, cat, tab):
@@ -2046,19 +2518,62 @@ class App:
         self._update_scroll()
 
 
-def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=False, on_saved=None):
-    """Add / edit a handload. `existing` is a handload record (dict) to start from."""
+def handload_cartridges(app):
+    """Every cartridge a handload can be for, across the bullet categories: {text: (category,
+    cartridge)}; a cartridge in two categories (.44 Magnum) names its category in brackets."""
+    per = []
+    for cat in CATEGORIES:
+        info = app.data.get(cat.title, {})
+        if not cat.grain_style or info.get("error"):
+            continue
+        groups = with_handload_only(group_by_cartridge(info["detail"] + app.hand_loads(cat), True),
+                                    info["loads"])
+        per.append((cat, list(groups)))
+    count = {}
+    for _, carts in per:
+        for c in carts:
+            count[c] = count.get(c, 0) + 1
+    return {(f"{c} ({cat.title})" if count[c] > 1 else c): (cat, c) for cat, carts in per for c in carts}
+
+
+def disclaimer(app, parent, bg):
+    """The handload safety note under a bold DISCLAIMER heading (Zeke), wrapping to its width."""
+    app.label(parent, "DISCLAIMER", 9, TEXT, True, bg=bg, anchor="w").pack(anchor="w")
+    text = app.label(parent, HANDLOAD_NOTE, 9, MUTED, bg=bg, anchor="w", justify="left",
+                     wraplength=app.px(420))     # until it knows its width; never widens the window
+    text.pack(fill="x", pady=(2, 0))
+    text.bind("<Configure>", lambda e: text.configure(wraplength=max(e.width, 1)))
+
+
+def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=None):
+    """The Handloads tab's add / edit form, for any category (the cartridge picks it).
+    `existing` is a handload record (dict) to start from."""
     win = tk.Toplevel(parent)
     win.configure(bg=BG)
-    verb = "Edit" if existing and not duplicate else "Add"
-    win.title(f"{verb} handload — {cat.title}")
+    win.title("Edit handload" if existing and not duplicate else "New handload")
+    opts = handload_cartridges(app)
+
+    def pick_of(text):
+        text = text.strip()
+        low = text.lower()
+        for t, v in opts.items():
+            if t == text:
+                return v
+        for t, v in opts.items():
+            if t.lower() == low or v[1].lower() == low:
+                return v
+        return None
     win.transient(parent)
     win.resizable(False, False)
-    body = tk.Frame(win, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-    body.pack(padx=16, pady=16, fill="both")
+    card = app.card(win, padx=4, pady=4)
+    card.pack(padx=16, pady=16, fill="both")
+    body = card.body
     for c in range(3):
         body.columnconfigure(c, weight=1, uniform="c")
     ex = dict(existing or {})
+    if ex.get("cartridge"):                           # its text in the cartridge list
+        ex["cartridge"] = next((t for t, (c, x) in opts.items() if x == ex["cartridge"] and
+                                c.title == ex.get("category")), ex["cartridge"])
     V = {k: tk.StringVar(value=str(ex.get(k, ""))) for k in (
         "cartridge", "name", "bullet_maker", "bullet", "bullet_gr", "diameter_in", "bc_g1",
         "powder", "powder_gr", "muzzle_fps", "barrel_in", "purpose", "bullet_cost",
@@ -2069,7 +2584,6 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
         V["total"].set(ex["cost"])
     if duplicate and V["name"].get():
         V["name"].set(V["name"].get() + " (copy)")
-    OTHER = "Other / custom"
     bullets = app.bullets
 
     def lab(text, row, col, span=1, pady=(10, 3)):
@@ -2077,14 +2591,13 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
             row=row, column=col, columnspan=span, sticky="w", pady=pady,
             padx=(18 if col == 0 else 6, 6 if col + span < 3 else 18))
 
-    def ent(var, row, col, span=1, kind="entry", values=(), state=None):
+    def ent(var, row, col, span=1, kind="entry"):
         px = dict(padx=(18 if col == 0 else 6, 6 if col + span < 3 else 18))
-        if kind == "combo":
-            w = ttk.Combobox(body, textvariable=var, values=list(values), font=app.f(11),
-                             state=state or "normal")
+        if kind == "combo":                           # a box that opens a search pop-up
+            box, w = app.field(body, ttk.Combobox, textvariable=var, font=app.f(11), width=8)
         else:
-            w = ttk.Entry(body, textvariable=var, font=app.f(11))
-        w.grid(row=row, column=col, columnspan=span, sticky="ew", **px)
+            box, w = app.field(body, ttk.Entry, textvariable=var, font=app.f(11), width=8)
+        box.grid(row=row, column=col, columnspan=span, sticky="ew", **px)
         return w
 
     def section(text, row):
@@ -2095,32 +2608,39 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
 
     lab("CARTRIDGE", 0, 0, 2, (16, 3))
     lab("PURPOSE", 0, 2, 1, (16, 3))
-    cart_box = ent(V["cartridge"], 1, 0, 2, "combo", cartridges)
-    ent(V["purpose"], 1, 2, 1, "combo", PURPOSES, "readonly")
+    cart_box = ent(V["cartridge"], 1, 0, 2, "combo")
+    LoadSearch(app, cart_box, list(opts), lambda n: refresh_bullets(),
+               head=lambda t: opts[t][0].title, hint="Cartridge")
+    LoadSearch(app, ent(V["purpose"], 1, 2, 1, "combo"), list(PURPOSES), lambda n: None,
+               hint="Purpose")
     lab("LOAD NAME (OPTIONAL)", 2, 0, 3)
     ent(V["name"], 3, 0, 3)
 
     section("BULLET", 4)
     lab("MAKER", 6, 0, 1, (6, 3))
     lab("BULLET", 6, 1, 2, (6, 3))
-    makers = sorted({b["maker"] for b in bullets}) + [OTHER]
-    maker_box = ent(V["bullet_maker"], 7, 0, 1, "combo", makers, "readonly")
-    bullet_box = ent(V["bullet"], 7, 1, 2, "combo", [], "readonly")
+    # pick from the library, or type your own maker / bullet / powder
+    maker_search = LoadSearch(app, ent(V["bullet_maker"], 7, 0, 1, "combo"), [],
+                              lambda n: (V["bullet"].set(""), refresh_bullets()),
+                              hint="Bullet maker", own=True)
+    bullet_search = LoadSearch(app, ent(V["bullet"], 7, 1, 2, "combo"), [],
+                               lambda n: pick_bullet(), hint="Bullet", own=True)
     lab("WEIGHT (GR)", 8, 0)
     lab("DIAMETER (IN)", 8, 1)
     lab("BC (G1)", 8, 2)
     ent(V["bullet_gr"], 9, 0)
     ent(V["diameter_in"], 9, 1)
     ent(V["bc_g1"], 9, 2)
-    note = app.label(body, "Pick a bullet to fill these in, or just type your own. Leave diameter / "
-                           "BC blank to estimate them.", 9, MUTED, anchor="w")
+    note = app.label(body, "Pick a maker and bullet to fill these in, or type your own. Leave "
+                           "diameter / BC blank to estimate them.", 9, MUTED, anchor="w")
     note.grid(row=10, column=0, columnspan=3, sticky="w", padx=18, pady=(4, 0))
 
     section("POWDER AND PERFORMANCE", 11)
     lab("POWDER", 13, 0, 1, (6, 3))
     lab("CHARGE (GR)", 13, 1, 1, (6, 3))
     lab("MUZZLE VELOCITY (FPS)", 13, 2, 1, (6, 3))
-    ent(V["powder"], 14, 0, 1, "combo", POWDERS)
+    LoadSearch(app, ent(V["powder"], 14, 0, 1, "combo"), list(POWDERS), lambda n: None,
+               hint="Powder", own=True)
     ent(V["powder_gr"], 14, 1)
     ent(V["muzzle_fps"], 14, 2)
     lab("BARREL LENGTH (IN, OPTIONAL)", 15, 0, 2)
@@ -2139,10 +2659,9 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
     cost_lbl.grid(row=23, column=0, columnspan=3, sticky="w", padx=18, pady=(8, 0))
     lab("NOTES (OPTIONAL)", 24, 0, 3)
     ent(V["notes"], 25, 0, 3)
-    app.label(body, "Handload figures are only as good as your data. Always follow published load "
-                    "manuals; this app doesn't check pressure or safety.", 9, MUTED, anchor="w",
-              justify="left", wraplength=560).grid(row=26, column=0, columnspan=3, sticky="w",
-                                                   padx=18, pady=(10, 0))
+    note = tk.Frame(body, bg=body.cget("bg"))
+    note.grid(row=26, column=0, columnspan=3, sticky="ew", padx=18, pady=(10, 0))
+    disclaimer(app, note, body.cget("bg"))
 
     def num(key, label, lo, hi=None, blank=False):
         text = V[key].get().strip().replace("$", "")
@@ -2175,34 +2694,31 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
             c = None
         cost_lbl.config(text="" if not c else f"Cost per round: ${c:.2f}")
 
+    def fits(b):
+        """The library bullet is the cartridge's diameter (bullets go by diameter, not cartridge)."""
+        pick = pick_of(V["cartridge"].get())
+        d = DIAMETERS.get(pick[1]) if pick else None
+        return not d or abs(b["diameter"] - d) <= 0.003
+
     def refresh_bullets(*_):
-        d = DIAMETERS.get(V["cartridge"].get().strip())
-        maker = V["bullet_maker"].get()
-        names = []
-        for b in bullets:
-            if maker and maker != OTHER and b["maker"] != maker:
-                continue
-            if d and abs(b["diameter"] - d) > 0.003:
-                continue
-            names.append(f"{b['name']} · {b['weight']:g} gr")
-        bullet_box.config(values=names, state="readonly" if maker and maker != OTHER else "disabled")
+        """Makers list only those with a bullet of this diameter; bullets only the picked maker's."""
+        maker = V["bullet_maker"].get().strip()
+        maker_search.names = sorted({b["maker"] for b in bullets if fits(b)})
+        bullet_search.names = [f"{b['name']} · {b['weight']:g} gr" for b in bullets
+                               if b["maker"] == maker and fits(b)]
 
     def pick_bullet(*_):
-        maker, label = V["bullet_maker"].get(), V["bullet"].get()
-        d = DIAMETERS.get(V["cartridge"].get().strip())
+        maker, label = V["bullet_maker"].get().strip(), V["bullet"].get()
         for b in bullets:
-            if b["maker"] == maker and f"{b['name']} · {b['weight']:g} gr" == label and (
-                    not d or abs(b["diameter"] - d) <= 0.003):
+            if b["maker"] == maker and f"{b['name']} · {b['weight']:g} gr" == label and fits(b):
                 V["bullet_gr"].set(f"{b['weight']:g}")
                 V["diameter_in"].set(f"{b['diameter']:g}")
                 V["bc_g1"].set(f"{b['bc']:g}")
                 V["bullet"].set(label)
                 break
 
-    maker_box.bind("<<ComboboxSelected>>", lambda e: (V["bullet"].set(""), refresh_bullets()))
-    bullet_box.bind("<<ComboboxSelected>>", pick_bullet)
-    cart_box.bind("<<ComboboxSelected>>", refresh_bullets)
     V["cartridge"].trace_add("write", refresh_bullets)
+    V["bullet_maker"].trace_add("write", refresh_bullets)
     for k in ("bullet_cost", "powder_cost_lb", "powder_gr", "primer_cost", "brass_cost",
               "brass_reuse", "total"):
         V[k].trace_add("write", update_cost)
@@ -2211,9 +2727,11 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
 
     def save(_e=None):
         try:
-            cart = V["cartridge"].get().strip()
-            if not cart:
-                raise ValueError("Enter a cartridge.")
+            pick = pick_of(V["cartridge"].get())
+            if pick is None:
+                raise ValueError("Pick a cartridge from the list." if V["cartridge"].get().strip()
+                                 else "Enter a cartridge.")
+            cat, cart = pick
             gr = num("bullet_gr", "Bullet weight", 1, 2000)
             fps = num("muzzle_fps", "Muzzle velocity", 100, 5500)
             charge = num("powder_gr", "Powder charge", 0.1, 300)
@@ -2235,8 +2753,8 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
             return
         row = dict(id=ex.get("id") if existing and not duplicate else new_handload_id(),
                    category=cat.title, cartridge=cart, name=V["name"].get().strip(),
-                   bullet_maker=V["bullet_maker"].get() if V["bullet_maker"].get() != OTHER else "",
-                   bullet=V["bullet"].get().split(" · ")[0] if V["bullet"].get() else "",
+                   bullet_maker=V["bullet_maker"].get().strip(),
+                   bullet=V["bullet"].get().split(" · ")[0].strip(),
                    bullet_gr=f"{gr:g}", diameter_in=f"{dia:g}", bc_g1=f"{bc:g}",
                    powder=V["powder"].get().strip(), powder_gr=f"{charge:g}", muzzle_fps=f"{fps:g}",
                    barrel_in=f"{barrel:g}" if barrel else "", purpose=V["purpose"].get(),
@@ -2273,16 +2791,32 @@ def open_handload_dialog(app, cat, parent, cartridges, existing=None, duplicate=
 
 def grades_chip(app, parent, command):
     """The 'S-F grades  On / Off' switch on the Settings page (both tools; remembered)."""
-    chip = tk.Label(parent, text="", font=app.f(10, True), padx=10, pady=3, cursor="hand2")
-    chip.bind("<Button-1>", lambda e: command())
+    chip = toggle(app, parent, command)
     style_grades_chip(app, chip)
     return chip
 
 
 def style_grades_chip(app, chip):
-    on = app.show_grades
-    chip.config(text="On" if on else "Off", width=4,
-                bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
+    chip.set(text="On" if app.show_grades else "Off", kind="on" if app.show_grades else "chip")
+
+
+def toggle(app, parent, command):
+    """An On / Off pill like the web's .tgl switch."""
+    return Pill(parent, app, "Off", command, "chip", size=9, padx=12, pady=5, radius=99)
+
+
+def close_button(app, parent, command):
+    """A ✕ that gets a rounded grey square under the pointer (the web's .x buttons)."""
+    bg = parent.cget("bg")
+    box = RoundBox(parent, app, bg, outside=bg, radius=8, padx=6, pady=2, cursor="hand2")
+    x = tk.Label(box.body, text="✕", bg=bg, fg=MUTED, font=app.f(12, True), cursor="hand2",
+                 bd=0, padx=2, pady=0)
+    x.pack()
+    box.on_click(command, (x,))
+    for w in (box, box.canvas, box.body, x):
+        w.bind("<Enter>", lambda e: (box.recolour(SURFACE_2, SURFACE_2, (x,)), x.config(fg=TEXT)))
+        w.bind("<Leave>", lambda e: (box.recolour(bg, bg, (x,)), x.config(fg=MUTED)))
+    return box
 
 
 class LoadsView:
@@ -2335,69 +2869,69 @@ class LoadsView:
         outer.columnconfigure(0, weight=1)
         a.header(outer, cat, "loads").grid(row=0, column=0, sticky="ew", pady=(0, 16))
         if error or not self.loads:
-            msg = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-            msg.grid(row=3, column=0, sticky="ew")
+            mbox = a.card(outer, padx=4, pady=4)
+            mbox.grid(row=3, column=0, sticky="ew")
+            msg = mbox.body
             a.label(msg, error or "No loads found.", 11, TEXT, True, anchor="w").pack(
                 anchor="w", padx=18, pady=(16, 4))
             a.label(msg, f"Put {cat.loads_filename} next to the program to use this tab.",
                     10, MUTED, anchor="w").pack(anchor="w", padx=18, pady=(0, 16))
             return
 
-        card = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        card.grid(row=3, column=0, sticky="ew")
+        box = a.card(outer, padx=18, pady=16)
+        box.grid(row=3, column=0, sticky="ew")
+        card = box.body
         card.columnconfigure(0, weight=1)
-        pad = dict(padx=18)
+        pad = dict(padx=0)
+        # the web's layout: the cartridge on its own line, distance and gun weight under it
         top = tk.Frame(card, bg=SURFACE)
-        top.grid(row=0, column=0, sticky="ew", pady=(16, 0), **pad)
-        top.columnconfigure(0, weight=3, minsize=a.px(300))
-        for i in (1, 2):
-            top.columnconfigure(i, weight=1)
-        fields = ((cat.cartridge_label, None), ("DISTANCE (YD)", self.dist_var),
-                  (cat.gun_label, self.gun_var))
-        for i, (text, var) in enumerate(fields):
-            a.label(top, text, 9, MUTED, True).grid(row=0, column=i, sticky="w",
-                                                     padx=(0 if i == 0 else 8, 0))
-            if var is None:
-                # the cartridge menu is a search too: type "6.5" or "mag" to narrow it down
-                self.cart_combo = ttk.Combobox(top, textvariable=self.cart_var,
-                                               values=self.cartridges, font=a.f(12),
-                                               width=max([16] + [len(c) for c in self.cartridges]))
-                self.cart_combo.grid(row=1, column=i, sticky="ew", pady=(4, 0))
-                self.cart_combo.bind("<<ComboboxSelected>>", lambda e: self._on_cartridge())
-                self.cart_search = LoadSearch(a, self.cart_combo, self.cartridges,
-                                              lambda n: self._on_cartridge())
-            else:
-                ttk.Entry(top, textvariable=var, font=a.f(12), width=10).grid(
-                    row=1, column=i, sticky="ew", pady=(4, 0), padx=(8, 0))
+        top.grid(row=0, column=0, sticky="ew")
+        top.columnconfigure((0, 1), weight=1, uniform="n")
+        a.label(top, cat.cartridge_label, 8, MUTED, True).grid(row=0, column=0, columnspan=2,
+                                                                sticky="w")
+        # the cartridge menu opens a search pop-up: type "6.5" or "mag" to narrow it down
+        cbox, self.cart_combo = a.field(top, ttk.Combobox, textvariable=self.cart_var,
+                                        values=self.cartridges, font=a.f(12),
+                                        width=max([16] + [len(c) for c in self.cartridges]))
+        cbox.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(a.px(5), 0))
+        self.cart_search = LoadSearch(a, self.cart_combo, self.cartridges,
+                                      lambda n: self._on_cartridge(), hint="Cartridge")
+        for i, (text, var) in enumerate((("DISTANCE (YD)", self.dist_var),
+                                         (cat.gun_label, self.gun_var))):
+            gap = (0, a.px(4)) if i == 0 else (a.px(4), 0)
+            a.label(top, text, 8, MUTED, True).grid(row=2, column=i, sticky="w", padx=gap,
+                                                     pady=(a.px(14), 0))
+            fbox, _ = a.field(top, ttk.Entry, textvariable=var, font=a.f(12), width=10)
+            fbox.grid(row=3, column=i, sticky="ew", padx=gap, pady=(a.px(5), 0))
         self.chip_row = tk.Frame(card, bg=SURFACE)
-        self.chip_row.grid(row=5, column=0, sticky="w", pady=(12, 0), **pad)
+        self.chip_row.grid(row=5, column=0, sticky="w", pady=(a.px(12), 0), **pad)
         self.src_row = tk.Frame(card, bg=SURFACE)
-        self.src_row.grid(row=6, column=0, sticky="w", pady=(8, 16), **pad)
+        self.src_row.grid(row=6, column=0, sticky="w", pady=(a.px(6), 0), **pad)
         self.status = a.label(card, "", 10, DANGER, anchor="w")
-        self.status.grid(row=1, column=0, sticky="w", pady=(8, 0), **pad)
+        self.status.grid(row=1, column=0, sticky="w", **pad)
         self.weights_toggle = tk.Label(card, text="▸  Scoring weights", bg=SURFACE, fg=MUTED,
                                        font=a.f(10, True), cursor="hand2")
-        self.weights_toggle.grid(row=2, column=0, sticky="w", pady=(8, 0), **pad)
+        self.weights_toggle.grid(row=7, column=0, sticky="w", pady=(a.px(10), 0), **pad)
         self.weights_toggle.bind("<Button-1>", lambda e: self._toggle_weights())
         right = tk.Frame(card, bg=SURFACE)
-        right.grid(row=2, column=0, sticky="e", pady=(8, 0), **pad)
+        right.grid(row=7, column=0, sticky="e", pady=(a.px(10), 0), **pad)
         if cat.grain_style:
-            add = tk.Label(right, text="+  Add handload", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
-                           cursor="hand2")
+            add = tk.Label(right, text="Your handloads ›", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
+                           cursor="hand2")                 # adding / editing lives in the Handloads tab
             add.pack(side="left")
-            add.bind("<Button-1>", lambda e: self._open_handload())
+            add.bind("<Button-1>", lambda e: a.show_hand())
         self.weights_frame = tk.Frame(card, bg=SURFACE)
         for i, key in enumerate(self.keys):
-            a.label(self.weights_frame, METRICS[key][0], 10, MUTED).grid(
-                row=0, column=i * 2, padx=(0 if i == 0 else 14, 6))
-            ttk.Spinbox(self.weights_frame, from_=0, to=10, increment=1, width=3,
-                        textvariable=self.weight_vars[key], font=a.f(11)).grid(
-                row=0, column=i * 2 + 1)
+            a.label(self.weights_frame, METRICS[key][0], 9, MUTED).grid(
+                row=0, column=i, sticky="w", padx=(0 if i == 0 else a.px(8), 0))
+            wbox, _ = a.field(self.weights_frame, ttk.Spinbox, from_=0, to=10, increment=1, width=3,
+                              textvariable=self.weight_vars[key], font=a.f(11))
+            wbox.grid(row=1, column=i, sticky="ew", padx=(0 if i == 0 else a.px(8), 0),
+                      pady=(a.px(4), 0))
         self.weight_note = a.label(self.weights_frame, "", 9, TEXT, True)
-        self.weight_note.grid(row=1, column=0, columnspan=12, sticky="w", pady=(8, 0))
-        self.weights_frame.grid(row=3, column=0, sticky="w", pady=(8, 0), **pad)
+        self.weight_note.grid(row=2, column=0, columnspan=12, sticky="w", pady=(8, 0))
+        self.weights_frame.grid(row=8, column=0, sticky="w", pady=(8, 0), **pad)
         self.weights_frame.grid_remove()
-        a.label(card, "", 4).grid(row=4, column=0)
 
         # ---- ranked table
         tbl = tk.Frame(outer, bg=BG)
@@ -2408,10 +2942,11 @@ class LoadsView:
         above = tk.Frame(tbl, bg=BG)
         above.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         above.columnconfigure(1, weight=1)
-        a.label(above, "FILTER BRAND / LOAD", 9, MUTED, True, bg=BG).grid(row=0, column=0, sticky="w")
+        a.label(above, "FILTER BRAND / LOAD", 8, MUTED, True, bg=BG).grid(row=0, column=0, sticky="w")
         fl = tk.Frame(above, bg=BG)
-        fl.grid(row=1, column=0, sticky="w", pady=(4, 0))
-        ttk.Entry(fl, textvariable=self.filter_var, font=a.f(10), width=28).pack(side="left")
+        fl.grid(row=1, column=0, sticky="w", pady=(a.px(5), 0))
+        a.field(fl, ttk.Entry, textvariable=self.filter_var, font=a.f(11), width=28)[0].pack(
+            side="left")
         # +P / +P+ check boxes, only for cartridges that have such loads
         self.press_row = tk.Frame(fl, bg=BG)
         self.press_row.pack(side="left", padx=(14, 0))
@@ -2426,9 +2961,12 @@ class LoadsView:
         if cat.terminal:
             self.cols += ["Taylor", "HITS"]
         self.cols += ["Price", "Score", "Grade"]
-        frame = tk.Frame(tbl, bg=BG)
-        frame.grid(row=1, column=0, sticky="nsew")
+        # the table sits in a rounded box like the web's tables
+        tbox = a.card(tbl, radius=10, padx=3, pady=3)
+        tbox.grid(row=1, column=0, sticky="nsew")
+        frame = tbox.body
         frame.columnconfigure(0, weight=1)
+        frame.rowconfigure(0, weight=1)
         self.tree = ttk.Treeview(frame, columns=self.cols, show="headings", height=12,
                                  selectmode="browse")
         scroll = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
@@ -2456,22 +2994,19 @@ class LoadsView:
         self.tree.bind("<<TreeviewSelect>>", lambda e: self._on_select())
 
         # ---- selected load
-        self.detail = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        self.detail.columnconfigure(0, weight=1)
-        self.d_title = a.label(self.detail, "", 16, TEXT, True, anchor="w", justify="left",
+        self.detail = a.card(outer, padx=4, pady=4)
+        d = self.detail.body
+        d.columnconfigure(0, weight=1)
+        self.d_title = a.label(d, "", 16, TEXT, True, anchor="w", justify="left",
                                wraplength=a.px(820))
         self.d_title.grid(row=0, column=0, sticky="w", padx=18, pady=(14, 2))
-        close = tk.Label(self.detail, text="✕", bg=SURFACE, fg=MUTED, font=a.f(15, True),
-                         padx=8, pady=2, cursor="hand2")
-        close.grid(row=0, column=1, sticky="ne", padx=(0, 10), pady=(10, 0))
-        close.bind("<Button-1>", lambda e: self._close_detail())
-        close.bind("<Enter>", lambda e: close.config(fg=TEXT, bg=SURFACE_2))
-        close.bind("<Leave>", lambda e: close.config(fg=MUTED, bg=SURFACE))
-        self.d_info = a.label(self.detail, "", 12, MUTED, anchor="w", justify="left",
+        close_button(a, d, self._close_detail).grid(row=0, column=1, sticky="ne", padx=(0, 10),
+                                                    pady=(10, 0))
+        self.d_info = a.label(d, "", 12, MUTED, anchor="w", justify="left",
                               wraplength=a.px(820))
         self.d_info.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
         # the four factors sit side by side, packed to the left (no stretched columns)
-        factors = tk.Frame(self.detail, bg=SURFACE)
+        factors = tk.Frame(d, bg=SURFACE)
         factors.grid(row=2, column=0, sticky="w", padx=18)
         self.d_badges = {}
         for i, key in enumerate(self.keys):
@@ -2482,34 +3017,32 @@ class LoadsView:
             line.pack(anchor="w", pady=(4, 0))
             val = a.label(line, "", 16, TEXT, True)
             val.pack(side="left")
-            badge = tk.Label(line, text="", width=2, font=a.f(13, True))
+            badge = Badge(line, a, "", 12)
             badge.pack(side="left", padx=(6, 0))
             self.d_badges[key] = (val, badge)
-        priceline = tk.Frame(self.detail, bg=SURFACE)
+        priceline = tk.Frame(d, bg=SURFACE)
         self.priceline = priceline
         priceline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
-        self.handline = tk.Frame(self.detail, bg=SURFACE)
+        self.handline = tk.Frame(d, bg=SURFACE)
         self.handline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
-        a.button(self.handline, "Edit", lambda: self._open_handload(self.selected)).pack(side="left")
-        a.button(self.handline, "Duplicate",
-                 lambda: self._open_handload(self.selected, duplicate=True)).pack(side="left", padx=8)
-        a.button(self.handline, "Delete", self._delete_handload).pack(side="left")
+        a.button(self.handline, "Edit in Handloads  ›",
+                 lambda: a.show_hand(self.selected.hid if self.selected else None)).pack(side="left")
         self.handline.grid_remove()
-        self.h2h_btn = a.button(self.detail, "", self._h2h_click)
+        self.h2h_btn = a.button(d, "", self._h2h_click)
         self.h2h_btn.grid(row=3, column=0, columnspan=2, sticky="e", padx=18, pady=(14, 0))
         a.label(priceline, "YOUR PRICE PER ROUND ($)", 9, MUTED, True).pack(side="left")
-        ttk.Entry(priceline, textvariable=self.price_var, width=8, font=a.f(11)).pack(
+        a.field(priceline, ttk.Entry, textvariable=self.price_var, width=8, font=a.f(11))[0].pack(
             side="left", padx=8)
         a.button(priceline, "Set price", self._set_price, "primary").pack(side="left")
         a.button(priceline, "Use catalog estimate", self._reset_price).pack(side="left", padx=8)
-        self.d_note = a.label(self.detail, "", 10, MUTED, anchor="w", justify="left",
+        self.d_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
                               wraplength=a.px(820))
         self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 6))
-        self.bt_toggle = tk.Label(self.detail, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
+        self.bt_toggle = tk.Label(d, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
                                   cursor="hand2")
         self.bt_toggle.grid(row=5, column=0, sticky="w", padx=18, pady=(4, 14))
         self.bt_toggle.bind("<Button-1>", lambda e: self._toggle_ballistics())
-        self.bt_frame = tk.Frame(self.detail, bg=SURFACE)
+        self.bt_frame = tk.Frame(d, bg=SURFACE)
         self.bt_frame.grid(row=6, column=0, columnspan=2, sticky="w", padx=18, pady=(0, 16))
         self.bt_frame.grid_remove()
         self.detail.grid(row=5, column=0, sticky="ew", pady=(14, 0))
@@ -2687,33 +3220,6 @@ class LoadsView:
                     self._reselect()
                     break
 
-    def _open_handload(self, item=None, duplicate=False):
-        carts = [c for c in self.cartridges]
-        for b in self.app.data[self.cat.title]["loads"]:
-            if b.cartridge not in carts:
-                carts.append(b.cartridge)
-        existing = dict(item.info) if item is not None and item.handload else None
-
-        def saved(row):
-            new = load_from_handload_row(row, self.cat.grain_style)
-            self.purpose = "All"
-            self.source = "All"
-            self._reload_loads(select=new)
-        open_handload_dialog(self.app, self.cat, self.root, carts, existing, duplicate, saved)
-
-    def _delete_handload(self):
-        item = self.selected
-        if item is None or not item.handload:
-            return
-        if not messagebox.askyesno("Delete handload", f"Delete \"{item.load}\" from your handloads?"):
-            return
-        try:
-            self.app.delete_handload(item.hid)
-        except OSError as exc:
-            messagebox.showerror("Couldn't delete", f"Could not write {HANDLOAD_FILENAME}:\n{exc}")
-            return
-        self._reload_loads()
-
     # ---- purpose chips ---------------------------------------------------- #
     def _purpose_of(self, item):
         return item.purpose or item.group or ""
@@ -2740,12 +3246,10 @@ class LoadsView:
             self.src_row.grid_remove()
             return
         self.src_row.grid()
-        self.app.label(self.src_row, "SHOW", 9, MUTED, True).pack(side="left", padx=(0, 10))
         for name, n in (("All", len(items)), ("Factory", len(items) - nh), ("Handloads", nh)):
-            chip = tk.Label(self.src_row, text=f"{name} ({n})", font=self.app.f(10, True),
-                            padx=10, pady=4, cursor="hand2")
-            chip.pack(side="left", padx=(0, 6))
-            chip.bind("<Button-1>", lambda e, nm=name: self._pick_source(nm))
+            chip = self.app.chip(self.src_row, name, lambda nm=name: self._pick_source(nm),
+                                 note=str(n))
+            chip.pack(side="left", padx=(0, self.app.px(6)))
             self.src_chips[name] = chip
         self._style_chips()
 
@@ -2761,11 +3265,15 @@ class LoadsView:
             # drawn as a box + text (ttk's clam check box is a tiny X that's hard to see)
             row = tk.Frame(self.press_row, bg=BG, cursor="hand2")
             row.pack(side="left", padx=(0, 16))
-            mark = tk.Label(row, width=2, font=self.app.f(10, True), highlightthickness=1)
+            mark = RoundBox(row, self.app, BG, MUTED, radius=5, padx=2, pady=0, cursor="hand2")
             mark.pack(side="left")
+            tick = tk.Label(mark.body, width=2, font=self.app.f(9, True), bg=BG, fg=ON_ACCENT,
+                            bd=0, padx=0, pady=0, cursor="hand2")
+            tick.pack()
+            mark.tick = tick
             text = self.app.label(row, p, 10, TEXT, True, bg=BG)
-            text.pack(side="left", padx=(6, 0))
-            for w in (row, mark, text):
+            text.pack(side="left", padx=(self.app.px(7), 0))
+            for w in (row, mark, mark.canvas, mark.body, tick, text):
                 w.bind("<Button-1>", lambda e, pr=p: self._pick_pressure(pr))
             self.press_boxes[p] = (mark, text)
         self._style_pressure()
@@ -2773,8 +3281,8 @@ class LoadsView:
     def _style_pressure(self):
         for p, (mark, _) in self.press_boxes.items():
             on = self.press_vars[p].get()
-            mark.config(text="✓" if on else "", bg=ACCENT if on else SURFACE_2,
-                        fg=ON_ACCENT, highlightbackground=ACCENT if on else MUTED)
+            mark.tick.configure(text="✓" if on else "")
+            mark.recolour(ACCENT if on else BG, ACCENT if on else MUTED, (mark.tick,))
 
     def _pick_pressure(self, p=None):
         if p is not None:
@@ -2805,13 +3313,11 @@ class LoadsView:
         names = self._purposes_of(cart)
         if len(names) <= 2:                      # only one purpose: nothing to pick between
             return
-        self.app.label(self.chip_row, "PURPOSE", 9, MUTED, True).pack(side="left", padx=(0, 10))
         for name in names:
             n = len(items) if name == "All" else sum(self._purpose_of(x) == name for x in items)
-            chip = tk.Label(self.chip_row, text=f"{name} ({n})", font=self.app.f(10, True),
-                            padx=10, pady=4, cursor="hand2")
-            chip.pack(side="left", padx=(0, 6))
-            chip.bind("<Button-1>", lambda e, nm=name: self._pick_purpose(nm))
+            chip = self.app.chip(self.chip_row, name, lambda nm=name: self._pick_purpose(nm),
+                                 note=str(n))
+            chip.pack(side="left", padx=(0, self.app.px(6)))
             self.chips[name] = chip
         self._style_chips()
 
@@ -2826,19 +3332,17 @@ class LoadsView:
         items = [x for x in items if self._press_ok(x)]
         for name, chip in self.src_chips.items():
             n = sum(name == "All" or x.handload == (name == "Handloads") for x in items)
-            chip.config(text=f"{name} ({n})")
+            chip.set(note=str(n))
         shown = [x for x in items if self.source == "All" or x.handload == (self.source == "Handloads")]
         for name, chip in self.chips.items():
             n = len(shown) if name == "All" else sum(self._purpose_of(x) == name for x in shown)
-            chip.config(text=f"{name} ({n})")
+            chip.set(note=str(n))
 
     def _style_chips(self):
         for name, chip in self.chips.items():
-            on = name == self.purpose
-            chip.config(bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
+            chip.set(kind="on" if name == self.purpose else "chip")
         for name, chip in self.src_chips.items():
-            on = name == self.source
-            chip.config(bg=ACCENT if on else SURFACE_2, fg=ON_ACCENT if on else TEXT)
+            chip.set(kind="on" if name == self.source else "chip")
 
     def _pick_purpose(self, name):
         self.purpose = name
@@ -2867,8 +3371,8 @@ class LoadsView:
             self.rows = []
             self.selected = None
             self.detail.grid_remove()
-            self.count_lbl.config(text=f"No factory loads listed for {cart}. Use \"+ Add handload\" "
-                                       "to grade your own.")
+            self.count_lbl.config(text=f"No factory loads listed for {cart}. Add your own in the "
+                                       "Handloads tab to grade it.")
             return
         if self.purpose != "All":
             items = [x for x in items if self._purpose_of(x) == self.purpose]
@@ -3000,10 +3504,9 @@ class LoadsView:
                 "hits": f"{st['hits']:.0f} ({hits_class(st['hits'])})"}
         for key, (val, badge) in self.d_badges.items():
             grade = grade_relative(row["scores"][key])
-            bg, fg = GRADE_COLORS[grade]
             val.config(text=vals[key])
             if self.app.show_grades:
-                badge.config(text=grade, bg=bg, fg=fg)
+                badge.set(grade)
                 badge.pack(side="left", padx=(6, 0))
             else:
                 badge.pack_forget()
@@ -3075,7 +3578,7 @@ class LoadsView:
             last = self.detail if self.selected is not None else self.footnote
             if not last.winfo_ismapped():
                 return a.fit_window()
-            rowh = a.px(28)
+            rowh = a.px(30)
             rows_now = int(self.tree.cget("height"))
             bottom = last.winfo_rooty() + last.winfo_height() - a.stage.winfo_rooty()
             spare = a.canvas.winfo_height() - a.px(22) - (bottom - rows_now * rowh)
@@ -3125,144 +3628,761 @@ class LoadsView:
                 break
 
 
-class LoadSearch:
-    """Type into a load or cartridge menu to search it (issue #24; cartridges too since Oct
-    2026). The matches show in a list under the box while the box keeps the keyboard: every
-    typed word must appear in the name (brand, bullet, weight...), Up/Down move, Enter or a
-    click picks, Esc closes.
-    names: the searched list. value(name): the box text once a name is picked (default: the
-    name). valid: the box texts that count as a pick; browse: what Down lists with nothing typed
-    (both default to names). on_pick(name) gets the picked name from the list."""
-    MAX_ROWS = 12
+def rounded_rect(canvas, x1, y1, x2, y2, r, **kw):
+    """A rectangle with rounded corners on a Canvas (a smoothed polygon)."""
+    r = max(0, min(r, (x2 - x1) / 2, (y2 - y1) / 2))
+    pts = (x1 + r, y1, x2 - r, y1, x2, y1, x2, y1 + r, x2, y2 - r, x2, y2, x2 - r, y2,
+           x1 + r, y2, x1, y2, x1, y2 - r, x1, y1 + r, x1, y1)
+    return canvas.create_polygon(pts, smooth=True, **kw)
 
-    def __init__(self, app, box, names, on_pick, value=None):
+
+class LoadSearch:
+    """A cartridge or load box that opens a search pop-up (issue #24; a pop-up since Oct 2026,
+    the desktop match for the phone's bottom sheet): a click, Down, Enter or a typed letter on
+    the box opens a panel under it with a search field (the cursor in it) over the list. Every
+    typed word must appear in the name (brand, bullet, weight...); Up/Down move, Enter or a
+    click picks, Esc or a click outside closes. The box itself takes no typing, so its text is
+    never selected.
+    names: the list. value(name): the box text once a name is picked (default: the name).
+    browse: the order to list them in (default: names). head(name): a group heading over the
+    rows (optional), label(name): a row's text (default: the name). on_pick(name) gets the
+    pick; last is the box text of the last pick. hint: the grey text an empty box shows, like
+    the web's placeholder (a string, or a function for one that changes). own: lets the user
+    keep what they typed when it isn't in the list (a last row 'Use "..."'; makers, bullets and
+    powders in the handload form)."""
+    MAX_ROWS = 14
+
+    def __init__(self, app, box, names, on_pick, value=None, head=None, label=None, hint=None,
+                 own=False):
         self.app, self.box, self.names, self.on_pick = app, box, names, on_pick
         self.value = value or (lambda n: n)
-        self.valid = self.browse = None   # None: the same as names
+        self.head, self.label = head, label or (lambda n: n)
+        self.browse = None                # None: the same as names
         self.var = box.cget("textvariable")
-        self.popup = self.listbox = None
-        self.matches = []
-        self.last = ""                    # the pick before the typing started
-        box.bind("<KeyRelease>", self._typed)
-        box.bind("<Down>", lambda e: self._move(1))
-        box.bind("<Up>", lambda e: self._move(-1))
-        box.bind("<Return>", lambda e: self._pick())
-        box.bind("<Escape>", lambda e: self.close())
-        box.bind("<FocusIn>", lambda e: box.select_range(0, "end"))
-        box.bind("<FocusOut>", lambda e: box.after(150, self._left))
+        self.popup = self.listbox = self.entry = self.canvas = self.bar = None
+        self.rows, self.texts, self.tops, self.at, self.total = [], [], [], None, 0
+        # rows: a name, or None for a heading / the no-match line; tops: each row's y
+        self.last = ""
+        box.bind("<Button-1>", self._click)
+        box.bind("<Key>", self._key)
+        for ev in ("<<Paste>>", "<<Cut>>", "<<Clear>>"):
+            box.bind(ev, lambda e: "break")
+        self.hint, self.own = hint, own
+        self.hint_label = None
+        if hint is not None:
+            self.hint_label = tk.Label(box, bg=SURFACE_2, fg=MUTED, font=box.cget("font"),
+                                       cursor="hand2", padx=0, pady=0)
+            self.hint_label.bind("<Button-1>", self._click)
+            box.tk.call("trace", "add", "variable", self.var, "write",
+                        box.register(lambda *x: self.show_hint()))
+            self.show_hint()
+
+    def show_hint(self):
+        """Shows the hint while the box is empty (call it again when a hint function would
+        give a different text)."""
+        h = self.hint_label
+        if h is None or not h.winfo_exists():
+            return
+        if self.text():
+            h.place_forget()
+        else:
+            h.config(text=self.hint() if callable(self.hint) else self.hint)
+            h.place(x=self.app.px(5), rely=0.5, anchor="w")
 
     def text(self):
-        return self.box.getvar(self.var)
+        return self.box.tk.globalgetvar(self.var)
 
-    def _typed(self, e):
-        if e.keysym in ("Down", "Up", "Return", "KP_Enter", "Escape", "Tab", "ISO_Left_Tab"):
-            return
-        if self._ok(self.text()):
-            self.close()
-            return
-        self.matches = self._find(self.text())
-        self._show()
+    def _click(self, e):
+        if str(self.box.cget("state")) != "disabled":
+            self.box.focus_set()
+            self.open()
+        return "break"
 
-    def _ok(self, text):
-        return text in (self.names if self.valid is None else self.valid)
+    def _key(self, e):
+        if e.keysym in ("Tab", "ISO_Left_Tab", "Escape") or str(self.box.cget("state")) == "disabled":
+            return None
+        if e.keysym in ("Down", "Up", "Return", "KP_Enter", "space"):
+            self.open()
+        elif e.char and e.char.isprintable() and not e.state & 0x4:   # a letter starts a search
+            self.open(e.char)
+        return "break"
 
     def _find(self, text):
         words = text.lower().split()
-        return [n for n in self.names if all(w in n.lower() for w in words)]
+        order = self.names if self.browse is None else self.browse
+        return [n for n in order if all(w in n.lower() for w in words)]
 
-    def _show(self):
-        if not self.matches:
-            self.close()
+    def open(self, typed=""):
+        if self.popup is not None or not (self.names or self.own):
             return
         a = self.app
+        # drawn like a refined menu (and like the web version): a rounded search field with a
+        # magnifier, rows without lines, a rounded highlight set in from the edges, a check on
+        # the current pick, quiet headings, and a thin scrollbar in the theme's colours
+        self.font, self.head_font = tkfont.Font(font=a.f(11)), tkfont.Font(font=a.f(8, True))
+        self.row_h, self.head_h = a.px(34), a.px(30)
+        self.pop_w, self.up = 0, None
+        # drawn inside the box's own window (not a window of its own), so it moves with the
+        # window and never floats over other apps after Alt+Tab
+        self.popup = tk.Frame(self.box.winfo_toplevel(), bg=BORDER)
+        frame = tk.Frame(self.popup, bg=SURFACE)
+        frame.pack(fill="both", expand=True, padx=1, pady=1)
+        field = tk.Canvas(frame, bg=SURFACE, height=a.px(38), highlightthickness=0, borderwidth=0)
+        field.pack(fill="x", padx=a.px(8), pady=(a.px(8), a.px(6)))
+        self.query = tk.StringVar(value=typed)
+        self.entry = tk.Entry(field, textvariable=self.query, bg=SURFACE_2, fg=TEXT,
+                              insertbackground=TEXT, relief="flat", font=a.f(11),
+                              highlightthickness=0, borderwidth=0)
+        hint = tk.Label(field, text="Search", bg=SURFACE_2, fg=MUTED, font=a.f(11), anchor="w")
+        def draw_field(e=None):
+            w, h, r = field.winfo_width(), field.winfo_height(), a.px(8)
+            field.delete("deco")
+            rounded_rect(field, 1, 1, w - 2, h - 2, r, fill=SURFACE_2, outline=ACCENT, tags="deco")
+            cx, cy, cr = a.px(17), h / 2 - a.px(1), a.px(5)
+            field.create_oval(cx - cr, cy - cr, cx + cr, cy + cr, outline=MUTED, width=a.px(2) / 1.2,
+                              tags="deco")
+            field.create_line(cx + cr * 0.7, cy + cr * 0.7, cx + cr * 1.7, cy + cr * 1.7,
+                              fill=MUTED, width=a.px(2), capstyle="round", tags="deco")
+            field.coords("entry", a.px(32), h / 2)
+            field.itemconfig("entry", width=max(10, w - a.px(42)))
+        field.create_window(a.px(32), a.px(19), window=self.entry, anchor="w", tags="entry")
+        field.bind("<Configure>", draw_field)
+        field.bind("<Button-1>", lambda e: self.entry.focus_set())
+        show_hint = lambda *x: (hint.place_forget() if self.query.get() else
+                                hint.place(in_=self.entry, x=0, rely=0.5, anchor="w"))
+        hint.bind("<Button-1>", lambda e: self.entry.focus_set())
+        body = tk.Frame(frame, bg=SURFACE)
+        body.pack(fill="both", expand=True, pady=(0, a.px(6)))
+        self.canvas = tk.Canvas(body, bg=SURFACE, highlightthickness=0, borderwidth=0,
+                                yscrollincrement=self.row_h // 2)
+        self.bar = tk.Canvas(body, bg=SURFACE, width=a.px(10), height=1, highlightthickness=0, borderwidth=0)
+        self.bar.pack(side="right", fill="y", padx=(0, a.px(3)))
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.canvas.config(yscrollcommand=lambda f, l: self._draw_bar(float(f), float(l)))
+        self.canvas.bind("<Configure>", lambda e: self._draw())
+        self.canvas.bind("<Motion>", self._hover)
+        self.canvas.bind("<ButtonRelease-1>", lambda e: self._pick(self._row_at(e.y)))
+        self.bar.bind("<Button-1>", self._bar_press)
+        self.bar.bind("<B1-Motion>", self._bar_drag)
+        self.bar.bind("<Configure>", lambda e: self._draw_bar(*self.canvas.yview()))
+        self.listbox = self.canvas            # App._on_wheel: the wheel scrolls the pop-up
+        for key, step in (("<Down>", 1), ("<Up>", -1), ("<Next>", 10), ("<Prior>", -10)):
+            self.entry.bind(key, lambda e, s=step: self._move(s))
+        self.entry.bind("<Return>", lambda e: self._pick())
+        self.entry.bind("<KP_Enter>", lambda e: self._pick())
+        self.entry.bind("<Escape>", lambda e: self.close(refocus=True))
+        self.entry.bind("<Tab>", lambda e: self.close(refocus=True))
+        self.popup.bind("<Button-1>", self._click_out)
+        self.query.trace_add("write", lambda *x: (show_hint(), self._fill()))
+        a.search_popup = self
+        show_hint()
+        self._fill(first=True)
+        self._place()
+        self._see(self.at, center=True)
+        self.opened_at = self.window_at()
+        self.entry.bind("<FocusOut>", lambda e: self.box.after(80, self._focus_left))
+        try:
+            self.prev_grab = self.box.grab_current()   # a dialog's own grab, given back on close
+            self.popup.grab_set()             # a click outside reaches the pop-up, which closes
+        except tk.TclError:
+            pass
+        self.entry.focus_force()
+        self.entry.icursor("end")
+
+    def _fill(self, first=False):
+        """Work out the rows (a name, or None for a heading / the no-match line) and draw them."""
         if self.popup is None:
-            self.popup = tk.Toplevel(self.box)
-            self.popup.wm_overrideredirect(True)
-            self.listbox = tk.Listbox(self.popup, bg=SURFACE_2, fg=TEXT, selectbackground=ACCENT,
-                                      selectforeground=ON_ACCENT, font=a.f(11), activestyle="none",
-                                      highlightthickness=1, highlightbackground=BORDER,
-                                      borderwidth=0, takefocus=0, exportselection=False)
-            self.listbox.pack(fill="both", expand=True)
-            self.listbox.bind("<ButtonRelease-1>", lambda e: self._pick(self.listbox.nearest(e.y)))
-            a.search_popup = self
-        self.listbox.delete(0, "end")
-        for n in self.matches:
-            self.listbox.insert("end", n)
-        self.listbox.config(height=min(len(self.matches), self.MAX_ROWS))
-        self.listbox.selection_clear(0, "end")
-        self.listbox.selection_set(0)
-        self.popup.wm_geometry(f"+{self.box.winfo_rootx()}+{self.box.winfo_rooty() + self.box.winfo_height()}")
+            return
+        matches = self._find(self.query.get())
+        cur = self.text()
+        self.rows, self.texts, self.tops, self.at = [], [], [], None
+        y, last = 0, object()
+        for n in matches:
+            h = self.head(n) if self.head else None
+            if h is not None and h != last:
+                self.rows.append(None)
+                self.texts.append(h.upper())
+                self.tops.append(y)
+                y += self.head_h
+            last = h
+            self.rows.append(n)
+            self.texts.append(self.label(n))
+            self.tops.append(y)
+            y += self.row_h
+            if first and self.at is None and self.value(n) == cur:
+                self.at = len(self.rows) - 1
+        q = self.query.get().strip()
+        if self.own and q and not any(self.value(n).lower() == q.lower() for n in matches):
+            self.rows.append((q,))            # the user's own text, not a list entry
+            self.texts.append(f"Use \u201c{q}\u201d")
+            self.tops.append(y)
+            y += self.row_h
+        elif not matches:
+            self.rows.append(None)
+            self.texts.append(f"No matches for \u201c{q}\u201d")
+            self.tops.append(y)
+            y += self.row_h
+        self.total = y
+        if self.at is None:
+            self.at = next((i for i, r in enumerate(self.rows) if r is not None), None)
+        self.canvas.yview_moveto(0)
+        if first:
+            self._draw()
+        else:
+            self._place()                     # the list shrinks to fit what's left
+
+    def _draw(self):
+        c, a = self.canvas, self.app
+        if c is None:
+            return
+        c.delete("all")
+        w, cur, pad = max(c.winfo_width(), a.px(200)), self.text(), a.px(6)
+        for i, (name, text, top) in enumerate(zip(self.rows, self.texts, self.tops)):
+            if name is None:
+                if text.startswith("No matches"):
+                    c.create_text(a.px(14), top + self.row_h / 2, text=text, anchor="w",
+                                  fill=MUTED, font=self.font)
+                else:                         # a heading: small muted capitals, a little air above
+                    c.create_text(a.px(14), top + self.head_h * 0.62, text=text, anchor="w",
+                                  fill=MUTED, font=self.head_font)
+                continue
+            on = i == self.at
+            if on:
+                rounded_rect(c, pad, top + a.px(2), w - pad, top + self.row_h - a.px(2), a.px(6),
+                             fill=ACCENT, outline="")
+            c.create_text(a.px(14), top + self.row_h / 2, text=text, anchor="w",
+                          fill=ON_ACCENT if on else TEXT, font=self.font)
+            if self._val(name) == cur:        # the current pick
+                c.create_text(w - a.px(16), top + self.row_h / 2, text="\u2713", anchor="e",
+                              fill=ON_ACCENT if on else ACCENT, font=self.font)
+        c.config(scrollregion=(0, 0, w, self.total))
+
+    def _draw_bar(self, first, last):
+        b, a = self.bar, self.app
+        if b is None:
+            return
+        b.delete("all")
+        if last - first >= 0.999:             # everything fits: no scrollbar
+            return
+        h, w = b.winfo_height(), b.winfo_width()
+        top, bottom = first * h, max(first * h + a.px(24), last * h)
+        rounded_rect(b, a.px(2), top + a.px(2), w - a.px(2), bottom - a.px(2), (w - a.px(4)) / 2,
+                     fill=MUTED, outline="")
+
+    def _bar_press(self, e):
+        first, last = self.canvas.yview()
+        h = max(1, self.bar.winfo_height())
+        if first * h <= e.y <= last * h:      # on the thumb: drag it
+            self._drag_from = (e.y, first)
+        else:                                 # on the track: jump there
+            self.canvas.yview_moveto(max(0, e.y / h - (last - first) / 2))
+            self._drag_from = (e.y, self.canvas.yview()[0])
+
+    def _bar_drag(self, e):
+        y0, f0 = getattr(self, "_drag_from", (e.y, 0))
+        self.canvas.yview_moveto(f0 + (e.y - y0) / max(1, self.bar.winfo_height()))
+
+    def _row_at(self, y):
+        y = self.canvas.canvasy(y)
+        for i, top in enumerate(self.tops):
+            if top <= y < top + (self.row_h if self.rows[i] is not None else self.head_h):
+                return i
+        return -1
+
+    def _hover(self, e):
+        i = self._row_at(e.y)
+        if i != self.at and 0 <= i < len(self.rows) and self.rows[i] is not None:
+            self.at = i
+            self._draw()
+        self.canvas.config(cursor="hand2" if 0 <= i < len(self.rows) and self.rows[i] else "")
+
+    def _place(self):
+        box, a = self.box, self.app
+        top = box.winfo_toplevel()
+        tw, th = top.winfo_width(), top.winfo_height()
+        widest = max([self.font.measure(t) for t in self.texts] + [0])
+        w = max(box.winfo_width(), min(widest + a.px(64), a.px(640)), a.px(320), self.pop_w)
+        w = min(w, tw - a.px(8))
+        self.pop_w = w                        # never narrower while typing
+        gap = a.px(4)
+        bx, by = box.winfo_rootx() - top.winfo_rootx(), box.winfo_rooty() - top.winfo_rooty()
+        below, above = th - (by + box.winfo_height() + gap) - gap, by - 2 * gap
         self.popup.update_idletasks()
-        self.popup.wm_geometry(f"{max(self.box.winfo_width(), self.listbox.winfo_reqwidth())}x"
-                               f"{self.listbox.winfo_reqheight()}")
+        extra = self.popup.winfo_reqheight() - self.canvas.winfo_reqheight()   # field + edges
+        want = min(self.total, a.px(420))
+        if self.up is None:                   # pick a side once: below, unless above has more room
+            self.up = want + extra > below and above > below
+        room = (above if self.up else below) - extra
+        self.canvas.config(height=max(min(want, room), self.row_h), width=w - a.px(16))
+        self.popup.update_idletasks()
+        h = self.popup.winfo_reqheight()
+        y = by - h - gap if self.up else by + box.winfo_height() + gap
+        x = max(0, min(bx, tw - w))
+        self.popup.place(x=x, y=max(0, y), width=w, height=h)
         self.popup.lift()
+        self.popup.update_idletasks()
+        self._draw()
+        self.placed = time.monotonic()        # resizing the window can drop its focus
+
+    def scroll(self, step):
+        self.canvas.yview_scroll(step * 3, "units")
+
+    def _see(self, i, center=False):
+        if i is None or self.popup is None or self.total <= 0:
+            return
+        top = self.tops[i]
+        if i > 0 and self.rows[i - 1] is None:
+            top = self.tops[i - 1]            # keep the row's heading in view too
+        bottom = self.tops[i] + self.row_h
+        view = self.canvas.winfo_height()
+        y0 = self.canvas.canvasy(0)
+        if center:
+            self.canvas.yview_moveto(max(0, top - view / 2 + self.row_h) / self.total)
+        elif top < y0:
+            self.canvas.yview_moveto(top / self.total)
+        elif bottom > y0 + view:
+            self.canvas.yview_moveto((bottom - view) / self.total)
+
+    def _select(self, i, see=True):
+        if not (0 <= i < len(self.rows)) or self.rows[i] is None:
+            return
+        self.at = i
+        self._draw()
+        if see:
+            self._see(i)
 
     def _move(self, step):
-        if self.popup is None:
-            self.matches = list(self.names if self.browse is None else self.browse) \
-                if self._ok(self.text()) or not self.text().strip() else self._find(self.text())
-            self._show()
-            return "break"
-        cur = self.listbox.curselection()
-        i = min(max((cur[0] if cur else -1) + step, 0), len(self.matches) - 1)
-        self.listbox.selection_clear(0, "end")
-        self.listbox.selection_set(i)
-        self.listbox.see(i)
+        i = -1 if self.at is None else self.at
+        names = [k for k, r in enumerate(self.rows) if r is not None]
+        if names:
+            ahead = [k for k in names if (k > i if step > 0 else k < i)]
+            if ahead:
+                n = min(abs(step), len(ahead))
+                i = ahead[n - 1] if step > 0 else ahead[-n]
+            self._select(i)
         return "break"
-
-    def _typed_pick(self):
-        """The name whose box text was typed out in full instead of picked from the list (the
-        list closes then), or None if the text is no pick or the one already made."""
-        text = self.text()
-        if text == self.last or not self._ok(text):
-            return None
-        return next((n for n in (self.names if self.browse is None else self.browse)
-                     if self.value(n) == text), None)
 
     def _pick(self, i=None):
-        if self.popup is None:                # a name typed out in full + Enter picks it too
-            name = self._typed_pick()
-            if name is not None:
-                self.on_pick(name)
-        elif self.matches:
-            if i is None:
-                cur = self.listbox.curselection()
-                i = cur[0] if cur else 0
-            name = self.matches[i]
-            self.box.setvar(self.var, self.value(name))
-            self.close()
-            self.box.focus_set()
-            self.box.icursor("end")
-            self.on_pick(name)
+        if self.popup is None:
+            return "break"
+        if i is None:
+            i = -1 if self.at is None else self.at
+        if not (0 <= i < len(self.rows)) or self.rows[i] is None:
+            return "break"
+        name = self.rows[i]
+        self.close(refocus=True)
+        self.box.tk.globalsetvar(self.var, self._val(name))
+        self.last = self._val(name)
+        self.on_pick(name[0] if isinstance(name, tuple) else name)
+        self._unselect()
         return "break"
 
-    def _left(self):
-        """Focus left the box: drop typing that isn't a pick (the pick before it stays)."""
-        try:
-            if not self.box.winfo_exists():
-                return
-            focus = self.box.focus_get()
-        except (KeyError, tk.TclError):
-            focus = None
-        if focus is self.box or (focus is not None and focus is self.listbox):
-            return
-        self.close()
-        if not self._ok(self.text()):
-            self.box.setvar(self.var, self.last if self._ok(self.last) else "")
-            return
-        name = self._typed_pick()             # typed out in full: the table follows the box
-        if name is not None:
-            self.on_pick(name)
+    def _val(self, name):
+        return name[0] if isinstance(name, tuple) else self.value(name)
 
-    def close(self):
+    def window_at(self):
+        """Where the box's window is on screen and its size (the pop-up closes when it changes)."""
+        top = self.box.winfo_toplevel()
+        return top.winfo_rootx(), top.winfo_rooty(), top.winfo_width(), top.winfo_height()
+
+    def _focus_left(self):
+        try:
+            if self.popup is not None and self.box.focus_get() is None:
+                if time.monotonic() - getattr(self, "placed", 0) < 0.5:
+                    self.entry.focus_force()  # lost to the pop-up's own resize, not another app
+                else:
+                    self.close()              # another app has the focus now
+        except (tk.TclError, KeyError):
+            pass
+
+    def _click_out(self, e):
+        w = self.popup.winfo_containing(e.x_root, e.y_root)
+        if w is None or str(w).find(str(self.popup)) != 0:
+            self.close()
+
+    def _unselect(self):
+        try:
+            if self.box.winfo_exists():
+                self.box.selection_clear()
+        except tk.TclError:
+            pass
+
+    def close(self, refocus=False):
         if self.popup is not None:
             try:
+                self.popup.grab_release()
                 self.popup.destroy()
+                prev = getattr(self, "prev_grab", None)
+                if prev is not None and prev.winfo_exists():
+                    prev.grab_set()
             except tk.TclError:
                 pass
-            self.popup = self.listbox = None
+            self.popup = self.listbox = self.entry = self.canvas = self.bar = None
+            if refocus:
+                try:
+                    self.box.focus_force()        # back from the pop-up's own window
+                    self._unselect()
+                except tk.TclError:
+                    pass
         if getattr(self.app, "search_popup", None) is self:
             self.app.search_popup = None
+        return "break"
+
+
+class HandloadsView:
+    """The Handloads tab: every handload of every category in one place, to add, edit,
+    duplicate, delete, back up and restore. Each card shows the load's Load Dictionary grade
+    (against every load of its cartridge, with that category's dictionary weights and distance)."""
+    tab = "hand"
+    cat = None
+
+    def __init__(self, app, stage, open_id=None):
+        self.app, self.root = app, app.root
+        self.open_id, self.cat_on = open_id, "All"
+        self.scroll_to_open = open_id is not None
+        a = app
+        wrap = tk.Frame(stage, bg=BG)
+        wrap.pack(fill="both", expand=True, padx=a.px(34), pady=(a.px(26), a.px(28)))
+        wrap.columnconfigure(0, weight=1)
+        a.label(wrap, tool_title("hand"), 17, TEXT, True, bg=BG, anchor="w").grid(row=0, column=0, sticky="w")
+        blurb = a.label(wrap, "Your own reloads, from every category. Each one is graded against the "
+                              "factory loads of its cartridge, the same as in the Load Dictionary, "
+                              "and can go head to head.", 11, MUTED, bg=BG, anchor="w", justify="left")
+        blurb.grid(row=1, column=0, sticky="ew", pady=(2, 14))
+        blurb.bind("<Configure>", lambda e: blurb.configure(wraplength=max(e.width, 1)))
+        bar = tk.Frame(wrap, bg=BG)
+        bar.grid(row=2, column=0, sticky="ew")
+        a.button(bar, "+  New handload", self._new, "primary").pack(side="left")
+        for text, cmd in (("Restore…", self._restore), ("Back up…", self._backup)):
+            link = tk.Label(bar, text=text, bg=BG, fg=ACCENT, font=a.f(10, True), cursor="hand2")
+            link.pack(side="right", padx=(14, 0))
+            link.bind("<Button-1>", lambda e, c=cmd: c())
+        self.search_row = tk.Frame(wrap, bg=BG)
+        self.search_row.grid(row=3, column=0, sticky="ew", pady=(12, 0))
+        self.q_var = tk.StringVar()
+        a.label(self.search_row, "SEARCH (NAME, CARTRIDGE, BULLET OR POWDER)", 8, MUTED, True, bg=BG,
+                anchor="w").pack(anchor="w", pady=(0, a.px(5)))
+        a.field(self.search_row, ttk.Entry, textvariable=self.q_var, font=a.f(11))[0].pack(fill="x")
+        self.q_var.trace_add("write", lambda *_: self.draw())
+        self.chip_row = tk.Frame(wrap, bg=BG)
+        self.chip_row.grid(row=4, column=0, sticky="w", pady=(10, 0))
+        self.list = tk.Frame(wrap, bg=BG)
+        self.list.grid(row=5, column=0, sticky="ew")
+        self.list.columnconfigure(0, weight=1)
+        self.note = tk.Frame(wrap, bg=BG)
+        self.note.grid(row=6, column=0, sticky="ew", pady=(14, 0))
+        disclaimer(a, self.note, BG)
+        self.draw()
+
+    # ---- data -------------------------------------------------------------- #
+    def items(self):
+        """[(category, handload Load)] of every bullet category."""
+        out = []
+        for c in CATEGORIES:
+            if c.grain_style and not self.app.data[c.title]["error"]:
+                out += [(c, it) for it in self.app.hand_loads(c)]
+        return out
+
+    def grade(self, cat, item):
+        """Its Load Dictionary row: against every load of its cartridge, at the dictionary's distance."""
+        app = self.app
+        loads = [x for x in app.data[cat.title]["detail"] + app.hand_loads(cat)
+                 if x.cartridge == item.cartridge]
+        item = next(x for x in loads if x.handload and x.hid == item.hid)
+        try:
+            dist = float(app.carry.get(cat.title, {}).get("dist", cat.default_distance))
+        except (TypeError, ValueError):
+            dist = cat.default_distance
+        return h2h_rows([(cat, item)], dist, None, app.dict_weights, app.price_for,
+                        {(cat.title, item.cartridge): loads})[0]
+
+    # ---- drawing ------------------------------------------------------------ #
+    def draw(self):
+        a = self.app
+        for w in self.chip_row.winfo_children() + self.list.winfo_children():
+            w.destroy()
+        items = self.items()
+        cats = list(dict.fromkeys(c.title for c, _ in items))
+        if self.cat_on not in cats:
+            self.cat_on = "All"
+        if len(cats) > 1:
+            for name in ["All"] + cats:
+                n = len(items) if name == "All" else sum(c.title == name for c, _ in items)
+                chip = a.chip(self.chip_row, name, lambda nm=name: self._pick_cat(nm),
+                              on=name == self.cat_on, note=str(n))
+                chip.pack(side="left", padx=(0, a.px(6)))
+        if items:
+            self.search_row.grid()
+        else:
+            self.search_row.grid_remove()
+            card = a.card(self.list, padx=4, pady=4)
+            card.grid(row=0, column=0, sticky="ew", pady=(a.px(16), 0))
+            box = card.body
+            a.label(box, "No handloads yet", 13, TEXT, True).pack(pady=(22, 4))
+            a.label(box, "Click “+  New handload” to add your first. It's graded against the "
+                         "factory loads of its cartridge.", 10, MUTED).pack(pady=(0, 22), padx=20)
+            return a._update_scroll()
+        words = self.q_var.get().lower().split()
+        shown = [(c, it) for c, it in items
+                 if (self.cat_on == "All" or c.title == self.cat_on) and all(
+                     w in " ".join([it.label, it.cartridge] + [it.info.get(k, "") for k in (
+                         "bullet_maker", "bullet", "powder", "notes")]).lower() for w in words)]
+        if not shown:
+            a.label(self.list, "No handloads match.", 11, MUTED, bg=BG, anchor="w").grid(
+                row=0, column=0, sticky="w", pady=(14, 0))
+            return a._update_scroll()
+        order = {c.title: i for i, c in enumerate(CATEGORIES)}
+        shown.sort(key=lambda p: (order[p[0].title], p[1].cartridge.lower(), p[1].label.lower()))
+        row, last, open_card = 0, None, None
+        for c, it in shown:
+            if (c.title, it.cartridge) != last:
+                last = (c.title, it.cartridge)
+                head = tk.Frame(self.list, bg=BG)
+                head.grid(row=row, column=0, sticky="w", pady=(18, 6))
+                a.label(head, it.cartridge, 12, TEXT, True, bg=BG).pack(side="left")
+                a.label(head, f"  ·  {c.title}", 10, MUTED, True, bg=BG).pack(side="left")
+                row += 1
+            card = self._card(c, it)
+            card.grid(row=row, column=0, sticky="ew", pady=(0, 8))
+            if it.hid == self.open_id:
+                open_card = card
+            row += 1
+        a._update_scroll()
+        if open_card is not None and self.scroll_to_open:    # opened from the Load Dictionary
+            self.scroll_to_open = False
+            self.root.update_idletasks()
+            total = max(1, a.stage.winfo_reqheight())
+            y = open_card.winfo_rooty() - a.stage.winfo_rooty()
+            a.canvas.yview_moveto(max(0.0, (y - a.px(80)) / total))
+
+    def _card(self, cat, it):
+        a, rec = self.app, it.info
+        r = self.grade(cat, it)
+        is_open = self.open_id == it.hid
+        box = a.card(self.list, border=ACCENT if is_open else BORDER, padx=4, pady=4)
+        box.configure(cursor="hand2")
+        card = box.body
+        card.columnconfigure(0, weight=1)
+        name = a.label(card, it.load, 12, TEXT, True, anchor="w", justify="left")
+        name.grid(row=0, column=0, sticky="w", padx=(12, 8), pady=(8, 0))
+        clickable = [box, box.canvas, card, name]
+        if a.show_grades:
+            gbox = tk.Frame(card, bg=SURFACE)
+            gbox.grid(row=0, column=1, rowspan=2, sticky="ne", padx=12, pady=(8, 0))
+            Badge(gbox, a, r["grade"], 10).pack(anchor="e")
+            rk = a.label(gbox, f"#{r['rank']} of {r['peers']}", 9, MUTED)
+            rk.pack(anchor="e", pady=(2, 0))
+            clickable += [gbox, rk]
+        st = r["stats"]
+        stats = a.label(card, f"{st['velocity']:.0f} fps    {st['energy']:.0f} ft-lbs    "
+                              f"${st['cost']:.2f} a round    at {r['dist']:g} yd", 10, MUTED, anchor="w")
+        stats.grid(row=1, column=0, sticky="w", padx=12, pady=(2, 8))
+        clickable.append(stats)
+        for w in clickable:
+            w.bind("<Button-1>", lambda e, h=it.hid: self._toggle(h))
+        if is_open:
+            self._details(card, cat, it, r)
+        return box
+
+    def _details(self, card, cat, it, r):
+        a, rec = self.app, it.info
+        tk.Frame(card, bg=BORDER, height=1).grid(row=2, column=0, columnspan=2, sticky="ew", padx=12)
+        det = tk.Frame(card, bg=SURFACE)
+        det.grid(row=3, column=0, columnspan=2, sticky="ew", padx=12, pady=(10, 0))
+        bullet = " ".join(x for x in (rec.get("bullet_maker", ""), rec.get("bullet", "")) if x) or "Bullet"
+        parts = [bullet, f"{it.bullet_gr:g} gr"]
+        if it.diameter_in:
+            parts.append(f"{it.diameter_in:g} in")
+        parts.append(f"BC {it.bc_g1:g}")
+        lines = [("Bullet", "  ·  ".join(parts)),
+                 ("Powder", "  ·  ".join(x for x in (rec.get("powder", ""), f"{it.powder_gr:g} gr") if x)),
+                 ("Velocity", f"{it.muzzle_fps:g} fps" + (f" from a {it.barrel_in:g} in barrel"
+                                                          if it.barrel_in else ""))]
+        if it.purpose:
+            lines.append(("Purpose", it.purpose))
+        n = 0
+        for n, (k, v) in enumerate(lines):
+            a.label(det, k, 10, MUTED, anchor="w").grid(row=n, column=0, sticky="nw", padx=(0, 16), pady=2)
+            a.label(det, v, 10, TEXT, True, anchor="w").grid(row=n, column=1, sticky="w", pady=2)
+        n += 1
+        a.label(det, "Cost", 10, MUTED, anchor="w").grid(row=n, column=0, sticky="nw", padx=(0, 16), pady=2)
+        get = lambda k: float(rec.get(k) or 0)
+        parts = [("Bullet", get("bullet_cost")), ("Powder", get("powder_gr") / 7000.0 * get("powder_cost_lb")),
+                 ("Primer", get("primer_cost")),
+                 ("Brass" + (f" (÷{get('brass_reuse'):g} reloads)" if get("brass_reuse") > 1 else ""),
+                  get("brass_cost") / max(1.0, get("brass_reuse") or 1))]
+        if any(v for _, v in parts):
+            cost = tk.Frame(det, bg=SURFACE)
+            cost.grid(row=n, column=1, sticky="w", pady=2)
+            for i, (k, v) in enumerate(parts):
+                a.label(cost, k, 10, TEXT, True).grid(row=i, column=0, sticky="w", padx=(0, 18))
+                a.label(cost, f"${v:.2f}", 10, TEXT).grid(row=i, column=1, sticky="e")
+            n_parts = len(parts)
+            tk.Frame(cost, bg=BORDER, height=1).grid(row=n_parts, column=0, columnspan=2, sticky="ew", pady=2)
+            a.label(cost, "Per round", 10, TEXT, True).grid(row=n_parts + 1, column=0, sticky="w")
+            a.label(cost, f"${it.default_cost:.2f}", 10, TEXT, True).grid(row=n_parts + 1, column=1, sticky="e")
+        else:
+            a.label(det, f"${it.default_cost:.2f} a round", 10, TEXT, True, anchor="w").grid(
+                row=n, column=1, sticky="w", pady=2)
+        if rec.get("notes"):
+            n += 1
+            a.label(det, "Notes", 10, MUTED, anchor="w").grid(row=n, column=0, sticky="nw", padx=(0, 16), pady=2)
+            a.label(det, rec["notes"], 10, TEXT, anchor="w", justify="left", wraplength=a.px(520)).grid(
+                row=n, column=1, sticky="w", pady=2)
+        if a.show_grades:
+            n += 1
+            a.label(det, "Grade", 10, MUTED, anchor="w").grid(row=n, column=0, sticky="nw", padx=(0, 16), pady=2)
+            a.label(det, f"{r['grade']}  ·  {r['overall']:.0f}, ranks #{r['rank']} of {r['peers']} "
+                         f"{it.cartridge} loads in the Load Dictionary", 10, TEXT, anchor="w").grid(
+                row=n, column=1, sticky="w", pady=2)
+        btns = tk.Frame(card, bg=SURFACE)
+        btns.grid(row=4, column=0, columnspan=2, sticky="w", padx=12, pady=(12, 4))
+        small = dict(size=10, padx=14, pady=7)
+        a.button(btns, "Edit", lambda: self._edit(it), "primary", **small).pack(side="left")
+        a.button(btns, "Duplicate", lambda: self._duplicate(it), **small).pack(side="left", padx=8)
+        delete = a.button(btns, "Delete", lambda: self._delete(cat, it), **small)
+        delete.text.configure(fg=DANGER)              # the web's red Delete
+        delete.pack(side="left")
+        links = tk.Frame(card, bg=SURFACE)
+        links.grid(row=5, column=0, columnspan=2, sticky="w", padx=12, pady=(4, 8))
+        key = pick_key(cat, it)
+        h2h = (f"In Head to Head ({len(a.h2h)} of {H2H_MAX})  ›" if key in a.h2h else
+               f"Head to Head is full ({H2H_MAX})  ›" if len(a.h2h) >= H2H_MAX else "+  Head to Head")
+        for text, cmd in (("Open in Load Dictionary  ›", lambda: self._to_dict(cat, it)),
+                          (h2h, lambda: self._to_h2h(cat, it))):
+            link = tk.Label(links, text=text, bg=SURFACE, fg=ACCENT, font=a.f(10, True), cursor="hand2")
+            link.pack(side="left", padx=(0, 20))
+            link.bind("<Button-1>", lambda e, c=cmd: c())
+
+    # ---- actions ------------------------------------------------------------ #
+    def _pick_cat(self, name):
+        self.cat_on = name
+        self.draw()
+
+    def _toggle(self, hid):
+        self.open_id = None if self.open_id == hid else hid
+        self.draw()
+
+    def _new(self):
+        open_handload_dialog(self.app, self.root, on_saved=self._saved)
+
+    def _edit(self, it):
+        open_handload_dialog(self.app, self.root, dict(it.info), on_saved=self._saved)
+
+    def _saved(self, row):
+        self.open_id = row["id"]
+        self.q_var.set("")
+        self.draw()
+
+    def _duplicate(self, it):
+        row = dict(it.info, id=new_handload_id(), name=(it.info.get("name") or it.load) + " (copy)")
+        try:
+            self.app.save_handload(row)
+        except OSError as exc:
+            return messagebox.showerror("Couldn't save", f"Could not write {HANDLOAD_FILENAME}:\n{exc}")
+        self._saved(row)
+
+    def _delete(self, cat, it):
+        if not messagebox.askyesno("Delete handload", f"Delete \"{it.load}\" from your handloads?"):
+            return
+        try:
+            self.app.delete_handload(it.hid)
+        except OSError as exc:
+            return messagebox.showerror("Couldn't delete", f"Could not write {HANDLOAD_FILENAME}:\n{exc}")
+        key = pick_key(cat, it)
+        if key in self.app.h2h:
+            self.app.h2h.remove(key)
+        self.open_id = None
+        self.draw()
+
+    def _to_dict(self, cat, it):
+        """Open the load in its Load Dictionary: its cartridge, the load selected."""
+        app = self.app
+        app.carry.setdefault(cat.title, {}).update(cart=it.cartridge, purpose="All", source="All")
+        app.go(cat, "loads")
+        view = app.view
+        if isinstance(view, LoadsView) and view.cat is cat:
+            view._reload_loads(select=it)
+
+    def _to_h2h(self, cat, it):
+        if self.app.add_to_h2h(cat, it) is None:
+            return self.app.show_h2h()
+        self.draw()
+
+    def _backup(self):
+        rows = self.app.hand_rows
+        if not rows:
+            return messagebox.showinfo("Back up", "You have no handloads to back up yet.")
+        from tkinter import filedialog
+        path = filedialog.asksaveasfilename(
+            parent=self.root, title="Back up handloads", defaultextension=".csv",
+            initialfile="my_handloads-backup.csv", filetypes=[("CSV files", "*.csv"), ("All files", "*")])
+        if not path:
+            return
+        try:
+            with open(path, "w", newline="", encoding="utf-8") as fh:
+                fh.write(handload_csv_text(rows))
+        except OSError as exc:
+            return messagebox.showerror("Couldn't back up", f"Could not write {path}:\n{exc}")
+        messagebox.showinfo("Backed up", f"{len(rows)} handload{'s' if len(rows) != 1 else ''} saved to\n"
+                                         f"{path}\n\nRestore it on any computer or phone with “Restore”.")
+
+    def _restore(self):
+        """A file, or a back up pasted from the phone, merged into the saved handloads."""
+        a = self.app
+        win = tk.Toplevel(self.root)
+        win.configure(bg=BG)
+        win.title("Restore handloads")
+        win.transient(self.root)
+        card = a.card(win, padx=4, pady=4)
+        card.pack(padx=16, pady=16, fill="both", expand=True)
+        body = card.body
+        a.label(body, "Open a back up file (or a my_handloads.csv), or paste a back up copied on "
+                      "the phone. Handloads you already have are kept; ones in the back up are "
+                      "added, or updated if they came from here.", 10, MUTED, anchor="w",
+                justify="left", wraplength=a.px(460)).pack(fill="x", padx=18, pady=(16, 10))
+        text = tk.Text(body, height=10, width=60, bg=SURFACE_2, fg=TEXT, insertbackground=TEXT,
+                       relief="flat", font=a.f(9))
+        text.pack(fill="both", expand=True, padx=18)
+
+        def open_file():
+            from tkinter import filedialog
+            path = filedialog.askopenfilename(parent=win, title="Open a handload back up",
+                                              filetypes=[("CSV files", "*.csv"), ("All files", "*")])
+            if not path:
+                return
+            try:
+                with open(path, encoding="utf-8-sig") as fh:
+                    data = fh.read()
+            except (OSError, UnicodeDecodeError) as exc:
+                return messagebox.showerror("Couldn't open", str(exc), parent=win)
+            text.delete("1.0", "end")
+            text.insert("1.0", data)
+
+        def go():
+            cats = {c.title for c in CATEGORIES if c.grain_style}
+            try:
+                rows, add, rep, skip = merge_handload_rows(a.hand_rows, text.get("1.0", "end"), cats)
+                write_handload_rows(rows)
+            except ValueError as exc:
+                return messagebox.showerror("Can't restore", str(exc), parent=win)
+            except OSError as exc:
+                return messagebox.showerror("Couldn't save", f"Could not write {HANDLOAD_FILENAME}:\n{exc}",
+                                            parent=win)
+            a.hand_rows = rows
+            win.destroy()
+            messagebox.showinfo("Restored", f"{add} new, {rep} updated" + (
+                f", {skip} skipped (not a rifle, handgun or rimfire handload, or missing figures)"
+                if skip else "") + ".")
+            self.draw()
+
+        btns = tk.Frame(body, bg=SURFACE)
+        btns.pack(fill="x", padx=18, pady=(12, 16))
+        a.button(btns, "Restore", go, "primary").pack(side="left")
+        a.button(btns, "Open file…", open_file).pack(side="left", padx=8)
+        a.button(btns, "Cancel", win.destroy).pack(side="left")
+        win.bind("<Escape>", lambda e: win.destroy())
+        text.focus_set()
 
 
 class HeadToHeadView:
@@ -3294,16 +4414,6 @@ class HeadToHeadView:
         # the cartridge search covers every category: "6.5 Creedmoor  ·  Rifle" -> (category, cartridge)
         self.cart_names = {f"{cart}  ·  {t}": (t, cart) for t, carts in self.cartridges.items()
                            for cart in carts}
-        # the cartridge menu: every category's cartridges under a "──  Category  ──" heading;
-        # a cartridge in two categories (.44 Magnum) names its category: text -> (category,
-        # cartridge), None for a heading
-        twice = {c for c in (c for carts in self.cartridges.values() for c in carts)
-                 if sum(c in carts for carts in self.cartridges.values()) > 1}
-        self.cart_menu = {}
-        for t, carts in self.cartridges.items():
-            self.cart_menu[f"──  {t}  ──"] = None
-            for cart in carts:
-                self.cart_menu[f"{cart} ({t})" if cart in twice else cart] = (t, cart)
         self.choices = {}                 # (category, cartridge) -> {text in the load menu: Load}
         for key, items in self.groups.items():
             self.choices[key] = {x.label + ("  (handload)" if x.handload else ""): x for x in items}
@@ -3336,23 +4446,25 @@ class HeadToHeadView:
         outer = tk.Frame(stage, bg=BG)
         outer.pack(fill="both", expand=True, padx=24, pady=22)
         outer.columnconfigure(0, weight=1)
-        a.label(outer, tool_title("h2h"), 20, TEXT, True, bg=BG).grid(
-            row=0, column=0, sticky="w", pady=(6, 16))
+        a.label(outer, tool_title("h2h"), 17, TEXT, True, bg=BG).grid(
+            row=0, column=0, sticky="w", pady=(0, a.px(12)))
         if not self.groups:
-            msg = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-            msg.grid(row=1, column=0, sticky="ew")
+            mbox = a.card(outer, padx=4, pady=4)
+            mbox.grid(row=1, column=0, sticky="ew")
+            msg = mbox.body
             a.label(msg, "No loads found.", 11, TEXT, True, anchor="w").pack(
                 anchor="w", padx=18, pady=(16, 4))
             a.label(msg, "Put the loads_*.csv files next to the program to use this tab.",
                     10, MUTED, anchor="w").pack(anchor="w", padx=18, pady=(0, 16))
             return
 
-        card = tk.Frame(outer, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        card.grid(row=1, column=0, sticky="ew")
+        box = a.card(outer, padx=18, pady=14)
+        box.grid(row=1, column=0, sticky="ew")
+        card = box.body
         card.columnconfigure(0, weight=1)
-        pad = dict(padx=18)
-        a.label(card, "LOADS TO COMPARE  ·  any category  ·  type in a cartridge or load box "
-                "to search", 9, MUTED, True).grid(row=0, column=0, sticky="w", pady=(16, 0), **pad)
+        pad = dict(padx=0)
+        a.label(card, "LOADS TO COMPARE · ANY CATEGORY", 8, MUTED, True).grid(
+            row=0, column=0, sticky="w", **pad)
         self.slot_box = tk.Frame(card, bg=SURFACE)
         self.slot_box.grid(row=1, column=0, sticky="ew", pady=(6, 0), **pad)
         self.slot_box.columnconfigure(3, weight=1)
@@ -3362,18 +4474,17 @@ class HeadToHeadView:
         self.add_link.bind("<Button-1>", lambda e: self._add_slot(focus=True))
 
         top = tk.Frame(card, bg=SURFACE)
-        top.grid(row=3, column=0, sticky="ew", pady=(16, 0), **pad)
-        a.label(top, "DISTANCE (YD)", 9, MUTED, True).grid(row=0, column=0, sticky="w")
-        ttk.Entry(top, textvariable=self.dist_var, font=a.f(12), width=10).grid(
-            row=1, column=0, sticky="w", pady=(4, 0))
+        top.grid(row=3, column=0, sticky="ew", pady=(a.px(12), 0), **pad)
+        a.label(top, "DISTANCE (YD)", 8, MUTED, True).grid(row=0, column=0, sticky="w")
+        a.field(top, ttk.Entry, textvariable=self.dist_var, font=a.f(12), width=8)[0].grid(
+            row=1, column=0, sticky="w", pady=(a.px(5), 0))
         # opens a gun weight box on each load's row
         self.gun_link = tk.Label(top, text="", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
                                  cursor="hand2")
         self.gun_link.grid(row=1, column=1, sticky="w", padx=(24, 0), pady=(4, 0))
         self.gun_link.bind("<Button-1>", lambda e: self._toggle_gun())
         self.status = a.label(card, "", 10, DANGER, anchor="w")
-        self.status.grid(row=4, column=0, sticky="w", pady=(8, 0), **pad)
-        a.label(card, "", 4).grid(row=5, column=0)
+        self.status.grid(row=4, column=0, sticky="w", **pad)
 
         self.results = tk.Frame(outer, bg=BG)
         self.results.grid(row=2, column=0, sticky="ew", pady=(14, 0))
@@ -3401,25 +4512,27 @@ class HeadToHeadView:
                 slot["cart"].set(last)
         widest = max([16] + [len(c) for carts in self.cartridges.values() for c in carts])
         slot["num"] = a.label(self.slot_box, "", 11, MUTED, True)
-        slot["cart_box"] = ttk.Combobox(self.slot_box, textvariable=slot["cart"],
-                                        values=list(self.cart_menu), font=a.f(11), width=widest)
+        slot["cart_wrap"], slot["cart_box"] = a.field(self.slot_box, ttk.Combobox,
+                                                      textvariable=slot["cart"], font=a.f(11),
+                                                      width=widest)
         slot["cart_search"] = LoadSearch(a, slot["cart_box"], list(self.cart_names),
                                          lambda n, s=slot: self._on_cart_search(s, n),
-                                         value=lambda n: self.cart_names[n][1])
-        slot["load_box"] = ttk.Combobox(self.slot_box, textvariable=slot["load"], font=a.f(11), width=40)
-        slot["search"] = LoadSearch(a, slot["load_box"], [], lambda n, s=slot: self._on_load(s))
+                                         value=lambda n: self.cart_names[n][1],
+                                         head=lambda n: self.cart_names[n][0],
+                                         label=lambda n: self.cart_names[n][1], hint="Cartridge")
+        slot["load_wrap"], slot["load_box"] = a.field(self.slot_box, ttk.Combobox,
+                                                      textvariable=slot["load"], font=a.f(11),
+                                                      width=40)
+        slot["search"] = LoadSearch(a, slot["load_box"], [], lambda n, s=slot: self._on_load(s),
+                                    hint=lambda s=slot: "Load" if s["cart"].get() else
+                                    "Pick a cartridge first")
         slot["gun_box"] = tk.Frame(self.slot_box, bg=SURFACE)
-        ttk.Entry(slot["gun_box"], textvariable=slot["gun"], font=a.f(11), width=6).pack(side="left")
+        a.field(slot["gun_box"], ttk.Entry, textvariable=slot["gun"], font=a.f(11),
+                width=6)[0].pack(side="left")
         slot["usual"] = a.label(slot["gun_box"], "", 9, MUTED)
         slot["usual"].pack(side="left", padx=(6, 0))
         slot["gun"].trace_add("write", self._schedule)
-        slot["x"] = tk.Label(self.slot_box, text="✕", bg=SURFACE, fg=MUTED, font=a.f(12, True),
-                             padx=10, pady=2, cursor="hand2")
-        slot["cart_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_cart_menu(s))
-        slot["load_box"].bind("<<ComboboxSelected>>", lambda e, s=slot: self._on_load(s))
-        slot["x"].bind("<Button-1>", lambda e, s=slot: self._remove_slot(s))
-        slot["x"].bind("<Enter>", lambda e, s=slot: s["x"].config(fg=TEXT, bg=SURFACE_2))
-        slot["x"].bind("<Leave>", lambda e, s=slot: s["x"].config(fg=MUTED, bg=SURFACE))
+        slot["x"] = close_button(a, self.slot_box, lambda s=slot: self._remove_slot(s))
         self.slots.append(slot)
         self._fill_loads(slot)
         self._layout_slots()
@@ -3427,18 +4540,18 @@ class HeadToHeadView:
             slot["load_box" if slot["cart"].get() else "cart_box"].focus_set()
 
     def _fill_loads(self, slot):
-        # the cartridge search: any category's cartridge can be typed (the row's category
-        # first, for a cartridge in two); with nothing typed, Down lists them all
+        # the cartridge pop-up lists every category's cartridges under its heading, the row's
+        # category first
         t = slot["cat"].get()
         cs = slot["cart_search"]
-        cs.valid = [c for _, c in self.cart_names.values()]
         cs.browse = sorted(self.cart_names, key=lambda n: self.cart_names[n][0] != t)
         cs.last = slot["cart"].get()
         names = list(self.choices.get((slot["cat"].get(), slot["cart"].get()), {}))
-        slot["load_box"].config(values=names, width=max([40] + [min(len(n), 64) for n in names]))
+        slot["load_box"].config(width=max([40] + [min(len(n), 64) for n in names]))
         slot["search"].names = names
         if slot["load"].get() not in names:
             slot["load"].set("")
+        slot["search"].show_hint()
         slot["search"].last = slot["load"].get()
 
     def _on_load(self, slot):
@@ -3459,8 +4572,8 @@ class HeadToHeadView:
         for n, slot in enumerate(self.slots, start=1):
             slot["num"].config(text=f"{n}")
             slot["num"].grid(row=n, column=0, sticky="w", padx=(0, 10), pady=3)
-            slot["cart_box"].grid(row=n, column=2, sticky="w", pady=3)
-            slot["load_box"].grid(row=n, column=3, sticky="ew", padx=(8, 0), pady=3)
+            slot["cart_wrap"].grid(row=n, column=2, sticky="w", pady=3)
+            slot["load_wrap"].grid(row=n, column=3, sticky="ew", padx=(8, 0), pady=3)
             if self.gun_open:
                 t, cart = slot["cat"].get(), slot["cart"].get()
                 slot["usual"].config(text=f"usual {typical_gun_lb(self.cats[t], cart):g}"
@@ -3476,16 +4589,6 @@ class HeadToHeadView:
         else:
             self.add_link.grid()
 
-    def _on_cart_menu(self, slot):
-        """A cartridge was picked from the menu; a category heading picks nothing."""
-        pick = self.cart_menu.get(slot["cart"].get())
-        if pick is None:
-            slot["cart"].set(slot["cart_search"].last)
-            return
-        slot["cat"].set(pick[0])
-        slot["cart"].set(pick[1])
-        self._on_cart(slot)
-
     def _on_cart_search(self, slot, name):
         """A cartridge was picked from the search list, maybe from another category."""
         t, cart = self.cart_names[name]
@@ -3498,7 +4601,6 @@ class HeadToHeadView:
         slot["gun"].set("")                       # another cartridge: back to its usual gun
         self._fill_loads(slot)
         self._layout_slots()
-        slot["load_box"].focus_set()
         self._changed()
 
     def _remove_slot(self, slot):
@@ -3510,7 +4612,7 @@ class HeadToHeadView:
             return
         slot["search"].close()
         slot["cart_search"].close()
-        for key in ("num", "cart_box", "load_box", "gun_box", "x"):
+        for key in ("num", "cart_wrap", "load_wrap", "gun_box", "x"):
             slot[key].destroy()
         self.slots.remove(slot)
         while len(self.slots) < H2H_MIN:
@@ -3625,8 +4727,9 @@ class HeadToHeadView:
         n = len(rows)
         cats = list({row["cat"].title: row["cat"] for row in rows}.values())
         keys = h2h_keys(cats)
-        card = tk.Frame(self.results, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        card.grid(row=0, column=0, sticky="ew")
+        box = a.card(self.results, padx=4, pady=4)
+        box.grid(row=0, column=0, sticky="ew")
+        card = box.body
         card.columnconfigure(0, weight=0, minsize=self._label_w())
         for c in range(1, n + 1):
             card.columnconfigure(c, weight=1, uniform="load")
@@ -3648,8 +4751,7 @@ class HeadToHeadView:
             for c, row in enumerate(rows, start=1):
                 box = tk.Frame(card, bg=SURFACE)
                 box.grid(row=r, column=c, sticky="w", padx=12, pady=5)
-                bg, fg = GRADE_COLORS[row["grade"]]
-                tk.Label(box, text=row["grade"], bg=bg, fg=fg, width=2, font=a.f(13, True)).pack(side="left")
+                Badge(box, a, row["grade"], 12).pack(side="left")
                 a.label(box, f"{row['overall']:.0f}", 12, TEXT, True).pack(side="left", padx=(8, 0))
             r += 1
         if grades:
@@ -3691,9 +4793,7 @@ class HeadToHeadView:
                     gap += f"  at {row['dist']:g} yd"
                 a.label(box, gap, 9, ACCENT if best else MUTED, best).pack(side="left", padx=(6, 0))
                 if grades:
-                    g = grade_relative(row["scores"][key])
-                    bg, fg = GRADE_COLORS[g]
-                    tk.Label(box, text=g, bg=bg, fg=fg, width=2, font=a.f(9, True)).pack(
+                    Badge(box, a, grade_relative(row["scores"][key]), 9).pack(
                         side="left", padx=(8, 0))
             r += 1
         self._cell(card, r, 0, "Best in", 10, MUTED, True)
@@ -3706,27 +4806,60 @@ class HeadToHeadView:
         a.label(card, "", 4).grid(row=r, column=0)
 
         # downrange
-        a.label(self.results, "DOWNRANGE  ·  velocity (fps) and energy (ft-lbs)", 9, MUTED, True,
+        a.label(self.results, "DOWNRANGE", 8, MUTED, True,
                 bg=BG, anchor="w").grid(row=1, column=0, sticky="w", pady=(16, 6))
-        dr = tk.Frame(self.results, bg=SURFACE, highlightthickness=1, highlightbackground=BORDER)
-        dr.grid(row=2, column=0, sticky="ew")
-        dr.columnconfigure(0, minsize=self._label_w())
-        for c in range(1, n + 1):
-            dr.columnconfigure(c, weight=1, uniform="load")
-        self._cell(dr, 0, 0, "Yards", 9, MUTED, True)
-        for c, row in enumerate(rows, start=1):
-            self._cell(dr, 0, c, row["item"].label, 9, MUTED, True, wraplength=wrap)
+        box = a.card(self.results, padx=4, pady=4)
+        box.grid(row=2, column=0, sticky="w")
+        dr = box.body
+        # like the Load Dictionary's ballistic table: a compact table (it doesn't stretch to the
+        # window), each load's name over its own right-aligned Velocity and Energy columns, a thin
+        # line between loads, and each column marking its own leader
+        heads = ("Velocity (fps)", "Energy (ft-lbs)")
+        hf, nf = tkfont.Font(font=a.f(10, True)), tkfont.Font(font=a.f(11, True))
+        col_w = max([hf.measure(h) for h in heads] + [nf.measure("00,000")])
+        pad = a.px(14)
+        for c in range(n):
+            dr.columnconfigure(3 * c + 1, minsize=1)                     # the line between loads
+            for k in (2, 3):
+                dr.columnconfigure(3 * c + k, minsize=col_w + 2 * pad, uniform="dr")
+
+        def cell(r, c, text, color=TEXT, bold=False, size=11, py=3):
+            a.label(dr, text, size, color, bold, bg=SURFACE, anchor="e").grid(
+                row=r, column=c, sticky="nsew", padx=pad, pady=py)
+
         table = h2h_downrange([(row["cat"], row["item"]) for row in rows])
-        for i, (yd, cells) in enumerate(table, start=1):
-            self._cell(dr, i, 0, f"{yd:g}", 10, TEXT, True)
-            top = max(cell[1] for cell in cells if cell)
-            for c, cell in enumerate(cells, start=1):
-                if cell is None:
-                    self._cell(dr, i, c, "—", 10, MUTED)
+        last = len(table) + 3
+        a.label(dr, "Yards", 10, MUTED, True, bg=SURFACE, anchor="e").grid(
+            row=1, column=0, sticky="nsew", padx=pad, pady=(0, 6))
+        for c, row in enumerate(rows):
+            tk.Frame(dr, bg=BORDER, width=1).grid(row=0, column=3 * c + 1, rowspan=last, sticky="ns")
+            # the cartridge in small grey type, then "Load  ·  124 gr" -> the name on one line (the
+            # columns widen for it; only a very long name wraps), the weight in small grey type
+            name, _, weight = row["item"].label.rpartition("  ·  ")
+            head = tk.Frame(dr, bg=SURFACE)
+            head.grid(row=0, column=3 * c + 2, columnspan=2, sticky="s", padx=pad, pady=(8, 6))
+            a.label(head, row["item"].cartridge, 9, MUTED, True, bg=SURFACE).pack()
+            a.label(head, name or weight, 10, HAND_FG if row["item"].handload else TEXT, True,
+                    bg=SURFACE, justify="center", wraplength=a.px(420)).pack()
+            if name:
+                a.label(head, weight, 9, MUTED, bg=SURFACE).pack()
+            cell(1, 3 * c + 2, heads[0], MUTED, True, 10, (0, 6))
+            cell(1, 3 * c + 3, heads[1], MUTED, True, 10, (0, 6))
+        tk.Frame(dr, bg=BORDER, height=1).grid(row=2, column=0, columnspan=3 * n + 1, sticky="ew")
+        for i, (yd, cells) in enumerate(table, start=3):
+            cell(i, 0, f"{yd:g}", TEXT, True)
+            live = [x for x in cells if x]
+            v_top, e_top = max(v for v, _ in live), max(e for _, e in live)
+            for c, x in enumerate(cells):
+                if x is None:
+                    cell(i, 3 * c + 2, "—", MUTED)
+                    cell(i, 3 * c + 3, "—", MUTED)
                     continue
-                v, e = cell
-                best = e >= top - 1e-9
-                self._cell(dr, i, c, f"{v:,.0f}  ·  {e:,.0f}", 10, ACCENT if best else TEXT, best)
+                v, e = x
+                vb, eb = v >= v_top - 1e-9, e >= e_top - 1e-9
+                cell(i, 3 * c + 2, f"{v:,.0f}", ACCENT if vb else TEXT, vb)
+                cell(i, 3 * c + 3, f"{e:,.0f}", ACCENT if eb else TEXT, eb)
+        a.label(dr, "", 2, bg=SURFACE).grid(row=last, column=0)
 
 
 def h2h_keys(cats):

@@ -1,0 +1,62 @@
+maker	name	diameter_in	weight_gr	bc_g1	source
+Hornady	InterLock	0.257	100	0.356	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .250 Savage Custom InterLock SP 100
+Hornady	InterLock BTSP	0.257	117	0.399	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .25-06 American Whitetail 117
+Hornady	SST	0.257	117	0.397	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .25-06 Superformance SST 117
+Hornady	ELD-X	0.257	110	0.473	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .25-06 Precision Hunter 110
+Hornady	ELD-X	0.257	128	0.644	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .25 Creedmoor Precision Hunter 128
+Hornady	ELD Match	0.257	134	0.658	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .25 Creedmoor Match 134
+Hornady	CX	0.257	90	0.278	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .25-06 Superformance CX 90
+Hornady	FTX	0.257	110	0.346	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .25-35 LEVERevolution 110
+Sierra	GameKing SBT	0.257	100	0.355	sierrabullets.com/product/25-caliber-100-gr-sbt (top velocity band)
+Sierra	GameKing SBT	0.257	117	0.410	sierrabullets.com/product/25-caliber-117-gr-sbt (top velocity band)
+Nosler	Ballistic Tip Varmint	0.257	85	0.329	Nosler 2024 catalog, component bullet tables
+Nosler	Ballistic Tip	0.257	100	0.393	Nosler 2024 catalog, component bullet tables
+Nosler	Ballistic Tip	0.257	115	0.453	Nosler 2024 catalog, component bullet tables
+Nosler	Partition	0.257	100	0.377	Nosler 2024 catalog, component bullet tables
+Nosler	Partition	0.257	115	0.389	Nosler 2024 catalog, component bullet tables
+Nosler	Partition	0.257	120	0.391	Nosler 2024 catalog, component bullet tables
+Nosler	AccuBond	0.257	110	0.418	Nosler 2024 catalog, component bullet tables (weight from SD 0.238)
+Nosler	E-Tip	0.257	100	0.409	Nosler 2024 catalog, component bullet tables
+Speer	Flat Nose SP	0.257	75	0.133	Speer rifle bullet ballistic chart
+Speer	Spitzer SP	0.257	87	0.300	Speer rifle bullet ballistic chart
+Speer	Spitzer SP	0.257	100	0.369	Speer rifle bullet ballistic chart
+Speer	Spitzer SP Boat Tail	0.257	100	0.393	Speer rifle bullet ballistic chart
+Speer	Spitzer SP	0.257	120	0.410	Speer rifle bullet ballistic chart
+Speer	Spitzer SP Boat Tail	0.257	120	0.435	Speer rifle bullet ballistic chart
+Speer	Trophy Bonded Bear Claw	0.257	115	0.372	Speer rifle bullet ballistic chart
+Barnes	TSX	0.257	100	0.336	Federal 2026 catalog, the factory load with this bullet (BC as printed): .25-06 Barnes Triple-Shock X 100
+Hornady	InterLock	0.312	150	0.367	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .303 British Custom InterLock SP 150
+Speer	Spitzer SP	0.311	150	0.411	Speer rifle bullet ballistic chart
+Speer	Round Nose SP	0.311	180	0.328	Speer rifle bullet ballistic chart
+Hornady	XTP	0.312	60	0.092	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .32 ACP Custom XTP 60
+Sierra	Sports Master JHC	0.312	90	0.125	sierrabullets.com/product/32-caliber-312-90-gr-jhc (top velocity band)
+Speer	Flat Nose SP	0.321	170	0.297	Speer rifle bullet ballistic chart (32 Special)
+Hornady	InterLock RN	0.323	170	0.217	brownells.com, Hornady #3235 (G1)
+Nosler	Ballistic Tip	0.323	180	0.394	Nosler 2024 catalog, component bullet tables
+Nosler	E-Tip	0.323	180	0.427	Nosler 2024 catalog, component bullet tables
+Nosler	Partition	0.323	200	0.426	Nosler 2024 catalog, component bullet tables
+Nosler	AccuBond	0.323	200	0.450	Nosler 2024 catalog, component bullet tables
+Nosler	Custom Competition	0.323	200	0.520	Nosler 2024 catalog, component bullet tables
+Hornady	FTX	0.348	200	0.326	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .348 Winchester LEVERevolution 200
+Hornady	XTP	0.365	95	0.127	palmettostatearmory.com, Hornady #36500 (G1)
+Nosler	AccuBond	0.366	250	0.494	Nosler 2024 catalog, component bullet tables
+Nosler	E-Tip	0.366	250	0.494	Nosler 2024 catalog, component bullet tables
+Nosler	Partition	0.366	286	0.482	Nosler 2024 catalog, component bullet tables
+Hornady	InterLock SP-RP	0.366	286	0.407	Hornady 2026 catalog, the factory load with this bullet (BC as printed): 9.3x62 Dangerous Game 286
+Swift	A-Frame	0.366	286	0.385	Federal 2026 catalog, the factory load with this bullet (BC as printed): 9.3x62 Safari Swift A-Frame 286
+Barnes	TSX	0.366	250	0.361	Federal 2026 catalog, the factory load with this bullet (BC as printed): 9.3x62 Barnes Triple-Shock X 250
+Hornady	FTX	0.410	190	0.168	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .41 Magnum LEVERevolution 190
+Hornady	XTP	0.410	210	0.186	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .41 Magnum Custom XTP 210
+Sierra	Sports Master JHC	0.410	210	0.165	sierrabullets.com/product/41-caliber-410-210-gr-jhc (top velocity band)
+Hornady	DGS	0.416	400	0.324	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .416 Rem Mag Dangerous Game DGS 400
+Hornady	DGX Bonded	0.416	400	0.324	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .416 Rem Mag Dangerous Game DGX Bonded 400
+Swift	A-Frame	0.416	400	0.367	Federal 2026 catalog, the factory load with this bullet (BC as printed): .416 Rem Mag Safari Swift A-Frame 400
+Speer	Mag Tip SP	0.416	350	0.332	Speer rifle bullet ballistic chart
+Speer	Trophy Bonded Bear Claw	0.416	400	0.374	Speer rifle bullet ballistic chart
+Hornady	XTP Mag	0.475	325	0.152	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .480 Ruger Custom XTP Mag 325
+Hornady	XTP	0.500	300	0.122	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .50 AE Custom XTP 300
+Hornady	FTX	0.500	300	0.122	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .500 S&W Custom FTX 300
+Hornady	FP-XTP	0.500	500	0.204	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .500 S&W Custom FP-XTP 500
+Swift	A-Frame	0.500	325	0.143	Federal 2026 catalog, the factory load with this bullet (BC as printed): .500 S&W Swift A-Frame 325
+Hornady	A-MAX	0.510	750	1.068	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .50 BMG Match A-MAX 750
+Hornady	XTP	0.251	35	0.074	Hornady 2026 catalog, the factory load with this bullet (BC as printed): .25 ACP Custom XTP 35

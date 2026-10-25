@@ -61,7 +61,14 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .nav .sub button.on{color:var(--text);background:var(--surface2);font-weight:700}
   .main{padding:26px 34px 48px;min-width:0}
   .wrap.wide{max-width:1040px}.wrap{margin:0}
-  .wrap.home{max-width:760px}
+  .wrap.home,.wrap.picker{max-width:560px}
+  /* PC (Zeke, Oct 25 2026): Load Dictionary above Head to Head in the sidebar (phones keep NAVS),
+     Home and category cards in one column at the desktop app's sizes; fitMenu zooms the page */
+  .nav>button[data-nav=h2h]{order:1}.nav>button[data-nav=hand]{order:2}.nav>button[data-nav=settings]{order:3}
+  .feat,.pick{grid-template-columns:1fr;gap:10px}
+  .fcard{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:2px;padding:16px 18px;border-radius:12px}
+  .fcard .ic{grid-row:span 2;width:36px;height:36px;border-radius:9px}.fcard .ic svg{width:20px;height:20px}
+  .fcard b{font-size:1rem}.fcard span{font-size:.85rem}
 }
 .lgrid{align-items:start;display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-top:12px}
 @media(min-width:720px){.lgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
@@ -103,6 +110,10 @@ h2{font-size:1.45rem;margin:6px 0 0}
 .cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;color:var(--text);cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:6px;min-height:118px}
 .cat:hover,.cat:active{background:var(--surface2);border-color:var(--accent)}
 .cat b{font-size:1.1rem}.cat span.b{color:var(--muted);font-size:.85rem}.cat span.c{color:var(--accent);font-size:.78rem;font-weight:700;margin-top:auto}
+@media(min-width:900px){   /* PC: compact category cards like the desktop app's */
+  .cat{padding:14px 18px;min-height:0;gap:2px}
+  .cat b{font-size:1rem}.cat span.c{font-size:.76rem;margin-top:8px}
+}
 .link{background:none;border:0;color:var(--accent);font:inherit;font-weight:700;font-size:.9rem;padding:6px 0;cursor:pointer}
 .link.m{color:var(--muted)}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
@@ -168,7 +179,12 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 /* phone: a line under the app name, Home and the two menus sit a little lower */
 @media(max-width:899px){
   .brand{border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:14px}
-  #app.home,#app.picker{padding-top:7vh}
+  /* Home and the category list sit centred between the header and the bottom tabs (Zeke,
+     Oct 2026); taller than the space, they start at the top and scroll */
+  .shell{display:flex;flex-direction:column;min-height:calc(100vh - max(16px,env(safe-area-inset-top)) - 84px - env(safe-area-inset-bottom));min-height:calc(100dvh - max(16px,env(safe-area-inset-top)) - 84px - env(safe-area-inset-bottom))}
+  .main{flex:1;display:flex;flex-direction:column}
+  #app{width:100%}
+  #app.home,#app.picker{margin-top:auto;margin-bottom:auto}
 }
 .setlist{display:flex;flex-direction:column;gap:6px;margin-top:6px}
 .sethead{font-size:.85rem;font-weight:700;color:var(--muted);margin:8px 0 0}
@@ -184,6 +200,27 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .setrow .size{font-size:0}.setrow .size button{font-size:.95rem;min-width:52px;min-height:42px}
 .safety{font-size:.78rem;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:14px;line-height:1.4}
 .costlbl{font-weight:700;margin-top:10px}
+/* Handloads tab */
+.htools{display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center}
+.htools .sp{flex:1}
+/* phones: the disclaimer sits at the bottom of the page, or under the list once it's taller;
+   PC keeps it right under the list (Zeke) */
+@media(max-width:899px){
+  .main:has(.hpage){display:flex;flex-direction:column}
+  #app:has(>.hpage){flex:1;display:flex;flex-direction:column}
+  .hpage{flex:1;display:flex;flex-direction:column}
+  .hnote{margin-top:auto;padding-top:14px;text-align:center}
+}
+.dis{display:block;color:var(--text);margin-bottom:2px}
+.hgrp{margin:20px 0 8px;font-size:1rem}.hgrp small{color:var(--muted);font-weight:600}
+.hdet{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 16px;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;font-size:.92rem}
+.hdet>span:nth-child(odd){color:var(--muted)}
+.hdet>span:nth-child(even){font-weight:600;min-width:0;overflow-wrap:anywhere}
+.hcost{display:grid;grid-template-columns:max-content max-content;gap:2px 14px;font-weight:600}
+.hcost span:nth-child(even){text-align:right}
+.hcost .t{border-top:1px solid var(--border);padding-top:3px;font-weight:800}
+.hlinks{display:flex;gap:4px 18px;flex-wrap:wrap;margin-top:4px}
+.hempty{margin-top:18px;text-align:center;padding:28px 18px}
 .links{align-items:center;gap:8px}.links .link.m{white-space:nowrap}
 .lright{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}
 .tgl{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:99px;padding:6px 12px;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer}
@@ -205,13 +242,38 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lsearch .lq{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px;text-overflow:ellipsis}
 .lsearch .lq::-webkit-search-cancel-button{display:none}
 .lsearch .lq:disabled{opacity:.6}
-.lopts{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:30;max-height:min(50vh,360px);overflow-y:auto;background:var(--surface2);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
-.lopts [role=option]{padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border)}
-.lopts [role=option]:last-child{border-bottom:0}
-.lopts [role=option].cur{font-weight:700}
-.lopts [role=option].on,.lopts [role=option]:hover{background:var(--accent);color:var(--on-accent)}
-.lopts .none{padding:10px 12px;color:var(--muted)}
-.lopts .hd{padding:7px 12px 5px;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface);border-bottom:1px solid var(--border)}
+.lsearch.picker .lq{caret-color:transparent;cursor:pointer}
+.popbg{position:fixed;inset:0;z-index:40}
+.sheet.pop{position:fixed;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.45);padding-bottom:6px;animation:none;max-height:480px}
+/* the pop-up, drawn like a refined menu: no lines between rows, a rounded highlight set in from
+   the edges, a check on the current pick, quiet headings, a thin scrollbar in the theme colours */
+.sheet.pop .sqw{position:relative;margin:8px 8px 6px}
+.sheet.pop .sqw svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
+.sheet.pop .sq{margin:0;width:100%;padding-left:34px;border-radius:8px;border-color:var(--accent)}
+.sheet.pop .slist{border-top:0;padding:0 6px;scrollbar-width:thin;scrollbar-color:var(--muted) transparent}
+.sheet.pop .slist::-webkit-scrollbar{width:8px}
+.sheet.pop .slist::-webkit-scrollbar-track{background:transparent}
+.sheet.pop .slist::-webkit-scrollbar-thumb{background:var(--muted);border-radius:4px;border:2px solid var(--surface)}
+.sheet.pop .slist [role=option]{padding:8px 10px;border-bottom:0;border-radius:6px;margin:2px 0;display:flex;justify-content:space-between;gap:12px}
+.sheet.pop .slist [role=option].cur{color:var(--text);font-weight:400}
+.sheet.pop .slist [role=option].cur::after{content:"\2713";color:var(--accent)}
+.sheet.pop .slist [role=option].on{background:var(--accent);color:var(--on-accent)}
+.sheet.pop .slist [role=option].on.cur::after{color:var(--on-accent)}
+.sheet.pop .slist .hd{position:static;padding:12px 10px 4px;background:none;border-bottom:0;font-size:.68rem}
+.selcover{position:absolute;inset:0;background:none;border:0;padding:0;cursor:pointer}
+.sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:flex;align-items:flex-end}
+.sheet{width:100%;max-height:85vh;max-height:85dvh;display:flex;flex-direction:column;background:var(--surface);border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.35);padding-bottom:env(safe-area-inset-bottom);animation:sheetup .18s ease-out}
+@keyframes sheetup{from{transform:translateY(40%);opacity:.4}}
+.sheet .shead{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px}
+.sheet .shead b{font-size:1.05rem}
+.sheet .sx{background:none;border:0;color:var(--muted);font-size:1.6rem;line-height:1;width:40px;height:40px;cursor:pointer}
+.sheet .sq{margin:0 16px 10px;width:auto}
+.sheet .slist{overflow-y:auto;border-top:1px solid var(--border);overscroll-behavior:contain}
+.slist [role=option]{padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer}
+.slist [role=option].cur{color:var(--accent);font-weight:700}
+.slist [role=option]:active{background:var(--surface2)}
+.slist .none{padding:14px 16px;color:var(--muted)}
+.slist .hd{position:sticky;top:0;padding:8px 16px 6px;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)}
 .h2h{overflow:auto;margin-top:12px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
 .h2h table{font-size:.9rem}
 .h2h th,.h2h td{text-align:left;vertical-align:top;white-space:normal;padding:8px 12px}
@@ -224,6 +286,22 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .h2h .gap{font-size:.75rem;color:var(--muted);margin-left:6px}.h2h .gap.best{font-weight:700}
 .h2h .badge{display:inline-block;margin-left:8px;min-width:24px;font-size:.75rem;padding:1px 5px}
 .h2h tr.sep td{border-bottom:2px solid var(--border)}
+.h2h.drw{width:fit-content;max-width:100%}
+.h2h table.dr{width:auto}
+.h2h table.dr th,.h2h table.dr td{text-align:right;white-space:nowrap;padding:6px 10px}
+.h2h table.dr td{min-width:5.5em}
+.h2h table.dr th:first-child,.h2h table.dr td:first-child{min-width:0}
+.h2h table.dr .yd{text-align:right;color:var(--text);font-weight:700}
+.h2h table.dr thead th{font-size:.8rem;color:var(--muted);vertical-align:bottom}
+.h2h table.dr thead tr+tr th{border-bottom:1px solid var(--border);padding-bottom:8px}
+.h2h table.dr thead tr+tr th:first-child{position:static;min-width:0;font-size:.8rem}
+.h2h table.dr th.ld{text-align:center;color:var(--text);font-size:.8rem;padding-top:10px}
+.h2h table.dr th.ld small.ct{display:block;margin:0 0 2px;font-weight:700;font-size:.72rem}
+.h2h table.dr th.ld .nm{display:inline-block;width:max-content;max-width:26em;white-space:normal}
+.h2h table.dr th.ld.hl{color:var(--hand)}
+.h2h table.dr th small{display:block;font-weight:600}
+.h2h table.dr th.ld small{font-weight:400;margin-top:2px}
+.h2h table.dr .l0{border-left:1px solid var(--border)}
 details.btab{margin-top:10px}
 details.btab summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.9rem;padding:6px 0}
 details.btab table th,details.btab table td{text-align:right;padding:7px 8px}
@@ -301,7 +379,7 @@ const SOURCE_NOTES = {
   partial:"Weight and velocity are manufacturer-published; ballistic coefficient and powder charge are estimated.",
   custom:"Your own entry. Anything you left blank was estimated.",
   typical:"Typical factory-load figures from published specs; approximate, so check the box.",
-  handload:"Your own handload. Check every figure against a published load manual."};
+  handload:DATA.hand_note};
 const DEFAULT_SOURCE_NOTE = "Load data is approximate. Check it against the box or the manufacturer.";
 const REL_CENTER=70, REL_SPREAD=10, REL_BANDS=[[85,"S"],[77,"A"],[66,"B"],[55,"C"],[45,"D"]];
 // saved data may use cartridge names from before a rename (e.g. "7.62x54R" -> "7.62x54mmR")
@@ -491,24 +569,27 @@ function applyTS(){document.documentElement.style.setProperty("--ts",TS);}
 function setTS(d,after){TS=Math.round(Math.min(1.6,Math.max(.85,TS+d))*100)/100;applyTS();try{localStorage.setItem("cartridge_calc_ts",TS);}catch(e){}if(after)after();}
 applyTS();
 const sizeCtl=()=>`<div class="size">Text size <button data-ts="-.15" aria-label="Smaller text">A−</button><button data-ts=".15" aria-label="Larger text">A+</button></div>`;
-function wireSize(root){root.querySelectorAll("[data-ts]").forEach(b=>b.onclick=()=>setTS(+b.dataset.ts));}
+function wireSize(root){root.querySelectorAll("[data-ts]").forEach(b=>b.onclick=()=>{setTS(+b.dataset.ts);fitMenu();});}
 // ---------- views ----------
 const app=$("#app");
 const ICON={
   home:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10"/></svg>',
   h2h:'<svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 7a3 3 0 0 0 6 0L7 7zM17 7l-3 7a3 3 0 0 0 6 0l-3-7z"/></svg>',
   loads:'<svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg>',
+  hand:'<svg viewBox="0 0 24 24"><path d="M9.5 3h5v4.5l2 3V21h-9V10.5l2-3z"/><path d="M7.5 14h9"/></svg>',
   settings:'<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>'};
 // Settings (theme, text size, S-F grades): a tab on phones, the bottom of the sidebar on wide screens
-// the two tools: key, title, Home-screen blurb (same as TOOLS in the desktop app)
+// the tools: key, title, Home-screen blurb (same as TOOLS in the desktop app)
 const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or your own handload, graded against each other."],
-  ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges or categories."]];
+  ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges or categories."],
+  ["hand","Handloads","Build and save your own reloads. They're graded in the Load Dictionary and can go head to head."]];
 const toolTitle=k=>(TOOLS.find(t=>t[0]===k)||TOOLS[0])[1];
-const NAVS=[["home","Home",ICON.home],["loads","Load Dictionary",ICON.loads],["h2h","Head to Head",ICON.h2h],["settings","Settings",ICON.settings]];
+// the Load Dictionary, the main tool, sits in the middle of the phone's tab bar
+const NAVS=[["home","Home",ICON.home],["h2h","Head to Head",ICON.h2h],["loads","Load Dictionary",ICON.loads],["hand","Handloads",ICON.hand],["settings","Settings",ICON.settings]];
 const H2H_MIN=2,H2H_MAX=5,H2H=[],H2H_DISTANCE=100;   // Head to Head picks (pickKey), any category
 const pickKey=(cat,it)=>cat.title+"|"+it.cartridge+"|"+(it.hid||it.label);
 // S-F grades on / off (Settings), shared by both tools and remembered
-let GRADES=true;try{GRADES=localStorage.getItem(GRADES_KEY)!=="0";}catch(e){}
+let GRADES=false;try{GRADES=localStorage.getItem(GRADES_KEY)==="1";}catch(e){}
 function setGrades(on){GRADES=on;try{localStorage.setItem(GRADES_KEY,on?"1":"0");}catch(e){}}
 function h2hText(cat,it){
   const p=H2H;
@@ -534,15 +615,30 @@ function drawChrome(){
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
   nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(NAV.mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
 }
-function navigate(mode,cat){
+function navigate(mode,cat,hid){   // hid: the handload the Handloads tab opens
   if(app._leave){try{app._leave();}catch(e){}}
   app._leave=null;app.onkeydown=null;
   NAV.mode=mode;NAV.cat=mode==="loads"?(cat||null):null;   // Head to Head has no category
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
-  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
+  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="hand")showHand(hid);else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
   window.scrollTo(0,0);
+  fitMenu();
 }
+// PC: Home, the category list and Settings zoom with the window (up to 1.15x, steps of 5%),
+// like the desktop app's App._menu_layout; the rest of the app keeps its size
+const MENU_W={home:560,picker:560,settings:680};
+function fitMenu(){
+  const page=NAV.mode==="home"||NAV.mode==="settings"?NAV.mode:NAV.mode==="loads"&&!NAV.cat?"picker":null;
+  app.style.zoom="";app.style.maxWidth="";
+  if(!page||!matchMedia("(min-width:900px)").matches)return;
+  app.style.maxWidth=MENU_W[page]+"px";
+  const w=app.parentElement.clientWidth-68,h=innerHeight-74,nat=app.offsetHeight||1;
+  const k=Math.max(1,Math.floor(Math.min(w/MENU_W[page],h/nat,1.15)*20)/20);
+  if(k>1)app.style.zoom=k;
+}
+let fitMenuJob=0;
+addEventListener("resize",()=>{clearTimeout(fitMenuJob);fitMenuJob=setTimeout(fitMenu,150);});
 function showHome(){
   document.title=APP_TITLE;app.classList.remove("wide","picker");app.classList.add("home");
   app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost, or put loads head to head.</p></div>
@@ -623,13 +719,171 @@ const costParts=r=>{
   const b=+r.bullet_cost||0,p=(+r.powder_gr||0)/7000*(+r.powder_cost_lb||0),pr=+r.primer_cost||0,br=(+r.brass_cost||0)/Math.max(1,+r.brass_reuse||1);
   return {b,p,pr,br,total:b+p+pr+br};
 };
-function handDialog(cat,rec,cartList,done){
+// ---------- Handloads tab ----------
+// every handload of every category in one place: add, edit, duplicate, delete, back up / restore.
+// Each card shows the load's Load Dictionary grade (against every load of its cartridge, with
+// that category's dictionary weights and distance), so the tabs agree.
+const HAND_FIELDS=DATA.hand_fields||[];
+const newHid=()=>"h"+Date.now()+Math.random().toString(36).slice(2,6);
+function handGrade(cat,it){
+  const items=state.detail[cat.title].filter(x=>x.cartridge===it.cartridge),prices=readPrices();
+  const dist=parseFloat((shared[cat.title]||{}).dist);
+  const priceOf=(c,x)=>{const v=prices[priceKey(c,x)];return typeof v==="number"?v:x.default_cost;};
+  return h2hRows([[cat,it]],isNaN(dist)?cat.default_distance:dist,null,dictWeights,priceOf,new Map([[cat.title+"|"+it.cartridge,items]]))[0];
+}
+function showHand(openId){
+  document.title=`${APP_TITLE} — ${toolTitle("hand")}`;
+  app.classList.remove("home","picker");app.classList.add("wide");
+  const H={open:openId||null,q:"",cat:"All"};
+  app.innerHTML=`<div class="hpage"><div class="phead"><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
+    <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button><span class="sp"></span><button class="link" id="hbak">Back up</button><button class="link" id="hres">Restore</button></div>
+    <div id="hsearch" style="margin-top:12px"><input id="hq" type="search" placeholder="Search: name, cartridge, bullet or powder" autocomplete="off" aria-label="Search your handloads"></div>
+    <div class="chips" id="hcats" role="group" aria-label="Category"></div>
+    <div id="hlist"></div>
+    <div class="note hnote"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div></div>`;
+  const items=()=>{
+    const out=[];
+    for(const c of CATEGORIES.filter(c=>c.grain_style&&state.detail[c.title])){syncHand(c);for(const it of state.detail[c.title])if(it.handload)out.push([c,it]);}
+    return out;
+  };
+  function draw(){
+    const all=items(),rows=readHand();
+    $("#hsearch").classList.toggle("hidden",!all.length);
+    const cats=[...new Set(all.map(([c])=>c.title))];
+    if(!cats.includes(H.cat))H.cat="All";
+    $("#hcats").innerHTML=cats.length>1?[["All",all.length],...cats.map(t=>[t,all.filter(([c])=>c.title===t).length])].map(([t,n])=>`<button data-c="${esc(t)}" class="${H.cat===t?"on":""}" aria-pressed="${H.cat===t}">${esc(t)}<small>${n}</small></button>`).join(""):"";
+    $("#hcats").querySelectorAll("button").forEach(b=>b.onclick=()=>{H.cat=b.dataset.c;draw();});
+    const words=H.q.toLowerCase().split(/\s+/).filter(Boolean);
+    const shown=all.filter(([c,it])=>(H.cat==="All"||c.title===H.cat)&&words.every(w=>[it.label,it.cartridge,it.rec.bullet_maker,it.rec.bullet,it.rec.powder,it.rec.notes].join(" ").toLowerCase().includes(w)));
+    if(!all.length){$("#hlist").innerHTML=`<div class="card hempty"><b>No handloads yet</b><p class="muted" style="margin:6px 0 0">Tap “+ New handload” to add your first. It's graded against the factory loads of its cartridge.</p></div>`;return;}
+    if(!shown.length){$("#hlist").innerHTML=`<div class="muted" style="margin-top:14px">No handloads match.</div>`;return;}
+    const groups=new Map();
+    shown.sort((a,b)=>CATEGORIES.indexOf(a[0])-CATEGORIES.indexOf(b[0])||a[1].cartridge.localeCompare(b[1].cartridge)||a[1].label.localeCompare(b[1].label))
+      .forEach(p=>{const k=p[0].title+"|"+p[1].cartridge;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(p);});
+    const badge=gr=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
+    const money=v=>"$"+v.toFixed(2);
+    $("#hlist").innerHTML=[...groups.values()].map(list=>`<h3 class="hgrp">${esc(list[0][1].cartridge)} <small>· ${esc(list[0][0].title)}</small></h3><div class="lgrid" style="margin-top:0">${list.map(([c,it])=>{
+      const r=handGrade(c,it),rec=it.rec,open=H.open===rec.id,cp=costParts(rec),hasP=cp.b||cp.p||cp.pr||cp.br;
+      const bullet=[rec.bullet_maker,rec.bullet].filter(Boolean).join(" ")||"Bullet";
+      return `<div class="lc hl ${open?"open":""}" data-id="${esc(rec.id)}"><div class="top"><div class="nm">${esc(it.load)}</div>
+        ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">#${r.rank} of ${r.peers}</span></div>`:""}</div>
+        <div class="st" style="margin-left:0"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span><b>${money(r.st.cost)}</b> a round</span><span>at ${g(r.dist)} yd</span></div>
+        ${open?`<div class="hdet">
+          <span>Bullet</span><span>${esc(bullet)} · ${g(it.bullet_gr)} gr${rec.diameter_in?` · ${g(+rec.diameter_in)} in`:""} · BC ${g(it.bc_g1)}</span>
+          <span>Powder</span><span>${rec.powder?esc(rec.powder)+" · ":""}${g(it.powder_gr)} gr</span>
+          <span>Velocity</span><span>${g(it.muzzle_fps)} fps${it.barrel_in?` from a ${g(it.barrel_in)} in barrel`:""}</span>
+          ${it.purpose?`<span>Purpose</span><span>${esc(it.purpose)}</span>`:""}
+          <span>Cost</span><span>${hasP?`<span class="hcost"><span>Bullet</span><span>${money(cp.b)}</span><span>Powder</span><span>${money(cp.p)}</span><span>Primer</span><span>${money(cp.pr)}</span><span>Brass${+rec.brass_reuse>1?` (÷${g(+rec.brass_reuse)} reloads)`:""}</span><span>${money(cp.br)}</span><span class="t">Per round</span><span class="t">${money(it.default_cost)}</span></span>`:`${money(it.default_cost)} a round`}</span>
+          ${rec.notes?`<span>Notes</span><span style="font-weight:500">${esc(rec.notes)}</span>`:""}
+          ${GRADES?`<span>Grade</span><span style="font-weight:500">${r.grade} · ${r.overall.toFixed(0)}, ranks #${r.rank} of ${r.peers} ${esc(it.cartridge)} loads in the Load Dictionary</span>`:""}
+        </div>
+        <div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn d hdel">Delete</button></div>
+        <div class="hlinks"><button class="link hdict">Open in Load Dictionary ›</button><button class="link hh2h">${esc(h2hText(c,it))}</button></div>`:""}
+      </div>`;}).join("")}</div>`).join("");
+    $("#hlist").querySelectorAll(".lc").forEach(el=>{
+      const id=el.dataset.id,p=shown.find(([,it])=>it.rec.id===id);if(!p)return;const [c,it]=p;
+      el.onclick=e=>{if(e.target.closest(".hbtns,.hlinks"))return;H.open=H.open===id?null:id;draw();};
+      if(H.open!==id)return;
+      el.querySelector(".hedit").onclick=()=>handDialog(rows.find(x=>x.id===id),r=>{H.open=r.id;draw();});
+      el.querySelector(".hdup").onclick=()=>{const all2=readHand(),n=Object.assign({},it.rec,{id:newHid(),name:(it.rec.name||it.label)+" (copy)"});all2.push(n);writeHand(all2);H.open=n.id;draw();};
+      el.querySelector(".hdel").onclick=()=>{if(!confirm(`Delete "${it.label}"?`))return;writeHand(readHand().filter(x=>x.id!==id));const k=pickKey(c,it),i=H2H.indexOf(k);if(i>=0)H2H.splice(i,1);H.open=null;draw();};
+      el.querySelector(".hdict").onclick=()=>{shared[c.title]=Object.assign({},shared[c.title],{goHand:id});navigate("loads",c);};
+      el.querySelector(".hh2h").onclick=()=>{const k=pickKey(c,it);if(H2H.includes(k)||H2H.length>=H2H_MAX){navigate("h2h");return;}H2H.push(k);draw();};
+    });
+    if(openId){const el=$("#hlist .lc.open");if(el)el.scrollIntoView({block:"center"});openId=null;}
+  }
+  $("#hq").oninput=e=>{H.q=e.target.value;draw();};
+  $("#hnew").onclick=()=>handDialog(null,r=>{H.open=r.id;H.q="";$("#hq").value="";draw();});
+  $("#hbak").onclick=backupHand;
+  $("#hres").onclick=()=>restoreHand(draw);
+  draw();
+}
+// back up / restore: the same CSV as the desktop app's my_handloads.csv, so a backup from the
+// phone restores on the computer and the other way round
+function csvCell(v){v=v==null?"":String(v);return /[",\r\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v;}
+function handCSV(rows){return [HAND_FIELDS.join(",")].concat(rows.map(r=>HAND_FIELDS.map(k=>csvCell(r[k]==null||r[k]===0&&/cost|barrel|diameter/.test(k)&&!r[k]?"":r[k])).join(","))).join("\r\n")+"\r\n";}
+function parseCSV(text){
+  const out=[];let row=[],cell="",q=false;
+  text=text.replace(/^\ufeff/,"");
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(q){if(ch==='"'){if(text[i+1]==='"'){cell+='"';i++;}else q=false;}else cell+=ch;}
+    else if(ch==='"')q=true;
+    else if(ch===","){row.push(cell);cell="";}
+    else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&text[i+1]==="\n")i++;row.push(cell);cell="";if(row.some(x=>x!==""))out.push(row);row=[];}
+    else cell+=ch;
+  }
+  row.push(cell);if(row.some(x=>x!==""))out.push(row);
+  return out;
+}
+// merge backed-up rows into the saved handloads: same id replaced, new ones added. Returns
+// [added, replaced, skipped]
+function mergeHand(text){
+  const t=parseCSV(text);if(!t.length)throw new Error("That isn't a handload backup.");
+  const head=t[0].map(x=>x.trim());
+  if(!["cartridge","bullet_gr","muzzle_fps"].every(k=>head.includes(k)))throw new Error("That isn't a handload backup (no cartridge / bullet_gr / muzzle_fps columns).");
+  const known=new Set(CATEGORIES.filter(c=>c.grain_style).map(c=>c.title)),rows=readHand();let add=0,rep=0,skip=0;
+  for(const line of t.slice(1)){
+    const r={};head.forEach((k,i)=>{r[k]=(line[i]||"").trim();});
+    r.cartridge=canon(r.cartridge);
+    const ok=known.has(r.category)&&r.cartridge&&["bullet_gr","muzzle_fps","bc_g1","powder_gr","cost"].every(k=>+r[k]>0);
+    if(!ok){skip++;continue;}
+    ["bullet_gr","diameter_in","bc_g1","powder_gr","muzzle_fps","barrel_in","cost","bullet_cost","powder_cost_lb","primer_cost","brass_cost","brass_reuse"].forEach(k=>{r[k]=+r[k]||0;});
+    if(!r.brass_reuse)r.brass_reuse=5;
+    if(!r.id)r.id=newHid();
+    const i=rows.findIndex(x=>x.id===r.id);
+    if(i>=0){rows[i]=r;rep++;}else{rows.push(r);add++;}
+  }
+  if(!writeHand(rows))throw new Error("Couldn't save: storage isn't available.");
+  return [add,rep,skip];
+}
+function backupHand(){
+  const rows=readHand();
+  if(!rows.length){alert("You have no handloads to back up yet.");return;}
+  const csv=handCSV(rows),name="my_handloads.csv";
+  const native=window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform();
+  const [m,close]=modal(`<h3 style="margin:0 0 6px">Back up handloads</h3>
+    <p class="muted" style="margin:0 0 10px">${rows.length} handload${rows.length>1?"s":""} as a CSV file (the same file the desktop app keeps). ${native?"Copy it, then paste it into a note or an email to yourself.":"Save the file, or copy the text."} Restore it on any device with “Restore”.</p>
+    <textarea id="bkt" readonly rows="6" style="width:100%;font-size:.75rem;font-family:monospace;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px">${esc(csv)}</textarea>
+    <div class="btns">${native?"":'<button class="btn p" id="bks">Save file</button>'}<button class="btn ${native?"p":""}" id="bkc">Copy</button><button class="btn" id="bkx">Close</button></div>`);
+  $("#bkx",m).onclick=close;
+  $("#bkc",m).onclick=async()=>{const t=$("#bkt",m);try{await navigator.clipboard.writeText(csv);}catch(e){t.select();document.execCommand("copy");}$("#bkc",m).textContent="Copied ✓";};
+  const sv=$("#bks",m);
+  if(sv)sv.onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);};
+}
+function restoreHand(after){
+  const [m,close]=modal(`<h3 style="margin:0 0 6px">Restore handloads</h3>
+    <p class="muted" style="margin:0 0 10px">Choose a backup file (my_handloads.csv from the desktop app works too), or paste its text. Handloads you already have are kept; ones in the backup are added, or updated if they came from here.</p>
+    <input type="file" id="rsf" accept=".csv,text/csv,text/plain" style="padding:8px">
+    <label class="l" style="margin-top:12px">OR PASTE THE BACKUP</label>
+    <textarea id="rst" rows="6" style="width:100%;font-size:.75rem;font-family:monospace;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px"></textarea>
+    <div class="btns"><button class="btn p" id="rsg">Restore</button><button class="btn" id="rsx">Cancel</button></div>`);
+  $("#rsx",m).onclick=close;
+  $("#rsf",m).onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{$("#rst",m).value=rd.result;};rd.readAsText(f);};
+  $("#rsg",m).onclick=()=>{
+    try{const [a,r,s]=mergeHand($("#rst",m).value);close();
+      alert(`Restored: ${a} new, ${r} updated`+(s?`, ${s} skipped (not a rifle, handgun or rimfire handload, or missing figures)`:"")+".");after();}
+    catch(e){alert(e.message);}
+  };
+}
+// every cartridge a handload can be for, across the bullet categories: [{text, cat, cart}]; a
+// cartridge in two categories (.44 Magnum) names its category in brackets
+function handCarts(){
+  const per=CATEGORIES.filter(c=>c.grain_style&&state.detail[c.title]).map(c=>{
+    syncHand(c);return [c,[...withHandloadOnly(groupBy(state.detail[c.title],false),state.loads[c.title]||[]).keys()]];});
+  const cnt={};per.forEach(([c,cs])=>cs.forEach(x=>{cnt[x]=(cnt[x]||0)+1;}));
+  return per.flatMap(([c,cs])=>cs.map(x=>({text:cnt[x]>1?`${x} (${c.title})`:x,cat:c,cart:x})));
+}
+// the Handloads tab's add / edit form (any category: the cartridge picks it)
+function handDialog(rec,done){
   const edit=!!(rec&&rec.id&&readHand().some(x=>x.id===rec.id));
   rec=rec||{};
+  const opts=handCarts();
+  const pickOf=t=>{t=(t||"").trim();const lo=t.toLowerCase();return opts.find(o=>o.text===t)||opts.find(o=>o.text.toLowerCase()===lo)||opts.find(o=>o.cart.toLowerCase()===lo)||null;};
   const [m,close]=modal(`
-    <h3 style="margin:0 0 4px">${edit?"Edit":"Add"} handload — ${esc(cat.title)}</h3>
-    <label class="l" style="margin-top:12px">CARTRIDGE</label><input id="hc" list="hcl" autocomplete="off"><datalist id="hcl">${cartList.map(c=>`<option value="${esc(c)}">`).join("")}</datalist>
-    <div class="g2"><div><label class="l">BULLET MAKER</label><select id="hbm"></select></div><div><label class="l">BULLET (LIBRARY)</label><select id="hbl"></select></div></div>
+    <h3 style="margin:0 0 4px">${edit?"Edit handload":"New handload"}</h3>
+    <label class="l" style="margin-top:12px">CARTRIDGE</label><input id="hc" list="hcl" autocomplete="off" placeholder="e.g. .308 Winchester"><datalist id="hcl">${opts.map(o=>`<option value="${esc(o.text)}">`).join("")}</datalist>
+    <div class="g2"><div><label class="l">BULLET MAKER</label><select id="hbm"></select><input id="hbmo" autocomplete="off" placeholder="Type the maker" aria-label="Bullet maker" style="display:none;margin-top:6px"></div><div><label class="l">BULLET (LIBRARY)</label><select id="hbl"></select></div></div>
     <div class="g2"><div><label class="l">BULLET NAME</label><input id="hbn" autocomplete="off" placeholder="e.g. ELD-M"></div><div><label class="l">LOAD NAME (OPTIONAL)</label><input id="hn" autocomplete="off"></div></div>
     <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal"></div></div>
     <div class="g2"><div><label class="l">POWDER</label><input id="hpw" list="hpl" autocomplete="off"><datalist id="hpl">${POWDERS.map(c=>`<option value="${esc(c)}">`).join("")}</datalist></div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div></div>
@@ -639,22 +893,38 @@ function handDialog(cat,rec,cartList,done){
     <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div>
     <div class="costlbl" id="hcost"></div>
     <label class="l" style="margin-top:14px">NOTES</label><input id="hno" autocomplete="off">
-    <div class="safety">Handload figures are only as good as your data. Always follow published load manuals; this app doesn't check pressure or safety.</div>
+    <div class="safety"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div>
     <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button></div>`);
   const q=x=>$(x,m);
-  const diaOf=c=>DIAMETERS[c.trim()]||0;
+  const diaOf=c=>{const o=pickOf(c);return o?DIAMETERS[o.cart]||0:0;};
   const val=(id,v)=>{q("#"+id).value=v==null||v===0||v===""?"":v;};
-  const fillMakers=()=>{
-    const d=diaOf(q("#hc").value),list=BULLETS.filter(b=>!d||Math.abs(b.diameter-d)<=0.003);
-    const makers=[...new Set(list.map(b=>b.maker))].sort(),cur=q("#hbm").value;
-    q("#hbm").innerHTML=`<option value="">Other / custom</option>`+makers.map(x=>`<option>${esc(x)}</option>`).join("");
-    q("#hbm").value=makers.includes(cur)?cur:"";
-    fillBullets();
+  // phones: the form's pickers open the bottom sheet (pickSheet) instead of the system list
+  const touch=matchMedia("(pointer:coarse)").matches;
+  const sheetSelect=(id,none)=>{   // a <select>: a clear button over it opens the sheet of its options
+    const sel=q("#"+id),wrap=sel.parentElement,b=document.createElement("button");
+    b.type="button";b.className="selcover";b.setAttribute("aria-label","Choose a "+none);
+    wrap.style.position="relative";sel.tabIndex=-1;wrap.appendChild(b);
+    b.onclick=()=>{
+      const opts=[...sel.options].filter(x=>x.value!=="");
+      if(!opts.length)return;
+      pickSheet(opts,{text:x=>x.textContent,none,cur:()=>opts.find(x=>x.value===sel.value),pick:x=>{sel.value=x.value;sel.dispatchEvent(new Event("change"));}});
+    };
   };
+  // bullets go by diameter, not cartridge: the makers listed are those with a bullet of this
+  // diameter; "Other maker" opens a box to type any maker (#hbmo)
+  const OTHER="__other__",fits=b=>{const d=diaOf(q("#hc").value);return !d||Math.abs(b.diameter-d)<=0.003;};
+  const makerOf=()=>q("#hbm").value===OTHER?q("#hbmo").value.trim():q("#hbm").value;
+  const fillMakers=()=>{
+    const makers=[...new Set(BULLETS.filter(fits).map(b=>b.maker))].sort(),cur=q("#hbm").value;
+    q("#hbm").innerHTML=`<option value="">Choose…</option>`+makers.map(x=>`<option>${esc(x)}</option>`).join("")+`<option value="${OTHER}">Other maker</option>`;
+    q("#hbm").value=makers.includes(cur)||cur===OTHER?cur:"";
+    showOther();fillBullets();
+  };
+  const showOther=()=>{q("#hbmo").style.display=q("#hbm").value===OTHER?"":"none";};
   const fillBullets=()=>{
-    const d=diaOf(q("#hc").value),mk=q("#hbm").value;
-    const list=BULLETS.filter(b=>mk&&b.maker===mk&&(!d||Math.abs(b.diameter-d)<=0.003));
-    q("#hbl").innerHTML=`<option value="">${mk?"Choose a bullet…":"—"}</option>`+list.map((b,i)=>`<option value="${BULLETS.indexOf(b)}">${esc(b.name)} · ${g(b.weight)} gr</option>`).join("");
+    const mk=q("#hbm").value;
+    const list=BULLETS.filter(b=>mk&&b.maker===mk&&fits(b));
+    q("#hbl").innerHTML=`<option value="">${mk&&mk!==OTHER?"Choose a bullet…":"—"}</option>`+list.map((b,i)=>`<option value="${BULLETS.indexOf(b)}">${esc(b.name)} · ${g(b.weight)} gr</option>`).join("");
   };
   const showCost=()=>{
     const t=parseFloat(q("#hct").value);let c;
@@ -662,12 +932,30 @@ function handDialog(cat,rec,cartList,done){
     q("#hcost").textContent=c>0?`Cost per round = $${c.toFixed(2)}`:"";
   };
   q("#hc").addEventListener("input",fillMakers);q("#hc").addEventListener("change",fillMakers);
-  q("#hbm").onchange=fillBullets;
+  q("#hbm").onchange=()=>{showOther();fillBullets();if(q("#hbm").value===OTHER)q("#hbmo").focus();};
   q("#hbl").onchange=()=>{const b=BULLETS[+q("#hbl").value];if(!b)return;q("#hbn").value=b.name;q("#hgr").value=g(b.weight);q("#hdm").value=g(b.diameter);q("#hbc").value=g(b.bc);};
   ["hcb","hcp","hcr","hcs","hcu","hct","hpg"].forEach(i=>q("#"+i).addEventListener("input",showCost));
+  if(touch){
+    const hc=q("#hc"),pw=q("#hpw");
+    hc.readOnly=true;hc.placeholder="Choose a cartridge";
+    hc.onfocus=()=>{hc.blur();pickSheet(opts,{text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>o.cat.title,none:"cartridge",
+      cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;fillMakers();}});};
+    // powder: the list, or "Other powder" to type one that isn't in it
+    const OTHERP={other:true};
+    pw.readOnly=true;
+    pw.onfocus=()=>{if(!pw.readOnly)return;pw.blur();pickSheet(POWDERS.concat([OTHERP]),{text:x=>x===OTHERP?"Other powder (type it)":x,none:"powder",
+      cur:()=>POWDERS.find(x=>x===pw.value.trim()),pick:x=>{if(x===OTHERP){pw.readOnly=false;pw.value="";pw.focus();}else pw.value=x;}});};
+    pw.onblur=()=>{pw.readOnly=true;};
+    sheetSelect("hbm","bullet maker");sheetSelect("hbl","bullet");sheetSelect("hpu","purpose");
+  }
   // prefill
-  val("hc",rec.cartridge);fillMakers();
-  if(rec.bullet_maker&&[...q("#hbm").options].some(o=>o.value===rec.bullet_maker)){q("#hbm").value=rec.bullet_maker;fillBullets();}
+  const o0=opts.find(o=>o.cart===rec.cartridge&&o.cat.title===rec.category)||opts.find(o=>o.cart===rec.cartridge);
+  val("hc",o0?o0.text:rec.cartridge);fillMakers();
+  if(rec.bullet_maker){
+    if([...q("#hbm").options].some(o=>o.value===rec.bullet_maker))q("#hbm").value=rec.bullet_maker;
+    else{q("#hbm").value=OTHER;q("#hbmo").value=rec.bullet_maker;}
+    showOther();fillBullets();
+  }
   val("hbn",rec.bullet);val("hn",rec.name);val("hgr",rec.bullet_gr);val("hdm",rec.diameter_in);val("hbc",rec.bc_g1);
   val("hpw",rec.powder);val("hpg",rec.powder_gr);val("hfps",rec.muzzle_fps);val("hbl2",rec.barrel_in);
   q("#hpu").value=rec.purpose||"Hunting";
@@ -685,7 +973,8 @@ function handDialog(cat,rec,cartList,done){
         const v=Number(t);if(!isFinite(v))throw new Error(`${label} must be a number.`);
         if(v<lo||(hi!=null&&v>hi))throw new Error(`${label} must be ${hi!=null?`between ${g(lo)} and ${g(hi)}`:`${g(lo)} or more`}.`);
         return v;};
-      const cart=q("#hc").value.trim();if(!cart)throw new Error("Enter a cartridge.");
+      const pk=pickOf(q("#hc").value);if(!pk)throw new Error(q("#hc").value.trim()?"Pick a cartridge from the list.":"Enter a cartridge.");
+      const cart=pk.cart,cat=pk.cat;
       const gr=num("hgr","Bullet weight",1,2000),fps=num("hfps","Velocity",100,5500),pg=num("hpg","Powder charge",0.1,300);
       let dm=num("hdm","Diameter",0.1,0.7,true);if(dm==null)dm=DIAMETERS[cart]||bulletDiameter({cartridge:cart,bullet_gr:gr});if(!dm)throw new Error("Enter the bullet diameter.");
       let bc=num("hbc","Ballistic coefficient",0.01,1.5,true);
@@ -695,7 +984,7 @@ function handDialog(cat,rec,cartList,done){
       const tot=num("hct","Total cost",0,null,true);
       const cost=tot>0?tot:costParts(Object.assign({powder_gr:pg},parts)).total;
       if(!(cost>0))throw new Error("Enter a cost per round (a total, or the bullet, powder, primer and brass prices).");
-      const mk=q("#hbm").value,bn=q("#hbn").value.trim(),pw=q("#hpw").value.trim();
+      const mk=makerOf(),bn=q("#hbn").value.trim(),pw=q("#hpw").value.trim();
       let name=q("#hn").value.trim();
       if(!name)name=[mk,bn,g(gr)+" gr"].filter(Boolean).join(" ")+(pw?` + ${pw} ${g(pg)} gr`:` + ${g(pg)} gr`);
       r=Object.assign({id:edit?rec.id:"h"+Date.now()+Math.random().toString(36).slice(2,6),category:cat.title,cartridge:cart,name,bullet_maker:mk,bullet:bn,
@@ -707,43 +996,86 @@ function handDialog(cat,rec,cartList,done){
     if(!writeHand(rows)){alert("Couldn't save: browser storage isn't available.");return;}
     close();done(r);
   };
-  q("#hc").focus();
+  if(!touch)q("#hc").focus();
 }
 
 // ---------- Load Dictionary tab ----------
-// a search box over a list (issue #24; cartridges too since Oct 2026): every typed word must
-// be in the name, the list shows the matches, arrows + Enter or a tap pick one; leaving the box
-// keeps the old pick. o: text(x) = box text, find(x) = searched text (default text),
+// a box that picks from a list through a search (issue #24; cartridges too since Oct 2026; a
+// picker panel since Oct 2026): every typed word must be in the name. o: text(x) = box text,
+// find(x) = searched text (default text),
 // head(x) = group heading over the list rows (optional), cur() = the current pick, pick(x), none.
 function searchBox(box,items,o){
-  const q=box.querySelector(".lq"),list=box.querySelector(".lopts"),find=o.find||o.text;
-  const all_=()=>typeof items==="function"?items():items,cur=()=>o.cur();
-  let shown=[],at=0;
-  const open=all=>{
-    const words=all?[]:q.value.toLowerCase().split(/\s+/).filter(Boolean),c=cur();
-    shown=all_().filter(x=>{const t=find(x).toLowerCase();return words.every(w=>t.includes(w));});
-    at=Math.max(0,shown.indexOf(c));
+  const q=box.querySelector(".lq"),all_=()=>typeof items==="function"?items():items;
+  const back=()=>{const c=o.cur();q.value=c==null?"":o.text(c);};
+  const touch=matchMedia("(pointer:coarse)").matches;
+  const p=Object.assign({},o,{pick:x=>{q.value=o.text(x);o.pick(x);}});
+  // the box only shows the pick, so its text is never selected; phones get the bottom sheet,
+  // a mouse / keyboard the same panel as a pop-up under the box (pickSheet)
+  q.readOnly=true;box.classList.add("picker");
+  if(/type to search/i.test(q.placeholder))q.placeholder=touch?"Choose a "+o.none:o.none[0].toUpperCase()+o.none.slice(1);
+  const open=typed=>{if(!q.disabled)pickSheet(all_(),p,touch?null:{el:q,input:q,typed:typed||""});};
+  if(touch)q.onfocus=()=>{q.blur();open();};
+  else{
+    q.onclick=()=>open();
+    q.onkeydown=e=>{
+      if(["ArrowDown","ArrowUp","Enter"," "].includes(e.key)){e.preventDefault();open();}
+      else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();open(e.key);}  // a letter starts a search
+    };
+  }
+  back();
+}
+// the picker for a searchBox. Phones: a panel up from the bottom with a title, a search bar (the
+// keyboard opens only when it's tapped) and the list; a tap picks and closes it, so do the
+// backdrop, × and the Android back button. anchor {el, input, typed} (mouse / keyboard): the same
+// panel as a pop-up under anchor.el, the cursor in its search bar; Up/Down move, Enter picks,
+// Esc, Tab or a click outside closes, and the focus goes back to anchor.input
+function pickSheet(items,o,anchor){
+  const find=o.find||o.text,c=o.cur(),under=openModalClose;   // a dialog it opened over keeps its back button
+  const m=document.createElement("div");m.className=anchor?"popbg":"sheetbg";
+  m.innerHTML=`<div class="sheet${anchor?" pop":""}" role="dialog" aria-label="Choose a ${esc(o.none)}">${anchor?"":`<div class="shead"><b>Choose a ${esc(o.none)}</b><button class="sx" aria-label="Close">×</button></div>`}
+    ${anchor?'<div class="sqw"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>':""}<input class="sq" type="search" placeholder="Search" autocomplete="off" aria-label="Search">${anchor?"</div>":""}<div class="slist" role="listbox"></div></div>`;
+  const sq=m.querySelector(".sq"),list=m.querySelector(".slist");
+  let shown=[],at=-1;
+  const mark=()=>list.querySelectorAll("[role=option]").forEach((r,i)=>r.classList.toggle("on",i===at));
+  const draw=first=>{
+    const words=sq.value.toLowerCase().split(/\s+/).filter(Boolean);
+    shown=items.filter(x=>{const t=find(x).toLowerCase();return words.every(w=>t.includes(w));});
     let last=null;
     list.innerHTML=shown.length?shown.map((x,i)=>{const h=o.head?o.head(x):null,top=h!==last?`<div class="hd">${esc(h)}</div>`:"";last=h;
-      return `${top}<div role="option" class="${i===at?"on":""}${x===c?" cur":""}" data-i="${i}">${esc(o.text(x))}</div>`;}).join(""):`<div class="none">No ${o.none} matches “${esc(q.value.trim())}”</div>`;
-    list.classList.remove("hidden");q.setAttribute("aria-expanded","true");
-    const on=list.querySelector(".on");if(on)on.scrollIntoView({block:"nearest"});
+      return `${top}<div role="option" class="${x===c?"cur":""}" aria-selected="${x===c}" data-i="${i}">${esc(o.text(x))}</div>`;}).join(""):`<div class="none">No ${o.none} matches “${esc(sq.value.trim())}”</div>`;
+    if(anchor){at=shown.length?(first?Math.max(0,shown.indexOf(c)):0):-1;mark();}
   };
-  const close=()=>{list.classList.add("hidden");q.setAttribute("aria-expanded","false");};
-  const move=d=>{if(!shown.length)return;at=(at+d+shown.length)%shown.length;list.querySelectorAll("[role=option]").forEach((o,i)=>o.classList.toggle("on",i===at));list.querySelector(".on").scrollIntoView({block:"nearest"});};
-  const back=()=>{const c=cur();q.value=c==null?"":o.text(c);};
-  const choose=i=>{const x=shown[i];if(!x)return;close();q.value=o.text(x);o.pick(x);};
-  q.onfocus=()=>{q.select();open(true);};
-  q.oninput=()=>open(!q.value.trim());
-  q.onkeydown=e=>{
-    if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();if(list.classList.contains("hidden")){const c=cur();open(c!=null&&q.value===o.text(c));}else move(e.key==="ArrowDown"?1:-1);}
-    else if(e.key==="Enter"){e.preventDefault();if(!list.classList.contains("hidden"))choose(at);}
-    else if(e.key==="Escape"){if(!list.classList.contains("hidden")){e.preventDefault();e.stopPropagation();}close();back();}
+  const close=()=>{m.remove();document.body.style.overflow=under?"hidden":"";if(openModalClose===close)openModalClose=under;if(anchor)anchor.input.focus();};
+  const choose=x=>{close();o.pick(x);};
+  if(anchor)sq.value=anchor.typed;
+  draw(true);
+  m.onclick=e=>{
+    if(e.target===m||e.target.closest(".sx")){close();return;}
+    const r=e.target.closest("[role=option]");if(!r)return;
+    choose(shown[+r.dataset.i]);
   };
-  q.onblur=()=>{close();back();};
-  // mousedown, not click: the box must keep focus until the pick is made
-  list.onmousedown=e=>{e.preventDefault();const r=e.target.closest("[role=option]");if(r)choose(+r.dataset.i);};
-  back();
+  sq.oninput=()=>draw(false);
+  sq.onkeydown=e=>{
+    if(anchor){
+      const move=d=>{if(!shown.length)return;at=Math.min(shown.length-1,Math.max(0,at+d));mark();const on=list.querySelector(".on");if(on)on.scrollIntoView({block:"nearest"});};
+      if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();move(e.key==="ArrowDown"?1:-1);}
+      else if(e.key==="PageDown"||e.key==="PageUp"){e.preventDefault();move(e.key==="PageDown"?10:-10);}
+      else if(e.key==="Enter"){e.preventDefault();if(shown[at])choose(shown[at]);}
+      else if(e.key==="Escape"||e.key==="Tab"){e.preventDefault();e.stopPropagation();close();}
+      return;
+    }
+    if(e.key==="Enter"){e.preventDefault();if(shown.length===1)choose(shown[0]);else sq.blur();}
+  };
+  if(anchor)list.onmousemove=e=>{const r=e.target.closest("[role=option]");if(r&&+r.dataset.i!==at){at=+r.dataset.i;mark();}};
+  document.body.appendChild(m);document.body.style.overflow="hidden";openModalClose=close;
+  if(anchor){   // under the box (above it when there's no room), at least 320 px wide
+    const sh=m.querySelector(".sheet"),r=anchor.el.getBoundingClientRect(),w=Math.min(innerWidth-16,Math.max(r.width,320));
+    const below=innerHeight-r.bottom-12,above=r.top-12,up=below<260&&above>below;
+    Object.assign(sh.style,{left:Math.max(8,Math.min(r.left,innerWidth-w-8))+"px",width:w+"px",maxHeight:Math.min(480,up?above:below)+"px"});
+    if(up)sh.style.bottom=(innerHeight-r.top+4)+"px";else sh.style.top=(r.bottom+4)+"px";
+    sq.focus();sq.setSelectionRange(sq.value.length,sq.value.length);
+  }
+  const cur=list.querySelector(anchor?".on":".cur");if(cur)cur.scrollIntoView({block:"center"});
 }
 function openLoads(cat,pane){
   syncHand(cat);
@@ -755,14 +1087,14 @@ function openLoads(cat,pane){
   const PORDER=["Hunting","Varmint","Target","Match","Defense","Subsonic","Game","Waterfowl","Turkey","Buckshot","Slug"];
   const purposeOf=it=>it.purpose||it.group||"";
   pane.innerHTML=`<div class="card">
-    <div class="field"><label class="l" for="lcq">${esc(cat.cartridge_label)}</label><div class="lsearch" id="lcs"><input class="lq" id="lcq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" placeholder="Type to search, e.g. 6.5" autocomplete="off"><div class="lopts hidden" role="listbox"></div></div><input type="hidden" id="lc"></div>
+    <div class="field"><label class="l" for="lcq">${esc(cat.cartridge_label)}</label><div class="lsearch" id="lcs"><input class="lq" id="lcq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" placeholder="Type to search, e.g. 6.5" autocomplete="off"></div><input type="hidden" id="lc"></div>
     <div class="nums" style="grid-template-columns:1fr 1fr">
       <div><label class="l">DISTANCE (YD)</label><input id="ld" inputmode="decimal"></div>
       <div><label class="l">${esc(cat.gun_label)}</label><input id="lg" inputmode="decimal"></div>
     </div>
     <div class="chips" id="lp" role="group" aria-label="Purpose"></div>
     <div class="chips hidden" id="lsrc" role="group" aria-label="Source"></div>
-    <div class="links"><button class="link m" id="lwt">▸&nbsp; Scoring weights</button><span class="lright">${cat.grain_style?'<button class="link" id="hadd">+&nbsp; Add handload</button>':""}</span></div>
+    <div class="links"><button class="link m" id="lwt">▸&nbsp; Scoring weights</button><span class="lright">${cat.grain_style?'<button class="link" id="hadd">Your handloads ›</button>':""}</span></div>
     <div class="weights hidden" id="lwb"><div class="wrow">${MKEYS.map(k=>`<div class="${keysOf(cat).includes(k)?"":"hidden"}"><label>${METRICS[k][0]}</label><input id="lw_${k}" inputmode="numeric"></div>`).join("")}</div>
       <div class="help">Higher = matters more. 0 ignores that factor.</div></div>
   </div>
@@ -835,7 +1167,7 @@ function openLoads(cat,pane){
   function render(){
     const out=compute(),box=$$("#lres");
     if(!out){box.innerHTML=`<div class="muted">Enter a distance, gun weight and weights (numbers) to see results.</div>`;$$("#lcnt").textContent="";return;}
-    if(!(groups.get($$("#lc").value)||[]).length){box.innerHTML=`<div class="muted">No factory loads listed for ${esc($$("#lc").value)}. Use “+ Add handload” to grade your own.</div>`;$$("#lcnt").textContent="";return;}
+    if(!(groups.get($$("#lc").value)||[]).length){box.innerHTML=`<div class="muted">No factory loads listed for ${esc($$("#lc").value)}. Add your own in the Handloads tab to grade it.</div>`;$$("#lcnt").textContent="";return;}
     countChips();
     let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>matchesFilter(r.it)&&pressOk(r.it));
     const key=$$("#ls").value;
@@ -868,7 +1200,7 @@ function openLoads(cat,pane){
           ${GRADES?`<div class="muted" style="font-size:.8rem;margin-top:4px">Overall ${r.grade} · ${r.overall.toFixed(0)} · ranks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}. Grades compare loads of this cartridge only.</div>`:""}
           ${ballisticHTML(it,cat,L.btOpen)}
           <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button></div>
-          ${it.handload?`<div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn d hdel">Delete</button></div>
+          ${it.handload?`<div class="hbtns"><button class="btn hedit">Edit in Handloads ›</button></div>
           <div class="note">${esc(SOURCE_NOTES.handload)}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
           <div class="note">${esc(SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE)} Catalog price estimate: $${it.default_cost.toFixed(2)}.</div></div>`}`:""}
       </div>`;}).join("")||`<div class="muted">No loads match that filter.</div>`;
@@ -886,9 +1218,7 @@ function openLoads(cat,pane){
       };
       if(it&&it.handload){
         if(!c.querySelector(".hedit"))return;
-        c.querySelector(".hedit").onclick=()=>openHand(it.rec);
-        c.querySelector(".hdup").onclick=()=>{const rows=readHand(),n=Object.assign({},it.rec,{id:"h"+Date.now()+Math.random().toString(36).slice(2,6),name:it.rec.name+" (copy)"});rows.push(n);writeHand(rows);afterHand(n);};
-        c.querySelector(".hdel").onclick=()=>{if(!confirm(`Delete "${it.rec.name}"?`))return;writeHand(readHand().filter(x=>x.id!==it.rec.id));L.open=null;afterHand(null);};
+        c.querySelector(".hedit").onclick=()=>navigate("hand",null,it.rec.id);   // adding / editing lives in the Handloads tab
         return;
       }
       const sp=c.querySelector(".setp"),cl=c.querySelector(".clrp");
@@ -897,24 +1227,21 @@ function openLoads(cat,pane){
     });
     $$("#lnote").textContent=(GRADES?`Grades compare loads of this cartridge${L.purpose!=="All"?" and purpose ("+L.purpose+")":""}; the average scores about ${REL_CENTER}. `:"")+"Prices are estimates.";
   }
-  function openHand(rec){
-    const cl=[...new Set([...carts,...state.loads[cat.title].map(x=>x.cartridge)])];
-    handDialog(cat,rec||{cartridge:$$("#lc").value},cl,afterHand);
-  }
-  function afterHand(r){
-    const cur0=$$("#lc").value;syncHand(cat);regroup();setCart(groups.has(cur0)?cur0:(groups.has(biggest)?biggest:carts[0]));
-    if(r){const cur=r.cartridge;setCart(cur);L.purpose="All";L.src="All";const it=all.find(x=>x.hid===r.id);L.open=it?keyOf(it):null;}
-    
-    buildChips();render();
-  }
-  if(cat.grain_style)$$("#hadd").onclick=()=>openHand(null);
+  if(cat.grain_style)$$("#hadd").onclick=()=>navigate("hand");
   $$("#lc").onchange=()=>{
     const nw=typicalGun(cat,$$("#lc").value);if(parseFloat($$("#lg").value)===L.gunAuto||isNaN(parseFloat($$("#lg").value)))$$("#lg").value=g(nw);L.gunAuto=nw;
     L.open=null;buildChips();render();};
   ["#ld","#lg","#lf"].concat(MKEYS.map(k=>"#lw_"+k)).forEach(id=>$$(id).addEventListener("input",render));
   $$("#ls").onchange=render;
   $$("#lwt").onclick=()=>{L.weightsOpen=!L.weightsOpen;$$("#lwb").classList.toggle("hidden",!L.weightsOpen);$$("#lwt").innerHTML=(L.weightsOpen?"▾":"▸")+"&nbsp; Scoring weights";};
+  // opened from the Handloads tab's "Open in Load Dictionary": that cartridge, that load open
+  const go=sh.goHand&&readHand().find(x=>x.id===sh.goHand);delete sh.goHand;
+  if(go&&groups.has(go.cartridge)){
+    if(go.cartridge!==$$("#lc").value){setCart(go.cartridge);$$("#lc").onchange();}
+    L.purpose="All";L.src="All";const it=all.find(x=>x.hid===go.id);L.open=it?keyOf(it):null;
+  }
   buildChips();render();
+  if(go){const c=pane.querySelector(".lc.open");if(c)c.scrollIntoView({block:"center"});}
 }
 
 // ---------- Head to Head tab ----------
@@ -1007,15 +1334,15 @@ function openH2H(pane){
     $$("#hgun").textContent=gunOpen?"▾  Hide gun weights (blank: the cartridge's usual gun)":"▸  Gun weight for each load";
     $$("#hgun").setAttribute("aria-expanded",gunOpen);
     $$("#hs").innerHTML=`<div class="gunhead">GUN WEIGHT (LB)</div>`+slots.map((s,i)=>`<div class="slot" data-i="${i}"><span class="n">${i+1}</span>
-      <div class="cs lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Cartridge ${i+1}: type to search" placeholder="Cartridge… type to search" autocomplete="off"><div class="lopts hidden" role="listbox"></div></div>
-      <div class="ls lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Load ${i+1}: type to search" placeholder="${s.cart?"Load… type to search":"Pick a cartridge first"}" autocomplete="off" value="${esc(optText(choice(s.cat,s.cart,s.key)))}"${s.cart?"":" disabled"}><div class="lopts hidden" role="listbox"></div></div>
+      <div class="cs lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Cartridge ${i+1}" placeholder="Cartridge… type to search" autocomplete="off"></div>
+      <div class="ls lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Load ${i+1}" placeholder="${s.cart?"Load… type to search":"Pick a cartridge first"}" autocomplete="off" value="${esc(optText(choice(s.cat,s.cart,s.key)))}"${s.cart?"":" disabled"}></div>
       <input class="gn" inputmode="decimal" aria-label="Gun weight for load ${i+1}, in pounds" placeholder="${s.cart?`Gun: usual ${g(typicalGun(byTitle[s.cat],s.cart))} lb`:"Gun weight (lb)"}" value="${esc(s.gun)}">
       <button class="x${slots.length<=H2H_MIN&&!s.key?" gone":""}" aria-label="Remove load ${i+1}">✕</button></div>`).join("");
     $$("#hs").querySelectorAll(".slot").forEach(row=>{
       const s=slots[+row.dataset.i];
       const ci=cartItems.find(x=>x.cat===s.cat&&x.cart===s.cart);
       searchBox(row.querySelector(".cs"),cartItems,{text:cartText,find:x=>x.cart+" "+x.cat,head:x=>x.cat,none:"cartridge",cur:()=>ci,
-        pick:x=>{if(x===ci)return;s.cat=x.cat;s.cart=x.cart;s.key="";s.gun="";drawSlots();changed();const nr=$$("#hs").querySelectorAll(".slot")[slots.indexOf(s)];if(nr)nr.querySelector(".ls .lq").focus();}});
+        pick:x=>{if(x===ci)return;s.cat=x.cat;s.cart=x.cart;s.key="";s.gun="";drawSlots();changed();}});
       const li=groups.get(s.cat+"|"+s.cart)||[],lc=li.find(x=>(x.hid||x.label)===s.key);
       searchBox(row.querySelector(".ls"),li,{text:optText,none:"load",cur:()=>lc,pick:x=>{s.key=x.hid||x.label;drawSlots();changed();}});
       row.querySelector(".gn").addEventListener("input",e=>{s.gun=e.target.value;render();});
@@ -1078,10 +1405,11 @@ function openH2H(pane){
         return `<span class="v${b?" best":""}">${h2hValue(k,r.st[k])}</span><span class="gap${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?badge(gradeRel(r.sc[k])):""}`;}));
     }
     h+=line("Best in",rows.map(r=>`<span class="${r.best.size===most&&most?"v best":""}">${r.best.size} of ${r.keys.length}</span>`));
-    h+=`</tbody></table></div><div class="sect">DOWNRANGE · velocity (fps) and energy (ft-lbs)</div><div class="h2h"><table><thead><tr><th>Yards</th>${rows.map(r=>`<th style="font-size:.8rem;color:var(--muted)">${esc(r.it.label)}</th>`).join("")}</tr></thead><tbody>`;
+    h+=`</tbody></table></div><div class="sect">DOWNRANGE</div><div class="h2h drw"><table class="dr"><thead><tr><th></th>${rows.map(r=>{const i=r.it.label.lastIndexOf("  ·  "),nm=i<0?r.it.label:r.it.label.slice(0,i),wt=i<0?"":r.it.label.slice(i+5);return `<th colspan="2" class="ld l0${r.it.handload?" hl":""}"><small class="ct">${esc(r.it.cartridge)}</small><span class="nm">${esc(nm)}</span>${wt?`<small>${esc(wt)}</small>`:""}</th>`;}).join("")}</tr><tr><th class="yd" style="color:var(--muted)">Yards</th>${rows.map(()=>`<th class="l0">Velocity (fps)</th><th>Energy (ft-lbs)</th>`).join("")}</tr></thead><tbody>`;
+    // velocity and energy each highlight their own leader at that distance
     for(const [yd,cells] of h2hDownrange(rows.map(r=>[r.cat,r.it]))){
-      const top=Math.max(...cells.filter(Boolean).map(c=>c[1]));
-      h+=`<tr><td>${g(yd)}</td>${cells.map(c=>!c?`<td class="c">—</td>`:`<td class="c${c[1]>=top-1e-9?" v best":""}">${fmt0(c[0])} · ${fmt0(c[1])}</td>`).join("")}</tr>`;
+      const live=cells.filter(Boolean),vTop=Math.max(...live.map(c=>c[0])),eTop=Math.max(...live.map(c=>c[1]));
+      h+=`<tr><td class="yd v">${g(yd)}</td>${cells.map(c=>!c?`<td class="l0 gap">—</td><td class="gap">—</td>`:`<td class="l0${c[0]>=vTop-1e-9?" v best":""}">${fmt0(c[0])}</td><td class="${c[1]>=eTop-1e-9?"v best":""}">${fmt0(c[1])}</td>`).join("")}</tr>`;
     }
     box.innerHTML=h+`</tbody></table></div></div>`+phoneView(rows,dist,keys,most,badge,payload);
     box.querySelectorAll("[data-yd]").forEach(c=>c.onclick=()=>{H.drYd=+c.dataset.yd;render();});
