@@ -296,6 +296,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .h2h table.dr thead tr+tr th{border-bottom:1px solid var(--border);padding-bottom:8px}
 .h2h table.dr thead tr+tr th:first-child{position:static;min-width:0;font-size:.8rem}
 .h2h table.dr th.ld{text-align:center;color:var(--text);font-size:.8rem;padding-top:10px}
+.h2h table.dr th.ld small.ct{display:block;margin:0 0 2px;font-weight:700;font-size:.72rem}
 .h2h table.dr th.ld .nm{display:inline-block;width:max-content;max-width:26em;white-space:normal}
 .h2h table.dr th.ld.hl{color:var(--hand)}
 .h2h table.dr th small{display:block;font-weight:600}
@@ -1404,7 +1405,7 @@ function openH2H(pane){
         return `<span class="v${b?" best":""}">${h2hValue(k,r.st[k])}</span><span class="gap${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?badge(gradeRel(r.sc[k])):""}`;}));
     }
     h+=line("Best in",rows.map(r=>`<span class="${r.best.size===most&&most?"v best":""}">${r.best.size} of ${r.keys.length}</span>`));
-    h+=`</tbody></table></div><div class="sect">DOWNRANGE</div><div class="h2h drw"><table class="dr"><thead><tr><th></th>${rows.map(r=>{const i=r.it.label.lastIndexOf("  ·  "),nm=i<0?r.it.label:r.it.label.slice(0,i),wt=i<0?"":r.it.label.slice(i+5);return `<th colspan="2" class="ld l0${r.it.handload?" hl":""}"><span class="nm">${esc(nm)}</span>${wt?`<small>${esc(wt)}</small>`:""}</th>`;}).join("")}</tr><tr><th class="yd" style="color:var(--muted)">Yards</th>${rows.map(()=>`<th class="l0">Velocity (fps)</th><th>Energy (ft-lbs)</th>`).join("")}</tr></thead><tbody>`;
+    h+=`</tbody></table></div><div class="sect">DOWNRANGE</div><div class="h2h drw"><table class="dr"><thead><tr><th></th>${rows.map(r=>{const i=r.it.label.lastIndexOf("  ·  "),nm=i<0?r.it.label:r.it.label.slice(0,i),wt=i<0?"":r.it.label.slice(i+5);return `<th colspan="2" class="ld l0${r.it.handload?" hl":""}"><small class="ct">${esc(r.it.cartridge)}</small><span class="nm">${esc(nm)}</span>${wt?`<small>${esc(wt)}</small>`:""}</th>`;}).join("")}</tr><tr><th class="yd" style="color:var(--muted)">Yards</th>${rows.map(()=>`<th class="l0">Velocity (fps)</th><th>Energy (ft-lbs)</th>`).join("")}</tr></thead><tbody>`;
     // velocity and energy each highlight their own leader at that distance
     for(const [yd,cells] of h2hDownrange(rows.map(r=>[r.cat,r.it]))){
       const live=cells.filter(Boolean),vTop=Math.max(...live.map(c=>c[0])),eTop=Math.max(...live.map(c=>c[1]));

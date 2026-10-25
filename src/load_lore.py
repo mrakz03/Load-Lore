@@ -4833,11 +4833,12 @@ class HeadToHeadView:
             row=1, column=0, sticky="nsew", padx=pad, pady=(0, 6))
         for c, row in enumerate(rows):
             tk.Frame(dr, bg=BORDER, width=1).grid(row=0, column=3 * c + 1, rowspan=last, sticky="ns")
-            # "Load  ·  124 gr" -> the name on one line (the columns widen for it; only a very
-            # long name wraps), the weight in small grey type under it
+            # the cartridge in small grey type, then "Load  ·  124 gr" -> the name on one line (the
+            # columns widen for it; only a very long name wraps), the weight in small grey type
             name, _, weight = row["item"].label.rpartition("  ·  ")
             head = tk.Frame(dr, bg=SURFACE)
             head.grid(row=0, column=3 * c + 2, columnspan=2, sticky="s", padx=pad, pady=(8, 6))
+            a.label(head, row["item"].cartridge, 9, MUTED, True, bg=SURFACE).pack()
             a.label(head, name or weight, 10, HAND_FG if row["item"].handload else TEXT, True,
                     bg=SURFACE, justify="center", wraplength=a.px(420)).pack()
             if name:
