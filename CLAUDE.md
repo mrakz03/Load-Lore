@@ -84,8 +84,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open
   pickSheet too (sheetSelect puts a clear button over a <select>; powder has "Other powder (type
   it)"); pickSheet over a dialog hands the back button back to the dialog when it closes.
-- Tab order (Oct 2026, Zeke): Home, Head to Head, Load Dictionary (the main tool, in the middle),
-  Handloads, Settings (NAV_ORDER / NAVS); Home cards keep the Load Dictionary first (TOOLS).
+- Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
+  middle), Handloads, Settings; the PC sidebar (NAV_ORDER, Oct 25) has the Load Dictionary above Head
+  to Head. Home cards keep the Load Dictionary first (TOOLS).
 - Handload bullets go by diameter, not cartridge (one .257 bullet fits .250 Savage, .25-06, .257
   Roberts): the form lists only makers with a bullets.csv bullet of the cartridge's DIAMETERS
   size, then that maker's bullets; any other maker can be typed (web:

@@ -28,6 +28,7 @@ for Windows and macOS).
 """
 
 import base64
+import contextlib
 import bisect
 import csv
 import glob
@@ -186,7 +187,7 @@ TOOLS = (("loads", "Load Dictionary", "Every load of a cartridge, factory or you
                                  "or categories."),
          ("hand", "Handloads", "Build and save your own reloads. They're graded in the Load "
                                "Dictionary and can go head to head."))
-NAV_ORDER = ("h2h", "loads", "hand")     # the sidebar: the Load Dictionary, the main tool, in the middle
+NAV_ORDER = ("loads", "h2h", "hand")     # the PC sidebar (Zeke, Oct 25 2026): Load Dictionary first; phones keep NAVS
 H2H_MIN, H2H_MAX = 2, 5
 H2H_DISTANCE = 100       # Head to Head's starting distance (yd); each load is capped at its category's max
 
@@ -1918,7 +1919,8 @@ class App:
         win_id = self.canvas.create_window((0, 0), window=self.stage, anchor="nw")
         self.stage.bind("<Configure>", lambda e: self._update_scroll())
         self.canvas.bind("<Configure>", lambda e: (self.canvas.itemconfigure(win_id, width=e.width),
-                                                   self._update_scroll(), self._refit_soon()))
+                                                   self._update_scroll(), self._refit_soon(),
+                                                   self._menu_resized()))
         for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
             self.root.bind_all(seq, self._on_wheel)
             # Tk's dropdowns step their value on every wheel tick, and each step re-ran the
@@ -2052,6 +2054,93 @@ class App:
             w.bind("<Enter>", lambda e: [x.config(bg=hover) for x in widgets])
             w.bind("<Leave>", lambda e: [x.config(bg=base) for x in widgets])
 
+    # ---- Home, category list and Settings: sized to the window ------------ #
+    # Each page has a size it is drawn for at zoom 1 (MENU_PAGES: content width, height, the
+    # vertical centring). A bigger window zooms the whole page up to MENU_ZOOM_MAX (text, cards,
+    # icons: App.scale is raised while it is built), the column is centred, and a window too
+    # narrow for two card columns gets one. Resizing re-lays it out (_menu_resized).
+    MENU_PAGES = {"home": (900, 520, True), "picker": (840, 430, True), "settings": (680, 760, False)}
+    MENU_ZOOM_MAX = 1.4
+    MENU_CARD_MIN = 290                 # a Home card's narrowest width in a row of three
+    MENU_SIDE = 34                      # the page's side margin at zoom 1
+
+    def _menu_page(self):
+        if self.mode in ("home", "settings"):
+            return self.mode
+        if self.mode == "loads" and self.cat is None and self.view is None:
+            return "picker"
+        return None
+
+    def _menu_layout(self, page):
+        """(zoom, column width, card columns) for `page` in the window's current page area.
+        Home's three cards go in one row when each still gets MENU_CARD_MIN."""
+        self.root.update_idletasks()
+        box = self.canvas.master
+        w = box.winfo_width() - self.vbar.winfo_reqwidth()     # the same with or without the bar
+        h = box.winfo_height()
+        if w <= 1 or h <= 1:                                   # not drawn yet
+            w = self.root.winfo_width() - self.sidebar.winfo_reqwidth() - 1
+            h = self.root.winfo_height()
+        dw, dh, _ = self.MENU_PAGES[page]
+        side = 2 * self.px(self.MENU_SIDE)
+        k = min((w - side) / self.px(dw), (h - self.px(54)) / self.px(dh), self.MENU_ZOOM_MAX)
+        k = max(1.0, math.floor(k * 20) / 20)                  # steps of 5%
+        width = max(self.px(260), min(w - side, round(self.px(dw) * k)))
+        cols = 2 if width >= self.px(560) else 1
+        if page == "home" and width >= 3 * round(self.px(self.MENU_CARD_MIN) * k):
+            cols = 3
+        return k, width, cols
+
+    @contextlib.contextmanager
+    def _zoomed(self, k):
+        """Build with every px() / f() / icon k times bigger (the window's zoom, not the text
+        size setting: that is put back when the page is built)."""
+        base = self.scale
+        self.scale = base * k
+        try:
+            yield
+        finally:
+            self.scale = base
+
+    def _menu_wrap(self, stage, page, width):
+        """The page's centred column, `width` wide."""
+        wrap = tk.Frame(stage, bg=BG)
+        wrap.pack(anchor="n", pady=(self.px(26), self.px(28)))
+        tk.Frame(wrap, bg=BG, width=width, height=0).pack()
+        self._menu = (page, wrap)
+        return wrap
+
+    def _menu_centre(self):
+        """Home and the category list sit in the middle of a window taller than they are."""
+        page, wrap = getattr(self, "_menu", (None, None))
+        if page is None or not self.MENU_PAGES[page][2] or not wrap.winfo_exists():
+            return
+        self.root.update_idletasks()
+        room = self.canvas.winfo_height() - wrap.winfo_reqheight()
+        top = max(self.px(26), room // 2)
+        if wrap.pack_info().get("pady") != (top, max(self.px(28), room - top)):
+            wrap.pack_configure(pady=(top, max(self.px(28), room - top)))
+        self._update_scroll()
+
+    def _menu_resized(self):
+        """Window resized: once it settles, re-lay out Home / the category list / Settings."""
+        if self._menu_page() is None:
+            return
+        if getattr(self, "_menu_job", None):
+            self.root.after_cancel(self._menu_job)
+
+        def run():
+            self._menu_job = None
+            page = self._menu_page()
+            if page is None:
+                return
+            if self._menu_layout(page) != getattr(self, "_menu_fit", None):
+                {"home": self.show_launcher, "settings": self.show_settings,
+                 "picker": lambda: self.show_picker(self.mode)}[page]()
+            else:
+                self._menu_centre()
+        self._menu_job = self.root.after(150, run)
+
     def show_launcher(self):
         """Home screen: the two things you can do."""
         self._stash()
@@ -2059,23 +2148,28 @@ class App:
         stage = self._new_stage()
         self.root.title(APP_TITLE)
         self._draw_chrome()
-        wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(anchor="w", padx=self.px(34), pady=(self.px(26), self.px(28)))
-        self.label(wrap, "In Like Flint", 11, MUTED, True, bg=BG, anchor="w").pack(anchor="w")
-        self.label(wrap, "Load Lore", 20, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
-        self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
-                   "loads head to head.", 11, MUTED,
-                   bg=BG, anchor="w").pack(anchor="w", pady=(self.px(8), self.px(18)))
-        feats = tk.Frame(wrap, bg=BG)
-        feats.pack(fill="x")
-        feats.columnconfigure((0, 1), weight=1, uniform="f", minsize=self.px(440))
-        for i, (key, title, blurb) in enumerate(TOOLS):
-            self._feature_card(feats, key, title, blurb, lambda k=key: self.show_picker(k)).grid(
-                row=i // 2, column=i % 2, sticky="nsew", pady=(0, self.px(12)),
-                padx=(0, self.px(6)) if i % 2 == 0 else (self.px(6), 0))
-        self._update_scroll()
+        k, width, cols = self._menu_fit = self._menu_layout("home")
+        with self._zoomed(k):
+            gap = self.px(12)
+            wrap = self._menu_wrap(stage, "home", width)
+            self.label(wrap, "In Like Flint", 11, MUTED, True, bg=BG, anchor="w").pack(anchor="w")
+            self.label(wrap, "Load Lore", 20, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
+            self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
+                       "loads head to head.", 11, MUTED, bg=BG, anchor="w", justify="left",
+                       wraplength=width).pack(anchor="w", pady=(self.px(8), self.px(18)))
+            feats = tk.Frame(wrap, bg=BG)
+            feats.pack(fill="x")
+            feats.columnconfigure(tuple(range(cols)), weight=1, uniform="f")
+            col_w = (width - gap * (cols - 1)) // cols
+            for i, (key, title, blurb) in enumerate(TOOLS):
+                col = i % cols
+                self._feature_card(feats, key, title, blurb, lambda t=key: self.show_picker(t),
+                                   col_w).grid(
+                    row=i // cols, column=col, sticky="nsew", pady=(0, gap),
+                    padx=(0 if col == 0 else gap // 2, 0 if col == cols - 1 else gap - gap // 2))
+        self._menu_centre()
 
-    def _feature_card(self, parent, key, title, blurb, command):
+    def _feature_card(self, parent, key, title, blurb, command, width):
         """A Home card like the web's .fcard: accent icon tile, title, a line about it."""
         # a size up from the web's cards: a PC window has the room (Zeke, Oct 2026)
         card = RoundBox(parent, self, SURFACE, BORDER, radius=16, padx=26, pady=26, cursor="hand2")
@@ -2088,7 +2182,7 @@ class App:
                      cursor="hand2")
         t.pack(fill="x", pady=(self.px(12), 0))
         d = tk.Label(card.body, text=blurb, bg=SURFACE, fg=MUTED, font=self.f(12), anchor="w",
-                     justify="left", wraplength=self.px(380), cursor="hand2")
+                     justify="left", wraplength=width - 2 * self.px(26) - 4, cursor="hand2")
         d.pack(fill="x", pady=(self.px(8), 0))
         parts = (t, d)
         card.on_click(command, (tile, tile.canvas, tile.body, ic, *parts))
@@ -2248,9 +2342,14 @@ class App:
         stage = self._new_stage()
         self.root.title(f"{APP_TITLE} — Settings")
         self._draw_chrome()
-        wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(anchor="w", padx=self.px(34), pady=(self.px(26), self.px(28)))
-        tk.Frame(wrap, bg=BG, width=self.px(640), height=0).pack()   # the web's page width
+        k, width, _ = self._menu_fit = self._menu_layout("settings")
+        text_size = f"{round(self.scale * 100)}%"
+        with self._zoomed(k):
+            self._settings_page(stage, width, text_size)
+        self._update_scroll()
+
+    def _settings_page(self, stage, width, text_size):
+        wrap = self._menu_wrap(stage, "settings", width)
         self.label(wrap, "Settings", 17, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
 
         def section(title):
@@ -2288,7 +2387,7 @@ class App:
         pbox.pack()
         pick.theme_var = theme_var                    # keep the variable alive with its box
         LoadSearch(self, pick, list(THEMES), self.set_theme)
-        box = row("Text size", f"{round(self.scale * 100)}%")
+        box = row("Text size", text_size)
         for text, delta in (("A−", -0.15), ("A+", 0.15)):
             self.button(box, text, lambda d=delta: self.set_scale(self.scale + d), size=11,
                         padx=13, pady=6).pack(side="left", padx=(self.px(6), 0))
@@ -2307,10 +2406,9 @@ class App:
         self.label(card, "Disclaimer", 11, TEXT, True, bg=SURFACE, anchor="w").pack(
             anchor="w", pady=(self.px(12), 0))
         about = self.label(card, ABOUT_TEXT, 9, MUTED, bg=SURFACE, anchor="w", justify="left",
-                           wraplength=self.px(640 - 2 * 16 - 4))
+                           wraplength=width - 2 * self.px(16) - 4)
         about.pack(fill="x", pady=(self.px(2), self.px(12)))
         self.label(row("Version"), version_text(), 9, MUTED, bg=SURFACE).pack()
-        self._update_scroll()
 
     def _stash(self):
         """Remember what the open tool has on screen, for when you come back to it."""
@@ -2354,15 +2452,22 @@ class App:
         stage = self._new_stage()
         self.root.title(f"{APP_TITLE} — {tool_title(mode)}")
         self._draw_chrome()
-        wrap = tk.Frame(stage, bg=BG)
-        wrap.pack(anchor="w", padx=self.px(34), pady=(self.px(26), self.px(28)))
+        k, width, cols = self._menu_fit = self._menu_layout("picker")
+        with self._zoomed(k):
+            self._picker_page(stage, mode, width, cols)
+        self._menu_centre()
+
+    def _picker_page(self, stage, mode, width, cols):
+        wrap = self._menu_wrap(stage, "picker", width)
         self.label(wrap, tool_title(mode), 17,
                    TEXT, True, bg=BG, anchor="w").pack(anchor="w")
         self.label(wrap, "Choose a category.", 11, MUTED, bg=BG, anchor="w").pack(
             anchor="w", pady=(self.px(4), self.px(18)))
         grid = tk.Frame(wrap, bg=BG)
         grid.pack(fill="x")
-        grid.columnconfigure((0, 1), weight=1, uniform="g", minsize=self.px(360))
+        grid.columnconfigure(tuple(range(cols)), weight=1, uniform="g")
+        gap = self.px(12)
+        col_w = (width - gap * (cols - 1)) // cols
         for i, cat in enumerate(CATEGORIES):
             info = self.data[cat.title]
             if info["error"]:
@@ -2375,13 +2480,14 @@ class App:
                 caption = f"{len(carts)} cartridges · {len(shown):,} loads"
             card = RoundBox(grid, self, SURFACE, BORDER, radius=14, padx=24, pady=22,
                             cursor="hand2")
-            card.grid(row=i // 2, column=i % 2, sticky="nsew", pady=(0, self.px(12)),
-                      padx=(0 if i % 2 == 0 else self.px(6), self.px(6) if i % 2 == 0 else 0))
+            col = i % cols
+            card.grid(row=i // cols, column=col, sticky="nsew", pady=(0, gap),
+                      padx=(0 if col == 0 else gap // 2, 0 if col == cols - 1 else gap - gap // 2))
             t = tk.Label(card.body, text=cat.title, bg=SURFACE, fg=TEXT, font=self.f(15, True),
                          anchor="w", cursor="hand2")
             t.pack(fill="x")
             d = tk.Label(card.body, text=cat.blurb, bg=SURFACE, fg=MUTED, font=self.f(12), anchor="w",
-                         cursor="hand2")
+                         justify="left", wraplength=col_w - 2 * self.px(24) - 4, cursor="hand2")
             d.pack(fill="x", pady=(self.px(6), self.px(26)))
             c = tk.Label(card.body, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(11, True),
                          anchor="w", cursor="hand2")
@@ -2391,7 +2497,6 @@ class App:
             for w in (card, card.canvas, card.body, *parts):
                 w.bind("<Enter>", lambda e, cd=card, p=parts: cd.recolour(SURFACE_2, ACCENT, p))
                 w.bind("<Leave>", lambda e, cd=card, p=parts: cd.recolour(SURFACE, BORDER, p))
-        self._update_scroll()
 
     def header(self, parent, cat, active):
         """Back link and the page title."""
