@@ -4809,29 +4809,45 @@ class HeadToHeadView:
         a.label(card, "", 4).grid(row=r, column=0)
 
         # downrange
-        a.label(self.results, "DOWNRANGE · VELOCITY (FPS) AND ENERGY (FT-LBS)", 8, MUTED, True,
+        a.label(self.results, "DOWNRANGE", 8, MUTED, True,
                 bg=BG, anchor="w").grid(row=1, column=0, sticky="w", pady=(16, 6))
         box = a.card(self.results, padx=4, pady=4)
         box.grid(row=2, column=0, sticky="ew")
         dr = box.body
+        # like the Load Dictionary's ballistic table: each load gets its own right-aligned
+        # Velocity and Energy columns under its name, and each column marks its own leader
         dr.columnconfigure(0, minsize=self._label_w())
-        for c in range(1, n + 1):
+        for c in range(1, 2 * n + 1):
             dr.columnconfigure(c, weight=1, uniform="load")
-        self._cell(dr, 0, 0, "Yards", 9, MUTED, True)
-        for c, row in enumerate(rows, start=1):
-            self._cell(dr, 0, c, row["item"].label, 9, MUTED, True, wraplength=wrap)
+
+        def num(r, c, text, color=TEXT, bold=False, size=11):
+            a.label(dr, text, size, color, bold, bg=SURFACE, anchor="e").grid(
+                row=r, column=c, sticky="nsew", padx=(12, 12), pady=2 if r > 1 else (0, 4))
+
+        a.label(dr, "Yards", 10, MUTED, True, bg=SURFACE, anchor="w").grid(
+            row=1, column=0, sticky="nsew", padx=(12, 12), pady=(0, 4))
+        for c, row in enumerate(rows):
+            lab = a.label(dr, row["item"].label, 9, HAND_FG if row["item"].handload else MUTED,
+                          True, bg=SURFACE, anchor="w", justify="left", wraplength=wrap)
+            lab.grid(row=0, column=2 * c + 1, columnspan=2, sticky="nsew", padx=(12, 12), pady=(5, 2))
+            num(1, 2 * c + 1, "Velocity (fps)", MUTED, True, 10)
+            num(1, 2 * c + 2, "Energy (ft-lbs)", MUTED, True, 10)
         table = h2h_downrange([(row["cat"], row["item"]) for row in rows])
-        for i, (yd, cells) in enumerate(table, start=1):
-            self._cell(dr, i, 0, f"{yd:g}", 10, TEXT, True)
-            top = max(cell[1] for cell in cells if cell)
-            for c, cell in enumerate(cells, start=1):
+        for i, (yd, cells) in enumerate(table, start=2):
+            a.label(dr, f"{yd:g}", 11, TEXT, True, bg=SURFACE, anchor="w").grid(
+                row=i, column=0, sticky="nsew", padx=(12, 12), pady=2)
+            live = [cell for cell in cells if cell]
+            v_top, e_top = max(v for v, _ in live), max(e for _, e in live)
+            for c, cell in enumerate(cells):
                 if cell is None:
-                    self._cell(dr, i, c, "—", 10, MUTED)
+                    num(i, 2 * c + 1, "—", MUTED)
+                    num(i, 2 * c + 2, "—", MUTED)
                     continue
                 v, e = cell
-                best = e >= top - 1e-9
-                self._cell(dr, i, c, f"{v:,.0f}  ·  {e:,.0f}", 10, ACCENT if best else TEXT, best)
-
+                vb, eb = v >= v_top - 1e-9, e >= e_top - 1e-9
+                num(i, 2 * c + 1, f"{v:,.0f}", ACCENT if vb else TEXT, vb)
+                num(i, 2 * c + 2, f"{e:,.0f}", ACCENT if eb else TEXT, eb)
+        a.label(dr, "", 2, bg=SURFACE).grid(row=len(table) + 2, column=0)
 
 def h2h_keys(cats):
     """The factors shown in Head to Head: every factor that applies to any of the loads."""
