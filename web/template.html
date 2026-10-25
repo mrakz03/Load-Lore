@@ -286,13 +286,21 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .h2h .gap{font-size:.75rem;color:var(--muted);margin-left:6px}.h2h .gap.best{font-weight:700}
 .h2h .badge{display:inline-block;margin-left:8px;min-width:24px;font-size:.75rem;padding:1px 5px}
 .h2h tr.sep td{border-bottom:2px solid var(--border)}
-.h2h table.dr th,.h2h table.dr td{text-align:right;white-space:nowrap}
-.h2h table.dr thead tr+tr th:first-child{position:static;color:var(--muted);font-size:.8rem;min-width:0;text-align:right}
-.h2h table.dr .yd{text-align:left;color:var(--text);min-width:3.5em}
+.h2h.drw{width:fit-content;max-width:100%}
+.h2h table.dr{width:auto}
+.h2h table.dr th,.h2h table.dr td{text-align:right;white-space:nowrap;padding:6px 10px}
+.h2h table.dr td{min-width:5.5em}
+.h2h table.dr th:first-child,.h2h table.dr td:first-child{min-width:0}
+.h2h table.dr .yd{text-align:right;color:var(--text);font-weight:700}
 .h2h table.dr thead th{font-size:.8rem;color:var(--muted);vertical-align:bottom}
-.h2h table.dr thead tr:first-child th.ld{text-align:center;white-space:normal;border-bottom:1px solid var(--border)}
+.h2h table.dr thead tr+tr th{border-bottom:1px solid var(--border);padding-bottom:8px}
+.h2h table.dr thead tr+tr th:first-child{position:static;min-width:0;font-size:.8rem}
+.h2h table.dr th.ld{text-align:center;color:var(--text);font-size:.8rem;padding-top:10px}
+.h2h table.dr th.ld .nm{display:inline-block;width:max-content;max-width:26em;white-space:normal}
+.h2h table.dr th.ld.hl{color:var(--hand)}
 .h2h table.dr th small{display:block;font-weight:600}
-.h2h table.dr .l0{border-left:1px solid var(--border);padding-left:18px}
+.h2h table.dr th.ld small{font-weight:400;margin-top:2px}
+.h2h table.dr .l0{border-left:1px solid var(--border)}
 details.btab{margin-top:10px}
 details.btab summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.9rem;padding:6px 0}
 details.btab table th,details.btab table td{text-align:right;padding:7px 8px}
@@ -1396,7 +1404,7 @@ function openH2H(pane){
         return `<span class="v${b?" best":""}">${h2hValue(k,r.st[k])}</span><span class="gap${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?badge(gradeRel(r.sc[k])):""}`;}));
     }
     h+=line("Best in",rows.map(r=>`<span class="${r.best.size===most&&most?"v best":""}">${r.best.size} of ${r.keys.length}</span>`));
-    h+=`</tbody></table></div><div class="sect">DOWNRANGE</div><div class="h2h"><table class="dr"><thead><tr><th rowspan="2" class="yd">Yd</th>${rows.map(r=>`<th colspan="2" class="ld l0${r.it.handload?" hl":""}">${esc(r.it.label)}</th>`).join("")}</tr><tr>${rows.map(()=>`<th class="l0">Velocity<small>fps</small></th><th>Energy<small>ft-lbs</small></th>`).join("")}</tr></thead><tbody>`;
+    h+=`</tbody></table></div><div class="sect">DOWNRANGE</div><div class="h2h drw"><table class="dr"><thead><tr><th></th>${rows.map(r=>{const i=r.it.label.lastIndexOf("  ·  "),nm=i<0?r.it.label:r.it.label.slice(0,i),wt=i<0?"":r.it.label.slice(i+5);return `<th colspan="2" class="ld l0${r.it.handload?" hl":""}"><span class="nm">${esc(nm)}</span>${wt?`<small>${esc(wt)}</small>`:""}</th>`;}).join("")}</tr><tr><th class="yd" style="color:var(--muted)">Yards</th>${rows.map(()=>`<th class="l0">Velocity (fps)</th><th>Energy (ft-lbs)</th>`).join("")}</tr></thead><tbody>`;
     // velocity and energy each highlight their own leader at that distance
     for(const [yd,cells] of h2hDownrange(rows.map(r=>[r.cat,r.it]))){
       const live=cells.filter(Boolean),vTop=Math.max(...live.map(c=>c[0])),eTop=Math.max(...live.map(c=>c[1]));
