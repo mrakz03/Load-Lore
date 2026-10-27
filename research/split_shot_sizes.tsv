@@ -1,0 +1,590 @@
+cartridge	old_load	new_load	old_bc	new_bc
+10 Gauge	Federal Black Cloud FS Steel · 3½" BB/2 Steel · 1⅝ oz	Federal Black Cloud FS Steel · 3½" BB Steel · 1⅝ oz	0.021	0.021
+10 Gauge	Federal Black Cloud FS Steel · 3½" BB/2 Steel · 1⅝ oz	Federal Black Cloud FS Steel · 3½" #2 Steel · 1⅝ oz	0.021	0.018
+10 Gauge	Federal Ultra Steel · 3½" BBB x #1/BB x #2 Steel · 1⅝ oz	Federal Ultra Steel · 3½" BBB x #1 Steel · 1⅝ oz	0.022	0.022
+10 Gauge	Federal Ultra Steel · 3½" BBB x #1/BB x #2 Steel · 1⅝ oz	Federal Ultra Steel · 3½" BB x #2 Steel · 1⅝ oz	0.022	0.022
+10 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2 Steel · 1½ oz	Federal Speed-Shok Waterfowl · 3½" T Steel · 1½ oz	0.022	0.023
+10 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2 Steel · 1½ oz	Federal Speed-Shok Waterfowl · 3½" BBB Steel · 1½ oz	0.022	0.022
+10 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2 Steel · 1½ oz	Federal Speed-Shok Waterfowl · 3½" BB Steel · 1½ oz	0.022	0.021
+10 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2 Steel · 1½ oz	Federal Speed-Shok Waterfowl · 3½" #2 Steel · 1½ oz	0.022	0.018
+10 Gauge	Winchester Drylok Super Steel · 3½" T/BBB/BB/2 Steel · 1⅝ oz	Winchester Drylok Super Steel · 3½" T Steel · 1⅝ oz	0.022	0.023
+10 Gauge	Winchester Drylok Super Steel · 3½" T/BBB/BB/2 Steel · 1⅝ oz	Winchester Drylok Super Steel · 3½" BBB Steel · 1⅝ oz	0.022	0.022
+10 Gauge	Winchester Drylok Super Steel · 3½" T/BBB/BB/2 Steel · 1⅝ oz	Winchester Drylok Super Steel · 3½" BB Steel · 1⅝ oz	0.022	0.021
+10 Gauge	Winchester Drylok Super Steel · 3½" T/BBB/BB/2 Steel · 1⅝ oz	Winchester Drylok Super Steel · 3½" #2 Steel · 1⅝ oz	0.022	0.018
+10 Gauge	Federal Premium Grand Slam · 3½" #4/5 · 2 oz	Federal Premium Grand Slam · 3½" #4 · 2 oz	0.022	0.022
+10 Gauge	Federal Premium Grand Slam · 3½" #4/5 · 2 oz	Federal Premium Grand Slam · 3½" #5 · 2 oz	0.022	0.02
+10 Gauge	Winchester Double-X Copper Plated Buffered · 3½" #4/5 · 2 oz	Winchester Double-X Copper Plated Buffered · 3½" #4 · 2 oz	0.022	0.022
+10 Gauge	Winchester Double-X Copper Plated Buffered · 3½" #4/5 · 2 oz	Winchester Double-X Copper Plated Buffered · 3½" #5 · 2 oz	0.022	0.02
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/6.5/7 Steel · 1 oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6 Steel · 1 oz	0.013	0.013
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/6.5/7 Steel · 1 oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6.5 Steel · 1 oz	0.013	0.013
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/6.5/7 Steel · 1 oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #7 Steel · 1 oz	0.013	0.012
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/6.5/7 Steel · 1⅛ oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6 Steel · 1⅛ oz	0.013	0.013
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/6.5/7 Steel · 1⅛ oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6.5 Steel · 1⅛ oz	0.013	0.013
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/6.5/7 Steel · 1⅛ oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #7 Steel · 1⅛ oz	0.013	0.012
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/7 Steel · 1 oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6 Steel · 1 oz	0.013	0.013
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/7 Steel · 1 oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #7 Steel · 1 oz	0.013	0.012
+12 Gauge	Winchester AA Sporting Clays (lead-free) · 2¾" #7.5 Steel/8 Steel · 1 oz	Winchester AA Sporting Clays (lead-free) · 2¾" #7.5 Steel · 1 oz	0.011	0.011
+12 Gauge	Winchester AA Sporting Clays (lead-free) · 2¾" #7.5 Steel/8 Steel · 1 oz	Winchester AA Sporting Clays (lead-free) · 2¾" #8 Steel · 1 oz	0.011	0.01
+12 Gauge	Winchester AA Light Handicap · 2¾" #7.5/8 · 1 oz	Winchester AA Light Handicap · 2¾" #7.5 · 1 oz	0.016	0.016
+12 Gauge	Winchester AA Light Handicap · 2¾" #7.5/8 · 1 oz	Winchester AA Light Handicap · 2¾" #8 · 1 oz	0.016	0.015
+12 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8 · 1 oz (1350 fps)	Winchester AA Sporting Clays · 2¾" #7.5 · 1 oz (1350 fps)	0.016	0.016
+12 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8 · 1 oz (1350 fps)	Winchester AA Sporting Clays · 2¾" #8 · 1 oz (1350 fps)	0.016	0.015
+12 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8 · 1 oz (1250 fps)	Winchester AA Sporting Clays · 2¾" #7.5 · 1 oz (1250 fps)	0.016	0.016
+12 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8 · 1 oz (1250 fps)	Winchester AA Sporting Clays · 2¾" #8 · 1 oz (1250 fps)	0.016	0.015
+12 Gauge	Winchester Super Target · 2¾" #7.5/8 · 1 oz (1290 fps)	Winchester Super Target · 2¾" #7.5 · 1 oz (1290 fps)	0.016	0.016
+12 Gauge	Winchester Super Target · 2¾" #7.5/8 · 1 oz (1290 fps)	Winchester Super Target · 2¾" #8 · 1 oz (1290 fps)	0.016	0.015
+12 Gauge	Winchester Super Target · 2¾" #7.5/8 · 1 oz (1350 fps)	Winchester Super Target · 2¾" #7.5 · 1 oz (1350 fps)	0.016	0.016
+12 Gauge	Winchester Super Target · 2¾" #7.5/8 · 1 oz (1350 fps)	Winchester Super Target · 2¾" #8 · 1 oz (1350 fps)	0.016	0.015
+12 Gauge	Winchester AA Super-Handicap · 2¾" #7.5/8 · 1⅛ oz	Winchester AA Super-Handicap · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Winchester AA Super-Handicap · 2¾" #7.5/8 · 1⅛ oz	Winchester AA Super-Handicap · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Winchester Super Target · 2¾" #7.5/8 · 1⅛ oz	Winchester Super Target · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Winchester Super Target · 2¾" #7.5/8 · 1⅛ oz	Winchester Super Target · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Winchester USA Valor · 2¾" #7.5/8 · 1⅛ oz	Winchester USA Valor · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Winchester USA Valor · 2¾" #7.5/8 · 1⅛ oz	Winchester USA Valor · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Winchester AA Xtra-Lite · 2¾" #7.5/8/8.5/9 · 1 oz	Winchester AA Xtra-Lite · 2¾" #7.5 · 1 oz	0.016	0.016
+12 Gauge	Winchester AA Xtra-Lite · 2¾" #7.5/8/8.5/9 · 1 oz	Winchester AA Xtra-Lite · 2¾" #8 · 1 oz	0.016	0.015
+12 Gauge	Winchester AA Xtra-Lite · 2¾" #7.5/8/8.5/9 · 1 oz	Winchester AA Xtra-Lite · 2¾" #8.5 · 1 oz	0.016	0.014
+12 Gauge	Winchester AA Xtra-Lite · 2¾" #7.5/8/8.5/9 · 1 oz	Winchester AA Xtra-Lite · 2¾" #9 · 1 oz	0.016	0.013
+12 Gauge	Winchester AA Light Target · 2¾" #7.5/8/8.5/9 · 1⅛ oz	Winchester AA Light Target · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Winchester AA Light Target · 2¾" #7.5/8/8.5/9 · 1⅛ oz	Winchester AA Light Target · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Winchester AA Light Target · 2¾" #7.5/8/8.5/9 · 1⅛ oz	Winchester AA Light Target · 2¾" #8.5 · 1⅛ oz	0.016	0.014
+12 Gauge	Winchester AA Light Target · 2¾" #7.5/8/8.5/9 · 1⅛ oz	Winchester AA Light Target · 2¾" #9 · 1⅛ oz	0.016	0.013
+12 Gauge	Winchester Super Target · 2¾" #7.5/8/9 · 1 oz (1180 fps)	Winchester Super Target · 2¾" #7.5 · 1 oz (1180 fps)	0.016	0.016
+12 Gauge	Winchester Super Target · 2¾" #7.5/8/9 · 1 oz (1180 fps)	Winchester Super Target · 2¾" #8 · 1 oz (1180 fps)	0.016	0.015
+12 Gauge	Winchester Super Target · 2¾" #7.5/8/9 · 1 oz (1180 fps)	Winchester Super Target · 2¾" #9 · 1 oz (1180 fps)	0.016	0.013
+12 Gauge	Winchester Super Target · 2¾" #7.5/8/9 · 1 oz (1250 fps)	Winchester Super Target · 2¾" #7.5 · 1 oz (1250 fps)	0.016	0.016
+12 Gauge	Winchester Super Target · 2¾" #7.5/8/9 · 1 oz (1250 fps)	Winchester Super Target · 2¾" #8 · 1 oz (1250 fps)	0.016	0.015
+12 Gauge	Winchester Super Target · 2¾" #7.5/8/9 · 1 oz (1250 fps)	Winchester Super Target · 2¾" #9 · 1 oz (1250 fps)	0.016	0.013
+12 Gauge	Winchester AA Heavy Target · 2¾" #7.5/8/9 · 1⅛ oz	Winchester AA Heavy Target · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Winchester AA Heavy Target · 2¾" #7.5/8/9 · 1⅛ oz	Winchester AA Heavy Target · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Winchester AA Heavy Target · 2¾" #7.5/8/9 · 1⅛ oz	Winchester AA Heavy Target · 2¾" #9 · 1⅛ oz	0.016	0.013
+12 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8/9 · 1⅛ oz	Winchester AA Sporting Clays · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8/9 · 1⅛ oz	Winchester AA Sporting Clays · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8/9 · 1⅛ oz	Winchester AA Sporting Clays · 2¾" #9 · 1⅛ oz	0.016	0.013
+12 Gauge	Winchester Super Target · 2¾" #7.5/8/9 · 1⅛ oz	Winchester Super Target · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Winchester Super Target · 2¾" #7.5/8/9 · 1⅛ oz	Winchester Super Target · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Winchester Super Target · 2¾" #7.5/8/9 · 1⅛ oz	Winchester Super Target · 2¾" #9 · 1⅛ oz	0.016	0.013
+12 Gauge	Winchester AA International · 2¾" #7.5/9 · 0.85 oz	Winchester AA International · 2¾" #7.5 · 0.85 oz	0.016	0.016
+12 Gauge	Winchester AA International · 2¾" #7.5/9 · 0.85 oz	Winchester AA International · 2¾" #9 · 0.85 oz	0.016	0.013
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · 1 oz (1200 fps)	Federal Premium High Over All · 2¾" #7.5 · 1 oz (1200 fps)	0.016	0.016
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · 1 oz (1200 fps)	Federal Premium High Over All · 2¾" #8 · 1 oz (1200 fps)	0.016	0.015
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · 1 oz (1250 fps)	Federal Premium High Over All · 2¾" #7.5 · 1 oz (1250 fps)	0.016	0.016
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · 1 oz (1250 fps)	Federal Premium High Over All · 2¾" #8 · 1 oz (1250 fps)	0.016	0.015
+12 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · 1 oz (1330 fps)	Federal Premium Gold Medal Paper · 2¾" #7.5 · 1 oz (1330 fps)	0.016	0.016
+12 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · 1 oz (1330 fps)	Federal Premium Gold Medal Paper · 2¾" #8 · 1 oz (1330 fps)	0.016	0.015
+12 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · 1 oz (1290 fps)	Federal Premium Gold Medal Paper · 2¾" #7.5 · 1 oz (1290 fps)	0.016	0.016
+12 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · 1 oz (1290 fps)	Federal Premium Gold Medal Paper · 2¾" #8 · 1 oz (1290 fps)	0.016	0.015
+12 Gauge	Federal Master Class · 2¾" #7.5/8 · 1 oz (1250 fps)	Federal Master Class · 2¾" #7.5 · 1 oz (1250 fps)	0.016	0.016
+12 Gauge	Federal Master Class · 2¾" #7.5/8 · 1 oz (1250 fps)	Federal Master Class · 2¾" #8 · 1 oz (1250 fps)	0.016	0.015
+12 Gauge	Federal Master Class · 2¾" #7.5/8 · 1 oz (1300 fps)	Federal Master Class · 2¾" #7.5 · 1 oz (1300 fps)	0.016	0.016
+12 Gauge	Federal Master Class · 2¾" #7.5/8 · 1 oz (1300 fps)	Federal Master Class · 2¾" #8 · 1 oz (1300 fps)	0.016	0.015
+12 Gauge	Federal All-American · 2¾" #7.5/8 · 1 oz	Federal All-American · 2¾" #7.5 · 1 oz	0.016	0.016
+12 Gauge	Federal All-American · 2¾" #7.5/8 · 1 oz	Federal All-American · 2¾" #8 · 1 oz	0.016	0.015
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · 1 oz (1180 fps)	Federal Top Gun Target · 2¾" #7.5 · 1 oz (1180 fps)	0.016	0.016
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · 1 oz (1180 fps)	Federal Top Gun Target · 2¾" #8 · 1 oz (1180 fps)	0.016	0.015
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · 1 oz (1330 fps)	Federal Top Gun Target · 2¾" #7.5 · 1 oz (1330 fps)	0.016	0.016
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · 1 oz (1330 fps)	Federal Top Gun Target · 2¾" #8 · 1 oz (1330 fps)	0.016	0.015
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · 1 oz (1300 fps)	Federal Top Gun Target · 2¾" #7.5 · 1 oz (1300 fps)	0.016	0.016
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · 1 oz (1300 fps)	Federal Top Gun Target · 2¾" #8 · 1 oz (1300 fps)	0.016	0.015
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · 1 oz (1250 fps)	Federal Top Gun Target · 2¾" #7.5 · 1 oz (1250 fps)	0.016	0.016
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · 1 oz (1250 fps)	Federal Top Gun Target · 2¾" #8 · 1 oz (1250 fps)	0.016	0.015
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · 1⅛ oz (1200 fps)	Federal Premium High Over All · 2¾" #7.5 · 1⅛ oz (1200 fps)	0.016	0.016
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · 1⅛ oz (1200 fps)	Federal Premium High Over All · 2¾" #8 · 1⅛ oz (1200 fps)	0.016	0.015
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · 1⅛ oz (1250 fps)	Federal Premium High Over All · 2¾" #7.5 · 1⅛ oz (1250 fps)	0.016	0.016
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · 1⅛ oz (1250 fps)	Federal Premium High Over All · 2¾" #8 · 1⅛ oz (1250 fps)	0.016	0.015
+12 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · 1⅛ oz (1145 fps)	Federal Premium Gold Medal Paper · 2¾" #7.5 · 1⅛ oz (1145 fps)	0.016	0.016
+12 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · 1⅛ oz (1145 fps)	Federal Premium Gold Medal Paper · 2¾" #8 · 1⅛ oz (1145 fps)	0.016	0.015
+12 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · 1⅛ oz (1200 fps)	Federal Premium Gold Medal Paper · 2¾" #7.5 · 1⅛ oz (1200 fps)	0.016	0.016
+12 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · 1⅛ oz (1200 fps)	Federal Premium Gold Medal Paper · 2¾" #8 · 1⅛ oz (1200 fps)	0.016	0.015
+12 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · 1⅛ oz (1235 fps)	Federal Premium Gold Medal Paper · 2¾" #7.5 · 1⅛ oz (1235 fps)	0.016	0.016
+12 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · 1⅛ oz (1235 fps)	Federal Premium Gold Medal Paper · 2¾" #8 · 1⅛ oz (1235 fps)	0.016	0.015
+12 Gauge	Federal Master Class · 2¾" #7.5/8 · 1⅛ oz	Federal Master Class · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Federal Master Class · 2¾" #7.5/8 · 1⅛ oz	Federal Master Class · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Federal All-American · 2¾" #7.5/8 · 1⅛ oz (1145 fps)	Federal All-American · 2¾" #7.5 · 1⅛ oz (1145 fps)	0.016	0.016
+12 Gauge	Federal All-American · 2¾" #7.5/8 · 1⅛ oz (1145 fps)	Federal All-American · 2¾" #8 · 1⅛ oz (1145 fps)	0.016	0.015
+12 Gauge	Federal All-American · 2¾" #7.5/8 · 1⅛ oz (1200 fps)	Federal All-American · 2¾" #7.5 · 1⅛ oz (1200 fps)	0.016	0.016
+12 Gauge	Federal All-American · 2¾" #7.5/8 · 1⅛ oz (1200 fps)	Federal All-American · 2¾" #8 · 1⅛ oz (1200 fps)	0.016	0.015
+12 Gauge	Federal All-American · 2¾" #7.5/8 · 1⅛ oz (1250 fps)	Federal All-American · 2¾" #7.5 · 1⅛ oz (1250 fps)	0.016	0.016
+12 Gauge	Federal All-American · 2¾" #7.5/8 · 1⅛ oz (1250 fps)	Federal All-American · 2¾" #8 · 1⅛ oz (1250 fps)	0.016	0.015
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · 1⅛ oz	Federal Top Gun Target · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · 1⅛ oz	Federal Top Gun Target · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Federal Top Gun with Paper Wad · 2¾" #7.5/8 · 1⅛ oz	Federal Top Gun with Paper Wad · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Federal Top Gun with Paper Wad · 2¾" #7.5/8 · 1⅛ oz	Federal Top Gun with Paper Wad · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8/8.5 · 1 oz	Federal Premium High Over All · 2¾" #7.5 · 1 oz	0.016	0.016
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8/8.5 · 1 oz	Federal Premium High Over All · 2¾" #8 · 1 oz	0.016	0.015
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/8/8.5 · 1 oz	Federal Premium High Over All · 2¾" #8.5 · 1 oz	0.016	0.014
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8/9 · 1⅛ oz	Federal Top Gun Target · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8/9 · 1⅛ oz	Federal Top Gun Target · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Federal Top Gun Target · 2¾" #7.5/8/9 · 1⅛ oz	Federal Top Gun Target · 2¾" #9 · 1⅛ oz	0.016	0.013
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/9 · 0.85 oz	Federal Premium High Over All · 2¾" #7.5 · 0.85 oz	0.016	0.016
+12 Gauge	Federal Premium High Over All · 2¾" #7.5/9 · 0.85 oz	Federal Premium High Over All · 2¾" #9 · 0.85 oz	0.016	0.013
+12 Gauge	Federal Premium High Over All · 2¾" #8/9 · 1⅛ oz	Federal Premium High Over All · 2¾" #8 · 1⅛ oz	0.015	0.015
+12 Gauge	Federal Premium High Over All · 2¾" #8/9 · 1⅛ oz	Federal Premium High Over All · 2¾" #9 · 1⅛ oz	0.015	0.013
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #4 · 1¼ oz	0.022	0.022
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #5 · 1¼ oz	0.022	0.02
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #4 · 1¼ oz	0.022	0.022
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #5 · 1¼ oz	0.022	0.02
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #6 · 1¼ oz	0.022	0.018
+12 Gauge	Winchester Super Pheasant · 2¾" #4/5/6 · 1⅜ oz (1300 fps)	Winchester Super Pheasant · 2¾" #4 · 1⅜ oz (1300 fps)	0.022	0.022
+12 Gauge	Winchester Super Pheasant · 2¾" #4/5/6 · 1⅜ oz (1300 fps)	Winchester Super Pheasant · 2¾" #5 · 1⅜ oz (1300 fps)	0.022	0.02
+12 Gauge	Winchester Super Pheasant · 2¾" #4/5/6 · 1⅜ oz (1300 fps)	Winchester Super Pheasant · 2¾" #6 · 1⅜ oz (1300 fps)	0.022	0.018
+12 Gauge	Winchester Super Pheasant · 2¾" #4/5/6 · 1⅜ oz (1450 fps)	Winchester Super Pheasant · 2¾" #4 · 1⅜ oz (1450 fps)	0.022	0.022
+12 Gauge	Winchester Super Pheasant · 2¾" #4/5/6 · 1⅜ oz (1450 fps)	Winchester Super Pheasant · 2¾" #5 · 1⅜ oz (1450 fps)	0.022	0.02
+12 Gauge	Winchester Super Pheasant · 2¾" #4/5/6 · 1⅜ oz (1450 fps)	Winchester Super Pheasant · 2¾" #6 · 1⅜ oz (1450 fps)	0.022	0.018
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6/7.5/8 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #4 · 1¼ oz	0.022	0.022
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6/7.5/8 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #5 · 1¼ oz	0.022	0.02
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6/7.5/8 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #6 · 1¼ oz	0.022	0.018
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6/7.5/8 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #7.5 · 1¼ oz	0.022	0.016
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6/7.5/8 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #8 · 1¼ oz	0.022	0.015
+12 Gauge	Winchester Super-X Game · 2¾" #4/6/7.5/8 · 1⅛ oz	Winchester Super-X Game · 2¾" #4 · 1⅛ oz	0.022	0.022
+12 Gauge	Winchester Super-X Game · 2¾" #4/6/7.5/8 · 1⅛ oz	Winchester Super-X Game · 2¾" #6 · 1⅛ oz	0.022	0.018
+12 Gauge	Winchester Super-X Game · 2¾" #4/6/7.5/8 · 1⅛ oz	Winchester Super-X Game · 2¾" #7.5 · 1⅛ oz	0.022	0.016
+12 Gauge	Winchester Super-X Game · 2¾" #4/6/7.5/8 · 1⅛ oz	Winchester Super-X Game · 2¾" #8 · 1⅛ oz	0.022	0.015
+12 Gauge	Winchester Super-X Game · 2¾" #6/7.5/8 · 1 oz	Winchester Super-X Game · 2¾" #6 · 1 oz	0.018	0.018
+12 Gauge	Winchester Super-X Game · 2¾" #6/7.5/8 · 1 oz	Winchester Super-X Game · 2¾" #7.5 · 1 oz	0.018	0.016
+12 Gauge	Winchester Super-X Game · 2¾" #6/7.5/8 · 1 oz	Winchester Super-X Game · 2¾" #8 · 1 oz	0.018	0.015
+12 Gauge	Winchester Fast Dove · 2¾" #7.5/8 · 1 oz	Winchester Fast Dove · 2¾" #7.5 · 1 oz	0.016	0.016
+12 Gauge	Winchester Fast Dove · 2¾" #7.5/8 · 1 oz	Winchester Fast Dove · 2¾" #8 · 1 oz	0.016	0.015
+12 Gauge	Winchester Super-X Game · 2¾" #7.5/8 · 1¼ oz	Winchester Super-X Game · 2¾" #7.5 · 1¼ oz	0.016	0.016
+12 Gauge	Winchester Super-X Game · 2¾" #7.5/8 · 1¼ oz	Winchester Super-X Game · 2¾" #8 · 1¼ oz	0.016	0.015
+12 Gauge	Federal Premium Prairie Storm FS Steel · 2¾" #3/4 Steel · 1⅛ oz	Federal Premium Prairie Storm FS Steel · 2¾" #3 Steel · 1⅛ oz	0.017	0.017
+12 Gauge	Federal Premium Prairie Storm FS Steel · 2¾" #3/4 Steel · 1⅛ oz	Federal Premium Prairie Storm FS Steel · 2¾" #4 Steel · 1⅛ oz	0.017	0.015
+12 Gauge	Federal Premium Hi-Bird Fiber Wad · 2¾" #4/5/6 · 1¼ oz	Federal Premium Hi-Bird Fiber Wad · 2¾" #4 · 1¼ oz	0.022	0.022
+12 Gauge	Federal Premium Hi-Bird Fiber Wad · 2¾" #4/5/6 · 1¼ oz	Federal Premium Hi-Bird Fiber Wad · 2¾" #5 · 1¼ oz	0.022	0.02
+12 Gauge	Federal Premium Hi-Bird Fiber Wad · 2¾" #4/5/6 · 1¼ oz	Federal Premium Hi-Bird Fiber Wad · 2¾" #6 · 1¼ oz	0.022	0.018
+12 Gauge	Federal Premium Upland Paper · 2¾" #4/5/6 · 1¼ oz	Federal Premium Upland Paper · 2¾" #4 · 1¼ oz	0.022	0.022
+12 Gauge	Federal Premium Upland Paper · 2¾" #4/5/6 · 1¼ oz	Federal Premium Upland Paper · 2¾" #5 · 1¼ oz	0.022	0.02
+12 Gauge	Federal Premium Upland Paper · 2¾" #4/5/6 · 1¼ oz	Federal Premium Upland Paper · 2¾" #6 · 1¼ oz	0.022	0.018
+12 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1¼ oz (1500 fps)	Federal Premium Prairie Storm FS Lead · 2¾" #4 · 1¼ oz (1500 fps)	0.022	0.022
+12 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1¼ oz (1500 fps)	Federal Premium Prairie Storm FS Lead · 2¾" #5 · 1¼ oz (1500 fps)	0.022	0.02
+12 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1¼ oz (1500 fps)	Federal Premium Prairie Storm FS Lead · 2¾" #6 · 1¼ oz (1500 fps)	0.022	0.018
+12 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1¼ oz (1330 fps)	Federal Premium Prairie Storm FS Lead · 2¾" #4 · 1¼ oz (1330 fps)	0.022	0.022
+12 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1¼ oz (1330 fps)	Federal Premium Prairie Storm FS Lead · 2¾" #5 · 1¼ oz (1330 fps)	0.022	0.02
+12 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1¼ oz (1330 fps)	Federal Premium Prairie Storm FS Lead · 2¾" #6 · 1¼ oz (1330 fps)	0.022	0.018
+12 Gauge	Federal Premium Upland · 2¾" #4/5/6 · 1⅜ oz	Federal Premium Upland · 2¾" #4 · 1⅜ oz	0.022	0.022
+12 Gauge	Federal Premium Upland · 2¾" #4/5/6 · 1⅜ oz	Federal Premium Upland · 2¾" #5 · 1⅜ oz	0.022	0.02
+12 Gauge	Federal Premium Upland · 2¾" #4/5/6 · 1⅜ oz	Federal Premium Upland · 2¾" #6 · 1⅜ oz	0.022	0.018
+12 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6/7.5 · 1¼ oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4 · 1¼ oz	0.022	0.022
+12 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6/7.5 · 1¼ oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #5 · 1¼ oz	0.022	0.02
+12 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6/7.5 · 1¼ oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #6 · 1¼ oz	0.022	0.018
+12 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6/7.5 · 1¼ oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #7.5 · 1¼ oz	0.022	0.016
+12 Gauge	Federal Game Load Hi-Brass · 2¾" #4/5/6/7.5 · 1¼ oz	Federal Game Load Hi-Brass · 2¾" #4 · 1¼ oz	0.022	0.022
+12 Gauge	Federal Game Load Hi-Brass · 2¾" #4/5/6/7.5 · 1¼ oz	Federal Game Load Hi-Brass · 2¾" #5 · 1¼ oz	0.022	0.02
+12 Gauge	Federal Game Load Hi-Brass · 2¾" #4/5/6/7.5 · 1¼ oz	Federal Game Load Hi-Brass · 2¾" #6 · 1¼ oz	0.022	0.018
+12 Gauge	Federal Game Load Hi-Brass · 2¾" #4/5/6/7.5 · 1¼ oz	Federal Game Load Hi-Brass · 2¾" #7.5 · 1¼ oz	0.022	0.016
+12 Gauge	Federal Upland Steel · 2¾" #4/5/6/7.5 Steel · 1⅛ oz	Federal Upland Steel · 2¾" #4 Steel · 1⅛ oz	0.015	0.015
+12 Gauge	Federal Upland Steel · 2¾" #4/5/6/7.5 Steel · 1⅛ oz	Federal Upland Steel · 2¾" #5 Steel · 1⅛ oz	0.015	0.014
+12 Gauge	Federal Upland Steel · 2¾" #4/5/6/7.5 Steel · 1⅛ oz	Federal Upland Steel · 2¾" #6 Steel · 1⅛ oz	0.015	0.013
+12 Gauge	Federal Upland Steel · 2¾" #4/5/6/7.5 Steel · 1⅛ oz	Federal Upland Steel · 2¾" #7.5 Steel · 1⅛ oz	0.015	0.011
+12 Gauge	Federal Premium Upland · 2¾" #4/6/7.5 · 1⅛ oz	Federal Premium Upland · 2¾" #4 · 1⅛ oz	0.022	0.022
+12 Gauge	Federal Premium Upland · 2¾" #4/6/7.5 · 1⅛ oz	Federal Premium Upland · 2¾" #6 · 1⅛ oz	0.022	0.018
+12 Gauge	Federal Premium Upland · 2¾" #4/6/7.5 · 1⅛ oz	Federal Premium Upland · 2¾" #7.5 · 1⅛ oz	0.022	0.016
+12 Gauge	Federal Game Load Heavy Field · 2¾" #4/6/7.5 · 1¼ oz	Federal Game Load Heavy Field · 2¾" #4 · 1¼ oz	0.022	0.022
+12 Gauge	Federal Game Load Heavy Field · 2¾" #4/6/7.5 · 1¼ oz	Federal Game Load Heavy Field · 2¾" #6 · 1¼ oz	0.022	0.018
+12 Gauge	Federal Game Load Heavy Field · 2¾" #4/6/7.5 · 1¼ oz	Federal Game Load Heavy Field · 2¾" #7.5 · 1¼ oz	0.022	0.016
+12 Gauge	Federal Game Load Heavy Field · 2¾" #4/6/7.5/8 · 1⅛ oz	Federal Game Load Heavy Field · 2¾" #4 · 1⅛ oz	0.022	0.022
+12 Gauge	Federal Game Load Heavy Field · 2¾" #4/6/7.5/8 · 1⅛ oz	Federal Game Load Heavy Field · 2¾" #6 · 1⅛ oz	0.022	0.018
+12 Gauge	Federal Game Load Heavy Field · 2¾" #4/6/7.5/8 · 1⅛ oz	Federal Game Load Heavy Field · 2¾" #7.5 · 1⅛ oz	0.022	0.016
+12 Gauge	Federal Game Load Heavy Field · 2¾" #4/6/7.5/8 · 1⅛ oz	Federal Game Load Heavy Field · 2¾" #8 · 1⅛ oz	0.022	0.015
+12 Gauge	Federal Premium Hi-Bird · 2¾" #5/6/7.5 · 1¼ oz	Federal Premium Hi-Bird · 2¾" #5 · 1¼ oz	0.02	0.02
+12 Gauge	Federal Premium Hi-Bird · 2¾" #5/6/7.5 · 1¼ oz	Federal Premium Hi-Bird · 2¾" #6 · 1¼ oz	0.02	0.018
+12 Gauge	Federal Premium Hi-Bird · 2¾" #5/6/7.5 · 1¼ oz	Federal Premium Hi-Bird · 2¾" #7.5 · 1¼ oz	0.02	0.016
+12 Gauge	Federal Upland Steel · 2¾" #6/7.5 Steel · 1 oz	Federal Upland Steel · 2¾" #6 Steel · 1 oz	0.013	0.013
+12 Gauge	Federal Upland Steel · 2¾" #6/7.5 Steel · 1 oz	Federal Upland Steel · 2¾" #7.5 Steel · 1 oz	0.013	0.011
+12 Gauge	Federal Game Load · 2¾" #6/7.5/8 · 1 oz	Federal Game Load · 2¾" #6 · 1 oz	0.018	0.018
+12 Gauge	Federal Game Load · 2¾" #6/7.5/8 · 1 oz	Federal Game Load · 2¾" #7.5 · 1 oz	0.018	0.016
+12 Gauge	Federal Game Load · 2¾" #6/7.5/8 · 1 oz	Federal Game Load · 2¾" #8 · 1 oz	0.018	0.015
+12 Gauge	Federal Premium Hi-Bird · 2¾" #7.5/8 · 1⅛ oz	Federal Premium Hi-Bird · 2¾" #7.5 · 1⅛ oz	0.016	0.016
+12 Gauge	Federal Premium Hi-Bird · 2¾" #7.5/8 · 1⅛ oz	Federal Premium Hi-Bird · 2¾" #8 · 1⅛ oz	0.016	0.015
+12 Gauge	Federal Premium Paper Flyer · 2¾" #7.5/8 · 1¼ oz	Federal Premium Paper Flyer · 2¾" #7.5 · 1¼ oz	0.016	0.016
+12 Gauge	Federal Premium Paper Flyer · 2¾" #7.5/8 · 1¼ oz	Federal Premium Paper Flyer · 2¾" #8 · 1¼ oz	0.016	0.015
+12 Gauge	Winchester Super Pheasant · 3" #4/5 · 1⅝ oz	Winchester Super Pheasant · 3" #4 · 1⅝ oz	0.022	0.022
+12 Gauge	Winchester Super Pheasant · 3" #4/5 · 1⅝ oz	Winchester Super Pheasant · 3" #5 · 1⅝ oz	0.022	0.02
+12 Gauge	Federal Premium Prairie Storm FS Steel · 3" #3/4 Steel · 1⅛ oz	Federal Premium Prairie Storm FS Steel · 3" #3 Steel · 1⅛ oz	0.017	0.017
+12 Gauge	Federal Premium Prairie Storm FS Steel · 3" #3/4 Steel · 1⅛ oz	Federal Premium Prairie Storm FS Steel · 3" #4 Steel · 1⅛ oz	0.017	0.015
+12 Gauge	Federal Premium Prairie Storm FS Lead · 3" #4/5/6 · 1⅝ oz	Federal Premium Prairie Storm FS Lead · 3" #4 · 1⅝ oz	0.022	0.022
+12 Gauge	Federal Premium Prairie Storm FS Lead · 3" #4/5/6 · 1⅝ oz	Federal Premium Prairie Storm FS Lead · 3" #5 · 1⅝ oz	0.022	0.02
+12 Gauge	Federal Premium Prairie Storm FS Lead · 3" #4/5/6 · 1⅝ oz	Federal Premium Prairie Storm FS Lead · 3" #6 · 1⅝ oz	0.022	0.018
+12 Gauge	Federal Premium Upland · 3" #5/6 · 1⅝ oz	Federal Premium Upland · 3" #5 · 1⅝ oz	0.02	0.02
+12 Gauge	Federal Premium Upland · 3" #5/6 · 1⅝ oz	Federal Premium Upland · 3" #6 · 1⅝ oz	0.02	0.018
+12 Gauge	Winchester Drylok Super Steel · 2¾" #2/4 Steel · 1¼ oz	Winchester Drylok Super Steel · 2¾" #2 Steel · 1¼ oz	0.018	0.018
+12 Gauge	Winchester Drylok Super Steel · 2¾" #2/4 Steel · 1¼ oz	Winchester Drylok Super Steel · 2¾" #4 Steel · 1¼ oz	0.018	0.015
+12 Gauge	Federal Black Cloud FS Steel · 2¾" #2/3/4 Steel · 1⅛ oz	Federal Black Cloud FS Steel · 2¾" #2 Steel · 1⅛ oz	0.018	0.018
+12 Gauge	Federal Black Cloud FS Steel · 2¾" #2/3/4 Steel · 1⅛ oz	Federal Black Cloud FS Steel · 2¾" #3 Steel · 1⅛ oz	0.018	0.017
+12 Gauge	Federal Black Cloud FS Steel · 2¾" #2/3/4 Steel · 1⅛ oz	Federal Black Cloud FS Steel · 2¾" #4 Steel · 1⅛ oz	0.018	0.015
+12 Gauge	Federal Hevi-Bismuth · 2¾" #3/4/5 Bismuth · 1¼ oz	Federal Hevi-Bismuth · 2¾" #3 Bismuth · 1¼ oz	0.02	0.02
+12 Gauge	Federal Hevi-Bismuth · 2¾" #3/4/5 Bismuth · 1¼ oz	Federal Hevi-Bismuth · 2¾" #4 Bismuth · 1¼ oz	0.02	0.019
+12 Gauge	Federal Hevi-Bismuth · 2¾" #3/4/5 Bismuth · 1¼ oz	Federal Hevi-Bismuth · 2¾" #5 Bismuth · 1¼ oz	0.02	0.017
+12 Gauge	Winchester Xpert Steel · 2¾" BB/2/3/4 Steel · 1¹⁄₁₆ oz	Winchester Xpert Steel · 2¾" BB Steel · 1¹⁄₁₆ oz	0.021	0.021
+12 Gauge	Winchester Xpert Steel · 2¾" BB/2/3/4 Steel · 1¹⁄₁₆ oz	Winchester Xpert Steel · 2¾" #2 Steel · 1¹⁄₁₆ oz	0.021	0.018
+12 Gauge	Winchester Xpert Steel · 2¾" BB/2/3/4 Steel · 1¹⁄₁₆ oz	Winchester Xpert Steel · 2¾" #3 Steel · 1¹⁄₁₆ oz	0.021	0.017
+12 Gauge	Winchester Xpert Steel · 2¾" BB/2/3/4 Steel · 1¹⁄₁₆ oz	Winchester Xpert Steel · 2¾" #4 Steel · 1¹⁄₁₆ oz	0.021	0.015
+12 Gauge	Federal Speed-Shok Waterfowl · 2¾" BB/2/3/4 Steel · 1⅛ oz	Federal Speed-Shok Waterfowl · 2¾" BB Steel · 1⅛ oz	0.021	0.021
+12 Gauge	Federal Speed-Shok Waterfowl · 2¾" BB/2/3/4 Steel · 1⅛ oz	Federal Speed-Shok Waterfowl · 2¾" #2 Steel · 1⅛ oz	0.021	0.018
+12 Gauge	Federal Speed-Shok Waterfowl · 2¾" BB/2/3/4 Steel · 1⅛ oz	Federal Speed-Shok Waterfowl · 2¾" #3 Steel · 1⅛ oz	0.021	0.017
+12 Gauge	Federal Speed-Shok Waterfowl · 2¾" BB/2/3/4 Steel · 1⅛ oz	Federal Speed-Shok Waterfowl · 2¾" #4 Steel · 1⅛ oz	0.021	0.015
+12 Gauge	Winchester Xpert Steel · 2¾" BB/2/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 2¾" BB Steel · 1⅛ oz	0.021	0.021
+12 Gauge	Winchester Xpert Steel · 2¾" BB/2/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 2¾" #2 Steel · 1⅛ oz	0.021	0.018
+12 Gauge	Winchester Xpert Steel · 2¾" BB/2/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 2¾" #3 Steel · 1⅛ oz	0.021	0.017
+12 Gauge	Winchester Xpert Steel · 2¾" BB/2/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 2¾" #4 Steel · 1⅛ oz	0.021	0.015
+12 Gauge	Winchester Xpert Steel · 2¾" BB/2/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 2¾" #6 Steel · 1⅛ oz	0.021	0.013
+12 Gauge	Winchester Bismuth · 3" #1/4 Bismuth · 1⅜ oz	Winchester Bismuth · 3" #1 Bismuth · 1⅜ oz	0.023	0.023
+12 Gauge	Winchester Bismuth · 3" #1/4 Bismuth · 1⅜ oz	Winchester Bismuth · 3" #4 Bismuth · 1⅜ oz	0.023	0.019
+12 Gauge	Winchester Xpert Steel · 3" #2/3 Steel · 1¹⁄₁₆ oz	Winchester Xpert Steel · 3" #2 Steel · 1¹⁄₁₆ oz	0.018	0.018
+12 Gauge	Winchester Xpert Steel · 3" #2/3 Steel · 1¹⁄₁₆ oz	Winchester Xpert Steel · 3" #3 Steel · 1¹⁄₁₆ oz	0.018	0.017
+12 Gauge	Winchester Last Call TSS · 3" #5/7/9 · 1¼ oz	Winchester Last Call TSS · 3" #5 · 1¼ oz	0.02	0.033
+12 Gauge	Winchester Last Call TSS · 3" #5/7/9 · 1¼ oz	Winchester Last Call TSS · 3" #7 · 1¼ oz	0.02	0.027
+12 Gauge	Winchester Last Call TSS · 3" #5/7/9 · 1¼ oz	Winchester Last Call TSS · 3" #9 · 1¼ oz	0.02	0.022
+12 Gauge	Federal Ultra Steel · 3" #2/2/4/3/5/BB/2/BB Steel · 1¼ oz	Federal Ultra Steel · 3" #2 Steel · 1¼ oz	0.018	0.018
+12 Gauge	Federal Ultra Steel · 3" #2/2/4/3/5/BB/2/BB Steel · 1¼ oz	Federal Ultra Steel · 3" #2 x #4 Steel · 1¼ oz	0.018	0.018
+12 Gauge	Federal Ultra Steel · 3" #2/2/4/3/5/BB/2/BB Steel · 1¼ oz	Federal Ultra Steel · 3" #3 x #5 Steel · 1¼ oz	0.018	0.018
+12 Gauge	Federal Ultra Steel · 3" #2/2/4/3/5/BB/2/BB Steel · 1¼ oz	Federal Ultra Steel · 3" BB x #2 Steel · 1¼ oz	0.018	0.018
+12 Gauge	Federal Ultra Steel · 3" #2/2/4/3/5/BB/2/BB Steel · 1¼ oz	Federal Ultra Steel · 3" BB Steel · 1¼ oz	0.018	0.021
+12 Gauge	Federal Raptor Steel · 3" #2/3/4 Steel · 1⅜ oz	Federal Raptor Steel · 3" #2 Steel · 1⅜ oz	0.018	0.018
+12 Gauge	Federal Raptor Steel · 3" #2/3/4 Steel · 1⅜ oz	Federal Raptor Steel · 3" #3 Steel · 1⅜ oz	0.018	0.017
+12 Gauge	Federal Raptor Steel · 3" #2/3/4 Steel · 1⅜ oz	Federal Raptor Steel · 3" #4 Steel · 1⅜ oz	0.018	0.015
+12 Gauge	Federal Hevi-Bismuth · 3" #3/4/5 Bismuth · 1⅜ oz	Federal Hevi-Bismuth · 3" #3 Bismuth · 1⅜ oz	0.02	0.02
+12 Gauge	Federal Hevi-Bismuth · 3" #3/4/5 Bismuth · 1⅜ oz	Federal Hevi-Bismuth · 3" #4 Bismuth · 1⅜ oz	0.02	0.019
+12 Gauge	Federal Hevi-Bismuth · 3" #3/4/5 Bismuth · 1⅜ oz	Federal Hevi-Bismuth · 3" #5 Bismuth · 1⅜ oz	0.02	0.017
+12 Gauge	Winchester Final Pass Steel Blend · 3" BB+1.5/2.5+4 · 1¼ oz	Winchester Final Pass Steel Blend · 3" BB+1.5 · 1¼ oz	0.03	0.03
+12 Gauge	Winchester Final Pass Steel Blend · 3" BB+1.5/2.5+4 · 1¼ oz	Winchester Final Pass Steel Blend · 3" 2.5+4 · 1¼ oz	0.03	0.03
+12 Gauge	Winchester Last Call Double Shot · 3" BB+7/2.5+8/2.5+9 · 1¼ oz	Winchester Last Call Double Shot · 3" BB+7 · 1¼ oz	0.03	0.03
+12 Gauge	Winchester Last Call Double Shot · 3" BB+7/2.5+8/2.5+9 · 1¼ oz	Winchester Last Call Double Shot · 3" 2.5+8 · 1¼ oz	0.03	0.03
+12 Gauge	Winchester Last Call Double Shot · 3" BB+7/2.5+8/2.5+9 · 1¼ oz	Winchester Last Call Double Shot · 3" 2.5+9 · 1¼ oz	0.03	0.03
+12 Gauge	Winchester Xpert Snow Goose · 3" BB/1+2 Steel · 1¼ oz	Winchester Xpert Snow Goose · 3" BB Steel · 1¼ oz	0.021	0.021
+12 Gauge	Winchester Xpert Snow Goose · 3" BB/1+2 Steel · 1¼ oz	Winchester Xpert Snow Goose · 3" 1+2 Steel · 1¼ oz	0.021	0.018
+12 Gauge	Federal Black Cloud FS Steel High Velocity · 3" BB/1/2/3/4 Steel · 1⅛ oz	Federal Black Cloud FS Steel High Velocity · 3" BB Steel · 1⅛ oz	0.021	0.021
+12 Gauge	Federal Black Cloud FS Steel High Velocity · 3" BB/1/2/3/4 Steel · 1⅛ oz	Federal Black Cloud FS Steel High Velocity · 3" #1 Steel · 1⅛ oz	0.021	0.019
+12 Gauge	Federal Black Cloud FS Steel High Velocity · 3" BB/1/2/3/4 Steel · 1⅛ oz	Federal Black Cloud FS Steel High Velocity · 3" #2 Steel · 1⅛ oz	0.021	0.018
+12 Gauge	Federal Black Cloud FS Steel High Velocity · 3" BB/1/2/3/4 Steel · 1⅛ oz	Federal Black Cloud FS Steel High Velocity · 3" #3 Steel · 1⅛ oz	0.021	0.017
+12 Gauge	Federal Black Cloud FS Steel High Velocity · 3" BB/1/2/3/4 Steel · 1⅛ oz	Federal Black Cloud FS Steel High Velocity · 3" #4 Steel · 1⅛ oz	0.021	0.015
+12 Gauge	Federal Speed-Shok Waterfowl · 3" BB/1/2/3/4 Steel · 1⅛ oz	Federal Speed-Shok Waterfowl · 3" BB Steel · 1⅛ oz	0.021	0.021
+12 Gauge	Federal Speed-Shok Waterfowl · 3" BB/1/2/3/4 Steel · 1⅛ oz	Federal Speed-Shok Waterfowl · 3" #1 Steel · 1⅛ oz	0.021	0.019
+12 Gauge	Federal Speed-Shok Waterfowl · 3" BB/1/2/3/4 Steel · 1⅛ oz	Federal Speed-Shok Waterfowl · 3" #2 Steel · 1⅛ oz	0.021	0.018
+12 Gauge	Federal Speed-Shok Waterfowl · 3" BB/1/2/3/4 Steel · 1⅛ oz	Federal Speed-Shok Waterfowl · 3" #3 Steel · 1⅛ oz	0.021	0.017
+12 Gauge	Federal Speed-Shok Waterfowl · 3" BB/1/2/3/4 Steel · 1⅛ oz	Federal Speed-Shok Waterfowl · 3" #4 Steel · 1⅛ oz	0.021	0.015
+12 Gauge	Federal Speed-Shok Waterfowl · 3" BB/1/2/3/4 Steel · 1¼ oz	Federal Speed-Shok Waterfowl · 3" BB Steel · 1¼ oz	0.021	0.021
+12 Gauge	Federal Speed-Shok Waterfowl · 3" BB/1/2/3/4 Steel · 1¼ oz	Federal Speed-Shok Waterfowl · 3" #1 Steel · 1¼ oz	0.021	0.019
+12 Gauge	Federal Speed-Shok Waterfowl · 3" BB/1/2/3/4 Steel · 1¼ oz	Federal Speed-Shok Waterfowl · 3" #2 Steel · 1¼ oz	0.021	0.018
+12 Gauge	Federal Speed-Shok Waterfowl · 3" BB/1/2/3/4 Steel · 1¼ oz	Federal Speed-Shok Waterfowl · 3" #3 Steel · 1¼ oz	0.021	0.017
+12 Gauge	Federal Speed-Shok Waterfowl · 3" BB/1/2/3/4 Steel · 1¼ oz	Federal Speed-Shok Waterfowl · 3" #4 Steel · 1¼ oz	0.021	0.015
+12 Gauge	Winchester Xpert Steel · 3" BB/1/2/3/4 Steel · 1¼ oz	Winchester Xpert Steel · 3" BB Steel · 1¼ oz	0.021	0.021
+12 Gauge	Winchester Xpert Steel · 3" BB/1/2/3/4 Steel · 1¼ oz	Winchester Xpert Steel · 3" #1 Steel · 1¼ oz	0.021	0.019
+12 Gauge	Winchester Xpert Steel · 3" BB/1/2/3/4 Steel · 1¼ oz	Winchester Xpert Steel · 3" #2 Steel · 1¼ oz	0.021	0.018
+12 Gauge	Winchester Xpert Steel · 3" BB/1/2/3/4 Steel · 1¼ oz	Winchester Xpert Steel · 3" #3 Steel · 1¼ oz	0.021	0.017
+12 Gauge	Winchester Xpert Steel · 3" BB/1/2/3/4 Steel · 1¼ oz	Winchester Xpert Steel · 3" #4 Steel · 1¼ oz	0.021	0.015
+12 Gauge	Winchester Xpert Steel · 3" BB/2/2+3/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 3" BB Steel · 1⅛ oz	0.021	0.021
+12 Gauge	Winchester Xpert Steel · 3" BB/2/2+3/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 3" #2 Steel · 1⅛ oz	0.021	0.018
+12 Gauge	Winchester Xpert Steel · 3" BB/2/2+3/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 3" 2+3 Steel · 1⅛ oz	0.021	0.018
+12 Gauge	Winchester Xpert Steel · 3" BB/2/2+3/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 3" #3 Steel · 1⅛ oz	0.021	0.017
+12 Gauge	Winchester Xpert Steel · 3" BB/2/2+3/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 3" #4 Steel · 1⅛ oz	0.021	0.015
+12 Gauge	Winchester Xpert Steel · 3" BB/2/2+3/3/4/6 Steel · 1⅛ oz	Winchester Xpert Steel · 3" #6 Steel · 1⅛ oz	0.021	0.013
+12 Gauge	Federal Black Cloud FS Steel · 3" BB/2/3/4 Steel · 1¼ oz	Federal Black Cloud FS Steel · 3" BB Steel · 1¼ oz	0.021	0.021
+12 Gauge	Federal Black Cloud FS Steel · 3" BB/2/3/4 Steel · 1¼ oz	Federal Black Cloud FS Steel · 3" #2 Steel · 1¼ oz	0.021	0.018
+12 Gauge	Federal Black Cloud FS Steel · 3" BB/2/3/4 Steel · 1¼ oz	Federal Black Cloud FS Steel · 3" #3 Steel · 1¼ oz	0.021	0.017
+12 Gauge	Federal Black Cloud FS Steel · 3" BB/2/3/4 Steel · 1¼ oz	Federal Black Cloud FS Steel · 3" #4 Steel · 1¼ oz	0.021	0.015
+12 Gauge	Winchester Drylok Super Steel · 3" BB/2/3/4 Steel · 1¼ oz	Winchester Drylok Super Steel · 3" BB Steel · 1¼ oz	0.021	0.021
+12 Gauge	Winchester Drylok Super Steel · 3" BB/2/3/4 Steel · 1¼ oz	Winchester Drylok Super Steel · 3" #2 Steel · 1¼ oz	0.021	0.018
+12 Gauge	Winchester Drylok Super Steel · 3" BB/2/3/4 Steel · 1¼ oz	Winchester Drylok Super Steel · 3" #3 Steel · 1¼ oz	0.021	0.017
+12 Gauge	Winchester Drylok Super Steel · 3" BB/2/3/4 Steel · 1¼ oz	Winchester Drylok Super Steel · 3" #4 Steel · 1¼ oz	0.021	0.015
+12 Gauge	Winchester Drylok Super Steel · 3" BB/2/3/4 Steel · 1⅜ oz	Winchester Drylok Super Steel · 3" BB Steel · 1⅜ oz	0.021	0.021
+12 Gauge	Winchester Drylok Super Steel · 3" BB/2/3/4 Steel · 1⅜ oz	Winchester Drylok Super Steel · 3" #2 Steel · 1⅜ oz	0.021	0.018
+12 Gauge	Winchester Drylok Super Steel · 3" BB/2/3/4 Steel · 1⅜ oz	Winchester Drylok Super Steel · 3" #3 Steel · 1⅜ oz	0.021	0.017
+12 Gauge	Winchester Drylok Super Steel · 3" BB/2/3/4 Steel · 1⅜ oz	Winchester Drylok Super Steel · 3" #4 Steel · 1⅜ oz	0.021	0.015
+12 Gauge	Winchester Xpert Snow Goose · 3½" BB/1+2 Steel · 1⅜ oz	Winchester Xpert Snow Goose · 3½" BB Steel · 1⅜ oz	0.021	0.021
+12 Gauge	Winchester Xpert Snow Goose · 3½" BB/1+2 Steel · 1⅜ oz	Winchester Xpert Snow Goose · 3½" 1+2 Steel · 1⅜ oz	0.021	0.018
+12 Gauge	Winchester Xpert Steel · 3½" BB/2 Steel · 1¼ oz	Winchester Xpert Steel · 3½" BB Steel · 1¼ oz	0.021	0.021
+12 Gauge	Winchester Xpert Steel · 3½" BB/2 Steel · 1¼ oz	Winchester Xpert Steel · 3½" #2 Steel · 1¼ oz	0.021	0.018
+12 Gauge	Winchester Xpert Steel · 3½" BB/2/3 Steel · 1⅜ oz	Winchester Xpert Steel · 3½" BB Steel · 1⅜ oz	0.021	0.021
+12 Gauge	Winchester Xpert Steel · 3½" BB/2/3 Steel · 1⅜ oz	Winchester Xpert Steel · 3½" #2 Steel · 1⅜ oz	0.021	0.018
+12 Gauge	Winchester Xpert Steel · 3½" BB/2/3 Steel · 1⅜ oz	Winchester Xpert Steel · 3½" #3 Steel · 1⅜ oz	0.021	0.017
+12 Gauge	Winchester Drylok Super Steel · 3½" BB/2/3 Steel · 1½ oz	Winchester Drylok Super Steel · 3½" BB Steel · 1½ oz	0.021	0.021
+12 Gauge	Winchester Drylok Super Steel · 3½" BB/2/3 Steel · 1½ oz	Winchester Drylok Super Steel · 3½" #2 Steel · 1½ oz	0.021	0.018
+12 Gauge	Winchester Drylok Super Steel · 3½" BB/2/3 Steel · 1½ oz	Winchester Drylok Super Steel · 3½" #3 Steel · 1½ oz	0.021	0.017
+12 Gauge	Federal Ultra Steel · 3½" BB/2/2/4 Steel · 1½ oz	Federal Ultra Steel · 3½" BB x #2 Steel · 1½ oz	0.021	0.021
+12 Gauge	Federal Ultra Steel · 3½" BB/2/2/4 Steel · 1½ oz	Federal Ultra Steel · 3½" #2 x #4 Steel · 1½ oz	0.021	0.021
+12 Gauge	Federal Black Cloud FS Steel · 3½" BBB/BB/2/3/4 Steel · 1½ oz	Federal Black Cloud FS Steel · 3½" BBB Steel · 1½ oz	0.022	0.022
+12 Gauge	Federal Black Cloud FS Steel · 3½" BBB/BB/2/3/4 Steel · 1½ oz	Federal Black Cloud FS Steel · 3½" BB Steel · 1½ oz	0.022	0.021
+12 Gauge	Federal Black Cloud FS Steel · 3½" BBB/BB/2/3/4 Steel · 1½ oz	Federal Black Cloud FS Steel · 3½" #2 Steel · 1½ oz	0.022	0.018
+12 Gauge	Federal Black Cloud FS Steel · 3½" BBB/BB/2/3/4 Steel · 1½ oz	Federal Black Cloud FS Steel · 3½" #3 Steel · 1½ oz	0.022	0.017
+12 Gauge	Federal Black Cloud FS Steel · 3½" BBB/BB/2/3/4 Steel · 1½ oz	Federal Black Cloud FS Steel · 3½" #4 Steel · 1½ oz	0.022	0.015
+12 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2/3/4 Steel · 1⅜ oz	Federal Speed-Shok Waterfowl · 3½" T Steel · 1⅜ oz	0.022	0.023
+12 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2/3/4 Steel · 1⅜ oz	Federal Speed-Shok Waterfowl · 3½" BBB Steel · 1⅜ oz	0.022	0.022
+12 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2/3/4 Steel · 1⅜ oz	Federal Speed-Shok Waterfowl · 3½" BB Steel · 1⅜ oz	0.022	0.021
+12 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2/3/4 Steel · 1⅜ oz	Federal Speed-Shok Waterfowl · 3½" #2 Steel · 1⅜ oz	0.022	0.018
+12 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2/3/4 Steel · 1⅜ oz	Federal Speed-Shok Waterfowl · 3½" #3 Steel · 1⅜ oz	0.022	0.017
+12 Gauge	Federal Speed-Shok Waterfowl · 3½" T/BBB/BB/2/3/4 Steel · 1⅜ oz	Federal Speed-Shok Waterfowl · 3½" #4 Steel · 1⅜ oz	0.022	0.015
+12 Gauge	Winchester Super-X Buffered · 2¾" #4/5 · 1½ oz	Winchester Super-X Buffered · 2¾" #4 · 1½ oz	0.022	0.022
+12 Gauge	Winchester Super-X Buffered · 2¾" #4/5 · 1½ oz	Winchester Super-X Buffered · 2¾" #5 · 1½ oz	0.022	0.02
+12 Gauge	Winchester Double-X Copper Plated Buffered · 3" #4/5 · 1¾ oz	Winchester Double-X Copper Plated Buffered · 3" #4 · 1¾ oz	0.022	0.022
+12 Gauge	Winchester Double-X Copper Plated Buffered · 3" #4/5 · 1¾ oz	Winchester Double-X Copper Plated Buffered · 3" #5 · 1¾ oz	0.022	0.02
+12 Gauge	Winchester Super-X Buffered · 3" #4/5 · 1⅞ oz	Winchester Super-X Buffered · 3" #4 · 1⅞ oz	0.022	0.022
+12 Gauge	Winchester Super-X Buffered · 3" #4/5 · 1⅞ oz	Winchester Super-X Buffered · 3" #5 · 1⅞ oz	0.022	0.02
+12 Gauge	Winchester Longbeard XR · 3" #4/5/6 · 1¾ oz	Winchester Longbeard XR · 3" #4 · 1¾ oz	0.022	0.022
+12 Gauge	Winchester Longbeard XR · 3" #4/5/6 · 1¾ oz	Winchester Longbeard XR · 3" #5 · 1¾ oz	0.022	0.02
+12 Gauge	Winchester Longbeard XR · 3" #4/5/6 · 1¾ oz	Winchester Longbeard XR · 3" #6 · 1¾ oz	0.022	0.018
+12 Gauge	Winchester Longbeard Tungsten · 3" #8/9 · 2¼ oz	Winchester Longbeard Tungsten · 3" #8 · 2¼ oz	0.015	0.025
+12 Gauge	Winchester Longbeard Tungsten · 3" #8/9 · 2¼ oz	Winchester Longbeard Tungsten · 3" #9 · 2¼ oz	0.015	0.022
+12 Gauge	Federal Premium Grand Slam · 3" #4/5/6 · 1¾ oz	Federal Premium Grand Slam · 3" #4 · 1¾ oz	0.022	0.022
+12 Gauge	Federal Premium Grand Slam · 3" #4/5/6 · 1¾ oz	Federal Premium Grand Slam · 3" #5 · 1¾ oz	0.022	0.02
+12 Gauge	Federal Premium Grand Slam · 3" #4/5/6 · 1¾ oz	Federal Premium Grand Slam · 3" #6 · 1¾ oz	0.022	0.018
+12 Gauge	Federal Premium Heavyweight TSS Rob Roberts · 3" #7/9 TSS · 2 oz	Federal Premium Heavyweight TSS Rob Roberts · 3" #7 TSS · 2 oz	0.027	0.027
+12 Gauge	Federal Premium Heavyweight TSS Rob Roberts · 3" #7/9 TSS · 2 oz	Federal Premium Heavyweight TSS Rob Roberts · 3" #9 TSS · 2 oz	0.027	0.022
+12 Gauge	Federal Premium Heavyweight TSS · 3" #7/9 TSS · 1¾ oz	Federal Premium Heavyweight TSS · 3" #7 TSS · 1¾ oz	0.027	0.027
+12 Gauge	Federal Premium Heavyweight TSS · 3" #7/9 TSS · 1¾ oz	Federal Premium Heavyweight TSS · 3" #9 TSS · 1¾ oz	0.027	0.022
+12 Gauge	Federal Premium Heavyweight TSS · 3" #7/9 TSS · 2 oz	Federal Premium Heavyweight TSS · 3" #7 x #9 TSS · 2 oz	0.027	0.027
+12 Gauge	Winchester Longbeard XR · 3½" #2/4/5/6 · 2 oz	Winchester Longbeard XR · 3½" #2 · 2 oz	0.025	0.025
+12 Gauge	Winchester Longbeard XR · 3½" #2/4/5/6 · 2 oz	Winchester Longbeard XR · 3½" #4 · 2 oz	0.025	0.022
+12 Gauge	Winchester Longbeard XR · 3½" #2/4/5/6 · 2 oz	Winchester Longbeard XR · 3½" #5 · 2 oz	0.025	0.02
+12 Gauge	Winchester Longbeard XR · 3½" #2/4/5/6 · 2 oz	Winchester Longbeard XR · 3½" #6 · 2 oz	0.025	0.018
+12 Gauge	Winchester Double-X Copper Plated Buffered · 3½" #4/5 · 2 oz	Winchester Double-X Copper Plated Buffered · 3½" #4 · 2 oz	0.022	0.022
+12 Gauge	Winchester Double-X Copper Plated Buffered · 3½" #4/5 · 2 oz	Winchester Double-X Copper Plated Buffered · 3½" #5 · 2 oz	0.022	0.02
+12 Gauge	Federal Premium Grand Slam · 3½" #4/5/6 · 2 oz	Federal Premium Grand Slam · 3½" #4 · 2 oz	0.022	0.022
+12 Gauge	Federal Premium Grand Slam · 3½" #4/5/6 · 2 oz	Federal Premium Grand Slam · 3½" #5 · 2 oz	0.022	0.02
+12 Gauge	Federal Premium Grand Slam · 3½" #4/5/6 · 2 oz	Federal Premium Grand Slam · 3½" #6 · 2 oz	0.022	0.018
+12 Gauge	Federal Premium Heavyweight TSS · 3½" #7/9 TSS · 2¼ oz	Federal Premium Heavyweight TSS · 3½" #7 TSS · 2¼ oz	0.027	0.027
+12 Gauge	Federal Premium Heavyweight TSS · 3½" #7/9 TSS · 2¼ oz	Federal Premium Heavyweight TSS · 3½" #9 TSS · 2¼ oz	0.027	0.022
+12 Gauge	Federal Premium Heavyweight TSS · 3½" #7/9 TSS · 2½ oz	Federal Premium Heavyweight TSS · 3½" #7 x #9 TSS · 2½ oz	0.027	0.027
+16 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6 · 1⅛ oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4 · 1⅛ oz	0.022	0.022
+16 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6 · 1⅛ oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #5 · 1⅛ oz	0.022	0.02
+16 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6 · 1⅛ oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #6 · 1⅛ oz	0.022	0.018
+16 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1⅛ oz	Federal Premium Prairie Storm FS Lead · 2¾" #4 · 1⅛ oz	0.022	0.022
+16 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1⅛ oz	Federal Premium Prairie Storm FS Lead · 2¾" #5 · 1⅛ oz	0.022	0.02
+16 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1⅛ oz	Federal Premium Prairie Storm FS Lead · 2¾" #6 · 1⅛ oz	0.022	0.018
+16 Gauge	Federal Game Load Hi-Brass · 2¾" #4/6/7.5 · 1⅛ oz	Federal Game Load Hi-Brass · 2¾" #4 · 1⅛ oz	0.022	0.022
+16 Gauge	Federal Game Load Hi-Brass · 2¾" #4/6/7.5 · 1⅛ oz	Federal Game Load Hi-Brass · 2¾" #6 · 1⅛ oz	0.022	0.018
+16 Gauge	Federal Game Load Hi-Brass · 2¾" #4/6/7.5 · 1⅛ oz	Federal Game Load Hi-Brass · 2¾" #7.5 · 1⅛ oz	0.022	0.016
+16 Gauge	Federal Game Load · 2¾" #6/7.5/8 · 1 oz	Federal Game Load · 2¾" #6 · 1 oz	0.018	0.018
+16 Gauge	Federal Game Load · 2¾" #6/7.5/8 · 1 oz	Federal Game Load · 2¾" #7.5 · 1 oz	0.018	0.016
+16 Gauge	Federal Game Load · 2¾" #6/7.5/8 · 1 oz	Federal Game Load · 2¾" #8 · 1 oz	0.018	0.015
+16 Gauge	Winchester Super-X High Brass Game · 2¾" #4/6/7.5 · 1⅛ oz	Winchester Super-X High Brass Game · 2¾" #4 · 1⅛ oz	0.022	0.022
+16 Gauge	Winchester Super-X High Brass Game · 2¾" #4/6/7.5 · 1⅛ oz	Winchester Super-X High Brass Game · 2¾" #6 · 1⅛ oz	0.022	0.018
+16 Gauge	Winchester Super-X High Brass Game · 2¾" #4/6/7.5 · 1⅛ oz	Winchester Super-X High Brass Game · 2¾" #7.5 · 1⅛ oz	0.022	0.016
+16 Gauge	Winchester Super-X Game · 2¾" #6/8 · 1 oz	Winchester Super-X Game · 2¾" #6 · 1 oz	0.018	0.018
+16 Gauge	Winchester Super-X Game · 2¾" #6/8 · 1 oz	Winchester Super-X Game · 2¾" #8 · 1 oz	0.018	0.015
+16 Gauge	Federal Black Cloud FS Steel · 2¾" #2/4 Steel · ⅞ oz	Federal Black Cloud FS Steel · 2¾" #2 Steel · ⅞ oz	0.018	0.018
+16 Gauge	Federal Black Cloud FS Steel · 2¾" #2/4 Steel · ⅞ oz	Federal Black Cloud FS Steel · 2¾" #4 Steel · ⅞ oz	0.018	0.015
+16 Gauge	Federal Speed-Shok Waterfowl · 2¾" #2/4 Steel · ¹⁵⁄₁₆ oz	Federal Speed-Shok Waterfowl · 2¾" #2 Steel · ¹⁵⁄₁₆ oz	0.018	0.018
+16 Gauge	Federal Speed-Shok Waterfowl · 2¾" #2/4 Steel · ¹⁵⁄₁₆ oz	Federal Speed-Shok Waterfowl · 2¾" #4 Steel · ¹⁵⁄₁₆ oz	0.018	0.015
+16 Gauge	Federal Hevi-Bismuth · 2¾" #3/4/5 Bismuth · 1⅛ oz	Federal Hevi-Bismuth · 2¾" #3 Bismuth · 1⅛ oz	0.02	0.02
+16 Gauge	Federal Hevi-Bismuth · 2¾" #3/4/5 Bismuth · 1⅛ oz	Federal Hevi-Bismuth · 2¾" #4 Bismuth · 1⅛ oz	0.02	0.019
+16 Gauge	Federal Hevi-Bismuth · 2¾" #3/4/5 Bismuth · 1⅛ oz	Federal Hevi-Bismuth · 2¾" #5 Bismuth · 1⅛ oz	0.02	0.017
+20 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/7 Steel · ¾ oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6 Steel · ¾ oz	0.013	0.013
+20 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/7 Steel · ¾ oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #7 Steel · ¾ oz	0.013	0.012
+20 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8 · ⅞ oz	Winchester AA Sporting Clays · 2¾" #7.5 · ⅞ oz	0.016	0.016
+20 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8 · ⅞ oz	Winchester AA Sporting Clays · 2¾" #8 · ⅞ oz	0.016	0.015
+20 Gauge	Winchester Super Target · 2¾" #7.5/8 · ⅞ oz	Winchester Super Target · 2¾" #7.5 · ⅞ oz	0.016	0.016
+20 Gauge	Winchester Super Target · 2¾" #7.5/8 · ⅞ oz	Winchester Super Target · 2¾" #8 · ⅞ oz	0.016	0.015
+20 Gauge	Winchester AA Heavy Target · 2¾" #7.5/8 · 1 oz	Winchester AA Heavy Target · 2¾" #7.5 · 1 oz	0.016	0.016
+20 Gauge	Winchester AA Heavy Target · 2¾" #7.5/8 · 1 oz	Winchester AA Heavy Target · 2¾" #8 · 1 oz	0.016	0.015
+20 Gauge	Winchester AA Target · 2¾" #8/9 · ⅞ oz	Winchester AA Target · 2¾" #8 · ⅞ oz	0.015	0.015
+20 Gauge	Winchester AA Target · 2¾" #8/9 · ⅞ oz	Winchester AA Target · 2¾" #9 · ⅞ oz	0.015	0.013
+20 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · ⅞ oz (1200 fps)	Federal Premium High Over All · 2¾" #7.5 · ⅞ oz (1200 fps)	0.016	0.016
+20 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · ⅞ oz (1200 fps)	Federal Premium High Over All · 2¾" #8 · ⅞ oz (1200 fps)	0.016	0.015
+20 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · ⅞ oz (1275 fps)	Federal Premium High Over All · 2¾" #7.5 · ⅞ oz (1275 fps)	0.016	0.016
+20 Gauge	Federal Premium High Over All · 2¾" #7.5/8 · ⅞ oz (1275 fps)	Federal Premium High Over All · 2¾" #8 · ⅞ oz (1275 fps)	0.016	0.015
+20 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · ⅞ oz	Federal Premium Gold Medal Paper · 2¾" #7.5 · ⅞ oz	0.016	0.016
+20 Gauge	Federal Premium Gold Medal Paper · 2¾" #7.5/8 · ⅞ oz	Federal Premium Gold Medal Paper · 2¾" #8 · ⅞ oz	0.016	0.015
+20 Gauge	Federal Master Class · 2¾" #7.5/8 · ⅞ oz	Federal Master Class · 2¾" #7.5 · ⅞ oz	0.016	0.016
+20 Gauge	Federal Master Class · 2¾" #7.5/8 · ⅞ oz	Federal Master Class · 2¾" #8 · ⅞ oz	0.016	0.015
+20 Gauge	Federal All-American · 2¾" #7.5/8 · ⅞ oz	Federal All-American · 2¾" #7.5 · ⅞ oz	0.016	0.016
+20 Gauge	Federal All-American · 2¾" #7.5/8 · ⅞ oz	Federal All-American · 2¾" #8 · ⅞ oz	0.016	0.015
+20 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · ⅞ oz	Federal Top Gun Target · 2¾" #7.5 · ⅞ oz	0.016	0.016
+20 Gauge	Federal Top Gun Target · 2¾" #7.5/8 · ⅞ oz	Federal Top Gun Target · 2¾" #8 · ⅞ oz	0.016	0.015
+20 Gauge	Federal Top Gun Target · 2¾" #7.5/8/9 · ⅞ oz	Federal Top Gun Target · 2¾" #7.5 · ⅞ oz	0.016	0.016
+20 Gauge	Federal Top Gun Target · 2¾" #7.5/8/9 · ⅞ oz	Federal Top Gun Target · 2¾" #8 · ⅞ oz	0.016	0.015
+20 Gauge	Federal Top Gun Target · 2¾" #7.5/8/9 · ⅞ oz	Federal Top Gun Target · 2¾" #9 · ⅞ oz	0.016	0.013
+20 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6/7.5/8 · 1 oz	Winchester Super-X High Brass Game · 2¾" #4 · 1 oz	0.022	0.022
+20 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6/7.5/8 · 1 oz	Winchester Super-X High Brass Game · 2¾" #5 · 1 oz	0.022	0.02
+20 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6/7.5/8 · 1 oz	Winchester Super-X High Brass Game · 2¾" #6 · 1 oz	0.022	0.018
+20 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6/7.5/8 · 1 oz	Winchester Super-X High Brass Game · 2¾" #7.5 · 1 oz	0.022	0.016
+20 Gauge	Winchester Super-X High Brass Game · 2¾" #4/5/6/7.5/8 · 1 oz	Winchester Super-X High Brass Game · 2¾" #8 · 1 oz	0.022	0.015
+20 Gauge	Winchester Super Pheasant · 2¾" #5/6 · 1 oz	Winchester Super Pheasant · 2¾" #5 · 1 oz	0.02	0.02
+20 Gauge	Winchester Super Pheasant · 2¾" #5/6 · 1 oz	Winchester Super Pheasant · 2¾" #6 · 1 oz	0.02	0.018
+20 Gauge	Winchester Super-X Game · 2¾" #6/7.5/8 · ⅞ oz	Winchester Super-X Game · 2¾" #6 · ⅞ oz	0.018	0.018
+20 Gauge	Winchester Super-X Game · 2¾" #6/7.5/8 · ⅞ oz	Winchester Super-X Game · 2¾" #7.5 · ⅞ oz	0.018	0.016
+20 Gauge	Winchester Super-X Game · 2¾" #6/7.5/8 · ⅞ oz	Winchester Super-X Game · 2¾" #8 · ⅞ oz	0.018	0.015
+20 Gauge	Winchester Super-X Game · 2¾" #6/7.5/8 · 1 oz	Winchester Super-X Game · 2¾" #6 · 1 oz	0.018	0.018
+20 Gauge	Winchester Super-X Game · 2¾" #6/7.5/8 · 1 oz	Winchester Super-X Game · 2¾" #7.5 · 1 oz	0.018	0.016
+20 Gauge	Winchester Super-X Game · 2¾" #6/7.5/8 · 1 oz	Winchester Super-X Game · 2¾" #8 · 1 oz	0.018	0.015
+20 Gauge	Federal Premium Upland Paper · 2¾" #4/5/6 · 1 oz	Federal Premium Upland Paper · 2¾" #4 · 1 oz	0.022	0.022
+20 Gauge	Federal Premium Upland Paper · 2¾" #4/5/6 · 1 oz	Federal Premium Upland Paper · 2¾" #5 · 1 oz	0.022	0.02
+20 Gauge	Federal Premium Upland Paper · 2¾" #4/5/6 · 1 oz	Federal Premium Upland Paper · 2¾" #6 · 1 oz	0.022	0.018
+20 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1 oz	Federal Premium Prairie Storm FS Lead · 2¾" #4 · 1 oz	0.022	0.022
+20 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1 oz	Federal Premium Prairie Storm FS Lead · 2¾" #5 · 1 oz	0.022	0.02
+20 Gauge	Federal Premium Prairie Storm FS Lead · 2¾" #4/5/6 · 1 oz	Federal Premium Prairie Storm FS Lead · 2¾" #6 · 1 oz	0.022	0.018
+20 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6/7.5 · 1 oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4 · 1 oz	0.022	0.022
+20 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6/7.5 · 1 oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #5 · 1 oz	0.022	0.02
+20 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6/7.5 · 1 oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #6 · 1 oz	0.022	0.018
+20 Gauge	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #4/5/6/7.5 · 1 oz	Federal Premium Upland Pheasants Forever High Velocity · 2¾" #7.5 · 1 oz	0.022	0.016
+20 Gauge	Federal Game Load Hi-Brass · 2¾" #4/5/6/7.5 · 1 oz	Federal Game Load Hi-Brass · 2¾" #4 · 1 oz	0.022	0.022
+20 Gauge	Federal Game Load Hi-Brass · 2¾" #4/5/6/7.5 · 1 oz	Federal Game Load Hi-Brass · 2¾" #5 · 1 oz	0.022	0.02
+20 Gauge	Federal Game Load Hi-Brass · 2¾" #4/5/6/7.5 · 1 oz	Federal Game Load Hi-Brass · 2¾" #6 · 1 oz	0.022	0.018
+20 Gauge	Federal Game Load Hi-Brass · 2¾" #4/5/6/7.5 · 1 oz	Federal Game Load Hi-Brass · 2¾" #7.5 · 1 oz	0.022	0.016
+20 Gauge	Federal Upland Steel · 2¾" #6/7.5 Steel · ¾ oz	Federal Upland Steel · 2¾" #6 Steel · ¾ oz	0.013	0.013
+20 Gauge	Federal Upland Steel · 2¾" #6/7.5 Steel · ¾ oz	Federal Upland Steel · 2¾" #7.5 Steel · ¾ oz	0.013	0.011
+20 Gauge	Federal Game Load · 2¾" #6/7.5/8 · ⅞ oz	Federal Game Load · 2¾" #6 · ⅞ oz	0.018	0.018
+20 Gauge	Federal Game Load · 2¾" #6/7.5/8 · ⅞ oz	Federal Game Load · 2¾" #7.5 · ⅞ oz	0.018	0.016
+20 Gauge	Federal Game Load · 2¾" #6/7.5/8 · ⅞ oz	Federal Game Load · 2¾" #8 · ⅞ oz	0.018	0.015
+20 Gauge	Federal Game Load Heavy Field · 2¾" #6/7.5/8 · 1 oz	Federal Game Load Heavy Field · 2¾" #6 · 1 oz	0.018	0.018
+20 Gauge	Federal Game Load Heavy Field · 2¾" #6/7.5/8 · 1 oz	Federal Game Load Heavy Field · 2¾" #7.5 · 1 oz	0.018	0.016
+20 Gauge	Federal Game Load Heavy Field · 2¾" #6/7.5/8 · 1 oz	Federal Game Load Heavy Field · 2¾" #8 · 1 oz	0.018	0.015
+20 Gauge	Winchester Super Pheasant · 3" #4/5/6 · 1¼ oz	Winchester Super Pheasant · 3" #4 · 1¼ oz	0.022	0.022
+20 Gauge	Winchester Super Pheasant · 3" #4/5/6 · 1¼ oz	Winchester Super Pheasant · 3" #5 · 1¼ oz	0.022	0.02
+20 Gauge	Winchester Super Pheasant · 3" #4/5/6 · 1¼ oz	Winchester Super Pheasant · 3" #6 · 1¼ oz	0.022	0.018
+20 Gauge	Federal Premium Prairie Storm FS Steel · 3" #3/4 Steel · ⅞ oz	Federal Premium Prairie Storm FS Steel · 3" #3 Steel · ⅞ oz	0.017	0.017
+20 Gauge	Federal Premium Prairie Storm FS Steel · 3" #3/4 Steel · ⅞ oz	Federal Premium Prairie Storm FS Steel · 3" #4 Steel · ⅞ oz	0.017	0.015
+20 Gauge	Federal Premium Prairie Storm FS Lead · 3" #4/5/6 · 1¼ oz	Federal Premium Prairie Storm FS Lead · 3" #4 · 1¼ oz	0.022	0.022
+20 Gauge	Federal Premium Prairie Storm FS Lead · 3" #4/5/6 · 1¼ oz	Federal Premium Prairie Storm FS Lead · 3" #5 · 1¼ oz	0.022	0.02
+20 Gauge	Federal Premium Prairie Storm FS Lead · 3" #4/5/6 · 1¼ oz	Federal Premium Prairie Storm FS Lead · 3" #6 · 1¼ oz	0.022	0.018
+20 Gauge	Federal Premium Upland · 3" #5/6 · 1¼ oz	Federal Premium Upland · 3" #5 · 1¼ oz	0.02	0.02
+20 Gauge	Federal Premium Upland · 3" #5/6 · 1¼ oz	Federal Premium Upland · 3" #6 · 1¼ oz	0.02	0.018
+20 Gauge	Federal Game Load Hi-Brass · 3" #5/6 · 1¼ oz	Federal Game Load Hi-Brass · 3" #5 · 1¼ oz	0.02	0.02
+20 Gauge	Federal Game Load Hi-Brass · 3" #5/6 · 1¼ oz	Federal Game Load Hi-Brass · 3" #6 · 1¼ oz	0.02	0.018
+20 Gauge	Winchester Drylok Super Steel · 2¾" #2/4 Steel · ¾ oz	Winchester Drylok Super Steel · 2¾" #2 Steel · ¾ oz	0.018	0.018
+20 Gauge	Winchester Drylok Super Steel · 2¾" #2/4 Steel · ¾ oz	Winchester Drylok Super Steel · 2¾" #4 Steel · ¾ oz	0.018	0.015
+20 Gauge	Federal Speed-Shok Waterfowl · 2¾" #4/6/7 Steel · ¾ oz	Federal Speed-Shok Waterfowl · 2¾" #4 Steel · ¾ oz	0.015	0.015
+20 Gauge	Federal Speed-Shok Waterfowl · 2¾" #4/6/7 Steel · ¾ oz	Federal Speed-Shok Waterfowl · 2¾" #6 Steel · ¾ oz	0.015	0.013
+20 Gauge	Federal Speed-Shok Waterfowl · 2¾" #4/6/7 Steel · ¾ oz	Federal Speed-Shok Waterfowl · 2¾" #7 Steel · ¾ oz	0.015	0.012
+20 Gauge	Winchester Drylok Super Steel · 3" #2/3 Steel · 1 oz	Winchester Drylok Super Steel · 3" #2 Steel · 1 oz	0.018	0.018
+20 Gauge	Winchester Drylok Super Steel · 3" #2/3 Steel · 1 oz	Winchester Drylok Super Steel · 3" #3 Steel · 1 oz	0.018	0.017
+20 Gauge	Winchester Xpert Steel · 3" #2/4 Steel · ⅞ oz	Winchester Xpert Steel · 3" #2 Steel · ⅞ oz	0.018	0.018
+20 Gauge	Winchester Xpert Steel · 3" #2/4 Steel · ⅞ oz	Winchester Xpert Steel · 3" #4 Steel · ⅞ oz	0.018	0.015
+20 Gauge	Winchester Last Call TSS · 3" #7/9 · 1 oz	Winchester Last Call TSS · 3" #7 · 1 oz	0.017	0.027
+20 Gauge	Winchester Last Call TSS · 3" #7/9 · 1 oz	Winchester Last Call TSS · 3" #9 · 1 oz	0.017	0.022
+20 Gauge	Federal Speed-Shok Waterfowl · 3" #1/2/3/4 Steel · ⅞ oz	Federal Speed-Shok Waterfowl · 3" #1 Steel · ⅞ oz	0.019	0.019
+20 Gauge	Federal Speed-Shok Waterfowl · 3" #1/2/3/4 Steel · ⅞ oz	Federal Speed-Shok Waterfowl · 3" #2 Steel · ⅞ oz	0.019	0.018
+20 Gauge	Federal Speed-Shok Waterfowl · 3" #1/2/3/4 Steel · ⅞ oz	Federal Speed-Shok Waterfowl · 3" #3 Steel · ⅞ oz	0.019	0.017
+20 Gauge	Federal Speed-Shok Waterfowl · 3" #1/2/3/4 Steel · ⅞ oz	Federal Speed-Shok Waterfowl · 3" #4 Steel · ⅞ oz	0.019	0.015
+20 Gauge	Federal Black Cloud FS Steel · 3" #2/3/4 Steel · 1 oz	Federal Black Cloud FS Steel · 3" #2 Steel · 1 oz	0.018	0.018
+20 Gauge	Federal Black Cloud FS Steel · 3" #2/3/4 Steel · 1 oz	Federal Black Cloud FS Steel · 3" #3 Steel · 1 oz	0.018	0.017
+20 Gauge	Federal Black Cloud FS Steel · 3" #2/3/4 Steel · 1 oz	Federal Black Cloud FS Steel · 3" #4 Steel · 1 oz	0.018	0.015
+20 Gauge	Federal Raptor Steel · 3" #2/3/4 Steel · 1 oz	Federal Raptor Steel · 3" #2 Steel · 1 oz	0.018	0.018
+20 Gauge	Federal Raptor Steel · 3" #2/3/4 Steel · 1 oz	Federal Raptor Steel · 3" #3 Steel · 1 oz	0.018	0.017
+20 Gauge	Federal Raptor Steel · 3" #2/3/4 Steel · 1 oz	Federal Raptor Steel · 3" #4 Steel · 1 oz	0.018	0.015
+20 Gauge	Federal Hevi-Bismuth · 3" #3/4/5 Bismuth · 1⅛ oz	Federal Hevi-Bismuth · 3" #3 Bismuth · 1⅛ oz	0.02	0.02
+20 Gauge	Federal Hevi-Bismuth · 3" #3/4/5 Bismuth · 1⅛ oz	Federal Hevi-Bismuth · 3" #4 Bismuth · 1⅛ oz	0.02	0.019
+20 Gauge	Federal Hevi-Bismuth · 3" #3/4/5 Bismuth · 1⅛ oz	Federal Hevi-Bismuth · 3" #5 Bismuth · 1⅛ oz	0.02	0.017
+20 Gauge	Federal Ultra Steel · 3" #3/5/2/4/2 Steel · 1 oz	Federal Ultra Steel · 3" #3 x #5 Steel · 1 oz	0.017	0.017
+20 Gauge	Federal Ultra Steel · 3" #3/5/2/4/2 Steel · 1 oz	Federal Ultra Steel · 3" #2 x #4 Steel · 1 oz	0.017	0.017
+20 Gauge	Federal Ultra Steel · 3" #3/5/2/4/2 Steel · 1 oz	Federal Ultra Steel · 3" #2 Steel · 1 oz	0.017	0.018
+20 Gauge	Winchester Double-X Copper Plated Buffered · 3" #4/5 · 1.31 oz	Winchester Double-X Copper Plated Buffered · 3" #4 · 1.31 oz	0.022	0.022
+20 Gauge	Winchester Double-X Copper Plated Buffered · 3" #4/5 · 1.31 oz	Winchester Double-X Copper Plated Buffered · 3" #5 · 1.31 oz	0.022	0.02
+20 Gauge	Winchester Longbeard XR · 3" #5/6 · 1¼ oz	Winchester Longbeard XR · 3" #5 · 1¼ oz	0.02	0.02
+20 Gauge	Winchester Longbeard XR · 3" #5/6 · 1¼ oz	Winchester Longbeard XR · 3" #6 · 1¼ oz	0.02	0.018
+20 Gauge	Winchester Longbeard Tungsten · 3" #8/9 · 1.56 oz	Winchester Longbeard Tungsten · 3" #8 · 1.56 oz	0.015	0.025
+20 Gauge	Winchester Longbeard Tungsten · 3" #8/9 · 1.56 oz	Winchester Longbeard Tungsten · 3" #9 · 1.56 oz	0.015	0.022
+20 Gauge	Federal Premium Heavyweight TSS · 3" #7/9 TSS · 1½ oz	Federal Premium Heavyweight TSS · 3" #7 TSS · 1½ oz	0.027	0.027
+20 Gauge	Federal Premium Heavyweight TSS · 3" #7/9 TSS · 1½ oz	Federal Premium Heavyweight TSS · 3" #9 TSS · 1½ oz	0.027	0.022
+20 Gauge	Federal Premium Heavyweight TSS Rob Roberts · 3" #7/9 TSS · 1⅝ oz	Federal Premium Heavyweight TSS Rob Roberts · 3" #7 TSS · 1⅝ oz	0.027	0.027
+20 Gauge	Federal Premium Heavyweight TSS Rob Roberts · 3" #7/9 TSS · 1⅝ oz	Federal Premium Heavyweight TSS Rob Roberts · 3" #9 TSS · 1⅝ oz	0.027	0.022
+20 Gauge	Federal Premium Heavyweight TSS · 3" #7/9 TSS · 1⅝ oz	Federal Premium Heavyweight TSS · 3" #7 x #9 TSS · 1⅝ oz	0.027	0.027
+28 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/7 Steel · ⅝ oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6 Steel · ⅝ oz	0.013	0.013
+28 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6/7 Steel · ⅝ oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #7 Steel · ⅝ oz	0.013	0.012
+28 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8/8.5 · ¾ oz	Winchester AA Sporting Clays · 2¾" #7.5 · ¾ oz	0.016	0.016
+28 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8/8.5 · ¾ oz	Winchester AA Sporting Clays · 2¾" #8 · ¾ oz	0.016	0.015
+28 Gauge	Winchester AA Sporting Clays · 2¾" #7.5/8/8.5 · ¾ oz	Winchester AA Sporting Clays · 2¾" #8.5 · ¾ oz	0.016	0.014
+28 Gauge	Winchester AA Target · 2¾" #8/9 · ¾ oz	Winchester AA Target · 2¾" #8 · ¾ oz	0.015	0.015
+28 Gauge	Winchester AA Target · 2¾" #8/9 · ¾ oz	Winchester AA Target · 2¾" #9 · ¾ oz	0.015	0.013
+28 Gauge	Federal Top Gun Target · 2¾" #7.5/8/9 · ¾ oz	Federal Top Gun Target · 2¾" #7.5 · ¾ oz	0.016	0.016
+28 Gauge	Federal Top Gun Target · 2¾" #7.5/8/9 · ¾ oz	Federal Top Gun Target · 2¾" #8 · ¾ oz	0.016	0.015
+28 Gauge	Federal Top Gun Target · 2¾" #7.5/8/9 · ¾ oz	Federal Top Gun Target · 2¾" #9 · ¾ oz	0.016	0.013
+28 Gauge	Federal Premium High Over All · 2¾" #8/8.5/9 · ¾ oz	Federal Premium High Over All · 2¾" #8 · ¾ oz	0.015	0.015
+28 Gauge	Federal Premium High Over All · 2¾" #8/8.5/9 · ¾ oz	Federal Premium High Over All · 2¾" #8.5 · ¾ oz	0.015	0.014
+28 Gauge	Federal Premium High Over All · 2¾" #8/8.5/9 · ¾ oz	Federal Premium High Over All · 2¾" #9 · ¾ oz	0.015	0.013
+28 Gauge	Federal Premium High Over All · 2¾" #8/9 · ¾ oz	Federal Premium High Over All · 2¾" #8 · ¾ oz	0.015	0.015
+28 Gauge	Federal Premium High Over All · 2¾" #8/9 · ¾ oz	Federal Premium High Over All · 2¾" #9 · ¾ oz	0.015	0.013
+28 Gauge	Winchester Super-X Heavy Game · 2¾" #5/6 · ¾ oz	Winchester Super-X Heavy Game · 2¾" #5 · ¾ oz	0.02	0.02
+28 Gauge	Winchester Super-X Heavy Game · 2¾" #5/6 · ¾ oz	Winchester Super-X Heavy Game · 2¾" #6 · ¾ oz	0.02	0.018
+28 Gauge	Winchester Super-X Heavy Game · 2¾" #5/6/7.5/8 · 1 oz	Winchester Super-X Heavy Game · 2¾" #5 · 1 oz	0.02	0.02
+28 Gauge	Winchester Super-X Heavy Game · 2¾" #5/6/7.5/8 · 1 oz	Winchester Super-X Heavy Game · 2¾" #6 · 1 oz	0.02	0.018
+28 Gauge	Winchester Super-X Heavy Game · 2¾" #5/6/7.5/8 · 1 oz	Winchester Super-X Heavy Game · 2¾" #7.5 · 1 oz	0.02	0.016
+28 Gauge	Winchester Super-X Heavy Game · 2¾" #5/6/7.5/8 · 1 oz	Winchester Super-X Heavy Game · 2¾" #8 · 1 oz	0.02	0.015
+28 Gauge	Federal Game Load Hi-Brass · 2¾" #5/6/7.5 · 1 oz	Federal Game Load Hi-Brass · 2¾" #5 · 1 oz	0.02	0.02
+28 Gauge	Federal Game Load Hi-Brass · 2¾" #5/6/7.5 · 1 oz	Federal Game Load Hi-Brass · 2¾" #6 · 1 oz	0.02	0.018
+28 Gauge	Federal Game Load Hi-Brass · 2¾" #5/6/7.5 · 1 oz	Federal Game Load Hi-Brass · 2¾" #7.5 · 1 oz	0.02	0.016
+28 Gauge	Federal Upland Steel · 2¾" #6/7.5 Steel · ⅝ oz	Federal Upland Steel · 2¾" #6 Steel · ⅝ oz	0.013	0.013
+28 Gauge	Federal Upland Steel · 2¾" #6/7.5 Steel · ⅝ oz	Federal Upland Steel · 2¾" #7.5 Steel · ⅝ oz	0.013	0.011
+28 Gauge	Federal Premium Upland · 2¾" #6/7.5/8 · ¾ oz	Federal Premium Upland · 2¾" #6 · ¾ oz	0.018	0.018
+28 Gauge	Federal Premium Upland · 2¾" #6/7.5/8 · ¾ oz	Federal Premium Upland · 2¾" #7.5 · ¾ oz	0.018	0.016
+28 Gauge	Federal Premium Upland · 2¾" #6/7.5/8 · ¾ oz	Federal Premium Upland · 2¾" #8 · ¾ oz	0.018	0.015
+28 Gauge	Federal Hevi-Bismuth · 2¾" #3/4 Bismuth · ¾ oz	Federal Hevi-Bismuth · 2¾" #3 Bismuth · ¾ oz	0.02	0.02
+28 Gauge	Federal Hevi-Bismuth · 2¾" #3/4 Bismuth · ¾ oz	Federal Hevi-Bismuth · 2¾" #4 Bismuth · ¾ oz	0.02	0.019
+28 Gauge	Federal Hevi-Bismuth · 3" #3/4 Bismuth · ⅞ oz	Federal Hevi-Bismuth · 3" #3 Bismuth · ⅞ oz	0.02	0.02
+28 Gauge	Federal Hevi-Bismuth · 3" #3/4 Bismuth · ⅞ oz	Federal Hevi-Bismuth · 3" #4 Bismuth · ⅞ oz	0.02	0.019
+28 Gauge	Federal Black Cloud FS Steel · 3" #3/4 Steel · ¾ oz	Federal Black Cloud FS Steel · 3" #3 Steel · ¾ oz	0.017	0.017
+28 Gauge	Federal Black Cloud FS Steel · 3" #3/4 Steel · ¾ oz	Federal Black Cloud FS Steel · 3" #4 Steel · ¾ oz	0.017	0.015
+.410 Bore	Winchester AA Sporting Clays · 2½" #7.5/8/8.5 · ½ oz	Winchester AA Sporting Clays · 2½" #7.5 · ½ oz	0.016	0.016
+.410 Bore	Winchester AA Sporting Clays · 2½" #7.5/8/8.5 · ½ oz	Winchester AA Sporting Clays · 2½" #8 · ½ oz	0.016	0.015
+.410 Bore	Winchester AA Sporting Clays · 2½" #7.5/8/8.5 · ½ oz	Winchester AA Sporting Clays · 2½" #8.5 · ½ oz	0.016	0.014
+.410 Bore	Federal Top Gun Target · 2½" #7.5/8/9 · ½ oz	Federal Top Gun Target · 2½" #7.5 · ½ oz	0.016	0.016
+.410 Bore	Federal Top Gun Target · 2½" #7.5/8/9 · ½ oz	Federal Top Gun Target · 2½" #8 · ½ oz	0.016	0.015
+.410 Bore	Federal Top Gun Target · 2½" #7.5/8/9 · ½ oz	Federal Top Gun Target · 2½" #9 · ½ oz	0.016	0.013
+.410 Bore	Federal Premium High Over All · 2½" #8/8.5/9 · ½ oz	Federal Premium High Over All · 2½" #8 · ½ oz	0.015	0.015
+.410 Bore	Federal Premium High Over All · 2½" #8/8.5/9 · ½ oz	Federal Premium High Over All · 2½" #8.5 · ½ oz	0.015	0.014
+.410 Bore	Federal Premium High Over All · 2½" #8/8.5/9 · ½ oz	Federal Premium High Over All · 2½" #9 · ½ oz	0.015	0.013
+.410 Bore	Federal Premium High Over All · 2½" #8.5/9 · ½ oz	Federal Premium High Over All · 2½" #8.5 · ½ oz	0.014	0.014
+.410 Bore	Federal Premium High Over All · 2½" #8.5/9 · ½ oz	Federal Premium High Over All · 2½" #9 · ½ oz	0.014	0.013
+.410 Bore	Winchester Xpert Game & Target Hi-Velocity Steel · 3" #6/7 Steel · ⅜ oz	Winchester Xpert Game & Target Hi-Velocity Steel · 3" #6 Steel · ⅜ oz	0.013	0.013
+.410 Bore	Winchester Xpert Game & Target Hi-Velocity Steel · 3" #6/7 Steel · ⅜ oz	Winchester Xpert Game & Target Hi-Velocity Steel · 3" #7 Steel · ⅜ oz	0.013	0.012
+.410 Bore	Winchester Super-X Heavy Game · 2½" #4/6/7.5 · ½ oz	Winchester Super-X Heavy Game · 2½" #4 · ½ oz	0.022	0.022
+.410 Bore	Winchester Super-X Heavy Game · 2½" #4/6/7.5 · ½ oz	Winchester Super-X Heavy Game · 2½" #6 · ½ oz	0.022	0.018
+.410 Bore	Winchester Super-X Heavy Game · 2½" #4/6/7.5 · ½ oz	Winchester Super-X Heavy Game · 2½" #7.5 · ½ oz	0.022	0.016
+.410 Bore	Federal Game Load Hi-Brass · 2½" #6/7.5 · ½ oz	Federal Game Load Hi-Brass · 2½" #6 · ½ oz	0.018	0.018
+.410 Bore	Federal Game Load Hi-Brass · 2½" #6/7.5 · ½ oz	Federal Game Load Hi-Brass · 2½" #7.5 · ½ oz	0.018	0.016
+.410 Bore	Winchester Super-X Heavy Game · 3" #4/6/7.5 · 0.69 oz	Winchester Super-X Heavy Game · 3" #4 · 0.69 oz	0.022	0.022
+.410 Bore	Winchester Super-X Heavy Game · 3" #4/6/7.5 · 0.69 oz	Winchester Super-X Heavy Game · 3" #6 · 0.69 oz	0.022	0.018
+.410 Bore	Winchester Super-X Heavy Game · 3" #4/6/7.5 · 0.69 oz	Winchester Super-X Heavy Game · 3" #7.5 · 0.69 oz	0.022	0.016
+.410 Bore	Winchester Super-X Heavy Game · 3" #4/6/7.5/8.5 · ¾ oz	Winchester Super-X Heavy Game · 3" #4 · ¾ oz	0.022	0.022
+.410 Bore	Winchester Super-X Heavy Game · 3" #4/6/7.5/8.5 · ¾ oz	Winchester Super-X Heavy Game · 3" #6 · ¾ oz	0.022	0.018
+.410 Bore	Winchester Super-X Heavy Game · 3" #4/6/7.5/8.5 · ¾ oz	Winchester Super-X Heavy Game · 3" #7.5 · ¾ oz	0.022	0.016
+.410 Bore	Winchester Super-X Heavy Game · 3" #4/6/7.5/8.5 · ¾ oz	Winchester Super-X Heavy Game · 3" #8.5 · ¾ oz	0.022	0.014
+.410 Bore	Federal Game Load Hi-Brass · 3" #4/5/6/7.5 · 0.69 oz	Federal Game Load Hi-Brass · 3" #4 · 0.69 oz	0.022	0.022
+.410 Bore	Federal Game Load Hi-Brass · 3" #4/5/6/7.5 · 0.69 oz	Federal Game Load Hi-Brass · 3" #5 · 0.69 oz	0.022	0.02
+.410 Bore	Federal Game Load Hi-Brass · 3" #4/5/6/7.5 · 0.69 oz	Federal Game Load Hi-Brass · 3" #6 · 0.69 oz	0.022	0.018
+.410 Bore	Federal Game Load Hi-Brass · 3" #4/5/6/7.5 · 0.69 oz	Federal Game Load Hi-Brass · 3" #7.5 · 0.69 oz	0.022	0.016
+.410 Bore	Federal Upland Steel · 3" #6/7.5 Steel · ⅜ oz	Federal Upland Steel · 3" #6 Steel · ⅜ oz	0.013	0.013
+.410 Bore	Federal Upland Steel · 3" #6/7.5 Steel · ⅜ oz	Federal Upland Steel · 3" #7.5 Steel · ⅜ oz	0.013	0.011
+.410 Bore	Federal Premium Heavyweight TSS · 3" #7/9 TSS · 0.81 oz	Federal Premium Heavyweight TSS · 3" #7 TSS · 0.81 oz	0.027	0.027
+.410 Bore	Federal Premium Heavyweight TSS · 3" #7/9 TSS · 0.81 oz	Federal Premium Heavyweight TSS · 3" #9 TSS · 0.81 oz	0.027	0.022
+12 Gauge	Winchester Longbeard Tungsten · 3½" #8 · 2¾ oz	Winchester Longbeard Tungsten · 3½" #8 · 2¾ oz	0.015	0.025
+28 Gauge	Winchester Last Call TSS · 3" #9 · ⅞ oz	Winchester Last Call TSS · 3" #9 · ⅞ oz	0.013	0.022
+28 Gauge	Winchester Longbeard Tungsten · 2¾" #9 · 1¼ oz	Winchester Longbeard Tungsten · 2¾" #9 · 1¼ oz	0.013	0.022
+28 Gauge	Winchester Longbeard Tungsten · 3" #9 · 1½ oz	Winchester Longbeard Tungsten · 3" #9 · 1½ oz	0.013	0.022
+.410 Bore	Winchester Last Call TSS · 3" #9 · ½ oz	Winchester Last Call TSS · 3" #9 · ½ oz	0.013	0.022
+.410 Bore	Winchester Longbeard Tungsten · 3" #9 · 0.81 oz	Winchester Longbeard Tungsten · 3" #9 · 0.81 oz	0.013	0.022
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6 Steel · 1 oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6 Steel · 1 oz (1325 fps)	0.013	0.013
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6 Steel · 1 oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #6 Steel · 1 oz (1450 fps)	0.013	0.013
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #7 Steel · 1 oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #7 Steel · 1 oz (1325 fps)	0.012	0.012
+12 Gauge	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #7 Steel · 1 oz	Winchester Xpert Game & Target Hi-Velocity Steel · 2¾" #7 Steel · 1 oz (1450 fps)	0.012	0.012
+12 Gauge	Winchester Super Target · 2¾" #7.5 · 1⅛ oz	Winchester Super Target · 2¾" #7.5 · 1⅛ oz (1200 fps)	0.016	0.016
+12 Gauge	Winchester Super Target · 2¾" #7.5 · 1⅛ oz	Winchester Super Target · 2¾" #7.5 · 1⅛ oz (1145 fps)	0.016	0.016
+12 Gauge	Winchester Super Target · 2¾" #8 · 1⅛ oz	Winchester Super Target · 2¾" #8 · 1⅛ oz (1200 fps)	0.015	0.015
+12 Gauge	Winchester Super Target · 2¾" #8 · 1⅛ oz	Winchester Super Target · 2¾" #8 · 1⅛ oz (1145 fps)	0.015	0.015
+12 Gauge	Federal Top Gun Target · 2¾" #7.5 · 1⅛ oz	Federal Top Gun Target · 2¾" #7.5 · 1⅛ oz (1200 fps)	0.016	0.016
+12 Gauge	Federal Top Gun Target · 2¾" #7.5 · 1⅛ oz	Federal Top Gun Target · 2¾" #7.5 · 1⅛ oz (1145 fps)	0.016	0.016
+12 Gauge	Federal Top Gun Target · 2¾" #8 · 1⅛ oz	(dropped: same as existing)	0.015	
+12 Gauge	Federal Top Gun Target · 2¾" #8 · 1⅛ oz	Federal Top Gun Target · 2¾" #8 · 1⅛ oz (1200 fps)	0.015	0.015
+12 Gauge	Federal Top Gun Target · 2¾" #8 · 1⅛ oz	Federal Top Gun Target · 2¾" #8 · 1⅛ oz (1145 fps)	0.015	0.015
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #4 · 1¼ oz (1220 fps)	0.022	0.022
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #4 · 1¼ oz (1450 fps)	0.022	0.022
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #4 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #4 · 1¼ oz (1330 fps)	0.022	0.022
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #5 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #5 · 1¼ oz (1220 fps)	0.02	0.02
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #5 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #5 · 1¼ oz (1450 fps)	0.02	0.02
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #5 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #5 · 1¼ oz (1330 fps)	0.02	0.02
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #6 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #6 · 1¼ oz (1450 fps)	0.018	0.018
+12 Gauge	Winchester Super-X High Brass Game · 2¾" #6 · 1¼ oz	Winchester Super-X High Brass Game · 2¾" #6 · 1¼ oz (1330 fps)	0.018	0.018
+20 Gauge	Federal Top Gun Target · 2¾" #7.5 · ⅞ oz	Federal Top Gun Target · 2¾" #7.5 · ⅞ oz (1250 fps)	0.016	0.016
+20 Gauge	Federal Top Gun Target · 2¾" #7.5 · ⅞ oz	Federal Top Gun Target · 2¾" #7.5 · ⅞ oz (1210 fps)	0.016	0.016
+20 Gauge	Federal Top Gun Target · 2¾" #8 · ⅞ oz	Federal Top Gun Target · 2¾" #8 · ⅞ oz (1250 fps)	0.015	0.015
+20 Gauge	Federal Top Gun Target · 2¾" #8 · ⅞ oz	Federal Top Gun Target · 2¾" #8 · ⅞ oz (1210 fps)	0.015	0.015
+20 Gauge	Winchester Super-X High Brass Game · 2¾" #5 · 1 oz	Winchester Super-X High Brass Game · 2¾" #5 · 1 oz (1220 fps)	0.02	0.02
+20 Gauge	Winchester Super-X High Brass Game · 2¾" #5 · 1 oz	Winchester Super-X High Brass Game · 2¾" #5 · 1 oz (1165 fps)	0.02	0.02
+28 Gauge	Federal Premium High Over All · 2¾" #8 · ¾ oz	Federal Premium High Over All · 2¾" #8 · ¾ oz (1250 fps)	0.015	0.015
+28 Gauge	Federal Premium High Over All · 2¾" #8 · ¾ oz	Federal Premium High Over All · 2¾" #8 · ¾ oz (1300 fps)	0.015	0.015
+28 Gauge	Federal Premium High Over All · 2¾" #9 · ¾ oz	Federal Premium High Over All · 2¾" #9 · ¾ oz (1250 fps)	0.013	0.013
+28 Gauge	Federal Premium High Over All · 2¾" #9 · ¾ oz	Federal Premium High Over All · 2¾" #9 · ¾ oz (1300 fps)	0.013	0.013
+.410 Bore	Federal Premium High Over All · 2½" #8.5 · ½ oz	Federal Premium High Over All · 2½" #8.5 · ½ oz (1200 fps)	0.014	0.014
+.410 Bore	Federal Premium High Over All · 2½" #8.5 · ½ oz	Federal Premium High Over All · 2½" #8.5 · ½ oz (1275 fps)	0.014	0.014
+.410 Bore	Federal Premium High Over All · 2½" #9 · ½ oz	Federal Premium High Over All · 2½" #9 · ½ oz (1200 fps)	0.013	0.013
+.410 Bore	Federal Premium High Over All · 2½" #9 · ½ oz	Federal Premium High Over All · 2½" #9 · ½ oz (1275 fps)	0.013	0.013
