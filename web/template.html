@@ -1416,7 +1416,9 @@ function openH2H(pane){
     box.querySelectorAll("[data-yd]").forEach(c=>c.onclick=()=>{H.drYd=+c.dataset.yd;render();});
   }
   drawSlots();save();
-  $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push(blank());drawSlots();const r=$$("#hs").lastElementChild;r.querySelector((slots[slots.length-1].cart?".ls":".cs")+" .lq").focus();};
+  // "+ Add a load" adds an empty row and opens nothing (Zeke: it used to copy the last row's
+  // cartridge and jump into the load picker)
+  $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push({cat:(slots[slots.length-1]||{cat:first.title}).cat,cart:"",key:"",gun:""});drawSlots();};
   $$("#hd").addEventListener("input",render);
   $$("#hgun").onclick=()=>{gunOpen=!gunOpen;drawSlots();render();};
   render();

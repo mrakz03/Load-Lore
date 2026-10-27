@@ -28,7 +28,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   load is graded with its own category's Load Dictionary weights (dict_weights / dictWeights),
   factors it lacks show "—", downrange steps come from the picked category with the largest step. Its downrange table (Oct 2026) looks like the dictionary's ballistic table: compact (sized to its figures, not stretched to the window), each load's cartridge in small grey type, then its name on one line (only a very long name wraps), weight in small grey type under it, over its own right-aligned Velocity (fps) and Energy (ft-lbs) columns, a thin line between loads, each column highlighting its own leader at that distance. Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
-  always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
+  always naming loads, never numbering them. "+ Add a load" adds an empty row (no copied cartridge) and
+  opens nothing (Oct 27 2026, Zeke). Head to Head load boxes are searches (issue #24:
   LoadSearch / searchBox, every typed word must be in the name); so are the cartridge boxes
   (Oct 2026): the dictionary's searches its category, Head to Head's searches every category
   (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings).
