@@ -71,6 +71,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Grades are relative to the same cartridge and purpose (median/MAD, centre 70; shotshells
   within their load type): score_loads / scoreLoads. Head to Head shows each load's Load
   Dictionary grade (purpose All), never grades the picked loads against each other.
+- Shot size sort (Oct 27 2026, Zeke): shotgun only, web "Sort: shot size" in the dictionary's sort
+  menu, desktop a "Shot" column (click its heading). shot_size / shotSize read the load name's
+  largest shot (slugs first, then 000-4 Buck, T/BBB/BB/B, #1-#9 as (17-n)/100 in), then most
+  pellets, then heaviest payload.
 - Load labels read "Load  ·  150 gr" (make_label / makeLabel). Saved prices are keyed by label;
   keys from the old weight-first format are converted on read (_rename_price_key / readPrices).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files

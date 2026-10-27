@@ -630,6 +630,32 @@ def make_label(item, grain_style):
     return item.load or f"{item.bullet_gr:g} gr"
 
 
+# shot sizes in inches: buckshot by number, then birdshot letters; birdshot #n is (17 - n) / 100
+BUCK_IN = {"000": .36, "00": .33, "0": .32, "1": .30, "2": .27, "3": .25, "4": .24}
+SHOT_LETTER_IN = {"T": .20, "BBB": .19, "BB": .18, "B": .17}
+
+
+def shot_size(item):
+    """(size in inches, pellet count or 0, short text) of a shotshell's largest shot, from its
+    name ('2¾" 00 Buck · 9 pellets', '3" #4/5/6 · 1¼ oz'); slugs come out biggest (1.0)."""
+    name = item.load or ""
+    seg = next((s for s in name.split(" · ") if '"' in s), name)
+    seg = re.sub(r'^[\d.¼½¾⅛⅜⅝⅞]+" ?', "", seg).replace("½", ".5")
+    m = re.search(r"(\d+) pellets", name)
+    pellets = int(m.group(1)) if m else 0
+    if item.group == "Slug" or re.search(r"\bSlug", seg):
+        return 1.0, pellets, "Slug"
+    m = re.search(r"\b(000|00|0|[1-4]) Buck", seg)
+    if m:
+        return BUCK_IN[m.group(1)], pellets, f"{m.group(1)} Buck"
+    best = (0.0, pellets, "—")
+    for t in re.findall(r"\b(T|BBB|BB|B|\d+(?:\.\d+)?)\b", seg):
+        d = SHOT_LETTER_IN.get(t) or (17 - float(t)) / 100
+        if best[0] < d <= .21:
+            best = (d, pellets, t if t in SHOT_LETTER_IN else f"#{float(t):g}")
+    return best
+
+
 PRESSURES = ("+P", "+P+")
 
 
@@ -2955,7 +2981,7 @@ class LoadsView:
                                  10, MUTED, bg=BG, anchor="e")
         self.count_lbl.grid(row=1, column=1, sticky="e", pady=(4, 0), padx=(16, 0))
         # (for bullets the weight is already in the Load text, so no separate Grains column)
-        self.cols = ["#", "Load"] + ([] if cat.grain_style else [cat.payload_col])
+        self.cols = ["#", "Load"] + ([] if cat.grain_style else ["Shot", cat.payload_col])
         if cat.grain_style:
             self.cols += ["Barrel", "Use"]
         self.cols += ["Velocity", "Energy", "Recoil"]
@@ -3396,7 +3422,7 @@ class LoadsView:
         self._render()
 
     def _sort_by(self, col):
-        first = col in (self.cat.payload_col, "Velocity", "Energy", "Taylor", "HITS", "Score")
+        first = col in ("Shot", self.cat.payload_col, "Velocity", "Energy", "Taylor", "HITS", "Score")
         if self.sort["col"] == col and not self.app.show_grades and self.sort["desc"] != first:
             # grades off hides the # column, so a third click on a heading goes back to the
             # default order instead
@@ -3420,6 +3446,8 @@ class LoadsView:
                 and self._press_ok(r["item"])]
         keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["item"].label.lower(), r["stats"]["weight"]),
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
+                # biggest shot first, then the most pellets, then the heaviest payload
+                "Shot": lambda r: shot_size(r["item"])[:2] + (r["stats"]["weight"],),
                 "Barrel": lambda r: r["item"].barrel_in or 999,
                 "Use": lambda r: (r["item"].purpose, r["rank"]),
                 "Velocity": lambda r: r["stats"]["velocity"],
@@ -3440,7 +3468,7 @@ class LoadsView:
             if self.cat.grain_style:
                 vals += [f"{it.barrel_in:g}\"" if it.barrel_in else "—", it.purpose]
             else:
-                vals += [f"{st['weight']:g}"]
+                vals += [shot_size(it)[2], f"{st['weight']:g}"]
             vals += [f"{st['velocity']:.0f}", f"{st['energy']:.0f}", f"{st['recoil']:.1f}"]
             if self.cat.terminal:
                 vals += [f"{st['taylor']:.1f}", f"{st['hits']:.0f}"]
