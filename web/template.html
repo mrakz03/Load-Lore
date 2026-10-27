@@ -111,6 +111,15 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   #lres .lc .trow .badge{display:inline-flex}
   #lres .lc .det{grid-column:1/-1;max-width:600px;margin:8px 0 6px}
 }
+@media(min-width:1500px){   /* big PC windows: the dictionary fills the window, its settings in a column beside the table */
+  .wrap.wide.dict{max-width:none}
+  .dict #pane{display:grid;grid-template-columns:minmax(320px,380px) minmax(0,1fr);column-gap:22px;align-items:start}
+  .dict #pane>*{grid-column:1;min-width:0}
+  .dict #pane>#lres{grid-column:2;grid-row:1/span 6;margin-top:0}
+  .dict #pane>.card{margin-top:0}
+  .dict #pane .sortrow{grid-template-columns:1fr}
+  .dict #pane .chips button{min-height:34px;padding:6px 11px}
+}
 @media(min-width:900px) and (max-width:1199px){#lres{gap:0 10px;font-size:.84rem}#lres .lhead{font-size:.72rem}}   /* small PC windows: tighter columns */
 .prow{display:flex;gap:8px;align-items:center;margin-top:8px}.prow input{max-width:7.5em}
 .prow .btn{padding:9px 12px;font-size:.85rem}
@@ -686,7 +695,7 @@ function fitMenu(){
 let fitMenuJob=0;
 addEventListener("resize",()=>{clearTimeout(fitMenuJob);fitMenuJob=setTimeout(fitMenu,150);});
 function showHome(){
-  document.title=APP_TITLE;app.classList.remove("wide","picker");app.classList.add("home");
+  document.title=APP_TITLE;app.classList.remove("dict","wide","picker");app.classList.add("home");
   app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost, or put loads head to head.</p></div>
   <div class="feat">${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
@@ -694,7 +703,7 @@ function showHome(){
 // GitHub's mark (Octicons mark-github), drawn in the text colour
 const GITHUB_MARK="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z";
 function showSettings(){
-  document.title=APP_TITLE;app.classList.remove("wide","home","picker");
+  document.title=APP_TITLE;app.classList.remove("dict","wide","home","picker");
   app.innerHTML=`<div class="phead"><h2>Settings</h2></div><div class="setlist">
     <div class="sethead">Display</div><div class="setgroup">
     <div class="setrow"><label for="theme2"><b>Theme</b></label><select id="theme2">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>
@@ -711,7 +720,7 @@ function showSettings(){
   $("#theme2").onchange=e=>applyTheme(e.target.value);
 }
 function showPicker(mode){
-  document.title=APP_TITLE;app.classList.remove("wide","home");app.classList.add("picker");
+  document.title=APP_TITLE;app.classList.remove("dict","wide","home");app.classList.add("picker");
   const last=lastCat();
   app.innerHTML=`<div class="phead"><h2>${toolTitle(mode)}</h2><p class="sub">Choose a category.</p></div><div class="pick">${
     CATEGORIES.filter(hasDetail).map(c=>{
@@ -723,7 +732,7 @@ function showPicker(mode){
 function openCategory(cat,tab){
   tab=tab||"loads";
   document.title=`${APP_TITLE} — ${cat.title}`;
-  app.classList.remove("home","picker");app.classList.add("wide");
+  app.classList.remove("dict","home","picker");app.classList.add("wide","dict");
   app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2>${toolTitle(tab)} · ${esc(cat.title)}</h2></div><div id="pane"></div>`;
   $("[data-back]",app).onclick=()=>navigate(tab);
   openLoads(cat,$("#pane",app));
@@ -731,7 +740,7 @@ function openCategory(cat,tab){
 // Head to Head: one page for loads of every category
 function showH2H(){
   document.title=`${APP_TITLE} — ${toolTitle("h2h")}`;
-  app.classList.remove("home","picker");app.classList.add("wide");
+  app.classList.remove("dict","home","picker");app.classList.add("wide");
   app.innerHTML=`<div class="phead"><h2>${toolTitle("h2h")}</h2></div><div id="pane"></div>`;
   openH2H($("#pane",app));
 }
@@ -779,7 +788,7 @@ function handGrade(cat,it){
 }
 function showHand(openId){
   document.title=`${APP_TITLE} — ${toolTitle("hand")}`;
-  app.classList.remove("home","picker");app.classList.add("wide");
+  app.classList.remove("dict","home","picker");app.classList.add("wide");
   const H={open:openId||null,q:"",cat:"All"};
   app.innerHTML=`<div class="hpage"><div class="phead"><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
     <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button><span class="sp"></span><button class="link" id="hbak">Back up</button><button class="link" id="hres">Restore</button></div>
