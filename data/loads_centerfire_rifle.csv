@@ -378,6 +378,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 6.5 Creedmoor,Winchester Deer Season XP Extreme Point,125,2850,0.449,39.9,1.57,,catalog,,24,Hunting
 6.5 Creedmoor,Winchester USA Open Tip,125,2850,0.365,39.9,1.10,,catalog,,24,Hunting
 6.5 Creedmoor,Winchester USA Ready Open Tip,125,2850,0.365,39.9,1.10,,catalog,,24,Hunting
+6.5 Creedmoor,Federal Premium +Peak Barnes LRX,127,3050,0.468,46.4,3.70,,published,,,Hunting
 6.5 Creedmoor,Fiocchi Field Dynamics PSP,129,2820,0.445,40.3,1.49,,catalog,,,Hunting
 6.5 Creedmoor,Fiocchi Hyperformance Hunt SST,129,2820,0.485,40.3,2.16,,catalog,,,Hunting
 6.5 Creedmoor,Hornady American Whitetail InterLock,129,2820,0.452,40.3,1.50,,catalog,,24,Hunting
@@ -717,6 +718,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 7mm-08 Remington,Winchester Power-Point,140,2800,0.360,45,1.75,,catalog,,24,Hunting
 7mm-08 Remington,Nosler Trophy Grade AccuBond,140,2825,0.486,45.8,2.72,,partial,,24,Hunting
 7mm-08 Remington,PPU Pointed Soft Point Boat Tail,140,2854,0.390,46.7,1.25,,partial,,24,Hunting
+7mm-08 Remington,Buffalo Bore Barnes TTSX (lead-free),140,2850,0.452,46.6,3.16,,partial,,,Hunting
 7mm-08 Remington,Federal Power-Shok SP,150,2650,0.420,43.2,1.75,,catalog,,24,Hunting
 7mm-08 Remington,Hornady Precision Hunter ELD-X,150,2770,0.586,47.2,2.25,,catalog,,24,Match
 .30 Carbine,Hornady Critical Defense FTX,110,2000,0.181,18.5,1.08,yes,catalog,,20,Defense
@@ -925,6 +927,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .300 Blackout,Winchester USA Open Tip (subsonic),200,1060,0.269,7.4,0.93,,catalog,,16,Subsonic
 .300 Blackout,Winchester USA Valor Open Tip (subsonic),200,1060,0.269,7.4,0.93,,catalog,,16,Subsonic
 .300 Blackout,Sellier & Bellot FMJ Subsonic,200,1060,0.563,7.4,0.90,,partial,,24,Subsonic
+.300 Blackout,Barnes Suppressor Series Sierra GameKing (subsonic),205,1060,0.525,7.6,1.50,,partial,,,Subsonic
 .300 Blackout,Hornady BLACK A-MAX (subsonic),208,1020,0.658,7.1,1.60,,catalog,,16,Subsonic
 .300 Blackout,Hornady FMJ (subsonic),208,1025,0.586,7.2,0.90,,catalog,,16,Subsonic
 .300 Blackout,Federal American Eagle OTM subsonic,220,1000,0.669,7.3,1.85,,catalog,,16,Subsonic
@@ -1234,6 +1237,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .308 Winchester,Lapua Subsonic FMJBT,200,1066,0.518,8.0,3.17,,published,,16,Subsonic
 7.62x51mm NATO,PPU 7.62x51mm Subsonic FMJ Boat Tail,200,1050,0.518,7.8,1.34,,partial,,24,Subsonic
 .308 Winchester,Federal Subsonic Target Hollow Point,205,1000,0.480,7.2,2.33,,published,,24,Subsonic
+.308 Winchester,Remington Subsonic Hollow Point,205,1050,0.480,7.9,2.50,,partial,,,Subsonic
 .308 Winchester,PPU FMJ Boat Tail,220,2362,0.570,43.1,0.86,,partial,,24,Target
 7.62x39mm,Hornady BLACK MonoFlex,111,2350,0.178,23.5,1.85,,catalog,,24,Hunting
 7.62x39mm,Winchester Defender,120,2365,0.248,25.7,1.13,,catalog,,24,Defense
@@ -1352,6 +1356,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .350 Legend,Winchester Power-Point,180,2100,0.221,35,1.37,,catalog,,20,Hunting
 .350 Legend,Hornady Subsonic SUB-X,250,1050,0.270,12.1,2.02,,catalog,,24,Subsonic
 .350 Legend,Winchester Super Suppressed Open Tip (subsonic),255,1060,0.221,12.6,1.00,,catalog,,16,Subsonic
+.357 Magnum,Winchester American Lever Range FMJ,130,1605,0.140,10.9,0.71,,partial,,,Target
 .357 Magnum,Winchester Big Bore Jacketed Soft Point,158,1830,0.167,17.2,0.71,,catalog,,20,Hunting
 .357 Magnum,Winchester Super-X Jacketed Soft Point,158,1830,0.163,17.2,0.62,yes,catalog,,20,Hunting
 .357 Magnum,Federal Premium Hammerdown Revolver Carbine Bonded Soft Point,170,1610,0.188,14.3,1.46,,catalog,,20,Hunting
@@ -1381,17 +1386,23 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 9.3x62mm,Hornady Dangerous Game InterLock SP-RP,286,2360,0.407,67.0,3.05,yes,catalog,,24,Hunting
 9.3x62mm,Federal Premium Barnes Triple-Shock X,250,2400,0.361,53.3,4.19,,catalog,,24,Hunting
 9.3x62mm,PPU Soft Point,250,2428,0.297,54.6,2.04,,partial,,24,Hunting
+9.3x62mm,Buffalo Bore Barnes TSX (lead-free),250,2650,0.361,65.0,4.10,,partial,,,Hunting
 9.3x62mm,Lapua Mega Soft Point,285,2265,0.339,61.5,6.90,,published,,24,Hunting
 9.3x62mm,PPU Soft Point,285,2264,0.339,61.4,2.04,,partial,,24,Hunting
 9.3x62mm,Federal Premium Safari Swift A-Frame,286,2360,0.385,59.0,4.19,,catalog,,24,Hunting
 9.3x62mm,Federal Premium Safari Woodleigh Hydro,286,2360,0.260,59.0,4.19,,catalog,,24,Hunting
 9.3x62mm,Sellier & Bellot Soft Point,286,2280,0.340,62.5,2.77,,partial,,24,Hunting
+9.3x62mm,Buffalo Bore Spitzer Soft Point,286,2450,0.340,72.2,3.75,,partial,,,Hunting
+9.3x62mm,Buffalo Bore Penetrator Solid,300,2380,0.427,71.5,4.10,,partial,,,Hunting
+.375 H&H Magnum,Buffalo Bore Supercharged Barnes TSX (lead-free),235,2950,0.406,86.1,6.47,,partial,,,Hunting
 .375 H&H Magnum,Hornady Outfitter CX,250,2700,0.411,76.7,6.36,,catalog,,24,Hunting
 .375 H&H Magnum,Hornady Dangerous Game InterLock SP-RP SPF,270,2800,0.386,89.1,4.24,yes,catalog,,24,Hunting
 .375 H&H Magnum,Hornady Dangerous Game DGS,300,2530,0.279,80.8,4.24,,catalog,,24,Hunting
 .375 H&H Magnum,Hornady Dangerous Game DGX Bonded,300,2530,0.279,80.8,6.36,,catalog,,24,Hunting
 .375 H&H Magnum,Federal Power-Shok SP,270,2690,0.328,72.3,4.05,,catalog,,24,Hunting
 .375 H&H Magnum,Remington Core-Lokt Soft Point,270,2690,0.267,72.3,4.46,,catalog,,24,Hunting
+.375 H&H Magnum,Buffalo Bore Supercharged Barnes TSX (lead-free),270,2750,0.466,85.9,6.83,,partial,,,Hunting
+.375 H&H Magnum,Buffalo Bore Dangerous Game Lehigh Defense Solid (lead-free),270,2750,0.386,85.9,6.83,,partial,,,Hunting
 .375 H&H Magnum,Federal Power-Shok SP,300,2530,0.328,71.1,4.05,,catalog,,24,Hunting
 .375 H&H Magnum,Federal Premium Safari Swift A-Frame,300,2450,0.325,66.7,7.28,,catalog,,24,Hunting
 .375 H&H Magnum,Federal Premium Safari Trophy Bonded Bear Claw,300,2400,0.342,64.0,7.28,,catalog,,24,Hunting
@@ -1399,11 +1410,16 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .375 H&H Magnum,Federal Premium Safari Woodleigh Hydro,300,2500,0.260,69.4,7.28,,catalog,,24,Hunting
 .375 H&H Magnum,PPU FMJ Round Nose,300,2543,0.279,81.6,2.79,,partial,,24,Target
 .375 H&H Magnum,PPU Soft Point Round Nose,300,2543,0.297,81.6,2.79,,partial,,24,Hunting
+.375 H&H Magnum,Buffalo Bore Supercharged Barnes TSX (lead-free),300,2550,0.518,82.1,6.83,,partial,,,Hunting
 .375 Ruger,Hornady Outfitter CX,250,2800,0.410,82.5,5.86,,catalog,,24,Hunting
 .375 Ruger,Hornady Dangerous Game InterLock SP-RP,270,2840,0.386,91.7,3.90,yes,catalog,,24,Hunting
+.375 Ruger,Buffalo Bore Dangerous Game Barnes TSX (lead-free),270,2750,0.466,86.0,6.83,,partial,,,Hunting
+.375 Ruger,Buffalo Bore Dangerous Game Solid Mono-Metal,270,2750,0.386,86.0,6.83,,partial,,,Hunting
 .375 Ruger,Hornady Dangerous Game DGS,300,2660,0.279,89.3,3.90,,catalog,,24,Hunting
 .375 Ruger,Hornady Dangerous Game DGX Bonded,300,2660,0.279,89.3,5.86,,catalog,,24,Hunting
+.375 Ruger,Buffalo Bore Dangerous Game Barnes TSX (lead-free),300,2600,0.518,85.3,6.83,,partial,,,Hunting
 .38-55 Winchester,Winchester Super-X Power-Point,255,1320,0.354,16,2.75,yes,catalog,,,Hunting
+.38-55 Winchester,Buffalo Bore Heavy JFN Bonded Core,255,1950,0.245,34.9,4.29,,partial,,,Hunting
 .416 Remington Magnum,Hornady Dangerous Game DGS,400,2400,0.324,97.0,6.36,,catalog,,24,Hunting
 .416 Remington Magnum,Hornady Dangerous Game DGX Bonded,400,2400,0.324,97.0,9.55,yes,catalog,,24,Hunting
 .416 Remington Magnum,Federal Premium Safari Swift A-Frame,400,2400,0.367,85.3,10.93,,catalog,,24,Hunting
@@ -1412,22 +1428,30 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .44 Magnum,Hornady LEVERevolution FTX (rifle barrel),225,1850,0.147,22,1.60,,approx,,,Hunting
 .44 Magnum,Federal Premium Hammerdown Revolver Carbine Bonded Soft Point,270,1715,0.196,23.2,1.75,,catalog,,20,Hunting
 .44 Magnum,Winchester Big Bore Jacketed Soft Point,240,1765,0.167,21.9,1.18,yes,catalog,,20,Hunting
+.44 Magnum,Winchester American Lever Range JSP,240,1750,0.157,21.5,1.68,,partial,,,Target
 .44 Magnum,Buffalo Bore Lever Gun JFN,265,1700,0.195,22.4,2.68,,partial,,,Hunting
 .444 Marlin,Remington Soft Point,240,2350,0.146,45,2.66,,catalog,,,Hunting
 .444 Marlin,Hornady LEVERevolution FTX,265,2325,0.229,48.6,2.73,yes,catalog,,24,Hunting
 .444 Marlin,Hornady Superformance InterLock FP,265,2400,0.192,51.8,2.73,,catalog,,24,Hunting
 .444 Marlin,Federal Premium Hammerdown Bonded Hollow Point,270,2250,0.193,46.4,3.62,,catalog,,24,Hunting
+.444 Marlin,Buffalo Bore Heavy JFN,270,2250,0.233,46.4,4.16,,partial,,,Hunting
 .444 Marlin,Remington Core-Lokt Tipped,280,2100,0.177,41.9,2.66,,catalog,,,Hunting
+.444 Marlin,Buffalo Bore Heavy JFN,300,2150,0.259,47.1,4.16,,partial,,,Hunting
+.444 Marlin,Buffalo Bore Heavy LFN-GC,335,2025,0.247,46.7,4.31,,partial,,,Hunting
 .450 Bushmaster,Hornady American Whitetail InterLock,245,2200,0.168,44.1,2.21,,catalog,,20,Hunting
 .450 Bushmaster,Hornady American Whitetail FTX,250,2200,0.214,45,2.54,,catalog,,20,Hunting
 .450 Bushmaster,Hornady BLACK FTX,250,2200,0.214,45,2.54,,catalog,,20,Hunting
 .450 Bushmaster,Winchester Deer Season XP Extreme Point,250,2200,0.210,45,2.23,yes,catalog,,24,Hunting
+.450 Bushmaster,Buffalo Bore JHP,250,2250,0.166,47.1,3.39,,partial,,,Hunting
 .450 Bushmaster,Federal Fusion,260,2200,0.183,46.8,2.24,,catalog,,24,Hunting
 .450 Bushmaster,Remington Premier AccuTip,260,2130,0.144,43.9,2.47,,catalog,,,Hunting
 .450 Bushmaster,Remington Soft Point,260,2150,0.161,44.7,2.47,,catalog,,,Hunting
 .450 Bushmaster,Remington UMC Full Metal Jacket,260,2040,0.186,40.2,1.68,,catalog,,,Target
 .450 Bushmaster,Winchester Power-Point,260,2110,0.191,43,2.23,,catalog,,24,Hunting
+.450 Bushmaster,Buffalo Bore Barnes XPB (lead-free),275,2000,0.223,40.9,4.05,,partial,,,Hunting
 .450 Bushmaster,Federal Power-Shok SP,300,1900,0.237,40.3,2.24,,catalog,,24,Hunting
+.450 Bushmaster,Buffalo Bore JHP,300,1950,0.199,42.4,3.39,,partial,,,Hunting
+.450 Bushmaster,Buffalo Bore Hard Cast FN-GC,360,1700,0.279,38.7,3.69,,partial,,,Hunting
 .450 Bushmaster,Hornady Subsonic SUB-X,395,1050,0.306,16.2,3.31,,catalog,,20,Subsonic
 .45-70 Government,Hornady LEVERevolution MonoFlex,250,2025,0.178,43.1,2.60,,catalog,,24,Hunting
 .45-70 Government,Hornady LEVERevolution FTX,325,2000,0.234,54.7,2.20,yes,catalog,,24,Hunting
@@ -1446,9 +1470,14 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45-70 Government,Federal Subsonic Fusion Soft Point,300,1000,0.290,11.1,2.95,,published,,24,Subsonic
 .45-70 Government,Federal Subsonic Target Soft Point,300,1000,0.290,11.1,2.14,,published,,24,Subsonic
 .45-70 Government,Buffalo Bore Low Recoil Standard Pressure JHP,300,2000,0.295,44.5,3.49,,partial,,24,Hunting
+.45-70 Government,Buffalo Bore Barnes TSX-FN +P (lead-free),300,2350,0.188,61.4,5.17,,partial,,,Hunting
+.45-70 Government,Winchester American Lever Range JHP,300,1880,0.283,39.3,2.11,,published,,,Target
+.45-70 Government,Remington Subsonic Bonded Hollow Point,300,1000,0.295,11.1,3.00,,partial,,,Subsonic
 .45-70 Government,Black Hills HoneyBadger,325,1775,0.204,43.1,4.50,,partial,,24,Hunting
 .45-70 Government,Buffalo Bore Magnum Lever Gun JFN,350,2150,0.252,68.1,4.00,,partial,,24,Hunting
 .45-70 Government,Buffalo Bore Low Recoil Standard Pressure JFN,350,1800,0.252,47.7,4.31,,partial,,,Hunting
+.45-70 Government,Buffalo Bore Barnes TSX-FN +P (lead-free),350,2150,0.220,68.1,5.17,,partial,,,Hunting
+.45-70 Government,Buffalo Bore Single Shot & Bolt Action Barnes TSX Spitzer (lead-free),350,2150,0.220,68.1,5.17,,partial,,,Hunting
 .45-70 Government,Buffalo Bore Dangerous Game Mono-Metal WFN,380,2075,0.263,60.6,4.18,,partial,,24,Hunting
 .45-70 Government,Barnes Pioneer,400,1715,0.246,43.6,2.90,,published,,24,Hunting
 .45-70 Government,Fiocchi Cowboy Action LRNFP,405,1185,0.281,21.1,2.11,,partial,,,Target
@@ -1459,11 +1488,14 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45-70 Government,PPU Semi-Jacketed Flat Point,405,1329,0.280,26.5,1.56,,partial,,24,Hunting
 .45-70 Government,Buffalo Bore Magnum Lever Gun JFN,405,2000,0.280,60.1,4.00,,partial,,24,Hunting
 .45-70 Government,Buffalo Bore Low Recoil Standard Pressure JFN,405,1625,0.280,39.7,4.31,,partial,,,Hunting
+.45-70 Government,Buffalo Bore JFN (black powder equivalent),405,1300,0.280,25.4,4.31,,partial,,,Hunting
 .45-70 Government,"Buffalo Bore Hard Cast FN (+P, modern rifles only)",430,1920,0.304,58.7,4.26,,partial,,22,Hunting
 .45-70 Government,Buffalo Bore Low Recoil Standard Pressure LBT-LFN,430,1550,0.304,38.3,3.57,,partial,,24,Hunting
 .45-70 Government,Buffalo Bore Hard Cast GC (black powder equivalent),440,1300,0.311,27.5,4.26,,partial,,,Hunting
 .45-70 Government,"Buffalo Bore FMJ FN (+P, modern rifles only)",500,1625,0.354,48.9,4.26,,partial,,,Hunting
 .45-70 Government,Buffalo Bore Hard Cast Plain Base (black powder equivalent),500,1250,0.354,28.9,4.26,,partial,,,Hunting
+.458 Lott,Buffalo Bore Dangerous Game Barnes TSX (lead-free),450,2350,0.291,104.6,7.26,,partial,,,Hunting
+.458 Lott,Buffalo Bore Dangerous Game Solid Mono-Metal,450,2350,0.270,104.6,7.26,,partial,,,Hunting
 .458 Lott,Hornady Dangerous Game DGS,500,2300,0.300,111.3,7.64,,catalog,,24,Hunting
 .458 Lott,Hornady Dangerous Game DGX Bonded,500,2300,0.300,111.3,11.46,yes,catalog,,24,Hunting
 .458 Lott,Federal Premium Safari Trophy Bonded Bear Claw,500,2300,0.282,97.9,13.11,,catalog,,24,Hunting
