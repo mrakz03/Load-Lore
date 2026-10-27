@@ -97,6 +97,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), Handloads, Settings; the PC sidebar (NAV_ORDER; web: CSS order at >=900 px, Oct 25) has
   the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
+- PC web load list (Oct 27 2026, Zeke): at >=900 px the dictionary's load list (#lres) is one table like
+  the desktop app's (.lhead / .trow on a CSS subgrid, columns fit their figures, same columns as LoadsView;
+  sortable headers set the #ls sort). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
 - PC Home, category list and Settings (Oct 25 2026, Zeke): top left, compact cards in one column (icon beside the text), zoomed
   with the window up to 1.15x (desktop App._menu_layout / _zoomed, re-laid out on resize; web
   fitMenu sets CSS zoom at >=900 px). Phones keep their centred layout.
