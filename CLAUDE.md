@@ -165,6 +165,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
 (tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
 - APP_VERSION in load_lore.py stays "dev" in the repo; CI sets it from the tag.
+- Web version on GitHub Pages (Oct 27 2026, .github/workflows/pages.yml): every push to main runs
+  build_web.py and deploys web/www (version = newest v* tag). Needs Settings > Pages > Source: GitHub
+  Actions. A custom domain is set in Settings > Pages (no CNAME file with an Actions deploy).
 - Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the maintainer saves
   the middle number (v1.6) for bigger releases.
 - Installers upgrade in place and clear old shipped data (ammo_*, loads_*, bullets.csv) first.
