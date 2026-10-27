@@ -4471,7 +4471,7 @@ class HeadToHeadView:
         self.add_link = tk.Label(card, text=f"+  Add a load (up to {H2H_MAX})", bg=SURFACE,
                                  fg=ACCENT, font=a.f(10, True), cursor="hand2")
         self.add_link.grid(row=2, column=0, sticky="w", pady=(8, 0), **pad)
-        self.add_link.bind("<Button-1>", lambda e: self._add_slot(focus=True))
+        self.add_link.bind("<Button-1>", lambda e: self._add_slot(empty=True))
 
         top = tk.Frame(card, bg=SURFACE)
         top.grid(row=3, column=0, sticky="ew", pady=(a.px(12), 0), **pad)
@@ -4493,7 +4493,9 @@ class HeadToHeadView:
                                 wraplength=a.px(880))
         self.footnote.grid(row=3, column=0, sticky="w", pady=(10, 0))
 
-    def _add_slot(self, item=None, icat=None, focus=False):
+    def _add_slot(self, item=None, icat=None, empty=False):
+        # empty: "+ Add a load" gives a blank row and opens nothing (Zeke: it used to copy the
+        # last row's cartridge and jump into the load box)
         if len(self.slots) >= H2H_MAX:
             return
         a = self.app
@@ -4503,6 +4505,9 @@ class HeadToHeadView:
         if item is not None:
             slot["load"].set(next(t for t, x in self.choices[(icat.title, item.cartridge)].items()
                                   if x is item))
+        elif empty:
+            if self.slots:
+                slot["cat"].set(self.slots[-1]["cat"].get())
         elif self.slots:                          # a new row starts on the last row's cartridge
             slot["cat"].set(self.slots[-1]["cat"].get())
             slot["cart"].set(self.slots[-1]["cart"].get())
@@ -4536,8 +4541,6 @@ class HeadToHeadView:
         self.slots.append(slot)
         self._fill_loads(slot)
         self._layout_slots()
-        if focus:
-            slot["load_box" if slot["cart"].get() else "cart_box"].focus_set()
 
     def _fill_loads(self, slot):
         # the cartridge pop-up lists every category's cartridges under its heading, the row's
