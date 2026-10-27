@@ -450,7 +450,7 @@ GUN_LB = {     # per category: the same cartridge can be in a rifle and a handgu
         ".375 Ruger": 9.5},
     "Handgun": {
         ".500 S&W Magnum": 4.5, ".460 S&W Magnum": 4.5, ".50 AE": 4.5, ".454 Casull": 3.5,
-        ".480 Ruger": 3.5, ".44 Magnum": 3.0},
+        ".480 Ruger": 3.5, ".44 Magnum": 3.0, "4.6x30mm": 4.5},
     "Shotgun": {"10 Gauge": 10.0},
 }
 GUN_LB_MAX = 60.0
@@ -554,6 +554,7 @@ DIAMETERS = {
     ".460 S&W Magnum": 0.452,
     ".480 Ruger": 0.475,
     "5.7x28mm": 0.224,
+    "4.6x30mm": 0.183,
     ".50 AE": 0.5,
     ".500 S&W Magnum": 0.5,
     "9x18mm Makarov": 0.365,

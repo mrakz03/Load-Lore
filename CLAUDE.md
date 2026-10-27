@@ -227,6 +227,12 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   matched loads of the same product line, else the same brand + old price in that cartridge, else a
   fitted cartridge x brand ratio (0.33-3x). ELEY kept. Each load's old/new price and method is in
   research/price_sources.tsv. Shotshells match by brand, line, length, payload / buck size.
+- Oct 27 2026 gap fill: Buffalo Bore read cartridge by cartridge from buffalobore.com's category pages
+  (index.php?l=product_list&c=N; c=146 handgun / c=147 rifle list them): 170+ loads, every cartridge the app has
+  (the Sniper .223 loads are left out: their velocities are only in chart images). Federal's two .22 Creedmoor
+  loads, Federal +Peak Barnes LRX, Winchester American Lever Range, Remington and Barnes subsonics. New cartridge
+  4.6x30mm (Handgun category next to 5.7x28mm, 0.183 in, GUN_LB 4.5 lb for the MP7): Hornady BLACK V-MAX and
+  Fiocchi FMJ / JSP / Hyperformance. bullets.csv has no .183 bullet. Rows and sources in added_loads_sources.tsv.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
