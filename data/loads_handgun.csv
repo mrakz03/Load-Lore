@@ -29,6 +29,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 5.7x28mm,Federal American Eagle TMJ,40,1655,0.137,3.4,0.60,,partial,,5,Target
 5.7x28mm,Speer Gold Dot Personal Protection GDHP,40,1800,0.108,4.1,1.48,,partial,,5,Defense
 5.7x28mm,Fiocchi Subsonic FMJ,62,1050,0.146,2.5,1.11,,partial,,,Subsonic
+4.6x30mm,Hornady BLACK V-MAX,38,2100,0.227,5.2,0.79,yes,published,,7,Target
+4.6x30mm,Fiocchi Range Dynamics FMJ,40,1900,0.215,4.5,0.82,,partial,,,Target
+4.6x30mm,Fiocchi Defense Dynamics JSP,40,1900,0.215,4.5,0.80,,published,,,Defense
 .25 ACP,Hornady Critical Defense FTX,35,900,0.067,1,1.12,,catalog,,2,Defense
 .25 ACP,Hornady Custom XTP,35,900,0.074,1,1.06,,catalog,,2,Defense
 .25 ACP,Speer Gold Dot Personal Protection Hollow Point,35,900,0.075,1,1.35,,partial,,,Defense
@@ -40,6 +43,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .25 ACP,Remington UMC Full Metal Jacket,50,760,0.088,1,0.41,,catalog,,2,Target
 .25 ACP,Winchester USA Full Metal Jacket,50,760,0.092,1,0.54,,catalog,,2,Target
 .25 ACP,PPU FMJ,50,771,0.113,1.0,0.44,,partial,,2.0,Target
+.25 ACP,Buffalo Bore FMJ-RN,50,875,0.113,1.3,1.73,,partial,,,Defense
+.25 ACP,Buffalo Bore Hard Cast FN,60,850,0.129,1.5,1.73,,partial,,,Defense
 7.62x25mm Tokarev,Fiocchi Heritage FMJ,85,1525,0.121,7.3,0.54,,partial,,,Target
 7.62x25mm Tokarev,Winchester USA Full Metal Jacket,85,1645,0.121,8.5,0.49,,partial,,,Target
 7.62x25mm Tokarev,Sellier & Bellot FMJ,85,1857,0.121,10.8,0.54,,partial,,,Target
@@ -50,6 +55,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .32 ACP,Hornady Custom XTP,60,1000,0.092,1.9,1.12,,catalog,,4,Defense
 .32 ACP,PMC Bronze Jacketed Hollow Point,60,980,0.063,1.8,1.46,,catalog,,,Defense
 .32 ACP,Winchester Silvertip Plated JHP,60,970,0.108,1.7,1.41,,catalog,,4,Defense
+.32 ACP,Buffalo Bore Barnes TAC-XP +P (lead-free),60,1150,0.084,2.4,1.94,,partial,,,Defense
 .32 ACP,Federal Premium Personal Defense Hydra-Shok,65,925,0.113,1.7,1.74,,catalog,,4,Defense
 .32 ACP,Federal Premium Personal Defense Hydra-Shok Deep,68,1000,0.093,2.1,1.74,,catalog,,4,Defense
 .32 ACP,CCI Blazer Aluminum FMJ,71,900,0.114,1.8,0.56,yes,catalog,,4,Target
@@ -60,6 +66,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .32 ACP,PPU FMJ,71,902,0.114,1.8,0.30,,partial,,4.0,Target
 .32 ACP,PPU JHP,71,902,0.099,1.8,1.01,,partial,,4.0,Defense
 .32 ACP,Fiocchi Range Dynamics FMJ,73,1000,0.102,2.3,0.41,,partial,,,Target
+.32 ACP,Buffalo Bore Hard Cast FN +P,75,1150,0.103,3.1,1.73,,partial,,,Defense
 .32 H&R Magnum,Federal American Eagle JSP,85,975,0.123,3,0.62,yes,catalog,,4,Hunting
 .32 H&R Magnum,Federal Personal Defense Revolver JHP,85,1120,0.140,3.9,2.36,,catalog,,5,Defense
 .32 H&R Magnum,Federal Premium Personal Defense Hydra-Shok Deep,85,1025,0.148,3.3,2.36,,catalog,,4,Defense
@@ -67,20 +74,27 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .32 H&R Magnum,Black Hills Jacketed Hollow Point,85,1050,0.140,3.5,1.10,,partial,,5.5,Defense
 .32 H&R Magnum,Federal Champion LSW,95,980,0.103,3.4,1.45,,catalog,,4,Target
 .32 H&R Magnum,Remington Performance Wheelgun Lead Semi-Wadcutter,95,1020,0.140,3.6,1.40,,catalog,,5,Match
+.32 H&R Magnum,Buffalo Bore Hard Cast Wadcutter,100,1050,0.108,4.1,1.92,,partial,,,Defense
+.32 H&R Magnum,Buffalo Bore JHP +P,100,1300,0.165,6.3,1.92,,partial,,,Defense
+.32 H&R Magnum,Buffalo Bore Outdoorsman Hard Cast Keith +P,130,1125,0.181,6.1,1.92,,partial,,,Hunting
 .32 S&W Long,Fiocchi Range Dynamics FMJ,97,800,0.118,2.3,0.56,,partial,,,Target
 .32 S&W Long,Fiocchi Heritage LFP,97,800,0.118,2.3,0.56,,partial,,,Target
 .32 S&W Long,Remington Performance Wheelgun Lead Round Nose,98,705,0.119,1.8,0.56,,catalog,,4,Target
 .32 S&W Long,PPU Lead Round Nose,98,787,0.119,2.2,0.58,,partial,,5.3,Target
 .32 S&W Long,PPU Wadcutter,98,738,0.119,2.0,0.58,,partial,,5.3,Target
 .32 S&W Long,Fiocchi Heritage LWC,100,730,0.121,2.0,0.90,,partial,,,Target
+.32 S&W Long,Buffalo Bore Hard Cast Wadcutter,100,900,0.121,3.0,1.73,,partial,,,Defense
+.32 S&W Long,Buffalo Bore Hard Cast FN,115,800,0.139,2.8,1.73,,partial,,,Defense
 .327 Federal Magnum,Hornady Critical Defense FTX,80,1475,0.138,5.5,1.52,yes,catalog,,5,Defense
 .327 Federal Magnum,Federal American Eagle JSP,85,1400,0.143,6.2,1.70,,catalog,,4,Target
 .327 Federal Magnum,Federal Premium Personal Defense Hydra-Shok,85,1400,0.143,6.2,1.60,,catalog,,4,Defense
 .327 Federal Magnum,Federal American Eagle JSP,100,1500,0.163,8.3,1.70,,catalog,,4,Target
 .327 Federal Magnum,Federal Premium Swift A-Frame,100,1500,0.168,8.3,2.15,,catalog,,4,Hunting
 .327 Federal Magnum,Remington UMC Jacketed Soft Point,100,1500,0.160,8.3,0.88,,catalog,,4,Target
+.327 Federal Magnum,Buffalo Bore JHP,100,1450,0.139,7.8,2.01,,partial,,,Defense
 .327 Federal Magnum,Federal Premium Personal Defense HST,104,1525,0.160,8.9,1.60,,partial,,4,Defense
 .327 Federal Magnum,Federal Premium Hammerdown Revolver Carbine Bonded Hollow Point,127,1650,0.198,12.8,1.70,,catalog,,20,Hunting
+.327 Federal Magnum,Buffalo Bore Outdoorsman Hard Cast Keith,130,1300,0.181,8.1,2.01,,partial,,,Hunting
 .357 SIG,Hornady Critical Duty FlexLock,135,1225,0.173,6.4,1.70,yes,catalog,,4,Defense
 .357 SIG,Hornady Custom XTP,147,1225,0.214,7.0,1.50,,catalog,,4,Defense
 .357 SIG,Fiocchi Range Dynamics FMJ,124,1350,0.109,8.4,1.05,,partial,,,Target
@@ -96,16 +110,22 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 SIG,Buffalo Bore Low Flash JHP,125,1425,0.118,9.4,1.33,,partial,,,Defense
 .357 SIG,Buffalo Bore Low Flash FMJ-FN,125,1425,0.153,9.4,1.33,,partial,,,Target
 .38 Super,Federal American Eagle JHP,115,1130,0.123,5.4,0.87,,catalog,,5,Defense
+.38 Super,Buffalo Bore JHP +P,115,1450,0.123,8.9,1.92,,partial,,,Defense
+.38 Super,Buffalo Bore Barnes TAC-XP +P (lead-free),115,1450,0.124,8.9,2.46,,partial,,,Defense
+.38 Super,Buffalo Bore JHP +P,124,1350,0.151,8.3,1.92,,partial,,,Defense
+.38 Super,Buffalo Bore FMJ-FN +P,124,1350,0.151,8.3,1.92,,partial,,,Target
 .38 Super,Winchester Silvertip Plated JHP,125,1240,0.152,7.1,1.28,,partial,,,Defense
 .38 Super,Fiocchi Range Dynamics FMJ,129,1150,0.157,6.3,0.79,,partial,,,Target
 .38 Super,Remington UMC Full Metal Jacket +P,130,1215,0.158,7.1,0.79,,catalog,,4,Target
 .38 Super,Winchester USA Full Metal Jacket,130,1215,0.158,7.1,0.71,,partial,,,Target
 .38 Super,PMC Bronze Full Metal Jacket +P,130,1100,0.158,5.8,0.73,,partial,,,Target
 .38 Super,PPU FMJ +P,130,1214,0.158,7.1,0.57,,partial,,5.0,Target
+.38 Super,Buffalo Bore JHP +P,147,1150,0.179,7.2,1.92,,partial,,,Defense
 .380 ACP,Black Hills HoneyBadger,60,1150,0.065,2.3,1.80,,partial,,3.25,Defense
 .380 ACP,Federal American Eagle IRT Lead Free RHT,70,1110,0.094,2.5,0.44,,catalog,,3.75,Target
 .380 ACP,Sellier & Bellot XRG Defense,77,1115,0.103,2.8,1.07,,partial,,,Defense
 .380 ACP,SIG Sauer Legion TAC-XP HP,80,1110,0.107,2.9,1.14,,published,,3.75,Defense
+.380 ACP,Buffalo Bore Barnes TAC-XP +P (lead-free),80,1275,0.107,3.8,2.01,,partial,,,Defense
 .380 ACP,Federal Personal Defense Punch JHP,85,1000,0.093,2.5,1.62,,catalog,,3.75,Defense
 .380 ACP,Federal Train+Protect JHP,85,1000,0.103,2.5,1.62,,catalog,,3.75,Defense
 .380 ACP,Winchester Silvertip Plated JHP,85,1000,0.115,2.5,0.93,,catalog,,3.75,Defense
@@ -120,6 +140,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .380 ACP,SIG Sauer 365 Elite V-Crown JHP,90,980,0.148,2.5,1.14,,published,,3.75,Defense
 .380 ACP,Black Hills Jacketed Hollow Point,90,950,0.097,2.3,1.62,,partial,,3.25,Defense
 .380 ACP,Underwood Xtreme Penetrator,90,1100,0.120,3.1,1.52,,published,,,Defense
+.380 ACP,Buffalo Bore JHP +P,90,1200,0.097,3.7,1.73,,partial,,,Defense
+.380 ACP,Buffalo Bore JHP,90,1025,0.097,2.7,1.73,,partial,,,Defense
 .380 ACP,Sellier & Bellot FMJ,92,955,0.134,2.4,0.27,,partial,,,Target
 .380 ACP,PPU FMJ,94,951,0.133,2.5,0.35,,partial,,3.7,Target
 .380 ACP,PPU JHP,94,951,0.120,2.5,0.52,,partial,,3.7,Defense
@@ -136,11 +158,16 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .380 ACP,Winchester USA Full Metal Jacket Flat Nose,95,955,0.084,2.5,0.44,,catalog,,3.75,Target
 .380 ACP,Winchester USA Jacketed Hollow Point,95,955,0.122,2.5,1.32,,catalog,,3.75,Defense
 .380 ACP,Winchester WinClean Brass Enclosed Base,95,955,0.105,2.5,0.51,,catalog,,3.75,Target
+.380 ACP,Buffalo Bore JHP +P,95,1125,0.121,3.5,1.73,,partial,,,Defense
+.380 ACP,Buffalo Bore FMJ-FN +P,95,1150,0.134,3.7,1.73,,partial,,,Defense
+.380 ACP,Buffalo Bore FMJ-FN,95,975,0.134,2.7,1.73,,partial,,,Defense
 .380 ACP,CCI Blazer Brass HP JHP,98,920,0.123,2.4,1.61,,catalog,,3.75,Defense
 .380 ACP,Federal Premium Personal Defense HST,99,1030,0.122,3.1,1.50,,catalog,,3.75,Defense
 .380 ACP,Federal Premium Personal Defense Hydra-Shok Deep,99,975,0.093,2.7,1.50,,catalog,,3.75,Defense
 .380 ACP,SIG Sauer Elite Ball FMJ,100,910,0.141,2.4,0.51,,partial,,3.75,Target
 .380 ACP,Black Hills Full Metal Jacket,100,850,0.141,2.1,0.95,,partial,,3.25,Target
+.380 ACP,Buffalo Bore Hard Cast FN +P,100,1150,0.123,3.8,1.73,,partial,,,Defense
+.380 ACP,Buffalo Bore Hard Cast FN,100,975,0.123,2.8,1.73,,partial,,,Defense
 .380 ACP,Remington Golden Saber Brass Jacketed Hollow Point,102,940,0.148,2.6,1.40,,catalog,,4,Defense
 9mm Luger,Federal American Eagle IRT Lead Free RHT,70,1625,0.096,5.4,0.50,,catalog,,4,Target
 9mm Luger,Underwood Xtreme Defender,90,1400,0.087,5.2,1.35,,published,,,Defense
@@ -202,6 +229,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 9mm Luger,Buffalo Bore JHP +P+,115,1400,0.159,6.6,2.08,,partial,,,Defense
 9mm Luger,Buffalo Bore JHP +P,115,1300,0.159,5.7,2.08,,partial,,,Defense
 9mm Luger,Buffalo Bore Barnes TAC-XP +P+ (lead-free),115,1400,0.124,6.6,2.00,,partial,,,Defense
+9mm Luger,Buffalo Bore Controlled Fracture,115,1175,0.131,4.6,2.44,,partial,,,Defense
+9mm Luger,Buffalo Bore JHP,115,1175,0.159,4.6,1.66,,partial,,,Defense
 9mm Luger,CCI Blazer Brass FMJ RN,124,1090,0.170,4.3,0.30,,catalog,,4,Target
 9mm Luger,CCI Blazer Brass HP JHP,124,1100,0.180,4.4,1.26,,catalog,,4,Defense
 9mm Luger,Federal American Eagle FMJ,124,1150,0.154,4.8,0.30,,catalog,,4,Target
@@ -331,6 +360,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 Magnum,Buffalo Bore JHC,125,1700,0.153,20.2,1.50,,partial,,6,Defense
 .357 Magnum,Buffalo Bore Barnes XPB (lead-free),125,1650,0.164,19.0,1.89,,partial,,6,Defense
 .357 Magnum,Buffalo Bore Tactical Short Barrel Low Recoil JHP,125,1225,0.133,10.5,1.50,,partial,,6,Defense
+.357 Magnum,Buffalo Bore Controlled Fracture,125,1350,0.153,12.7,2.52,,partial,,,Defense
 .357 Magnum,Black Hills HoneyBadger,127,1365,0.167,13.2,2.10,,partial,,6,Defense
 .357 Magnum,Hornady Handgun Hunter MonoFlex,130,1250,0.143,11.4,1.52,,catalog,,8,Hunting
 .357 Magnum,Hornady Backcountry Defense DGH,135,1510,0.194,17.2,1.36,,catalog,,8,Defense
@@ -339,6 +369,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 Magnum,Federal Premium Hunting Handgun Barnes Expander,140,1400,0.184,15.3,1.90,,catalog,,6,Hunting
 .357 Magnum,Fiocchi Hyperformance Hunt Barnes XPB,140,1250,0.149,12.2,1.87,,partial,,,Defense
 .357 Magnum,Hornady LEVERevolution FTX,140,1440,0.172,16.2,1.36,,catalog,,8,Hunting
+.357 Magnum,Buffalo Bore Barnes XPB (lead-free),140,1550,0.184,18.8,2.52,,partial,,,Hunting
+.357 Magnum,Buffalo Bore Tactical Short Barrel Low Flash Barnes XPB (lead-free),140,1150,0.184,10.3,2.52,,partial,,,Defense
+.357 Magnum,Buffalo Bore Tactical Short Barrel Low Recoil JHP,140,1150,0.161,10.3,2.01,,partial,,,Defense
 .357 Magnum,Fiocchi Range Dynamics FMJTC,142,1420,0.151,16,0.49,,partial,,,Target
 .357 Magnum,Winchester Silvertip Plated JHP,145,1290,0.167,13.5,1.25,,catalog,,4,Defense
 .357 Magnum,Fiocchi Defense Dynamics JHP,148,1310,0.158,14.2,1.87,,partial,,,Defense
@@ -387,6 +420,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .38 Special,Remington HTP Semi-Jacketed Hollow Point +P,110,995,0.128,4,1.25,,catalog,,4,Defense
 .38 Special,Winchester Silvertip Plated JHP,110,945,0.150,3.6,1.00,,catalog,,4,Defense
 .38 Special,Sellier & Bellot XRG Defense,110,1115,0.123,4.9,2.10,,partial,,,Defense
+.38 Special,Buffalo Bore Barnes TAC-XP Short Barrel Low Flash (lead-free),110,1000,0.117,4.0,2.46,,partial,,,Defense
+.38 Special,Buffalo Bore Barnes TAC-XP +P Short Barrel Low Flash (lead-free),110,1125,0.117,5.0,2.46,,partial,,,Defense
 .38 Special,Federal Personal Defense Punch JHP +P,120,1000,0.096,4.4,1.15,,catalog,,4,Defense
 .38 Special,CCI Blazer Aluminum JHP +P [vented test barrel],125,945,0.132,4.1,1.61,,catalog,,4,Defense
 .38 Special,CCI Blazer Brass FMJ FN [vented test barrel],125,865,0.149,3.4,0.42,,catalog,,4,Target
@@ -405,6 +440,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .38 Special,SIG Sauer Elite V-Crown JHP +P,125,965,0.132,4.3,1.20,,partial,,7.7,Defense
 .38 Special,Black Hills Jacketed Hollow Point +P,125,1050,0.132,5.1,1.10,,partial,,6,Defense
 .38 Special,Buffalo Bore Low Velocity JHP +P,125,1050,0.132,5.1,1.73,,partial,,,Defense
+.38 Special,Buffalo Bore Short Barrel Low Flash JHP,125,900,0.132,3.7,1.92,,partial,,,Defense
 .38 Special,Federal Premium Personal Defense Hydra-Shok +P,129,950,0.175,4.2,1.40,,catalog,,4,Defense
 .38 Special,Federal American Eagle FMJ,130,890,0.174,3.7,0.56,,catalog,,4,Target
 .38 Special,Federal Champion FMJ,130,890,0.174,3.7,0.60,,catalog,,4,Target
@@ -425,6 +461,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .38 Special,Black Hills Match HBWC,148,700,0.118,2.7,0.66,,partial,,6,Match
 .38 Special,PPU Wadcutter,148,804,0.118,3.5,0.49,,partial,,7.7,Target
 .38 Special,Winchester USA Lead Round Nose,150,845,0.178,3.9,0.36,,catalog,,4,Target
+.38 Special,Buffalo Bore Short Barrel Low Flash Hard Cast Wadcutter,150,850,0.178,3.9,1.92,,partial,,,Defense
 .38 Special,CCI Blazer Aluminum FMJ +P [vented test barrel],158,850,0.177,4.2,0.42,,catalog,,4,Target
 .38 Special,CCI Blazer Aluminum LRN [vented test barrel],158,755,0.181,3.3,0.42,,catalog,,4,Target
 .38 Special,Federal American Eagle LRN,158,770,0.206,3.4,0.64,,catalog,,4,Target
@@ -453,12 +490,15 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .38 Special,PPU TMJ +P,158,886,0.181,4.6,0.49,,partial,,4.0,Target
 .38 Special,Buffalo Bore LSWCHP-GC +P,158,1000,0.148,5.8,1.73,,partial,,,Defense
 .38 Special,Buffalo Bore Outdoorsman Hard Cast Keith +P,158,1250,0.181,9.1,1.73,,partial,,,Hunting
+.38 Special,Buffalo Bore Short Barrel Low Flash Soft Lead SWC-HC,158,850,0.148,4.2,1.92,,partial,,,Defense
 9x18mm Makarov,PPU FMJ,93,1050,0.100,3.2,0.62,,partial,,3.9,Target
 9x18mm Makarov,Hornady Critical Defense FTX,95,1000,0.102,3.0,1.28,yes,catalog,,4,Defense
 9x18mm Makarov,Fiocchi Heritage FMJ,95,1020,0.102,3.7,0.86,,partial,,,Target
 9x18mm Makarov,Winchester USA Full Metal Jacket,95,1015,0.102,3.6,0.78,,partial,,,Target
 9x18mm Makarov,Sellier & Bellot FMJ,95,1017,0.102,3.1,0.42,,partial,,,Target
 9x18mm Makarov,PPU JHP,95,1017,0.097,3.1,0.83,,partial,,3.9,Defense
+9x18mm Makarov,Buffalo Bore JHP +P,95,1125,0.097,3.8,1.82,,partial,,,Defense
+9x18mm Makarov,Buffalo Bore Hard Cast FN +P,115,1000,0.117,3.6,1.82,,partial,,,Defense
 10mm Auto,Black Hills HoneyBadger,115,1600,0.098,9.8,2.10,,partial,,5,Defense
 10mm Auto,Sellier & Bellot XRG Defense,130,1362,0.110,8.1,1.00,,partial,,,Defense
 10mm Auto,Hornady Handgun Hunter MonoFlex,135,1315,0.103,7.8,1.90,,catalog,,5,Hunting
@@ -468,6 +508,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 10mm Auto,Hornady American Gunner XTP,155,1410,0.139,10.3,1.13,,catalog,,5,Hunting
 10mm Auto,Hornady Custom XTP,155,1410,0.139,10.3,1.40,,catalog,,5,Hunting
 10mm Auto,Buffalo Bore Barnes TAC-XP (lead-free),155,1350,0.131,9.5,2.36,,partial,,,Defense
+10mm Auto,Buffalo Bore Tactical Low Recoil JHP,155,1350,0.104,9.5,2.10,,partial,,,Defense
 10mm Auto,PMC Bronze Jacketed Hollow Point,170,1200,0.114,8.2,1.85,,catalog,,,Hunting
 10mm Auto,Winchester USA Ready Defense Hex-Vent JHP,170,1250,0.157,8.9,1.55,,catalog,,5,Defense
 10mm Auto,PPU Flat Point Jacketed,170,1115,0.159,7.1,0.37,,partial,,5.9,Target
@@ -524,12 +565,15 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 10mm Auto,Federal Syntech Range TSJ,205,1150,0.175,9.1,0.70,,catalog,,5,Target
 10mm Auto,Underwood Hard Cast Flat Nose,220,1200,0.188,10.6,1.35,,partial,,,Hunting
 10mm Auto,Buffalo Bore Outdoorsman Hard Cast FN,220,1200,0.188,10.6,1.86,,partial,,,Hunting
+10mm Auto,Buffalo Bore Tactical Low Recoil Hard Cast FN,220,1050,0.188,8.1,2.10,,partial,,,Hunting
 .40 S&W,Black Hills HoneyBadger,115,1325,0.098,5.6,1.95,,partial,,4.5,Defense
 .40 S&W,Winchester Super Clean Zinc FMJ,120,1250,0.127,5.2,0.41,,catalog,,4,Target
+.40 S&W,Buffalo Bore Barnes TAC-XP (lead-free),125,1425,0.107,7.0,2.46,,partial,,,Defense
 .40 S&W,Sellier & Bellot XRG Defense,130,1247,0.110,5.6,0.76,,partial,,,Defense
 .40 S&W,Hornady Handgun Hunter MonoFlex,135,1130,0.114,4.8,1.45,,partial,,4,Hunting
 .40 S&W,Black Hills Barnes TAC-XP,140,1150,0.119,5.2,1.45,,partial,,4.5,Defense
 .40 S&W,Underwood Xtreme Penetrator,140,1200,0.118,5.7,1.78,,partial,,,Defense
+.40 S&W,Buffalo Bore Barnes TAC-XP (lead-free),140,1300,0.119,6.6,2.46,,partial,,,Defense
 .40 S&W,Federal American Eagle FMJ,155,1160,0.134,5.8,0.50,,catalog,,4,Target
 .40 S&W,Hornady Custom XTP,155,1180,0.139,6,1.25,,catalog,,4,Defense
 .40 S&W,Remington HTP Jacketed Hollow Point,155,1205,0.163,6.3,1.25,,catalog,,4,Defense
@@ -609,13 +653,22 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .40 S&W,PPU Flat Point Jacketed,190,902,0.155,4.3,0.25,,partial,,4.0,Target
 .40 S&W,Federal Premium Hunting Handgun Solid Core,200,1000,0.206,5.6,1.65,,catalog,,4,Hunting
 .40 S&W,Nosler Defense Bonded JHP,200,900,0.202,4.5,2.17,,partial,,,Defense
+.40 S&W,Buffalo Bore Outdoorsman Hard Cast FN Low Flash,200,1000,0.170,5.6,1.92,,partial,,,Hunting
 .40 S&W,Federal Syntech Action Pistol TSJ,205,830,0.174,3.9,0.60,,catalog,,4,Target
+.41 Magnum,Buffalo Bore JHP,170,1650,0.137,14.7,2.68,,partial,,,Hunting
+.41 Magnum,Buffalo Bore Barnes XPB (lead-free),180,1550,0.145,13.7,3.38,,partial,,,Hunting
 .41 Magnum,Hornady LEVERevolution FTX,190,1620,0.168,15.8,1.55,yes,catalog,,10,Hunting
 .41 Magnum,Hornady Custom XTP,210,1545,0.186,15.8,3.36,,catalog,,10,Defense
 .41 Magnum,Federal Power-Shok JHP,210,1230,0.182,11.8,2.18,,catalog,,4,Hunting
 .41 Magnum,Remington HTP Semi-Jacketed Hollow Point,210,1240,0.180,12.0,2.62,,catalog,,4,Hunting
+.41 Magnum,Buffalo Bore JHP,210,1550,0.182,15.9,2.68,,partial,,,Hunting
+.41 Magnum,Buffalo Bore Outdoorsman Keith,230,1450,0.204,15.2,2.68,,partial,,,Hunting
+.41 Magnum,Buffalo Bore Outdoorsman LWN,265,1350,0.214,15.2,2.68,,partial,,,Hunting
+.44-40 Winchester,Buffalo Bore HP,185,1150,0.138,9.1,2.68,,partial,,,Hunting
+.44-40 Winchester,Buffalo Bore Hammer (lead-free),185,1120,0.149,8.6,3.17,,partial,,,Hunting
 .44-40 Winchester,Hornady Custom Cowboy,205,725,0.127,3.4,1.30,yes,catalog,,7,Target
 .44-40 Winchester,Winchester Power-Point,200,1190,0.161,10.5,1.06,,catalog,,24,Hunting
+.44-40 Winchester,Buffalo Bore Hard Cast,200,1050,0.161,8.2,2.68,,partial,,,Hunting
 .44-40 Winchester,Fiocchi Cowboy Action LRNFP,210,725,0.130,4.1,1.12,,partial,,,Target
 .44-40 Winchester,Winchester USA Lead,225,750,0.139,4.7,1.06,,partial,,,Target
 .44 Magnum,Black Hills HoneyBadger,160,1700,0.118,29.4,2.30,,partial,,6.5,Hunting
@@ -625,14 +678,19 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .44 Magnum,Remington UMC Jacketed Soft Point,180,1610,0.123,29.7,0.56,,catalog,,4,Hunting
 .44 Magnum,PPU Flat Point Jacketed,180,1804,0.155,37.3,0.41,,partial,,8.3,Target
 .44 Magnum,PPU JHP,180,1804,0.124,37.3,0.92,,partial,,8.3,Defense
+.44 Magnum,Buffalo Bore Anti-Personnel JHP,180,1500,0.124,25.8,2.68,,partial,,,Defense
+.44 Magnum,Buffalo Bore Anti-Personnel Medium Cast HP,180,1550,0.124,27.5,2.68,,partial,,,Defense
 .44 Magnum,Fiocchi Defense Dynamics SJHP,200,1475,0.147,27.7,2.14,,partial,,,Defense
 .44 Magnum,Hornady Custom XTP,200,1500,0.172,28.6,1.50,,catalog,,7,Hunting
 .44 Magnum,Hornady Handgun Hunter MonoFlex,200,1475,0.171,27.7,1.15,,catalog,,7,Hunting
+.44 Magnum,Buffalo Bore Barnes XPB (lead-free),200,1500,0.145,28.6,3.38,,partial,,,Hunting
+.44 Magnum,Buffalo Bore Anti-Personnel Hard Cast Wadcutter,200,1300,0.172,21.5,2.68,,partial,,,Defense
 .44 Magnum,Winchester Silvertip Plated JHP (hunting),210,1250,0.138,20.9,1.50,,catalog,,4,Hunting
 .44 Magnum,Underwood Xtreme Penetrator,220,1530,0.144,32.8,1.65,,partial,,6,Hunting
 .44 Magnum,Federal Premium Hunting Handgun Barnes Expander,225,1280,0.163,23.5,2.50,,catalog,,6,Hunting
 .44 Magnum,Fiocchi Hyperformance Hunt Barnes XPB,225,1240,0.166,22,2.14,,partial,,,Defense
 .44 Magnum,Hornady LEVERevolution FTX,225,1410,0.147,28.5,1.60,,catalog,,7,Hunting
+.44 Magnum,Buffalo Bore Barnes XPB (lead-free),225,1400,0.163,28.1,3.38,,partial,,,Hunting
 .44 Magnum,Federal Premium Personal Defense HST,230,1085,0.175,17.2,2.30,,catalog,,4,Defense
 .44 Magnum,Federal Premium Hunting Handgun Terminal Ascent,235,1380,0.160,28.5,2.63,,catalog,,6,Hunting
 .44 Magnum,CCI Blazer Aluminum JHP [vented test barrel],240,1200,0.169,22,2.23,,catalog,,6.5,Hunting
@@ -661,6 +719,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .44 Magnum,Buffalo Bore Deer Grenade Medium Cast +P,240,1550,0.177,36.7,1.67,,partial,,6,Hunting
 .44 Magnum,Buffalo Bore Lower Recoil JHP,240,1350,0.169,27.8,1.61,,partial,,6,Hunting
 .44 Magnum,Buffalo Bore Lower Recoil Keith-GC,255,1350,0.185,29.6,1.61,,partial,,6,Hunting
+.44 Magnum,Buffalo Bore Dangerous Game Mono-Metal,265,1425,0.146,34.2,3.38,,partial,,,Hunting
 .44 Magnum,Buffalo Bore JFN,270,1450,0.149,36.1,1.61,,partial,,6,Hunting
 .44 Magnum,Federal Premium Hunting Handgun Swift A-Frame,280,1170,0.155,24.4,2.75,,catalog,,6,Hunting
 .44 Magnum,Federal Premium Hunting Handgun Solid Core,300,1150,0.170,25.3,2.63,,catalog,,6.5,Hunting
@@ -675,9 +734,12 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .44 Special,Federal Punch JHP,180,815,0.143,4.4,1.65,,catalog,,4,Defense
 .44 Special,PMC Bronze JHP,180,980,0.143,6.4,1.41,,partial,,,Defense
 .44 Special,Buffalo Bore JHP,180,1150,0.143,8.8,1.86,,partial,,,Defense
+.44 Special,Buffalo Bore Soft Cast HP,190,1150,0.151,9.2,2.68,,partial,,,Defense
 .44 Special,CCI Blazer Aluminum JHP,200,920,0.156,6.3,1.58,,partial,,5.15,Defense
 .44 Special,Federal Champion SWHP,200,870,0.156,5.6,1.50,,catalog,,4,Defense
 .44 Special,Fiocchi Defense Dynamics SJHP,200,900,0.156,6.0,2.01,,partial,,,Defense
+.44 Special,Buffalo Bore Anti-Personnel Hard Cast Wadcutter,200,1000,0.156,7.4,2.68,,partial,,,Defense
+.44 Special,Buffalo Bore Barnes TAC-XP (lead-free),200,1100,0.147,9.0,3.38,,partial,,,Defense
 .44 Special,Fiocchi Cowboy Action LFP,210,750,0.164,4.4,1.16,,partial,,,Target
 .44 Special,Winchester USA Lead,240,750,0.154,5.0,1.37,,partial,,,Target
 .44 Special,Remington Performance Wheelgun Lead Round Nose,246,755,0.158,5.2,1.52,,catalog,,4,Target
@@ -686,7 +748,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 ACP,Hornady Handgun Hunter MonoFlex +P,160,1110,0.128,6.2,1.90,,catalog,,5,Hunting
 .45 ACP,Winchester Super Clean Zinc FMJ,160,1100,0.143,6.1,0.57,,catalog,,5,Target
 .45 ACP,Buffalo Bore Barnes TAC-XP +P (lead-free),160,1250,0.107,7.9,2.48,,partial,,,Defense
+.45 ACP,Buffalo Bore Barnes TAC-XP Low Recoil (lead-free),160,950,0.107,4.5,2.52,,partial,,,Defense
 .45 ACP,Sellier & Bellot XRG Defense,165,1148,0.127,6.8,0.80,,partial,,,Defense
+.45 ACP,Buffalo Bore Controlled Fracture,170,1150,0.131,7.0,2.52,,partial,,,Defense
 .45 ACP,Federal Premium Gold Medal FMJ-SWC Match,185,770,0.093,3.5,0.94,,catalog,,5,Match
 .45 ACP,Hornady American Gunner XTP,185,970,0.142,5.5,1.15,,catalog,,5,Defense
 .45 ACP,Hornady Critical Defense FTX,185,900,0.143,4.7,1.53,,catalog,,3,Defense
@@ -707,6 +771,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 ACP,PPU JHP,185,935,0.099,5.2,1.14,,partial,,5.0,Defense
 .45 ACP,Buffalo Bore JHP +P,185,1150,0.099,7.8,1.94,,partial,,,Defense
 .45 ACP,Buffalo Bore Barnes TAC-XP +P (lead-free),185,1150,0.167,7.8,2.48,,partial,,,Defense
+.45 ACP,Buffalo Bore Low Recoil FMJ-FN,185,850,0.093,4.3,1.97,,partial,,,Target
 .45 ACP,Fiocchi Defense Dynamics JHP,200,890,0.133,5,1.69,,partial,,,Defense
 .45 ACP,Hornady Custom XTP,200,900,0.155,5.1,1.30,,catalog,,5,Defense
 .45 ACP,Speer Gold Dot Carry Gun Hollow Point +P,200,1080,0.133,7.4,1.70,,partial,,,Defense
@@ -775,6 +840,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 Colt,Hornady Critical Defense FTX,185,920,0.143,6.6,1.60,,catalog,,3,Defense
 .45 Colt,CCI Blazer Aluminum JHP,200,1000,0.142,8.5,0.96,,catalog,,7.26,Hunting
 .45 Colt,Fiocchi Hyperformance Hunt Barnes XPB,200,1010,0.133,8.7,2.57,,partial,,,Defense
+.45 Colt,Buffalo Bore JHP,200,1100,0.142,10.3,2.68,,partial,,,Defense
 .45 Colt,Federal Premium Personal Defense Hydra-Shok Deep,210,913,0.133,7.4,1.68,,catalog,,6,Defense
 .45 Colt,Federal American Eagle JSP,225,860,0.194,7.1,1.20,,catalog,,4,Hunting
 .45 Colt,Federal Champion SWCHP,225,830,0.154,6.6,1.75,,catalog,,4,Target
@@ -783,6 +849,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 Colt,"Winchester Defender Bonded JHP (3in Judge, vented)",225,850,0.170,6.9,2.32,,catalog,,3,Defense
 .45 Colt,Winchester Silvertip Plated JHP,225,920,0.170,8.1,2.32,,catalog,,5.5,Hunting
 .45 Colt,Buffalo Bore Barnes XPB +P (lead-free),225,1500,0.150,21.6,2.87,,partial,,,Hunting
+.45 Colt,Buffalo Bore Barnes XPB (lead-free),225,1000,0.150,9.6,3.38,,partial,,,Hunting
+.45 Colt,Buffalo Bore Anti-Personnel Soft Cast Hollow Nose,225,1050,0.170,10.6,2.68,,partial,,,Defense
+.45 Colt,Buffalo Bore Anti-Personnel Hard Cast Wadcutter,225,1050,0.194,10.6,2.68,,partial,,,Defense
 .45 Colt,Remington HTP Jacketed Hollow Point,230,850,0.149,7,2.58,,catalog,,4,Hunting
 .45 Colt,Federal Power-Shok JHP,235,850,0.194,7.2,1.65,,catalog,,6,Hunting
 .45 Colt,Fiocchi Heritage Cowboy Action LRNFP,250,750,0.167,6,0.99,,partial,,,Target
@@ -792,7 +861,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 Colt,Federal Premium Hammerdown Revolver Carbine Bonded Hollow Point,250,1025,0.145,11.2,1.70,,catalog,,20,Hunting
 .45 Colt,Fiocchi Range Dynamics CMJ,255,750,0.170,6.1,0.67,,partial,,,Target
 .45 Colt,Hornady Custom Cowboy,255,725,0.128,5.7,1.35,yes,catalog,,4,Target
+.45 Colt,Buffalo Bore Outdoorsman Soft Cast GC,255,1000,0.128,10.8,2.68,,partial,,,Hunting
 .45 Colt,Buffalo Bore JHP +P,260,1450,0.171,23.2,2.27,,partial,,,Hunting
+.45 Colt,Buffalo Bore Deer Grenade Medium Cast HP-GC +P,260,1500,0.173,24.8,2.68,,partial,,,Hunting
 .45 Colt,Buffalo Bore JFN +P,300,1325,0.151,22.4,2.27,,partial,,,Hunting
 .45 Colt,Buffalo Bore JFN +P (3D),300,1200,0.151,18.4,2.27,,partial,,,Hunting
 .45 Colt,Buffalo Bore Dangerous Game Mono-Metal +P,300,1300,0.151,21.6,2.87,,partial,,,Hunting
@@ -802,19 +873,42 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .454 Casull,Hornady Backcountry Defense DGH,300,1820,0.204,31.4,2.08,,catalog,,7,Defense
 .454 Casull,Hornady Custom XTP Mag,300,1650,0.203,25.8,2.05,,catalog,,7,Defense
 .454 Casull,Federal Premium Barnes Expander,250,1530,0.143,21.7,2.75,,catalog,,5.7,Hunting
+.454 Casull,Buffalo Bore Barnes XPB (lead-free),250,1750,0.143,28.4,3.95,,partial,,,Hunting
 .454 Casull,Federal Fusion SP,260,1350,0.153,17.5,2.05,,catalog,,5.7,Hunting
 .454 Casull,Federal Premium Swift A-Frame,300,1520,0.138,25.7,2.95,,catalog,,5.7,Hunting
 .454 Casull,Winchester Big Bore Semi Jacketed Hollow Point,300,1560,0.204,27.0,3.78,,partial,,,Hunting
+.454 Casull,Buffalo Bore Dangerous Game Mono-Metal,300,1650,0.204,25.8,3.95,,partial,,,Hunting
+.454 Casull,Buffalo Bore JFN,300,1650,0.204,25.8,3.27,,partial,,,Hunting
+.454 Casull,Buffalo Bore LBT-LFN,325,1525,0.221,23.9,3.27,,partial,,,Hunting
+.454 Casull,Buffalo Bore LBT-LWN,360,1425,0.239,23.1,3.27,,partial,,,Hunting
 .460 S&W Magnum,Hornady Custom FTX,200,2200,0.158,30.6,2.39,yes,catalog,,8,Hunting
 .460 S&W Magnum,Hornady Handgun Hunter MonoFlex,200,2150,0.169,29.2,2.75,,catalog,,8,Hunting
 .460 S&W Magnum,Federal Fusion SP,260,1600,0.153,24.6,2.30,,catalog,,8.4,Hunting
 .460 S&W Magnum,Federal Premium Barnes Expander,275,1670,0.223,28.3,3.75,,catalog,,8.4,Hunting
+.460 S&W Magnum,Buffalo Bore Barnes XPB (lead-free),275,1900,0.223,36.6,5.03,,partial,,,Hunting
 .460 S&W Magnum,Federal Premium Swift A-Frame,300,1750,0.137,34.0,3.85,,catalog,,8.4,Hunting
+.460 S&W Magnum,Buffalo Bore JFN,300,2060,0.137,47.1,4.29,,partial,,,Hunting
+.460 S&W Magnum,Buffalo Bore Dangerous Game Mono-Metal,300,1920,0.137,40.9,5.03,,partial,,,Hunting
+.460 S&W Magnum,Buffalo Bore LBT-LFN,360,1900,0.239,48.1,4.29,,partial,,,Hunting
+.480 Ruger,Buffalo Bore Barnes XPB (lead-free),275,1500,0.165,19.5,4.96,,partial,,,Hunting
 .480 Ruger,Hornady Custom XTP Mag,325,1350,0.152,18.7,4.85,yes,catalog,,7,Defense
+.480 Ruger,Buffalo Bore Dangerous Game Mono-Metal WFN,330,1400,0.154,20.4,4.96,,partial,,,Hunting
+.480 Ruger,Buffalo Bore LBT-LFN,370,1300,0.173,19.7,4.29,,partial,,,Hunting
+.480 Ruger,Buffalo Bore LFN Low Recoil,370,1000,0.173,11.7,4.29,,partial,,,Hunting
+.480 Ruger,Buffalo Bore Hard Cast LBT-WFN-GC,410,1200,0.247,18.6,4.29,,partial,,,Hunting
 .50 AE,Hornady Custom XTP,300,1475,0.122,20.6,2.25,yes,catalog,,6,Defense
 .50 AE,Federal Fusion SP,300,1550,0.158,26.7,5.28,,catalog,,10,Hunting
+.50 AE,Buffalo Bore FMJ-FN,300,1500,0.163,21.3,3.27,,partial,,,Target
+.50 AE,Buffalo Bore JHP,325,1450,0.176,21.6,3.53,,partial,,,Hunting
+.50 AE,Buffalo Bore JHP,350,1350,0.190,20.2,3.59,,partial,,,Hunting
+.50 AE,Buffalo Bore FMJ-FN,350,1350,0.190,20.2,3.51,,partial,,,Target
+.50 AE,Buffalo Bore Outdoorsman Hard Cast FN-GC,380,1250,0.206,18.8,3.59,,partial,,,Hunting
 .500 S&W Magnum,Federal Premium Barnes Expander,275,1660,0.142,24.0,3.75,,catalog,,8.4,Hunting
 .500 S&W Magnum,Hornady Custom FTX,300,1950,0.122,36.1,4.00,yes,catalog,,8,Hunting
 .500 S&W Magnum,Hornady Custom FP-XTP,500,1300,0.204,26.7,4.00,,catalog,,8,Defense
 .500 S&W Magnum,Federal Fusion SP,325,1450,0.153,25.3,2.75,,catalog,,8.4,Hunting
 .500 S&W Magnum,Federal Premium Swift A-Frame,325,1800,0.143,39.0,6.10,,catalog,,8.4,Hunting
+.500 S&W Magnum,Buffalo Bore Barnes XPB (lead-free),375,1800,0.204,45.0,5.39,,partial,,,Hunting
+.500 S&W Magnum,Buffalo Bore JFN,400,1675,0.217,41.6,4.51,,partial,,,Hunting
+.500 S&W Magnum,Buffalo Bore LFN-GC,440,1625,0.180,36.7,4.51,,partial,,,Hunting
+.500 S&W Magnum,Buffalo Bore LFN-GC Low Recoil,440,1325,0.180,24.4,4.51,,partial,,,Hunting
