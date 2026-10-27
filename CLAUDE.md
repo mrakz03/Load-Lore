@@ -223,6 +223,13 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   22-250 55 PSP 0.453 -> 0.239, Fiocchi 30-06 165 HPBT GK 0.224 -> 0.370, Remington .224 Valkyrie 90 OTM
   0.274 -> 0.572); bad scaled (partial) BCs on PPU HPBT and a few others set to the bullet's published BC.
   Hornady's Frontier line is in under "Hornady Frontier ..." (same ballistics as some Hornady loads).
+- One shot size per load (Oct 27 2026): shotshell rows that listed every size a product is sold in
+  ("3½" T/BBB/BB/2/3/4 Steel") were split into one row per size, same velocity, payload and price
+  (the catalogs print one velocity per product), BC from the size and shot material (lead, steel,
+  bismuth, TSS/tungsten; Winchester Last Call TSS and Longbeard Tungsten now use TSS BCs too).
+  Shells holding two sizes stay one row: Federal Ultra Steel and Heavyweight TSS 7/9 read
+  "BB x #2" / "#7 x #9", Winchester blends "BB+1.5". Where two speeds of the same line, size and
+  payload met, both got "(1250 fps)". Old -> new names in research/split_shot_sizes.tsv.
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
 - Data check (Oct 24 2026): bullets.csv Hornady ELD Match / ELD-X BCs set to hornady.com/bc (G1 at
