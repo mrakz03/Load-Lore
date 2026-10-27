@@ -531,6 +531,24 @@ function makeLabel(it,cat){
   if(it.group&&it.load)return `${it.group}  ·  ${it.load}`;
   return it.load||g(it.bullet_gr)+" gr";
 }
+// shot sizes in inches: buckshot by number, then birdshot letters; birdshot #n is (17 - n) / 100
+const BUCK_IN={"000":.36,"00":.33,"0":.32,"1":.30,"2":.27,"3":.25,"4":.24},SHOT_LETTER_IN={T:.20,BBB:.19,BB:.18,B:.17};
+// [size in inches, pellet count or 0, short text] of a shotshell's largest shot (shot_size); slugs come out biggest
+function shotSize(it){
+  const name=it.load||"";
+  let seg=name.split(" · ").find(s=>s.includes('"'))||name;
+  seg=seg.replace(/^[\d.¼½¾⅛⅜⅝⅞]+" ?/,"").replace(/½/g,".5");
+  let m=name.match(/(\d+) pellets/);const pel=m?+m[1]:0;
+  if(it.group==="Slug"||/\bSlug/.test(seg))return [1,pel,"Slug"];
+  m=seg.match(/\b(000|00|0|[1-4]) Buck/);
+  if(m)return [BUCK_IN[m[1]],pel,m[1]+" Buck"];
+  let best=[0,pel,"—"];
+  for(const t of seg.match(/\b(T|BBB|BB|B|\d+(?:\.\d+)?)\b/g)||[]){
+    const d=SHOT_LETTER_IN[t]||(17-parseFloat(t))/100;
+    if(d>best[0]&&d<=.21)best=[d,pel,SHOT_LETTER_IN[t]?t:"#"+g(parseFloat(t))];
+  }
+  return best;
+}
 const PRESSURES=["+P","+P+"];
 // "+P+", "+P" or "" from a load's name (Federal Train+Protect and +Peak aren't +P)
 function pressureOf(name){name=name||"";return /\+P\+/.test(name)?"+P+":/\+P(?![A-Za-z+])/.test(name)?"+P":"";}
@@ -1101,7 +1119,7 @@ function openLoads(cat,pane){
   </div>
   <!-- the brand / load filter and sort sit right above the list (issue #26) -->
   <div class="sortrow above"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
-      <select id="ls"><option value="score">Sort: ${GRADES?"best value":"default order"}</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
+      <select id="ls"><option value="score">Sort: ${GRADES?"best value":"default order"}</option>${cat.grain_style?"":'<option value="shot">Sort: shot size</option>'}<option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
   <div class="pchk hidden" id="lpr" role="group" aria-label="Show +P loads"></div>
   <div class="cnt" id="lcnt"></div><div class="lgrid" id="lres"></div>
   <div class="note" id="lnote"></div>`;
@@ -1173,6 +1191,8 @@ function openLoads(cat,pane){
     let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>matchesFilter(r.it)&&pressOk(r.it));
     const key=$$("#ls").value;
     const cmp={score:(a,b)=>(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
+      // biggest shot first, then the most pellets, then the heaviest payload
+      shot:(a,b)=>{const x=shotSize(a.it),y=shotSize(b.it);return y[0]-x[0]||y[1]-x[1]||b.st.weight-a.st.weight;},
       cost:(a,b)=>a.st.cost-b.st.cost,velocity:(a,b)=>b.st.velocity-a.st.velocity,energy:(a,b)=>b.st.energy-a.st.energy,taylor:(a,b)=>b.st.taylor-a.st.taylor,hits:(a,b)=>b.st.hits-a.st.hits,recoil:(a,b)=>a.st.recoil-b.st.recoil}[key];
     rows.sort(cmp);
     $$("#lcnt").textContent=`${rows.length} of ${out.rows.length} loads at ${g(out.dist)} yards`+(L.purpose!=="All"?` · ${L.purpose} only`:"")+(out.multi&&GRADES?" · ranked within each load type":"");
