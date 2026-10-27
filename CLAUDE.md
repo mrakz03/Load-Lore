@@ -150,6 +150,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   and copies assets/android/res over the Capacitor project after `cap add android`.
 
 ## Release
+- Build artifacts (the files on an Actions run page) are kept 7 days (retention-days); releases
+  keep their own copies. Old private Load-Lore-old artifacts counted against the 500 MB free quota.
 - In-app updates (Windows/Linux, Settings > Updates, App.check_updates / start_update): asks the
   GitHub latest-release API, downloads the Setup.exe (run with /SILENT; the .iss [Run] entry with
   Check: WizardSilent reopens the app) or the Linux tar (install_linux_update swaps the files in
