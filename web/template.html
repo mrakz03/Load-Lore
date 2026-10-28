@@ -155,7 +155,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 }
 @media(min-width:1500px){   /* big PC windows: Head to Head fills the window, the load picker in a column beside the results */
   .wrap.wide.h2hp,.wrap.wide.handp{max-width:none}
-  .h2hp #pane{display:grid;grid-template-columns:minmax(360px,460px) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:22px;align-items:start}
+  .h2hp #pane{display:grid;grid-template-columns:minmax(360px,clamp(460px,40vw - 80px,720px)) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:22px;align-items:start}
   .h2hp #pane>.card{grid-column:1;grid-row:1/span 2;margin-top:0}
   .h2hp #pane>#hres,.h2hp #pane>#hnote{grid-column:2;min-width:0}
   .h2hp #hres>.h2hw>.h2h:first-child{margin-top:0}
@@ -751,10 +751,42 @@ function drawChrome(){
   nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(NAV.mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
   nav.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
 }
-function navigate(mode,cat,hid){   // hid: the handload the Handloads tab opens
+// In-app history: every page change is a browser history entry (#settings, #loads/Handgun...),
+// so the browser's back arrow and the phone's back button step back through the app's pages
+// instead of leaving it. how: "pop" (moving through history, add nothing), "replace" (swap
+// this entry), else a new entry. depth counts the app's entries before this one.
+const NAV_MODES=["home","loads","h2h","hand","settings"];
+const navState=()=>({mode:NAV.mode,cat:NAV.cat?NAV.cat.title:null});
+const navURL=()=>NAV.mode==="home"?location.pathname+location.search:"#"+NAV.mode+(NAV.cat?"/"+encodeURIComponent(NAV.cat.title):"");
+function navRecord(how){
+  try{
+    const cur=history.state&&history.state.app?history.state:null;
+    const st=Object.assign({app:1},navState());
+    if(how==="replace"||!cur||(cur.mode===st.mode&&cur.cat===st.cat)){st.depth=cur&&cur.depth||0;history.replaceState(st,"",navURL());}
+    else{st.depth=(cur.depth||0)+1;history.pushState(st,"",navURL());}
+  }catch(e){}
+}
+// a history entry (or a typed / linked #address) -> [mode, category]
+function navFrom(st){
+  if(!st||!st.mode){const h=(location.hash||"").slice(1).split("/");st={mode:h[0],cat:h[1]?decodeURIComponent(h.slice(1).join("/")):null};}
+  const mode=NAV_MODES.includes(st.mode)?st.mode:"home";
+  return [mode,mode==="loads"&&st.cat?CATEGORIES.find(c=>c.title===st.cat)||null:null];
+}
+addEventListener("popstate",e=>{
+  // back with a dialog or pop-up open closes it and stays on the page
+  if(openModalClose){
+    openModalClose();
+    try{history.pushState(Object.assign({app:1,depth:(e.state&&e.state.depth||0)+1},navState()),"",navURL());}catch(err){}
+    return;
+  }
+  const [mode,cat]=navFrom(e.state);
+  navigate(mode,cat,null,"pop");
+});
+function navigate(mode,cat,hid,how){   // hid: the handload the Handloads tab opens
   if(app._leave){try{app._leave();}catch(e){}}
   app._leave=null;app.onkeydown=null;
   NAV.mode=mode;NAV.cat=mode==="loads"?(cat||null):null;   // Head to Head has no category
+  if(how!=="pop")navRecord(how);
   if(NAV.cat&&NAV.cat.group)OPEN_GROUPS.add(NAV.cat.group);   // back on the list, its drop-down is open
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
@@ -1524,7 +1556,7 @@ function openH2H(pane){
     $$("#hgun").setAttribute("aria-expanded",gunOpen);
     $$("#hs").innerHTML=`<div class="gunhead">GUN WEIGHT (LB)</div>`+slots.map((s,i)=>`<div class="slot" data-i="${i}"><span class="n">${i+1}</span>
       <div class="cs lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Cartridge ${i+1}" placeholder="Cartridge… type to search" autocomplete="off"></div>
-      <div class="ls lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Load ${i+1}" placeholder="${s.cart?"Load… type to search":"Pick a cartridge first"}" autocomplete="off" value="${esc(optText(choice(s.cat,s.cart,s.key)))}"${s.cart?"":" disabled"}></div>
+      <div class="ls lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Load ${i+1}" placeholder="${s.cart?"Load… type to search":"Pick a cartridge first"}" autocomplete="off" value="${esc(optText(choice(s.cat,s.cart,s.key)))}" title="${esc(optText(choice(s.cat,s.cart,s.key)))}"${s.cart?"":" disabled"}></div>
       <input class="gn" inputmode="decimal" aria-label="Gun weight for load ${i+1}, in pounds" placeholder="${s.cart?`Gun: usual ${g(typicalGun(byTitle[s.cat],s.cart))} lb`:"Gun weight (lb)"}" value="${esc(s.gun)}">
       <button class="x${slots.length<=H2H_MIN&&!s.key?" gone":""}" aria-label="Remove load ${i+1}">✕</button></div>`).join("");
     $$("#hs").querySelectorAll(".slot").forEach(row=>{
@@ -1623,17 +1655,20 @@ function modal(inner){
 }
 
 $("#ver").textContent=VERSION_TEXT;
-navigate("home");
-// Android back button (Capacitor App plugin): close a dialog, then step back up the menus
-// (category -> category list -> Home; Head to Head -> Home); only Home closes the app
+// start on the page the address names (a reload, or a link to #settings), else Home
+{const [m,c]=navFrom(history.state&&history.state.app?history.state:null);navigate(m,c,null,"replace");}
+// Android back button (Capacitor App plugin): close a dialog, then go back to the previous page
+// (the same history the browser's back arrow uses); with no earlier page, step up the menus
+// (category -> category list -> Home); only Home closes the app
 (function(){
   const AppPlugin=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
   if(!AppPlugin||!AppPlugin.addListener)return;
   AppPlugin.addListener("backButton",()=>{
     if(openModalClose){openModalClose();return;}
-    if(NAV.cat)navigate(NAV.mode);
-    else if(NAV.mode!=="home")navigate("home");
-    else AppPlugin.exitApp();
+    if(NAV.mode==="home")AppPlugin.exitApp();
+    else if(history.state&&history.state.depth>0)history.back();
+    else if(NAV.cat)navigate(NAV.mode,null,null,"replace");
+    else navigate("home",null,null,"replace");
   });
 })();
 </script>
