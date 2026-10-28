@@ -89,26 +89,30 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .lhead,.lc .trow,.lc .pdet{display:none}
 @media(min-width:900px){   /* PC: the load list is one table like the desktop app's (phones keep the cards);
                               the rows share the list's columns (subgrid), so each column fits its widest figure */
-  #lres{display:grid;grid-template-columns:var(--lcols);gap:0 16px;padding:0 14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow-x:auto;font-size:.9rem}   /* a narrow window scrolls the table sideways, like the desktop app */
+  :is(#lres,#hlist .lgrid){display:grid;grid-template-columns:var(--lcols);gap:0 16px;padding:0 14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow-x:auto;font-size:.9rem}   /* a narrow window scrolls the table sideways, like the desktop app */
   #lres>.muted{grid-column:1/-1;padding:12px 0}
-  #lres .lhead,#lres .lc,#lres .lc .trow{grid-column:1/-1;display:grid;grid-template-columns:subgrid;align-items:center}
-  #lres .lhead{margin:0 -14px;padding:8px 14px;background:var(--surface2);font-size:.78rem;font-weight:700;color:var(--muted)}
-  #lres .lhead>*{text-align:center;white-space:nowrap}#lres .lhead>.rk,#lres .lhead>.ln{text-align:left}
-  #lres .lhead button{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
-  #lres .lhead button:hover{color:var(--text)}#lres .lhead button.on{color:var(--accent)}
-  #lres .lhead button.on::after{content:" ▾"}
-  #lres .lc{border:0;border-top:1px solid var(--border);border-radius:0;margin:0 -14px;padding:7px 14px;background:none}
-  #lres .lhead+.lc{border-top:0}
-  #lres .lc:hover{background:var(--surface2)}
-  #lres .lc.open{box-shadow:inset 3px 0 0 var(--accent);background:none}
-  #lres .lc.open .trow>span{color:var(--accent)}
-  #lres .lc.hl{box-shadow:inset 3px 0 0 var(--accent)}
-  #lres .lc .top{display:none}
-  #lres .lc .trow>span{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
-  #lres .lc .trow>.ln{text-align:left;white-space:normal;font-weight:600;line-height:1.3}
-  #lres .lc .trow .wt{white-space:nowrap}
-  #lres .lc .trow>.rk{text-align:left;color:var(--muted);font-weight:700}
-  #lres .lc .trow .badge{display:inline-flex}
+  :is(#lres,#hlist .lgrid) .lhead,:is(#lres,#hlist .lgrid) .lc,:is(#lres,#hlist .lgrid) .lc .trow{grid-column:1/-1;display:grid;grid-template-columns:subgrid;align-items:center}
+  :is(#lres,#hlist .lgrid) .lhead{margin:0 -14px;padding:8px 14px;background:var(--surface2);font-size:.78rem;font-weight:700;color:var(--muted)}
+  :is(#lres,#hlist .lgrid) .lhead>*{text-align:center;white-space:nowrap}:is(#lres,#hlist .lgrid) .lhead>.rk,:is(#lres,#hlist .lgrid) .lhead>.ln{text-align:left}
+  :is(#lres,#hlist .lgrid) .lhead button{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+  :is(#lres,#hlist .lgrid) .lhead button:hover{color:var(--text)}:is(#lres,#hlist .lgrid) .lhead button.on{color:var(--accent)}
+  :is(#lres,#hlist .lgrid) .lhead button.on::after{content:" ▾"}
+  :is(#lres,#hlist .lgrid) .lc{border:0;border-top:1px solid var(--border);border-radius:0;margin:0 -14px;padding:7px 14px;background:none}
+  :is(#lres,#hlist .lgrid) .lhead+.lc{border-top:0}
+  :is(#lres,#hlist .lgrid) .lc:hover{background:var(--surface2)}
+  :is(#lres,#hlist .lgrid) .lc.open{box-shadow:inset 3px 0 0 var(--accent);background:none}
+  :is(#lres,#hlist .lgrid) .lc.open .trow>span{color:var(--accent)}
+  :is(#lres,#hlist .lgrid) .lc.hl{box-shadow:inset 3px 0 0 var(--accent)}
+  :is(#lres,#hlist .lgrid) .lc .top,#hlist .lc .st{display:none}
+  #hlist .lgrid{margin:0 0 6px}#hlist .lc.hl:not(.open){box-shadow:none}
+  #hlist .lgrid .lc .trow>.bp{text-align:left;white-space:normal;color:var(--muted)}
+  #hlist .lc>.hdet,#hlist .lc>.hbtns,#hlist .lc>.hlinks{grid-column:1/-1}
+  #hlist .lc>.hdet{margin:10px 0 0;max-width:760px}#hlist .lc>.hlinks{margin-bottom:6px}
+  :is(#lres,#hlist .lgrid) .lc .trow>span{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+  :is(#lres,#hlist .lgrid) .lc .trow>.ln{text-align:left;white-space:normal;font-weight:600;line-height:1.3}
+  :is(#lres,#hlist .lgrid) .lc .trow .wt{white-space:nowrap}
+  :is(#lres,#hlist .lgrid) .lc .trow>.rk{text-align:left;color:var(--muted);font-weight:700}
+  :is(#lres,#hlist .lgrid) .lc .trow .badge{display:inline-flex}
   #lres .lc .det{grid-column:1/-1;margin:6px 0 4px;padding-top:10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
   #lres .lc .det>*{flex:1 1 100%;margin:0}
   #lres .lc .det .fr{display:none}
@@ -136,7 +140,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .dict #pane .chips button{min-height:34px;padding:6px 11px}
 }
 @media(min-width:1500px){   /* big PC windows: Head to Head fills the window, the load picker in a column beside the results */
-  .wrap.wide.h2hp{max-width:none}
+  .wrap.wide.h2hp,.wrap.wide.handp{max-width:none}
   .h2hp #pane{display:grid;grid-template-columns:minmax(360px,460px) minmax(0,1fr);column-gap:22px;align-items:start}
   .h2hp #pane>.card{grid-column:1;grid-row:1/span 2;margin-top:0}
   .h2hp #pane>#hres,.h2hp #pane>#hnote{grid-column:2;min-width:0}
@@ -145,7 +149,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .h2hp .slot .ls,.h2hp .slot .gn{grid-column:2}.h2hp .gunhead,.h2hp .slots.gun .gunhead{display:none}
   .h2hp .slots{gap:12px}.h2hp .slot+.slot{border-top:1px solid var(--border);padding-top:12px}
 }
-@media(min-width:900px) and (max-width:1199px){#lres{gap:0 10px;font-size:.84rem}#lres .lhead{font-size:.72rem}}   /* small PC windows: tighter columns */
+@media(min-width:900px) and (max-width:1199px){:is(#lres,#hlist .lgrid){gap:0 10px;font-size:.84rem}:is(#lres,#hlist .lgrid) .lhead{font-size:.72rem}}   /* small PC windows: tighter columns */
 .prow{display:flex;gap:8px;align-items:center;margin-top:8px}.prow input{max-width:7.5em}
 .prow .btn{padding:9px 12px;font-size:.85rem}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
@@ -720,7 +724,7 @@ function fitMenu(){
 let fitMenuJob=0;
 addEventListener("resize",()=>{clearTimeout(fitMenuJob);fitMenuJob=setTimeout(fitMenu,150);});
 function showHome(){
-  document.title=APP_TITLE;app.classList.remove("dict","h2hp","wide","picker");app.classList.add("home");
+  document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","picker");app.classList.add("home");
   app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost, or put loads head to head.</p></div>
   <div class="feat">${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
@@ -728,7 +732,7 @@ function showHome(){
 // GitHub's mark (Octicons mark-github), drawn in the text colour
 const GITHUB_MARK="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z";
 function showSettings(){
-  document.title=APP_TITLE;app.classList.remove("dict","h2hp","wide","home","picker");
+  document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","home","picker");
   app.innerHTML=`<div class="phead"><h2>Settings</h2></div><div class="setlist">
     <div class="sethead">Display</div><div class="setgroup">
     <div class="setrow"><label for="theme2"><b>Theme</b></label><select id="theme2">${Object.keys(THEMES).map(n=>`<option${n===THEME?" selected":""}>${esc(n)}</option>`).join("")}</select></div>
@@ -745,7 +749,7 @@ function showSettings(){
   $("#theme2").onchange=e=>applyTheme(e.target.value);
 }
 function showPicker(mode){
-  document.title=APP_TITLE;app.classList.remove("dict","h2hp","wide","home");app.classList.add("picker");
+  document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","home");app.classList.add("picker");
   const last=lastCat();
   app.innerHTML=`<div class="phead"><h2>${toolTitle(mode)}</h2><p class="sub">Choose a category.</p></div><div class="pick">${
     CATEGORIES.filter(hasDetail).map(c=>{
@@ -757,7 +761,7 @@ function showPicker(mode){
 function openCategory(cat,tab){
   tab=tab||"loads";
   document.title=`${APP_TITLE} — ${cat.title}`;
-  app.classList.remove("dict","h2hp","home","picker");app.classList.add("wide","dict");
+  app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide","dict");
   app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2>${toolTitle(tab)} · ${esc(cat.title)}</h2></div><div id="pane"></div>`;
   $("[data-back]",app).onclick=()=>navigate(tab);
   openLoads(cat,$("#pane",app));
@@ -765,7 +769,7 @@ function openCategory(cat,tab){
 // Head to Head: one page for loads of every category
 function showH2H(){
   document.title=`${APP_TITLE} — ${toolTitle("h2h")}`;
-  app.classList.remove("dict","h2hp","home","picker");app.classList.add("wide","h2hp");
+  app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide","h2hp");
   app.innerHTML=`<div class="phead"><h2>${toolTitle("h2h")}</h2></div><div id="pane"></div>`;
   openH2H($("#pane",app));
 }
@@ -813,7 +817,7 @@ function handGrade(cat,it){
 }
 function showHand(openId){
   document.title=`${APP_TITLE} — ${toolTitle("hand")}`;
-  app.classList.remove("dict","h2hp","home","picker");app.classList.add("wide");
+  app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide","handp");
   const H={open:openId||null,q:"",cat:"All"};
   app.innerHTML=`<div class="hpage"><div class="phead"><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
     <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button><span class="sp"></span><button class="link" id="hbak">Back up</button><button class="link" id="hres">Restore</button></div>
@@ -842,11 +846,15 @@ function showHand(openId){
       .forEach(p=>{const k=p[0].title+"|"+p[1].cartridge;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(p);});
     const badge=gr=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
     const money=v=>"$"+v.toFixed(2);
-    $("#hlist").innerHTML=[...groups.values()].map(list=>`<h3 class="hgrp">${esc(list[0][1].cartridge)} <small>· ${esc(list[0][0].title)}</small></h3><div class="lgrid" style="margin-top:0">${list.map(([c,it])=>{
+    // PC (>=900 px): each cartridge's handloads are a table like the dictionary's (.lhead / .trow)
+    const cols=["minmax(10em,1.3fr)","minmax(8em,1fr)","minmax(7em,.8fr)","auto","auto","auto"].concat(GRADES?["auto"]:[]).join(" ");
+    const lhead=d=>`<div class="lhead"><span class="ln">Handload</span><span class="ln">Bullet</span><span class="ln">Powder</span><span>Velocity at ${g(d)} yd</span><span>Energy</span><span>Price</span>${GRADES?"<span>Grade</span>":""}</div>`;
+    $("#hlist").innerHTML=[...groups.values()].map(list=>`<h3 class="hgrp">${esc(list[0][1].cartridge)} <small>· ${esc(list[0][0].title)}</small></h3><div class="lgrid" style="margin-top:0;--lcols:${cols}">${lhead(handGrade(list[0][0],list[0][1]).dist)}${list.map(([c,it])=>{
       const r=handGrade(c,it),rec=it.rec,open=H.open===rec.id,cp=costParts(rec),hasP=cp.b||cp.p||cp.pr||cp.br;
       const bullet=[rec.bullet_maker,rec.bullet].filter(Boolean).join(" ")||"Bullet";
       return `<div class="lc hl ${open?"open":""}" data-id="${esc(rec.id)}"><div class="top"><div class="nm">${esc(it.load)}</div>
         ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">#${r.rank} of ${r.peers}</span></div>`:""}</div>
+        <div class="trow"><span class="ln">${esc(it.load)}</span><span class="bp">${esc(bullet)} · ${g(it.bullet_gr)} gr</span><span class="bp">${esc(rec.powder||"—")} · ${g(it.powder_gr)} gr</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
         <div class="st" style="margin-left:0"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span><b>${money(r.st.cost)}</b> a round</span><span>at ${g(r.dist)} yd</span></div>
         ${open?`<div class="hdet">
           <span>Bullet</span><span>${esc(bullet)} · ${g(it.bullet_gr)} gr${rec.diameter_in?` · ${g(+rec.diameter_in)} in`:""} · BC ${g(it.bc_g1)}</span>
