@@ -1389,7 +1389,10 @@ function openLoads(cat,pane){
           <div class="note">${esc(SOURCE_NOTES.handload)}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
           <div class="note">${esc(SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE)} Catalog price estimate: $${it.default_cost.toFixed(2)}.</div></div>`}`:""}
       </div>`;}).join("")||`<div class="muted">No loads match that filter.</div>`;
-    box.querySelectorAll(".lhead button").forEach(b=>b.onclick=()=>{$$("#ls").value=b.dataset.k==="grain"&&$$("#ls").value==="grain"?"grainl":b.dataset.k;render();});
+    // a heading sorts by its column; clicking the sorted heading again goes back to the default
+    // order (Grains: heaviest, then lightest, then the default order; Zeke, Oct 28 2026)
+    box.querySelectorAll(".lhead button").forEach(b=>b.onclick=()=>{const k=b.dataset.k,cur=$$("#ls").value;
+      $$("#ls").value=k==="grain"&&cur==="grain"?"grainl":k===cur||k==="grain"&&cur==="grainl"?"score":k;render();});
     box.querySelectorAll(".lc").forEach(c=>{
       const lab=c.dataset.i;
       c.onclick=e=>{if(e.target.closest(".prow,.hbtns,.btab"))return;L.open=L.open===lab?null:lab;render();};

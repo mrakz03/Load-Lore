@@ -120,7 +120,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
 - PC web load list (Oct 27 2026, Zeke): at >=900 px the dictionary's load list (#lres) is one table like
   the desktop app's (.lhead / .trow on a CSS subgrid, columns fit their figures, same columns as LoadsView;
-  sortable headers set the #ls sort). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
+  sortable headers set the #ls sort; clicking the sorted header again goes back to the default order, Grains goes heaviest -> lightest -> default, desktop _sort_by the same; Zeke, Oct 28 2026). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
   At >=1500 px the dictionary page (.wrap.dict) fills the window: settings card, filter and sort in a
   left column, the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
   column (cartridge box over load box) beside the results. An opened load on PC web shows a facts line
