@@ -1,12 +1,11 @@
 name: Web version on GitHub Pages
-# Every push to main (and every release tag, below) rebuilds web/www/index.html (python web/build_web.py) and publishes it on
-# GitHub Pages at https://loadlore.net/ (custom domain, set in Settings > Pages; the old address
+# Each release (a vX.Y.Z tag, below) or a manual run rebuilds web/www/index.html (python web/build_web.py)
+# from main and publishes it on GitHub Pages at https://loadlore.net/ (custom domain, set in Settings > Pages; the old address
 # https://mrakz03.github.io/Load-Lore/ forwards there). Turn it on once: Settings > Pages >
-# Source: GitHub Actions. Run manually from the Actions tab too.
+# Source: GitHub Actions. Pushing to main alone does NOT update the site (Zeke, Oct 28 2026): run it by
+# hand from the Actions tab (Web version on GitHub Pages > Run workflow) to publish main without a release.
 # With an Actions deploy GitHub keeps the domain in the repo settings, so no CNAME file is needed.
 on:
-  push:
-    branches: [main]
   # after a release build for a new tag (vX.Y.Z), rebuild so the site shows the new number. This
   # runs on main (a tag can't deploy to github-pages), and the tag is usually pushed after main.
   workflow_run:
@@ -26,6 +25,8 @@ concurrency:
 
 jobs:
   build:
+    # skip when the release build failed
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
