@@ -155,7 +155,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 }
 @media(min-width:1500px){   /* big PC windows: Head to Head fills the window, the load picker in a column beside the results */
   .wrap.wide.h2hp,.wrap.wide.handp{max-width:none}
-  .h2hp #pane{display:grid;grid-template-columns:minmax(360px,460px) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:22px;align-items:start}
+  .h2hp #pane{display:grid;grid-template-columns:minmax(360px,clamp(460px,40vw - 80px,720px)) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:22px;align-items:start}
   .h2hp #pane>.card{grid-column:1;grid-row:1/span 2;margin-top:0}
   .h2hp #pane>#hres,.h2hp #pane>#hnote{grid-column:2;min-width:0}
   .h2hp #hres>.h2hw>.h2h:first-child{margin-top:0}
@@ -1556,7 +1556,7 @@ function openH2H(pane){
     $$("#hgun").setAttribute("aria-expanded",gunOpen);
     $$("#hs").innerHTML=`<div class="gunhead">GUN WEIGHT (LB)</div>`+slots.map((s,i)=>`<div class="slot" data-i="${i}"><span class="n">${i+1}</span>
       <div class="cs lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Cartridge ${i+1}" placeholder="Cartridge… type to search" autocomplete="off"></div>
-      <div class="ls lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Load ${i+1}" placeholder="${s.cart?"Load… type to search":"Pick a cartridge first"}" autocomplete="off" value="${esc(optText(choice(s.cat,s.cart,s.key)))}"${s.cart?"":" disabled"}></div>
+      <div class="ls lsearch"><input class="lq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="Load ${i+1}" placeholder="${s.cart?"Load… type to search":"Pick a cartridge first"}" autocomplete="off" value="${esc(optText(choice(s.cat,s.cart,s.key)))}" title="${esc(optText(choice(s.cat,s.cart,s.key)))}"${s.cart?"":" disabled"}></div>
       <input class="gn" inputmode="decimal" aria-label="Gun weight for load ${i+1}, in pounds" placeholder="${s.cart?`Gun: usual ${g(typicalGun(byTitle[s.cat],s.cart))} lb`:"Gun weight (lb)"}" value="${esc(s.gun)}">
       <button class="x${slots.length<=H2H_MIN&&!s.key?" gone":""}" aria-label="Remove load ${i+1}">✕</button></div>`).join("");
     $$("#hs").querySelectorAll(".slot").forEach(row=>{
