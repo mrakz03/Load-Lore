@@ -1775,7 +1775,28 @@ class App:
             s.map(name, background=[("active", MUTED)], lightcolor=[("active", MUTED)],
                   darkcolor=[("active", MUTED)])
         s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", ON_ACCENT)])
+        # a thin line under each row, like the web's table rows: the row background is an image
+        # (fill + a 1 px BORDER line at the bottom) stretched to the row, accent when selected
+        def row_png(fill):
+            img = tk.PhotoImage(width=3, height=3)
+            img.put(fill, to=(0, 0, 3, 2))
+            img.put(BORDER, to=(0, 2, 3, 3))
+            return img
+        self._row_imgs = (row_png(SURFACE), row_png(ACCENT))
+        name = f"Rowline{len(getattr(self, '_row_names', ()))}.row"     # one element per theme
+        self._row_names = getattr(self, "_row_names", ()) + (name,)
+        s.element_create(name, "image", self._row_imgs[0], ("selected", self._row_imgs[1]),
+                         border=(1, 0, 1, 1), sticky="nswe")
+        s.layout("Treeview.Row", [(name, {"sticky": "nswe"})])
         s.map("Treeview.Heading", background=[("active", BORDER)])
+
+    def rule(self, parent, row, span, column=0):
+        """A thin line along the bottom of a grid row, like the web's table row borders
+        (drawn over the row's padding, so it doesn't change the row's height)."""
+        line = tk.Frame(parent, bg=BORDER, height=1)
+        line.grid(row=row, column=column, columnspan=span, sticky="sew")
+        line.lift()
+        return line
 
     def label(self, parent, text="", size=11, color=None, bold=False, bg=None, **kw):
         return tk.Label(parent, text=text, bg=SURFACE if bg is None else bg,
@@ -3577,12 +3598,16 @@ class LoadsView:
                  f"Wind drift (in, {WIND_MPH:g} mph)"]
         for c, h in enumerate(heads):
             a.label(self.bt_frame, h, 10, MUTED, True, anchor="e").grid(
-                row=0, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=(0, 4))
-        for r, (yd, v, e, path, drift) in enumerate(ballistic_table(item, cat), start=1):
+                row=0, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=(0, 6))
+        a.rule(self.bt_frame, 0, len(heads))
+        table = ballistic_table(item, cat)
+        for r, (yd, v, e, path, drift) in enumerate(table, start=1):
             for c, text in enumerate((f"{yd:g}", f"{v:,.0f}", f"{e:,.0f}", "0.0" if abs(path) < 0.05 else f"{path:+.1f}",
                                       f"{drift:.1f}")):
                 a.label(self.bt_frame, text, 11, TEXT, c == 0, anchor="e").grid(
-                    row=r, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=1)
+                    row=r, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=4)
+            if r < len(table):
+                a.rule(self.bt_frame, r, len(heads))
         a.label(self.bt_frame, f"Zeroed at {cat.zero_yd:g} yd with the sight {cat.sight_in:g} in "
                 f"above the bore; drop and drift are estimates from the G1 BC, sea-level air.",
                 9, MUTED, anchor="w", justify="left", wraplength=a.px(760)).grid(
@@ -4777,6 +4802,11 @@ class HeadToHeadView:
                     justify="left", wraplength=wrap).pack(anchor="w")
             if it.handload:
                 a.label(box, "handload", 9, HAND_FG, anchor="w").pack(anchor="w")
+        # a thin line between rows, like the web's table (the thicker rule below stands in for
+        # the line under the grade rows, and the card's edge for the one under "Best in")
+        line = lambda: a.rule(card, r, n + 1)
+        if grades:
+            line()
         r += 1
         if grades:
             self._cell(card, r, 0, "Overall", 10, MUTED, True)
@@ -4785,6 +4815,7 @@ class HeadToHeadView:
                 box.grid(row=r, column=c, sticky="w", padx=12, pady=5)
                 Badge(box, a, row["grade"], 12).pack(side="left")
                 a.label(box, f"{row['overall']:.0f}", 12, TEXT, True).pack(side="left", padx=(8, 0))
+            line()
             r += 1
         if grades:
             self._cell(card, r, 0, "Rank in its cartridge", 10, MUTED, True)
@@ -4805,6 +4836,7 @@ class HeadToHeadView:
             self._cell(card, r, 0, name, 10, MUTED, True)
             for c, row in enumerate(rows, start=1):
                 self._cell(card, r, c, fn(row), 10, TEXT)
+            line()
             r += 1
         # graded factors: best highlighted, others show how far behind; "—" where a factor
         # doesn't apply (no Taylor KO / HITS for shotshells)
@@ -4827,6 +4859,7 @@ class HeadToHeadView:
                 if grades:
                     Badge(box, a, grade_relative(row["scores"][key]), 9).pack(
                         side="left", padx=(8, 0))
+            line()
             r += 1
         self._cell(card, r, 0, "Best in", 10, MUTED, True)
         most = max(len(row["best"]) for row in rows)
@@ -4891,6 +4924,8 @@ class HeadToHeadView:
                 vb, eb = v >= v_top - 1e-9, e >= e_top - 1e-9
                 cell(i, 3 * c + 2, f"{v:,.0f}", ACCENT if vb else TEXT, vb)
                 cell(i, 3 * c + 3, f"{e:,.0f}", ACCENT if eb else TEXT, eb)
+            if i < len(table) + 2:
+                a.rule(dr, i, 3 * n + 1)                    # a thin line between distances
         a.label(dr, "", 2, bg=SURFACE).grid(row=last, column=0)
 
 
