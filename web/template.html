@@ -204,7 +204,7 @@ h2{font-size:1.45rem;margin:6px 0 0}
 label.l{display:block;font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.04em;margin:0 0 5px}
 select,input{width:100%;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:11px 10px;font:inherit;font-size:1rem;appearance:none;-webkit-appearance:none}
 select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
-select:focus,input:focus{outline:none;border-color:var(--accent)}
+select:focus,select.focus,input:focus{outline:none;border-color:var(--accent)}
 .field{margin-top:14px}.field:first-child{margin-top:0}
 .nums>div,.three>div,.wrow>div{min-width:0}
 .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
@@ -1042,13 +1042,22 @@ function handDialog(rec,done){
   q("#hbl").onchange=()=>{const b=BULLETS[+q("#hbl").value];if(!b)return;q("#hbn").value=b.name;q("#hgr").value=g(b.weight);q("#hdm").value=g(b.diameter);q("#hbc").value=g(b.bc);};
   ["hcb","hcp","hcr","hcs","hcu","hct","hpg"].forEach(i=>q("#"+i).addEventListener("input",showCost));
   q("#hc").onchange=fillMakers;
+  // the cartridge box opens a searchable list of cartridges under their category headings: the
+  // bottom sheet on touch screens, a search pop-up under the box with a mouse (Zeke, Oct 28 2026)
+  const hc=q("#hc"),cv=document.createElement("button");
+  cv.type="button";cv.className="selcover";cv.setAttribute("aria-label","Choose a cartridge");
+  hc.parentElement.style.position="relative";hc.tabIndex=-1;hc.parentElement.appendChild(cv);
+  const cartPick={text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>o.cat.title,none:"cartridge",
+    cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;fillMakers();}};
+  const openCart=typed=>touch?pickSheet(opts,cartPick):pickSheet(opts,cartPick,{el:hc,input:cv,typed:typed||""});
+  cv.onclick=()=>openCart();
+  cv.onfocus=()=>hc.classList.add("focus");cv.onblur=()=>hc.classList.remove("focus");
+  cv.onkeydown=e=>{
+    if(["ArrowDown","ArrowUp","Enter"," "].includes(e.key)){e.preventDefault();openCart();}
+    else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();openCart(e.key);}
+  };
   if(touch){
-    // the cartridge sheet lists cartridges under their category headings
-    const hc=q("#hc"),pw=q("#hpw"),cv=document.createElement("button");
-    cv.type="button";cv.className="selcover";cv.setAttribute("aria-label","Choose a cartridge");
-    hc.parentElement.style.position="relative";hc.tabIndex=-1;hc.parentElement.appendChild(cv);
-    cv.onclick=()=>pickSheet(opts,{text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>o.cat.title,none:"cartridge",
-      cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;fillMakers();}});
+    const pw=q("#hpw");
     // powder: the list, or "Other powder" to type one that isn't in it
     const OTHERP={other:true};
     pw.readOnly=true;
@@ -1105,7 +1114,7 @@ function handDialog(rec,done){
     if(!writeHand(rows)){alert("Couldn't save: browser storage isn't available.");return;}
     close();done(r);
   };
-  if(!touch)q("#hc").focus();
+  if(!touch)cv.focus();
 }
 
 // ---------- Load Dictionary tab ----------

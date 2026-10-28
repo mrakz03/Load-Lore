@@ -106,8 +106,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   and a tile per factor (.pdet, desktop panel style) instead of the phone's figure rows (.fr).
   Handloads (>=900 px): each cartridge group is a table too (Handload, Bullet, Powder, Velocity, Energy,
   Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); >=1500 px it fills the window (.handp).
-  The web handload form's cartridge box is a plain <select> like its maker / bullet / purpose boxes (Zeke,
-  Oct 28 2026), cartridges in an <optgroup> per category; touch opens the bottom sheet (with headings).
+  The web handload form's cartridge box is a <select> (cartridges in an <optgroup> per category) with a
+  .selcover button over it: with a mouse it opens the search pop-up (pickSheet with an anchor), on touch the
+  bottom sheet, both with category headings (Zeke, Oct 28 2026; he tried the plain drop-down and preferred the pop-up).
 - Before the public web launch (Oct 28 2026, Zeke): no "Development Build" text anywhere (version_text /
   VERSION_TEXT read "v1.10", or "dev" from source); Home ends with "Figures are estimates. Nothing you see
   here is reloading data. Disclaimer in Settings ›" (the Home line says "over 3,500 commercially available
