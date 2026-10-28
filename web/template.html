@@ -330,6 +330,15 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lsearch .lq::-webkit-search-cancel-button{display:none}
 .lsearch .lq:disabled{opacity:.6}
 .lsearch.picker .lq{caret-color:transparent;cursor:pointer}
+/* touch screens: an input can't wrap, so the pick is shown by a text layer over it (.lqv) that
+   wraps a long load name onto more lines; the box grows with it and the input still takes the tap */
+.lsearch.wrap{display:grid}
+.lsearch.wrap>*{grid-area:1/1}
+.lsearch.wrap .lq{color:transparent;height:100%}
+.lsearch.wrap .lq::placeholder{color:transparent}
+.lsearch.wrap .lqv{pointer-events:none;border:1px solid transparent;padding:11px 32px 11px 10px;font-size:1rem;line-height:1.3;overflow-wrap:anywhere;align-self:center}
+.lsearch.wrap .lqv.ph{color:var(--muted)}
+.lsearch.wrap .lq:disabled+.lqv{opacity:.6}
 .popbg{position:fixed;inset:0;z-index:40}
 .sheet.pop{position:fixed;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.45);padding-bottom:6px;animation:none;max-height:480px}
 /* the pop-up, drawn like a refined menu: no lines between rows, a rounded highlight set in from
@@ -1202,9 +1211,13 @@ function handDialog(rec,done){
 // head(x) = group heading over the list rows (optional), cur() = the current pick, pick(x), none.
 function searchBox(box,items,o){
   const q=box.querySelector(".lq"),all_=()=>typeof items==="function"?items():items;
-  const back=()=>{const c=o.cur();q.value=c==null?"":o.text(c);};
   const touch=matchMedia("(pointer:coarse)").matches;
-  const p=Object.assign({},o,{pick:x=>{q.value=o.text(x);o.pick(x);}});
+  // touch screens: a text layer that wraps the full name (.lsearch.wrap), so it isn't cut off
+  let v=null;
+  if(touch){v=box.querySelector(".lqv")||q.insertAdjacentElement("afterend",document.createElement("div"));v.className="lqv";box.classList.add("wrap");}
+  const show=()=>{if(v){v.textContent=q.value||q.placeholder;v.classList.toggle("ph",!q.value);}};
+  const back=()=>{const c=o.cur();q.value=c==null?"":o.text(c);show();};
+  const p=Object.assign({},o,{pick:x=>{q.value=o.text(x);show();o.pick(x);}});
   // the box only shows the pick, so its text is never selected; phones get the bottom sheet,
   // a mouse / keyboard the same panel as a pop-up under the box (pickSheet)
   q.readOnly=true;box.classList.add("picker");
@@ -1218,6 +1231,7 @@ function searchBox(box,items,o){
       else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();open(e.key);}  // a letter starts a search
     };
   }
+  box.sync=back;  // for code that sets the pick from outside
   back();
 }
 // the picker for a searchBox. Phones: a panel up from the bottom with a title, a search bar (the
@@ -1302,7 +1316,7 @@ function openLoads(cat,pane){
   <div class="note" id="lnote"></div>`;
   const $$=s=>$(s,pane);
   // the cartridge box is a search too: type "6.5" or "mag" to narrow the list down
-  const setCart=c=>{$$("#lc").value=c;$$("#lcq").value=c;};
+  const setCart=c=>{$$("#lc").value=c;$$("#lcq").value=c;if($$("#lcs").sync)$$("#lcs").sync();};
   searchBox($$("#lcs"),()=>carts,{text:c=>c,none:"cartridge",cur:()=>$$("#lc").value,pick:c=>{if(c===$$("#lc").value)return;setCart(c);$$("#lc").onchange();}});
   const biggest=carts.reduce((a,c)=>groups.get(c).length>groups.get(a).length?c:a,carts[0]);
   setCart((sh.cart&&groups.has(sh.cart))?sh.cart:biggest);
