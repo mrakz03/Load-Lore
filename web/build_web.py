@@ -22,7 +22,7 @@ for cat in c.CATEGORIES:
         cartridge_label=cat.cartridge_label, payload_row=cat.payload_row,
         payload_col=cat.payload_col, grain_style=cat.grain_style, show_oz=cat.show_oz,
         weights=list(cat.weights), terminal=cat.terminal, step_yd=cat.step_yd,
-        zero_yd=cat.zero_yd, sight_in=cat.sight_in,
+        zero_yd=cat.zero_yd, sight_in=cat.sight_in, group=cat.group, menu=cat.menu, note=cat.note,
         detail=[dict(cartridge=x.cartridge, load=x.load, bullet_gr=x.bullet_gr, muzzle_fps=x.muzzle_fps,
                      bc_g1=x.bc_g1, powder_gr=x.powder_gr, default_cost=x.default_cost,
                      is_default=x.is_default, source=x.source, group=x.group,
@@ -38,7 +38,7 @@ SITE = "https://loadlore.net/"
 tpl = open(os.path.join(here, "template.html"), encoding="utf-8").read()
 os.makedirs(os.path.join(here, "www"), exist_ok=True)
 with open(os.path.join(here, "www", "index.html"), "w", encoding="utf-8") as f:
-    f.write(tpl.replace("__SITE__", SITE).replace("__DATA__", json.dumps({"version": c.APP_VERSION, "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS, "hand_fields": c.HANDLOAD_FIELDS, "hand_note": c.HANDLOAD_NOTE}, ensure_ascii=False)))
+    f.write(tpl.replace("__SITE__", SITE).replace("__DATA__", json.dumps({"version": c.APP_VERSION, "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "group_blurbs": c.GROUP_BLURBS, "cat_tags": c.CAT_TAGS, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "moved": c.MOVED_CATEGORIES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS, "hand_fields": c.HANDLOAD_FIELDS, "hand_note": c.HANDLOAD_NOTE}, ensure_ascii=False)))
 shutil.copyfile(os.path.join(root, "assets", "icon.png"), os.path.join(here, "www", "icon.png"))  # browser tab icon
 # home-screen icons (scripts/make_icons.py draws them); the manifest's "browser" display keeps
 # "Add to Home screen" a plain shortcut: no install prompt

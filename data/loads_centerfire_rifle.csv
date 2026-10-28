@@ -1356,10 +1356,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .350 Legend,Winchester Power-Point,180,2100,0.221,35,1.37,,catalog,,20,Hunting
 .350 Legend,Hornady Subsonic SUB-X,250,1050,0.270,12.1,2.02,,catalog,,24,Subsonic
 .350 Legend,Winchester Super Suppressed Open Tip (subsonic),255,1060,0.221,12.6,1.00,,catalog,,16,Subsonic
-.357 Magnum,Winchester American Lever Range FMJ,130,1605,0.140,10.9,0.71,,partial,,,Target
-.357 Magnum,Winchester Big Bore Jacketed Soft Point,158,1830,0.167,17.2,0.71,,catalog,,20,Hunting
-.357 Magnum,Winchester Super-X Jacketed Soft Point,158,1830,0.163,17.2,0.62,yes,catalog,,20,Hunting
-.357 Magnum,Federal Premium Hammerdown Revolver Carbine Bonded Soft Point,170,1610,0.188,14.3,1.46,,catalog,,20,Hunting
 .35 Remington,Remington Core-Lokt Pointed Soft Point,150,2300,0.184,29.2,2.09,,catalog,,,Hunting
 .35 Remington,Federal Power-Shok SPRN,200,2080,0.195,31.9,1.90,yes,catalog,,24,Hunting
 .35 Remington,Hornady LEVERevolution FTX,200,2225,0.305,36.5,2.15,,catalog,,24,Hunting
@@ -1425,11 +1421,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .416 Remington Magnum,Federal Premium Safari Swift A-Frame,400,2400,0.367,85.3,10.93,,catalog,,24,Hunting
 .416 Remington Magnum,Federal Premium Safari Trophy Bonded Bear Claw,400,2400,0.373,85.3,10.93,,catalog,,24,Hunting
 .416 Remington Magnum,Federal Premium Safari Trophy Bonded Sledgehammer Solid,400,2400,0.273,85.3,10.93,,catalog,,24,Hunting
-.44 Magnum,Hornady LEVERevolution FTX (rifle barrel),225,1850,0.147,22,1.60,,approx,,,Hunting
-.44 Magnum,Federal Premium Hammerdown Revolver Carbine Bonded Soft Point,270,1715,0.196,23.2,1.75,,catalog,,20,Hunting
-.44 Magnum,Winchester Big Bore Jacketed Soft Point,240,1765,0.167,21.9,1.18,yes,catalog,,20,Hunting
-.44 Magnum,Winchester American Lever Range JSP,240,1750,0.157,21.5,1.68,,partial,,,Target
-.44 Magnum,Buffalo Bore Lever Gun JFN,265,1700,0.195,22.4,2.68,,partial,,,Hunting
 .444 Marlin,Remington Soft Point,240,2350,0.146,45,2.66,,catalog,,,Hunting
 .444 Marlin,Hornady LEVERevolution FTX,265,2325,0.229,48.6,2.73,yes,catalog,,24,Hunting
 .444 Marlin,Hornady Superformance InterLock FP,265,2400,0.192,51.8,2.73,,catalog,,24,Hunting

@@ -49,11 +49,28 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (pressure_of / pressureOf reads the load name; Train+Protect and +Peak aren't +P) hides those
   loads from the list without changing any grade; ticked by default, kept per category while the
   app is open (snapshot / shared), not in settings.json.
+- Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
+  (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
+  card and the sidebar entry open / close them (menu_entries / menuEntries, open_groups / OPEN_GROUPS,
+  GROUP_BLURBS; cat_name / catName for menus, page titles and cartridge-list headings). A cartridge in
+  two categories reads "9mm Luger  ·  Carbine" (CAT_TAGS) in the handload form's box; lists under
+  category headings show just the cartridge.
+- Pistol Caliber Carbine: data/loads_pcc.csv, every row's source in research/pcc_sources.tsv.
+  Maker-published carbine / lever-gun figures first (Buffalo Bore Marlin 1894 18-20", Hammerdown,
+  Syntech PCC, Winchester rifle-barrel loads), then reviewer chronograph tests (source "tested"), then
+  an estimate for every other handgun load of its cartridges (source "estimate", name ends " (est.)",
+  SOURCE_NOTES + the category note say so): v16 = v x (16 / test barrel)^n, n fitted from loads
+  printed at both lengths (auto 0.057, magnum revolver 0.221, standard revolver 0.132). Loads made
+  for lever guns / carbines (Hammerdown, Syntech PCC, Gold Dot Carbine, LEVERevolution, American
+  Lever Range) are PCC only, never in loads_handgun.csv. .357 / .44 Magnum left Centerfire Rifle
+  (Zeke): MOVED_CATEGORIES moves saved handloads and prices. .22 LR / .22 WMR stay in Handgun.
 - Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
   page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones),
   in two boxes, Display and About (rows split by thin lines, not one box each). About has a small
   GitHub logo that opens REPO_PAGE (GITHUB_MARK; web gets the URL as DATA.repo).
   The app name is drawn as a small "In Like Flint" over a larger "Load Lore" (issue #18).
+- Default distance (Oct 28 2026, Zeke): 0 yd (the muzzle) in every category and in Head to Head
+  (Category default_distance, H2H_DISTANCE), so the figures match the box; the field stays editable.
 - Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
   point-mass G1 path (trajectory / _fly, fly in web: drag along the path + gravity, RK2 0.5 m
   steps, bore tilted to cross the sight line at zero_yd) + 10 mph drift by Didion's lag rule,
@@ -75,6 +92,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   menu, desktop a "Shot" column (click its heading). shot_size / shotSize read the load name's
   largest shot (slugs first, then 000-4 Buck, T/BBB/BB/B, #1-#9 as (17-n)/100 in), then most
   pellets, then heaviest payload.
+- Grain weight sort (Oct 28 2026, Zeke): bullet categories (rifle, rimfire, handgun). Web sort menu
+  "Sort: heaviest bullet" / "Sort: lightest bullet" (#ls grain / grainl); PC tables (desktop LoadsView, web
+  >=900 px) have a Grains column whose heading sorts heaviest first, click again for lightest, so the
+  Load cell there shows just the name (cards and labels keep "· 150 gr").
 - Load labels read "Load  ·  150 gr" (make_label / makeLabel). Saved prices are keyed by label;
   keys from the old weight-first format are converted on read (_rename_price_key / readPrices).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
@@ -99,7 +120,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
 - PC web load list (Oct 27 2026, Zeke): at >=900 px the dictionary's load list (#lres) is one table like
   the desktop app's (.lhead / .trow on a CSS subgrid, columns fit their figures, same columns as LoadsView;
-  sortable headers set the #ls sort). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
+  sortable headers set the #ls sort; clicking the sorted header again goes back to the default order, Grains goes heaviest -> lightest -> default, desktop _sort_by the same; Zeke, Oct 28 2026). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
   At >=1500 px the dictionary page (.wrap.dict) fills the window: settings card, filter and sort in a
   left column, the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
   column (cartridge box over load box) beside the results. An opened load on PC web shows a facts line
@@ -112,7 +133,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Before the public web launch (Oct 28 2026, Zeke): no "Development Build" text anywhere (version_text /
   VERSION_TEXT read "v1.10", or "dev" from source); Home ends with "Figures are estimates. Nothing you see
   here is reloading data. Disclaimer in Settings ›" (the Home line says "over 3,500 commercially available
-  rounds": 3,686 loads in Oct 2026, update it if the count changes a lot) (desktop + web); the web page has a meta description and link-preview
+  rounds": 3,685 loads in Oct 2026, update it if the count changes a lot) (desktop + web); the web page has a meta description and link-preview
   (og:) tags whose address is SITE in build_web.py (https://loadlore.net/, Zeke's custom domain for Pages), an apple-touch-icon and a
   manifest with display "browser" (a plain home-screen shortcut, no install prompt; Zeke wanted it
   unobtrusive). make_icons.py draws those icons into assets/web/; build_web.py copies them into www.
@@ -269,6 +290,11 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   loads, Federal +Peak Barnes LRX, Winchester American Lever Range, Remington and Barnes subsonics. New cartridge
   4.6x30mm (Handgun category next to 5.7x28mm, 0.183 in, GUN_LB 4.5 lb for the MP7): Hornady BLACK V-MAX and
   Fiocchi FMJ / JSP / Hyperformance. bullets.csv has no .183 bullet. Rows and sources in added_loads_sources.tsv.
+- Defensive rimfire (Oct 28 2026, Zeke): a defense load goes in each list it has published figures for, Handgun for a
+  handgun-barrel velocity, Rimfire Rifle for a rifle one. Silvertip .22 LR / .22 WMR, Federal Punch, CCI Uppercut and
+  Hornady Critical Defense .22 WMR print handgun figures only (Winchester marks Silvertip "handgun only"), so they are
+  Handgun-only, purpose Defense. Winchester Defender .22 WMR has only the catalog's rifle figure (1910 fps), so it stays in
+  Rimfire Rifle (purpose Hunting: a lone Defense load there would have nothing to be graded against).
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
