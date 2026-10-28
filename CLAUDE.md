@@ -77,8 +77,12 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   zero_yd / sight_in per category. Checked Oct 2026 against the Hornady 2026 ballistics pages:
   velocity and path match to ~0.1-0.3 in median error out to 500 yd (the old flat-fire t^2 drop
   read 10-15% too much drop at 400-500 yd). An estimate, not a full solver.
-- Android back button: @capacitor/app backButton listener in template.html closes a dialog, then
-  steps category -> category list -> Home; only Home exits.
+- Back button (Oct 28 2026, Zeke): every web page change is a history entry (navigate -> navRecord:
+  pushState with #loads/<category>, #h2h, #hand, #settings; Home has no hash), so the browser's back
+  arrow and the phone's back button go to the previous in-app page; a reload or #address link opens
+  that page (navFrom). Back with a dialog / pop-up open closes it and stays (popstate re-pushes).
+  Android: the @capacitor/app backButton listener closes a dialog, else history.back() (state.depth),
+  else steps category -> category list -> Home; only Home exits.
 - data/loads_*.csv: every load name starts with its brand (Federal, Hornady, SIG Sauer...).
   data/ammo_*.csv: generic loads, no brand names; now only the cartridge list (handload-only
   cartridges, handload dialog).
