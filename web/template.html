@@ -53,7 +53,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .homenote .link{font-size:inherit;padding:0}
 .feat{display:grid;grid-template-columns:1fr;gap:12px}
 .fcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px;text-align:left;color:var(--text);font:inherit;cursor:pointer}
-.fcard:hover{border-color:var(--accent);background:var(--surface2)}
+@media(hover:hover){.fcard:hover{border-color:var(--accent);background:var(--surface2)}}
 .fcard .ic{width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center}
 .fcard .ic svg{width:22px;height:22px;stroke:var(--on-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fcard b{font-size:1.15rem}.fcard span{color:var(--muted);font-size:.92rem;line-height:1.45}
@@ -193,7 +193,8 @@ h2{font-size:1.45rem;margin:6px 0 0}
 .grid{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
 .cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;color:var(--text);cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:6px;min-height:118px}
-.cat:hover,.cat:active{background:var(--surface2);border-color:var(--accent)}
+.cat:active{background:var(--surface2);border-color:var(--accent)}
+@media(hover:hover){.cat:hover{background:var(--surface2);border-color:var(--accent)}}   /* phones: no hover left stuck on a tapped card */
 .cat.child{margin-left:28px}   /* Pistol / Revolver and Pistol Caliber Carbine, under Handgun */
 .cat b{font-size:1.1rem}.cat span.b{color:var(--muted);font-size:.85rem}.cat span.c{color:var(--accent);font-size:.78rem;font-weight:700;margin-top:auto}
 @media(min-width:900px){   /* PC: compact category cards like the desktop app's */
@@ -699,7 +700,7 @@ const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or y
 const toolTitle=k=>(TOOLS.find(t=>t[0]===k)||TOOLS[0])[1];
 // the Load Dictionary, the main tool, sits in the middle of the phone's tab bar
 const NAVS=[["home","Home",ICON.home],["h2h","Head to Head",ICON.h2h],["loads","Load Dictionary",ICON.loads],["hand","Handloads",ICON.hand],["settings","Settings",ICON.settings]];
-const H2H_MIN=2,H2H_MAX=5,H2H=[],H2H_DISTANCE=100;   // Head to Head picks (pickKey), any category
+const H2H_MIN=2,H2H_MAX=5,H2H=[],H2H_DISTANCE=0;   // Head to Head picks (pickKey), any category
 const pickKey=(cat,it)=>cat.title+"|"+it.cartridge+"|"+(it.hid||it.label);
 // S-F grades on / off (Settings), shared by both tools and remembered
 let GRADES=false;try{GRADES=localStorage.getItem(GRADES_KEY)==="1";}catch(e){}
@@ -803,13 +804,12 @@ function showSettings(){
 }
 function showPicker(mode){
   document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","home");app.classList.add("picker");
-  const last=lastCat();
   const count=cs=>{
     const carts=new Set();let d=0;
     for(const c of cs){const list=state.detail[c.title].filter(x=>!x.handload);list.concat(c.grain_style?state.loads[c.title]:[]).forEach(x=>carts.add(x.cartridge));d+=list.length;}
     return `${carts.size} cartridges  ·  ${d.toLocaleString()} loads`;
   };
-  const card=c=>`<button class="cat${c.group?" child":""}" data-cat="${esc(c.title)}" ${c.title===last?'style="border-color:var(--accent)"':""}><b>${esc(catName(c))}</b><span class="b">${esc(c.blurb)}</span><span class="c">${count([c])}</span></button>`;
+  const card=c=>`<button class="cat${c.group?" child":""}" data-cat="${esc(c.title)}"><b>${esc(catName(c))}</b><span class="b">${esc(c.blurb)}</span><span class="c">${count([c])}</span></button>`;
   app.innerHTML=`<div class="phead"><h2>${toolTitle(mode)}</h2><p class="sub">Choose a category.</p></div><div class="pick">${
     menuEntries().map(e=>{
       if(!Array.isArray(e))return card(e);

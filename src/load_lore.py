@@ -155,27 +155,27 @@ class Category:
 
 CATEGORIES = (
     Category("Centerfire Rifle", "Hunting, precision and military rounds",
-             "ammo_centerfire_rifle.csv", 100, 2000, 8.0, "RIFLE WEIGHT (LB)",
+             "ammo_centerfire_rifle.csv", 0, 2000, 8.0, "RIFLE WEIGHT (LB)",
              legacy_filename="ammo_data.csv",
              loads_filename="loads_centerfire_rifle.csv"),
     Category("Handgun", "Pistol and revolver rounds",
-             "ammo_handgun.csv", 10, 500, 2.0, "HANDGUN WEIGHT (LB)",
+             "ammo_handgun.csv", 0, 500, 2.0, "HANDGUN WEIGHT (LB)",
              loads_filename="loads_handgun.csv", step_yd=25, zero_yd=25, sight_in=0.6,
              group="Handgun", menu="Pistol / Revolver"),
     # handgun cartridges fired from carbines and lever guns: published, reviewer-tested or
     # estimated (source "estimate") carbine velocities
     Category("Pistol Caliber Carbine", "Handgun rounds from carbine and lever-gun barrels",
-             "ammo_pcc.csv", 50, 300, 6.5, "CARBINE WEIGHT (LB)",
+             "ammo_pcc.csv", 0, 300, 6.5, "CARBINE WEIGHT (LB)",
              loads_filename="loads_pcc.csv", step_yd=50, zero_yd=50, sight_in=2.0,
              group="Handgun",
              note="Loads marked (est.) have no published carbine velocity: it is worked out from "
                   "the maker's handgun figure for a 16 in barrel."),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
-             "ammo_rimfire_rifle.csv", 50, 500, 5.0, "RIFLE WEIGHT (LB)",
+             "ammo_rimfire_rifle.csv", 0, 500, 5.0, "RIFLE WEIGHT (LB)",
              weights=(3, 3, 1, 6, 3, 3),
              loads_filename="loads_rimfire_rifle.csv", step_yd=50, zero_yd=50),
     Category("Shotgun", "Birdshot, buckshot and slugs",
-             "ammo_shotgun.csv", 25, 300, 7.5, "SHOTGUN WEIGHT (LB)",
+             "ammo_shotgun.csv", 0, 300, 7.5, "SHOTGUN WEIGHT (LB)",
              cartridge_label="GAUGE", payload_row="Payload",
              payload_col="Payload (gr)", grain_style=False, show_oz=True,
              terminal=False, weights=(3, 3, 1, 3, 0, 0),
@@ -237,7 +237,7 @@ TOOLS = (("loads", "Load Dictionary", "Every load of a cartridge, factory or you
                                "Dictionary and can go head to head."))
 NAV_ORDER = ("loads", "h2h", "hand")     # the PC sidebar (Zeke, Oct 25 2026): Load Dictionary first; phones keep NAVS
 H2H_MIN, H2H_MAX = 2, 5
-H2H_DISTANCE = 100       # Head to Head's starting distance (yd); each load is capped at its category's max
+H2H_DISTANCE = 0         # Head to Head's starting distance (yd, 0 = muzzle); each load is capped at its category's max
 
 
 def tool_title(key):
