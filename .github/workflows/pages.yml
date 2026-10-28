@@ -1,0 +1,50 @@
+name: Web version on GitHub Pages
+# Every push to main rebuilds web/www/index.html (python web/build_web.py) and publishes it on
+# GitHub Pages at https://loadlore.net/ (custom domain, set in Settings > Pages; the old address
+# https://mrakz03.github.io/Load-Lore/ forwards there). Turn it on once: Settings > Pages >
+# Source: GitHub Actions. Run manually from the Actions tab too.
+# With an Actions deploy GitHub keeps the domain in the repo settings, so no CNAME file is needed.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Set version from the latest tag
+        shell: bash
+        run: |
+          # main is the released version: show the newest tag's number (v1.8-beta -> 1.8-beta)
+          t=$(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || true)
+          v=dev; [ -n "$t" ] && v="${t#v}"
+          sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/load_lore.py
+          grep -q "^APP_VERSION = \"$v\"" src/load_lore.py
+      - run: python web/build_web.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: web/www }
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

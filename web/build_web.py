@@ -1,7 +1,7 @@
 """Regenerates www/index.html (the phone/web version) from the CSV files.
 Run after editing any data/*.csv or web/template.html:   python3 web/build_web.py
 """
-import json, os, sys
+import json, os, shutil, sys
 
 here = os.path.dirname(os.path.abspath(__file__))
 root = os.path.dirname(here)
@@ -33,8 +33,20 @@ for cat in c.CATEGORIES:
 bullets = [dict(maker=r["maker"], name=r["name"], diameter=float(r["diameter_in"]), weight=float(r["weight_gr"]),
                bc=float(r["bc_g1"]), type=r["type"])
            for r in csv.DictReader(open(os.path.join(data, "bullets.csv"), encoding="utf-8-sig"))]
+# the public web address, for link previews; change it here if the site moves to its own domain
+SITE = "https://loadlore.net/"
 tpl = open(os.path.join(here, "template.html"), encoding="utf-8").read()
 os.makedirs(os.path.join(here, "www"), exist_ok=True)
 with open(os.path.join(here, "www", "index.html"), "w", encoding="utf-8") as f:
-    f.write(tpl.replace("__DATA__", json.dumps({"version": c.APP_VERSION, "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS, "hand_fields": c.HANDLOAD_FIELDS, "hand_note": c.HANDLOAD_NOTE}, ensure_ascii=False)))
+    f.write(tpl.replace("__SITE__", SITE).replace("__DATA__", json.dumps({"version": c.APP_VERSION, "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS, "hand_fields": c.HANDLOAD_FIELDS, "hand_note": c.HANDLOAD_NOTE}, ensure_ascii=False)))
+shutil.copyfile(os.path.join(root, "assets", "icon.png"), os.path.join(here, "www", "icon.png"))  # browser tab icon
+# home-screen icons (scripts/make_icons.py draws them); the manifest's "browser" display keeps
+# "Add to Home screen" a plain shortcut: no install prompt
+for name in os.listdir(os.path.join(root, "assets", "web")):
+    shutil.copyfile(os.path.join(root, "assets", "web", name), os.path.join(here, "www", name))
+with open(os.path.join(here, "www", "manifest.webmanifest"), "w", encoding="utf-8") as f:
+    json.dump({"name": c.APP_TITLE, "short_name": "Load Lore", "start_url": ".", "display": "browser",
+               "background_color": "#0e1014", "theme_color": "#0e1014",
+               "icons": [{"src": f"icon-{n}.png", "sizes": f"{n}x{n}", "type": "image/png"} for n in (192, 512)]},
+              f, indent=1)
 print("wrote www/index.html")

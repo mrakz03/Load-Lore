@@ -47,6 +47,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: windows
+          retention-days: 7
           path: |
             LoadLore-${{ env.VTAG }}-Windows.zip
             LoadLore-${{ env.VTAG }}-Setup.exe
@@ -74,7 +75,7 @@ jobs:
           cp scripts/install_linux.sh LoadLore/install.sh
           tar czf "LoadLore-$VTAG-Linux.tar.gz" LoadLore
       - uses: actions/upload-artifact@v4
-        with: { name: linux, path: "LoadLore-${{ env.VTAG }}-Linux.tar.gz" }
+        with: { name: linux, path: "LoadLore-${{ env.VTAG }}-Linux.tar.gz", retention-days: 7 }
 
   android:
     runs-on: ubuntu-latest
@@ -134,7 +135,7 @@ jobs:
           [ -n "$want" ] && [ "$want" = "$got" ]
       - run: cp android/app/build/outputs/apk/debug/app-debug.apk "LoadLore-$VTAG.apk"
       - uses: actions/upload-artifact@v4
-        with: { name: android, path: "LoadLore-${{ env.VTAG }}.apk" }
+        with: { name: android, path: "LoadLore-${{ env.VTAG }}.apk", retention-days: 7 }
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')

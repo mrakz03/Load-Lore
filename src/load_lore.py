@@ -172,7 +172,7 @@ CATEGORIES = (
 
 
 def version_text():
-    return "Development Build" if APP_VERSION == "dev" else f"Development Build v{APP_VERSION}"
+    return "dev" if APP_VERSION == "dev" else f"v{APP_VERSION}"
 
 
 def default_weights(cat):
@@ -450,7 +450,7 @@ GUN_LB = {     # per category: the same cartridge can be in a rifle and a handgu
         ".375 Ruger": 9.5},
     "Handgun": {
         ".500 S&W Magnum": 4.5, ".460 S&W Magnum": 4.5, ".50 AE": 4.5, ".454 Casull": 3.5,
-        ".480 Ruger": 3.5, ".44 Magnum": 3.0},
+        ".480 Ruger": 3.5, ".44 Magnum": 3.0, "4.6x30mm": 4.5},
     "Shotgun": {"10 Gauge": 10.0},
 }
 GUN_LB_MAX = 60.0
@@ -554,6 +554,7 @@ DIAMETERS = {
     ".460 S&W Magnum": 0.452,
     ".480 Ruger": 0.475,
     "5.7x28mm": 0.224,
+    "4.6x30mm": 0.183,
     ".50 AE": 0.5,
     ".500 S&W Magnum": 0.5,
     "9x18mm Makarov": 0.365,
@@ -627,6 +628,32 @@ def make_label(item, grain_style):
     if item.group and item.load:
         return f"{item.group}  ·  {item.load}"
     return item.load or f"{item.bullet_gr:g} gr"
+
+
+# shot sizes in inches: buckshot by number, then birdshot letters; birdshot #n is (17 - n) / 100
+BUCK_IN = {"000": .36, "00": .33, "0": .32, "1": .30, "2": .27, "3": .25, "4": .24}
+SHOT_LETTER_IN = {"T": .20, "BBB": .19, "BB": .18, "B": .17}
+
+
+def shot_size(item):
+    """(size in inches, pellet count or 0, short text) of a shotshell's largest shot, from its
+    name ('2¾" 00 Buck · 9 pellets', '3" #4/5/6 · 1¼ oz'); slugs come out biggest (1.0)."""
+    name = item.load or ""
+    seg = next((s for s in name.split(" · ") if '"' in s), name)
+    seg = re.sub(r'^[\d.¼½¾⅛⅜⅝⅞]+" ?', "", seg).replace("½", ".5")
+    m = re.search(r"(\d+) pellets", name)
+    pellets = int(m.group(1)) if m else 0
+    if item.group == "Slug" or re.search(r"\bSlug", seg):
+        return 1.0, pellets, "Slug"
+    m = re.search(r"\b(000|00|0|[1-4]) Buck", seg)
+    if m:
+        return BUCK_IN[m.group(1)], pellets, f"{m.group(1)} Buck"
+    best = (0.0, pellets, "—")
+    for t in re.findall(r"\b(T|BBB|BB|B|\d+(?:\.\d+)?)\b", seg):
+        d = SHOT_LETTER_IN.get(t) or (17 - float(t)) / 100
+        if best[0] < d <= .21:
+            best = (d, pellets, t if t in SHOT_LETTER_IN else f"#{float(t):g}")
+    return best
 
 
 PRESSURES = ("+P", "+P+")
@@ -1748,7 +1775,28 @@ class App:
             s.map(name, background=[("active", MUTED)], lightcolor=[("active", MUTED)],
                   darkcolor=[("active", MUTED)])
         s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", ON_ACCENT)])
+        # a thin line under each row, like the web's table rows: the row background is an image
+        # (fill + a 1 px BORDER line at the bottom) stretched to the row, accent when selected
+        def row_png(fill):
+            img = tk.PhotoImage(width=3, height=3)
+            img.put(fill, to=(0, 0, 3, 2))
+            img.put(BORDER, to=(0, 2, 3, 3))
+            return img
+        self._row_imgs = (row_png(SURFACE), row_png(ACCENT))
+        name = f"Rowline{len(getattr(self, '_row_names', ()))}.row"     # one element per theme
+        self._row_names = getattr(self, "_row_names", ()) + (name,)
+        s.element_create(name, "image", self._row_imgs[0], ("selected", self._row_imgs[1]),
+                         border=(1, 0, 1, 1), sticky="nswe")
+        s.layout("Treeview.Row", [(name, {"sticky": "nswe"})])
         s.map("Treeview.Heading", background=[("active", BORDER)])
+
+    def rule(self, parent, row, span, column=0):
+        """A thin line along the bottom of a grid row, like the web's table row borders
+        (drawn over the row's padding, so it doesn't change the row's height)."""
+        line = tk.Frame(parent, bg=BORDER, height=1)
+        line.grid(row=row, column=column, columnspan=span, sticky="sew")
+        line.lift()
+        return line
 
     def label(self, parent, text="", size=11, color=None, bold=False, bg=None, **kw):
         return tk.Label(parent, text=text, bg=SURFACE if bg is None else bg,
@@ -2137,12 +2185,20 @@ class App:
             wrap = self._menu_wrap(stage, width)
             self.label(wrap, "In Like Flint", 11, MUTED, True, bg=BG, anchor="w").pack(anchor="w")
             self.label(wrap, "Load Lore", 20, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
-            self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
-                       "loads head to head.", 11, MUTED, bg=BG, anchor="w", justify="left",
+            self.label(wrap, "Explore the velocity, energy, recoil and cost of over 3,500 commercially "
+                       "available rounds, or put loads head to head.", 11, MUTED, bg=BG, anchor="w", justify="left",
                        wraplength=width).pack(anchor="w", pady=(self.px(8), self.px(18)))
             for key, title, blurb in TOOLS:
                 self._feature_card(wrap, key, title, blurb, lambda t=key: self.show_picker(t),
                                    width).pack(fill="x", pady=(0, self.px(10)))
+            note = tk.Frame(wrap, bg=BG)
+            note.pack(anchor="w", pady=(self.px(4), 0))
+            self.label(note, "Figures are estimates. Nothing you see here is reloading data. ", 10, MUTED,
+                       bg=BG).pack(side="left")
+            go = tk.Label(note, text="Disclaimer in Settings ›", bg=BG, fg=ACCENT,
+                          font=self.f(10, True), cursor="hand2")
+            go.pack(side="left")
+            go.bind("<Button-1>", lambda e: self.show_settings())
         self._update_scroll()
 
     def _feature_card(self, parent, key, title, blurb, command, width):
@@ -2954,7 +3010,7 @@ class LoadsView:
                                  10, MUTED, bg=BG, anchor="e")
         self.count_lbl.grid(row=1, column=1, sticky="e", pady=(4, 0), padx=(16, 0))
         # (for bullets the weight is already in the Load text, so no separate Grains column)
-        self.cols = ["#", "Load"] + ([] if cat.grain_style else [cat.payload_col])
+        self.cols = ["#", "Load"] + ([] if cat.grain_style else ["Shot", cat.payload_col])
         if cat.grain_style:
             self.cols += ["Barrel", "Use"]
         self.cols += ["Velocity", "Energy", "Recoil"]
@@ -3395,7 +3451,7 @@ class LoadsView:
         self._render()
 
     def _sort_by(self, col):
-        first = col in (self.cat.payload_col, "Velocity", "Energy", "Taylor", "HITS", "Score")
+        first = col in ("Shot", self.cat.payload_col, "Velocity", "Energy", "Taylor", "HITS", "Score")
         if self.sort["col"] == col and not self.app.show_grades and self.sort["desc"] != first:
             # grades off hides the # column, so a third click on a heading goes back to the
             # default order instead
@@ -3419,6 +3475,8 @@ class LoadsView:
                 and self._press_ok(r["item"])]
         keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["item"].label.lower(), r["stats"]["weight"]),
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
+                # biggest shot first, then the most pellets, then the heaviest payload
+                "Shot": lambda r: shot_size(r["item"])[:2] + (r["stats"]["weight"],),
                 "Barrel": lambda r: r["item"].barrel_in or 999,
                 "Use": lambda r: (r["item"].purpose, r["rank"]),
                 "Velocity": lambda r: r["stats"]["velocity"],
@@ -3439,7 +3497,7 @@ class LoadsView:
             if self.cat.grain_style:
                 vals += [f"{it.barrel_in:g}\"" if it.barrel_in else "—", it.purpose]
             else:
-                vals += [f"{st['weight']:g}"]
+                vals += [shot_size(it)[2], f"{st['weight']:g}"]
             vals += [f"{st['velocity']:.0f}", f"{st['energy']:.0f}", f"{st['recoil']:.1f}"]
             if self.cat.terminal:
                 vals += [f"{st['taylor']:.1f}", f"{st['hits']:.0f}"]
@@ -3548,12 +3606,16 @@ class LoadsView:
                  f"Wind drift (in, {WIND_MPH:g} mph)"]
         for c, h in enumerate(heads):
             a.label(self.bt_frame, h, 10, MUTED, True, anchor="e").grid(
-                row=0, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=(0, 4))
-        for r, (yd, v, e, path, drift) in enumerate(ballistic_table(item, cat), start=1):
+                row=0, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=(0, 6))
+        a.rule(self.bt_frame, 0, len(heads))
+        table = ballistic_table(item, cat)
+        for r, (yd, v, e, path, drift) in enumerate(table, start=1):
             for c, text in enumerate((f"{yd:g}", f"{v:,.0f}", f"{e:,.0f}", "0.0" if abs(path) < 0.05 else f"{path:+.1f}",
                                       f"{drift:.1f}")):
                 a.label(self.bt_frame, text, 11, TEXT, c == 0, anchor="e").grid(
-                    row=r, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=1)
+                    row=r, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=4)
+            if r < len(table):
+                a.rule(self.bt_frame, r, len(heads))
         a.label(self.bt_frame, f"Zeroed at {cat.zero_yd:g} yd with the sight {cat.sight_in:g} in "
                 f"above the bore; drop and drift are estimates from the G1 BC, sea-level air.",
                 9, MUTED, anchor="w", justify="left", wraplength=a.px(760)).grid(
@@ -4471,7 +4533,7 @@ class HeadToHeadView:
         self.add_link = tk.Label(card, text=f"+  Add a load (up to {H2H_MAX})", bg=SURFACE,
                                  fg=ACCENT, font=a.f(10, True), cursor="hand2")
         self.add_link.grid(row=2, column=0, sticky="w", pady=(8, 0), **pad)
-        self.add_link.bind("<Button-1>", lambda e: self._add_slot(focus=True))
+        self.add_link.bind("<Button-1>", lambda e: self._add_slot(empty=True))
 
         top = tk.Frame(card, bg=SURFACE)
         top.grid(row=3, column=0, sticky="ew", pady=(a.px(12), 0), **pad)
@@ -4493,7 +4555,9 @@ class HeadToHeadView:
                                 wraplength=a.px(880))
         self.footnote.grid(row=3, column=0, sticky="w", pady=(10, 0))
 
-    def _add_slot(self, item=None, icat=None, focus=False):
+    def _add_slot(self, item=None, icat=None, empty=False):
+        # empty: "+ Add a load" gives a blank row and opens nothing (Zeke: it used to copy the
+        # last row's cartridge and jump into the load box)
         if len(self.slots) >= H2H_MAX:
             return
         a = self.app
@@ -4503,6 +4567,9 @@ class HeadToHeadView:
         if item is not None:
             slot["load"].set(next(t for t, x in self.choices[(icat.title, item.cartridge)].items()
                                   if x is item))
+        elif empty:
+            if self.slots:
+                slot["cat"].set(self.slots[-1]["cat"].get())
         elif self.slots:                          # a new row starts on the last row's cartridge
             slot["cat"].set(self.slots[-1]["cat"].get())
             slot["cart"].set(self.slots[-1]["cart"].get())
@@ -4536,8 +4603,6 @@ class HeadToHeadView:
         self.slots.append(slot)
         self._fill_loads(slot)
         self._layout_slots()
-        if focus:
-            slot["load_box" if slot["cart"].get() else "cart_box"].focus_set()
 
     def _fill_loads(self, slot):
         # the cartridge pop-up lists every category's cartridges under its heading, the row's
@@ -4745,6 +4810,11 @@ class HeadToHeadView:
                     justify="left", wraplength=wrap).pack(anchor="w")
             if it.handload:
                 a.label(box, "handload", 9, HAND_FG, anchor="w").pack(anchor="w")
+        # a thin line between rows, like the web's table (the thicker rule below stands in for
+        # the line under the grade rows, and the card's edge for the one under "Best in")
+        line = lambda: a.rule(card, r, n + 1)
+        if grades:
+            line()
         r += 1
         if grades:
             self._cell(card, r, 0, "Overall", 10, MUTED, True)
@@ -4753,6 +4823,7 @@ class HeadToHeadView:
                 box.grid(row=r, column=c, sticky="w", padx=12, pady=5)
                 Badge(box, a, row["grade"], 12).pack(side="left")
                 a.label(box, f"{row['overall']:.0f}", 12, TEXT, True).pack(side="left", padx=(8, 0))
+            line()
             r += 1
         if grades:
             self._cell(card, r, 0, "Rank in its cartridge", 10, MUTED, True)
@@ -4773,6 +4844,7 @@ class HeadToHeadView:
             self._cell(card, r, 0, name, 10, MUTED, True)
             for c, row in enumerate(rows, start=1):
                 self._cell(card, r, c, fn(row), 10, TEXT)
+            line()
             r += 1
         # graded factors: best highlighted, others show how far behind; "—" where a factor
         # doesn't apply (no Taylor KO / HITS for shotshells)
@@ -4795,6 +4867,7 @@ class HeadToHeadView:
                 if grades:
                     Badge(box, a, grade_relative(row["scores"][key]), 9).pack(
                         side="left", padx=(8, 0))
+            line()
             r += 1
         self._cell(card, r, 0, "Best in", 10, MUTED, True)
         most = max(len(row["best"]) for row in rows)
@@ -4859,6 +4932,8 @@ class HeadToHeadView:
                 vb, eb = v >= v_top - 1e-9, e >= e_top - 1e-9
                 cell(i, 3 * c + 2, f"{v:,.0f}", ACCENT if vb else TEXT, vb)
                 cell(i, 3 * c + 3, f"{e:,.0f}", ACCENT if eb else TEXT, eb)
+            if i < len(table) + 2:
+                a.rule(dr, i, 3 * n + 1)                    # a thin line between distances
         a.label(dr, "", 2, bg=SURFACE).grid(row=last, column=0)
 
 

@@ -28,7 +28,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   load is graded with its own category's Load Dictionary weights (dict_weights / dictWeights),
   factors it lacks show "—", downrange steps come from the picked category with the largest step. Its downrange table (Oct 2026) looks like the dictionary's ballistic table: compact (sized to its figures, not stretched to the window), each load's cartridge in small grey type, then its name on one line (only a very long name wraps), weight in small grey type under it, over its own right-aligned Velocity (fps) and Energy (ft-lbs) columns, a thin line between loads, each column highlighting its own leader at that distance. Phones (<=600 px)
   get Head to Head as cards (one per load, one per factor with bars, downrange by distance chip),
-  always naming loads, never numbering them. Head to Head load boxes are searches (issue #24:
+  always naming loads, never numbering them. "+ Add a load" adds an empty row (no copied cartridge) and
+  opens nothing (Oct 27 2026, Zeke). Head to Head load boxes are searches (issue #24:
   LoadSearch / searchBox, every typed word must be in the name); so are the cartridge boxes
   (Oct 2026): the dictionary's searches its category, Head to Head's searches every category
   (desktop rows "6.5 Creedmoor  ·  Centerfire Rifle", web list grouped under category headings).
@@ -70,6 +71,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Grades are relative to the same cartridge and purpose (median/MAD, centre 70; shotshells
   within their load type): score_loads / scoreLoads. Head to Head shows each load's Load
   Dictionary grade (purpose All), never grades the picked loads against each other.
+- Shot size sort (Oct 27 2026, Zeke): shotgun only, web "Sort: shot size" in the dictionary's sort
+  menu, desktop a "Shot" column (click its heading). shot_size / shotSize read the load name's
+  largest shot (slugs first, then 000-4 Buck, T/BBB/BB/B, #1-#9 as (17-n)/100 in), then most
+  pellets, then heaviest payload.
 - Load labels read "Load  ·  150 gr" (make_label / makeLabel). Saved prices are keyed by label;
   keys from the old weight-first format are converted on read (_rename_price_key / readPrices).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
@@ -92,6 +97,25 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), Handloads, Settings; the PC sidebar (NAV_ORDER; web: CSS order at >=900 px, Oct 25) has
   the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
+- PC web load list (Oct 27 2026, Zeke): at >=900 px the dictionary's load list (#lres) is one table like
+  the desktop app's (.lhead / .trow on a CSS subgrid, columns fit their figures, same columns as LoadsView;
+  sortable headers set the #ls sort). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
+  At >=1500 px the dictionary page (.wrap.dict) fills the window: settings card, filter and sort in a
+  left column, the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
+  column (cartridge box over load box) beside the results. An opened load on PC web shows a facts line
+  and a tile per factor (.pdet, desktop panel style) instead of the phone's figure rows (.fr).
+  Handloads (>=900 px): each cartridge group is a table too (Handload, Bullet, Powder, Velocity, Energy,
+  Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); >=1500 px it fills the window (.handp).
+  The web handload form's cartridge box is a <select> (cartridges in an <optgroup> per category) with a
+  .selcover button over it: with a mouse it opens the search pop-up (pickSheet with an anchor), on touch the
+  bottom sheet, both with category headings (Zeke, Oct 28 2026; he tried the plain drop-down and preferred the pop-up).
+- Before the public web launch (Oct 28 2026, Zeke): no "Development Build" text anywhere (version_text /
+  VERSION_TEXT read "v1.10", or "dev" from source); Home ends with "Figures are estimates. Nothing you see
+  here is reloading data. Disclaimer in Settings ›" (the Home line says "over 3,500 commercially available
+  rounds": 3,686 loads in Oct 2026, update it if the count changes a lot) (desktop + web); the web page has a meta description and link-preview
+  (og:) tags whose address is SITE in build_web.py (https://loadlore.net/, Zeke's custom domain for Pages), an apple-touch-icon and a
+  manifest with display "browser" (a plain home-screen shortcut, no install prompt; Zeke wanted it
+  unobtrusive). make_icons.py draws those icons into assets/web/; build_web.py copies them into www.
 - PC Home, category list and Settings (Oct 25 2026, Zeke): top left, compact cards in one column (icon beside the text), zoomed
   with the window up to 1.15x (desktop App._menu_layout / _zoomed, re-laid out on resize; web
   fitMenu sets CSS zoom at >=900 px). Phones keep their centred layout.
@@ -145,6 +169,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   and copies assets/android/res over the Capacitor project after `cap add android`.
 
 ## Release
+- Build artifacts (the files on an Actions run page) are kept 7 days (retention-days); releases
+  keep their own copies. Old private Load-Lore-old artifacts counted against the 500 MB free quota.
 - In-app updates (Windows/Linux, Settings > Updates, App.check_updates / start_update): asks the
   GitHub latest-release API, downloads the Setup.exe (run with /SILENT; the .iss [Run] entry with
   Check: WizardSilent reopens the app) or the Linux tar (install_linux_update swaps the files in
@@ -160,6 +186,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
 (tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
 - APP_VERSION in load_lore.py stays "dev" in the repo; CI sets it from the tag.
+- Web version on GitHub Pages (Oct 27 2026, .github/workflows/pages.yml): every push to main runs
+  build_web.py and deploys web/www (version = newest v* tag). Needs Settings > Pages > Source: GitHub
+  Actions. A custom domain is set in Settings > Pages (no CNAME file with an Actions deploy).
 - Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the maintainer saves
   the middle number (v1.6) for bigger releases.
 - Installers upgrade in place and clear old shipped data (ammo_*, loads_*, bullets.csv) first.
@@ -213,6 +242,13 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   22-250 55 PSP 0.453 -> 0.239, Fiocchi 30-06 165 HPBT GK 0.224 -> 0.370, Remington .224 Valkyrie 90 OTM
   0.274 -> 0.572); bad scaled (partial) BCs on PPU HPBT and a few others set to the bullet's published BC.
   Hornady's Frontier line is in under "Hornady Frontier ..." (same ballistics as some Hornady loads).
+- One shot size per load (Oct 27 2026): shotshell rows that listed every size a product is sold in
+  ("3½" T/BBB/BB/2/3/4 Steel") were split into one row per size, same velocity, payload and price
+  (the catalogs print one velocity per product), BC from the size and shot material (lead, steel,
+  bismuth, TSS/tungsten; Winchester Last Call TSS and Longbeard Tungsten now use TSS BCs too).
+  Shells holding two sizes stay one row: Federal Ultra Steel and Heavyweight TSS 7/9 read
+  "BB x #2" / "#7 x #9", Winchester blends "BB+1.5". Where two speeds of the same line, size and
+  payload met, both got "(1250 fps)". Old -> new names in research/split_shot_sizes.tsv.
 - Packaging variants are one load: bulk / pour pack / bucket / value or range pack / round-count
   boxes of the same product were merged (Oct 2026). Don't add them back as separate rows.
 - Data check (Oct 24 2026): bullets.csv Hornady ELD Match / ELD-X BCs set to hornady.com/bc (G1 at
@@ -227,6 +263,12 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   matched loads of the same product line, else the same brand + old price in that cartridge, else a
   fitted cartridge x brand ratio (0.33-3x). ELEY kept. Each load's old/new price and method is in
   research/price_sources.tsv. Shotshells match by brand, line, length, payload / buck size.
+- Oct 27 2026 gap fill: Buffalo Bore read cartridge by cartridge from buffalobore.com's category pages
+  (index.php?l=product_list&c=N; c=146 handgun / c=147 rifle list them): 170+ loads, every cartridge the app has
+  (the Sniper .223 loads are left out: their velocities are only in chart images). Federal's two .22 Creedmoor
+  loads, Federal +Peak Barnes LRX, Winchester American Lever Range, Remington and Barnes subsonics. New cartridge
+  4.6x30mm (Handgun category next to 5.7x28mm, 0.183 in, GUN_LB 4.5 lb for the MP7): Hornady BLACK V-MAX and
+  Fiocchi FMJ / JSP / Hyperformance. bullets.csv has no .183 bullet. Rows and sources in added_loads_sources.tsv.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
