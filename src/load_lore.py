@@ -3009,8 +3009,8 @@ class LoadsView:
         self.count_lbl = a.label(above, "Choose a cartridge to see how every brand's load compares.",
                                  10, MUTED, bg=BG, anchor="e")
         self.count_lbl.grid(row=1, column=1, sticky="e", pady=(4, 0), padx=(16, 0))
-        # (for bullets the weight is already in the Load text, so no separate Grains column)
-        self.cols = ["#", "Load"] + ([] if cat.grain_style else ["Shot", cat.payload_col])
+        # bullets get a Grains column (the Load cell then shows just the name)
+        self.cols = ["#", "Load"] + (["Grains"] if cat.grain_style else ["Shot", cat.payload_col])
         if cat.grain_style:
             self.cols += ["Barrel", "Use"]
         self.cols += ["Velocity", "Energy", "Recoil"]
@@ -3451,7 +3451,7 @@ class LoadsView:
         self._render()
 
     def _sort_by(self, col):
-        first = col in ("Shot", self.cat.payload_col, "Velocity", "Energy", "Taylor", "HITS", "Score")
+        first = col in ("Grains", "Shot", self.cat.payload_col, "Velocity", "Energy", "Taylor", "HITS", "Score")
         if self.sort["col"] == col and not self.app.show_grades and self.sort["desc"] != first:
             # grades off hides the # column, so a third click on a heading goes back to the
             # default order instead
@@ -3475,6 +3475,7 @@ class LoadsView:
                 and self._press_ok(r["item"])]
         keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["item"].label.lower(), r["stats"]["weight"]),
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
+                "Grains": lambda r: r["item"].bullet_gr,
                 # biggest shot first, then the most pellets, then the heaviest payload
                 "Shot": lambda r: shot_size(r["item"])[:2] + (r["stats"]["weight"],),
                 "Barrel": lambda r: r["item"].barrel_in or 999,
@@ -3493,9 +3494,10 @@ class LoadsView:
         for r in data:
             st = r["stats"]
             it = r["item"]
-            vals = [r["rank"], it.label + ("  (handload)" if it.handload else "")]
+            name = (it.load or it.label) if self.cat.grain_style else it.label
+            vals = [r["rank"], name + ("  (handload)" if it.handload else "")]
             if self.cat.grain_style:
-                vals += [f"{it.barrel_in:g}\"" if it.barrel_in else "—", it.purpose]
+                vals += [f"{it.bullet_gr:g}", f"{it.barrel_in:g}\"" if it.barrel_in else "—", it.purpose]
             else:
                 vals += [shot_size(it)[2], f"{st['weight']:g}"]
             vals += [f"{st['velocity']:.0f}", f"{st['energy']:.0f}", f"{st['recoil']:.1f}"]
