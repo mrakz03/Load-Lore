@@ -34,7 +34,7 @@ bullets = [dict(maker=r["maker"], name=r["name"], diameter=float(r["diameter_in"
                bc=float(r["bc_g1"]), type=r["type"])
            for r in csv.DictReader(open(os.path.join(data, "bullets.csv"), encoding="utf-8-sig"))]
 # the public web address, for link previews; change it here if the site moves to its own domain
-SITE = "https://mrakz03.github.io/Load-Lore/"
+SITE = "https://loadlore.net/"
 tpl = open(os.path.join(here, "template.html"), encoding="utf-8").read()
 os.makedirs(os.path.join(here, "www"), exist_ok=True)
 with open(os.path.join(here, "www", "index.html"), "w", encoding="utf-8") as f:

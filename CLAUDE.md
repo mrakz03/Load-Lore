@@ -113,7 +113,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   VERSION_TEXT read "v1.10", or "dev" from source); Home ends with "Figures are estimates. Nothing you see
   here is reloading data. Disclaimer in Settings ›" (the Home line says "over 3,500 commercially available
   rounds": 3,686 loads in Oct 2026, update it if the count changes a lot) (desktop + web); the web page has a meta description and link-preview
-  (og:) tags whose address is SITE in build_web.py (change it for a custom domain), an apple-touch-icon and a
+  (og:) tags whose address is SITE in build_web.py (https://loadlore.net/, Zeke's custom domain for Pages), an apple-touch-icon and a
   manifest with display "browser" (a plain home-screen shortcut, no install prompt; Zeke wanted it
   unobtrusive). make_icons.py draws those icons into assets/web/; build_web.py copies them into www.
 - PC Home, category list and Settings (Oct 25 2026, Zeke): top left, compact cards in one column (icon beside the text), zoomed
