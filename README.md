@@ -110,7 +110,7 @@ research/                     where each added load came from
 python3 src/load_lore.py                   # desktop app (needs Tk: python3-tkinter)
 python3 web/build_web.py                   # then open web/www/index.html in a browser
 ```
-The web version at loadlore.net is built from `main` by `.github/workflows/pages.yml` on every push to `main` and after each release.
+The web version at loadlore.net is built from `main` by `.github/workflows/pages.yml` after each release, or when run by hand from the Actions tab (Web version on GitHub Pages > Run workflow). Pushing to `main` alone doesn't change the site.
 Handloads (`my_handloads.csv`) and settings (`settings.json`) are saved next to the data files and are git-ignored; the phone/web version keeps them in the browser. The desktop and web versions use the same formulas and data and must stay in step: after editing any CSV or `web/template.html`, run `python3 web/build_web.py`.
 
 ### Data files
