@@ -75,6 +75,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   menu, desktop a "Shot" column (click its heading). shot_size / shotSize read the load name's
   largest shot (slugs first, then 000-4 Buck, T/BBB/BB/B, #1-#9 as (17-n)/100 in), then most
   pellets, then heaviest payload.
+- Grain weight sort (Oct 28 2026, Zeke): bullet categories (rifle, rimfire, handgun). Web sort menu
+  "Sort: heaviest bullet" / "Sort: lightest bullet" (#ls grain / grainl); PC tables (desktop LoadsView, web
+  >=900 px) have a Grains column whose heading sorts heaviest first, click again for lightest, so the
+  Load cell there shows just the name (cards and labels keep "· 150 gr").
 - Load labels read "Load  ·  150 gr" (make_label / makeLabel). Saved prices are keyed by label;
   keys from the old weight-first format are converted on read (_rename_price_key / readPrices).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files
