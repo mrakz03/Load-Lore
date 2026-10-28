@@ -3559,17 +3559,14 @@ class LoadsView:
 
     def _sort_by(self, col):
         first = col in ("Grains", "Shot", self.cat.payload_col, "Velocity", "Energy", "Taylor", "HITS", "Score")
-        if self.sort["col"] == col and not self.app.show_grades and self.sort["desc"] != first:
-            # grades off hides the # column, so a third click on a heading goes back to the
-            # default order instead
+        # clicking the sorted heading again goes back to the default order; Grains goes
+        # heaviest, then lightest, then the default order (Zeke, Oct 28 2026; same as the web)
+        if self.sort["col"] == col and col == "Grains" and self.sort["desc"]:
+            self.sort["desc"] = False
+        elif self.sort["col"] == col or col == "#":
             self.sort = {"col": "#", "desc": False}
-            return self._render()
-        if self.sort["col"] == col:
-            self.sort["desc"] = not self.sort["desc"]
         else:
             self.sort = {"col": col, "desc": first}
-        if col == "#":
-            self.sort["desc"] = False
         self._render()
 
     def _render(self):
