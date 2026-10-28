@@ -2289,7 +2289,6 @@ loads_rimfire_rifle.csv	.22 LR	Remington Cyclone Lead Hollow Point	36	0.10	0.15	
 loads_rimfire_rifle.csv	.22 LR	Remington Plated Hollow Point	36	0.10	0.15	tier: median of 3 matched same-brand same-price loads
 loads_rimfire_rifle.csv	.22 LR	Remington Viper Plated Truncated Cone Solid	36	0.10	0.15	tier: median of 3 matched same-brand same-price loads
 loads_rimfire_rifle.csv	.22 LR	Winchester Plated Hollow Point (222/333/525/555-round boxes)	36	0.10	0.17	tier: median of 8 matched same-brand same-price loads
-loads_rimfire_rifle.csv	.22 LR	Winchester Silvertip Segmenting Hollow Point	37	0.13	0.23	model: cartridge x brand ratio
 loads_rimfire_rifle.csv	.22 LR	Winchester Varmint HE Segmenting Hollow Point	37	0.13	0.23	model: cartridge x brand ratio
 loads_rimfire_rifle.csv	.22 LR	CCI Blazer 22 LR LRN High Velocity	38	0.07	0.11	retail: Blazer | - | 38 | LRN | 37.00 | 425
 loads_rimfire_rifle.csv	.22 LR	ELEY high velocity hollow-point	38	0.22	0.22	kept (ELEY retail-checked Oct 24)
