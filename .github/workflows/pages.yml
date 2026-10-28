@@ -1,8 +1,8 @@
 name: Web version on GitHub Pages
 # Every push to main rebuilds web/www/index.html (python web/build_web.py) and publishes it on
-# GitHub Pages (https://mrakz03.github.io/Load-Lore/). Turn it on once: Settings > Pages >
+# GitHub Pages at https://loadlore.net/ (custom domain, set in Settings > Pages; the old address
+# https://mrakz03.github.io/Load-Lore/ forwards there). Turn it on once: Settings > Pages >
 # Source: GitHub Actions. Run manually from the Actions tab too.
-# Custom domain later: type it in Settings > Pages > Custom domain and add the DNS record there.
 # With an Actions deploy GitHub keeps the domain in the repo settings, so no CNAME file is needed.
 on:
   push:
