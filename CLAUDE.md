@@ -106,8 +106,14 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   and a tile per factor (.pdet, desktop panel style) instead of the phone's figure rows (.fr).
   Handloads (>=900 px): each cartridge group is a table too (Handload, Bullet, Powder, Velocity, Energy,
   Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); >=1500 px it fills the window (.handp).
-  The handload form's cartridge box on PC web (mouse) is a search pop-up like the others (pickSheet with an
-  anchor, cartridges under category headings), not a datalist; touch keeps its bottom sheet.
+  The web handload form's cartridge box is a plain <select> like its maker / bullet / purpose boxes (Zeke,
+  Oct 28 2026), cartridges in an <optgroup> per category; touch opens the bottom sheet (with headings).
+- Before the public web launch (Oct 28 2026, Zeke): no "Development Build" text anywhere (version_text /
+  VERSION_TEXT read "v1.10", or "dev" from source); Home ends with "Figures are estimates, not reloading
+  data. Disclaimer in Settings ›" (desktop + web); the web page has a meta description and link-preview
+  (og:) tags whose address is SITE in build_web.py (change it for a custom domain), an apple-touch-icon and a
+  manifest with display "browser" (a plain home-screen shortcut, no install prompt; Zeke wanted it
+  unobtrusive). make_icons.py draws those icons into assets/web/; build_web.py copies them into www.
 - PC Home, category list and Settings (Oct 25 2026, Zeke): top left, compact cards in one column (icon beside the text), zoomed
   with the window up to 1.15x (desktop App._menu_layout / _zoomed, re-laid out on resize; web
   fitMenu sets CSS zoom at >=900 px). Phones keep their centred layout.

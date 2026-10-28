@@ -172,7 +172,7 @@ CATEGORIES = (
 
 
 def version_text():
-    return "Development Build" if APP_VERSION == "dev" else f"Development Build v{APP_VERSION}"
+    return "dev" if APP_VERSION == "dev" else f"v{APP_VERSION}"
 
 
 def default_weights(cat):
@@ -2191,6 +2191,14 @@ class App:
             for key, title, blurb in TOOLS:
                 self._feature_card(wrap, key, title, blurb, lambda t=key: self.show_picker(t),
                                    width).pack(fill="x", pady=(0, self.px(10)))
+            note = tk.Frame(wrap, bg=BG)
+            note.pack(anchor="w", pady=(self.px(4), 0))
+            self.label(note, "Figures are estimates, not reloading data. ", 10, MUTED,
+                       bg=BG).pack(side="left")
+            go = tk.Label(note, text="Disclaimer in Settings ›", bg=BG, fg=ACCENT,
+                          font=self.f(10, True), cursor="hand2")
+            go.pack(side="left")
+            go.bind("<Button-1>", lambda e: self.show_settings())
         self._update_scroll()
 
     def _feature_card(self, parent, key, title, blurb, command, width):
