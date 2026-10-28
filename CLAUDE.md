@@ -101,7 +101,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the desktop app's (.lhead / .trow on a CSS subgrid, columns fit their figures, same columns as LoadsView;
   sortable headers set the #ls sort). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
   At >=1500 px the dictionary page (.wrap.dict) fills the window: settings card, filter and sort in a
-  left column, the table beside it.
+  left column, the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
+  column (cartridge box over load box) beside the results. An opened load on PC web shows a facts line
+  and a tile per factor (.pdet, desktop panel style) instead of the phone's figure rows (.fr).
+  Handloads (>=900 px): each cartridge group is a table too (Handload, Bullet, Powder, Velocity, Energy,
+  Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); >=1500 px it fills the window (.handp).
 - PC Home, category list and Settings (Oct 25 2026, Zeke): top left, compact cards in one column (icon beside the text), zoomed
   with the window up to 1.15x (desktop App._menu_layout / _zoomed, re-laid out on resize; web
   fitMenu sets CSS zoom at >=900 px). Phones keep their centred layout.
