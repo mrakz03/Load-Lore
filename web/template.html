@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e1014">
 <title>In Like Flint - Load Lore</title>
-<meta name="description" content="Grade factory ammo and your own handloads from S to F on velocity, energy, recoil and cost, or put loads head to head. Free and open source.">
+<meta name="description" content="Explore the velocity, energy, recoil and cost of over 3,500 commercially available rounds and your own handloads, or put loads head to head. Free and open source.">
 <!-- link previews (texts, Discord, Facebook); the image needs the full address of the site -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Load Lore">
 <meta property="og:title" content="In Like Flint - Load Lore">
-<meta property="og:description" content="Grade factory ammo and your own handloads from S to F on velocity, energy, recoil and cost, or put loads head to head.">
+<meta property="og:description" content="Explore the velocity, energy, recoil and cost of over 3,500 commercially available rounds, or put loads head to head.">
 <meta property="og:url" content="__SITE__">
 <meta property="og:image" content="__SITE__icon-512.png">
 <meta name="twitter:card" content="summary">
@@ -743,9 +743,9 @@ let fitMenuJob=0;
 addEventListener("resize",()=>{clearTimeout(fitMenuJob);fitMenuJob=setTimeout(fitMenu,150);});
 function showHome(){
   document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","picker");app.classList.add("home");
-  app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost, or put loads head to head.</p></div>
+  app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Explore the velocity, energy, recoil and cost of over 3,500 commercially available rounds, or put loads head to head.</p></div>
   <div class="feat">${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>
-  <p class="homenote">Figures are estimates, not reloading data. <button class="link" data-go="settings">Disclaimer in Settings ›</button></p>`;
+  <p class="homenote">Figures are estimates. Nothing you see here is reloading data. <button class="link" data-go="settings">Disclaimer in Settings ›</button></p>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
 }
 // GitHub's mark (Octicons mark-github), drawn in the text colour

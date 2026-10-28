@@ -2185,15 +2185,15 @@ class App:
             wrap = self._menu_wrap(stage, width)
             self.label(wrap, "In Like Flint", 11, MUTED, True, bg=BG, anchor="w").pack(anchor="w")
             self.label(wrap, "Load Lore", 20, TEXT, True, bg=BG, anchor="w").pack(anchor="w")
-            self.label(wrap, "Grade ammo from S to F on velocity, energy, recoil and cost, or put "
-                       "loads head to head.", 11, MUTED, bg=BG, anchor="w", justify="left",
+            self.label(wrap, "Explore the velocity, energy, recoil and cost of over 3,500 commercially "
+                       "available rounds, or put loads head to head.", 11, MUTED, bg=BG, anchor="w", justify="left",
                        wraplength=width).pack(anchor="w", pady=(self.px(8), self.px(18)))
             for key, title, blurb in TOOLS:
                 self._feature_card(wrap, key, title, blurb, lambda t=key: self.show_picker(t),
                                    width).pack(fill="x", pady=(0, self.px(10)))
             note = tk.Frame(wrap, bg=BG)
             note.pack(anchor="w", pady=(self.px(4), 0))
-            self.label(note, "Figures are estimates, not reloading data. ", 10, MUTED,
+            self.label(note, "Figures are estimates. Nothing you see here is reloading data. ", 10, MUTED,
                        bg=BG).pack(side="left")
             go = tk.Label(note, text="Disclaimer in Settings ›", bg=BG, fg=ACCENT,
                           font=self.f(10, True), cursor="hand2")

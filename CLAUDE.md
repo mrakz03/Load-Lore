@@ -109,8 +109,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   The web handload form's cartridge box is a plain <select> like its maker / bullet / purpose boxes (Zeke,
   Oct 28 2026), cartridges in an <optgroup> per category; touch opens the bottom sheet (with headings).
 - Before the public web launch (Oct 28 2026, Zeke): no "Development Build" text anywhere (version_text /
-  VERSION_TEXT read "v1.10", or "dev" from source); Home ends with "Figures are estimates, not reloading
-  data. Disclaimer in Settings ›" (desktop + web); the web page has a meta description and link-preview
+  VERSION_TEXT read "v1.10", or "dev" from source); Home ends with "Figures are estimates. Nothing you see
+  here is reloading data. Disclaimer in Settings ›" (the Home line says "over 3,500 commercially available
+  rounds": 3,686 loads in Oct 2026, update it if the count changes a lot) (desktop + web); the web page has a meta description and link-preview
   (og:) tags whose address is SITE in build_web.py (change it for a custom domain), an apple-touch-icon and a
   manifest with display "browser" (a plain home-screen shortcut, no install prompt; Zeke wanted it
   unobtrusive). make_icons.py draws those icons into assets/web/; build_web.py copies them into www.
