@@ -689,7 +689,7 @@ const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or y
 const toolTitle=k=>(TOOLS.find(t=>t[0]===k)||TOOLS[0])[1];
 // the Load Dictionary, the main tool, sits in the middle of the phone's tab bar
 const NAVS=[["home","Home",ICON.home],["h2h","Head to Head",ICON.h2h],["loads","Load Dictionary",ICON.loads],["hand","Handloads",ICON.hand],["settings","Settings",ICON.settings]];
-const H2H_MIN=2,H2H_MAX=5,H2H=[],H2H_DISTANCE=100;   // Head to Head picks (pickKey), any category
+const H2H_MIN=2,H2H_MAX=5,H2H=[],H2H_DISTANCE=0;   // Head to Head picks (pickKey), any category
 const pickKey=(cat,it)=>cat.title+"|"+it.cartridge+"|"+(it.hid||it.label);
 // S-F grades on / off (Settings), shared by both tools and remembered
 let GRADES=false;try{GRADES=localStorage.getItem(GRADES_KEY)==="1";}catch(e){}
