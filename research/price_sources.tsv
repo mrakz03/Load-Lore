@@ -2373,7 +2373,7 @@ loads_rimfire_rifle.csv	.22 WMR	Fiocchi Field Dynamics JHP	40	0.26	0.32	model: c
 loads_rimfire_rifle.csv	.22 WMR	Fiocchi Field Dynamics JSP	40	0.26	0.32	model: cartridge x brand ratio
 loads_rimfire_rifle.csv	.22 WMR	Fiocchi Range Dynamics TMJ	40	0.18	0.22	model: cartridge x brand ratio
 loads_rimfire_rifle.csv	.22 WMR	Winchester Defender JHP	40	0.26	0.41	tier: median of 2 matched same-brand same-price loads
-loads_rimfire_rifle.csv	.22 WMR	Winchester Silvertip Defense JHP	40	0.26	0.41	tier: median of 2 matched same-brand same-price loads
+loads_handgun.csv	.22 WMR	Winchester Silvertip Defense JHP	40	0.26	0.41	tier: median of 2 matched same-brand same-price loads
 loads_rimfire_rifle.csv	.22 WMR	Winchester Super-X Full Metal Jacket	40	0.18	0.28	retail: Winchester | Super-X | 40 | FMJ | 14 | 50
 loads_rimfire_rifle.csv	.22 WMR	Winchester Super-X JHP	40	0.26	0.41	tier: median of 2 matched same-brand same-price loads
 loads_rimfire_rifle.csv	.22 WMR	Winchester USA White Box Plated Dynapoint	45	0.18	0.30	retail: Winchester | Dynapoint | 45 | CPHP | 14.75 | 50
