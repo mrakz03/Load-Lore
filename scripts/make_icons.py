@@ -6,6 +6,7 @@
 assets/icon.png            1024 px master; the desktop app's window icon; Linux .desktop icon
 assets/icon.ico            Windows .exe, installer and shortcuts (16-256 px)
 assets/android/res/...     Android launcher icons (legacy + adaptive), copied in by the CI build
+assets/web/...             web version: home-screen icons (iPhone apple-touch-icon, manifest icons)
 """
 import os
 
@@ -100,7 +101,7 @@ def draw_symbol(d, s, ox=0.0, oy=0.0):
     draw_cartridge(d, Xc, Yc)
 
 
-def full_icon(size, round_mask=False):
+def full_icon(size, round_mask=False, square=False):
     n = size * SS
     img = Image.new("RGBA", (n, n), (0, 0, 0, 0))
     # vertical gradient background in a rounded square (or circle)
@@ -111,13 +112,15 @@ def full_icon(size, round_mask=False):
         gd.line([(0, y), (n, y)], fill=tuple(int(a + (b - a) * t) for a, b in zip(BG_TOP, BG_BOTTOM)))
     mask = Image.new("L", (n, n), 0)
     md = ImageDraw.Draw(mask)
-    if round_mask:
+    if square:                                      # iOS rounds the corners itself
+        md.rectangle([0, 0, n - 1, n - 1], fill=255)
+    elif round_mask:
         md.ellipse([0, 0, n - 1, n - 1], fill=255)
     else:
         md.rounded_rectangle([0, 0, n - 1, n - 1], radius=int(n * 0.215), fill=255)
     img.paste(grad, (0, 0), mask)
     d = ImageDraw.Draw(img)
-    if not round_mask:
+    if not round_mask and not square:
         d.rounded_rectangle([0, 0, n - 1, n - 1], radius=int(n * 0.215), outline=BORDER,
                             width=max(1, n // 128))
     inset = 0.12 if round_mask else 0.0             # keep the badge inside a round icon
@@ -149,6 +152,9 @@ def main():
     write(master, "icon.png")
     master.save(os.path.join(OUT, "icon.ico"),
                 sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
+    write(full_icon(180, square=True), "web", "apple-touch-icon.png")
+    for px in (192, 512):
+        write(full_icon(px), "web", f"icon-{px}.png")
     res = ("android", "res")
     for dpi, legacy, fg in (("mdpi", 48, 108), ("hdpi", 72, 162), ("xhdpi", 96, 216),
                             ("xxhdpi", 144, 324), ("xxxhdpi", 192, 432)):

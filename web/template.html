@@ -5,7 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e1014">
 <title>In Like Flint - Load Lore</title>
+<meta name="description" content="Explore the velocity, energy, recoil and cost of over 3,500 commercially available rounds and your own handloads, or put loads head to head. Free and open source.">
+<!-- link previews (texts, Discord, Facebook); the image needs the full address of the site -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Load Lore">
+<meta property="og:title" content="In Like Flint - Load Lore">
+<meta property="og:description" content="Explore the velocity, energy, recoil and cost of over 3,500 commercially available rounds, or put loads head to head.">
+<meta property="og:url" content="__SITE__">
+<meta property="og:image" content="__SITE__icon-512.png">
+<meta name="twitter:card" content="summary">
 <link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <style>
 :root{--bg:#0e1014;--surface:#171a21;--surface2:#222732;--border:#2d333f;--text:#e8eaee;--muted:#8a93a3;--accent:#4c8dff;--accent-h:#6aa0ff;--on-accent:#fff;--side:#12151b;--danger:#e5534b;--hand:#5fd1b4;color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -38,6 +49,8 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .hero h2{font-size:1.7rem;line-height:1.2;margin:0}
 .hero h2 small{display:block;font-size:.95rem;color:var(--muted);letter-spacing:.02em}
 .hero p{color:var(--muted);margin:8px 0 0;line-height:1.5}
+.homenote{color:var(--muted);font-size:.85rem;line-height:1.5;margin:14px 0 0}
+.homenote .link{font-size:inherit;padding:0}
 .feat{display:grid;grid-template-columns:1fr;gap:12px}
 .fcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px;text-align:left;color:var(--text);font:inherit;cursor:pointer}
 .fcard:hover{border-color:var(--accent);background:var(--surface2)}
@@ -434,7 +447,7 @@ function applyTheme(name){
   try{localStorage.setItem(THEME_KEY,name);}catch(e){}
 }
 applyTheme(THEME);
-const VERSION_TEXT = DATA.version && DATA.version !== "dev" ? "Development Build v" + DATA.version : "Development Build";
+const VERSION_TEXT = DATA.version && DATA.version !== "dev" ? "v" + DATA.version : "dev";
 const GRAINS_PER_OZ = 437.5;
 const METRICS = {velocity:["Velocity",true],energy:["Energy",true],recoil:["Recoil",false],cost:["Cost",false],taylor:["Taylor KO",true],hits:["HITS",true]};
 const TERMINAL=["taylor","hits"];
@@ -730,8 +743,9 @@ let fitMenuJob=0;
 addEventListener("resize",()=>{clearTimeout(fitMenuJob);fitMenuJob=setTimeout(fitMenu,150);});
 function showHome(){
   document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","picker");app.classList.add("home");
-  app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Grade ammo from S to F on velocity, energy, recoil and cost, or put loads head to head.</p></div>
-  <div class="feat">${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>`;
+  app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Explore the velocity, energy, recoil and cost of over 3,500 commercially available rounds, or put loads head to head.</p></div>
+  <div class="feat">${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>
+  <p class="homenote">Figures are estimates. Nothing you see here is reloading data. <button class="link" data-go="settings">Disclaimer in Settings ›</button></p>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
 }
 // GitHub's mark (Octicons mark-github), drawn in the text colour
@@ -975,7 +989,7 @@ function handDialog(rec,done){
   const pickOf=t=>{t=(t||"").trim();const lo=t.toLowerCase();return opts.find(o=>o.text===t)||opts.find(o=>o.text.toLowerCase()===lo)||opts.find(o=>o.cart.toLowerCase()===lo)||null;};
   const [m,close]=modal(`
     <h3 style="margin:0 0 4px">${edit?"Edit handload":"New handload"}</h3>
-    <label class="l" style="margin-top:12px">CARTRIDGE</label><input id="hc" list="hcl" autocomplete="off" placeholder="e.g. .308 Winchester"><datalist id="hcl">${opts.map(o=>`<option value="${esc(o.text)}">`).join("")}</datalist>
+    <label class="l" style="margin-top:12px">CARTRIDGE</label><div><select id="hc"><option value="">Choose…</option>${[...new Set(opts.map(o=>o.cat))].map(c=>`<optgroup label="${esc(c.title)}">${opts.filter(o=>o.cat===c).map(o=>`<option value="${esc(o.text)}">${esc(o.cart)}</option>`).join("")}</optgroup>`).join("")}</select></div>
     <div class="g2"><div><label class="l">BULLET MAKER</label><select id="hbm"></select><input id="hbmo" autocomplete="off" placeholder="Type the maker" aria-label="Bullet maker" style="display:none;margin-top:6px"></div><div><label class="l">BULLET (LIBRARY)</label><select id="hbl"></select></div></div>
     <div class="g2"><div><label class="l">BULLET NAME</label><input id="hbn" autocomplete="off" placeholder="e.g. ELD-M"></div><div><label class="l">LOAD NAME (OPTIONAL)</label><input id="hn" autocomplete="off"></div></div>
     <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal"></div></div>
@@ -1024,15 +1038,17 @@ function handDialog(rec,done){
     if(t>0)c=t;else c=costParts({bullet_cost:q("#hcb").value,powder_gr:q("#hpg").value,powder_cost_lb:q("#hcp").value,primer_cost:q("#hcr").value,brass_cost:q("#hcs").value,brass_reuse:q("#hcu").value||5}).total;
     q("#hcost").textContent=c>0?`Cost per round = $${c.toFixed(2)}`:"";
   };
-  q("#hc").addEventListener("input",fillMakers);q("#hc").addEventListener("change",fillMakers);
-  q("#hbm").onchange=()=>{showOther();fillBullets();if(q("#hbm").value===OTHER)q("#hbmo").focus();};
+    q("#hbm").onchange=()=>{showOther();fillBullets();if(q("#hbm").value===OTHER)q("#hbmo").focus();};
   q("#hbl").onchange=()=>{const b=BULLETS[+q("#hbl").value];if(!b)return;q("#hbn").value=b.name;q("#hgr").value=g(b.weight);q("#hdm").value=g(b.diameter);q("#hbc").value=g(b.bc);};
   ["hcb","hcp","hcr","hcs","hcu","hct","hpg"].forEach(i=>q("#"+i).addEventListener("input",showCost));
+  q("#hc").onchange=fillMakers;
   if(touch){
-    const hc=q("#hc"),pw=q("#hpw");
-    hc.readOnly=true;hc.placeholder="Choose a cartridge";
-    hc.onfocus=()=>{hc.blur();pickSheet(opts,{text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>o.cat.title,none:"cartridge",
-      cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;fillMakers();}});};
+    // the cartridge sheet lists cartridges under their category headings
+    const hc=q("#hc"),pw=q("#hpw"),cv=document.createElement("button");
+    cv.type="button";cv.className="selcover";cv.setAttribute("aria-label","Choose a cartridge");
+    hc.parentElement.style.position="relative";hc.tabIndex=-1;hc.parentElement.appendChild(cv);
+    cv.onclick=()=>pickSheet(opts,{text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>o.cat.title,none:"cartridge",
+      cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;fillMakers();}});
     // powder: the list, or "Other powder" to type one that isn't in it
     const OTHERP={other:true};
     pw.readOnly=true;
@@ -1040,20 +1056,6 @@ function handDialog(rec,done){
       cur:()=>POWDERS.find(x=>x===pw.value.trim()),pick:x=>{if(x===OTHERP){pw.readOnly=false;pw.value="";pw.focus();}else pw.value=x;}});};
     pw.onblur=()=>{pw.readOnly=true;};
     sheetSelect("hbm","bullet maker");sheetSelect("hbl","bullet");sheetSelect("hpu","purpose");
-  }else{
-    // mouse / keyboard: the cartridge box opens the same search pop-up as the other boxes
-    // (cartridges under their category headings), not the browser's datalist
-    const hc=q("#hc"),wrap=document.createElement("div");
-    wrap.className="lsearch picker";hc.before(wrap);wrap.appendChild(hc);
-    hc.classList.add("lq");hc.removeAttribute("list");hc.readOnly=true;hc.placeholder="Cartridge";
-    const p={text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>o.cat.title,none:"cartridge",
-      cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;fillMakers();}};
-    const open=typed=>pickSheet(opts,p,{el:hc,input:hc,typed:typed||""});
-    hc.onclick=()=>open();
-    hc.onkeydown=e=>{
-      if(["ArrowDown","ArrowUp","Enter"," "].includes(e.key)){e.preventDefault();open();}
-      else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();open(e.key);}
-    };
   }
   // prefill
   const o0=opts.find(o=>o.cart===rec.cartridge&&o.cat.title===rec.category)||opts.find(o=>o.cart===rec.cartridge);
@@ -1080,7 +1082,7 @@ function handDialog(rec,done){
         const v=Number(t);if(!isFinite(v))throw new Error(`${label} must be a number.`);
         if(v<lo||(hi!=null&&v>hi))throw new Error(`${label} must be ${hi!=null?`between ${g(lo)} and ${g(hi)}`:`${g(lo)} or more`}.`);
         return v;};
-      const pk=pickOf(q("#hc").value);if(!pk)throw new Error(q("#hc").value.trim()?"Pick a cartridge from the list.":"Enter a cartridge.");
+      const pk=pickOf(q("#hc").value);if(!pk)throw new Error("Choose a cartridge.");
       const cart=pk.cart,cat=pk.cat;
       const gr=num("hgr","Bullet weight",1,2000),fps=num("hfps","Velocity",100,5500),pg=num("hpg","Powder charge",0.1,300);
       let dm=num("hdm","Diameter",0.1,0.7,true);if(dm==null)dm=DIAMETERS[cart]||bulletDiameter({cartridge:cart,bullet_gr:gr});if(!dm)throw new Error("Enter the bullet diameter.");
