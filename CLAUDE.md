@@ -123,7 +123,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Before the public web launch (Oct 28 2026, Zeke): no "Development Build" text anywhere (version_text /
   VERSION_TEXT read "v1.10", or "dev" from source); Home ends with "Figures are estimates. Nothing you see
   here is reloading data. Disclaimer in Settings ›" (the Home line says "over 3,500 commercially available
-  rounds": 3,686 loads in Oct 2026, update it if the count changes a lot) (desktop + web); the web page has a meta description and link-preview
+  rounds": 3,685 loads in Oct 2026, update it if the count changes a lot) (desktop + web); the web page has a meta description and link-preview
   (og:) tags whose address is SITE in build_web.py (https://loadlore.net/, Zeke's custom domain for Pages), an apple-touch-icon and a
   manifest with display "browser" (a plain home-screen shortcut, no install prompt; Zeke wanted it
   unobtrusive). make_icons.py draws those icons into assets/web/; build_web.py copies them into www.
@@ -280,6 +280,11 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   loads, Federal +Peak Barnes LRX, Winchester American Lever Range, Remington and Barnes subsonics. New cartridge
   4.6x30mm (Handgun category next to 5.7x28mm, 0.183 in, GUN_LB 4.5 lb for the MP7): Hornady BLACK V-MAX and
   Fiocchi FMJ / JSP / Hyperformance. bullets.csv has no .183 bullet. Rows and sources in added_loads_sources.tsv.
+- Defensive rimfire (Oct 28 2026, Zeke): a defense load goes in each list it has published figures for, Handgun for a
+  handgun-barrel velocity, Rimfire Rifle for a rifle one. Silvertip .22 LR / .22 WMR, Federal Punch, CCI Uppercut and
+  Hornady Critical Defense .22 WMR print handgun figures only (Winchester marks Silvertip "handgun only"), so they are
+  Handgun-only, purpose Defense. Winchester Defender .22 WMR has only the catalog's rifle figure (1910 fps), so it stays in
+  Rimfire Rifle (purpose Hunting: a lone Defense load there would have nothing to be graded against).
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
