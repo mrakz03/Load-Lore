@@ -141,10 +141,11 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 }
 @media(min-width:1500px){   /* big PC windows: Head to Head fills the window, the load picker in a column beside the results */
   .wrap.wide.h2hp,.wrap.wide.handp{max-width:none}
-  .h2hp #pane{display:grid;grid-template-columns:minmax(360px,460px) minmax(0,1fr);column-gap:22px;align-items:start}
+  .h2hp #pane{display:grid;grid-template-columns:minmax(360px,460px) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:22px;align-items:start}
   .h2hp #pane>.card{grid-column:1;grid-row:1/span 2;margin-top:0}
   .h2hp #pane>#hres,.h2hp #pane>#hnote{grid-column:2;min-width:0}
   .h2hp #hres>.h2hw>.h2h:first-child{margin-top:0}
+  .h2hp #hres>.cnt{margin-top:0}.h2hp #hres:has(>.cnt)+#hnote{display:none}   /* nothing picked yet: just the hint */
   .h2hp .slot,.h2hp .slots.gun .slot{grid-template-columns:1.4em minmax(0,1fr) 2.2em;row-gap:6px}
   .h2hp .slot .ls,.h2hp .slot .gn{grid-column:2}.h2hp .gunhead,.h2hp .slots.gun .gunhead{display:none}
   .h2hp .slots{gap:12px}.h2hp .slot+.slot{border-top:1px solid var(--border);padding-top:12px}
@@ -1035,6 +1036,20 @@ function handDialog(rec,done){
       cur:()=>POWDERS.find(x=>x===pw.value.trim()),pick:x=>{if(x===OTHERP){pw.readOnly=false;pw.value="";pw.focus();}else pw.value=x;}});};
     pw.onblur=()=>{pw.readOnly=true;};
     sheetSelect("hbm","bullet maker");sheetSelect("hbl","bullet");sheetSelect("hpu","purpose");
+  }else{
+    // mouse / keyboard: the cartridge box opens the same search pop-up as the other boxes
+    // (cartridges under their category headings), not the browser's datalist
+    const hc=q("#hc"),wrap=document.createElement("div");
+    wrap.className="lsearch picker";hc.before(wrap);wrap.appendChild(hc);
+    hc.classList.add("lq");hc.removeAttribute("list");hc.readOnly=true;hc.placeholder="Cartridge";
+    const p={text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>o.cat.title,none:"cartridge",
+      cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;fillMakers();}};
+    const open=typed=>pickSheet(opts,p,{el:hc,input:hc,typed:typed||""});
+    hc.onclick=()=>open();
+    hc.onkeydown=e=>{
+      if(["ArrowDown","ArrowUp","Enter"," "].includes(e.key)){e.preventDefault();open();}
+      else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();open(e.key);}
+    };
   }
   // prefill
   const o0=opts.find(o=>o.cart===rec.cartridge&&o.cat.title===rec.category)||opts.find(o=>o.cart===rec.cartridge);
