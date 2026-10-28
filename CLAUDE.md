@@ -54,6 +54,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   in two boxes, Display and About (rows split by thin lines, not one box each). About has a small
   GitHub logo that opens REPO_PAGE (GITHUB_MARK; web gets the URL as DATA.repo).
   The app name is drawn as a small "In Like Flint" over a larger "Load Lore" (issue #18).
+- Default distance (Oct 28 2026, Zeke): 0 yd (the muzzle) in every category and in Head to Head
+  (Category default_distance, H2H_DISTANCE), so the figures match the box; the field stays editable.
 - Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
   point-mass G1 path (trajectory / _fly, fly in web: drag along the path + gravity, RK2 0.5 m
   steps, bore tilted to cross the sight line at zero_yd) + 10 mph drift by Didion's lag rule,
