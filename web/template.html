@@ -58,7 +58,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .fcard .ic svg{width:22px;height:22px;stroke:var(--on-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fcard b{font-size:1.15rem}.fcard span{color:var(--muted);font-size:.92rem;line-height:1.45}
 .pick{display:grid;grid-template-columns:1fr;gap:12px}
-@media(min-width:560px){.feat,.pick{grid-template-columns:1fr 1fr}}
+@media(min-width:560px){.feat,.pick{grid-template-columns:1fr 1fr}.pick .cat.child{grid-column:2}}   /* two columns: under its parent */
 @media(min-width:900px){
   body{padding:0}
   .shell{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:none;min-height:100vh}
@@ -73,6 +73,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .nav .sub button{background:none;border:0;color:var(--muted);font:inherit;font-size:.88rem;text-align:left;padding:8px 10px;border-radius:8px;cursor:pointer}
   .nav .sub button:hover{background:var(--surface)}
   .nav .sub button.on{color:var(--text);background:var(--surface2);font-weight:700}
+  .nav .sub button.child{margin-left:12px}
   .main{padding:26px 34px 48px;min-width:0}
   .wrap.wide{max-width:1040px}.wrap{margin:0}
   .wrap.home,.wrap.picker{max-width:560px}
@@ -80,6 +81,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
      Home and category cards in one column at the desktop app's sizes; fitMenu zooms the page */
   .nav>button[data-nav=h2h]{order:1}.nav>button[data-nav=hand]{order:2}.nav>button[data-nav=settings]{order:3}
   .feat,.pick{grid-template-columns:1fr;gap:10px}
+  .pick .cat.child{grid-column:auto}
   .fcard{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:2px;padding:16px 18px;border-radius:12px}
   .fcard .ic{grid-row:span 2;width:36px;height:36px;border-radius:9px}.fcard .ic svg{width:20px;height:20px}
   .fcard b{font-size:1rem}.fcard span{font-size:.85rem}
@@ -193,6 +195,7 @@ h2{font-size:1.45rem;margin:6px 0 0}
 @media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
 .cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;color:var(--text);cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:6px;min-height:118px}
 .cat:hover,.cat:active{background:var(--surface2);border-color:var(--accent)}
+.cat.child{margin-left:28px}   /* a sub-category (Pistol Caliber Carbine) sits under its parent */
 .cat b{font-size:1.1rem}.cat span.b{color:var(--muted);font-size:.85rem}.cat span.c{color:var(--accent);font-size:.78rem;font-weight:700;margin-top:auto}
 @media(min-width:900px){   /* PC: compact category cards like the desktop app's */
   .cat{padding:14px 18px;min-height:0;gap:2px}
@@ -712,7 +715,7 @@ function drawChrome(){
   nav.innerHTML=NAVS.map(([k,t,ic])=>{
     const on=NAV.mode===k;
     return `<button data-nav="${k}" class="${on?"on":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
-      (on&&k==="loads"?`<div class="sub">${CATEGORIES.filter(hasDetail).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
+      (on&&k==="loads"?`<div class="sub">${CATEGORIES.filter(hasDetail).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}${c.parent?" child":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
   nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(NAV.mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
@@ -773,7 +776,7 @@ function showPicker(mode){
   app.innerHTML=`<div class="phead"><h2>${toolTitle(mode)}</h2><p class="sub">Choose a category.</p></div><div class="pick">${
     CATEGORIES.filter(hasDetail).map(c=>{
       const list=state.detail[c.title].filter(x=>!x.handload),n=new Set(list.concat(c.grain_style?state.loads[c.title]:[]).map(x=>x.cartridge)).size,d=list.length;
-      return `<button class="cat" data-cat="${esc(c.title)}" ${c.title===last?'style="border-color:var(--accent)"':""}><b>${esc(c.title)}</b><span class="b">${esc(c.blurb)}</span><span class="c">${n} cartridges  ·  ${d.toLocaleString()} loads</span></button>`;}).join("")}</div>`;
+      return `<button class="cat${c.parent?" child":""}" data-cat="${esc(c.title)}" ${c.title===last?'style="border-color:var(--accent)"':""}><b>${esc(c.title)}</b><span class="b">${esc(c.blurb)}</span><span class="c">${n} cartridges  ·  ${d.toLocaleString()} loads</span></button>`;}).join("")}</div>`;
   app.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
 }
 
@@ -1096,7 +1099,7 @@ function handDialog(rec,done){
       const gr=num("hgr","Bullet weight",1,2000),fps=num("hfps","Velocity",100,5500),pg=num("hpg","Powder charge",0.1,300);
       let dm=num("hdm","Diameter",0.1,0.7,true);if(dm==null)dm=DIAMETERS[cart]||bulletDiameter({cartridge:cart,bullet_gr:gr});if(!dm)throw new Error("Enter the bullet diameter.");
       let bc=num("hbc","Ballistic coefficient",0.01,1.5,true);
-      if(bc==null)bc=+(gr/7000/(dm*dm)*(cat.title==="Handgun"?0.95:1.7)).toFixed(3);
+      if(bc==null)bc=+(gr/7000/(dm*dm)*([cat.title,cat.parent].includes("Handgun")?0.95:1.7)).toFixed(3);
       const bl=num("hbl2","Barrel length",1,60,true);
       const parts={bullet_cost:num("hcb","Bullet cost",0,null,true)||0,powder_cost_lb:num("hcp","Powder cost",0,null,true)||0,primer_cost:num("hcr","Primer cost",0,null,true)||0,brass_cost:num("hcs","Brass cost",0,null,true)||0,brass_reuse:num("hcu","Brass reuses",1,1000,true)||5};
       const tot=num("hct","Total cost",0,null,true);

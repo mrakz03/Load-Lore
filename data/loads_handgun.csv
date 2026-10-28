@@ -95,7 +95,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .327 Federal Magnum,Remington UMC Jacketed Soft Point,100,1500,0.160,8.3,0.88,,catalog,,4,Target
 .327 Federal Magnum,Buffalo Bore JHP,100,1450,0.139,7.8,2.01,,partial,,,Defense
 .327 Federal Magnum,Federal Premium Personal Defense HST,104,1525,0.160,8.9,1.60,,partial,,4,Defense
-.327 Federal Magnum,Federal Premium Hammerdown Revolver Carbine Bonded Hollow Point,127,1650,0.198,12.8,1.70,,catalog,,20,Hunting
 .327 Federal Magnum,Buffalo Bore Outdoorsman Hard Cast Keith,130,1300,0.181,8.1,2.01,,partial,,,Hunting
 .357 SIG,Hornady Critical Duty FlexLock,135,1225,0.173,6.4,1.70,yes,catalog,,4,Defense
 .357 SIG,Hornady Custom XTP,147,1225,0.214,7.0,1.50,,catalog,,4,Defense
@@ -289,12 +288,10 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 9mm Luger,Buffalo Bore JHP +P,124,1225,0.180,5.4,2.08,,partial,,,Defense
 9mm Luger,Black Hills HoneyBadger Subsonic,125,1000,0.135,3.6,1.85,,partial,,4,Defense
 9mm Luger,PPU Flat Point Jacketed,125,1115,0.155,4.5,0.31,,partial,,4.0,Target
-9mm Luger,Federal Syntech PCC TSJ,130,1130,0.155,4.9,0.42,,catalog,,16,Target
 9mm Luger,PPU Semi-Jacketed Soft Point,130,1083,0.155,4.5,0.83,,partial,,4.0,Defense
 9mm Luger,Federal Premium Personal Defense Hydra-Shok Deep,135,1060,0.185,4.4,1.45,,catalog,,4,Defense
 9mm Luger,Hornady Critical Duty FlexLock,135,1010,0.196,4,1.24,,catalog,,4,Defense
 9mm Luger,Hornady Critical Duty FlexLock +P,135,1110,0.196,4.9,1.24,,catalog,,4,Defense
-9mm Luger,Speer Gold Dot Carbine Hollow Point,135,1170,0.145,5.4,0.96,,partial,,,Defense
 9mm Luger,Speer Gold Dot Carry Gun Hollow Point,135,1120,0.145,5,0.88,,partial,,,Defense
 9mm Luger,Speer Lawman Training Total Metal Jacket,135,1120,0.145,5,0.36,,partial,,,Target
 9mm Luger,Federal Syntech Defense SHP,138,1050,0.111,4.5,1.00,,catalog,,4,Defense
@@ -671,7 +668,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .44-40 Winchester,Buffalo Bore HP,185,1150,0.138,9.1,2.68,,partial,,,Hunting
 .44-40 Winchester,Buffalo Bore Hammer (lead-free),185,1120,0.149,8.6,3.17,,partial,,,Hunting
 .44-40 Winchester,Hornady Custom Cowboy,205,725,0.127,3.4,1.30,yes,catalog,,7,Target
-.44-40 Winchester,Winchester Power-Point,200,1190,0.161,10.5,1.06,,catalog,,24,Hunting
 .44-40 Winchester,Buffalo Bore Hard Cast,200,1050,0.161,8.2,2.68,,partial,,,Hunting
 .44-40 Winchester,Fiocchi Cowboy Action LRNFP,210,725,0.130,4.1,1.12,,partial,,,Target
 .44-40 Winchester,Winchester USA Lead,225,750,0.139,4.7,1.06,,partial,,,Target
@@ -862,7 +858,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 Colt,Remington Performance Wheelgun Lead Round Nose,250,750,0.142,6,1.20,,catalog,,4,Hunting
 .45 Colt,Winchester Big Bore Semi Jacketed Hollow Point (hunting),250,845,0.164,7.6,2.32,,catalog,,7.25,Hunting
 .45 Colt,Winchester USA Lead,250,750,0.164,6,0.61,,catalog,,5.5,Hunting
-.45 Colt,Federal Premium Hammerdown Revolver Carbine Bonded Hollow Point,250,1025,0.145,11.2,1.70,,catalog,,20,Hunting
 .45 Colt,Winchester American Lever Range Lead Flat Nose,250,900,0.142,8.6,1.17,,partial,,,Target
 .45 Colt,Fiocchi Range Dynamics CMJ,255,750,0.170,6.1,0.67,,partial,,,Target
 .45 Colt,Hornady Custom Cowboy,255,725,0.128,5.7,1.35,yes,catalog,,4,Target

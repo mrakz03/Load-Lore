@@ -49,6 +49,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (pressure_of / pressureOf reads the load name; Train+Protect and +Peak aren't +P) hides those
   loads from the list without changing any grade; ticked by default, kept per category while the
   app is open (snapshot / shared), not in settings.json.
+- Pistol Caliber Carbine (Oct 28 2026, Zeke): a fifth Category after Handgun with parent="Handgun",
+  listed indented under it (picker cards, sidebar sub-list; web .cat.child / .sub button.child). Only
+  loads with a maker-published carbine / lever-gun velocity (Zeke: no estimates); data/loads_pcc.csv,
+  sources in research/pcc_sources.tsv (Buffalo Bore product pages give Marlin 1894 18-20" figures for
+  .357 / .44 / .45 Colt; most 9mm/.40/10mm/.45 ACP makers print none). ammo_pcc.csv is its cartridge
+  list (copies of the handgun generic rows), so handloads can be PCC too. Carbine figures go here, not
+  in loads_handgun.csv; the Centerfire Rifle .357/.44 lever rows are copied here, not moved.
 - Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
   page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones),
   in two boxes, Display and About (rows split by thin lines, not one box each). About has a small

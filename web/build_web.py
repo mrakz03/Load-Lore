@@ -22,7 +22,7 @@ for cat in c.CATEGORIES:
         cartridge_label=cat.cartridge_label, payload_row=cat.payload_row,
         payload_col=cat.payload_col, grain_style=cat.grain_style, show_oz=cat.show_oz,
         weights=list(cat.weights), terminal=cat.terminal, step_yd=cat.step_yd,
-        zero_yd=cat.zero_yd, sight_in=cat.sight_in,
+        zero_yd=cat.zero_yd, sight_in=cat.sight_in, parent=cat.parent,
         detail=[dict(cartridge=x.cartridge, load=x.load, bullet_gr=x.bullet_gr, muzzle_fps=x.muzzle_fps,
                      bc_g1=x.bc_g1, powder_gr=x.powder_gr, default_cost=x.default_cost,
                      is_default=x.is_default, source=x.source, group=x.group,

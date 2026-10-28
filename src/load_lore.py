@@ -148,6 +148,7 @@ class Category:
     zero_yd: float = 100         # ballistic table: zero range
     sight_in: float = 1.5        # ballistic table: sight height over the bore (inches)
     terminal: bool = True        # show Taylor KO / HITS (needs a bullet diameter; not for shot)
+    parent: str = ""             # listed as a sub-category under this one (Pistol Caliber Carbine)
 
 
 CATEGORIES = (
@@ -158,6 +159,11 @@ CATEGORIES = (
     Category("Handgun", "Pistol and revolver rounds",
              "ammo_handgun.csv", 10, 500, 2.0, "HANDGUN WEIGHT (LB)",
              loads_filename="loads_handgun.csv", step_yd=25, zero_yd=25, sight_in=0.6),
+    # handgun cartridges fired from carbines: only loads with a published long-barrel velocity
+    Category("Pistol Caliber Carbine", "Handgun rounds from carbine and lever-gun barrels",
+             "ammo_pcc.csv", 50, 300, 6.5, "CARBINE WEIGHT (LB)",
+             loads_filename="loads_pcc.csv", step_yd=50, zero_yd=50, sight_in=2.0,
+             parent="Handgun"),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
              "ammo_rimfire_rifle.csv", 50, 500, 5.0, "RIFLE WEIGHT (LB)",
              weights=(3, 3, 1, 6, 3, 3),
@@ -451,6 +457,8 @@ GUN_LB = {     # per category: the same cartridge can be in a rifle and a handgu
     "Handgun": {
         ".500 S&W Magnum": 4.5, ".460 S&W Magnum": 4.5, ".50 AE": 4.5, ".454 Casull": 3.5,
         ".480 Ruger": 3.5, ".44 Magnum": 3.0, "4.6x30mm": 4.5},
+    "Pistol Caliber Carbine": {      # lever guns run heavier than a 9mm carbine
+        ".357 Magnum": 7.0, ".44 Magnum": 7.0, ".45 Colt": 7.0, ".44-40 Winchester": 7.5},
     "Shotgun": {"10 Gauge": 10.0},
 }
 GUN_LB_MAX = 60.0
@@ -1988,7 +1996,8 @@ class App:
         icon = self.px(22) + self.px(12)
         need = max([main.measure(t) + icon for _, t, _ in TOOLS] + [title.measure("Load Lore")]
                    + [ver.measure(version_text())]
-                   + [sub.measure(cat.title) + self.px(24 + 9 + 10) for cat in CATEGORIES])
+                   + [sub.measure(cat.title) + self.px(24 + 9 + 10 + (12 if cat.parent else 0))
+                      for cat in CATEGORIES])
         return max(self.px(self.SIDEBAR_W), need + 2 * self.px(14) + 2 * self.px(12) + 4)
 
     def _window_moved(self, e):
@@ -2033,9 +2042,10 @@ class App:
             cache[key] = tk.PhotoImage(data=icon_png(name, self.px(size), colour))
         return cache[key]
 
-    def _nav_button(self, text, command, active, sub=False, parent=None, icon=None):
+    def _nav_button(self, text, command, active, sub=False, parent=None, icon=None, indent=0):
         """A sidebar entry like the web's: icon + bold name, rounded accent fill when it's the
-        open page; category entries sit indented behind a thin line, the open one grey-filled."""
+        open page; category entries sit indented behind a thin line, the open one grey-filled
+        (a sub-category, Pistol Caliber Carbine, `indent` px further in)."""
         parent = parent or self.nav
         if sub:
             bg, fg, hover = (SURFACE_2, TEXT, SURFACE_2) if active else (SIDE, MUTED, SURFACE)
@@ -2043,7 +2053,7 @@ class App:
             bg, fg, hover = (ACCENT, ON_ACCENT, ACCENT) if active else (SIDE, MUTED, SURFACE)
         box = RoundBox(parent, self, bg, bg, outside=SIDE, radius=8 if sub else 10,
                        padx=10 if sub else 12, pady=6 if sub else 9, cursor="hand2")
-        box.pack(fill="x", pady=(0, self.px(2 if sub else 4)))
+        box.pack(fill="x", pady=(0, self.px(2 if sub else 4)), padx=(indent, 0))
         parts = []
         if icon:
             i = tk.Label(box.body, image=self.icon(icon, fg), bg=bg, cursor="hand2")
@@ -2088,7 +2098,7 @@ class App:
                 for cat in CATEGORIES:
                     on = self.cat is not None and cat.title == self.cat.title
                     self._nav_button(cat.title, lambda c=cat, k=key: self.go(c, k), on, sub=True,
-                                     parent=inner)
+                                     parent=inner, indent=self.px(12) if cat.parent else 0)
 
     # ---- screens --------------------------------------------------------- #
     def _new_stage(self):
@@ -2111,7 +2121,7 @@ class App:
     # window zooms the whole page up to MENU_ZOOM_MAX (text, cards, icons: App.scale is raised
     # while it is built); it stays in the top left with its cards in one column (Zeke, Oct 25
     # 2026). Resizing re-lays it out (_menu_resized).
-    MENU_PAGES = {"home": (560, 460), "picker": (560, 540), "settings": (680, 680)}
+    MENU_PAGES = {"home": (560, 460), "picker": (560, 650), "settings": (680, 680)}
     MENU_ZOOM_MAX = 1.15
     MENU_SIDE = 34                      # the page's side margin at zoom 1
 
@@ -2510,12 +2520,13 @@ class App:
                 caption = f"{len(carts)} cartridges · {len(shown):,} loads"
             card = RoundBox(wrap, self, SURFACE, BORDER, radius=12, padx=18, pady=14,
                             cursor="hand2")
-            card.pack(fill="x", pady=(0, self.px(10)))
+            sub = self.px(28) if cat.parent else 0      # a sub-category sits indented under its parent
+            card.pack(fill="x", pady=(0, self.px(10)), padx=(sub, 0))
             t = tk.Label(card.body, text=cat.title, bg=SURFACE, fg=TEXT, font=self.f(12, True),
                          anchor="w", cursor="hand2")
             t.pack(fill="x")
             d = tk.Label(card.body, text=cat.blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
-                         justify="left", wraplength=width - 2 * self.px(18) - 4, cursor="hand2")
+                         justify="left", wraplength=width - sub - 2 * self.px(18) - 4, cursor="hand2")
             d.pack(fill="x", pady=(self.px(2), self.px(8)))
             c = tk.Label(card.body, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(9, True),
                          anchor="w", cursor="hand2")
@@ -2799,7 +2810,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
             if not dia:                       # a "gauge" / "bore" name has no bullet diameter
                 raise ValueError("Enter the bullet diameter.")
             if bc is None:
-                bc = estimate_bc(gr, dia, cat.title == "Handgun")
+                bc = estimate_bc(gr, dia, "Handgun" in (cat.title, cat.parent))
             total = num("total", "Total cost", 0, blank=True)
             cost = parts_cost() if total is None else total
             if not cost or cost <= 0:

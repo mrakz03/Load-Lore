@@ -1,0 +1,29 @@
+cartridge	load	bullet_gr	muzzle_fps	barrel_in	source
+9mm Luger	Federal Syntech PCC TSJ	130	1130	16	moved from Handgun (published carbine velocity)
+9mm Luger	Speer Gold Dot Carbine Hollow Point	135	1170		moved from Handgun (published carbine velocity)
+.357 Magnum	Buffalo Bore JHC	125	2298	18.5	buffalobore.com (19D/20, Marlin 1894 18.5"); other figures as the Handgun row
+.357 Magnum	Buffalo Bore Barnes XPB (lead-free)	125	2145	18	buffalobore.com (19J/20, Marlin 1894 18"); other figures as the Handgun row
+.357 Magnum	Winchester American Lever Range FMJ	130	1605		copied from Centerfire Rifle
+.357 Magnum	Buffalo Bore Barnes XPB (lead-free)	140	1947	18	buffalobore.com (19K/20, Marlin 1894 18"); other figures as the Handgun row
+.357 Magnum	Winchester Big Bore Jacketed Soft Point	158	1830	20	copied from Centerfire Rifle
+.357 Magnum	Winchester Super-X Jacketed Soft Point	158	1830	20	copied from Centerfire Rifle
+.357 Magnum	Buffalo Bore JHC	158	2153	18.5	buffalobore.com (19C/20, Marlin 1894 18.5"); other figures as the Handgun row
+.357 Magnum	Federal Premium Hammerdown Revolver Carbine Bonded Soft Point	170	1610	20	copied from Centerfire Rifle
+.357 Magnum	Buffalo Bore Outdoorsman Hard Cast LFN-GC	180	1851	18.5	buffalobore.com (19A/20, Marlin 1894 18.5"); other figures as the Handgun row
+.357 Magnum	Buffalo Bore JHP	180	1840	18	buffalobore.com (19L/20, Marlin 1894 18"); other figures as the Handgun row
+.327 Federal Magnum	Federal Premium Hammerdown Revolver Carbine Bonded Hollow Point	127	1650	20	moved from Handgun (published carbine velocity)
+.44 Magnum	Buffalo Bore Barnes XPB (lead-free)	200	1869	18	buffalobore.com (4K/20, Marlin 1894 18"); other figures as the Handgun row
+.44 Magnum	Hornady LEVERevolution FTX (rifle barrel)	225	1850		copied from Centerfire Rifle
+.44 Magnum	Buffalo Bore Barnes XPB (lead-free)	225	1676	18	buffalobore.com (4L/20, Marlin 1894 18"); other figures as the Handgun row
+.44 Magnum	Winchester Big Bore Jacketed Soft Point	240	1765	20	copied from Centerfire Rifle
+.44 Magnum	Winchester American Lever Range JSP	240	1750		copied from Centerfire Rifle
+.44 Magnum	Buffalo Bore Lever Gun JFN	265	1654	16	buffalobore.com (4 Lever Gun - 265 JFN/20, Browning 92 16")
+.44 Magnum	Buffalo Bore Dangerous Game Mono-Metal	265	1657	18	buffalobore.com (4DG 265/20, Marlin 1894 18"); other figures as the Handgun row
+.44 Magnum	Federal Premium Hammerdown Revolver Carbine Bonded Soft Point	270	1715	20	copied from Centerfire Rifle
+.44 Magnum	Buffalo Bore JFN	270	1802	18.5	buffalobore.com (4C/20, Marlin 1894 18.5"); other figures as the Handgun row
+.44 Magnum	Buffalo Bore JFN	300	1770	18.5	buffalobore.com (4B/20, Marlin 1894 18.5"); other figures as the Handgun row
+.44 Magnum	Buffalo Bore LBT-LFN	305	1779	18.5	buffalobore.com (4A/20, Marlin 1894 18.5"); other figures as the Handgun row
+.45 Colt	Buffalo Bore Barnes XPB +P (lead-free)	225	1855	20	buffalobore.com (3G/20, Marlin 1894 Cowboy 20"); other figures as the Handgun row
+.45 Colt	Federal Premium Hammerdown Revolver Carbine Bonded Hollow Point	250	1025	20	moved from Handgun (published carbine velocity)
+.45 Colt	Buffalo Bore Dangerous Game Mono-Metal +P	300	1480	20	buffalobore.com (3DG 300/20, Marlin 1894 20"); other figures as the Handgun row
+.44-40 Winchester	Winchester Power-Point	200	1190	24	moved from Handgun (published carbine velocity)
