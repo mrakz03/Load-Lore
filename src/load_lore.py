@@ -148,7 +148,9 @@ class Category:
     zero_yd: float = 100         # ballistic table: zero range
     sight_in: float = 1.5        # ballistic table: sight height over the bore (inches)
     terminal: bool = True        # show Taylor KO / HITS (needs a bullet diameter; not for shot)
-    parent: str = ""             # listed as a sub-category under this one (Pistol Caliber Carbine)
+    group: str = ""              # the menu entry it sits under (Handgun: a drop-down of two)
+    menu: str = ""               # its name in that drop-down and on its page; "" = the title
+    note: str = ""               # a line for the Load Dictionary's footnote
 
 
 CATEGORIES = (
@@ -158,12 +160,16 @@ CATEGORIES = (
              loads_filename="loads_centerfire_rifle.csv"),
     Category("Handgun", "Pistol and revolver rounds",
              "ammo_handgun.csv", 10, 500, 2.0, "HANDGUN WEIGHT (LB)",
-             loads_filename="loads_handgun.csv", step_yd=25, zero_yd=25, sight_in=0.6),
-    # handgun cartridges fired from carbines: only loads with a published long-barrel velocity
+             loads_filename="loads_handgun.csv", step_yd=25, zero_yd=25, sight_in=0.6,
+             group="Handgun", menu="Pistol / Revolver"),
+    # handgun cartridges fired from carbines and lever guns: published, reviewer-tested or
+    # estimated (source "estimate") carbine velocities
     Category("Pistol Caliber Carbine", "Handgun rounds from carbine and lever-gun barrels",
              "ammo_pcc.csv", 50, 300, 6.5, "CARBINE WEIGHT (LB)",
              loads_filename="loads_pcc.csv", step_yd=50, zero_yd=50, sight_in=2.0,
-             parent="Handgun"),
+             group="Handgun",
+             note="Loads marked (est.) have no published carbine velocity: it is worked out from "
+                  "the maker's handgun figure for a 16 in barrel."),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
              "ammo_rimfire_rifle.csv", 50, 500, 5.0, "RIFLE WEIGHT (LB)",
              weights=(3, 3, 1, 6, 3, 3),
@@ -175,6 +181,38 @@ CATEGORIES = (
              terminal=False, weights=(3, 3, 1, 3, 0, 0),
              loads_filename="loads_shotgun.csv", step_yd=25, zero_yd=50, sight_in=0.6),
 )
+
+
+# a drop-down menu entry's own line in the category list (Handgun: Pistol / Revolver, PCC)
+GROUP_BLURBS = {"Handgun": "Pistols, revolvers and pistol caliber carbines"}
+
+
+# a category's short tag, after a cartridge that is in two categories ("9mm Luger  ·  Carbine")
+CAT_TAGS = {"Centerfire Rifle": "Rifle", "Handgun": "Pistol / Revolver",
+            "Pistol Caliber Carbine": "Carbine", "Rimfire Rifle": "Rimfire"}
+
+
+def cat_name(cat):
+    """What menus and page titles call a category ("Pistol / Revolver" for Handgun)."""
+    return cat.menu or cat.title
+
+
+def title_name(title):
+    """cat_name for a category title."""
+    return next((cat_name(c) for c in CATEGORIES if c.title == title), title)
+
+
+def menu_entries():
+    """The category list in order: a category on its own, or (group name, [its categories])."""
+    out = []
+    for cat in CATEGORIES:
+        if not cat.group:
+            out.append(cat)
+        elif out and isinstance(out[-1], tuple) and out[-1][0] == cat.group:
+            out[-1][1].append(cat)
+        else:
+            out.append((cat.group, [cat]))
+    return out
 
 
 def version_text():
@@ -279,6 +317,11 @@ SOURCE_NOTES = {
     "custom": "Your own entry. Anything you left blank was estimated.",
     "typical": "Typical factory-load figures from published specs; approximate, so check the box.",
     "handload": HANDLOAD_NOTE,
+    "estimate": "ESTIMATE: no carbine velocity is published for this load. Its velocity is worked "
+                "out from the maker's handgun figure for a 16 in carbine barrel; ballistic "
+                "coefficient, powder charge and price are as in Pistol / Revolver.",
+    "tested": "Carbine velocity measured by a reviewer's chronograph, not printed by the maker; "
+              "ballistic coefficient and powder charge are estimated.",
 }
 DEFAULT_SOURCE_NOTE = ("Load data is approximate. Check it against the box or the "
                        "manufacturer, and edit the data file if needed.")
@@ -781,6 +824,12 @@ def read_settings():
 _OLD_LABEL = re.compile(r"^(\d+(?:\.\d+)?) gr  ·  (.+)$")
 
 
+# cartridges that left a category (Oct 28 2026: .357 / .44 Magnum lever-gun loads went from
+# Centerfire Rifle to Pistol Caliber Carbine): saved handloads and prices follow them
+MOVED_CATEGORIES = {"Centerfire Rifle|.357 Magnum": "Pistol Caliber Carbine",
+                    "Centerfire Rifle|.44 Magnum": "Pistol Caliber Carbine"}
+
+
 def _rename_price_key(key):
     """Update a saved price's key: old cartridge names, and loads saved when the label put the
     weight first ("150 gr  ·  Load", before v1.5) now read "Load  ·  150 gr". Returns a list:
@@ -792,7 +841,8 @@ def _rename_price_key(key):
     if m:
         parts[2] = f"{m.group(2)}  ·  {m.group(1)} gr"
     name = RENAMED_CARTRIDGES.get(parts[1], parts[1])
-    return ["|".join([parts[0], c, parts[2]]) for c in SPLIT_CARTRIDGES.get(name, (name,))]
+    cat = MOVED_CATEGORIES.get(f"{parts[0]}|{name}", parts[0])
+    return ["|".join([cat, c, parts[2]]) for c in SPLIT_CARTRIDGES.get(name, (name,))]
 
 
 def _read_user_rows(path):
@@ -808,6 +858,9 @@ def _read_user_rows(path):
     for row in rows:
         if "cartridge" in row:
             row["cartridge"] = canonical_name(row["cartridge"])
+            moved = MOVED_CATEGORIES.get(f"{row.get('category', '')}|{row['cartridge']}")
+            if moved:
+                row["category"] = moved
     return rows
 
 
@@ -1174,6 +1227,8 @@ def merge_handload_rows(rows, text, categories):
         if not any(row.values()):
             continue
         row["cartridge"] = canonical_name(row.get("cartridge", ""))
+        row["category"] = MOVED_CATEGORIES.get(f"{row.get('category', '')}|{row['cartridge']}",
+                                               row.get("category", ""))
         try:
             ok = (row.get("category") in categories and row["cartridge"] and
                   all(float(row.get(k) or 0) > 0 for k in ("bullet_gr", "muzzle_fps", "bc_g1",
@@ -1551,6 +1606,7 @@ class App:
         self.mode = "home"                # home / loads / h2h / hand / settings
         self.cat = None
         self.carry = {}                   # per category: what each tab knew when you left it
+        self.open_groups = set()          # drop-down menu entries (Handgun) opened by a click
         self.h2h = []                     # the Head to Head picks (pick_key), any category
         self.h2h_snap = {}                # what Head to Head had on screen when you left it
         self._place_window()
@@ -1996,7 +2052,7 @@ class App:
         icon = self.px(22) + self.px(12)
         need = max([main.measure(t) + icon for _, t, _ in TOOLS] + [title.measure("Load Lore")]
                    + [ver.measure(version_text())]
-                   + [sub.measure(cat.title) + self.px(24 + 9 + 10 + (12 if cat.parent else 0))
+                   + [sub.measure(cat_name(cat)) + self.px(24 + 9 + 10 + (12 if cat.group else 0))
                       for cat in CATEGORIES])
         return max(self.px(self.SIDEBAR_W), need + 2 * self.px(14) + 2 * self.px(12) + 4)
 
@@ -2095,10 +2151,30 @@ class App:
                 tk.Frame(subs, bg=BORDER, width=1).pack(side="left", fill="y")
                 inner = tk.Frame(subs, bg=SIDE)
                 inner.pack(side="left", fill="x", expand=True, padx=(self.px(8), 0))
-                for cat in CATEGORIES:
-                    on = self.cat is not None and cat.title == self.cat.title
-                    self._nav_button(cat.title, lambda c=cat, k=key: self.go(c, k), on, sub=True,
-                                     parent=inner, indent=self.px(12) if cat.parent else 0)
+                for entry in menu_entries():
+                    if isinstance(entry, tuple):          # Handgun: opens its two categories
+                        name, cats = entry
+                        here = self.cat is not None and self.cat in cats
+                        shown = here or name in self.open_groups
+                        self._nav_button(f"{name}  {'▾' if shown else '▸'}",
+                                         lambda n=name: self._toggle_group(n), False, sub=True,
+                                         parent=inner)
+                        kids = cats if shown else []
+                    else:
+                        kids = [entry]
+                    for cat in kids:
+                        on = self.cat is not None and cat.title == self.cat.title
+                        self._nav_button(cat_name(cat), lambda c=cat, k=key: self.go(c, k), on,
+                                         sub=True, parent=inner,
+                                         indent=self.px(12) if cat.group else 0)
+
+    def _toggle_group(self, name):
+        """Open or close a drop-down entry (Handgun) in the sidebar and the category list."""
+        self.open_groups ^= {name}
+        if self.mode in ("loads",) and self.cat is None:
+            self.show_picker(self.mode)
+        else:
+            self._draw_chrome()
 
     # ---- screens --------------------------------------------------------- #
     def _new_stage(self):
@@ -2508,34 +2584,49 @@ class App:
                    TEXT, True, bg=BG, anchor="w").pack(anchor="w")
         self.label(wrap, "Choose a category.", 11, MUTED, bg=BG, anchor="w").pack(
             anchor="w", pady=(self.px(4), self.px(18)))
-        for cat in CATEGORIES:
-            info = self.data[cat.title]
-            if info["error"]:
-                caption = "Data file missing" if "not found" in info["error"] else "Data problem"
-            else:
-                shown = info["detail"]
-                carts = {x.cartridge for x in shown}
+        def counts(cats):
+            carts, n = set(), 0
+            for cat in cats:
+                info = self.data[cat.title]
+                if info["error"]:
+                    return "Data file missing" if "not found" in info["error"] else "Data problem"
+                carts |= {x.cartridge for x in info["detail"]}
                 if cat.grain_style:                          # + cartridges open to handloads only
                     carts |= {x.cartridge for x in info["loads"]}
-                caption = f"{len(carts)} cartridges · {len(shown):,} loads"
-            card = RoundBox(wrap, self, SURFACE, BORDER, radius=12, padx=18, pady=14,
-                            cursor="hand2")
-            sub = self.px(28) if cat.parent else 0      # a sub-category sits indented under its parent
-            card.pack(fill="x", pady=(0, self.px(10)), padx=(sub, 0))
-            t = tk.Label(card.body, text=cat.title, bg=SURFACE, fg=TEXT, font=self.f(12, True),
+                n += len(info["detail"])
+            return f"{len(carts)} cartridges · {n:,} loads"
+
+        def card(title, blurb, caption, click, sub=0):
+            box = RoundBox(wrap, self, SURFACE, BORDER, radius=12, padx=18, pady=14, cursor="hand2")
+            box.pack(fill="x", pady=(0, self.px(10)), padx=(sub, 0))
+            t = tk.Label(box.body, text=title, bg=SURFACE, fg=TEXT, font=self.f(12, True),
                          anchor="w", cursor="hand2")
             t.pack(fill="x")
-            d = tk.Label(card.body, text=cat.blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
+            d = tk.Label(box.body, text=blurb, bg=SURFACE, fg=MUTED, font=self.f(10), anchor="w",
                          justify="left", wraplength=width - sub - 2 * self.px(18) - 4, cursor="hand2")
             d.pack(fill="x", pady=(self.px(2), self.px(8)))
-            c = tk.Label(card.body, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(9, True),
+            c = tk.Label(box.body, text=caption, bg=SURFACE, fg=ACCENT, font=self.f(9, True),
                          anchor="w", cursor="hand2")
             c.pack(fill="x")
             parts = (t, d, c)
-            card.on_click(lambda ct=cat: self.go(ct, mode), parts)
-            for w in (card, card.canvas, card.body, *parts):
-                w.bind("<Enter>", lambda e, cd=card, p=parts: cd.recolour(SURFACE_2, ACCENT, p))
-                w.bind("<Leave>", lambda e, cd=card, p=parts: cd.recolour(SURFACE, BORDER, p))
+            box.on_click(click, parts)
+            for w in (box, box.canvas, box.body, *parts):
+                w.bind("<Enter>", lambda e, cd=box, p=parts: cd.recolour(SURFACE_2, ACCENT, p))
+                w.bind("<Leave>", lambda e, cd=box, p=parts: cd.recolour(SURFACE, BORDER, p))
+
+        for entry in menu_entries():
+            if not isinstance(entry, tuple):
+                card(entry.title, entry.blurb, counts([entry]),
+                     lambda ct=entry: self.go(ct, mode))
+                continue
+            # Handgun: a drop-down; its categories show indented under it once it is clicked
+            name, cats = entry
+            shown = name in self.open_groups
+            card(f"{name}  {'▾' if shown else '▸'}", GROUP_BLURBS.get(name, ""), counts(cats),
+                 lambda n=name: self._toggle_group(n))
+            for cat in cats if shown else []:
+                card(cat_name(cat), cat.blurb, counts([cat]), lambda ct=cat: self.go(ct, mode),
+                     sub=self.px(28))
 
     def header(self, parent, cat, active):
         """Back link and the page title."""
@@ -2547,7 +2638,7 @@ class App:
         back.bind("<Enter>", lambda e: back.config(fg=ACCENT_HOVER))
         back.bind("<Leave>", lambda e: back.config(fg=ACCENT))
         title = tool_title(active)
-        self.label(box, f"{title} · {cat.title}", 17, TEXT, True, bg=BG).grid(
+        self.label(box, f"{title} · {cat_name(cat)}", 17, TEXT, True, bg=BG).grid(
             row=1, column=0, sticky="w", pady=(self.px(4), 0))
         return box
 
@@ -2556,6 +2647,8 @@ class App:
         if tab == "h2h":
             return self.show_h2h()
         self._stash()
+        if cat.group:                      # back on the category list, its drop-down is open
+            self.open_groups.add(cat.group)
         mem = self.carry.get(cat.title)
         self.open_category(cat, tab, dict(mem) if mem else None)
 
@@ -2578,7 +2671,7 @@ class App:
             self.settings["last_category"] = cat.title
             write_settings(self.settings)
         stage = self._new_stage()
-        self.root.title(f"{APP_TITLE} — {cat.title}")
+        self.root.title(f"{APP_TITLE} — {cat_name(cat)}")
         self._draw_chrome()
         self.view = LoadsView(self, stage, cat, info["detail"] + self.hand_loads(cat),
                               info["detail_error"], snap)
@@ -2587,7 +2680,8 @@ class App:
 
 def handload_cartridges(app):
     """Every cartridge a handload can be for, across the bullet categories: {text: (category,
-    cartridge)}; a cartridge in two categories (.44 Magnum) names its category in brackets."""
+    cartridge)}; a cartridge in two categories (9mm Luger) gets its category's tag ("9mm Luger  ·
+    Carbine"). The pop-up lists just the cartridge, under its category's heading (Zeke)."""
     per = []
     for cat in CATEGORIES:
         info = app.data.get(cat.title, {})
@@ -2600,7 +2694,8 @@ def handload_cartridges(app):
     for _, carts in per:
         for c in carts:
             count[c] = count.get(c, 0) + 1
-    return {(f"{c} ({cat.title})" if count[c] > 1 else c): (cat, c) for cat, carts in per for c in carts}
+    return {(f"{c}  ·  {CAT_TAGS.get(cat.title, cat.title)}" if count[c] > 1 else c): (cat, c)
+            for cat, carts in per for c in carts}
 
 
 def disclaimer(app, parent, bg):
@@ -2677,7 +2772,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     lab("PURPOSE", 0, 2, 1, (16, 3))
     cart_box = ent(V["cartridge"], 1, 0, 2, "combo")
     LoadSearch(app, cart_box, list(opts), lambda n: refresh_bullets(),
-               head=lambda t: opts[t][0].title, hint="Cartridge")
+               head=lambda t: cat_name(opts[t][0]), label=lambda t: opts[t][1], hint="Cartridge")
     LoadSearch(app, ent(V["purpose"], 1, 2, 1, "combo"), list(PURPOSES), lambda n: None,
                hint="Purpose")
     lab("LOAD NAME (OPTIONAL)", 2, 0, 3)
@@ -2810,7 +2905,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
             if not dia:                       # a "gauge" / "bore" name has no bullet diameter
                 raise ValueError("Enter the bullet diameter.")
             if bc is None:
-                bc = estimate_bc(gr, dia, "Handgun" in (cat.title, cat.parent))
+                bc = estimate_bc(gr, dia, cat.group == "Handgun")
             total = num("total", "Total cost", 0, blank=True)
             cost = parts_cost() if total is None else total
             if not cost or cost <= 0:
@@ -3178,7 +3273,8 @@ class LoadsView:
         self.tree.column("#0", width=self.app.px(6), minwidth=self.app.px(6), stretch=False)
         self.footnote.config(text=(
             f"Grades compare loads of the same cartridge with each other (the average scores "
-            f"{REL_CENTER:.0f}). " if on else "") + "Prices are estimates: set your own.")
+            f"{REL_CENTER:.0f}). " if on else "") + "Prices are estimates: set your own."
+            + (f" {self.cat.note}" if self.cat.note else ""))
 
     def _h2h_click(self):
         item = self.selected
@@ -4598,7 +4694,7 @@ class HeadToHeadView:
         slot["cart_search"] = LoadSearch(a, slot["cart_box"], list(self.cart_names),
                                          lambda n, s=slot: self._on_cart_search(s, n),
                                          value=lambda n: self.cart_names[n][1],
-                                         head=lambda n: self.cart_names[n][0],
+                                         head=lambda n: title_name(self.cart_names[n][0]),
                                          label=lambda n: self.cart_names[n][1], hint="Cartridge")
         slot["load_wrap"], slot["load_box"] = a.field(self.slot_box, ttk.Combobox,
                                                       textvariable=slot["load"], font=a.f(11),

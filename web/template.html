@@ -58,7 +58,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .fcard .ic svg{width:22px;height:22px;stroke:var(--on-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fcard b{font-size:1.15rem}.fcard span{color:var(--muted);font-size:.92rem;line-height:1.45}
 .pick{display:grid;grid-template-columns:1fr;gap:12px}
-@media(min-width:560px){.feat,.pick{grid-template-columns:1fr 1fr}.pick .cat.child{grid-column:2}}   /* two columns: under its parent */
+@media(min-width:560px){.feat,.pick{grid-template-columns:1fr 1fr}.pick .cat.grp,.pick .cat.child{grid-column:1/-1}}   /* two columns: a drop-down on its own rows */
 @media(min-width:900px){
   body{padding:0}
   .shell{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:none;min-height:100vh}
@@ -81,7 +81,6 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
      Home and category cards in one column at the desktop app's sizes; fitMenu zooms the page */
   .nav>button[data-nav=h2h]{order:1}.nav>button[data-nav=hand]{order:2}.nav>button[data-nav=settings]{order:3}
   .feat,.pick{grid-template-columns:1fr;gap:10px}
-  .pick .cat.child{grid-column:auto}
   .fcard{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:2px;padding:16px 18px;border-radius:12px}
   .fcard .ic{grid-row:span 2;width:36px;height:36px;border-radius:9px}.fcard .ic svg{width:20px;height:20px}
   .fcard b{font-size:1rem}.fcard span{font-size:.85rem}
@@ -195,7 +194,7 @@ h2{font-size:1.45rem;margin:6px 0 0}
 @media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
 .cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;color:var(--text);cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:6px;min-height:118px}
 .cat:hover,.cat:active{background:var(--surface2);border-color:var(--accent)}
-.cat.child{margin-left:28px}   /* a sub-category (Pistol Caliber Carbine) sits under its parent */
+.cat.child{margin-left:28px}   /* Pistol / Revolver and Pistol Caliber Carbine, under Handgun */
 .cat b{font-size:1.1rem}.cat span.b{color:var(--muted);font-size:.85rem}.cat span.c{color:var(--accent);font-size:.78rem;font-weight:700;margin-top:auto}
 @media(min-width:900px){   /* PC: compact category cards like the desktop app's */
   .cat{padding:14px 18px;min-height:0;gap:2px}
@@ -466,7 +465,9 @@ const SOURCE_NOTES = {
   partial:"Weight and velocity are manufacturer-published; ballistic coefficient and powder charge are estimated.",
   custom:"Your own entry. Anything you left blank was estimated.",
   typical:"Typical factory-load figures from published specs; approximate, so check the box.",
-  handload:DATA.hand_note};
+  handload:DATA.hand_note,
+  estimate:"ESTIMATE: no carbine velocity is published for this load. Its velocity is worked out from the maker's handgun figure for a 16 in carbine barrel; ballistic coefficient, powder charge and price are as in Pistol / Revolver.",
+  tested:"Carbine velocity measured by a reviewer's chronograph, not printed by the maker; ballistic coefficient and powder charge are estimated."};
 const DEFAULT_SOURCE_NOTE = "Load data is approximate. Check it against the box or the manufacturer.";
 const REL_CENTER=70, REL_SPREAD=10, REL_BANDS=[[85,"S"],[77,"A"],[66,"B"],[55,"C"],[45,"D"]];
 // saved data may use cartridge names from before a rename (e.g. "7.62x54R" -> "7.62x54mmR")
@@ -475,7 +476,14 @@ const RENAMED = DATA.renamed || {};
 // old saved handloads go to the commercial cartridge, an old saved price is kept for both
 const SPLIT = DATA.split || {};
 const canon = n => {n=RENAMED[n]||n;return SPLIT[n]?SPLIT[n][0]:n;};
-const canonRows = a => (Array.isArray(a) ? a : []).map(r => r && typeof r === "object" && r.cartridge ? {...r, cartridge: canon(r.cartridge)} : r);
+// cartridges that left a category (MOVED_CATEGORIES: .357 / .44 Magnum rifle -> Pistol Caliber Carbine)
+const MOVED = DATA.moved || {};
+const movedCat = (cat, cart) => MOVED[cat + "|" + cart] || cat;
+const canonRows = a => (Array.isArray(a) ? a : []).map(r => {
+  if (!(r && typeof r === "object" && r.cartridge)) return r;
+  const c = canon(r.cartridge);
+  return r.category ? {...r, cartridge: c, category: movedCat(r.category, c)} : {...r, cartridge: c};
+});
 const PRICE_KEY = "cartridge_calc_prices_v1";
 const GRADES_KEY = "cartridge_calc_grades";
 
@@ -647,7 +655,7 @@ for(const cat of CATEGORIES){
   state.detail[cat.title]=(cat.detail||[]).map(x=>Object.assign({},x,{label:makeLabel(x,cat)}));
 }
 // saved price keys: old cartridge names, and "150 gr  ·  Load" labels (weight first, before v1.5)
-function readPrices(){try{const o=JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{},out={};for(const [k,v] of Object.entries(o)){const p=k.split("|");if(p.length<3){out[k]=v;continue;}const r=p.slice(2).join("|"),m=/^(\d+(?:\.\d+)?) gr  ·  (.+)$/.exec(r),n=RENAMED[p[1]]||p[1];for(const c of SPLIT[n]||[n])out[`${p[0]}|${c}|${m?`${m[2]}  ·  ${m[1]} gr`:r}`]=v;}return out;}catch(e){return {};}}
+function readPrices(){try{const o=JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{},out={};for(const [k,v] of Object.entries(o)){const p=k.split("|");if(p.length<3){out[k]=v;continue;}const r=p.slice(2).join("|"),m=/^(\d+(?:\.\d+)?) gr  ·  (.+)$/.exec(r),n=RENAMED[p[1]]||p[1],cat=movedCat(p[0],n);for(const c of SPLIT[n]||[n])out[`${cat}|${c}|${m?`${m[2]}  ·  ${m[1]} gr`:r}`]=v;}return out;}catch(e){return {};}}
 function writePrices(o){try{localStorage.setItem(PRICE_KEY,JSON.stringify(o));return true;}catch(e){return false;}}
 const priceKey=(cat,it)=>`${cat.title}|${it.cartridge}|${it.label}`;
 const shared={};   // category title -> values carried between the two tabs
@@ -709,21 +717,44 @@ function wireGrades(root){
 const gradesBtn=()=>`<button class="tgl ${GRADES?"on":""}" data-grades aria-pressed="${GRADES}" aria-label="S–F grades">${GRADES?"On":"Off"}</button>`;
 const NAV={mode:"home",cat:null};
 const hasDetail=cat=>(state.detail[cat.title]||[]).length>0;
+// what menus and page titles call a category ("Pistol / Revolver" for Handgun: cat_name)
+const catName=c=>c.menu||c.title;
+// the category list in order: a category, or [group name, its categories] (Handgun: a drop-down)
+function menuEntries(){
+  const out=[];
+  for(const c of CATEGORIES.filter(hasDetail)){
+    const last=out[out.length-1];
+    if(!c.group)out.push(c);else if(Array.isArray(last)&&last[0]===c.group)last[1].push(c);else out.push([c.group,[c]]);
+  }
+  return out;
+}
+const OPEN_GROUPS=new Set();   // drop-down entries (Handgun) opened by a click
+function toggleGroup(name){
+  if(OPEN_GROUPS.has(name))OPEN_GROUPS.delete(name);else OPEN_GROUPS.add(name);
+  drawChrome();if(NAV.mode==="loads"&&!NAV.cat){showPicker(NAV.mode);fitMenu();}
+}
 function lastCat(){try{return localStorage.getItem("cartridge_calc_cat");}catch(e){return null;}}
 function drawChrome(){
   const nav=$("#nav");
   nav.innerHTML=NAVS.map(([k,t,ic])=>{
     const on=NAV.mode===k;
     return `<button data-nav="${k}" class="${on?"on":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
-      (on&&k==="loads"?`<div class="sub">${CATEGORIES.filter(hasDetail).map(c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}${c.parent?" child":""}">${esc(c.title)}</button>`).join("")}</div>`:"");
+      (on&&k==="loads"?`<div class="sub">${menuEntries().map(e=>{
+        const btn=c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}${c.group?" child":""}">${esc(catName(c))}</button>`;
+        if(!Array.isArray(e))return btn(e);
+        const [g,cs]=e,shown=cs.includes(NAV.cat)||OPEN_GROUPS.has(g);
+        return `<button data-group="${esc(g)}" aria-expanded="${shown}">${esc(g)}&nbsp; ${shown?"▾":"▸"}</button>`+(shown?cs.map(btn).join(""):"");
+      }).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
   nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(NAV.mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
+  nav.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
 }
 function navigate(mode,cat,hid){   // hid: the handload the Handloads tab opens
   if(app._leave){try{app._leave();}catch(e){}}
   app._leave=null;app.onkeydown=null;
   NAV.mode=mode;NAV.cat=mode==="loads"?(cat||null):null;   // Head to Head has no category
+  if(NAV.cat&&NAV.cat.group)OPEN_GROUPS.add(NAV.cat.group);   // back on the list, its drop-down is open
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
   if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="hand")showHand(hid);else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
@@ -773,18 +804,28 @@ function showSettings(){
 function showPicker(mode){
   document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","home");app.classList.add("picker");
   const last=lastCat();
+  const count=cs=>{
+    const carts=new Set();let d=0;
+    for(const c of cs){const list=state.detail[c.title].filter(x=>!x.handload);list.concat(c.grain_style?state.loads[c.title]:[]).forEach(x=>carts.add(x.cartridge));d+=list.length;}
+    return `${carts.size} cartridges  ·  ${d.toLocaleString()} loads`;
+  };
+  const card=c=>`<button class="cat${c.group?" child":""}" data-cat="${esc(c.title)}" ${c.title===last?'style="border-color:var(--accent)"':""}><b>${esc(catName(c))}</b><span class="b">${esc(c.blurb)}</span><span class="c">${count([c])}</span></button>`;
   app.innerHTML=`<div class="phead"><h2>${toolTitle(mode)}</h2><p class="sub">Choose a category.</p></div><div class="pick">${
-    CATEGORIES.filter(hasDetail).map(c=>{
-      const list=state.detail[c.title].filter(x=>!x.handload),n=new Set(list.concat(c.grain_style?state.loads[c.title]:[]).map(x=>x.cartridge)).size,d=list.length;
-      return `<button class="cat${c.parent?" child":""}" data-cat="${esc(c.title)}" ${c.title===last?'style="border-color:var(--accent)"':""}><b>${esc(c.title)}</b><span class="b">${esc(c.blurb)}</span><span class="c">${n} cartridges  ·  ${d.toLocaleString()} loads</span></button>`;}).join("")}</div>`;
+    menuEntries().map(e=>{
+      if(!Array.isArray(e))return card(e);
+      // Handgun: a drop-down; its categories show indented under it once it is tapped
+      const [g,cs]=e,shown=OPEN_GROUPS.has(g);
+      return `<button class="cat grp" data-group="${esc(g)}" aria-expanded="${shown}"><b>${esc(g)}&nbsp; ${shown?"▾":"▸"}</b><span class="b">${esc((DATA.group_blurbs||{})[g]||"")}</span><span class="c">${count(cs)}</span></button>`+(shown?cs.map(card).join(""):"");
+    }).join("")}</div>`;
   app.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
+  app.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
 }
 
 function openCategory(cat,tab){
   tab=tab||"loads";
-  document.title=`${APP_TITLE} — ${cat.title}`;
+  document.title=`${APP_TITLE} — ${catName(cat)}`;
   app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide","dict");
-  app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2>${toolTitle(tab)} · ${esc(cat.title)}</h2></div><div id="pane"></div>`;
+  app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2>${toolTitle(tab)} · ${esc(catName(cat))}</h2></div><div id="pane"></div>`;
   $("[data-back]",app).onclick=()=>navigate(tab);
   openLoads(cat,$("#pane",app));
 }
@@ -936,6 +977,7 @@ function mergeHand(text){
   for(const line of t.slice(1)){
     const r={};head.forEach((k,i)=>{r[k]=(line[i]||"").trim();});
     r.cartridge=canon(r.cartridge);
+    r.category=movedCat(r.category,r.cartridge);
     const ok=known.has(r.category)&&r.cartridge&&["bullet_gr","muzzle_fps","bc_g1","powder_gr","cost"].every(k=>+r[k]>0);
     if(!ok){skip++;continue;}
     ["bullet_gr","diameter_in","bc_g1","powder_gr","muzzle_fps","barrel_in","cost","bullet_cost","powder_cost_lb","primer_cost","brass_cost","brass_reuse"].forEach(k=>{r[k]=+r[k]||0;});
@@ -977,12 +1019,13 @@ function restoreHand(after){
   };
 }
 // every cartridge a handload can be for, across the bullet categories: [{text, cat, cart}]; a
-// cartridge in two categories (.44 Magnum) names its category in brackets
+// cartridge in two categories (9mm Luger) gets its category's tag ("9mm Luger  ·  Carbine")
+const CAT_TAGS=DATA.cat_tags||{};
 function handCarts(){
   const per=CATEGORIES.filter(c=>c.grain_style&&state.detail[c.title]).map(c=>{
     syncHand(c);return [c,[...withHandloadOnly(groupBy(state.detail[c.title],false),state.loads[c.title]||[]).keys()]];});
   const cnt={};per.forEach(([c,cs])=>cs.forEach(x=>{cnt[x]=(cnt[x]||0)+1;}));
-  return per.flatMap(([c,cs])=>cs.map(x=>({text:cnt[x]>1?`${x} (${c.title})`:x,cat:c,cart:x})));
+  return per.flatMap(([c,cs])=>cs.map(x=>({text:cnt[x]>1?`${x}  ·  ${CAT_TAGS[c.title]||c.title}`:x,cat:c,cart:x})));
 }
 // the Handloads tab's add / edit form (any category: the cartridge picks it)
 function handDialog(rec,done){
@@ -992,7 +1035,7 @@ function handDialog(rec,done){
   const pickOf=t=>{t=(t||"").trim();const lo=t.toLowerCase();return opts.find(o=>o.text===t)||opts.find(o=>o.text.toLowerCase()===lo)||opts.find(o=>o.cart.toLowerCase()===lo)||null;};
   const [m,close]=modal(`
     <h3 style="margin:0 0 4px">${edit?"Edit handload":"New handload"}</h3>
-    <label class="l" style="margin-top:12px">CARTRIDGE</label><div><select id="hc"><option value="">Choose…</option>${[...new Set(opts.map(o=>o.cat))].map(c=>`<optgroup label="${esc(c.title)}">${opts.filter(o=>o.cat===c).map(o=>`<option value="${esc(o.text)}">${esc(o.cart)}</option>`).join("")}</optgroup>`).join("")}</select></div>
+    <label class="l" style="margin-top:12px">CARTRIDGE</label><div><select id="hc"><option value="">Choose…</option>${[...new Set(opts.map(o=>o.cat))].map(c=>`<optgroup label="${esc(catName(c))}">${opts.filter(o=>o.cat===c).map(o=>`<option value="${esc(o.text)}">${esc(o.cart)}</option>`).join("")}</optgroup>`).join("")}</select></div>
     <div class="g2"><div><label class="l">BULLET MAKER</label><select id="hbm"></select><input id="hbmo" autocomplete="off" placeholder="Type the maker" aria-label="Bullet maker" style="display:none;margin-top:6px"></div><div><label class="l">BULLET (LIBRARY)</label><select id="hbl"></select></div></div>
     <div class="g2"><div><label class="l">BULLET NAME</label><input id="hbn" autocomplete="off" placeholder="e.g. ELD-M"></div><div><label class="l">LOAD NAME (OPTIONAL)</label><input id="hn" autocomplete="off"></div></div>
     <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal"></div></div>
@@ -1050,7 +1093,7 @@ function handDialog(rec,done){
   const hc=q("#hc"),cv=document.createElement("button");
   cv.type="button";cv.className="selcover";cv.setAttribute("aria-label","Choose a cartridge");
   hc.parentElement.style.position="relative";hc.tabIndex=-1;hc.parentElement.appendChild(cv);
-  const cartPick={text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>o.cat.title,none:"cartridge",
+  const cartPick={text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>catName(o.cat),none:"cartridge",
     cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;fillMakers();}};
   const openCart=typed=>touch?pickSheet(opts,cartPick):pickSheet(opts,cartPick,{el:hc,input:cv,typed:typed||""});
   cv.onclick=()=>openCart();
@@ -1099,7 +1142,7 @@ function handDialog(rec,done){
       const gr=num("hgr","Bullet weight",1,2000),fps=num("hfps","Velocity",100,5500),pg=num("hpg","Powder charge",0.1,300);
       let dm=num("hdm","Diameter",0.1,0.7,true);if(dm==null)dm=DIAMETERS[cart]||bulletDiameter({cartridge:cart,bullet_gr:gr});if(!dm)throw new Error("Enter the bullet diameter.");
       let bc=num("hbc","Ballistic coefficient",0.01,1.5,true);
-      if(bc==null)bc=+(gr/7000/(dm*dm)*([cat.title,cat.parent].includes("Handgun")?0.95:1.7)).toFixed(3);
+      if(bc==null)bc=+(gr/7000/(dm*dm)*(cat.group==="Handgun"?0.95:1.7)).toFixed(3);
       const bl=num("hbl2","Barrel length",1,60,true);
       const parts={bullet_cost:num("hcb","Bullet cost",0,null,true)||0,powder_cost_lb:num("hcp","Powder cost",0,null,true)||0,primer_cost:num("hcr","Primer cost",0,null,true)||0,brass_cost:num("hcs","Brass cost",0,null,true)||0,brass_reuse:num("hcu","Brass reuses",1,1000,true)||5};
       const tot=num("hct","Total cost",0,null,true);
@@ -1368,7 +1411,7 @@ function openLoads(cat,pane){
       if(sp)sp.onclick=()=>{const v=parseFloat(c.querySelector(".pin").value);if(!(v>=0)){alert("Enter a price, e.g. 0.45");return;}L.prices[priceKey(cat,it)]=v;writePrices(L.prices);render();};
       if(cl)cl.onclick=()=>{delete L.prices[priceKey(cat,it)];writePrices(L.prices);render();};
     });
-    $$("#lnote").textContent=(GRADES?`Grades compare loads of this cartridge${L.purpose!=="All"?" and purpose ("+L.purpose+")":""}; the average scores about ${REL_CENTER}. `:"")+"Prices are estimates.";
+    $$("#lnote").textContent=(GRADES?`Grades compare loads of this cartridge${L.purpose!=="All"?" and purpose ("+L.purpose+")":""}; the average scores about ${REL_CENTER}. `:"")+"Prices are estimates."+(cat.note?" "+cat.note:"");
   }
   if(cat.grain_style)$$("#hadd").onclick=()=>navigate("hand");
   $$("#lc").onchange=()=>{
@@ -1484,7 +1527,7 @@ function openH2H(pane){
     $$("#hs").querySelectorAll(".slot").forEach(row=>{
       const s=slots[+row.dataset.i];
       const ci=cartItems.find(x=>x.cat===s.cat&&x.cart===s.cart);
-      searchBox(row.querySelector(".cs"),cartItems,{text:cartText,find:x=>x.cart+" "+x.cat,head:x=>x.cat,none:"cartridge",cur:()=>ci,
+      searchBox(row.querySelector(".cs"),cartItems,{text:cartText,find:x=>x.cart+" "+x.cat,head:x=>catName(CATEGORIES.find(c=>c.title===x.cat)||{title:x.cat}),none:"cartridge",cur:()=>ci,
         pick:x=>{if(x===ci)return;s.cat=x.cat;s.cart=x.cart;s.key="";s.gun="";drawSlots();changed();}});
       const li=groups.get(s.cat+"|"+s.cart)||[],lc=li.find(x=>(x.hid||x.label)===s.key);
       searchBox(row.querySelector(".ls"),li,{text:optText,none:"load",cur:()=>lc,pick:x=>{s.key=x.hid||x.label;drawSlots();changed();}});

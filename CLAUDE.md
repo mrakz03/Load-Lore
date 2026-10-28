@@ -49,13 +49,21 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (pressure_of / pressureOf reads the load name; Train+Protect and +Peak aren't +P) hides those
   loads from the list without changing any grade; ticked by default, kept per category while the
   app is open (snapshot / shared), not in settings.json.
-- Pistol Caliber Carbine (Oct 28 2026, Zeke): a fifth Category after Handgun with parent="Handgun",
-  listed indented under it (picker cards, sidebar sub-list; web .cat.child / .sub button.child). Only
-  loads with a maker-published carbine / lever-gun velocity (Zeke: no estimates); data/loads_pcc.csv,
-  sources in research/pcc_sources.tsv (Buffalo Bore product pages give Marlin 1894 18-20" figures for
-  .357 / .44 / .45 Colt; most 9mm/.40/10mm/.45 ACP makers print none). ammo_pcc.csv is its cartridge
-  list (copies of the handgun generic rows), so handloads can be PCC too. Carbine figures go here, not
-  in loads_handgun.csv; the Centerfire Rifle .357/.44 lever rows are copied here, not moved.
+- Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
+  (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
+  card and the sidebar entry open / close them (menu_entries / menuEntries, open_groups / OPEN_GROUPS,
+  GROUP_BLURBS; cat_name / catName for menus, page titles and cartridge-list headings). A cartridge in
+  two categories reads "9mm Luger  ·  Carbine" (CAT_TAGS) in the handload form's box; lists under
+  category headings show just the cartridge.
+- Pistol Caliber Carbine: data/loads_pcc.csv, every row's source in research/pcc_sources.tsv.
+  Maker-published carbine / lever-gun figures first (Buffalo Bore Marlin 1894 18-20", Hammerdown,
+  Syntech PCC, Winchester rifle-barrel loads), then reviewer chronograph tests (source "tested"), then
+  an estimate for every other handgun load of its cartridges (source "estimate", name ends " (est.)",
+  SOURCE_NOTES + the category note say so): v16 = v x (16 / test barrel)^n, n fitted from loads
+  printed at both lengths (auto 0.057, magnum revolver 0.221, standard revolver 0.132). Loads made
+  for lever guns / carbines (Hammerdown, Syntech PCC, Gold Dot Carbine, LEVERevolution, American
+  Lever Range) are PCC only, never in loads_handgun.csv. .357 / .44 Magnum left Centerfire Rifle
+  (Zeke): MOVED_CATEGORIES moves saved handloads and prices. .22 LR / .22 WMR stay in Handgun.
 - Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
   page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones),
   in two boxes, Display and About (rows split by thin lines, not one box each). About has a small

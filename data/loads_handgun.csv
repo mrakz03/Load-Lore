@@ -369,7 +369,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 Magnum,Speer Gold Dot Short Barrel Hollow Point,135,990,0.144,7.4,1.90,,partial,,,Defense
 .357 Magnum,Federal Premium Hunting Handgun Barnes Expander,140,1400,0.184,15.3,1.90,,catalog,,6,Hunting
 .357 Magnum,Fiocchi Hyperformance Hunt Barnes XPB,140,1250,0.149,12.2,1.87,,partial,,,Defense
-.357 Magnum,Hornady LEVERevolution FTX,140,1440,0.172,16.2,1.36,,catalog,,8,Hunting
 .357 Magnum,Buffalo Bore Barnes XPB (lead-free),140,1550,0.184,18.8,2.52,,partial,,,Hunting
 .357 Magnum,Buffalo Bore Tactical Short Barrel Low Flash Barnes XPB (lead-free),140,1150,0.184,10.3,2.52,,partial,,,Defense
 .357 Magnum,Buffalo Bore Tactical Short Barrel Low Recoil JHP,140,1150,0.161,10.3,2.01,,partial,,,Defense
@@ -503,7 +502,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 10mm Auto,Black Hills HoneyBadger,115,1600,0.098,9.8,2.10,,partial,,5,Defense
 10mm Auto,Sellier & Bellot XRG Defense,130,1362,0.110,8.1,1.00,,partial,,,Defense
 10mm Auto,Hornady Handgun Hunter MonoFlex,135,1315,0.103,7.8,1.90,,catalog,,5,Hunting
-10mm Auto,Hornady LEVERevolution FTX,150,1220,0.095,7.5,1.35,,catalog,,5,Hunting
 10mm Auto,Underwood Xtreme Hunter,150,1425,0.114,10.2,2.15,,partial,,,Hunting
 10mm Auto,Fiocchi Hyperformance Hunt Barnes XPB,155,1165,0.131,7.1,1.98,,partial,,,Defense
 10mm Auto,Hornady American Gunner XTP,155,1410,0.139,10.3,1.13,,catalog,,5,Hunting
@@ -658,7 +656,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .40 S&W,Federal Syntech Action Pistol TSJ,205,830,0.174,3.9,0.60,,catalog,,4,Target
 .41 Magnum,Buffalo Bore JHP,170,1650,0.137,14.7,2.68,,partial,,,Hunting
 .41 Magnum,Buffalo Bore Barnes XPB (lead-free),180,1550,0.145,13.7,3.38,,partial,,,Hunting
-.41 Magnum,Hornady LEVERevolution FTX,190,1620,0.168,15.8,1.55,yes,catalog,,10,Hunting
 .41 Magnum,Hornady Custom XTP,210,1545,0.186,15.8,3.36,,catalog,,10,Defense
 .41 Magnum,Federal Power-Shok JHP,210,1230,0.182,11.8,2.18,,catalog,,4,Hunting
 .41 Magnum,Remington HTP Semi-Jacketed Hollow Point,210,1240,0.180,12.0,2.62,,catalog,,4,Hunting
@@ -689,7 +686,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .44 Magnum,Underwood Xtreme Penetrator,220,1530,0.144,32.8,1.65,,partial,,6,Hunting
 .44 Magnum,Federal Premium Hunting Handgun Barnes Expander,225,1280,0.163,23.5,2.50,,catalog,,6,Hunting
 .44 Magnum,Fiocchi Hyperformance Hunt Barnes XPB,225,1240,0.166,22,2.14,,partial,,,Defense
-.44 Magnum,Hornady LEVERevolution FTX,225,1410,0.147,28.5,1.60,,catalog,,7,Hunting
 .44 Magnum,Buffalo Bore Barnes XPB (lead-free),225,1400,0.163,28.1,3.38,,partial,,,Hunting
 .44 Magnum,Federal Premium Personal Defense HST,230,1085,0.175,17.2,2.30,,catalog,,4,Defense
 .44 Magnum,Federal Premium Hunting Handgun Terminal Ascent,235,1380,0.160,28.5,2.63,,catalog,,6,Hunting
@@ -844,7 +840,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 Colt,Federal Premium Personal Defense Hydra-Shok Deep,210,913,0.133,7.4,1.68,,catalog,,6,Defense
 .45 Colt,Federal American Eagle JSP,225,860,0.194,7.1,1.20,,catalog,,4,Hunting
 .45 Colt,Federal Champion SWCHP,225,830,0.154,6.6,1.75,,catalog,,4,Target
-.45 Colt,Hornady LEVERevolution FTX,225,960,0.142,8.8,1.55,,catalog,,4,Hunting
 .45 Colt,Remington Performance Wheelgun Lead Semi-Wadcutter,225,830,0.113,6.6,1.77,,catalog,,4,Match
 .45 Colt,"Winchester Defender Bonded JHP (3in Judge, vented)",225,850,0.170,6.9,2.32,,catalog,,3,Defense
 .45 Colt,Winchester Silvertip Plated JHP,225,920,0.170,8.1,2.32,,catalog,,5.5,Hunting
@@ -858,7 +853,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 Colt,Remington Performance Wheelgun Lead Round Nose,250,750,0.142,6,1.20,,catalog,,4,Hunting
 .45 Colt,Winchester Big Bore Semi Jacketed Hollow Point (hunting),250,845,0.164,7.6,2.32,,catalog,,7.25,Hunting
 .45 Colt,Winchester USA Lead,250,750,0.164,6,0.61,,catalog,,5.5,Hunting
-.45 Colt,Winchester American Lever Range Lead Flat Nose,250,900,0.142,8.6,1.17,,partial,,,Target
 .45 Colt,Fiocchi Range Dynamics CMJ,255,750,0.170,6.1,0.67,,partial,,,Target
 .45 Colt,Hornady Custom Cowboy,255,725,0.128,5.7,1.35,yes,catalog,,4,Target
 .45 Colt,Buffalo Bore Outdoorsman Soft Cast GC,255,1000,0.128,10.8,2.68,,partial,,,Hunting
