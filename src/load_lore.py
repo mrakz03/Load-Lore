@@ -52,7 +52,7 @@ import urllib.error
 import urllib.request
 import webbrowser
 import zlib
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 try:
     import tkinter as tk
@@ -151,29 +151,31 @@ class Category:
     group: str = ""              # the menu entry it sits under (Handgun: a drop-down of two)
     menu: str = ""               # its name in that drop-down and on its page; "" = the title
     note: str = ""               # a line for the Load Dictionary's footnote
+    barrel_in: float = 0.0       # the usual test barrel (inches): loads with none listed, and the
+                                 # barrel length box's starting value; 0 = no barrel length switch
 
 
 CATEGORIES = (
     Category("Centerfire Rifle", "Hunting, precision and military rounds",
              "ammo_centerfire_rifle.csv", 0, 2000, 8.0, "RIFLE WEIGHT (LB)",
              legacy_filename="ammo_data.csv",
-             loads_filename="loads_centerfire_rifle.csv"),
+             loads_filename="loads_centerfire_rifle.csv", barrel_in=24),
     Category("Handgun", "Pistol and revolver rounds",
              "ammo_handgun.csv", 0, 500, 2.0, "HANDGUN WEIGHT (LB)",
              loads_filename="loads_handgun.csv", step_yd=25, zero_yd=25, sight_in=0.6,
-             group="Handgun", menu="Pistol / Revolver"),
+             group="Handgun", menu="Pistol / Revolver", barrel_in=4),
     # handgun cartridges fired from carbines and lever guns: published, reviewer-tested or
     # estimated (source "estimate") carbine velocities
     Category("Pistol Caliber Carbine", "Handgun rounds from carbine and lever-gun barrels",
              "ammo_pcc.csv", 0, 300, 6.5, "CARBINE WEIGHT (LB)",
              loads_filename="loads_pcc.csv", step_yd=50, zero_yd=50, sight_in=2.0,
-             group="Handgun",
+             group="Handgun", barrel_in=16,
              note="Loads marked (est.) have no published carbine velocity: it is worked out from "
                   "the maker's handgun figure for a 16 in barrel."),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
              "ammo_rimfire_rifle.csv", 0, 500, 5.0, "RIFLE WEIGHT (LB)",
              weights=(3, 3, 1, 6, 3, 3),
-             loads_filename="loads_rimfire_rifle.csv", step_yd=50, zero_yd=50),
+             loads_filename="loads_rimfire_rifle.csv", step_yd=50, zero_yd=50, barrel_in=24),
     Category("Shotgun", "Birdshot, buckshot and slugs",
              "ammo_shotgun.csv", 0, 300, 7.5, "SHOTGUN WEIGHT (LB)",
              cartridge_label="GAUGE", payload_row="Payload",
@@ -509,6 +511,56 @@ GUN_LB_MAX = 60.0
 
 def typical_gun_lb(cat, cartridge):
     return GUN_LB.get(cat.title, {}).get(cartridge, cat.default_gun_lb)
+
+
+# Barrel length (the Load Dictionary's switch, off by default): each load's speed is moved from
+# its test barrel (the category's usual one when none is listed) to the length typed, as
+# v x (length / test barrel)^n. Handgun n are the fits from loads printed at both handgun and
+# carbine length (the Pistol Caliber Carbine estimates); a rifle's n grows with its powder charge
+# for the bullet weight (about 22 fps an inch for .308 Winchester, 30+ for magnums, near
+# published barrel-cut tests); a .22 gains little. An estimate: real barrels differ.
+BARREL_N = {"auto": 0.057, "revolver": 0.132, "magnum": 0.221, "rimfire": 0.07}
+STANDARD_REVOLVERS = (".38 Special", ".44 Special", ".45 Colt", ".44-40 Winchester", ".32 S&W Long")
+MAGNUM_REVOLVERS = (".454 Casull", ".480 Ruger")          # (and every "... Magnum")
+RIMFIRE_HANDGUN = (".22 LR", ".22 WMR")
+BARREL_MIN, BARREL_MAX = 1.0, 40.0
+
+
+def barrel_exponent(cat, item):
+    c = item.cartridge
+    if cat.title == "Rimfire Rifle" or c in RIMFIRE_HANDGUN:
+        return BARREL_N["rimfire"]
+    if cat.group == "Handgun":
+        if "Magnum" in c or c in MAGNUM_REVOLVERS:
+            return BARREL_N["magnum"]
+        return BARREL_N["revolver" if c in STANDARD_REVOLVERS else "auto"]
+    ratio = item.powder_gr / item.bullet_gr if item.bullet_gr > 0 else 0.0
+    return min(0.25, max(0.10, 0.10 + 0.25 * ratio))
+
+
+def base_load(item):
+    """The listed load behind an at_barrel copy (or the load itself)."""
+    return getattr(item, "base", item)
+
+
+def barrel_text(cat, item):
+    """Head to Head's test barrel cell: "20 in", or "20 in, shown for 16 in (est.)"."""
+    if not cat.grain_style:
+        return "—"
+    text = f"{item.barrel_in:g} in" if item.barrel_in else "not listed"
+    at = getattr(item, "at_in", 0)
+    return f"{text}, shown for {at:g} in (est.)" if at else text
+
+
+def at_barrel(item, cat, length):
+    """The load as fired from a `length` in barrel (a copy whose .base is the listed load), or
+    the load itself when the length is its test barrel's or the category has no switch."""
+    test = item.barrel_in or cat.barrel_in
+    if not cat.barrel_in or not length or abs(length - test) < 1e-9:
+        return item
+    new = replace(item, muzzle_fps=item.muzzle_fps * (length / test) ** barrel_exponent(cat, item))
+    new.base, new.at_in = item, length
+    return new
 
 
 # --------------------------------------------------------------------------- #
@@ -2994,6 +3046,9 @@ class LoadsView:
         self.cart_var = tk.StringVar(value="")
         self.dist_var = tk.StringVar(value=f"{cat.default_distance:g}")
         self.gun_var = tk.StringVar(value=f"{cat.default_gun_lb:g}")
+        # barrel length switch (off: the listed figures; on: every load moved to this length)
+        self.barrel_on, self.barrel = False, 0.0
+        self.barrel_var = tk.StringVar(value=f"{cat.barrel_in:g}")
         self.filter_var = tk.StringVar(value="")
         self.price_var = tk.StringVar(value="")
         self.keys = metric_keys(cat)
@@ -3014,7 +3069,8 @@ class LoadsView:
         self._build_ui(stage, error)
         if hasattr(self, "tree"):
             cart = self._apply_snap(snap) if snap and self.loads else None
-            for var in (self.dist_var, self.gun_var, self.filter_var, *self.weight_vars.values()):
+            for var in (self.dist_var, self.gun_var, self.barrel_var, self.filter_var,
+                        *self.weight_vars.values()):
                 var.trace_add("write", self._schedule)
             self.weight_vars_note()
             if cart is None and self.cartridges:      # start on the cartridge with the most loads
@@ -3065,6 +3121,19 @@ class LoadsView:
                                                      pady=(a.px(14), 0))
             fbox, _ = a.field(top, ttk.Entry, textvariable=var, font=a.f(12), width=10)
             fbox.grid(row=3, column=i, sticky="ew", padx=gap, pady=(a.px(5), 0))
+        if cat.barrel_in:
+            # barrel length: an On / Off switch, the length box beside it while on
+            a.label(top, "BARREL LENGTH (IN)", 8, MUTED, True).grid(
+                row=4, column=0, sticky="w", padx=(0, a.px(4)), pady=(a.px(14), 0))
+            brow = tk.Frame(top, bg=SURFACE)
+            brow.grid(row=5, column=0, sticky="ew", padx=(0, a.px(4)), pady=(a.px(5), 0))
+            brow.columnconfigure(1, weight=1)
+            self.barrel_tgl = toggle(a, brow, self._toggle_barrel)
+            self.barrel_tgl.grid(row=0, column=0, sticky="w")
+            self.barrel_box, _ = a.field(brow, ttk.Entry, textvariable=self.barrel_var,
+                                         font=a.f(12), width=6)
+            self.barrel_box.grid(row=0, column=1, sticky="ew", padx=(a.px(8), 0))
+            self._style_barrel()
         self.chip_row = tk.Frame(card, bg=SURFACE)
         self.chip_row.grid(row=5, column=0, sticky="w", pady=(a.px(12), 0), **pad)
         self.src_row = tk.Frame(card, bg=SURFACE)
@@ -3218,6 +3287,7 @@ class LoadsView:
     def snapshot(self):
         return dict(cart=self.cart_var.get(), dist=self.dist_var.get(), gun=self.gun_var.get(),
                     gun_auto=getattr(self, "_gun_auto", self.cat.default_gun_lb),
+                    barrel_on=self.barrel_on, barrel=self.barrel_var.get(),
                     weights={k: v.get() for k, v in self.weight_vars.items()},
                     weights_open=self.weights_open, purpose=self.purpose, source=self.source,
                     pressure={p: v.get() for p, v in self.press_vars.items()})
@@ -3245,11 +3315,29 @@ class LoadsView:
         if "gun" in snap:
             self.gun_var.set(snap["gun"])
             self._gun_auto = snap.get("gun_auto", self.cat.default_gun_lb)
+        if "barrel" in snap:
+            self.barrel_var.set(snap["barrel"])
+        if snap.get("barrel_on") and self.cat.barrel_in:
+            self.barrel_on = True
+            self._style_barrel()
         if snap.get("weights_open") and not self.weights_open:
             self._toggle_weights()
         return snap.get("cart") if snap.get("cart") in self.groups else None
 
     # ---- helpers ---------------------------------------------------------- #
+    def _toggle_barrel(self):
+        self.barrel_on = not self.barrel_on
+        self._style_barrel()
+        self.refresh()
+
+    def _style_barrel(self):
+        self.barrel_tgl.set(text="On" if self.barrel_on else "Off",
+                            kind="on" if self.barrel_on else "chip")
+        if self.barrel_on:
+            self.barrel_box.grid()
+        else:
+            self.barrel_box.grid_remove()
+
     def _toggle_weights(self):
         self.weights_open = not self.weights_open
         if self.weights_open:
@@ -3284,7 +3372,7 @@ class LoadsView:
         if pick_key(self.cat, item) in picks or len(picks) >= H2H_MAX:
             self.app.show_h2h()
             return
-        self.app.add_to_h2h(self.cat, item)
+        self.app.add_to_h2h(self.cat, base_load(item))     # Head to Head keeps listed figures
         self._style_h2h()
 
     def _style_h2h(self):
@@ -3542,12 +3630,16 @@ class LoadsView:
         try:
             dist = self._num(self.dist_var, "Distance", 0, self.cat.max_distance)
             gun = self._num(self.gun_var, "Gun weight", 0.5, GUN_LB_MAX)
+            barrel = (self._num(self.barrel_var, "Barrel length", BARREL_MIN, BARREL_MAX)
+                      if self.barrel_on else 0.0)
             weights = {k: self._num(v, f"{METRICS[k][0]} weight", 0, 10)
                        for k, v in self.weight_vars.items()}
         except ValueError as exc:
             self.status.config(text=str(exc))
             return
         self.status.config(text="")
+        self.barrel = barrel
+        items = [at_barrel(x, self.cat, barrel) for x in items]
         self.rows = score_loads(items, dist, gun, weights,
                                 [self.app.price_for(self.cat, x) for x in items],
                                 by_type=not self.cat.grain_style)
@@ -3612,12 +3704,14 @@ class LoadsView:
             cells.append(vals)
             iid = self.tree.insert("", "end", values=vals, tags=("hand",) if it.handload else ())
             self.iid_row[iid] = r
-            if self.selected is r["item"]:
+            if self.selected is not None and base_load(self.selected) is base_load(it):
+                self.selected = it                # the same load at a new barrel length
                 keep = iid
         self.count_lbl.config(
             text=f"{self.cart_var.get()}"
                  f"{'' if self.purpose == 'All' else '  ·  ' + self.purpose}: {len(data)} of "
-                 f"{len(self.rows)} loads at {self.dist:g} yards")
+                 f"{len(self.rows)} loads at {self.dist:g} yards"
+                 + (f", {self.barrel:g} in barrel (estimate)" if self.barrel else ""))
         if keep:
             self.tree.selection_set(keep)
             self.tree.see(keep)
@@ -3653,6 +3747,8 @@ class LoadsView:
         if self.cat.grain_style:
             info.append(f"{item.barrel_in:g} in test barrel" if item.barrel_in
                         else "test barrel length not listed")
+            if self.barrel:
+                info.append(f"figures for a {self.barrel:g} in barrel (estimate)")
         if item.purpose:
             info.append(item.purpose)
         if item.handload and item.info:
@@ -3790,7 +3886,7 @@ class LoadsView:
 
     def _reselect(self):
         for iid, r in self.iid_row.items():
-            if r["item"] is self.selected:
+            if self.selected is not None and base_load(r["item"]) is base_load(self.selected):
                 self.tree.selection_set(iid)
                 self._on_select()
                 break
@@ -4589,7 +4685,9 @@ class HeadToHeadView:
         # gun weight per load, hidden until opened: while hidden every load is in its
         # cartridge's typical gun (GUN_LB); a blank box means the same
         self.gun_open = False
-        self.slots = []                   # [{cat, cart, load, gun: StringVar, widgets...}]
+        # barrel length per load, the same way: hidden = the listed figures, blank = the same
+        self.barrel_open = False
+        self.slots = []                   # [{cat, cart, load, gun, barrel: StringVar, widgets...}]
         self._pending = None
         self._build_ui(stage)
         if not hasattr(self, "slot_box"):
@@ -4651,6 +4749,10 @@ class HeadToHeadView:
                                  cursor="hand2")
         self.gun_link.grid(row=1, column=1, sticky="w", padx=(24, 0), pady=(4, 0))
         self.gun_link.bind("<Button-1>", lambda e: self._toggle_gun())
+        self.barrel_link = tk.Label(top, text="", bg=SURFACE, fg=ACCENT, font=a.f(10, True),
+                                    cursor="hand2")
+        self.barrel_link.grid(row=1, column=2, sticky="w", padx=(24, 0), pady=(4, 0))
+        self.barrel_link.bind("<Button-1>", lambda e: self._toggle_barrel())
         self.status = a.label(card, "", 10, DANGER, anchor="w")
         self.status.grid(row=4, column=0, sticky="w", **pad)
 
@@ -4669,7 +4771,8 @@ class HeadToHeadView:
         a = self.app
         slot = {"cat": tk.StringVar(value=(icat or self.first).title),
                 "cart": tk.StringVar(value=item.cartridge if item else ""),
-                "load": tk.StringVar(value=""), "gun": tk.StringVar(value="")}
+                "load": tk.StringVar(value=""), "gun": tk.StringVar(value=""),
+                "barrel": tk.StringVar(value="")}
         if item is not None:
             slot["load"].set(next(t for t, x in self.choices[(icat.title, item.cartridge)].items()
                                   if x is item))
@@ -4705,6 +4808,13 @@ class HeadToHeadView:
         slot["usual"] = a.label(slot["gun_box"], "", 9, MUTED)
         slot["usual"].pack(side="left", padx=(6, 0))
         slot["gun"].trace_add("write", self._schedule)
+        slot["barrel_box"] = tk.Frame(self.slot_box, bg=SURFACE)
+        slot["barrel_entry"] = a.field(slot["barrel_box"], ttk.Entry, textvariable=slot["barrel"],
+                                       font=a.f(11), width=6)[0]
+        slot["barrel_entry"].pack(side="left")
+        slot["listed"] = a.label(slot["barrel_box"], "", 9, MUTED)
+        slot["listed"].pack(side="left", padx=(6, 0))
+        slot["barrel"].trace_add("write", self._schedule)
         slot["x"] = close_button(a, self.slot_box, lambda s=slot: self._remove_slot(s))
         self.slots.append(slot)
         self._fill_loads(slot)
@@ -4740,6 +4850,14 @@ class HeadToHeadView:
             self.gun_head.grid_remove()
         self.gun_link.config(text=("▾  Hide gun weights  (blank: the cartridge's usual gun)"
                                    if self.gun_open else "▸  Gun weight for each load"))
+        if not hasattr(self, "barrel_head"):
+            self.barrel_head = self.app.label(self.slot_box, "BARREL (IN)", 9, MUTED, True)
+        if self.barrel_open:
+            self.barrel_head.grid(row=0, column=5, sticky="w", padx=(12, 0))
+        else:
+            self.barrel_head.grid_remove()
+        self.barrel_link.config(text=("▾  Hide barrel lengths  (blank: the listed figures)"
+                                      if self.barrel_open else "▸  Barrel length for each load"))
         for n, slot in enumerate(self.slots, start=1):
             slot["num"].config(text=f"{n}")
             slot["num"].grid(row=n, column=0, sticky="w", padx=(0, 10), pady=3)
@@ -4752,7 +4870,21 @@ class HeadToHeadView:
                 slot["gun_box"].grid(row=n, column=4, sticky="w", padx=(12, 0), pady=3)
             else:
                 slot["gun_box"].grid_remove()
-            slot["x"].grid(row=n, column=5, sticky="w", padx=(4, 0), pady=3)
+            if self.barrel_open:
+                t, cart = slot["cat"].get(), slot["cart"].get()
+                item = self.choices.get((t, cart), {}).get(slot["load"].get())
+                has = bool(self.cats[t].barrel_in)
+                slot["barrel_box"].grid(row=n, column=5, sticky="w", padx=(12, 0), pady=3)
+                if has:
+                    slot["barrel_entry"].pack(side="left", before=slot["listed"])
+                else:
+                    slot["barrel_entry"].pack_forget()   # shotshells: no barrel length
+                slot["listed"].config(text="—" if not has else
+                                      f"listed {item.barrel_in:g}" if item and item.barrel_in else
+                                      f"usual {self.cats[t].barrel_in:g}" if item else "")
+            else:
+                slot["barrel_box"].grid_remove()
+            slot["x"].grid(row=n, column=6, sticky="w", padx=(4, 0), pady=3)
             if len(self.slots) <= H2H_MIN and not slot["load"].get():
                 slot["x"].grid_remove()           # nothing to remove: the 2 rows always stay
         if len(self.slots) >= H2H_MAX:
@@ -4770,6 +4902,7 @@ class HeadToHeadView:
     def _on_cart(self, slot):
         slot["load"].set("")
         slot["gun"].set("")                       # another cartridge: back to its usual gun
+        slot["barrel"].set("")
         self._fill_loads(slot)
         self._layout_slots()
         self._changed()
@@ -4783,7 +4916,7 @@ class HeadToHeadView:
             return
         slot["search"].close()
         slot["cart_search"].close()
-        for key in ("num", "cart_wrap", "load_wrap", "gun_box", "x"):
+        for key in ("num", "cart_wrap", "load_wrap", "gun_box", "barrel_box", "x"):
             slot[key].destroy()
         self.slots.remove(slot)
         while len(self.slots) < H2H_MIN:
@@ -4809,6 +4942,11 @@ class HeadToHeadView:
         self._layout_slots()
         self.refresh()
 
+    def _toggle_barrel(self):
+        self.barrel_open = not self.barrel_open
+        self._layout_slots()
+        self.refresh()
+
     def _save_picks(self):
         self.app.h2h[:] = [pick_key(c, x) for c, x in self._picked()]
 
@@ -4819,7 +4957,9 @@ class HeadToHeadView:
     # ---- state ------------------------------------------------------------ #
     def snapshot(self):
         return dict(dist=self.dist_var.get(), gun_open=self.gun_open,
-                    guns={pick_key(c, x): s["gun"].get() for c, x, s in self._picked_slots()})
+                    guns={pick_key(c, x): s["gun"].get() for c, x, s in self._picked_slots()},
+                    barrel_open=self.barrel_open,
+                    barrels={pick_key(c, x): s["barrel"].get() for c, x, s in self._picked_slots()})
 
     def restore(self, snap):
         if not hasattr(self, "slot_box"):
@@ -4831,10 +4971,13 @@ class HeadToHeadView:
         if "dist" in snap:
             self.dist_var.set(snap["dist"])
         self.gun_open = snap.get("gun_open", self.gun_open)
-        guns = snap.get("guns", {})
+        self.barrel_open = snap.get("barrel_open", self.barrel_open)
+        guns, barrels = snap.get("guns", {}), snap.get("barrels", {})
         for c, x, slot in self._picked_slots():
             if pick_key(c, x) in guns:
                 slot["gun"].set(guns[pick_key(c, x)])
+            if pick_key(c, x) in barrels:
+                slot["barrel"].set(barrels[pick_key(c, x)])
         self._layout_slots()
 
     def _schedule(self, *_):
@@ -4861,6 +5004,11 @@ class HeadToHeadView:
             guns = [None if not self.gun_open or not s["gun"].get().strip()
                     else LoadsView._num(s["gun"], f"Gun weight for {x.label}", 0.5, GUN_LB_MAX)
                     for _, x, s in picks]
+            # a blank box (or the boxes hidden, or a shotshell): the listed figures
+            barrels = [None if not self.barrel_open or not c.barrel_in or not s["barrel"].get().strip()
+                       else LoadsView._num(s["barrel"], f"Barrel length for {x.label}", BARREL_MIN,
+                                           BARREL_MAX)
+                       for c, x, s in picks]
         except ValueError as exc:
             self.status.config(text=str(exc))
             return self.app.fit_window()
@@ -4871,12 +5019,15 @@ class HeadToHeadView:
             "cartridge (shotshells: and load type), with its category's scoring weights from the "
             "Load Dictionary, not against the others here. " if grades else "") +
             "The best figure in each row is highlighted; the % shows how far the others are "
-            "behind it. Prices are estimates: set your own in the Load Dictionary.")
+            "behind it. Prices are estimates: set your own in the Load Dictionary."
+            + (" A load with a barrel length has its speed moved from its test barrel to that "
+               "length: an estimate." if any(barrels) else ""))
         if len(picked) < H2H_MIN:
             self.app.label(self.results, f"Pick at least {H2H_MIN} loads to put them head to head.",
                            11, MUTED, bg=BG, anchor="w").grid(row=0, column=0, sticky="w")
             return self.app.fit_window()
-        rows = h2h_rows(picked, dist, guns, self.app.dict_weights, self.app.price_for, self.groups)
+        rows = h2h_rows(picked, dist, guns, self.app.dict_weights, self.app.price_for, self.groups,
+                        barrels)
         self._render(rows, dist)
         self.app.fit_window()
 
@@ -4943,8 +5094,7 @@ class HeadToHeadView:
         payload = cats[0].payload_row if len({c.payload_row for c in cats}) == 1 else "Bullet / payload"
         facts = [(payload, lambda row: h2h_payload(row["cat"], row["item"]))]
         if any(c.grain_style for c in cats):
-            facts.append(("Test barrel", lambda row: "—" if not row["cat"].grain_style else
-                          f"{row['item'].barrel_in:g} in" if row["item"].barrel_in else "not listed"))
+            facts.append(("Test barrel", lambda row: barrel_text(row["cat"], row["item"])))
         facts.append(("Purpose", lambda row: row["item"].purpose or row["item"].group or "—"))
         for name, fn in facts:
             self._cell(card, r, 0, name, 10, MUTED, True)
@@ -5048,23 +5198,25 @@ def h2h_keys(cats):
     return [k for k in METRICS if any(k in metric_keys(c) for c in cats)]
 
 
-def h2h_rows(picked, dist, guns, weights_of, price_of, groups):
+def h2h_rows(picked, dist, guns, weights_of, price_of, groups, barrels=None):
     """Head to Head figures for the picked (category, load) pairs. Each load is graded the way
     its Load Dictionary grades it (against every load of its cartridge, with weights_of(category)),
     at `dist` capped to its category's max. `best` is the set of factors where it leads the picked
     loads and `gap` how far behind the leader it is, in %; factors that don't apply to a load
     (`keys`) are left out. guns: a gun weight per picked load, None (or a None in the list) for
-    its cartridge's typical gun (GUN_LB). `groups` maps (category title, cartridge) to its loads;
-    price_of(category, load)."""
+    its cartridge's typical gun (GUN_LB). barrels: a barrel length per picked load (at_barrel:
+    the load and every load it is graded against moved to it), None for the listed figures.
+    `groups` maps (category title, cartridge) to its loads; price_of(category, load)."""
     rows, done = [], {}
     for n, (icat, it) in enumerate(picked):
         gun = guns[n] if guns else None
         gun = typical_gun_lb(icat, it.cartridge) if gun is None else gun
-        key = (icat.title, it.cartridge, gun)
+        barrel = (barrels[n] if barrels else None) or 0.0
+        key = (icat.title, it.cartridge, gun, barrel)
         d = min(dist, icat.max_distance)
         if key not in done:
-            items = groups[key[:2]]
-            done[key] = {id(r["item"]): r for r in score_loads(
+            items = [at_barrel(x, icat, barrel) for x in groups[key[:2]]]
+            done[key] = {id(base_load(r["item"])): r for r in score_loads(
                 items, d, gun,
                 weights_of(icat), [price_of(icat, x) for x in items], by_type=not icat.grain_style)}
         rows.append(dict(done[key][id(it)], cat=icat, dist=d, keys=metric_keys(icat),

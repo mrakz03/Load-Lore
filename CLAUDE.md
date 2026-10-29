@@ -73,6 +73,16 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   The app name is drawn as a small "In Like Flint" over a larger "Load Lore" (issue #18).
 - Default distance (Oct 28 2026, Zeke): 0 yd (the muzzle) in every category and in Head to Head
   (Category default_distance, H2H_DISTANCE), so the figures match the box; the field stays editable.
+- Barrel length (Oct 29 2026, Zeke): the dictionary's settings card has a BARREL LENGTH (IN) On / Off
+  switch (barrel_on / L.barrelOn, off by default; off = the listed figures exactly) with a length box
+  while on, starting at Category.barrel_in (rifle / rimfire 24, handgun 4, PCC 16; shotgun 0 = no
+  switch); kept per category while the app is open (snapshot / shared), not in settings.json. at_barrel /
+  atBarrel copy each load (.base = the listed load, .at_in = the length) with v x (length / test
+  barrel)^n, test barrel = barrel_in or the category's; barrel_exponent / barrelExp: handgun auto 0.057,
+  standard revolver 0.132, magnum 0.221 (the PCC fits), .22s 0.07, rifles 0.10 + 0.25 x powder/bullet
+  clamped 0.10-0.25. Everything (grades, recoil, ballistic table) follows the new speed; marked
+  "(estimate)". Head to Head has "Barrel length for each load" like the gun weights (barrels in
+  h2h_rows / h2hRows: the load's cartridge is graded at that length; blank / hidden = listed).
 - Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
   point-mass G1 path (trajectory / _fly, fly in web: drag along the path + gravity, RK2 0.5 m
   steps, bore tilted to cross the sight line at zero_yd) + 10 mph drift by Didion's lag rule,
