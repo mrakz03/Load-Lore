@@ -1,0 +1,56 @@
+name: Beta web site
+# Every push to next (or a manual run) builds the web version from next and publishes it as the beta
+# site, https://beta.loadlore.net/, for testing before a release. GitHub allows one Pages site per
+# repo, so the beta lives in its own public repo, mrakz03/Load-Lore-beta: this pushes web/www to that
+# repo's gh-pages branch (one commit, replaced each time), and its Settings > Pages serves the branch.
+# Needs the BETA_PAGES_TOKEN secret (a fine-grained token with Contents: Read and write on
+# Load-Lore-beta only); without it the run just skips the publish. The live site (pages.yml) is untouched.
+# The beta is a separate address, so its saved handloads / prices / settings are its own, not the live site's.
+on:
+  push:
+    branches: [next]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: beta-pages
+  cancel-in-progress: true
+
+env:
+  BETA_REPO: mrakz03/Load-Lore-beta
+  BETA_DOMAIN: beta.loadlore.net
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Set version (newest tag + beta + commit)
+        shell: bash
+        run: |
+          # e.g. v1.10-beta.3f2c1ab in Settings, so a tester can tell which commit they're on
+          t=$(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || true)
+          v="${t#v}"; v="${v:-0}-beta.$(git rev-parse --short HEAD)"
+          sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/load_lore.py
+          grep -q "^APP_VERSION = \"$v\"" src/load_lore.py
+      - run: python web/build_web.py
+        env: { LOADLORE_BETA: "https://${{ env.BETA_DOMAIN }}/" }
+      - name: Push to the beta repo
+        shell: bash
+        env: { TOKEN: "${{ secrets.BETA_PAGES_TOKEN }}" }
+        run: |
+          if [ -z "$TOKEN" ]; then echo "::warning::BETA_PAGES_TOKEN is not set, nothing published"; exit 0; fi
+          cd web/www
+          echo "$BETA_DOMAIN" > CNAME   # Pages' custom domain for a branch deploy
+          touch .nojekyll               # serve the files as they are
+          git init -q -b gh-pages
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -qm "Beta from next ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${BETA_REPO}.git" gh-pages
+          echo "Published next ${GITHUB_SHA::7} to https://$BETA_DOMAIN/"

@@ -35,7 +35,14 @@ bullets = [dict(maker=r["maker"], name=r["name"], diameter=float(r["diameter_in"
            for r in csv.DictReader(open(os.path.join(data, "bullets.csv"), encoding="utf-8-sig"))]
 # the public web address, for link previews; change it here if the site moves to its own domain
 SITE = "https://loadlore.net/"
+# the beta site (beta.yml, built from next) sets LOADLORE_BETA=<its address>: link previews point
+# there, the tab title says (beta) and search engines are asked not to list it
+BETA = os.environ.get("LOADLORE_BETA", "")
 tpl = open(os.path.join(here, "template.html"), encoding="utf-8").read()
+if BETA:
+    SITE = BETA
+    tpl = tpl.replace("<title>In Like Flint - Load Lore</title>",
+                      '<title>Load Lore (beta)</title>\n<meta name="robots" content="noindex">', 1)
 os.makedirs(os.path.join(here, "www"), exist_ok=True)
 with open(os.path.join(here, "www", "index.html"), "w", encoding="utf-8") as f:
     f.write(tpl.replace("__SITE__", SITE).replace("__DATA__", json.dumps({"version": c.APP_VERSION, "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "group_blurbs": c.GROUP_BLURBS, "cat_tags": c.CAT_TAGS, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "moved": c.MOVED_CATEGORIES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "barrel": {"n": c.BARREL_N, "revolvers": c.STANDARD_REVOLVERS, "magnums": c.MAGNUM_REVOLVERS, "rimfire": c.RIMFIRE_HANDGUN, "min": c.BARREL_MIN, "max": c.BARREL_MAX}, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS, "hand_fields": c.HANDLOAD_FIELDS, "hand_note": c.HANDLOAD_NOTE}, ensure_ascii=False)))
