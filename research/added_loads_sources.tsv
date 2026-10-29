@@ -1168,3 +1168,5 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 .500 S&W Magnum	Buffalo Bore Dangerous Game Mono-Metal Long	400	1575	0.217	partial	buffalobore.com (18DG 400 Long/20 (10.5 in barrel)) (BC scaled from the nearest same-type load)
 .45 Colt	Winchester American Lever Range Lead Flat Nose	250	900	0.142	partial	winchester.com/Products/Ammunition/Rifle/American-Lever-Range (W45CAL) (BC scaled from the nearest same-type load) (price estimated)
 4.6x30mm	Fiocchi Hyperformance Tipped Hollow Point	38	1950	0.227	partial	blackstoneshooting.com listing of Fiocchi 46EXD Hyperformance (1950 fps; BC of the Hornady 38 gr V-MAX)
+5.56x45mm NATO	IMI M855 FMJ (steel core)	62	3020	0.304	partial	elbitsystems.com small-caliber ammunition catalog (920 m/s from 20"); luckygunner.com/5-56x45-62-grain-fmj-imi-m855-1200-rounds lists 3100 fps (BC of the PMC 62 gr steel penetrator load) (price as Federal XM855)
+5.56x45mm NATO	IMI Razor Core OTM-BT	69	2788	0.301	partial	elbitsystems.com small-caliber ammunition catalog (850 m/s from 20") (BC of the 69 gr Sierra MatchKing / Black Hills 5.56 OTM) (price estimated: Match median x IMI ratio)
