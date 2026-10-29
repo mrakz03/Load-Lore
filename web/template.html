@@ -321,7 +321,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .fire{margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg)}
 .fire .fnums{margin-top:0}.fire .note{margin-top:10px}.fire .link{padding-bottom:0}
 .chip.warn{color:var(--danger);border-color:var(--danger)}
-@media(max-width:600px){.fire .fnums{grid-template-columns:1fr 1fr}.nums:has(#lfb){grid-template-columns:6.5em 1fr!important}}
+@media(max-width:600px){.fire .fnums{grid-template-columns:1fr 1fr}.nums:has(#lfb){grid-template-columns:6.5em 1fr!important}.firebtn span{white-space:normal;line-height:1.25}}
 .slots{display:flex;flex-direction:column;gap:8px;margin-top:6px}
 .slot{display:grid;grid-template-columns:1.4em minmax(0,1fr) minmax(0,2fr) 2.2em;gap:8px;align-items:center}
 .slot .n{font-weight:800;color:var(--muted)}
@@ -632,9 +632,9 @@ function atFirearm(it,cat,len,twist){
 }
 const stabilityCell=it=>it.sg?`${it.sg.toFixed(2)} in 1:${g(it.twist)}, ${stabilityText(it.sg)} (est.)`:"—";
 function firearmText(cat,gun,barrel,twist){
-  const p=[gun?g(gun)+" lb":"gun weight?"];
-  if(cat.barrel_in){p.push(barrel?g(barrel)+" in":"listed barrels");if(twist)p.push(`1:${g(twist)} twist`);}
-  return p.join("  ·  ");
+  // non-breaking spaces keep "8 lb gun" and "16 in barrel" whole when a phone wraps the box's text
+  const w=gun?g(gun)+"\u00a0lb":"gun weight?",own=(barrel&&cat.barrel_in?[g(barrel)+"\u00a0in\u00a0barrel"]:[]).concat(twist&&cat.barrel_in?[`1:${g(twist)}\u00a0twist`]:[]);
+  return own.length?["Estimate"].concat(own,[w]).join("  ·  "):`Manufacturer data  ·  ${w}\u00a0gun`;
 }
 // a warning for a load that won't fly point first, or barely does, in its twist ("" if fine)
 const stabilityWarn=it=>it.sg&&stabilityText(it.sg)!=="stable"?`⚠ ${stabilityText(it.sg,true)} in 1:${g(it.twist)}`:"";

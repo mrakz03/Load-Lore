@@ -690,13 +690,14 @@ def stability_warn(item):
 
 
 def firearm_text(cat, gun, barrel, twist):
-    """The "Firearm setup" box's summary: "8 lb  ·  listed barrels", "8 lb  ·  16 in  ·  1:8 twist"."""
-    parts = [f"{gun:g} lb" if gun else "gun weight?"]
-    if cat.barrel_in:
-        parts.append(f"{barrel:g} in" if barrel else "listed barrels")
-        if twist:
-            parts.append(f"1:{twist:g} twist")
-    return "  ·  ".join(parts)
+    """The "Firearm setup" box's summary: "Manufacturer data  ·  8 lb gun" while the barrel and
+    twist are blank, else "Estimate  ·  16 in  ·  1:8 twist  ·  8 lb" (Zeke, Oct 29 2026)."""
+    weight = f"{gun:g} lb" if gun else "gun weight?"
+    own = ([f"{barrel:g} in barrel"] if barrel and cat.barrel_in else []) + (
+        [f"1:{twist:g} twist"] if twist and cat.barrel_in else [])
+    if not own:
+        return f"Manufacturer data  ·  {weight} gun"
+    return "  ·  ".join(["Estimate"] + own + [weight])
 
 
 def firearm_note(cat):

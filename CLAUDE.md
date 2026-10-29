@@ -79,7 +79,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (Category default_distance, H2H_DISTANCE), so the figures match the box; the field stays editable.
 - Firearm setup (Oct 29 2026, Zeke; first named "Your firearm"; replaced the barrel On / Off switch and the two Head to Head links):
   the dictionary's settings card has DISTANCE and a FIREARM SETUP box that looks like a drop-down
-  (summary "8 lb  ·  16 in  ·  1:8 twist", firearm_text / firearmText); it opens gun weight, BARREL (IN)
+  (summary "Manufacturer data  ·  8 lb gun" while unchanged, else "Estimate  ·  16 in barrel  ·  1:8 twist  ·  8 lb", firearm_text / firearmText); it opens gun weight, BARREL (IN)
   and TWIST (1 IN … IN) boxes (shotgun: gun weight only), a note (firearm_note, web DATA.fire_notes:
   listed velocity / energy are the makers' figures, PCC "(est.)" loads ours; your own barrel or twist
   makes them estimates) and "Reset to maker's figures" (shotgun: "Reset to the usual gun weight"). Blank barrel / twist = listed. Kept per category
