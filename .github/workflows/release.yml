@@ -19,7 +19,7 @@ jobs:
       - name: Set version from tag
         shell: bash
         run: |
-          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}"
+          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}" && v="${v#.}"  # v.1.2 typo -> 1.2
           # release files carry the version: LoadLore-v1.7.4-dev-Setup.exe (LoadLore-dev-... untagged)
           if [ "$v" = dev ]; then echo "VTAG=dev" >> "$GITHUB_ENV"; else echo "VTAG=v$v" >> "$GITHUB_ENV"; fi
           sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/load_lore.py
@@ -38,7 +38,7 @@ jobs:
       - name: Build installer
         shell: pwsh
         run: |
-          $v = if ($env:GITHUB_REF_NAME -like 'v*') { $env:GITHUB_REF_NAME.Substring(1) } else { '0.0-dev' }
+          $v = if ($env:GITHUB_REF_NAME -like 'v*') { $env:GITHUB_REF_NAME.Substring(1).TrimStart('.') } else { '0.0-dev' }
           $iscc = Get-ChildItem "${env:ProgramFiles(x86)}", "$env:ProgramFiles" -Filter ISCC.exe -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 1
           if (-not $iscc) { throw "ISCC.exe not found" }
           & $iscc.FullName "/DAppVersion=$v" scripts\windows_installer.iss
@@ -61,7 +61,7 @@ jobs:
       - name: Set version from tag
         shell: bash
         run: |
-          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}"
+          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}" && v="${v#.}"  # v.1.2 typo -> 1.2
           # release files carry the version: LoadLore-v1.7.4-dev-Setup.exe (LoadLore-dev-... untagged)
           if [ "$v" = dev ]; then echo "VTAG=dev" >> "$GITHUB_ENV"; else echo "VTAG=v$v" >> "$GITHUB_ENV"; fi
           sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/load_lore.py
@@ -88,7 +88,7 @@ jobs:
       - name: Set version from tag
         shell: bash
         run: |
-          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}"
+          v=dev; [[ "$GITHUB_REF" == refs/tags/v* ]] && v="${GITHUB_REF_NAME#v}" && v="${v#.}"  # v.1.2 typo -> 1.2
           # release files carry the version: LoadLore-v1.7.4-dev-Setup.exe (LoadLore-dev-... untagged)
           if [ "$v" = dev ]; then echo "VTAG=dev" >> "$GITHUB_ENV"; else echo "VTAG=v$v" >> "$GITHUB_ENV"; fi
           sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/load_lore.py
