@@ -3066,8 +3066,8 @@ class LoadsView:
                         *self.weight_vars.values()):
                 var.trace_add("write", self._schedule)
             self.weight_vars_note()
-            if cart is None and self.cartridges:      # start on the cartridge with the most loads
-                cart = max(self.cartridges, key=lambda c: len(self.groups[c]))
+            # the box starts empty (Zeke, Oct 29 2026): only a cartridge picked earlier while the
+            # app is open comes back
             if cart is not None:
                 self.cart_var.set(cart)
                 self._on_cartridge()
@@ -3106,7 +3106,8 @@ class LoadsView:
                                         width=max([16] + [len(c) for c in self.cartridges]))
         cbox.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(a.px(5), 0))
         self.cart_search = LoadSearch(a, self.cart_combo, self.cartridges,
-                                      lambda n: self._on_cartridge(), hint="Cartridge")
+                                      lambda n: self._on_cartridge(),
+                                      hint=cat.cartridge_label.capitalize())
         for i, (text, var) in enumerate((("DISTANCE (YD)", self.dist_var),
                                          (cat.gun_label, self.gun_var))):
             gap = (0, a.px(4)) if i == 0 else (a.px(4), 0)
@@ -3174,7 +3175,7 @@ class LoadsView:
         # +P / +P+ check boxes, only for cartridges that have such loads
         self.press_row = tk.Frame(fl, bg=BG)
         self.press_row.pack(side="left", padx=(14, 0))
-        self.count_lbl = a.label(above, "Choose a cartridge to see how every brand's load compares.",
+        self.count_lbl = a.label(above, self._choose_text(),
                                  10, MUTED, bg=BG, anchor="e")
         self.count_lbl.grid(row=1, column=1, sticky="e", pady=(4, 0), padx=(16, 0))
         # bullets get a Grains column (the Load cell then shows just the name)
@@ -3404,6 +3405,9 @@ class LoadsView:
                              else f"{name} must be between {lo:g} and {hi:g}.")
         return v
 
+    def _choose_text(self):
+        return f"Choose a {self.cat.cartridge_label.lower()} to see how every brand's load compares."
+
     def _on_cartridge(self):
         self.cart_search.last = self.cart_var.get()
         self.filter_var.set("")
@@ -3439,7 +3443,7 @@ class LoadsView:
                                width=max([16] + [len(c) for c in self.cartridges]))
         cart = select.cartridge if select else self.cart_var.get()
         if cart not in self.groups:
-            cart = max(self.cartridges, key=lambda c: len(self.groups[c])) if self.cartridges else ""
+            cart = ""
         self.cart_var.set(cart)
         self.cart_search.names = self.cartridges
         self.cart_search.last = cart
@@ -3600,7 +3604,10 @@ class LoadsView:
             return
         cart = self.cart_var.get()
         items = self.groups.get(cart)
-        if items is None:
+        if items is None:                            # nothing picked yet
+            self.tree.delete(*self.tree.get_children())
+            self.rows = []
+            self.count_lbl.config(text=self._choose_text())
             return
         if not items:                                # a cartridge with no factory loads yet
             self.tree.delete(*self.tree.get_children())
@@ -4720,7 +4727,7 @@ class HeadToHeadView:
         self.add_link = tk.Label(card, text=f"+  Add a load (up to {H2H_MAX})", bg=SURFACE,
                                  fg=ACCENT, font=a.f(10, True), cursor="hand2")
         self.add_link.grid(row=2, column=0, sticky="w", pady=(8, 0), **pad)
-        self.add_link.bind("<Button-1>", lambda e: self._add_slot(empty=True))
+        self.add_link.bind("<Button-1>", lambda e: self._add_slot())
 
         top = tk.Frame(card, bg=SURFACE)
         top.grid(row=3, column=0, sticky="ew", pady=(a.px(12), 0), **pad)
@@ -4746,9 +4753,9 @@ class HeadToHeadView:
                                 wraplength=a.px(880))
         self.footnote.grid(row=3, column=0, sticky="w", pady=(10, 0))
 
-    def _add_slot(self, item=None, icat=None, empty=False):
-        # empty: "+ Add a load" gives a blank row and opens nothing (Zeke: it used to copy the
-        # last row's cartridge and jump into the load box)
+    def _add_slot(self, item=None, icat=None):
+        # a new row has no cartridge and opens nothing (Zeke: "+ Add a load" used to copy the
+        # last row's cartridge and jump into the load box; Oct 29 2026 the first rows too)
         if len(self.slots) >= H2H_MAX:
             return
         a = self.app
@@ -4759,16 +4766,8 @@ class HeadToHeadView:
         if item is not None:
             slot["load"].set(next(t for t, x in self.choices[(icat.title, item.cartridge)].items()
                                   if x is item))
-        elif empty:
-            if self.slots:
-                slot["cat"].set(self.slots[-1]["cat"].get())
-        elif self.slots:                          # a new row starts on the last row's cartridge
+        elif self.slots:
             slot["cat"].set(self.slots[-1]["cat"].get())
-            slot["cart"].set(self.slots[-1]["cart"].get())
-        else:
-            last = self.app.carry.get(self.first.title, {}).get("cart")
-            if (self.first.title, last) in self.groups:
-                slot["cart"].set(last)
         widest = max([16] + [len(c) for carts in self.cartridges.values() for c in carts])
         slot["num"] = a.label(self.slot_box, "", 11, MUTED, True)
         slot["cart_wrap"], slot["cart_box"] = a.field(self.slot_box, ttk.Combobox,
