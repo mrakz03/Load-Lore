@@ -231,7 +231,8 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
 - Beta web site (Oct 29 2026, Zeke): Cloudflare Pages (Zeke's Cloudflare account, no workflow in this repo)
   builds next on every push: build command `python3 web/build_web.py`, output web/www, env var
   LOADLORE_BETA=https://beta.loadlore.net/, served at https://beta.loadlore.net/. With LOADLORE_BETA set,
-  build_web.py points og: tags there, titles the tab "In Like Flint - Load Lore (beta)", adds noindex and makes the version
+  build_web.py points og: tags there, titles the tab "In Like Flint - Load Lore (beta)", adds noindex (meta tag + a _headers file:
+  X-Robots-Tag on every file) and makes the version
   "beta <commit>" (CF_PAGES_COMMIT_SHA). Its own address, so its localStorage is separate from the live site.
   (A first try pushed to a second repo, Load-Lore-beta; Zeke preferred no extra repo.)
 - Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the maintainer saves
