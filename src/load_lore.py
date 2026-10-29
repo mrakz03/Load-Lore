@@ -1278,7 +1278,7 @@ def version_tuple(text):
     """"v1.6.2" or "1.6.2" -> (1, 6, 2, 0, 1), for comparing; None for "dev" or anything that
     isn't a version. A suffix ("v1.7.2-dev", "1.8-beta") marks a test build: it sorts after
     the version before it and before the same number without a suffix (the last field 0 / 1)."""
-    m = re.fullmatch(r"v?(\d+(?:\.\d+)*)([-+ ._]?[A-Za-z][\w.+-]*)?", (text or "").strip())
+    m = re.fullmatch(r"v?\.?(\d+(?:\.\d+)*)([-+ ._]?[A-Za-z][\w.+-]*)?", (text or "").strip())
     if not m:
         return None
     nums = [int(x) for x in m.group(1).split(".")][:4]
