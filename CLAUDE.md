@@ -71,6 +71,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   in two boxes, Display and About (rows split by thin lines, not one box each). About has a small
   GitHub logo that opens REPO_PAGE (GITHUB_MARK; web gets the URL as DATA.repo).
   The app name is drawn as a small "In Like Flint" over a larger "Load Lore" (issue #18).
+- Empty cartridge boxes (Oct 29 2026, Zeke): the dictionary's cartridge / gauge box and every Head to Head
+  row start empty ("Choose a cartridge / gauge to see..."), never the cartridge with the most loads; a
+  cartridge picked earlier while the app is open comes back (carry / shared), new Head to Head rows don't
+  copy one.
 - Default distance (Oct 28 2026, Zeke): 0 yd (the muzzle) in every category and in Head to Head
   (Category default_distance, H2H_DISTANCE), so the figures match the box; the field stays editable.
 - Barrel length (Oct 29 2026, Zeke): the dictionary's settings card has a BARREL LENGTH (IN) On / Off

@@ -1346,9 +1346,10 @@ function openLoads(cat,pane){
   const $$=s=>$(s,pane);
   // the cartridge box is a search too: type "6.5" or "mag" to narrow the list down
   const setCart=c=>{$$("#lc").value=c;$$("#lcq").value=c;if($$("#lcs").sync)$$("#lcs").sync();};
-  searchBox($$("#lcs"),()=>carts,{text:c=>c,none:"cartridge",cur:()=>$$("#lc").value,pick:c=>{if(c===$$("#lc").value)return;setCart(c);$$("#lc").onchange();}});
-  const biggest=carts.reduce((a,c)=>groups.get(c).length>groups.get(a).length?c:a,carts[0]);
-  setCart((sh.cart&&groups.has(sh.cart))?sh.cart:biggest);
+  const noun=cat.cartridge_label.toLowerCase();   // "cartridge", or "gauge" for shotguns
+  searchBox($$("#lcs"),()=>carts,{text:c=>c,none:noun,cur:()=>$$("#lc").value,pick:c=>{if(c===$$("#lc").value)return;setCart(c);$$("#lc").onchange();}});
+  // the box starts empty (Zeke, Oct 29 2026): only a cartridge picked earlier while the app is open comes back
+  setCart((sh.cart&&groups.has(sh.cart))?sh.cart:"");
   $$("#ld").value=sh.dist!=null?sh.dist:g(cat.default_distance);
   // the gun weight follows the cartridge's typical gun (GUN_LB) unless you typed your own
   L.gunAuto=sh.gun!=null?(sh.gunAuto!=null?sh.gunAuto:cat.default_gun_lb):typicalGun(cat,$$("#lc").value);
@@ -1411,6 +1412,7 @@ function openLoads(cat,pane){
   }
   function render(){
     const out=compute(),box=$$("#lres");
+    if(!$$("#lc").value){box.innerHTML=`<div class="muted">Choose a ${noun} to see how every brand's load compares.</div>`;$$("#lcnt").textContent="";return;}
     if(!out){box.innerHTML=`<div class="muted">Enter a distance, gun weight${L.barrelOn?`, barrel length (${BARREL.min}-${BARREL.max} in)`:""} and weights (numbers) to see results.</div>`;$$("#lcnt").textContent="";return;}
     if(!(groups.get($$("#lc").value)||[]).length){box.innerHTML=`<div class="muted">No factory loads listed for ${esc($$("#lc").value)}. Add your own in the Handloads tab to grade it.</div>`;$$("#lcnt").textContent="";return;}
     countChips();
@@ -1571,7 +1573,7 @@ function openH2H(pane){
     carts[c.title]=[...groupBy(state.detail[c.title],true)].filter(([,v])=>v.length).map(([k,v])=>{groups.set(c.title+"|"+k,v);return k;});
   }
   const choice=(t,c,key)=>(groups.get(t+"|"+c)||[]).find(x=>(x.hid||x.label)===key);
-  const sh=shared[first.title]||{},prices=readPrices();
+  const prices=readPrices();
   const priceOf=(ic,it)=>{const v=prices[priceKey(ic,it)];return typeof v==="number"?v:it.default_cost;};
   const H={};
   // slots: [{cat, cart, key}]: category title, cartridge, and the load's handload id or label
@@ -1580,7 +1582,8 @@ function openH2H(pane){
   let brlOpen=!!H2HS.brlOpen;   // barrel length per load, the same way (hidden: the listed figures)
   const brls0=H2HS.brls||{};
   let slots=H2H.map(k=>{const p=k.split("|");return {cat:p[0],cart:p[1],key:p.slice(2).join("|"),gun:guns0[k]||"",brl:brls0[k]||""};}).filter(s=>choice(s.cat,s.cart,s.key)).slice(0,H2H_MAX);
-  const blank=()=>{const l=slots[slots.length-1];return l?{cat:l.cat,cart:l.cart,key:"",gun:"",brl:""}:{cat:first.title,cart:sh.cart&&groups.has(first.title+"|"+sh.cart)?sh.cart:"",key:"",gun:"",brl:""};};
+  // rows start with no cartridge (Zeke, Oct 29 2026)
+  const blank=()=>({cat:(slots[slots.length-1]||{cat:first.title}).cat,cart:"",key:"",gun:"",brl:""});
   let gunOpen=!!H2HS.gunOpen;   // the gun weight boxes are hidden until opened
   while(slots.length<H2H_MIN)slots.push(blank());
   pane.innerHTML=`<div class="card">
@@ -1703,7 +1706,7 @@ function openH2H(pane){
   drawSlots();save();
   // "+ Add a load" adds an empty row and opens nothing (Zeke: it used to copy the last row's
   // cartridge and jump into the load picker)
-  $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push({cat:(slots[slots.length-1]||{cat:first.title}).cat,cart:"",key:"",gun:"",brl:""});drawSlots();};
+  $$("#hadd2").onclick=()=>{if(slots.length>=H2H_MAX)return;slots.push(blank());drawSlots();};
   $$("#hd").addEventListener("input",render);
   $$("#hgun").onclick=()=>{gunOpen=!gunOpen;drawSlots();render();};
   $$("#hbrl").onclick=()=>{brlOpen=!brlOpen;drawSlots();render();};
