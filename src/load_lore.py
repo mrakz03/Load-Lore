@@ -525,6 +525,71 @@ STANDARD_REVOLVERS = (".38 Special", ".44 Special", ".45 Colt", ".44-40 Winchest
 MAGNUM_REVOLVERS = (".454 Casull", ".480 Ruger")          # (and every "... Magnum")
 RIMFIRE_HANDGUN = (".22 LR", ".22 WMR")
 BARREL_MIN, BARREL_MAX = 1.0, 40.0
+# The longest barrel each cartridge is sold with from the factory (Zeke, Oct 29 2026): the barrel
+# box goes no further, since the speed estimate is a stretch past real barrels. Rounded up from
+# current and classic production guns (heavy varmint / precision rifles, single-shot pistols such
+# as the S&W 460XVR 14 in, lever guns such as the Rossi R92 24 in, military rifles such as the
+# Swedish M96 29 in); a cartridge not listed takes its category's (BARREL_MAX_CAT).
+BARREL_MAX_CAT = {"Centerfire Rifle": 28.0, "Rimfire Rifle": 24.0, "Handgun": 10.0,
+                  "Pistol Caliber Carbine": 20.0}
+BARREL_MAX_IN = {
+    "Centerfire Rifle": {
+        ".204 Ruger": 26, ".22 ARC": 24, ".22 Creedmoor": 26, ".22 Hornet": 24,
+        ".22-250 Remington": 26, ".220 Swift": 26, ".222 Remington": 24, ".223 Remington": 26,
+        ".224 Valkyrie": 24, ".243 Winchester": 26, ".25 Creedmoor": 24, ".25-06 Remington": 26,
+        ".25-35 Winchester": 26, ".250 Savage": 24, ".257 Roberts": 24, ".260 Remington": 26,
+        ".270 WSM": 24, ".270 Winchester": 26, ".277 Fury": 20, ".28 Nosler": 26,
+        ".280 Remington": 24, ".30 Carbine": 18, ".30 Thompson/Center": 24,
+        ".30-06 Springfield": 26, ".30-30 Winchester": 26, ".30-40 Krag": 30, ".300 Blackout": 20,
+        ".300 PRC": 26, ".300 Remington Ultra Mag": 26, ".300 Savage": 24, ".300 WSM": 26,
+        ".300 Weatherby Magnum": 28, ".300 Winchester Magnum": 26, ".303 British": 26,
+        ".308 Winchester": 26, ".32-40 Winchester": 30, ".338 ARC": 20, ".338 Lapua Magnum": 30,
+        ".338 Winchester Magnum": 26, ".348 Winchester": 24, ".35 Remington": 22,
+        ".35 Whelen": 24, ".350 Legend": 22, ".358 Winchester": 22, ".375 H&H Magnum": 26,
+        ".375 Ruger": 24, ".38-55 Winchester": 28, ".416 Remington Magnum": 24,
+        ".444 Marlin": 24, ".45-70 Government": 34, ".450 Bushmaster": 22, ".458 Lott": 24,
+        ".458 Winchester Magnum": 24, ".50 BMG": 36, "5.45x39mm": 20, "5.56x45mm NATO": 24,
+        "6.5 Creedmoor": 28, "6.5 Grendel": 24, "6.5 PRC": 26, "6.5x55mm Swedish": 30,
+        "6.8 Western": 24, "6.8mm SPC": 20, "6mm ARC": 24, "6mm Creedmoor": 28,
+        "6mm Remington": 24, "7.62x39mm": 20, "7.62x51mm NATO": 26, "7.62x54mmR": 31,
+        "7mm PRC": 26, "7mm Remington Magnum": 26, "7mm STW": 26, "7mm WSM": 24,
+        "7mm-08 Remington": 24, "8x57mm Mauser": 30, "9.3x62mm": 24},
+    "Rimfire Rifle": {".17 HMR": 24, ".17 Mach 2": 22, ".17 WSM": 24, ".22 LR": 28,
+                      ".22 Long": 24, ".22 Short": 24, ".22 WMR": 24},
+    "Handgun": {
+        ".22 LR": 10, ".22 WMR": 10, ".25 ACP": 3, ".32 ACP": 4, ".32 H&R Magnum": 7,
+        ".32 S&W Long": 6, ".327 Federal Magnum": 7.5, ".357 Magnum": 10, ".357 SIG": 6,
+        ".38 Special": 8.5, ".38 Super": 6, ".380 ACP": 4.5, ".40 S&W": 6, ".41 Magnum": 10.5,
+        ".44 Magnum": 10.6, ".44 Special": 7.5, ".44-40 Winchester": 7.5, ".45 ACP": 6,
+        ".45 Colt": 7.5, ".454 Casull": 10, ".460 S&W Magnum": 14, ".480 Ruger": 10,
+        ".50 AE": 10, ".500 S&W Magnum": 10.5, "10mm Auto": 6.5, "4.6x30mm": 7,
+        "5.7x28mm": 5, "7.62x25mm Tokarev": 10, "9mm Luger": 6, "9x18mm Makarov": 4},
+    "Pistol Caliber Carbine": {
+        ".327 Federal Magnum": 20, ".357 Magnum": 24, ".38 Special": 24, ".40 S&W": 17.5,
+        ".41 Magnum": 20, ".44 Magnum": 24, ".44 Special": 24, ".44-40 Winchester": 24,
+        ".45 ACP": 18, ".45 Colt": 24, ".454 Casull": 20, "10mm Auto": 17.5, "5.7x28mm": 16,
+        "9mm Luger": 18},
+}
+
+
+LONGEST_TEST = {}      # category title -> {cartridge: its loads' longest test barrel}, from the files
+
+
+def longest_test_barrels(loads):
+    """{cartridge: the longest test barrel its loads list}: makers test some short-barrel
+    cartridges (7.62x39mm, .350 Legend) in 24 in barrels no rifle is sold with."""
+    out = {}
+    for x in loads:
+        if x.barrel_in and not x.handload:
+            out[x.cartridge] = max(out.get(x.cartridge, 0.0), x.barrel_in)
+    return out
+
+
+def barrel_max(cat, cartridge):
+    """The longest barrel the barrel box takes for this cartridge: its longest factory barrel,
+    or its makers' longest test barrel when that is longer."""
+    return float(max(BARREL_MAX_IN.get(cat.title, {}).get(cartridge, BARREL_MAX_CAT.get(cat.title, BARREL_MAX)),
+                     LONGEST_TEST.get(cat.title, {}).get(cartridge, 0.0)))
 
 
 def barrel_exponent(cat, item):
@@ -1849,6 +1914,7 @@ class App:
                     detail, dprob = load_data(dpath, cat.grain_style)
                     problems += [f"{cat.loads_filename}: {x}" for x in dprob]
                     TEST_BARRELS[cat.title] = usual_test_barrels(cat, detail)
+                    LONGEST_TEST[cat.title] = longest_test_barrels(detail)
                 except (OSError, csv.Error, UnicodeDecodeError) as exc:
                     detail_error = f"Could not read {cat.loads_filename}: {exc}"
         return {"loads": loads, "problems": problems, "error": "", "detail": detail,
@@ -3634,6 +3700,19 @@ class LoadsView:
         return (f", {', '.join(parts)} (estimates)" if parts else "") + warn
 
     @staticmethod
+    def _barrel(var, cat, cart):
+        """A barrel length from BARREL_MIN up to the cartridge's longest factory barrel."""
+        hi = barrel_max(cat, cart)
+        try:
+            v = float(var.get().strip())
+        except ValueError:
+            v = None
+        if v is None or not BARREL_MIN <= v <= hi:
+            raise ValueError(f"Barrel length for {cart}: {BARREL_MIN:g}-{hi:g} in ({hi:g} in: its "
+                             "longest factory or test barrel), or blank for the listed figures.")
+        return v
+
+    @staticmethod
     def _twist(var, name):
         """Inches per turn from "1:8", "1 in 8" or "8"."""
         v = parse_twist(var.get())
@@ -3861,7 +3940,7 @@ class LoadsView:
         try:
             dist = self._num(self.dist_var, "Distance", 0, self.cat.max_distance)
             gun = self._num(self.gun_var, "Gun weight", 0.5, GUN_LB_MAX)
-            barrel = (self._num(self.barrel_var, "Barrel length", BARREL_MIN, BARREL_MAX)
+            barrel = (self._barrel(self.barrel_var, self.cat, cart)
                       if self.cat.barrel_in and self.barrel_var.get().strip() else 0.0)
             twist = (self._twist(self.twist_var, "Twist rate")
                      if self.cat.barrel_in and self.twist_var.get().strip() else 0.0)
@@ -5213,8 +5292,7 @@ class HeadToHeadView:
                     for _, x, s in picks]
             # a blank box (or the boxes hidden, or a shotshell): the listed figures
             barrels = [None if not self.fire_open or not c.barrel_in or not s["barrel"].get().strip()
-                       else LoadsView._num(s["barrel"], f"Barrel length for {x.label}", BARREL_MIN,
-                                           BARREL_MAX)
+                       else LoadsView._barrel(s["barrel"], c, x.cartridge)
                        for c, x, s in picks]
             twists = [None if not self.fire_open or not c.barrel_in or not s["twist"].get().strip()
                       else LoadsView._twist(s["twist"], f"Twist rate for {x.label}")

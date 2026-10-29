@@ -96,6 +96,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   Oct 29 2026 against Lucky Gunner's 7.5 / 10.5 / 16.5 in .300 BLK chrono test: within ~10 fps). S&B's
   .300 BLK loads are 16 in (their 147 FMJ printed 2077, chronographed 2088 from 16.5 in), not 24.
   Everything (grades, recoil, ballistic table) follows the new speed; marked "(estimate)".
+  The box takes BARREL_MIN 1 in up to barrel_max / barrelMax: the cartridge's longest factory barrel
+  (BARREL_MAX_IN, Zeke Oct 29 2026, e.g. .300 BLK 20, 9mm handgun 6, .460 S&W 14, .50 BMG 36; else
+  BARREL_MAX_CAT), or its makers' longest listed test barrel if longer (LONGEST_TEST, web cat.test_max:
+  makers test 7.62x39mm / .350 Legend in 24 in barrels). A new cartridge needs a BARREL_MAX_IN entry.
 - Twist rate: no speed change. stability / stability: Miller's Sg (sea-level air) with the bullet
   length estimated by bullet_length_in / bulletLength (weight, diameter, lead 10.7 or copper 8.9 g/cc
   from the name, nose shape factor 1.25-1.45); Sg < 1.5 cuts the BC 3% per 0.1 (Litz, stability_bc),

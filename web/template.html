@@ -593,6 +593,10 @@ function barrelExp(cat,it){
   const ratio=it.bullet_gr>0?it.powder_gr/it.bullet_gr:0;
   return Math.min(.25,Math.max(.10,.10+.25*ratio));
 }
+// the longest barrel the box takes: the cartridge's longest factory barrel (barrel_max)
+// or its makers' longest test barrel when that is longer (cat.test_max)
+const barrelMax=(cat,cart)=>{const t=BARREL.max_in[cat.title]||{},f=t[cart]!=null?t[cart]:BARREL.max_cat[cat.title]!=null?BARREL.max_cat[cat.title]:BARREL.max;return Math.max(f,(cat.test_max||{})[cart]||0);};
+const barrelHelp=(cat,cart)=>`Barrel length for ${cart}: ${BARREL.min}-${g(barrelMax(cat,cart))} in (${g(barrelMax(cat,cart))} in: its longest factory or test barrel), or blank for the listed figures.`;
 // a load printed without its test barrel: its cartridge's usual one (cat.test_barrels), else the
 // category's (test_barrel)
 const testBarrel=(cat,it)=>it.barrel_in||(cat.test_barrels||{})[it.cartridge]||cat.barrel_in;
@@ -1471,7 +1475,7 @@ function openLoads(cat,pane){
     for(const k of MKEYS){const v=parseFloat($$("#lw_"+k).value);if(isNaN(v)||v<0)bad=true;weights[k]=bad?0:Math.min(10,v);}
     const bt=cat.barrel_in?$$("#lb").value.trim():"",tt=cat.barrel_in?$$("#lt").value.trim():"";
     const barrel=bt?parseFloat(bt):0,twist=tt?parseTwist(tt):0;
-    if(dist==null||gun==null||bad||isNaN(barrel)||(bt&&(barrel<BARREL.min||barrel>BARREL.max))||(tt&&!(twist>=TWIST.min&&twist<=TWIST.max)))return null;
+    if(dist==null||gun==null||bad||isNaN(barrel)||(bt&&(barrel<BARREL.min||barrel>barrelMax(cat,$$("#lc").value)))||(tt&&!(twist>=TWIST.min&&twist<=TWIST.max)))return null;
     let items=groups.get($$("#lc").value)||[];
     if(L.purpose!=="All")items=items.filter(x=>purposeOf(x)===L.purpose);
     items=items.map(x=>atFirearm(x,cat,barrel,twist));
@@ -1487,7 +1491,7 @@ function openLoads(cat,pane){
     const out=compute(),box=$$("#lres");
     box.classList.toggle("empty",!$$("#lc").value);
     if(!$$("#lc").value){box.innerHTML=`<div class="muted">Choose a ${noun} to see how every brand's loads compare.</div>`;$$("#lcnt").textContent="";return;}
-    if(!out){box.innerHTML=`<div class="muted">Enter a distance, gun weight${cat.barrel_in?`, barrel length (${BARREL.min}-${BARREL.max} in, or blank), twist rate (${TWIST.min}-${TWIST.max} in per turn, or blank)`:""} and weights (numbers) to see results.</div>`;$$("#lcnt").textContent="";return;}
+    if(!out){box.innerHTML=`<div class="muted">${cat.barrel_in&&$$("#lb").value.trim()&&!(parseFloat($$("#lb").value)>=BARREL.min&&parseFloat($$("#lb").value)<=barrelMax(cat,$$("#lc").value))?esc(barrelHelp(cat,$$("#lc").value)):`Enter a distance, gun weight${cat.barrel_in?`, twist rate (${TWIST.min}-${TWIST.max} in per turn, or blank)`:""} and weights (numbers) to see results.`}</div>`;$$("#lcnt").textContent="";return;}
     if(!(groups.get($$("#lc").value)||[]).length){box.innerHTML=`<div class="muted">No factory loads listed for ${esc($$("#lc").value)}. Add your own in the Handloads tab to grade it.</div>`;$$("#lcnt").textContent="";return;}
     countChips();
     let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>matchesFilter(r.it)&&pressOk(r.it));
@@ -1770,7 +1774,8 @@ function openH2H(pane){
     const tws=ps.map(([c,,s])=>fireOpen&&c.barrel_in&&String(s.tw).trim()?parseTwist(s.tw):null);
     if(ps.some(([c,,s],i)=>fireOpen&&c.barrel_in&&String(s.tw).trim()&&!(tws[i]>=TWIST.min&&tws[i]<=TWIST.max))){box.innerHTML=`<div class="cnt">Enter each twist rate as the inches per turn, ${TWIST.min}–${TWIST.max} (1:8 or 8), or leave it blank.</div>`;return;}
     if(tws.some(v=>v!=null))$$("#hnote").textContent+=" A load with a twist rate is checked for spin stability (Miller's rule, bullet length estimated); a barely stable bullet loses some BC: an estimate.";
-    if(brls.some(v=>v!=null&&(isNaN(v)||v<BARREL.min||v>BARREL.max))){box.innerHTML=`<div class="cnt">Enter each barrel length as ${BARREL.min}–${BARREL.max} in, or leave it blank for the listed figures.</div>`;return;}
+    const badB=ps.findIndex(([c,it],i)=>brls[i]!=null&&(isNaN(brls[i])||brls[i]<BARREL.min||brls[i]>barrelMax(c,it.cartridge)));
+    if(badB>=0){box.innerHTML=`<div class="cnt">${esc(barrelHelp(ps[badB][0],ps[badB][1].cartridge))}</div>`;return;}
     if(brls.some(v=>v!=null))$$("#hnote").textContent+=" A load with a barrel length has its speed moved from its test barrel to that length: an estimate.";
     if(guns.some(v=>v!=null&&(isNaN(v)||v<.5||v>GUN_MAX))){box.innerHTML=`<div class="cnt">Enter each gun weight as 0.5–${g(GUN_MAX)} lb, or leave it blank for the cartridge's usual gun.</div>`;return;}
     if(pk.length<H2H_MIN){box.innerHTML=`<div class="cnt">Pick at least ${H2H_MIN} loads to put them head to head.</div>`;return;}
