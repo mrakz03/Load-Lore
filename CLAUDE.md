@@ -77,16 +77,36 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   copy one.
 - Default distance (Oct 28 2026, Zeke): 0 yd (the muzzle) in every category and in Head to Head
   (Category default_distance, H2H_DISTANCE), so the figures match the box; the field stays editable.
-- Barrel length (Oct 29 2026, Zeke): the dictionary's settings card has a BARREL LENGTH (IN) On / Off
-  switch (barrel_on / L.barrelOn, off by default; off = the listed figures exactly) with a length box
-  while on, starting at Category.barrel_in (rifle / rimfire 24, handgun 4, PCC 16; shotgun 0 = no
-  switch; under Distance on PC, phones swap Distance and gun weight so it sits under the gun weight: .dcell / .gcell / .bcell, Zeke Oct 29); kept per category while the app is open (snapshot / shared), not in settings.json. at_barrel /
-  atBarrel copy each load (.base = the listed load, .at_in = the length) with v x (length / test
-  barrel)^n, test barrel = barrel_in or the category's; barrel_exponent / barrelExp: handgun auto 0.057,
-  standard revolver 0.132, magnum 0.221 (the PCC fits), .22s 0.07, rifles 0.10 + 0.25 x powder/bullet
-  clamped 0.10-0.25. Everything (grades, recoil, ballistic table) follows the new speed; marked
-  "(estimate)". Head to Head has "Barrel length for each load" like the gun weights (barrels in
-  h2h_rows / h2hRows: the load's cartridge is graded at that length; blank / hidden = listed).
+- Firearm setup (Oct 29 2026, Zeke; first named "Your firearm"; replaced the barrel On / Off switch and the two Head to Head links):
+  the dictionary's settings card has DISTANCE and a FIREARM SETUP box that looks like a drop-down
+  (summary "Manufacturer data  ·  8 lb gun" while unchanged, else "Estimate  ·  16 in barrel  ·  1:8 twist  ·  8 lb", firearm_text / firearmText); it opens gun weight, BARREL (IN)
+  and TWIST (1 IN … IN) boxes (shotgun: gun weight only), a note (firearm_note, web DATA.fire_notes:
+  listed velocity / energy are the makers' figures, PCC "(est.)" loads ours; your own barrel or twist
+  makes them estimates) and "Reset to maker's figures" (shotgun: "Reset to the usual gun weight"). Blank barrel / twist = listed. Kept per category
+  while the app is open (snapshot / shared: fire_open, barrel, twist), not in settings.json.
+  Head to Head has one "Firearm setup for each load" link: under each load a Gun / Barrel / Twist line
+  (fire_open / fireOpen; guns, barrels, twists by row position; blank = usual gun / listed).
+  at_firearm / atFirearm = at_barrel then the twist check; h2h_rows / h2hRows take barrels and twists.
+- Barrel length: at_barrel / atBarrel copy each load (.base = the listed load, .at_in = the length) with
+  v x (length / test barrel)^n. Test barrel = the load's barrel_in, else its cartridge's usual one
+  (usual_test_barrels -> TEST_BARRELS, web cat.test_barrels: the length most of its loads list, e.g.
+  .300 Blackout 16, 5.56 NATO 20, 10mm Auto 5; Oct 29 2026: assuming 24 read .300 BLK 100+ fps slow),
+  else Category.barrel_in. barrel_exponent / barrelExp: handgun auto 0.057, standard revolver 0.132,
+  magnum 0.221 (the PCC fits), .22s 0.07, rifles 0.10 + 0.25 x powder/bullet clamped 0.10-0.25 (checked
+  Oct 29 2026 against Lucky Gunner's 7.5 / 10.5 / 16.5 in .300 BLK chrono test: within ~10 fps). S&B's
+  .300 BLK loads are 16 in (their 147 FMJ printed 2077, chronographed 2088 from 16.5 in), not 24.
+  Everything (grades, recoil, ballistic table) follows the new speed; marked "(estimate)".
+  The box takes BARREL_MIN 1 in up to barrel_max / barrelMax: the cartridge's longest factory barrel
+  (BARREL_MAX_IN, Zeke Oct 29 2026, e.g. .300 BLK 20, 9mm handgun 6, .460 S&W 14, .50 BMG 36; else
+  BARREL_MAX_CAT), or its makers' longest listed test barrel if longer (LONGEST_TEST, web cat.test_max:
+  makers test 7.62x39mm / .350 Legend in 24 in barrels). A new cartridge needs a BARREL_MAX_IN entry.
+- Twist rate: no speed change. stability / stability: Miller's Sg (sea-level air) with the bullet
+  length estimated by bullet_length_in / bulletLength (weight, diameter, lead 10.7 or copper 8.9 g/cc
+  from the name, nose shape factor 1.25-1.45); Sg < 1.5 cuts the BC 3% per 0.1 (Litz, stability_bc),
+  < 1.0 "won't stabilise" (a ⚠ chip / red row; grades unchanged). Open load, Head to Head "Spin
+  stability" row and a red line under the load's name show it. The same load can be picked in two or
+  more Head to Head rows to compare setups; columns get an accent line naming what differs
+  ("10.5 in barrel  ·  1:8 twist  ·  5 lb gun", h2h_setups / h2hSetups).
 - Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
   point-mass G1 path (trajectory / _fly, fly in web: drag along the path + gravity, RK2 0.5 m
   steps, bore tilted to cross the sight line at zero_yd) + 10 mph drift by Didion's lag rule,
