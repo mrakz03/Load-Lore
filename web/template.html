@@ -447,7 +447,7 @@ details.btab table td:first-child,details.btab table th:first-child{text-align:l
 <script>
 "use strict";
 const DATA = __DATA__;
-const APP_TITLE = "In Like Flint - Load Lore";
+const APP_TITLE = "In Like Flint - Load Lore" + (DATA.beta ? " (beta)" : "");  // DATA.beta: the beta site (build_web.py LOADLORE_BETA)
 // ---------- color themes (same table as the desktop app) ----------
 const THEMES = DATA.themes || {}, THEME_KEY = "cartridge_calc_theme";
 const THEME_VARS = {bg:"--bg",surface:"--surface",surface_2:"--surface2",border:"--border",text:"--text",muted:"--muted",
@@ -463,7 +463,7 @@ function applyTheme(name){
   try{localStorage.setItem(THEME_KEY,name);}catch(e){}
 }
 applyTheme(THEME);
-const VERSION_TEXT = DATA.version && DATA.version !== "dev" ? "v" + DATA.version : "dev";
+const VERSION_TEXT = /^\d/.test(DATA.version || "") ? "v" + DATA.version : (DATA.version || "dev");  // "1.10" -> v1.10; "dev", "beta 3f2c1ab" as they are
 const GRAINS_PER_OZ = 437.5;
 const METRICS = {velocity:["Velocity",true],energy:["Energy",true],recoil:["Recoil",false],cost:["Cost",false],taylor:["Taylor KO",true],hits:["HITS",true]};
 const TERMINAL=["taylor","hits"];

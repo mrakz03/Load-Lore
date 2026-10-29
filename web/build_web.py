@@ -35,17 +35,20 @@ bullets = [dict(maker=r["maker"], name=r["name"], diameter=float(r["diameter_in"
            for r in csv.DictReader(open(os.path.join(data, "bullets.csv"), encoding="utf-8-sig"))]
 # the public web address, for link previews; change it here if the site moves to its own domain
 SITE = "https://loadlore.net/"
-# the beta site (beta.yml, built from next) sets LOADLORE_BETA=<its address>: link previews point
-# there, the tab title says (beta) and search engines are asked not to list it
+# the beta site (Cloudflare Pages, built from next) sets LOADLORE_BETA=<its address>: link previews
+# point there, the tab title says (beta), search engines are asked not to list it, and Settings shows
+# "beta" + the commit (Cloudflare gives it as CF_PAGES_COMMIT_SHA)
 BETA = os.environ.get("LOADLORE_BETA", "")
+if BETA and c.APP_VERSION == "dev":
+    c.APP_VERSION = ("beta " + os.environ.get("CF_PAGES_COMMIT_SHA", "")[:7]).strip()
 tpl = open(os.path.join(here, "template.html"), encoding="utf-8").read()
 if BETA:
     SITE = BETA
     tpl = tpl.replace("<title>In Like Flint - Load Lore</title>",
-                      '<title>Load Lore (beta)</title>\n<meta name="robots" content="noindex">', 1)
+                      '<title>In Like Flint - Load Lore (beta)</title>\n<meta name="robots" content="noindex">', 1)
 os.makedirs(os.path.join(here, "www"), exist_ok=True)
 with open(os.path.join(here, "www", "index.html"), "w", encoding="utf-8") as f:
-    f.write(tpl.replace("__SITE__", SITE).replace("__DATA__", json.dumps({"version": c.APP_VERSION, "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "group_blurbs": c.GROUP_BLURBS, "cat_tags": c.CAT_TAGS, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "moved": c.MOVED_CATEGORIES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "barrel": {"n": c.BARREL_N, "revolvers": c.STANDARD_REVOLVERS, "magnums": c.MAGNUM_REVOLVERS, "rimfire": c.RIMFIRE_HANDGUN, "min": c.BARREL_MIN, "max": c.BARREL_MAX}, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS, "hand_fields": c.HANDLOAD_FIELDS, "hand_note": c.HANDLOAD_NOTE}, ensure_ascii=False)))
+    f.write(tpl.replace("__SITE__", SITE).replace("__DATA__", json.dumps({"version": c.APP_VERSION, "beta": bool(BETA), "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "group_blurbs": c.GROUP_BLURBS, "cat_tags": c.CAT_TAGS, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "moved": c.MOVED_CATEGORIES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "barrel": {"n": c.BARREL_N, "revolvers": c.STANDARD_REVOLVERS, "magnums": c.MAGNUM_REVOLVERS, "rimfire": c.RIMFIRE_HANDGUN, "min": c.BARREL_MIN, "max": c.BARREL_MAX}, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS, "hand_fields": c.HANDLOAD_FIELDS, "hand_note": c.HANDLOAD_NOTE}, ensure_ascii=False)))
 shutil.copyfile(os.path.join(root, "assets", "icon.png"), os.path.join(here, "www", "icon.png"))  # browser tab icon
 # home-screen icons (scripts/make_icons.py draws them); the manifest's "browser" display keeps
 # "Add to Home screen" a plain shortcut: no install prompt

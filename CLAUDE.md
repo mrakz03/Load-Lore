@@ -228,12 +228,12 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   (workflow_run after "Build and release") or a manual run (Actions tab) builds main with build_web.py and
   deploys web/www (version = newest v* tag). A plain push to main does not deploy (Zeke, Oct 28 2026). Needs Settings > Pages > Source: GitHub
   Actions. A custom domain is set in Settings > Pages (no CNAME file with an Actions deploy).
-- Beta web site (Oct 29 2026, Zeke): .github/workflows/beta.yml builds next on every push (or by hand) and
-  force-pushes web/www to the gh-pages branch of the public repo mrakz03/Load-Lore-beta (one Pages site per
-  repo), served at https://beta.loadlore.net/ (CNAME file written by the workflow). Secret BETA_PAGES_TOKEN
-  (fine-grained, Contents read/write on Load-Lore-beta only); no secret = the publish is skipped. build_web.py
-  with LOADLORE_BETA=<address> points og: tags there, titles the tab "Load Lore (beta)" and adds noindex.
-  Version reads v<newest tag>-beta.<commit>. Its own address, so its localStorage is separate from the live site.
+- Beta web site (Oct 29 2026, Zeke): Cloudflare Pages (Zeke's Cloudflare account, no workflow in this repo)
+  builds next on every push: build command `python3 web/build_web.py`, output web/www, env var
+  LOADLORE_BETA=https://beta.loadlore.net/, served at https://beta.loadlore.net/. With LOADLORE_BETA set,
+  build_web.py points og: tags there, titles the tab "In Like Flint - Load Lore (beta)", adds noindex and makes the version
+  "beta <commit>" (CF_PAGES_COMMIT_SHA). Its own address, so its localStorage is separate from the live site.
+  (A first try pushed to a second repo, Load-Lore-beta; Zeke preferred no extra repo.)
 - Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the maintainer saves
   the middle number (v1.6) for bigger releases.
 - Installers upgrade in place and clear old shipped data (ammo_*, loads_*, bullets.csv) first.
