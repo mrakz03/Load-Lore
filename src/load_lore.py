@@ -3406,7 +3406,7 @@ class LoadsView:
         return v
 
     def _choose_text(self):
-        return f"Choose a {self.cat.cartridge_label.lower()} to see how every brand's load compares."
+        return f"Choose a {self.cat.cartridge_label.lower()} to see how every brand's loads compare."
 
     def _on_cartridge(self):
         self.cart_search.last = self.cart_var.get()
