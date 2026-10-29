@@ -4544,8 +4544,7 @@ class HandloadsView:
         except OSError as exc:
             return messagebox.showerror("Couldn't delete", f"Could not write {HANDLOAD_FILENAME}:\n{exc}")
         key = pick_key(cat, it)
-        if key in self.app.h2h:
-            self.app.h2h.remove(key)
+        self.app.h2h[:] = [k for k in self.app.h2h if k != key]
         self.open_id = None
         self.draw()
 
@@ -4907,12 +4906,13 @@ class HeadToHeadView:
         self._changed()
 
     def _picked_slots(self):
-        """The loads chosen so far as (category, load, slot), in slot order, without repeats."""
+        """The loads chosen so far as (category, load, slot), in slot order. A load can be picked
+        twice, to compare it at two barrel lengths or gun weights (Zeke, Oct 29 2026)."""
         out = []
         for slot in self.slots:
             t = slot["cat"].get()
             item = self.choices.get((t, slot["cart"].get()), {}).get(slot["load"].get())
-            if item is not None and all(item is not x for _, x, _ in out):
+            if item is not None:
                 out.append((self.cats[t], item, slot))
         return out
 
@@ -4938,22 +4938,23 @@ class HeadToHeadView:
 
     # ---- state ------------------------------------------------------------ #
     def snapshot(self):
+        # by position, like app.h2h (the same load can be there twice)
         return dict(dist=self.dist_var.get(), gun_open=self.gun_open,
-                    guns={pick_key(c, x): s["gun"].get() for c, x, s in self._picked_slots()},
+                    guns=[s["gun"].get() for _, _, s in self._picked_slots()],
                     barrel_open=self.barrel_open,
-                    barrels={pick_key(c, x): s["barrel"].get() for c, x, s in self._picked_slots()})
+                    barrels=[s["barrel"].get() for _, _, s in self._picked_slots()])
 
     def _apply_snap(self, snap):
         if "dist" in snap:
             self.dist_var.set(snap["dist"])
         self.gun_open = snap.get("gun_open", self.gun_open)
         self.barrel_open = snap.get("barrel_open", self.barrel_open)
-        guns, barrels = snap.get("guns", {}), snap.get("barrels", {})
-        for c, x, slot in self._picked_slots():
-            if pick_key(c, x) in guns:
-                slot["gun"].set(guns[pick_key(c, x)])
-            if pick_key(c, x) in barrels:
-                slot["barrel"].set(barrels[pick_key(c, x)])
+        guns, barrels = snap.get("guns", []), snap.get("barrels", [])
+        for i, (_, _, slot) in enumerate(self._picked_slots()):
+            if i < len(guns):
+                slot["gun"].set(guns[i])
+            if i < len(barrels):
+                slot["barrel"].set(barrels[i])
         self._layout_slots()
 
     def _schedule(self, *_):
@@ -5032,6 +5033,7 @@ class HeadToHeadView:
         for c in range(1, n + 1):
             card.columnconfigure(c, weight=1, uniform="load")
         wrap = a.px(max(160, 760 // n))
+        setups = h2h_setups(rows)          # a load picked twice: "10.5 in barrel" etc.
         r = 0
         # names
         for c, row in enumerate(rows, start=1):
@@ -5043,6 +5045,8 @@ class HeadToHeadView:
                     justify="left", wraplength=wrap).pack(anchor="w")
             if it.handload:
                 a.label(box, "handload", 9, HAND_FG, anchor="w").pack(anchor="w")
+            if setups[c - 1]:
+                a.label(box, setups[c - 1], 9, ACCENT, True, anchor="w").pack(anchor="w")
         # a thin line between rows, like the web's table (the thicker rule below stands in for
         # the line under the grade rows, and the card's edge for the one under "Best in")
         line = lambda: a.rule(card, r, n + 1)
@@ -5148,6 +5152,8 @@ class HeadToHeadView:
                     bg=SURFACE, justify="center", wraplength=a.px(420)).pack()
             if name:
                 a.label(head, weight, 9, MUTED, bg=SURFACE).pack()
+            if setups[c]:
+                a.label(head, setups[c], 9, ACCENT, True, bg=SURFACE).pack()
             cell(1, 3 * c + 2, heads[0], MUTED, True, 10, (0, 6))
             cell(1, 3 * c + 3, heads[1], MUTED, True, 10, (0, 6))
         tk.Frame(dr, bg=BORDER, height=1).grid(row=2, column=0, columnspan=3 * n + 1, sticky="ew")
@@ -5167,6 +5173,30 @@ class HeadToHeadView:
             if i < len(table) + 2:
                 a.rule(dr, i, 3 * n + 1)                    # a thin line between distances
         a.label(dr, "", 2, bg=SURFACE).grid(row=last, column=0)
+
+
+def h2h_setups(rows):
+    """For a load picked more than once in Head to Head (the same load at two barrel lengths or
+    gun weights): what sets each copy apart, "10.5 in barrel  ·  7 lb gun" (only what differs
+    between the copies); "" for a load picked once."""
+    same = {}
+    for r in rows:
+        same.setdefault((r["cat"].title, id(base_load(r["item"]))), []).append(r)
+
+    def barrel(r):
+        it, c = r["item"], r["cat"]
+        return f"{getattr(it, 'at_in', 0) or it.barrel_in or c.barrel_in:g} in barrel" if c.barrel_in else ""
+
+    out = []
+    for r in rows:
+        copies = same[(r["cat"].title, id(base_load(r["item"])))]
+        parts = []
+        if len(copies) > 1 and len({barrel(x) for x in copies}) > 1:
+            parts.append(barrel(r))
+        if len(copies) > 1 and len({x["gun"] for x in copies}) > 1:
+            parts.append(f"{r['gun']:g} lb gun")
+        out.append("  ·  ".join(p for p in parts if p))
+    return out
 
 
 def h2h_keys(cats):
@@ -5195,7 +5225,7 @@ def h2h_rows(picked, dist, guns, weights_of, price_of, groups, barrels=None):
             done[key] = {id(base_load(r["item"])): r for r in score_loads(
                 items, d, gun,
                 weights_of(icat), [price_of(icat, x) for x in items], by_type=not icat.grain_style)}
-        rows.append(dict(done[key][id(it)], cat=icat, dist=d, keys=metric_keys(icat),
+        rows.append(dict(done[key][id(it)], cat=icat, dist=d, gun=gun, keys=metric_keys(icat),
                          best=set(), gap={}))
     for key in h2h_keys([r["cat"] for r in rows]):
         have = [r for r in rows if key in r["keys"]]
