@@ -2906,6 +2906,12 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
                 raise ValueError("Enter the bullet diameter.")
             if bc is None:
                 bc = estimate_bc(gr, dia, cat.group == "Handgun")
+            # saved as plain numbers: a typed "$0.30" or a stray letter used to be kept as typed,
+            # and opening the handload in the Handloads tab then failed
+            parts = {k: num(k, label, lo, hi, True) for k, label, lo, hi in (
+                ("bullet_cost", "Bullet cost", 0, None), ("powder_cost_lb", "Powder cost", 0, None),
+                ("primer_cost", "Primer cost", 0, None), ("brass_cost", "Brass cost", 0, None),
+                ("brass_reuse", "Brass reloads", 1, 1000))}
             total = num("total", "Total cost", 0, blank=True)
             cost = parts_cost() if total is None else total
             if not cost or cost <= 0:
@@ -2920,10 +2926,8 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
                    bullet_gr=f"{gr:g}", diameter_in=f"{dia:g}", bc_g1=f"{bc:g}",
                    powder=V["powder"].get().strip(), powder_gr=f"{charge:g}", muzzle_fps=f"{fps:g}",
                    barrel_in=f"{barrel:g}" if barrel else "", purpose=V["purpose"].get(),
-                   cost=f"{cost:.4f}", bullet_cost=V["bullet_cost"].get().strip(),
-                   powder_cost_lb=V["powder_cost_lb"].get().strip(),
-                   primer_cost=V["primer_cost"].get().strip(), brass_cost=V["brass_cost"].get().strip(),
-                   brass_reuse=V["brass_reuse"].get().strip(), notes=V["notes"].get().strip())
+                   cost=f"{cost:.4f}", notes=V["notes"].get().strip(),
+                   **{k: "" if v is None else f"{v:g}" for k, v in parts.items()})
         try:
             app.save_handload(row)
         except OSError as exc:
@@ -4374,7 +4378,7 @@ class HandloadsView:
             a.label(det, v, 10, TEXT, True, anchor="w").grid(row=n, column=1, sticky="w", pady=2)
         n += 1
         a.label(det, "Cost", 10, MUTED, anchor="w").grid(row=n, column=0, sticky="nw", padx=(0, 16), pady=2)
-        get = lambda k: float(rec.get(k) or 0)
+        get = lambda k: _opt_float((rec.get(k) or "").replace("$", ""))   # older saves kept text as typed
         parts = [("Bullet", get("bullet_cost")), ("Powder", get("powder_gr") / 7000.0 * get("powder_cost_lb")),
                  ("Primer", get("primer_cost")),
                  ("Brass" + (f" (÷{get('brass_reuse'):g} reloads)" if get("brass_reuse") > 1 else ""),

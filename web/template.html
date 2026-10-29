@@ -884,8 +884,11 @@ const POWDERS=DATA.powders||[], BULLETS=DATA.bullets||[];
 const PURPOSES=["Hunting","Varmint","Target","Match","Defense","Subsonic"];
 function readHand(){try{return canonRows(JSON.parse(localStorage.getItem(HAND_KEY)||"[]"));}catch(e){return [];}}
 function writeHand(a){try{localStorage.setItem(HAND_KEY,JSON.stringify(a));return true;}catch(e){return false;}}
+// a handload's name: its own, else maker + bullet + weight (+ powder), like handload_label in the
+// desktop app (a backup from there can have no name)
+const handName=r=>r.name||([r.bullet_maker,r.bullet].filter(Boolean).join(" ")||"Handload")+` ${g(+r.bullet_gr)} gr`+(r.powder?` + ${r.powder} ${g(+r.powder_gr)} gr`:"");
 function handItem(r,cat){
-  const it={cartridge:r.cartridge,load:r.name,bullet_gr:+r.bullet_gr,muzzle_fps:+r.muzzle_fps,bc_g1:+r.bc_g1,powder_gr:+r.powder_gr,
+  const it={cartridge:r.cartridge,load:handName(r),bullet_gr:+r.bullet_gr,muzzle_fps:+r.muzzle_fps,bc_g1:+r.bc_g1,powder_gr:+r.powder_gr,
     default_cost:+r.cost,source:"handload",group:"",is_default:false,barrel_in:+r.barrel_in||0,purpose:r.purpose||"",
     diameter_in:+r.diameter_in||0,handload:true,hid:r.id,rec:r};
   it.label=makeLabel(it,cat);return it;
@@ -977,7 +980,7 @@ function showHand(openId){
       el.onclick=e=>{if(e.target.closest(".hbtns,.hlinks"))return;H.open=H.open===id?null:id;draw();};
       if(H.open!==id)return;
       el.querySelector(".hedit").onclick=()=>handDialog(rows.find(x=>x.id===id),r=>{H.open=r.id;draw();});
-      el.querySelector(".hdup").onclick=()=>{const all2=readHand(),n=Object.assign({},it.rec,{id:newHid(),name:(it.rec.name||it.label)+" (copy)"});all2.push(n);writeHand(all2);H.open=n.id;draw();};
+      el.querySelector(".hdup").onclick=()=>{const all2=readHand(),n=Object.assign({},it.rec,{id:newHid(),name:(it.rec.name||it.load)+" (copy)"});all2.push(n);writeHand(all2);H.open=n.id;draw();};
       el.querySelector(".hdel").onclick=()=>{if(!confirm(`Delete "${it.label}"?`))return;writeHand(readHand().filter(x=>x.id!==id));const k=pickKey(c,it),i=H2H.indexOf(k);if(i>=0)H2H.splice(i,1);H.open=null;draw();};
       el.querySelector(".hdict").onclick=()=>{shared[c.title]=Object.assign({},shared[c.title],{goHand:id});navigate("loads",c);};
       el.querySelector(".hh2h").onclick=()=>{const k=pickKey(c,it);if(H2H.includes(k)||H2H.length>=H2H_MAX){navigate("h2h");return;}H2H.push(k);draw();};
