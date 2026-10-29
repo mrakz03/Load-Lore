@@ -3122,12 +3122,11 @@ class LoadsView:
             fbox, _ = a.field(top, ttk.Entry, textvariable=var, font=a.f(12), width=10)
             fbox.grid(row=3, column=i, sticky="ew", padx=gap, pady=(a.px(5), 0))
         if cat.barrel_in:
-            # barrel length: an On / Off switch, the length box beside it while on,
-            # under the gun weight (Zeke, Oct 29 2026)
+            # barrel length: an On / Off switch, the length box beside it while on
             a.label(top, "BARREL LENGTH (IN)", 8, MUTED, True).grid(
-                row=4, column=1, sticky="w", padx=(a.px(4), 0), pady=(a.px(14), 0))
+                row=4, column=0, sticky="w", padx=(0, a.px(4)), pady=(a.px(14), 0))
             brow = tk.Frame(top, bg=SURFACE)
-            brow.grid(row=5, column=1, sticky="ew", padx=(a.px(4), 0), pady=(a.px(5), 0))
+            brow.grid(row=5, column=0, sticky="ew", padx=(0, a.px(4)), pady=(a.px(5), 0))
             brow.columnconfigure(1, weight=1)
             self.barrel_tgl = toggle(a, brow, self._toggle_barrel)
             self.barrel_tgl.grid(row=0, column=0, sticky="w")

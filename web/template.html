@@ -312,6 +312,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lright{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}
 .tgl{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:99px;padding:6px 12px;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer}
 .tgl.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+@media(max-width:600px){.nums .gcell{grid-area:1/1}.nums .dcell{grid-area:1/2}.nums .bcell{grid-area:2/1}}
 .bsw{display:flex;gap:8px;align-items:stretch}.bsw .tgl{font-size:.95rem;padding:0 18px;min-height:44px}.bsw input{flex:1;min-width:0}
 .slots{display:flex;flex-direction:column;gap:8px;margin-top:6px}
 .slot{display:grid;grid-template-columns:1.4em minmax(0,1fr) minmax(0,2fr) 2.2em;gap:8px;align-items:center}
@@ -1323,9 +1324,9 @@ function openLoads(cat,pane){
   pane.innerHTML=`<div class="card">
     <div class="field"><label class="l" for="lcq">${esc(cat.cartridge_label)}</label><div class="lsearch" id="lcs"><input class="lq" id="lcq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" placeholder="Type to search, e.g. 6.5" autocomplete="off"></div><input type="hidden" id="lc"></div>
     <div class="nums" style="grid-template-columns:1fr 1fr">
-      <div><label class="l">DISTANCE (YD)</label><input id="ld" inputmode="decimal"></div>
-      <div><label class="l">${esc(cat.gun_label)}</label><input id="lg" inputmode="decimal"></div>
-      ${cat.barrel_in?`<div style="grid-column:2"><label class="l" for="lb">BARREL LENGTH (IN)</label><div class="bsw"><button class="tgl" id="lbt" aria-pressed="false" aria-label="Barrel length">Off</button><input id="lb" inputmode="decimal" class="hidden" aria-label="Barrel length (in)"></div></div>`:""}
+      <div class="dcell"><label class="l">DISTANCE (YD)</label><input id="ld" inputmode="decimal"></div>
+      <div class="gcell"><label class="l">${esc(cat.gun_label)}</label><input id="lg" inputmode="decimal"></div>
+      ${cat.barrel_in?`<div class="bcell"><label class="l" for="lb">BARREL LENGTH (IN)</label><div class="bsw"><button class="tgl" id="lbt" aria-pressed="false" aria-label="Barrel length">Off</button><input id="lb" inputmode="decimal" class="hidden" aria-label="Barrel length (in)"></div></div>`:""}
     </div>
     <div class="chips" id="lp" role="group" aria-label="Purpose"></div>
     <div class="chips hidden" id="lsrc" role="group" aria-label="Source"></div>

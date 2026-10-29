@@ -76,7 +76,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Barrel length (Oct 29 2026, Zeke): the dictionary's settings card has a BARREL LENGTH (IN) On / Off
   switch (barrel_on / L.barrelOn, off by default; off = the listed figures exactly) with a length box
   while on, starting at Category.barrel_in (rifle / rimfire 24, handgun 4, PCC 16; shotgun 0 = no
-  switch; under the gun weight, Zeke Oct 29); kept per category while the app is open (snapshot / shared), not in settings.json. at_barrel /
+  switch; under Distance on PC, phones swap Distance and gun weight so it sits under the gun weight: .dcell / .gcell / .bcell, Zeke Oct 29); kept per category while the app is open (snapshot / shared), not in settings.json. at_barrel /
   atBarrel copy each load (.base = the listed load, .at_in = the length) with v x (length / test
   barrel)^n, test barrel = barrel_in or the category's; barrel_exponent / barrelExp: handgun auto 0.057,
   standard revolver 0.132, magnum 0.221 (the PCC fits), .22s 0.07, rifles 0.10 + 0.25 x powder/bullet
