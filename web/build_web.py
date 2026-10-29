@@ -59,4 +59,9 @@ with open(os.path.join(here, "www", "manifest.webmanifest"), "w", encoding="utf-
                "background_color": "#0e1014", "theme_color": "#0e1014",
                "icons": [{"src": f"icon-{n}.png", "sizes": f"{n}x{n}", "type": "image/png"} for n in (192, 512)]},
               f, indent=1)
+if BETA:  # Cloudflare Pages reads _headers: noindex on every file (icons too), on both of its addresses
+    with open(os.path.join(here, "www", "_headers"), "w", encoding="utf-8") as f:
+        f.write("/*\n  X-Robots-Tag: noindex, nofollow\n")
+elif os.path.exists(os.path.join(here, "www", "_headers")):
+    os.remove(os.path.join(here, "www", "_headers"))
 print("wrote www/index.html")
