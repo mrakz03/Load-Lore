@@ -1412,7 +1412,7 @@ function openLoads(cat,pane){
   }
   function render(){
     const out=compute(),box=$$("#lres");
-    if(!$$("#lc").value){box.innerHTML=`<div class="muted">Choose a ${noun} to see how every brand's load compares.</div>`;$$("#lcnt").textContent="";return;}
+    if(!$$("#lc").value){box.innerHTML=`<div class="muted">Choose a ${noun} to see how every brand's loads compare.</div>`;$$("#lcnt").textContent="";return;}
     if(!out){box.innerHTML=`<div class="muted">Enter a distance, gun weight${L.barrelOn?`, barrel length (${BARREL.min}-${BARREL.max} in)`:""} and weights (numbers) to see results.</div>`;$$("#lcnt").textContent="";return;}
     if(!(groups.get($$("#lc").value)||[]).length){box.innerHTML=`<div class="muted">No factory loads listed for ${esc($$("#lc").value)}. Add your own in the Handloads tab to grade it.</div>`;$$("#lcnt").textContent="";return;}
     countChips();
