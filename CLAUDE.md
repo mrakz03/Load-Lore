@@ -77,14 +77,14 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   copy one.
 - Default distance (Oct 28 2026, Zeke): 0 yd (the muzzle) in every category and in Head to Head
   (Category default_distance, H2H_DISTANCE), so the figures match the box; the field stays editable.
-- Your firearm (Oct 29 2026, Zeke; replaced the barrel On / Off switch and the two Head to Head links):
-  the dictionary's settings card has DISTANCE and a YOUR FIREARM box that looks like a drop-down
+- Firearm setup (Oct 29 2026, Zeke; first named "Your firearm"; replaced the barrel On / Off switch and the two Head to Head links):
+  the dictionary's settings card has DISTANCE and a FIREARM SETUP box that looks like a drop-down
   (summary "8 lb  ·  16 in  ·  1:8 twist", firearm_text / firearmText); it opens gun weight, BARREL (IN)
   and TWIST (1 IN … IN) boxes (shotgun: gun weight only), a note (firearm_note, web DATA.fire_notes:
   listed velocity / energy are the makers' figures, PCC "(est.)" loads ours; your own barrel or twist
   makes them estimates) and "Reset to maker's figures" (shotgun: "Reset to the usual gun weight"). Blank barrel / twist = listed. Kept per category
   while the app is open (snapshot / shared: fire_open, barrel, twist), not in settings.json.
-  Head to Head has one "Your firearm for each load" link: under each load a Gun / Barrel / Twist line
+  Head to Head has one "Firearm setup for each load" link: under each load a Gun / Barrel / Twist line
   (fire_open / fireOpen; guns, barrels, twists by row position; blank = usual gun / listed).
   at_firearm / atFirearm = at_barrel then the twist check; h2h_rows / h2hRows take barrels and twists.
 - Barrel length: at_barrel / atBarrel copy each load (.base = the listed load, .at_in = the length) with

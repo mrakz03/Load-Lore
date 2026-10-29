@@ -313,7 +313,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lright{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}
 .tgl{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:99px;padding:6px 12px;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer}
 .tgl.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-/* "Your firearm": a box that looks like a drop-down, opening the gun / barrel / twist boxes under it */
+/* "Firearm setup": a box that looks like a drop-down, opening the gun / barrel / twist boxes under it */
 .firebtn{width:100%;display:flex;align-items:center;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:11px 32px 11px 10px;font:inherit;font-size:1rem;text-align:left;cursor:pointer;position:relative;min-height:46px}
 .firebtn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .firebtn::after{content:"";position:absolute;right:14px;top:50%;width:6px;height:6px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:translateY(-70%) rotate(45deg)}
@@ -328,7 +328,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .slot .x{background:none;border:0;color:var(--muted);font:inherit;font-size:1.1rem;font-weight:700;cursor:pointer;min-height:40px}
 .slot .x:hover{color:var(--text);background:var(--surface2)}
 .slot .x{border-radius:8px;min-width:40px}.slot .x.gone{visibility:hidden}
-/* "Your firearm for each load": gun / barrel / twist boxes on a line under the load */
+/* "Firearm setup for each load": gun / barrel / twist boxes on a line under the load */
 .slot .fire3{display:none;grid-column:2/span 2;gap:8px 14px;flex-wrap:wrap;margin-bottom:6px}
 .slots.fire .slot .fire3{display:flex}
 .fire3 label{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;color:var(--muted)}
@@ -1381,9 +1381,9 @@ function openLoads(cat,pane){
     <div class="field"><label class="l" for="lcq">${esc(cat.cartridge_label)}</label><div class="lsearch" id="lcs"><input class="lq" id="lcq" type="search" role="combobox" aria-expanded="false" aria-autocomplete="list" placeholder="Type to search, e.g. 6.5" autocomplete="off"></div><input type="hidden" id="lc"></div>
     <div class="nums" style="grid-template-columns:1fr 1fr">
       <div><label class="l" for="ld">DISTANCE (YD)</label><input id="ld" inputmode="decimal"></div>
-      <div><label class="l" for="lfb">YOUR FIREARM</label><button class="firebtn" id="lfb" aria-expanded="false" aria-controls="lfire"><span id="lfs"></span></button></div>
+      <div><label class="l" for="lfb">FIREARM SETUP</label><button class="firebtn" id="lfb" aria-expanded="false" aria-controls="lfire"><span id="lfs"></span></button></div>
     </div>
-    <!-- "Your firearm" (Zeke, Oct 29 2026): gun weight, barrel length and twist rate in one drop-down;
+    <!-- "Firearm setup" (Zeke, Oct 29 2026): gun weight, barrel length and twist rate in one drop-down;
          a blank barrel or twist = the listed figures, anything typed makes them estimates -->
     <div class="fire hidden" id="lfire">
       <div class="nums fnums">
@@ -1418,7 +1418,7 @@ function openLoads(cat,pane){
   L.gunAuto=sh.gun!=null?(sh.gunAuto!=null?sh.gunAuto:cat.default_gun_lb):typicalGun(cat,$$("#lc").value);
   $$("#lg").value=sh.gun!=null?sh.gun:g(L.gunAuto);
   MKEYS.forEach((k,i)=>$$("#lw_"+k).value=sh.w?sh.w[k]:cat.weights[i]);
-  // "Your firearm": blank barrel / twist boxes show the listed figures
+  // "Firearm setup": blank barrel / twist boxes show the listed figures
   L.fireOpen=!!sh.fireOpen;
   if(cat.barrel_in){$$("#lb").value=sh.barrel||"";$$("#lt").value=sh.twist||"";}
   const styleFire=()=>{
@@ -1668,7 +1668,7 @@ function openH2H(pane){
   // slots: [{cat, cart, key}]: category title, cartridge, and the load's handload id or label
   // gun: that load's gun weight as typed; blank (or the boxes hidden) = its cartridge's usual gun
   // brl, tw: barrel length and twist rate as typed, blank = the listed figures. All three sit
-  // under "Your firearm for each load", hidden until opened (Zeke, Oct 29 2026)
+  // under "Firearm setup for each load", hidden until opened (Zeke, Oct 29 2026)
   const guns0=H2HS.guns||[],brls0=H2HS.brls||[],tws0=H2HS.tws||[];   // by position, like H2H (the same load can be there twice)
   let fireOpen=!!H2HS.fireOpen;
   let slots=H2H.map((k,i)=>{const p=k.split("|");return {cat:p[0],cart:p[1],key:p.slice(2).join("|"),gun:guns0[i]||"",brl:brls0[i]||"",tw:tws0[i]||""};}).filter(s=>choice(s.cat,s.cart,s.key)).slice(0,H2H_MAX);
@@ -1700,7 +1700,7 @@ function openH2H(pane){
   const cartText=x=>x.cart+(dupCart.has(x.cart)?` (${x.cat})`:"");
   function drawSlots(){
     $$("#hs").classList.toggle("fire",fireOpen);
-    $$("#hfire").textContent=fireOpen?"▾  Hide your firearm (blank boxes: the listed figures)":"▸  Your firearm for each load";
+    $$("#hfire").textContent=fireOpen?"▾  Hide firearm setup (blank boxes: the listed figures)":"▸  Firearm setup for each load";
     $$("#hfire").setAttribute("aria-expanded",fireOpen);
     // the note of a picked category with barrels (the carbine one names its estimates)
     const pc=slots.filter(s=>s.cart).map(s=>byTitle[s.cat]),nc=pc.find(c=>c.title==="Pistol Caliber Carbine")||pc.find(c=>c.barrel_in)||first;

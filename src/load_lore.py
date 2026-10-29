@@ -593,7 +593,7 @@ def at_barrel(item, cat, length):
     return new
 
 
-# Twist rate ("Your firearm", blank = not checked): a twist changes no speed. It sets how fast the
+# Twist rate ("Firearm setup", blank = not checked): a twist changes no speed. It sets how fast the
 # bullet spins, so whether it flies point first: Miller's stability factor Sg (Don Miller's twist
 # rule, sea-level air) from the bullet's weight, diameter, length and speed. Factory boxes don't
 # print bullet length, so it is estimated from the weight (lead core, or copper for lead-free
@@ -690,7 +690,7 @@ def stability_warn(item):
 
 
 def firearm_text(cat, gun, barrel, twist):
-    """The "Your firearm" box's summary: "8 lb  ·  listed barrels", "8 lb  ·  16 in  ·  1:8 twist"."""
+    """The "Firearm setup" box's summary: "8 lb  ·  listed barrels", "8 lb  ·  16 in  ·  1:8 twist"."""
     parts = [f"{gun:g} lb" if gun else "gun weight?"]
     if cat.barrel_in:
         parts.append(f"{barrel:g} in" if barrel else "listed barrels")
@@ -700,7 +700,7 @@ def firearm_text(cat, gun, barrel, twist):
 
 
 def firearm_note(cat):
-    """What the "Your firearm" settings change, and that the listed figures are the makers'
+    """What the "Firearm setup" settings change, and that the listed figures are the makers'
     (web: DATA.fire_notes)."""
     if not cat.barrel_in:
         return ("Velocity and energy are the makers' published figures. Recoil is worked out "
@@ -3211,7 +3211,7 @@ class LoadsView:
         self.cart_var = tk.StringVar(value="")
         self.dist_var = tk.StringVar(value=f"{cat.default_distance:g}")
         self.gun_var = tk.StringVar(value=f"{cat.default_gun_lb:g}")
-        # "Your firearm" drop-down (Zeke, Oct 29 2026): gun weight, barrel length and twist rate;
+        # "Firearm setup" drop-down (Zeke, Oct 29 2026): gun weight, barrel length and twist rate;
         # a blank barrel or twist = the listed figures, anything typed makes them estimates
         self.fire_open, self.barrel, self.twist = False, 0.0, 0.0
         self.barrel_var = tk.StringVar(value="")
@@ -3286,8 +3286,8 @@ class LoadsView:
                                                             padx=(0, a.px(4)), pady=(a.px(14), 0))
         a.field(top, ttk.Entry, textvariable=self.dist_var, font=a.f(12), width=10)[0].grid(
             row=3, column=0, sticky="ew", padx=(0, a.px(4)), pady=(a.px(5), 0))
-        # "Your firearm": a drop-down box whose text sums up the gun; it opens the boxes under it
-        a.label(top, "YOUR FIREARM", 8, MUTED, True).grid(row=2, column=1, sticky="w",
+        # "Firearm setup": a drop-down box whose text sums up the gun; it opens the boxes under it
+        a.label(top, "FIREARM SETUP", 8, MUTED, True).grid(row=2, column=1, sticky="w",
                                                            padx=(a.px(4), 0), pady=(a.px(14), 0))
         self.fire_btn = RoundBox(top, a, SURFACE_2, BORDER, radius=8, padx=10, pady=7,
                                  cursor="hand2")
@@ -4916,7 +4916,7 @@ class HeadToHeadView:
         for key, items in self.groups.items():
             self.choices[key] = {x.label + ("  (handload)" if x.handload else ""): x for x in items}
         self.dist_var = tk.StringVar(value=f"{H2H_DISTANCE:g}")
-        # "Your firearm for each load" (Zeke, Oct 29 2026): gun weight, barrel length and twist
+        # "Firearm setup for each load" (Zeke, Oct 29 2026): gun weight, barrel length and twist
         # rate boxes under each load, hidden until opened. While hidden (or a box is blank) the
         # load is in its cartridge's typical gun (GUN_LB) with the listed figures
         self.fire_open = False
@@ -5065,8 +5065,8 @@ class HeadToHeadView:
         self._changed()
 
     def _layout_slots(self):
-        self.fire_link.config(text=("▾  Hide your firearm  (blank boxes: the listed figures)" if self.fire_open
-                                    else "▸  Your firearm for each load"))
+        self.fire_link.config(text=("▾  Hide firearm setup  (blank boxes: the listed figures)" if self.fire_open
+                                    else "▸  Firearm setup for each load"))
         # the note of a picked category with barrels (the carbine one names its estimates)
         cats = [self.cats[s["cat"].get()] for s in self.slots if s["cart"].get()]
         note = next((c for c in cats if c.title == "Pistol Caliber Carbine"),
