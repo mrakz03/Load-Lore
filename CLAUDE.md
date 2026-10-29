@@ -86,7 +86,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   standard revolver 0.132, magnum 0.221 (the PCC fits), .22s 0.07, rifles 0.10 + 0.25 x powder/bullet
   clamped 0.10-0.25. Everything (grades, recoil, ballistic table) follows the new speed; marked
   "(estimate)". Head to Head has "Barrel length for each load" like the gun weights (barrels in
-  h2h_rows / h2hRows: the load's cartridge is graded at that length; blank / hidden = listed).
+  h2h_rows / h2hRows: the load's cartridge is graded at that length; blank / hidden = listed). The same load
+  can be picked in two or more rows (Oct 29 2026, Zeke) to compare it at different barrel lengths / gun
+  weights; such columns get an accent line naming what differs, "10.5 in barrel  ·  5 lb gun"
+  (h2h_setups / h2hSetups). Head to Head's remembered gun / barrel boxes go by row position, not pick_key.
 - Ballistic table (dictionary, per load, collapsed by default): ballistic_table / ballisticTable,
   point-mass G1 path (trajectory / _fly, fly in web: drag along the path + gravity, RK2 0.5 m
   steps, bore tilted to cross the sight line at zero_yd) + 10 mph drift by Didion's lag rule,
