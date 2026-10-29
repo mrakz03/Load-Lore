@@ -44,7 +44,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   pick, thin MUTED scrollbar: drawn on a Canvas on desktop, scrollbar-color on web). Empty boxes
   show the web's placeholder on desktop too (LoadSearch hint: Cartridge / Load / Pick a cartridge first). A cartridge pick doesn't jump to the load box.
   On touch screens a long pick wraps onto more lines instead of being cut off (Oct 28 2026, Zeke:
-  .lsearch.wrap, a .lqv text layer over the input; box.sync re-reads the pick).
+  .lsearch.lwrap, a .lqv text layer over the input; box.sync re-reads the pick).
   Head to Head has no category box (Oct 2026): the cartridge box picks it; its pop-up lists
   every category's cartridges under category headings (LoadSearch head / searchBox head). The dictionary's brand / load
   filter sits right above the list (issue #26). Beside it, for cartridges that have +P / +P+ loads, a check box each
