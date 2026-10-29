@@ -1325,7 +1325,7 @@ function openLoads(cat,pane){
     <div class="nums" style="grid-template-columns:1fr 1fr">
       <div><label class="l">DISTANCE (YD)</label><input id="ld" inputmode="decimal"></div>
       <div><label class="l">${esc(cat.gun_label)}</label><input id="lg" inputmode="decimal"></div>
-      ${cat.barrel_in?`<div><label class="l" for="lb">BARREL LENGTH (IN)</label><div class="bsw"><button class="tgl" id="lbt" aria-pressed="false" aria-label="Barrel length">Off</button><input id="lb" inputmode="decimal" class="hidden" aria-label="Barrel length (in)"></div></div>`:""}
+      ${cat.barrel_in?`<div style="grid-column:2"><label class="l" for="lb">BARREL LENGTH (IN)</label><div class="bsw"><button class="tgl" id="lbt" aria-pressed="false" aria-label="Barrel length">Off</button><input id="lb" inputmode="decimal" class="hidden" aria-label="Barrel length (in)"></div></div>`:""}
     </div>
     <div class="chips" id="lp" role="group" aria-label="Purpose"></div>
     <div class="chips hidden" id="lsrc" role="group" aria-label="Source"></div>
