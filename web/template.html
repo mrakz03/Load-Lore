@@ -149,6 +149,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .dict #pane{display:grid;grid-template-columns:minmax(320px,380px) minmax(0,1fr);column-gap:22px;align-items:start}
   .dict #pane>*{grid-column:1;min-width:0}
   .dict #pane>#lres{grid-column:2;grid-row:1/span 6;margin-top:0}
+  .dict #pane>#lres.empty{grid-column:1;grid-row:auto;margin-top:12px}   /* no cartridge yet: the hint under the sort, not off to the side */
   .dict #pane>.card{margin-top:0}
   .dict #pane .sortrow{grid-template-columns:1fr}
   .dict #pane .chips button{min-height:34px;padding:6px 11px}
@@ -1412,6 +1413,7 @@ function openLoads(cat,pane){
   }
   function render(){
     const out=compute(),box=$$("#lres");
+    box.classList.toggle("empty",!$$("#lc").value);
     if(!$$("#lc").value){box.innerHTML=`<div class="muted">Choose a ${noun} to see how every brand's loads compare.</div>`;$$("#lcnt").textContent="";return;}
     if(!out){box.innerHTML=`<div class="muted">Enter a distance, gun weight${L.barrelOn?`, barrel length (${BARREL.min}-${BARREL.max} in)`:""} and weights (numbers) to see results.</div>`;$$("#lcnt").textContent="";return;}
     if(!(groups.get($$("#lc").value)||[]).length){box.innerHTML=`<div class="muted">No factory loads listed for ${esc($$("#lc").value)}. Add your own in the Handloads tab to grade it.</div>`;$$("#lcnt").textContent="";return;}
