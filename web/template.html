@@ -336,7 +336,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 #hfnote{margin-top:8px}
 .gunrow{display:flex;align-items:flex-end;gap:20px;margin-top:14px;flex-wrap:wrap}
 .gunrow input{width:7em}.gunrow .link{text-align:left}
-@media(max-width:600px){.slot{grid-template-columns:1.4em minmax(0,1fr) 2.2em}.slot .ls,.slot .fire3{grid-column:2}
+@media(max-width:600px){.slots{gap:22px}.slot{grid-template-columns:1.4em minmax(0,1fr) 2.2em}.slot .ls,.slot .fire3{grid-column:2}
   .slots.fire .slot .fire3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .fire3 label{flex-direction:column;align-items:stretch;gap:4px;min-width:0}.fire3 input{width:100%}}
 .lsearch{position:relative;min-width:0}
@@ -346,13 +346,13 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lsearch.picker .lq{caret-color:transparent;cursor:pointer}
 /* touch screens: an input can't wrap, so the pick is shown by a text layer over it (.lqv) that
    wraps a long load name onto more lines; the box grows with it and the input still takes the tap */
-.lsearch.wrap{display:grid}
-.lsearch.wrap>*{grid-area:1/1}
-.lsearch.wrap .lq{color:transparent;height:100%}
-.lsearch.wrap .lq::placeholder{color:transparent}
-.lsearch.wrap .lqv{pointer-events:none;border:1px solid transparent;padding:11px 32px 11px 10px;font-size:1rem;line-height:1.3;overflow-wrap:anywhere;align-self:center}
-.lsearch.wrap .lqv.ph{color:var(--muted)}
-.lsearch.wrap .lq:disabled+.lqv{opacity:.6}
+.lsearch.lwrap{display:grid}
+.lsearch.lwrap>*{grid-area:1/1}
+.lsearch.lwrap .lq{color:transparent;height:100%}
+.lsearch.lwrap .lq::placeholder{color:transparent}
+.lsearch.lwrap .lqv{pointer-events:none;border:1px solid transparent;padding:11px 32px 11px 10px;font-size:1rem;line-height:1.3;overflow-wrap:anywhere;align-self:center}
+.lsearch.lwrap .lqv.ph{color:var(--muted)}
+.lsearch.lwrap .lq:disabled+.lqv{opacity:.6}
 .popbg{position:fixed;inset:0;z-index:40}
 .sheet.pop{position:fixed;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.45);padding-bottom:6px;animation:none;max-height:480px}
 /* the pop-up, drawn like a refined menu: no lines between rows, a rounded highlight set in from
@@ -372,7 +372,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .sheet.pop .slist .hd{position:static;padding:12px 10px 4px;background:none;border-bottom:0;font-size:.68rem}
 .selcover{position:absolute;inset:0;background:none;border:0;padding:0;cursor:pointer}
 .sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:flex;align-items:flex-end}
-.sheet{width:100%;max-height:85vh;max-height:85dvh;display:flex;flex-direction:column;background:var(--surface);border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.35);padding-bottom:env(safe-area-inset-bottom);animation:sheetup .18s ease-out}
+.sheet{width:100%;max-height:85vh;max-height:85dvh;max-height:min(85dvh,calc(100% - 16px));display:flex;flex-direction:column;background:var(--surface);border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.35);padding-bottom:env(safe-area-inset-bottom);animation:sheetup .18s ease-out}
 @keyframes sheetup{from{transform:translateY(40%);opacity:.4}}
 .sheet .shead{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px}
 .sheet .shead b{font-size:1.05rem}
@@ -1297,9 +1297,9 @@ function handDialog(rec,done){
 function searchBox(box,items,o){
   const q=box.querySelector(".lq"),all_=()=>typeof items==="function"?items():items;
   const touch=matchMedia("(pointer:coarse)").matches;
-  // touch screens: a text layer that wraps the full name (.lsearch.wrap), so it isn't cut off
+  // touch screens: a text layer that wraps the full name (.lsearch.lwrap), so it isn't cut off
   let v=null;
-  if(touch){v=box.querySelector(".lqv")||q.insertAdjacentElement("afterend",document.createElement("div"));v.className="lqv";box.classList.add("wrap");}
+  if(touch){v=box.querySelector(".lqv")||q.insertAdjacentElement("afterend",document.createElement("div"));v.className="lqv";box.classList.add("lwrap");}
   const show=()=>{if(v){v.textContent=q.value||q.placeholder;v.classList.toggle("ph",!q.value);}};
   const back=()=>{const c=o.cur();q.value=c==null?"":o.text(c);show();};
   const p=Object.assign({},o,{pick:x=>{q.value=o.text(x);show();o.pick(x);}});
@@ -1363,6 +1363,12 @@ function pickSheet(items,o,anchor){
   };
   if(anchor)list.onmousemove=e=>{const r=e.target.closest("[role=option]");if(r&&+r.dataset.i!==at){at=+r.dataset.i;mark();}};
   document.body.appendChild(m);document.body.style.overflow="hidden";openModalClose=close;
+  // phones: the on-screen keyboard covers the bottom of the page without resizing it, so the
+  // sheet follows the part still in view (visualViewport) and its search box stays above the keys
+  const vv=!anchor&&window.visualViewport;
+  if(vv){const fit=()=>{if(!m.isConnected){vv.removeEventListener("resize",fit);vv.removeEventListener("scroll",fit);return;}
+      Object.assign(m.style,{top:vv.offsetTop+"px",height:vv.height+"px",bottom:"auto"});};
+    vv.addEventListener("resize",fit);vv.addEventListener("scroll",fit);fit();}
   if(anchor){   // under the box (above it when there's no room), at least 320 px wide
     const sh=m.querySelector(".sheet"),r=anchor.el.getBoundingClientRect(),w=Math.min(innerWidth-16,Math.max(r.width,320));
     const below=innerHeight-r.bottom-12,above=r.top-12,up=below<260&&above>below;
