@@ -3322,8 +3322,8 @@ class LoadsView:
         self.fire_note = a.label(self.fire_box, firearm_note(cat), 9, MUTED, bg=BG, anchor="w",
                                  justify="left", wraplength=a.px(640))
         self.fire_note.grid(row=2, column=0, columnspan=3, sticky="w", pady=(a.px(8), 0))
-        self.fire_reset = tk.Label(self.fire_box, text="Use the listed figures" if cat.barrel_in
-                                   else "Use the usual gun weight", bg=BG,
+        self.fire_reset = tk.Label(self.fire_box, text="Reset to maker's figures" if cat.barrel_in
+                                   else "Reset to the usual gun weight", bg=BG,
                                    fg=ACCENT, font=a.f(10, True), cursor="hand2")
         self.fire_reset.grid(row=3, column=0, columnspan=3, sticky="w", pady=(a.px(4), 0))
         self.fire_reset.bind("<Button-1>", lambda e: self._reset_fire())

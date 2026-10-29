@@ -82,7 +82,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (summary "8 lb  ·  16 in  ·  1:8 twist", firearm_text / firearmText); it opens gun weight, BARREL (IN)
   and TWIST (1 IN … IN) boxes (shotgun: gun weight only), a note (firearm_note, web DATA.fire_notes:
   listed velocity / energy are the makers' figures, PCC "(est.)" loads ours; your own barrel or twist
-  makes them estimates) and "Use the listed figures". Blank barrel / twist = listed. Kept per category
+  makes them estimates) and "Reset to maker's figures" (shotgun: "Reset to the usual gun weight"). Blank barrel / twist = listed. Kept per category
   while the app is open (snapshot / shared: fire_open, barrel, twist), not in settings.json.
   Head to Head has one "Your firearm for each load" link: under each load a Gun / Barrel / Twist line
   (fire_open / fireOpen; guns, barrels, twists by row position; blank = usual gun / listed).

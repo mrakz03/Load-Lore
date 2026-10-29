@@ -1392,7 +1392,7 @@ function openLoads(cat,pane){
         <div><label class="l" for="lt">TWIST (1 IN … IN)</label><input id="lt" inputmode="decimal" placeholder="Not checked"></div>`:""}
       </div>
       <div class="note">${esc(FIRE_NOTES[cat.title])}</div>
-      <button class="link" id="lfr">Use the listed figures</button>
+      <button class="link" id="lfr">${cat.barrel_in?"Reset to maker&#39;s figures":"Reset to the usual gun weight"}</button>
     </div>
     <div class="chips" id="lp" role="group" aria-label="Purpose"></div>
     <div class="chips hidden" id="lsrc" role="group" aria-label="Source"></div>
