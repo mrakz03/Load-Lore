@@ -1121,14 +1121,14 @@ function handDialog(rec,done){
   const fillBullets=()=>{
     const mk=q("#hbm").value;
     const list=BULLETS.filter(b=>mk&&b.maker===mk&&fits(b));
-    q("#hbl").innerHTML=`<option value="">${mk&&mk!==OTHER?"Choose a bullet…":"—"}</option>`+list.map((b,i)=>`<option value="${BULLETS.indexOf(b)}">${esc(b.name)} · ${g(b.weight)} gr</option>`).join("");
+    q("#hbl").innerHTML=`<option value="">${mk&&mk!==OTHER?"Choose a bullet…":"—"}</option>`+list.map(b=>`<option value="${BULLETS.indexOf(b)}">${esc(b.name)} · ${g(b.weight)} gr</option>`).join("");
   };
   const showCost=()=>{
     const t=parseFloat(q("#hct").value);let c;
     if(t>0)c=t;else c=costParts({bullet_cost:q("#hcb").value,powder_gr:q("#hpg").value,powder_cost_lb:q("#hcp").value,primer_cost:q("#hcr").value,brass_cost:q("#hcs").value,brass_reuse:q("#hcu").value||5}).total;
     q("#hcost").textContent=c>0?`Cost per round = $${c.toFixed(2)}`:"";
   };
-    q("#hbm").onchange=()=>{showOther();fillBullets();if(q("#hbm").value===OTHER)q("#hbmo").focus();};
+  q("#hbm").onchange=()=>{showOther();fillBullets();if(q("#hbm").value===OTHER)q("#hbmo").focus();};
   q("#hbl").onchange=()=>{const b=BULLETS[+q("#hbl").value];if(!b)return;q("#hbn").value=b.name;q("#hgr").value=g(b.weight);q("#hdm").value=g(b.diameter);q("#hbc").value=g(b.bc);};
   ["hcb","hcp","hcr","hcs","hcu","hct","hpg"].forEach(i=>q("#"+i).addEventListener("input",showCost));
   q("#hc").onchange=fillMakers;

@@ -3,12 +3,13 @@
 In Like Flint - Load Lore (formerly Cartridge Value Calculator) - a desktop tool for comparing ammunition by
 performance.
 
-Two tools, each split into categories (Centerfire Rifle, Handgun, Rimfire Rifle,
-Shotgun):
+Two tools plus your handloads, over five categories (Centerfire Rifle, Handgun, Pistol
+Caliber Carbine, Rimfire Rifle, Shotgun):
   Load Dictionary  every factory load (and your handloads) of one cartridge, graded
                    S-F against each other on velocity, energy, recoil, cost, Taylor KO
                    and HITS. The grades can be switched off.
-  Head to Head     2-5 loads side by side, from any cartridges in the category.
+  Head to Head     2-5 loads side by side, from any cartridges of any category.
+  Handloads        your own reloads: add, edit, back up and restore them.
 
 Data files (in data/ in the repo, or next to the program when packaged):
     loads_*.csv   the factory loads, one file per category
@@ -924,7 +925,6 @@ def github_mark_png(size, colour):
             x0, x1 = x * n // size, max((x + 1) * n // size, x * n // size + 1)
             cells = [src[j * n + i] for j in range(y0, y1) for i in range(x0, x1)]
             raw += bytes((r, g, b, sum(cells) // len(cells)))
-
     return rgba_png(size, size, raw)
 
 
@@ -1003,7 +1003,6 @@ def corner_png(radius, fill, border, outside, width=1):
                 raw += bytes([int(round(v)) for v in px] + [255])
         out.append(rgba_png(radius, radius, raw))
     return out
-
 
 
 def version_tuple(text):
@@ -1499,9 +1498,7 @@ class Pill(RoundBox):
     def _colours(kind):
         if kind == "primary" or kind == "on":
             return ACCENT, ON_ACCENT, ACCENT_HOVER
-        if kind == "chip":
-            return SURFACE_2, TEXT, BORDER
-        return SURFACE_2, TEXT, BORDER
+        return SURFACE_2, TEXT, BORDER                  # chip / secondary
 
     def _hover(self, inside):
         if not self.enabled:
@@ -1612,12 +1609,12 @@ class App:
         self._place_window()
         self._build_shell()
         self.show_launcher()
-        root.bind_all("<Control-Key-1>", lambda e: self.go_mode("loads"))
+        root.bind_all("<Control-Key-1>", lambda e: self.show_picker("loads"))
         root.bind_all("<Control-Key-2>", lambda e: self.show_h2h())
         root.bind_all("<Control-Key-3>", lambda e: self.show_hand())
         root.bind_all("<Control-Key-0>", lambda e: self.show_launcher())
-        # the search pop-up is its own window: close it when its window moves, resizes or is
-        # minimised, or the app loses the focus, like a menu (it would stay put on screen)
+        # the search pop-up is drawn inside its box's window: close it when that window moves,
+        # resizes or is minimised, like a menu
         for cls in ("Tk", "Toplevel"):
             for seq in ("<Configure>", "<Unmap>"):
                 root.bind_class(cls, seq, self._window_moved, add="+")
@@ -2187,11 +2184,6 @@ class App:
             pass
         return self.stage
 
-    def _card_hover(self, widgets, base, hover):
-        for w in widgets:
-            w.bind("<Enter>", lambda e: [x.config(bg=hover) for x in widgets])
-            w.bind("<Leave>", lambda e: [x.config(bg=base) for x in widgets])
-
     # ---- Home, category list and Settings: sized to the window ------------ #
     # Each page has a size it is drawn for at zoom 1 (MENU_PAGES: content width, height). A bigger
     # window zooms the whole page up to MENU_ZOOM_MAX (text, cards, icons: App.scale is raised
@@ -2651,9 +2643,6 @@ class App:
             self.open_groups.add(cat.group)
         mem = self.carry.get(cat.title)
         self.open_category(cat, tab, dict(mem) if mem else None)
-
-    def go_mode(self, tab):
-        self.show_picker(tab)
 
     def open_category(self, cat, tab="loads", snap=None):
         """Open a category's tool, set up from `snap` (what it had on screen last time) so the
@@ -3225,14 +3214,6 @@ class LoadsView:
                     weights={k: v.get() for k, v in self.weight_vars.items()},
                     weights_open=self.weights_open, purpose=self.purpose, source=self.source,
                     pressure={p: v.get() for p, v in self.press_vars.items()})
-
-    def restore(self, snap):
-        if not self.loads or not hasattr(self, "tree"):
-            return
-        cart = self._apply_snap(snap)
-        if cart is not None:
-            self.cart_var.set(cart)
-            self._on_cartridge()
 
     def _apply_snap(self, snap):
         """Put a snapshot's settings back; returns its cartridge if it is still listed."""
@@ -3822,7 +3803,6 @@ class LoadSearch:
     the web's placeholder (a string, or a function for one that changes). own: lets the user
     keep what they typed when it isn't in the list (a last row 'Use "..."'; makers, bullets and
     powders in the handload form)."""
-    MAX_ROWS = 14
 
     def __init__(self, app, box, names, on_pick, value=None, head=None, label=None, hint=None,
                  own=False):
@@ -3831,7 +3811,7 @@ class LoadSearch:
         self.head, self.label = head, label or (lambda n: n)
         self.browse = None                # None: the same as names
         self.var = box.cget("textvariable")
-        self.popup = self.listbox = self.entry = self.canvas = self.bar = None
+        self.popup = self.entry = self.canvas = self.bar = None
         self.rows, self.texts, self.tops, self.at, self.total = [], [], [], None, 0
         # rows: a name, or None for a heading / the no-match line; tops: each row's y
         self.last = ""
@@ -3937,7 +3917,6 @@ class LoadSearch:
         self.bar.bind("<Button-1>", self._bar_press)
         self.bar.bind("<B1-Motion>", self._bar_drag)
         self.bar.bind("<Configure>", lambda e: self._draw_bar(*self.canvas.yview()))
-        self.listbox = self.canvas            # App._on_wheel: the wheel scrolls the pop-up
         for key, step in (("<Down>", 1), ("<Up>", -1), ("<Next>", 10), ("<Prior>", -10)):
             self.entry.bind(key, lambda e, s=step: self._move(s))
         self.entry.bind("<Return>", lambda e: self._pick())
@@ -4189,7 +4168,7 @@ class LoadSearch:
                     prev.grab_set()
             except tk.TclError:
                 pass
-            self.popup = self.listbox = self.entry = self.canvas = self.bar = None
+            self.popup = self.entry = self.canvas = self.bar = None
             if refocus:
                 try:
                     self.box.focus_force()        # back from the pop-up's own window
@@ -4328,7 +4307,7 @@ class HandloadsView:
             a.canvas.yview_moveto(max(0.0, (y - a.px(80)) / total))
 
     def _card(self, cat, it):
-        a, rec = self.app, it.info
+        a = self.app
         r = self.grade(cat, it)
         is_open = self.open_id == it.hid
         box = a.card(self.list, border=ACCENT if is_open else BORDER, padx=4, pady=4)
@@ -4824,12 +4803,6 @@ class HeadToHeadView:
     def snapshot(self):
         return dict(dist=self.dist_var.get(), gun_open=self.gun_open,
                     guns={pick_key(c, x): s["gun"].get() for c, x, s in self._picked_slots()})
-
-    def restore(self, snap):
-        if not hasattr(self, "slot_box"):
-            return
-        self._apply_snap(snap)
-        self.refresh()
 
     def _apply_snap(self, snap):
         if "dist" in snap:
