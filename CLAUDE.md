@@ -164,7 +164,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   At >=1500 px the dictionary page (.wrap.dict) fills the window: settings card, filter and sort in a
   left column, the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
   column (cartridge box over load box) beside the results; that column grows with the window (520 px at
-  1500 px wide up to 720 px, so long load names fit; Zeke, Oct 28 2026), a load box's title shows the full name. An opened load on PC web shows a facts line
+  1500 px wide up to 720 px, so long load names fit; Zeke, Oct 28 2026), a load box's title shows the full name. An opened dictionary load names its cartridge (Oct 30 2026, Zeke): phones a small grey line over the
+  load name (.lc .nm .ct), PC web first in the facts line, desktop in the panel title. An opened load on PC web shows a facts line
   and a tile per factor (.pdet, desktop panel style) instead of the phone's figure rows (.fr).
   Handloads (>=900 px): each cartridge group is a table too (Handload, Bullet, Powder, Velocity, Energy,
   Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); >=1500 px it fills the window (.handp).
