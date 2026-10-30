@@ -4,7 +4,7 @@
 
 A field guide to factory ammunition. Look up every brand's load for a cartridge, see how it grades from S to F against the others, read its ballistic table, and put up to five loads head to head. Reloaders can add their own handloads and see how they stack up against factory ammo.
 
-**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). Want to see what's coming next? [beta.loadlore.net](https://beta.loadlore.net) runs the newest development version, which may be rough around the edges. It also runs as a desktop app on Windows and Linux and as a phone app on Android.
+**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also runs as a desktop app on Windows and Linux and as a phone app on Android.
 
 
 > **Still in development.** Load Lore is a work in progress. Most of it works well, but some parts aren't fully polished yet, and you may run into rough edges, layout quirks or a load whose figures need fixing. If something looks wrong, please [open an issue](https://github.com/mrakz03/Load-Lore/issues).
@@ -121,7 +121,7 @@ research/                     where each added load came from (pcc_sources.tsv f
 python3 src/load_lore.py                   # desktop app (needs Tk: python3-tkinter)
 python3 web/build_web.py                   # then open web/www/index.html in a browser
 ```
-The web version at loadlore.net is built from `main` by `.github/workflows/pages.yml` after each release, or when run by hand from the Actions tab (Web version on GitHub Pages > Run workflow). Pushing to `main` alone doesn't change the site. The beta site, beta.loadlore.net, is built from the `next` branch by Cloudflare Pages on every push (`LOADLORE_BETA=https://beta.loadlore.net/ python3 web/build_web.py`); it is marked beta, kept out of search engines, and keeps its own saved data separate from loadlore.net.
+The web version at loadlore.net is built from `main` by `.github/workflows/pages.yml` after each release, or when run by hand from the Actions tab (Web version on GitHub Pages > Run workflow). Pushing to `main` alone doesn't change the site.
 Handloads (`my_handloads.csv`) and settings (`settings.json`) are saved next to the data files and are git-ignored; the phone/web version keeps them in the browser. The desktop and web versions use the same formulas and data and must stay in step: after editing any CSV or `web/template.html`, run `python3 web/build_web.py`.
 
 ### Data files
