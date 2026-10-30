@@ -87,6 +87,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   Head to Head has one "Firearm setup for each load" link: under each load a Gun / Barrel / Twist line
   (fire_open / fireOpen; guns, barrels, twists by row position; blank = usual gun / listed).
   at_firearm / atFirearm = at_barrel then the twist check; h2h_rows / h2hRows take barrels and twists.
+  Oct 30 2026 (Zeke): the summary box takes two thirds of its row and wraps, never cut off. A line over
+  the dictionary's table (source_line / sourceLine; web .srcl, phones over the cards) says where the
+  figures come from (maker data, PCC's tested / (est.) figures, handloads) or "Estimated figures for your
+  firearm setup (...)". With your own barrel the Barrel column shows that length for every load, the
+  opened load's facts line says "figures for your X in barrel (estimate)" instead of the test barrel, and
+  its note starts with fire_source_note / fireSourceNote (test barrel -> your barrel, twist) then
+  "Listed figures: " + the SOURCE_NOTES text.
 - Barrel length: at_barrel / atBarrel copy each load (.base = the listed load, .at_in = the length) with
   v x (length / test barrel)^n. Test barrel = the load's barrel_in, else its cartridge's usual one
   (usual_test_barrels -> TEST_BARRELS, web cat.test_barrels: the length most of its loads list, e.g.
