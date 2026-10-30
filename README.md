@@ -4,7 +4,7 @@
 
 A field guide to factory ammunition. Look up every brand's load for a cartridge, see how it grades from S to F against the others, read its ballistic table, and put up to five loads head to head. Reloaders can add their own handloads and see how they stack up against factory ammo.
 
-**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also runs as a desktop app on Windows and Linux and as a phone app on Android.
+**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). Want to see what's coming next? [beta.loadlore.net](https://beta.loadlore.net) runs the newest development version, which may be rough around the edges. It also runs as a desktop app on Windows and Linux and as a phone app on Android.
 
 
 > **Still in development.** Load Lore is a work in progress. Most of it works well, but some parts aren't fully polished yet, and you may run into rough edges, layout quirks or a load whose figures need fixing. If something looks wrong, please [open an issue](https://github.com/mrakz03/Load-Lore/issues).
@@ -15,7 +15,7 @@ About 3,650 factory loads from 20 makers across four categories, plus a Pistol C
 
 | Category | Cartridges | Loads |
 |---|---|---|
-| Centerfire Rifle | 74 | 1,504 |
+| Centerfire Rifle | 74 | 1,506 |
 | Handgun | 30 | 909 |
 | ↳ Pistol Caliber Carbine | 14 | 732 |
 | Rimfire Rifle | 7 | 128 |
@@ -28,23 +28,32 @@ The **Pistol Caliber Carbine** section (picked from the Handgun menu) holds hand
 ## Using the app
 
 ### Load Dictionary
-Pick a category (Handgun opens a small menu: Pistol / Revolver or Pistol Caliber Carbine), then a cartridge, and every load for it is listed and ranked.
+Pick a category (Handgun opens a small menu: Pistol / Revolver or Pistol Caliber Carbine), then a cartridge, and every load for it is listed and ranked. The cartridge box starts empty; a cartridge you picked earlier comes back while the app stays open.
 
 - **Grades.** Each load gets a letter from S to F on velocity, energy, recoil, cost, Taylor KO and HITS, plus an overall grade. Grades compare loads of the *same* cartridge with each other: the average load scores about 70, a B. The **S–F grades: On / Off** switch on the Settings page hides the grades and scores if you just want the numbers; the app remembers your choice. (This is added for you Fudds that will complain that your favorite load somehow got ranked as an F).
-- **Filter and sort.** Narrow the list by purpose (Hunting, Varmint, Target, Match, Defense, Subsonic; shotguns by load type) or type a brand or load name in the filter box right above the list. Click a column heading (desktop app and PC browsers) or use the sort menu next to the filter box (phone). Besides grade, price, velocity, energy and recoil you can sort by bullet weight (heaviest or lightest first), and shotgun loads by shot size (slugs, then buckshot, then the largest birdshot first).
-- **Distance and gun weight.** Velocity, energy, Taylor KO and HITS are worked out at the distance you enter, which starts at 0 yd (the muzzle) so the figures match the box; recoil uses the gun weight you enter. The weight starts at a typical gun for the cartridge: 8 lb for most rifles, but 30 lb for .50 BMG, 15 lb for .338 Lapua, around 10 lb for the big dangerous-game rounds and heavier revolvers for the magnum handgun rounds. If you type your own weight it stays put when you switch cartridges. In Head to Head, leave the weight blank to put each load in its own cartridge's typical gun.
-- **Selected load.** Click a load to open its panel: every figure with its grade, the test barrel length, where the data came from, and:
+- **Filter and sort.** Narrow the list by purpose (Hunting, Varmint, Target, Match, Defense, Subsonic; shotguns by load type) or type a brand or load name in the filter box right above the list. For cartridges with +P or +P+ loads, a check box for each lets you hide them (grades don't change). Click a column heading (desktop app and PC browsers) or use the sort menu next to the filter box (phone). Besides grade, price, velocity, energy and recoil you can sort by bullet weight (heaviest or lightest first), and shotgun loads by shot size (slugs, then buckshot, then the largest birdshot first).
+- **Distance.** Velocity, energy, Taylor KO and HITS are worked out at the distance you enter, which starts at 0 yd (the muzzle) so the figures match the box.
+- **Firearm setup.** This box shows what the figures are based on: "Manufacturer data" while you haven't changed anything, "Estimate" once you have. Open it to set:
+  - **Gun weight**, used for recoil. It starts at a typical gun for the cartridge: 8 lb for most rifles, but 30 lb for .50 BMG, 15 lb for .338 Lapua, around 10 lb for the big dangerous-game rounds and heavier revolvers for the magnum handgun rounds. If you type your own weight it stays put when you switch cartridges.
+  - **Barrel length.** Listed velocities are the makers' figures from their own test barrels. Type your barrel length and every load's velocity is scaled from its test barrel to yours, and the grades, recoil and ballistic table follow. The box goes up to the longest factory barrel made for that cartridge.
+  - **Twist rate** (1 turn in so many inches). This doesn't change speed: it checks whether each bullet spins fast enough to fly point first (Miller's stability rule, with the bullet's length estimated from its weight and type). A bullet that barely stabilises loses a little ballistic coefficient; one that won't stabilise is flagged with a ⚠.
+
+  Leave barrel and twist blank to use the makers' figures. **Reset to maker's figures** puts everything back. Shotguns only have the gun weight. These settings are kept per category while the app is open.
+- **Selected load.** Click a load to open its panel: every figure with its grade, the test barrel length, where the data came from (figures you changed with Firearm setup are marked as estimates), and:
   - **Ballistic table** (▸ to open): velocity, energy, path (inches above or below the line of sight) and drift in a 10 mph crosswind, from the muzzle out to 500 yd for centerfire rifles (shorter steps for handgun, rimfire and shotgun). Rifles assume a 100 yd zero with the sight 1.5 in above the bore; handguns 25 yd and 0.6 in; pistol caliber carbines 50 yd and 2 in; rimfire 50 yd; slugs 50 yd. These are estimates from the ballistic coefficient in standard sea-level air, not a full ballistic solver.
   - **Your price.** Prices are catalog-based estimates; type what you actually pay per round and the cost grade updates.
   - **+ Head to Head** adds the load to the Head to Head tab.
 - **Scoring weights.** Decide how much each factor counts (0 ignores it). The defaults are 3 for everything except recoil (1); rimfire weighs cost double, and shotguns skip Taylor KO and HITS.
 
 ### Head to Head
-Pick 2 to 5 loads from any cartridges, for example a .308 Winchester load against a 6.5 Creedmoor load, or add them from the Load Dictionary. Head to Head is one page for every category, so loads can come from different categories too (a 12 gauge slug against a .30-30 Winchester): the cartridge box searches every category and lists its matches under category headings. A factor that doesn't apply to a load (shotguns have no Taylor KO or HITS) shows a dash, and every load keeps the grade its own Load Dictionary gives it, with that category's scoring weights. To find a load quickly, type in its load box: every word you type has to appear in the name (for example `hornady 55` or `federal match`), then pick from the matches with a click or tap, or the arrow keys and Enter. You see:
+Pick 2 to 5 loads from any cartridges (**+ Add a load** adds an empty row), for example a .308 Winchester load against a 6.5 Creedmoor load, or add them from the Load Dictionary. Head to Head is one page for every category, so loads can come from different categories too (a 12 gauge slug against a .30-30 Winchester): the cartridge box searches every category and lists its matches under category headings. A factor that doesn't apply to a load (shotguns have no Taylor KO or HITS) shows a dash, and every load keeps the grade its own Load Dictionary gives it, with that category's scoring weights. To find a load quickly, type in its load box: every word you type has to appear in the name (for example `hornady 55` or `federal match`), then pick from the matches with a click or tap, or the arrow keys and Enter. On a phone, tapping a box opens a list from the bottom of the screen with its own search bar.
+
+**Firearm setup for each load** opens a Gun / Barrel / Twist line under every load (blank means that cartridge's usual gun and the makers' listed figures). You can also pick the same load more than once to compare setups, for example one load from a 10.5 in and a 16 in barrel: each column then names what differs. You see:
 
 - every figure side by side, with the best one highlighted and how far behind the others are, in %;
 - how many factors each load wins;
 - each load's grade and rank from the Load Dictionary (against its own cartridge, so the two tabs always agree);
+- a spin stability row when you've set a twist rate;
 - a downrange table of velocity and energy.
 
 On a phone this is laid out as cards: one per load, then one per factor with a bar for each load, then downrange at the distance you pick.
@@ -57,7 +66,7 @@ The **Handloads** tab keeps all your own loads, from every category, in one plac
 Handload figures are only as good as your data. The app does not check pressure or safety: always follow a published load manual.
 
 ### Settings
-Theme (several color schemes; Classic is the original dark look), text size and the S–F grades switch are on the Settings page: at the bottom of the sidebar on desktop, and the Settings tab on the phone. On Android, the back button steps back through the menus; on the Home screen it closes the app.
+Theme (several color schemes; Classic is the original dark look), text size and the S–F grades switch are on the Settings page: at the bottom of the sidebar on desktop, and the Settings tab on the phone. In the web version the browser's back arrow goes back to the previous page of the app. On Android, the back button steps back through the menus; on the Home screen it closes the app.
 
 ## How the grades work
 For each factor, a load is scored on a curve against the typical (median) load of the same cartridge, so going further past typical earns less and less. The factor scores are spread out so that the typical load sits at 70 and one "typical spread" (median absolute deviation) moves it about 10 points, then combined using the scoring weights. Letter grades: S 85+, A 77+, B 66+, C 55+, D 45+, F below. Shotshells are only compared with the same load type (target with target, buckshot with buckshot, slugs with slugs).
@@ -65,6 +74,8 @@ For each factor, a load is scored on a curve against the typical (median) load o
 - **Taylor KO**: bullet weight (gr) × velocity (fps) × diameter (in) ÷ 7000.
 - **HITS** (Hornady Index of Terminal Standards): (weight² ÷ 7000) × (velocity ÷ diameter²) ÷ 100, shown with Hornady's game-size class.
 - **Velocity downrange**: integrated from the G1 drag model using each load's G1 ballistic coefficient.
+- **Barrel length**: velocity × (your barrel ÷ test barrel)^n, with n fitted from loads published at two barrel lengths (about 0.06 for auto pistol rounds, 0.13 to 0.22 for revolver rounds, 0.10 to 0.25 for rifles depending on how much powder the cartridge burns for its bullet weight). Checked against chronograph tests of .300 Blackout at 7.5, 10.5 and 16.5 in: within about 10 fps.
+- **Twist rate**: Miller's stability factor in sea-level air. Below 1.5 the ballistic coefficient drops 3% per 0.1; below 1.0 the bullet won't stabilise. Grades don't change.
 - **Recoil**: free recoil energy for a gun of the weight you enter (up to 60 lb): the gun takes the momentum of the bullet plus the powder gas (leaving at about 4000 fps). Powder charges are estimates, so figures are within about 10% of published recoil tables such as Chuck Hawks'.
 
 ## Download and install
@@ -72,7 +83,7 @@ The quickest way in is the web version at **[loadlore.net](https://loadlore.net)
 
 The apps are on the repository's **Releases** page.
 
-- **Windows**: run `LoadLore-v<version>-Setup.exe` (for example `LoadLore-v1.10-Setup.exe`). It installs for the current user (no admin password), adds Start menu and desktop shortcuts, and can be removed from Settings > Apps. A newer installer upgrades in place and keeps your handloads and settings. The installer isn't code-signed, so SmartScreen may say "Windows protected your PC": click More info, then Run anyway. A portable .zip is also available.
+- **Windows**: run `LoadLore-v<version>-Setup.exe` (for example `LoadLore-v1.11.4-Setup.exe`). It installs for the current user (no admin password), adds Start menu and desktop shortcuts, and can be removed from Settings > Apps. A newer installer upgrades in place and keeps your handloads and settings. The installer isn't code-signed, so SmartScreen may say "Windows protected your PC": click More info, then Run anyway. A portable .zip is also available.
 - **Linux**: unpack and run the installer, which adds the app to your launcher. Run it again with a newer release to update (your own files are kept), or with `--uninstall` to remove it.
   ```
   tar xzf LoadLore-v*-Linux.tar.gz
@@ -91,7 +102,7 @@ In the Start menu, app launcher and phone app drawer the app is called **Load Lo
 src/load_lore.py              desktop app (single file, Python standard library + Tkinter only)
 web/template.html             phone/web app (single page, no framework)
 web/build_web.py              embeds the CSV data into web/www/index.html
-data/loads_*.csv              factory loads, one file per category
+data/loads_*.csv              factory loads, one file per category (loads_pcc.csv: Pistol Caliber Carbine)
 data/ammo_*.csv               cartridge list (cartridges with no factory loads can still hold handloads)
 data/bullets.csv              bullet library for the handload form (weight, diameter, approximate G1 BC)
 assets/                       app icons (drawn by scripts/make_icons.py, needs Pillow)
@@ -102,7 +113,7 @@ scripts/windows_installer.iss Inno Setup script for the Windows installer (built
 .github/workflows/release.yml builds Windows, Linux and Android
 .github/workflows/pages.yml   publishes the web version to loadlore.net (GitHub Pages)
 package.json, capacitor.config.json   Android wrapper (Capacitor)
-research/                     where each added load came from
+research/                     where each added load came from (pcc_sources.tsv for the carbine loads)
 ```
 
 ### Running from source
@@ -110,7 +121,7 @@ research/                     where each added load came from
 python3 src/load_lore.py                   # desktop app (needs Tk: python3-tkinter)
 python3 web/build_web.py                   # then open web/www/index.html in a browser
 ```
-The web version at loadlore.net is built from `main` by `.github/workflows/pages.yml` after each release, or when run by hand from the Actions tab (Web version on GitHub Pages > Run workflow). Pushing to `main` alone doesn't change the site.
+The web version at loadlore.net is built from `main` by `.github/workflows/pages.yml` after each release, or when run by hand from the Actions tab (Web version on GitHub Pages > Run workflow). Pushing to `main` alone doesn't change the site. The beta site, beta.loadlore.net, is built from the `next` branch by Cloudflare Pages on every push (`LOADLORE_BETA=https://beta.loadlore.net/ python3 web/build_web.py`); it is marked beta, kept out of search engines, and keeps its own saved data separate from loadlore.net.
 Handloads (`my_handloads.csv`) and settings (`settings.json`) are saved next to the data files and are git-ignored; the phone/web version keeps them in the browser. The desktop and web versions use the same formulas and data and must stay in step: after editing any CSV or `web/template.html`, run `python3 web/build_web.py`.
 
 ### Data files
