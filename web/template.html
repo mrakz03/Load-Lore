@@ -95,6 +95,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .lc .st{display:flex;flex-wrap:wrap;gap:4px 14px;margin:6px 0 0 calc(2.2em + 10px);font-size:.85rem;color:var(--muted)}
 .lc .st b{color:var(--text);font-weight:600}
 .lc .nm .wt{white-space:nowrap}
+.lc .nm .ct{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:2px}   /* an opened load names its cartridge */
 .lc .sc{text-align:right;white-space:nowrap}.lc .sc .n{font-size:.75rem;color:var(--muted);display:block;margin-top:2px}
 .lc .det{margin:10px 0 0;border-top:1px solid var(--border);padding-top:8px}
 .lc .det .row{padding:4px 0}
@@ -1528,11 +1529,11 @@ function openLoads(cat,pane){
       const fb=k=>GRADES?badge(gradeRel(r.sc[k])):`<span style="width:32px"></span>`;
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top">${GRADES?`<span class="rk">#${r.rank}</span>`:""}
-        <div class="nm">${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}${warn(it)}</div>
+        <div class="nm">${open?`<small class="ct">${esc(it.cartridge||$$("#lc").value)}</small>`:""}${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}${warn(it)}</div>
         ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}</div>
         <div class="trow">${tcols.map(c=>`<span${c[0]==="Load"?' class="ln"':c[0]==="#"?' class="rk"':""}>${c[2](r)}</span>`).join("")}</div>
         ${open?`<div class="det">
-          <div class="pdet"><div class="psub">${esc([it.handload?"":payload,cat.grain_style?(it.barrel_in?g(it.barrel_in)+" in test barrel":"test barrel not listed"):"",out.barrel?`figures for a ${g(out.barrel)} in barrel (estimate)`:"",it.sg?`stability ${it.sg.toFixed(2)} in a 1:${g(it.twist)} twist: ${stabilityText(it.sg)}`:"",purposeOf(it)].filter(Boolean).join("  ·  "))}</div>
+          <div class="pdet"><div class="psub">${esc([it.cartridge||$$("#lc").value,it.handload?"":payload,cat.grain_style?(it.barrel_in?g(it.barrel_in)+" in test barrel":"test barrel not listed"):"",out.barrel?`figures for a ${g(out.barrel)} in barrel (estimate)`:"",it.sg?`stability ${it.sg.toFixed(2)} in a 1:${g(it.twist)} twist: ${stabilityText(it.sg)}`:"",purposeOf(it)].filter(Boolean).join("  ·  "))}</div>
           <div class="tiles">${[["Velocity",r.st.velocity.toFixed(0)+" fps","velocity"],["Energy",r.st.energy.toFixed(0)+" ft-lbs","energy"],["Recoil",r.st.recoil.toFixed(1)+" ft-lbs","recoil"],["Price","$"+r.st.cost.toFixed(2)+(edited?" ✎":""),"cost"]]
             .concat(cat.terminal?[["Taylor KO",r.st.taylor.toFixed(1),"taylor"],["HITS",`${r.st.hits.toFixed(0)} <small>(${hitsClass(r.st.hits)})</small>`,"hits"]]:[])
             .map(([l,v,k])=>`<div class="tile"><span class="l">${l}</span><span class="tv">${l==="HITS"?v:esc(v)}${GRADES?badge(gradeRel(r.sc[k])):""}</span></div>`).join("")}</div></div>
