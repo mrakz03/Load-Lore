@@ -2,16 +2,15 @@
 
 <img src="assets/icon.png" alt="App icon: a rifle cartridge standing on a book" width="96" align="right">
 
-A field guide to factory ammunition. Look up every brand's load for a cartridge, see how it grades from S to F against the others, read its ballistic table, and put up to five loads head to head. Reloaders can add their own handloads and see how they stack up against factory ammo.
+A field guide to factory ammunition. Look up every brand's loads for a cartridge, see how each grades from S to F against the others, check its ballistic table, and put up to five loads head to head. Reloaders can add their own handloads and see how they stack up.
 
-**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also runs as a desktop app on Windows and Linux and as a phone app on Android.
+**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also runs as a desktop app on Windows and Linux and as an Android app.
 
-
-> **Still in development.** Load Lore is a work in progress. Most of it works well, but some parts aren't fully polished yet, and you may run into rough edges, layout quirks or a load whose figures need fixing. If something looks wrong, please [open an issue](https://github.com/mrakz03/Load-Lore/issues).
+> **Still in development.** Most of it works well, but you may run into rough edges or a load whose figures need fixing. If something looks wrong, please [open an issue](https://github.com/mrakz03/Load-Lore/issues).
 
 ## What's inside
 
-About 3,650 factory loads from 20 makers across four categories, plus a Pistol Caliber Carbine section under Handgun:
+About 3,650 factory loads from 20 makers, in four categories plus a Pistol Caliber Carbine section under Handgun:
 
 | Category | Cartridges | Loads |
 |---|---|---|
@@ -21,79 +20,72 @@ About 3,650 factory loads from 20 makers across four categories, plus a Pistol C
 | Rimfire Rifle | 7 | 128 |
 | Shotgun (10, 12, 16, 20, 28 gauge and .410 bore) | 6 | 1,124 |
 
-The loads come from the 2026 catalogs of Hornady, Federal, Winchester, Remington, Fiocchi, PMC, CCI/Blazer and ELEY, and from the makers' own websites for SIG Sauer, Black Hills, Norma, Nosler, Lapua, Sellier & Bellot, PPU, Underwood, Buffalo Bore, Speer and newer Federal loads (plus a few Barnes, IMI, Winchester and Federal loads from retailer listings). Weight and velocity are the maker's published figures; prices and powder charges are estimates. Where each added load came from is listed in `research/added_loads_sources.tsv`.
+Velocity and bullet weight are the makers' own published figures, from the 2026 catalogs of Hornady, Federal, Winchester, Remington, Fiocchi, PMC, CCI/Blazer and ELEY and from the websites of SIG Sauer, Black Hills, Norma, Nosler, Lapua, Sellier & Bellot, PPU, Underwood, Buffalo Bore and Speer (plus a few loads from retailer listings). Prices and powder charges are estimates. The source of every added load is in `research/added_loads_sources.tsv`.
 
-The **Pistol Caliber Carbine** section (picked from the Handgun menu) holds handgun cartridges fired from carbine and lever-gun barrels, such as 9mm Luger, .357 Magnum, .44 Magnum and 10mm Auto. Its loads use the maker's published carbine velocity where there is one; most makers only print a handgun figure, so those loads are marked **(est.)** and their velocity is worked out for a 16 in barrel.
+**Pistol Caliber Carbine** covers handgun cartridges fired from carbines and lever guns (9mm, .357 Magnum, .44 Magnum, 10mm and more). Where a maker publishes a carbine velocity it is used; the rest are marked **(est.)** and worked out for a 16 in barrel from the maker's handgun figure.
 
-## Using the app
+## Features
 
 ### Load Dictionary
-Pick a category (Handgun opens a small menu: Pistol / Revolver or Pistol Caliber Carbine), then a cartridge, and every load for it is listed and ranked. The cartridge box starts empty; a cartridge you picked earlier comes back while the app stays open.
+Look up every load for a cartridge, graded and ranked.
 
-- **Grades.** Each load gets a letter from S to F on velocity, energy, recoil, cost, Taylor KO and HITS, plus an overall grade. Grades compare loads of the *same* cartridge with each other: the average load scores about 70, a B. The **S–F grades: On / Off** switch on the Settings page hides the grades and scores if you just want the numbers; the app remembers your choice. (This is added for you Fudds that will complain that your favorite load somehow got ranked as an F).
-- **Filter and sort.** Narrow the list by purpose (Hunting, Varmint, Target, Match, Defense, Subsonic; shotguns by load type) or type a brand or load name in the filter box right above the list. For cartridges with +P or +P+ loads, a check box for each lets you hide them (grades don't change). Click a column heading (desktop app and PC browsers) or use the sort menu next to the filter box (phone). Besides grade, price, velocity, energy and recoil you can sort by bullet weight (heaviest or lightest first), and shotgun loads by shot size (slugs, then buckshot, then the largest birdshot first).
-- **Distance.** Velocity, energy, Taylor KO and HITS are worked out at the distance you enter, which starts at 0 yd (the muzzle) so the figures match the box.
-- **Firearm setup.** This box shows what the figures are based on: "Manufacturer data" while you haven't changed anything, "Estimate" once you have. Open it to set:
-  - **Gun weight**, used for recoil. It starts at a typical gun for the cartridge: 8 lb for most rifles, but 30 lb for .50 BMG, 15 lb for .338 Lapua, around 10 lb for the big dangerous-game rounds and heavier revolvers for the magnum handgun rounds. If you type your own weight it stays put when you switch cartridges.
-  - **Barrel length.** Listed velocities are the makers' figures from their own test barrels. Type your barrel length and every load's velocity is scaled from its test barrel to yours, and the grades, recoil and ballistic table follow. The box goes up to the longest factory barrel made for that cartridge.
-  - **Twist rate** (1 turn in so many inches). This doesn't change speed: it checks whether each bullet spins fast enough to fly point first (Miller's stability rule, with the bullet's length estimated from its weight and type). A bullet that barely stabilises loses a little ballistic coefficient; one that won't stabilise is flagged with a ⚠.
-
-  Leave barrel and twist blank to use the makers' figures. **Reset to maker's figures** puts everything back. Shotguns only have the gun weight. These settings are kept per category while the app is open.
-- **Selected load.** Click a load to open its panel: every figure with its grade, the test barrel length, where the data came from (figures you changed with Firearm setup are marked as estimates), and:
-  - **Ballistic table** (▸ to open): velocity, energy, path (inches above or below the line of sight) and drift in a 10 mph crosswind, from the muzzle out to 500 yd for centerfire rifles (shorter steps for handgun, rimfire and shotgun). Rifles assume a 100 yd zero with the sight 1.5 in above the bore; handguns 25 yd and 0.6 in; pistol caliber carbines 50 yd and 2 in; rimfire 50 yd; slugs 50 yd. These are estimates from the ballistic coefficient in standard sea-level air, not a full ballistic solver.
-  - **Your price.** Prices are catalog-based estimates; type what you actually pay per round and the cost grade updates.
-  - **+ Head to Head** adds the load to the Head to Head tab.
-- **Scoring weights.** Decide how much each factor counts (0 ignores it). The defaults are 3 for everything except recoil (1); rimfire weighs cost double, and shotguns skip Taylor KO and HITS.
+- **Pick a cartridge.** Choose a category (Handgun opens Pistol / Revolver or Pistol Caliber Carbine), then search for a cartridge.
+- **Grades.** Each load gets a letter from S to F for velocity, energy, recoil, cost, Taylor KO and HITS, plus an overall grade. Loads are graded against others of the *same* cartridge, so an average load is a B. You can turn grades off in Settings if you just want the numbers. (This is added for you Fudds that will complain that your favorite load somehow got ranked as an F).
+- **Filter and sort.** Filter by purpose (Hunting, Defense, Match...) or by typing a brand or load name. Hide +P / +P+ loads with a check box. Sort by grade, price, velocity, energy, recoil, bullet weight or, for shotguns, shot size.
+- **Scoring weights.** Choose how much each factor counts toward the overall grade (0 ignores it).
+- **Distance.** Figures are shown at the distance you enter, starting at the muzzle (0 yd).
+- **Firearm setup.** Out of the box, the figures are the makers' published data. Enter your own gun weight, barrel length and twist rate to get estimates for your firearm: velocity is scaled to your barrel, recoil to your gun's weight, and the twist rate warns (⚠) when a bullet won't spin fast enough to stay stable. **Reset to maker's figures** goes back to the published data.
+- **Open a load** to see every figure with its grade, the test barrel, where the data came from, and:
+  - a **ballistic table**: velocity, energy, bullet drop and wind drift out to 500 yd (rifles) or a shorter range (handguns, rimfire, slugs);
+  - **your price**: type what you actually pay per round and the cost grade updates;
+  - **+ Head to Head** to compare it with other loads.
 
 ### Head to Head
-Pick 2 to 5 loads from any cartridges (**+ Add a load** adds an empty row), for example a .308 Winchester load against a 6.5 Creedmoor load, or add them from the Load Dictionary. Head to Head is one page for every category, so loads can come from different categories too (a 12 gauge slug against a .30-30 Winchester): the cartridge box searches every category and lists its matches under category headings. A factor that doesn't apply to a load (shotguns have no Taylor KO or HITS) shows a dash, and every load keeps the grade its own Load Dictionary gives it, with that category's scoring weights. To find a load quickly, type in its load box: every word you type has to appear in the name (for example `hornady 55` or `federal match`), then pick from the matches with a click or tap, or the arrow keys and Enter. On a phone, tapping a box opens a list from the bottom of the screen with its own search bar.
+Compare 2 to 5 loads side by side, from any cartridge or category (a .308 against a 6.5 Creedmoor, or a 12 gauge slug against a .30-30).
 
-**Firearm setup for each load** opens a Gun / Barrel / Twist line under every load (blank means that cartridge's usual gun and the makers' listed figures). You can also pick the same load more than once to compare setups, for example one load from a 10.5 in and a 16 in barrel: each column then names what differs. You see:
-
-- every figure side by side, with the best one highlighted and how far behind the others are, in %;
-- how many factors each load wins;
-- each load's grade and rank from the Load Dictionary (against its own cartridge, so the two tabs always agree);
-- a spin stability row when you've set a twist rate;
-- a downrange table of velocity and energy.
-
-On a phone this is laid out as cards: one per load, then one per factor with a bar for each load, then downrange at the distance you pick.
+- Search for a cartridge, then a load: every word you type has to be in the name (for example `hornady 55`).
+- See every figure side by side with the leader highlighted, how many factors each load wins, each load's grade from the Load Dictionary, and a downrange table.
+- **Firearm setup for each load** gives each load its own gun weight, barrel and twist. Pick the same load twice to compare it from, say, a 10.5 in and a 16 in barrel.
+- On phones the comparison is shown as easy-to-scroll cards.
 
 ### Handloads
-The **Handloads** tab keeps all your own loads, from every category, in one place. **+ New handload** opens a form for your own load: cartridge (any rifle, handgun or rimfire cartridge), bullet (pick a maker and bullet from the built-in library, which goes by bullet diameter, or type your own), powder and charge, velocity, barrel length, purpose and cost per round (a total, or bullet + powder + primer + brass with the number of times you reuse the brass). Each handload shows its grade against the factory loads of its cartridge and can be edited, duplicated, deleted, opened in the Load Dictionary (where it's listed with the factory loads, marked in a different color) or put head to head.
+Keep your own loads and see how they grade against factory ammo of the same cartridge.
 
-**Back up** saves your handloads as a CSV file (on the phone: copies it, to paste into a note or email), and **Restore** reads one back, so you can move handloads between the computer and the phone.
+- **+ New handload**: pick the cartridge, bullet (from the built-in library or type your own), powder and charge, velocity, barrel length, purpose and cost (a total, or worked out from components and brass reuse).
+- Edit, duplicate or delete handloads, see them listed with the factory loads in the Load Dictionary, or put them head to head.
+- **Back up / Restore** saves your handloads as a CSV file, so you can move them between computer and phone.
 
-Handload figures are only as good as your data. The app does not check pressure or safety: always follow a published load manual.
+The app does not check pressure or safety. Always follow a published load manual.
 
 ### Settings
-Theme (several color schemes; Classic is the original dark look), text size and the S–F grades switch are on the Settings page: at the bottom of the sidebar on desktop, and the Settings tab on the phone. In the web version the browser's back arrow goes back to the previous page of the app. On Android, the back button steps back through the menus; on the Home screen it closes the app.
+Theme, text size and the grades on/off switch. On Windows and Linux, Settings also has **Check for updates**.
 
-## How the grades work
-For each factor, a load is scored on a curve against the typical (median) load of the same cartridge, so going further past typical earns less and less. The factor scores are spread out so that the typical load sits at 70 and one "typical spread" (median absolute deviation) moves it about 10 points, then combined using the scoring weights. Letter grades: S 85+, A 77+, B 66+, C 55+, D 45+, F below. Shotshells are only compared with the same load type (target with target, buckshot with buckshot, slugs with slugs).
+## How the numbers work
+Each factor is scored against the typical (median) load of the same cartridge: the typical load scores 70, and going far past typical earns less and less. The factor scores are combined using the scoring weights (default 3 for everything, 1 for recoil; rimfire counts cost double, shotguns skip Taylor KO and HITS). Grades: S 85+, A 77+, B 66+, C 55+, D 45+, F below. Shotshells are only compared within their load type (buckshot with buckshot, slugs with slugs).
 
 - **Taylor KO**: bullet weight (gr) × velocity (fps) × diameter (in) ÷ 7000.
-- **HITS** (Hornady Index of Terminal Standards): (weight² ÷ 7000) × (velocity ÷ diameter²) ÷ 100, shown with Hornady's game-size class.
-- **Velocity downrange**: integrated from the G1 drag model using each load's G1 ballistic coefficient.
-- **Barrel length**: velocity × (your barrel ÷ test barrel)^n, with n fitted from loads published at two barrel lengths (about 0.06 for auto pistol rounds, 0.13 to 0.22 for revolver rounds, 0.10 to 0.25 for rifles depending on how much powder the cartridge burns for its bullet weight). Checked against chronograph tests of .300 Blackout at 7.5, 10.5 and 16.5 in: within about 10 fps.
-- **Twist rate**: Miller's stability factor in sea-level air. Below 1.5 the ballistic coefficient drops 3% per 0.1; below 1.0 the bullet won't stabilise. Grades don't change.
-- **Recoil**: free recoil energy for a gun of the weight you enter (up to 60 lb): the gun takes the momentum of the bullet plus the powder gas (leaving at about 4000 fps). Powder charges are estimates, so figures are within about 10% of published recoil tables such as Chuck Hawks'.
+- **HITS** (Hornady Index of Terminal Standards): (weight² ÷ 7000) × (velocity ÷ diameter²) ÷ 100.
+- **Recoil**: free recoil energy for your gun weight, counting the bullet and the powder gas. Within about 10% of published recoil tables.
+- **Downrange and ballistic table**: G1 drag model from each load's ballistic coefficient, in standard sea-level air. An estimate, not a full ballistic solver.
+- **Barrel length**: velocity × (your barrel ÷ test barrel)^n, with n fitted from loads published at two barrel lengths. Checked against .300 Blackout chronograph tests: within about 10 fps.
+- **Twist rate**: Miller's stability rule with an estimated bullet length. Twist never changes velocity or grades; a barely stable bullet loses a little ballistic coefficient.
 
 ## Download and install
-The quickest way in is the web version at **[loadlore.net](https://loadlore.net)**: it runs in any browser on a computer or phone and is always up to date. Your handloads, prices and settings stay in that browser (use **Back up** in Handloads to move them). On a phone you can add it to your home screen from the browser's menu.
+The easiest way is the web version at **[loadlore.net](https://loadlore.net)**: it runs in any browser, on a computer or phone, and is always up to date. Your handloads and settings stay in that browser (use **Back up** in Handloads to move them).
 
-The apps are on the repository's **Releases** page.
+The apps are on the [Releases](https://github.com/mrakz03/Load-Lore/releases) page.
 
-- **Windows**: run `LoadLore-v<version>-Setup.exe` (for example `LoadLore-v1.11.4-Setup.exe`). It installs for the current user (no admin password), adds Start menu and desktop shortcuts, and can be removed from Settings > Apps. A newer installer upgrades in place and keeps your handloads and settings. The installer isn't code-signed, so SmartScreen may say "Windows protected your PC": click More info, then Run anyway. A portable .zip is also available.
-- **Linux**: unpack and run the installer, which adds the app to your launcher. Run it again with a newer release to update (your own files are kept), or with `--uninstall` to remove it.
+- **Windows**: run `LoadLore-v<version>-Setup.exe`. No admin password needed, and a newer installer upgrades in place, keeping your handloads and settings. The installer isn't code-signed, so if Windows says "Windows protected your PC", click More info, then Run anyway. A portable .zip is also available.
+- **Linux**: unpack and run the installer, which adds the app to your launcher. Run it again with a newer release to update, or with `--uninstall` to remove it.
   ```
   tar xzf LoadLore-v*-Linux.tar.gz
   bash LoadLore/install.sh
   ```
 - **Android**: install `LoadLore-v<version>.apk` (allow installs from your browser or file manager when asked).
 
-**Updating (Windows and Linux):** open Settings and press **Check for updates**. When a newer release is out, **Update to vX** downloads it, checks it against the release's `SHA256SUMS.txt`, installs it over the old version and reopens the app; your handloads, prices and settings are kept. Turn on **Check at start** to be asked whenever a new version comes out. The app only talks to GitHub when you press the button or turn that on. The portable Windows .zip can't update itself, so its button opens the Releases page instead.
+**Updating (Windows and Linux):** in Settings press **Check for updates**, then **Update**. The download is checked against the release's `SHA256SUMS.txt` and installed over the old version; your data is kept. **Check at start** asks you whenever a new version is out. The app only contacts GitHub when you ask it to.
 
-In the Start menu, app launcher and phone app drawer the app is called **Load Lore**. Download files carry the version in their name. Copies of v1.7.3-dev and older can't update themselves to the renamed version: download and run the new installer (or install.sh) once. It moves the app from the old Cartridge Calculator folder to a Load Lore folder, handloads and settings included.
+Upgrading from v1.7.3-dev or older (when the app was called Cartridge Calculator)? Run the new installer or install.sh once by hand. It moves your handloads and settings over.
 
 ## For developers
 
@@ -121,19 +113,16 @@ research/                     where each added load came from (pcc_sources.tsv f
 python3 src/load_lore.py                   # desktop app (needs Tk: python3-tkinter)
 python3 web/build_web.py                   # then open web/www/index.html in a browser
 ```
-The web version at loadlore.net is built from `main` by `.github/workflows/pages.yml` after each release, or when run by hand from the Actions tab (Web version on GitHub Pages > Run workflow). Pushing to `main` alone doesn't change the site.
-Handloads (`my_handloads.csv`) and settings (`settings.json`) are saved next to the data files and are git-ignored; the phone/web version keeps them in the browser. The desktop and web versions use the same formulas and data and must stay in step: after editing any CSV or `web/template.html`, run `python3 web/build_web.py`.
+The desktop and web versions share the same formulas and data and must stay in step: after editing any CSV or `web/template.html`, run `python3 web/build_web.py`. The site at loadlore.net is rebuilt from `main` after each release (or by running the Pages workflow by hand); a plain push doesn't change it. Your own handloads (`my_handloads.csv`) and settings (`settings.json`) are git-ignored.
 
 ### Data files
-- `loads_*.csv` columns: cartridge, load, bullet_gr, muzzle_fps, bc_g1, powder_gr, default_cost, default, source, group, barrel_in, purpose (and optionally diameter_in). Every load name starts with its brand. `barrel_in` is the test barrel length; `purpose` is Hunting / Varmint / Target / Match / Defense / Subsonic (shotguns use `group`, their load type).
-- `ammo_*.csv` holds generic loads with no brand names; it provides the cartridge list.
-- 5.56x45mm NATO and 7.62x51mm NATO are their own cartridges, separate from .223 Remington and .308 Winchester. A NATO load says so in its name (5.56, M193, M855, 7.62x51, M80); Hornady's 5.56 NATO loads are the ones tested in a 20" barrel. Handloads and prices saved when they shared one list are matched up through `SPLIT_CARTRIDGES`.
-- Saved handloads and prices that use older names are matched up automatically through `RENAMED_CARTRIDGES` in `src/load_lore.py`.
-- Bullet diameters for Taylor KO and HITS come from the `DIAMETERS` table in the same file.
-- `bullets.csv` BCs are approximate published G1 figures.
+- `loads_*.csv` columns: cartridge, load, bullet_gr, muzzle_fps, bc_g1, powder_gr, default_cost, default, source, group, barrel_in (test barrel), purpose, and optionally diameter_in. Every load name starts with its brand; shotguns use `group` for the load type.
+- `ammo_*.csv` holds generic, unbranded loads and provides the cartridge list.
+- .223 Remington / 5.56x45mm NATO and .308 Winchester / 7.62x51mm NATO are separate cartridges; a NATO load says so in its name (5.56, M193, M855, 7.62x51, M80).
+- When renaming or splitting a cartridge, add it to `RENAMED_CARTRIDGES` or `SPLIT_CARTRIDGES` in `src/load_lore.py` so saved handloads and prices still match. Bullet diameters are in the `DIAMETERS` table there.
 
 ## Contributing
-Bug reports, load corrections and ideas are welcome as GitHub issues. For a data fix, name the load and give the source (maker's catalog page or website) for the numbers. Pull requests should keep the desktop and phone versions in step (same formulas, same data) and rebuild the web version after changing a CSV or `web/template.html`. `CLAUDE.md` holds the project's working notes and rules in more detail. I have shit to do IRL so I might not be the fastest at looking at your forks/PRs, but please feel free to improve this program and send over any suggestions!
+Bug reports, load corrections and ideas are welcome as [GitHub issues](https://github.com/mrakz03/Load-Lore/issues). For a data fix, name the load and link the maker's catalog page or website. Pull requests should keep the desktop and web versions in step. `CLAUDE.md` has the project's detailed working notes. I have shit to do IRL so I might not be the fastest at looking at your forks/PRs, but please feel free to improve this program and send over any suggestions!
 
 ## License
 
