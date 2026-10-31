@@ -188,7 +188,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the desktop app's (.lhead / .trow on a CSS subgrid, columns fit their figures, same columns as LoadsView;
   sortable headers set the #ls sort; clicking the sorted header again goes back to the default order, Grains goes heaviest -> lightest -> default, desktop _sort_by the same; Zeke, Oct 28 2026). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
   At >=1500 px the dictionary page (.wrap.dict) fills the window: settings card, filter and sort in a
-  left column, the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
+  left column (380 px beside the table; wider, 400-620 px with the window, while no cartridge is picked: Zeke,
+  Oct 31 2026), the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
   column (cartridge box over load box) beside the results; that column grows with the window (520 px at
   1500 px wide up to 720 px, so long load names fit; Zeke, Oct 28 2026), a load box's title shows the full name. An opened dictionary load names its cartridge (Oct 30 2026, Zeke): phones a small grey line over the
   load name (.lc .nm .ct), PC web first in the facts line, desktop in the panel title after the load's name
