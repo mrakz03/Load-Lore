@@ -222,6 +222,107 @@ def version_text():
     return "dev" if APP_VERSION == "dev" else f"v{APP_VERSION}"
 
 
+def brand_of(item):
+    """A load's brand for sorting: the first word of its name (every factory load name starts
+    with its brand, and no two brands share a first word: Black Hills, Buffalo Bore, SIG Sauer,
+    Sellier & Bellot)."""
+    return ((item.load or item.label).split() or [""])[0].lower()
+
+
+def brand_sort_key(row):
+    """Sort: brand, then bullet weight / payload (lightest first), then the name."""
+    it = row["item"]
+    return brand_of(it), it.bullet_gr, (it.load or it.label).lower()
+
+
+# Product lines for "Sort: brand (product line)" (Zeke, Oct 31 2026): each brand's lines as they
+# start a load's name after the brand. The longest match wins ("Premium Gold Medal" before
+# "Premium"); "A=B" files A under line B (the same product named two ways). A load matching none
+# goes with its brand's other unlined loads, after the named lines. build_web.py passes the
+# prefixes to the web as DATA.lines.
+PRODUCT_LINES = {
+    "Barnes": ["VOR-TX", "Precision Match", "Pioneer", "Suppressor Series"],
+    "Black Hills": ["Gold", "HoneyBadger"],
+    "Buffalo Bore": ["Anti-Personnel", "Outdoorsman", "Supercharged", "Premium Supercharged",
+                     "Dangerous Game", "Tactical", "Penetrator", "Deer Grenade", "Short Barrel",
+                     "Low Recoil", "Lower Recoil", "Barnes", "Hard Cast", "Heavy"],
+    "CCI": ["Blazer", "Blazer Brass", "Blazer Aluminum", "Mini-Mag", "Maxi-Mag", "Maxi Mag=Maxi-Mag",
+            "Stinger", "Velocitor", "Clean-22", "Quiet-22", "Suppressor", "Standard Velocity",
+            "Green Tag", "CB", "Pistol Match", "Uppercut", "AR Tactical", "Hunter Series", "VNT", "A17"],
+    "ELEY": ["tenex", "match", "team", "club", "contact", "force", "ultra", "biathlon", "sport/target",
+             "subsonic", "high velocity", "semi-auto benchrest", "bullseye"],
+    "Federal": ["+Peak", "Premium +Peak=+Peak", "All-American", "American Eagle", "Black Cloud",
+                "Champion", "Force X2", "Fusion", "Gold Medal", "Premium Gold Medal=Gold Medal",
+                "Game Load", "HammerDown", "Premium Hammerdown=HammerDown", "Hevi-Bismuth",
+                "Master Class", "Military Grade", "Punch", "Personal Defense Punch=Punch", "Personal Defense",
+                "Power-Shok", "Raptor", "Shorty", "Speed-Shok", "Subsonic", "Syntech", "Top Gun",
+                "Train+Protect", "Ultra Steel", "Upland Steel", "Varmint & Predator", "Premium",
+                "Premium Big Game", "Premium Personal Defense HST",
+                "Premium Personal Defense Hydra-Shok", "Premium Hunting Handgun", "Premium Safari",
+                "Premium Heavyweight TSS", "Premium High Over All", "Premium Prairie Storm",
+                "Premium Upland", "Premium Grand Slam", "Premium 3rd Degree", "Premium Buckshot",
+                "Premium Hi-Bird", "Premium Freight Train", "Premium Terminal Ascent",
+                "Premium Trophy Bonded", "Premium Trophy Copper", "Premium Swift A-Frame",
+                "Premium TruBall", "Premium Barnes", "Premium Berger", "Premium Varmint",
+                "Premium Paper Flyer"],
+    "Fiocchi": ["Backwoods Hunter", "CovertX", "Cowboy Action", "Crusher", "Super Crusher",
+                "Defense Dynamics", "Field Dynamics", "Flyway", "Golden Goose", "Golden Pheasant",
+                "Golden Turkey", "Golden Waterfowl", "Heritage", "Hyperformance", "Little Rino",
+                "Paper Little Rino", "White Rino", "Range Dynamics", "Shooting Dynamics", "VIP",
+                "Steel Target", "Arkansas Steel"],
+    "Hornady": ["American Gunner", "American Whitetail", "BLACK", "Backcountry Defense",
+                "Critical Defense", "Critical Duty", "Custom", "Dangerous Game", "ELD Match",
+                "Match", "ELD-VT", "Frontier", "Handgun Hunter", "LEVERevolution", "Outfitter",
+                "Precision Hunter", "Subsonic", "Superformance", "V-MAX"],
+    "IMI": ["Razor Core"],
+    "Lapua": ["Mega", "Naturalis", "Scenar", "Scenar-L"],
+    "Norma": ["Bondstrike", "Oryx", "Tipstrike", "Whitetail"],
+    "Nosler": ["Trophy Grade", "Defense", "Match Grade"],
+    "PMC": ["Bronze", "X-TAC"],
+    "PPU": ["GROM", "Z-GROM", "Match"],
+    "Remington": ["Core-Lokt", "Core-Lokt Tipped", "Core-Lokt Copper", "Duck Club", "Express",
+                  "Golden Saber", "Gun Club", "HTP", "Hypersonic Steel", "Nitro 27", "Nitro Magnum",
+                  "Nitro Pigeon", "Nitro Turkey", "Nitro-Steel", "Performance Wheelgun", "Premier",
+                  "Premier AccuTip", "Premier STS", "Premier TSS", "Premier Swift Scirocco",
+                  "Premier MatchKing", "Premier Nitro", "Premier Royal Flush", "Slugger", "UMC",
+                  "Ultimate Defense", "Managed Recoil", "Managed-Recoil=Managed Recoil", "Game Loads", "Pheasant Loads",
+                  "Heavy Dove", "Final Strut"],
+    "SIG Sauer": ["Elite", "Elite V-Crown", "Elite Ball", "Elite Match", "365", "Marksman",
+                  "Platinum Hunter", "Legion", "ROSE", "Match Elite"],
+    "Sellier & Bellot": ["XRG Defense", "eXergy", "Sierra GameKing", "Nontox", "HPBT Match"],
+    "Speer": ["Gold Dot", "Lawman"],
+    "Underwood": ["Xtreme Defender", "Xtreme Hunter", "Xtreme Penetrator"],
+    "Winchester": ["AA", "American Lever", "Ballistic Silvertip", "Big Bore", "Copper Impact",
+                   "Deer Season", "Defender", "Double-X", "Drylok", "Expedition Big Game",
+                   "Last Call", "Longbeard", "Match", "Power-Point", "Power Max", "Silvertip",
+                   "Super Clean", "Super Pheasant", "Super Suppressed", "Super Target", "Super-X",
+                   "Supreme", "USA", "USA Ready", "USA Forged", "USA Valor", "USA White",
+                   "Varmint", "Varmint-X", "Wildcat", "Win1911", "WinClean", "Xpert", "Bismuth"],
+}
+# (lowercase prefix, line it files under), longest prefix first
+LINE_PREFIXES = sorted(
+    ((f"{b} {e.split('=')[0]}".lower(), f"{b} {e.split('=')[-1]}".lower())
+     for b, lines in PRODUCT_LINES.items() for e in lines),
+    key=lambda p: -len(p[0]))
+
+
+def product_line(item):
+    """A load's product line ("federal fusion"), or "" when its name starts with none of them."""
+    name = (item.load or item.label).lower()
+    for pre, line in LINE_PREFIXES:
+        if name.startswith(pre) and (len(name) == len(pre) or name[len(pre)] == " "):
+            return line
+    return ""
+
+
+def line_sort_key(row):
+    """Sort: brand, then product line (unlined loads after the lines), then bullet weight /
+    payload (lightest first), then the name."""
+    it = row["item"]
+    line = product_line(it)
+    return brand_of(it), line == "", line, it.bullet_gr, (it.load or it.label).lower()
+
+
 def default_weights(cat):
     return dict(zip(METRICS, cat.weights))
 
@@ -233,10 +334,10 @@ def metric_keys(cat):
 
 # The tools: (key, title, blurb on the Home screen)
 TOOLS = (("loads", "Load Dictionary", "Every load of a cartridge, factory or your own handload, "
-                                      "graded against each other."),
+                                      "in one sortable list."),
          ("h2h", "Head to Head", "Put 2 to 5 loads side by side, even from different cartridges "
                                  "or categories."),
-         ("hand", "Handloads", "Build and save your own reloads. They're graded in the Load "
+         ("hand", "Handloads", "Build and save your own reloads. They show up in the Load "
                                "Dictionary and can go head to head."))
 NAV_ORDER = ("loads", "h2h", "hand")     # the PC sidebar (Zeke, Oct 25 2026): Load Dictionary first; phones keep NAVS
 H2H_MIN, H2H_MAX = 2, 5
@@ -254,6 +355,8 @@ def pick_key(cat, item):
 
 # Color themes (desktop and, via build_web.py, the phone/web version). "side" is the web
 # sidebar / bottom bar; "scheme" tells the browser whether form controls should be light or dark.
+# Optional: "best" colours Head to Head winners (else the accent; Graphite: gold, its grey accent
+# read like plain text, Zeke Oct 31 2026).
 THEMES = {
     "Classic": dict(bg="#0e1014", surface="#171a21", surface_2="#222732", border="#2d333f",
                     text="#e8eaee", muted="#8a93a3", accent="#4c8dff", accent_hover="#6aa0ff",
@@ -263,7 +366,8 @@ THEMES = {
                   on_accent="#ffffff", side="#ffffff", danger="#c62828", hand="#0f8a6c", scheme="light"),
     "Graphite": dict(bg="#121212", surface="#1c1c1c", surface_2="#282828", border="#383838",
                      text="#ededed", muted="#9e9e9e", accent="#d4d4d4", accent_hover="#ffffff",
-                     on_accent="#121212", side="#171717", danger="#ef6b62", hand="#9be0c9", scheme="dark"),
+                     on_accent="#121212", side="#171717", danger="#ef6b62", hand="#9be0c9", scheme="dark",
+                     best="#f2c94c"),
     "Woodland camo": dict(bg="#0f120c", surface="#181d14", surface_2="#232a1c", border="#343e2a",
                           text="#e7eadf", muted="#98a088", accent="#8aa155", accent_hover="#a3ba6a",
                           on_accent="#10140b", side="#13170f", danger="#e0664f", hand="#c9b27c",
@@ -289,12 +393,13 @@ DEFAULT_THEME = "Classic"
 def apply_theme(name):
     """Point the palette globals at a theme; screens built afterwards use it."""
     global BG, SURFACE, SURFACE_2, BORDER, TEXT, MUTED, ACCENT, ACCENT_HOVER, ON_ACCENT, DANGER, HAND_FG
-    global SIDE
+    global SIDE, BEST
     t = THEMES.get(name) or THEMES[DEFAULT_THEME]
     BG, SURFACE, SURFACE_2, BORDER = t["bg"], t["surface"], t["surface_2"], t["border"]
     SIDE = t["side"]
     TEXT, MUTED, ACCENT, ACCENT_HOVER = t["text"], t["muted"], t["accent"], t["accent_hover"]
     ON_ACCENT, DANGER, HAND_FG = t["on_accent"], t["danger"], t["hand"]
+    BEST = t.get("best", ACCENT)
 
 
 apply_theme(DEFAULT_THEME)
@@ -795,6 +900,21 @@ def source_line(cat, barrel, twist, handloads=False):
         text = ("Manufacturer-published data. Downrange figures, recoil and grades are worked "
                 "out from it.")
     return text + (" Handloads are your own figures." if handloads else "")
+
+
+def test_barrel_text(item):
+    """The opened load's facts-line part on where its listed speed comes from (Zeke, Oct 31 2026;
+    web: testBarrelText)."""
+    b = item.barrel_in
+    if item.handload:
+        return f"{b:g} in test barrel" if b else ""
+    if not b:
+        return "maker's figures (test barrel not listed)"
+    if item.source == "estimate":
+        return f"our estimate for a {b:g} in barrel"
+    if item.source == "tested":
+        return f"chronographed from a {b:g} in barrel"
+    return f"maker's figures from a {b:g} in test barrel"
 
 
 def fire_source_note(cat, item, barrel, twist):
@@ -3528,53 +3648,83 @@ class LoadsView:
         self.detail = a.card(outer, padx=4, pady=4)
         d = self.detail.body
         d.columnconfigure(0, weight=1)
-        self.d_title = a.label(d, "", 16, TEXT, True, anchor="w", justify="left",
+        self.d_title = a.label(d, "", 14, TEXT, True, anchor="w", justify="left",
                                wraplength=a.px(820))
         self.d_title.grid(row=0, column=0, sticky="w", padx=18, pady=(14, 2))
         close_button(a, d, self._close_detail).grid(row=0, column=1, sticky="ne", padx=(0, 10),
                                                     pady=(10, 0))
-        self.d_info = a.label(d, "", 12, MUTED, anchor="w", justify="left",
-                              wraplength=a.px(820))
+        # the facts line: muted but semi-bold, so it reads over the figures (Zeke, Oct 31 2026)
+        self.d_info = a.label(d, "", 10.5, MUTED, True, anchor="w", justify="left",
+                              wraplength=a.px(660))
         self.d_info.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
         # the four factors sit side by side, packed to the left (no stretched columns)
         factors = tk.Frame(d, bg=SURFACE)
-        factors.grid(row=2, column=0, sticky="w", padx=18)
+        factors.grid(row=2, column=0, columnspan=2, sticky="w", padx=18)
+        self.factors, self.d_cells = factors, []
         self.d_badges = {}
+        self.d_sub = {}
         for i, key in enumerate(self.keys):
             cell = tk.Frame(factors, bg=SURFACE)
-            cell.pack(side="left", padx=(0, 34))
+            cell.pack(side="left", padx=(0, 30))
+            self.d_cells.append(cell)
             a.label(cell, METRICS[key][0].upper(), 10, MUTED, True).pack(anchor="w")
             line = tk.Frame(cell, bg=SURFACE)
             line.pack(anchor="w", pady=(4, 0))
             val = a.label(line, "", 16, TEXT, True)
             val.pack(side="left")
+            if key == "hits":
+                # HITS's game class in small grey type, as on PC web, so the link fits after it
+                self.d_sub[key] = a.label(line, "", 10, MUTED)
+                self.d_sub[key].pack(side="left", padx=(5, 0), anchor="s", pady=(0, 3))
             badge = Badge(line, a, "", 12)
             badge.pack(side="left", padx=(6, 0))
             self.d_badges[key] = (val, badge)
-        priceline = tk.Frame(d, bg=SURFACE)
+        # "About these figures" follows the HITS figure, as on PC web (Zeke, Oct 31 2026)
+        self.src_toggle = tk.Label(d, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
+                                   cursor="hand2")
+        self.src_toggle.bind("<Button-1>", lambda e: self._toggle_source())
+        self.d_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
+                              wraplength=a.px(820))
+        self.d_note.grid(row=3, column=0, sticky="w", padx=18, pady=(12, 0))
+        # price row, Head to Head button and Ballistic table link on the left; the opened
+        # source note fills the space right of them (PC web's layout)
+        lower = tk.Frame(d, bg=SURFACE)
+        lower.grid(row=4, column=0, columnspan=2, sticky="ew", padx=18, pady=(16, 0))
+        lower.columnconfigure(1, weight=1)
+        self.lower = lower
+        left = tk.Frame(lower, bg=SURFACE)
+        self.left = left
+        left.grid(row=0, column=0, sticky="nw")
+        btns = tk.Frame(left, bg=SURFACE)
+        btns.pack(anchor="w")
+        priceline = tk.Frame(btns, bg=SURFACE)
         self.priceline = priceline
-        priceline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
-        self.handline = tk.Frame(d, bg=SURFACE)
-        self.handline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
+        priceline.grid(row=0, column=0, sticky="w")
+        self.handline = tk.Frame(btns, bg=SURFACE)
+        self.handline.grid(row=0, column=0, sticky="w")
         a.button(self.handline, "Edit in Handloads  ›",
                  lambda: a.show_hand(self.selected.hid if self.selected else None)).pack(side="left")
         self.handline.grid_remove()
-        self.h2h_btn = a.button(d, "", self._h2h_click)
-        self.h2h_btn.grid(row=3, column=0, columnspan=2, sticky="e", padx=18, pady=(14, 0))
-        a.label(priceline, "YOUR PRICE PER ROUND ($)", 9, MUTED, True).pack(side="left")
-        a.field(priceline, ttk.Entry, textvariable=self.price_var, width=8, font=a.f(11))[0].pack(
+        self.h2h_btn = a.button(btns, "", self._h2h_click)
+        self.h2h_btn.grid(row=0, column=1, sticky="w", padx=(14, 0))
+        a.label(priceline, "Your price $", 10, MUTED).pack(side="left")
+        a.field(priceline, ttk.Entry, textvariable=self.price_var, width=7, font=a.f(11))[0].pack(
             side="left", padx=8)
         a.button(priceline, "Set price", self._set_price, "primary").pack(side="left")
-        a.button(priceline, "Use catalog estimate", self._reset_price).pack(side="left", padx=8)
-        self.d_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
-                              wraplength=a.px(820))
-        self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 6))
-        self.bt_toggle = tk.Label(d, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
+        # only once a price was typed, as on PC web
+        self.reset_btn = a.button(priceline, "Use estimate", self._reset_price)
+        self.bt_toggle = tk.Label(left, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
                                   cursor="hand2")
-        self.bt_toggle.grid(row=5, column=0, sticky="w", padx=18, pady=(4, 14))
+        self.bt_toggle.pack(anchor="w", pady=(12, 14))
         self.bt_toggle.bind("<Button-1>", lambda e: self._toggle_ballistics())
+        # where a factory load's figures come from, folded away behind the link above
+        self.src_note = a.label(lower, "", 10, MUTED, anchor="nw", justify="left",
+                                wraplength=a.px(440))
+        self.src_note.grid(row=0, column=1, sticky="nw", padx=(28, 0))
+        # the gaps between the figures and the note's width follow the panel's width
+        d.bind("<Configure>", lambda e: self.root.after_idle(self._fit_detail), add="+")
         self.bt_frame = tk.Frame(d, bg=SURFACE)
-        self.bt_frame.grid(row=6, column=0, columnspan=2, sticky="w", padx=18, pady=(0, 16))
+        self.bt_frame.grid(row=5, column=0, columnspan=2, sticky="w", padx=18, pady=(0, 16))
         self.bt_frame.grid_remove()
         self.detail.grid(row=5, column=0, sticky="ew", pady=(14, 0))
         self.detail.grid_remove()
@@ -3647,9 +3797,22 @@ class LoadsView:
         self._gun_auto = typical_gun_lb(self.cat, self.cart_var.get())
         self.gun_var.set(f"{self._gun_auto:g}")
 
+    def _weights(self):
+        """The scoring weights typed in; with grades off (the boxes hidden) a bad entry falls
+        back to the category's default instead of stopping the list."""
+        out, dflt = {}, default_weights(self.cat)
+        for k, v in self.weight_vars.items():
+            try:
+                out[k] = self._num(v, f"{METRICS[k][0]} weight", 0, 10)
+            except ValueError:
+                if self.app.show_grades:
+                    raise
+                out[k] = dflt[k]
+        return out
+
     def _toggle_weights(self):
         self.weights_open = not self.weights_open
-        if self.weights_open:
+        if self.weights_open and self.app.show_grades:
             self.weights_frame.grid()
         else:
             self.weights_frame.grid_remove()
@@ -3661,6 +3824,15 @@ class LoadsView:
         badges. With grades off the list keeps its default order, just without the ranks
         (issue #4)."""
         on = self.app.show_grades
+        # the scoring weights only matter with grades shown (Zeke, Oct 31 2026): hidden with
+        # them, so a stray value can't blank the list (refresh then uses the defaults)
+        if on:
+            self.weights_toggle.grid()
+            if self.weights_open:
+                self.weights_frame.grid()
+        else:
+            self.weights_toggle.grid_remove()
+            self.weights_frame.grid_remove()
         self.tree.configure(displaycolumns=[c for c in self.cols
                                             if on or c not in ("#", "Score", "Grade")])
         # without the # column the load names would sit against the table's edge: the empty
@@ -3980,8 +4152,7 @@ class LoadsView:
                       if self.cat.barrel_in and self.barrel_var.get().strip() else 0.0)
             twist = (self._twist(self.twist_var, "Twist rate")
                      if self.cat.barrel_in and self.twist_var.get().strip() else 0.0)
-            weights = {k: self._num(v, f"{METRICS[k][0]} weight", 0, 10)
-                       for k, v in self.weight_vars.items()}
+            weights = self._weights()
         except ValueError as exc:
             self.status.config(text=str(exc))
             return
@@ -4001,7 +4172,19 @@ class LoadsView:
         first = col in ("Grains", "Shot", self.cat.payload_col, "Velocity", "Energy", "Taylor", "HITS", "Score")
         # clicking the sorted heading again goes back to the default order; Grains goes
         # heaviest, then lightest, then the default order (Zeke, Oct 28 2026; same as the web)
-        if self.sort["col"] == col and col == "Grains" and self.sort["desc"]:
+        if col == "Load":
+            # Load: brand (grain weight), then brand (product line), then the default order
+            # (Zeke, Oct 31 2026); with grades off the default order is brand (product line),
+            # so the heading just switches between the two brand sorts
+            grades = self.app.show_grades
+            if self.sort["col"] == "Load" and not self.sort.get("line"):
+                self.sort = ({"col": "Load", "desc": False, "line": True} if grades
+                             else {"col": "#", "desc": False})
+            elif self.sort["col"] == "Load":
+                self.sort = {"col": "#", "desc": False}
+            else:
+                self.sort = {"col": "Load", "desc": False}
+        elif self.sort["col"] == col and col == "Grains" and self.sort["desc"]:
             self.sort["desc"] = False
         elif self.sort["col"] == col or col == "#":
             self.sort = {"col": "#", "desc": False}
@@ -4017,7 +4200,10 @@ class LoadsView:
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
                 and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))
                 and self._press_ok(r["item"])]
-        keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["item"].label.lower(), r["stats"]["weight"]),
+        # with grades off the default order is brand (product line) (Zeke, Oct 31 2026); the
+        # Load heading sorts by brand (grain weight) or brand (product line)
+        keys = {"#": (lambda r: (self.group_order.get(r["group"], 0), r["rank"])) if self.app.show_grades
+                else line_sort_key, "Load": line_sort_key if self.sort.get("line") else brand_sort_key,
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
                 "Grains": lambda r: r["item"].bullet_gr,
                 # biggest shot first, then the most pellets, then the heaviest payload
@@ -4096,29 +4282,35 @@ class LoadsView:
             return
         item, st = row["item"], row["stats"]
         self.selected = item
-        self.d_title.config(text=f"{item.cartridge}  ·  {item.label}")
-        info = [f"{st['weight']:g} {'gr' if self.cat.grain_style else 'gr payload'}"]
+        # the load's name first, then its cartridge (Zeke, Oct 31 2026)
+        if self.cat.grain_style and item.load:
+            title = f"{item.load}  ·  {item.cartridge}  ·  {item.bullet_gr:g} gr"
+        else:
+            title = f"{item.label}  ·  {item.cartridge}"
+        self.d_title.config(text=title)
+        # the title already gives a bullet's weight; a shot payload goes here
+        info = [] if self.cat.grain_style else [f"{st['weight']:g} gr payload"]
         if self.cat.grain_style:
             # your own barrel: its length only (the note names the test barrel)
-            info.append(f"figures for your {self.barrel:g} in barrel (estimate)" if self.barrel
-                        else f"{item.barrel_in:g} in test barrel" if item.barrel_in
-                        else "test barrel length not listed")
+            info.append(f"estimated figures for your {self.barrel:g} in barrel" if self.barrel
+                        else test_barrel_text(item))
             if getattr(item, "sg", 0):
                 info.append(f"stability {item.sg:.2f} in a 1:{item.twist:g} twist: "
                             f"{stability_text(item.sg)}")
-        if item.purpose:
-            info.append(item.purpose)
         if item.handload and item.info:
             h = item.info
             if h.get("bullet"):
                 info.insert(0, f"{h.get('bullet_maker', '')} {h['bullet']}".strip())
             if h.get("powder"):
                 info.append(f"{h['powder']} {float(h['powder_gr']):g} gr")
-        self.d_info.config(text="  ·  ".join(info))
+        # in brackets under the title (Zeke, Oct 31 2026)
+        self.d_info.config(text=f"({'  ·  '.join(info)})" if info else "")
         vals = {"velocity": f"{st['velocity']:.0f} fps", "energy": f"{st['energy']:.0f} ft-lbs",
                 "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": f"${st['cost']:.2f}",
                 "taylor": f"{st['taylor']:.1f}",
-                "hits": f"{st['hits']:.0f} ({hits_class(st['hits'])})"}
+                "hits": f"{st['hits']:.0f}"}
+        if "hits" in self.d_sub:
+            self.d_sub["hits"].config(text=hits_class(st['hits']))
         for key, (val, badge) in self.d_badges.items():
             grade = grade_relative(row["scores"][key])
             val.config(text=vals[key])
@@ -4134,6 +4326,10 @@ class LoadsView:
         else:
             self.handline.grid_remove()
             self.priceline.grid()
+            if self.app.price_key(self.cat, item) in self.app.settings.get("prices", {}):
+                self.reset_btn.pack(side="left", padx=(8, 0))
+            else:
+                self.reset_btn.pack_forget()
         src = SOURCE_NOTES.get(item.source, DEFAULT_SOURCE_NOTE)
         own = fire_source_note(self.cat, item, self.barrel, self.twist)
         if own:
@@ -4143,11 +4339,72 @@ class LoadsView:
         rank = (f"Overall {row['grade']}  ·  {row['overall']:.0f}  ·  Rank #{row['rank']} of "
                 f"{row['peers']}{' ' + row['group'] + ' loads' if row['group'] else ''}.  "
                 if self.app.show_grades else "")
-        self.d_note.config(text=rank + src)
+        # a handload's disclaimer stays in view; a factory load's sources sit behind the link
+        note = (rank + src if item.handload else rank).strip()
+        self.d_note.config(text=note)
+        self.d_note.grid() if note else self.d_note.grid_remove()
+        self.src_text = "" if item.handload else src
+        self._draw_source()
         self._style_h2h()
         self._draw_ballistics()
         self.detail.grid()
         self.fit_table_height()
+
+    def _toggle_source(self):
+        self.source_open = not getattr(self, "source_open", False)
+        self._draw_source()
+        self.fit_table_height()
+
+    def _draw_source(self):
+        """The "About these figures" link and, opened, the selected load's source note."""
+        text, is_open = getattr(self, "src_text", ""), getattr(self, "source_open", False)
+        if not text:
+            self.src_toggle.pack_forget()
+            self.src_note.grid_remove()
+            return
+        self.src_toggle.config(text=("▾" if is_open else "▸") + "  About these figures")
+        self.src_note.config(text=text)
+        self.src_note.grid() if is_open else self.src_note.grid_remove()
+        self._fit_detail()
+
+    def _fit_detail(self):
+        """Fit the opened load's figures and link on one line: the gaps between them shrink
+        with the panel (34 px down to 12 px); if the link still doesn't fit it goes beside
+        the Ballistic table link. The source note fills what's right of the price row, or
+        goes under it when that's too narrow."""
+        a = self.app
+        if not self.detail.winfo_ismapped():
+            return
+        width = self.detail.body.winfo_width() - a.px(36)
+        cells = [c for c in self.d_cells if c.winfo_manager()]
+        link = bool(getattr(self, "src_text", ""))
+        self.root.update_idletasks()
+        need = sum(c.winfo_reqwidth() for c in cells)
+        link_w = self.src_toggle.winfo_reqwidth() if link else 0
+        gaps = len(cells) - (0 if link else 1)
+        gap = max(a.px(12), min(a.px(34), (width - need - link_w) // max(1, gaps)))
+        for c in cells:
+            c.pack_configure(padx=(0, gap))
+        fits = need + link_w + gap * gaps <= width
+        if link:
+            self.src_toggle.pack_forget()
+            if fits:
+                self.src_toggle.pack(in_=self.factors, side="left", anchor="s", pady=(0, 4))
+            else:
+                self.src_toggle.pack(in_=self.left, side="left", anchor="w", padx=(24, 0),
+                                     pady=(12, 14), after=self.bt_toggle)
+                self.bt_toggle.pack_configure(side="left")
+            self.src_toggle.lift()
+        if fits:
+            self.bt_toggle.pack_configure(side="top")
+        room = self.lower.winfo_width() - self.left.winfo_reqwidth() - a.px(28)
+        if room >= a.px(260):
+            self.src_note.grid_configure(row=0, column=1, columnspan=1, padx=(a.px(28), 0),
+                                         pady=0)
+            self.src_note.config(wraplength=room)
+        else:
+            self.src_note.grid_configure(row=1, column=0, columnspan=2, padx=0, pady=(0, 12))
+            self.src_note.config(wraplength=max(a.px(200), self.lower.winfo_width()))
 
     def _toggle_ballistics(self):
         self.ballistics_open = not getattr(self, "ballistics_open", False)
@@ -5452,15 +5709,16 @@ class HeadToHeadView:
                 if key not in row["keys"]:
                     self._cell(card, r, c, "—", 11, MUTED)
                     continue
+                best = key in row["best"]
                 box = tk.Frame(card, bg=SURFACE)
                 box.grid(row=r, column=c, sticky="w", padx=12, pady=4)
-                best = key in row["best"]
-                a.label(box, h2h_value(key, row["stats"][key]), 11, ACCENT if best else TEXT,
+                a.label(box, h2h_value(key, row["stats"][key]), 11, BEST if best else TEXT,
                         True).pack(side="left")
                 gap = "best" if best else h2h_gap(row["gap"][key])
                 if key in ("velocity", "energy") and row["dist"] != dist:
                     gap += f"  at {row['dist']:g} yd"
-                a.label(box, gap, 9, ACCENT if best else MUTED, best).pack(side="left", padx=(6, 0))
+                # the "best" tag stays grey like the web's .gap (only the figure is coloured)
+                a.label(box, gap, 9, MUTED, best).pack(side="left", padx=(6, 0))
                 if grades:
                     Badge(box, a, grade_relative(row["scores"][key]), 9).pack(
                         side="left", padx=(8, 0))
@@ -5470,8 +5728,8 @@ class HeadToHeadView:
         most = max(len(row["best"]) for row in rows)
         for c, row in enumerate(rows, start=1):
             k = len(row["best"])
-            self._cell(card, r, c, f"{k} of {len(row['keys'])}", 10,
-                       ACCENT if k == most and k else TEXT, k == most and k > 0)
+            win = k == most and k > 0
+            self._cell(card, r, c, f"{k} of {len(row['keys'])}", 10, BEST if win else TEXT, win)
         r += 1
         a.label(card, "", 4).grid(row=r, column=0)
 
@@ -5493,8 +5751,8 @@ class HeadToHeadView:
             for k in (2, 3):
                 dr.columnconfigure(3 * c + k, minsize=col_w + 2 * pad, uniform="dr")
 
-        def cell(r, c, text, color=TEXT, bold=False, size=11, py=3):
-            a.label(dr, text, size, color, bold, bg=SURFACE, anchor="e").grid(
+        def cell(r, c, text, color=TEXT, bold=False, size=11, py=3, win=False):
+            a.label(dr, text, size, BEST if win else color, bold or win, bg=SURFACE, anchor="e").grid(
                 row=r, column=c, sticky="nsew", padx=pad, pady=py)
 
         table = h2h_downrange([(row["cat"], row["item"]) for row in rows])
@@ -5531,8 +5789,8 @@ class HeadToHeadView:
                     continue
                 v, e = x
                 vb, eb = v >= v_top - 1e-9, e >= e_top - 1e-9
-                cell(i, 3 * c + 2, f"{v:,.0f}", ACCENT if vb else TEXT, vb)
-                cell(i, 3 * c + 3, f"{e:,.0f}", ACCENT if eb else TEXT, eb)
+                cell(i, 3 * c + 2, f"{v:,.0f}", win=vb)
+                cell(i, 3 * c + 3, f"{e:,.0f}", win=eb)
             if i < len(table) + 2:
                 a.rule(dr, i, 3 * n + 1)                    # a thin line between distances
         a.label(dr, "", 2, bg=SURFACE).grid(row=last, column=0)

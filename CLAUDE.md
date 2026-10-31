@@ -93,7 +93,15 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   firearm setup (...)". With your own barrel the Barrel column shows that length for every load, the
   opened load's facts line says "figures for your X in barrel (estimate)" instead of the test barrel, and
   its note starts with fire_source_note / fireSourceNote (test barrel -> your barrel, twist) then
-  "Listed figures: " + the SOURCE_NOTES text.
+  "Listed figures: " + the SOURCE_NOTES text. Oct 31 2026 (Zeke): on a factory load that note sits in a collapsed
+  "About these figures" drop-down (web details.srcd, L.srcOpen; desktop src_toggle / _draw_source,
+  source_open); a handload's disclaimer stays in view. PC web (Zeke, Oct 31 2026): the link (.srcb) follows
+  the HITS tile, the opened note fills the space right of the price row (.det grid), the facts line is
+  muted semi-bold without the purpose ("estimated figures for your 20 in barrel"), bigger tiles, even
+  spacing. The desktop app (Oct 31 2026, Zeke): the same layout: HITS's game class in small grey
+  type, the link after HITS (gaps shrink with the panel; if it still won't fit it sits beside "Ballistic
+  table": LoadsView._fit_detail), the note right of the price row / Head to Head button (under them
+  when too narrow), "Your price $" with "Use estimate" only once a price is set. Phones unchanged.
 - Barrel length: at_barrel / atBarrel copy each load (.base = the listed load, .at_in = the length) with
   v x (length / test barrel)^n. Test barrel = the load's barrel_in, else its cartridge's usual one
   (usual_test_barrels -> TEST_BARRELS, web cat.test_barrels: the length most of its loads list, e.g.
@@ -139,6 +147,19 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   menu, desktop a "Shot" column (click its heading). shot_size / shotSize read the load name's
   largest shot (slugs first, then 000-4 Buck, T/BBB/BB/B, #1-#9 as (17-n)/100 in), then most
   pellets, then heaviest payload.
+- Brand sort (Oct 31 2026, Zeke): brand_of / brandOf = the load name's first word (no two brands share
+  one), then bullet weight / payload lightest first, then the name (brand_sort_key / brandCmp). Web
+  "Sort: brand" (#ls brand) and the PC table's Load heading; desktop the Load heading. With grades off a brand
+  sort is the dictionary's default order (desktop "#" key, web DEFAULT_SORT) and "Sort: best value" is gone;
+  the "Scoring weights" link is hidden too, and a bad weight entry falls back to the category default
+  (_weights / GRADES check) instead of blanking the list.
+  Two brand sorts (Oct 31 2026, Zeke): "Sort: brand (grain weight)" (#ls brand) and "Sort: brand (product
+  line)" (#ls brandl: product_line / productLine from PRODUCT_LINES, web DATA.lines = LINE_PREFIXES, longest
+  prefix wins, "A=B" aliases; unlined loads after the lines, then lightest first; line_sort_key / lineCmp).
+  With grades off the default is brand (product line) (Zeke, Oct 31 2026; listed first in the menu).
+  The Load heading (desktop, PC web) cycles brand (grain) -> brand (product line) -> default; with grades
+  off it switches between the two brand sorts. A new product
+  line in the data needs a PRODUCT_LINES entry or it sorts with its brand's unlined loads.
 - Grain weight sort (Oct 28 2026, Zeke): bullet categories (rifle, rimfire, handgun). Web sort menu
   "Sort: heaviest bullet" / "Sort: lightest bullet" (#ls grain / grainl); PC tables (desktop LoadsView, web
   >=900 px) have a Grains column whose heading sorts heaviest first, click again for lightest, so the
@@ -169,13 +190,16 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the desktop app's (.lhead / .trow on a CSS subgrid, columns fit their figures, same columns as LoadsView;
   sortable headers set the #ls sort; clicking the sorted header again goes back to the default order, Grains goes heaviest -> lightest -> default, desktop _sort_by the same; Zeke, Oct 28 2026). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
   At >=1500 px the dictionary page (.wrap.dict) fills the window: settings card, filter and sort in a
-  left column, the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
+  left column (380 px beside the table; wider, 400-620 px with the window, while no cartridge is picked: Zeke,
+  Oct 31 2026), the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
   column (cartridge box over load box) beside the results; that column grows with the window (520 px at
   1500 px wide up to 720 px, so long load names fit; Zeke, Oct 28 2026), a load box's title shows the full name. An opened dictionary load names its cartridge (Oct 30 2026, Zeke): phones a small grey line over the
-  load name (.lc .nm .ct), PC web first in the facts line, desktop in the panel title. An opened load on PC web shows a facts line
+  load name (.lc .nm .ct), PC web first in the facts line, desktop in the panel title after the load's name
+  ("Hornady Superformance SST  ·  .308 Winchester  ·  165 gr", 14 pt, Zeke Oct 31 2026; its facts
+  line, 10.5 pt and in brackets, leaves the bullet weight out since the title has it). An opened load on PC web shows a facts line
   and a tile per factor (.pdet, desktop panel style) instead of the phone's figure rows (.fr).
   Handloads (>=900 px): each cartridge group is a table too (Handload, Bullet, Powder, Velocity, Energy,
-  Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); >=1500 px it fills the window (.handp).
+  Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); the page keeps the 1040 px width of the other pages even at >=1500 px (Zeke, Oct 31 2026: it used to fill the window).
   The web handload form's cartridge box is a <select> (cartridges in an <optgroup> per category) with a
   .selcover button over it: with a mouse it opens the search pop-up (pickSheet with an anchor), on touch the
   bottom sheet, both with category headings (Zeke, Oct 28 2026; he tried the plain drop-down and preferred the pop-up).
@@ -217,6 +241,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Colour themes live in THEMES (load_lore.py); build_web.py passes the same table to
   the web version. Classic is the default and the original look. Use the palette globals
   (BG, SURFACE, TEXT, ACCENT, ON_ACCENT, DANGER, HAND_FG...) / CSS variables, never hard-coded colours.
+  Head to Head winners use BEST / --best (a theme's optional "best" colour, else its accent). Graphite's
+  is gold (Zeke Oct 31 2026: its grey accent read like plain text; he chose gold text, no cell tint).
 - Desktop UI sizes come from measured text (App.fit_columns, _sidebar_width), not fixed pixel
   counts: fonts are in points and grow with screen DPI, so fixed widths cut text off on HiDPI.
   The Load column fits the longest full name, re-measured per cartridge; grow_to_fit widens
