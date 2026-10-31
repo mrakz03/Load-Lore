@@ -3569,12 +3569,20 @@ class LoadsView:
         self.d_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
                               wraplength=a.px(820))
         self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 6))
+        # where a factory load's figures come from, folded away behind a link (Zeke, Oct 31 2026)
+        self.src_toggle = tk.Label(d, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
+                                   cursor="hand2")
+        self.src_toggle.grid(row=5, column=0, sticky="w", padx=18, pady=(4, 0))
+        self.src_toggle.bind("<Button-1>", lambda e: self._toggle_source())
+        self.src_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
+                                wraplength=a.px(820))
+        self.src_note.grid(row=6, column=0, sticky="w", padx=18, pady=(4, 0))
         self.bt_toggle = tk.Label(d, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
                                   cursor="hand2")
-        self.bt_toggle.grid(row=5, column=0, sticky="w", padx=18, pady=(4, 14))
+        self.bt_toggle.grid(row=7, column=0, sticky="w", padx=18, pady=(4, 14))
         self.bt_toggle.bind("<Button-1>", lambda e: self._toggle_ballistics())
         self.bt_frame = tk.Frame(d, bg=SURFACE)
-        self.bt_frame.grid(row=6, column=0, columnspan=2, sticky="w", padx=18, pady=(0, 16))
+        self.bt_frame.grid(row=8, column=0, columnspan=2, sticky="w", padx=18, pady=(0, 16))
         self.bt_frame.grid_remove()
         self.detail.grid(row=5, column=0, sticky="ew", pady=(14, 0))
         self.detail.grid_remove()
@@ -4143,11 +4151,33 @@ class LoadsView:
         rank = (f"Overall {row['grade']}  ·  {row['overall']:.0f}  ·  Rank #{row['rank']} of "
                 f"{row['peers']}{' ' + row['group'] + ' loads' if row['group'] else ''}.  "
                 if self.app.show_grades else "")
-        self.d_note.config(text=rank + src)
+        # a handload's disclaimer stays in view; a factory load's sources sit behind the link
+        note = (rank + src if item.handload else rank).strip()
+        self.d_note.config(text=note)
+        self.d_note.grid() if note else self.d_note.grid_remove()
+        self.src_text = "" if item.handload else src
+        self._draw_source()
         self._style_h2h()
         self._draw_ballistics()
         self.detail.grid()
         self.fit_table_height()
+
+    def _toggle_source(self):
+        self.source_open = not getattr(self, "source_open", False)
+        self._draw_source()
+        self.fit_table_height()
+
+    def _draw_source(self):
+        """The "About these figures" link and, opened, the selected load's source note."""
+        text, is_open = getattr(self, "src_text", ""), getattr(self, "source_open", False)
+        if not text:
+            self.src_toggle.grid_remove()
+            self.src_note.grid_remove()
+            return
+        self.src_toggle.config(text=("▾" if is_open else "▸") + "  About these figures")
+        self.src_toggle.grid()
+        self.src_note.config(text=text)
+        self.src_note.grid() if is_open else self.src_note.grid_remove()
 
     def _toggle_ballistics(self):
         self.ballistics_open = not getattr(self, "ballistics_open", False)

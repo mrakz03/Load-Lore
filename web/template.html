@@ -137,7 +137,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   #lres .lc .det>.prow{order:3;flex:0 0 auto}
   #lres .lc .det>.hbtns{order:4;flex:0 0 auto;margin:0}
   #lres .lc .det>.note{order:5;max-width:900px}
-  #lres .lc .det>.btab{order:6}
+  #lres .lc .det>.btab{order:6}#lres .lc .det>.srcd{order:5}
   #lres .pdet .psub{color:var(--muted);font-size:.9rem;margin-bottom:10px}
   #lres .pdet .tiles{display:flex;flex-wrap:wrap;gap:10px 34px}
   #lres .pdet .tile .l{display:block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
@@ -419,7 +419,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .h2h table.dr th small{display:block;font-weight:600}
 .h2h table.dr th.ld small{font-weight:400;margin-top:2px}
 .h2h table.dr .l0{border-left:1px solid var(--border)}
-details.btab{margin-top:10px}
+details.btab{margin-top:10px}details.srcd .note{margin-top:2px}
 details.btab summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.9rem;padding:6px 0}
 details.btab table th,details.btab table td{text-align:right;padding:7px 8px}
 details.btab th small{display:block;font-weight:600;color:var(--muted)}
@@ -1579,7 +1579,8 @@ function openLoads(cat,pane){
           <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button></div>
           ${it.handload?`<div class="hbtns"><button class="btn hedit">Edit in Handloads ›</button></div>
           <div class="note">${esc([fireSourceNote(cat,it,out.barrel,out.twist),SOURCE_NOTES.handload].filter(Boolean).join(" "))}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
-          <div class="note">${esc((fireSourceNote(cat,it,out.barrel,out.twist)?fireSourceNote(cat,it,out.barrel,out.twist)+" Listed figures: ":"")+(SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE))} Catalog price estimate: $${it.default_cost.toFixed(2)}.</div></div>`}`:""}
+          <!-- where the figures come from, folded away behind a link (Zeke, Oct 31 2026) -->
+          <details class="btab srcd"${L.srcOpen?" open":""}><summary>About these figures</summary><div class="note">${esc((fireSourceNote(cat,it,out.barrel,out.twist)?fireSourceNote(cat,it,out.barrel,out.twist)+" Listed figures: ":"")+(SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE))} Catalog price estimate: $${it.default_cost.toFixed(2)}.</div></details></div>`}`:""}
       </div>`;}).join("")||`<div class="muted">No loads match that filter.</div>`;
     // a heading sorts by its column; clicking the sorted heading again goes back to the default
     // order (Grains: heaviest, then lightest, then the default order; Zeke, Oct 28 2026)
@@ -1589,8 +1590,9 @@ function openLoads(cat,pane){
       const lab=c.dataset.i;
       c.onclick=e=>{if(e.target.closest(".prow,.hbtns,.btab"))return;L.open=L.open===lab?null:lab;render();};
       const it=all.find(x=>keyOf(x)===lab&&x.cartridge===$$("#lc").value);
-      const bt=c.querySelector("details.btab");
+      const bt=c.querySelector("details.btab:not(.srcd)"),sd=c.querySelector("details.srcd");
       if(bt){bt.addEventListener("toggle",()=>{L.btOpen=bt.open;});bt.onclick=e=>e.stopPropagation();}
+      if(sd){sd.addEventListener("toggle",()=>{L.srcOpen=sd.open;});sd.onclick=e=>e.stopPropagation();}
       const hb=c.querySelector(".h2hb");
       if(hb&&it)hb.onclick=()=>{
         const picks=H2H;

@@ -93,7 +93,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   firearm setup (...)". With your own barrel the Barrel column shows that length for every load, the
   opened load's facts line says "figures for your X in barrel (estimate)" instead of the test barrel, and
   its note starts with fire_source_note / fireSourceNote (test barrel -> your barrel, twist) then
-  "Listed figures: " + the SOURCE_NOTES text.
+  "Listed figures: " + the SOURCE_NOTES text. Oct 31 2026 (Zeke): on a factory load that note sits in a collapsed
+  "About these figures" drop-down (web details.srcd, L.srcOpen; desktop src_toggle / _draw_source,
+  source_open); a handload's disclaimer stays in view.
 - Barrel length: at_barrel / atBarrel copy each load (.base = the listed load, .at_in = the length) with
   v x (length / test barrel)^n. Test barrel = the load's barrel_in, else its cartridge's usual one
   (usual_test_barrels -> TEST_BARRELS, web cat.test_barrels: the length most of its loads list, e.g.
