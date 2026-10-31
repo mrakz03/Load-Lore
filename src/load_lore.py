@@ -4162,7 +4162,8 @@ class LoadsView:
                 info.insert(0, f"{h.get('bullet_maker', '')} {h['bullet']}".strip())
             if h.get("powder"):
                 info.append(f"{h['powder']} {float(h['powder_gr']):g} gr")
-        self.d_info.config(text="  ·  ".join(info))
+        # in brackets under the title (Zeke, Oct 31 2026)
+        self.d_info.config(text=f"({'  ·  '.join(info)})" if info else "")
         vals = {"velocity": f"{st['velocity']:.0f} fps", "energy": f"{st['energy']:.0f} ft-lbs",
                 "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": f"${st['cost']:.2f}",
                 "taylor": f"{st['taylor']:.1f}",
