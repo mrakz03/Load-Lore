@@ -196,7 +196,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   line, 10.5 pt and in brackets, leaves the bullet weight out since the title has it). An opened load on PC web shows a facts line
   and a tile per factor (.pdet, desktop panel style) instead of the phone's figure rows (.fr).
   Handloads (>=900 px): each cartridge group is a table too (Handload, Bullet, Powder, Velocity, Energy,
-  Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); >=1500 px it fills the window (.handp).
+  Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); the page keeps the 1040 px width of the other pages even at >=1500 px (Zeke, Oct 31 2026: it used to fill the window).
   The web handload form's cartridge box is a <select> (cartridges in an <optgroup> per category) with a
   .selcover button over it: with a mouse it opens the search pop-up (pickSheet with an anchor), on touch the
   bottom sheet, both with category headings (Zeke, Oct 28 2026; he tried the plain drop-down and preferred the pop-up).

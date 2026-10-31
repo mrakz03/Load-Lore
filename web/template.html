@@ -167,7 +167,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .dict #pane .chips button{min-height:34px;padding:6px 11px}
 }
 @media(min-width:1500px){   /* big PC windows: Head to Head fills the window, the load picker in a column beside the results */
-  .wrap.wide.h2hp,.wrap.wide.handp{max-width:none}
+  .wrap.wide.h2hp{max-width:none}   /* Handloads keeps the 1040 px of the other pages (Zeke, Oct 31 2026) */
   .h2hp #pane{display:grid;grid-template-columns:minmax(360px,clamp(460px,40vw - 80px,720px)) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:22px;align-items:start}
   .h2hp #pane>.card{grid-column:1;grid-row:1/span 2;margin-top:0}
   .h2hp #pane>#hres,.h2hp #pane>#hnote{grid-column:2;min-width:0}
