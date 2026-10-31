@@ -4141,7 +4141,12 @@ class LoadsView:
             return
         item, st = row["item"], row["stats"]
         self.selected = item
-        self.d_title.config(text=f"{item.cartridge}  ·  {item.label}")
+        # the load's name first, then its cartridge (Zeke, Oct 31 2026)
+        if self.cat.grain_style and item.load:
+            title = f"{item.load}  ·  {item.cartridge}  ·  {item.bullet_gr:g} gr"
+        else:
+            title = f"{item.label}  ·  {item.cartridge}"
+        self.d_title.config(text=title)
         info = [f"{st['weight']:g} {'gr' if self.cat.grain_style else 'gr payload'}"]
         if self.cat.grain_style:
             # your own barrel: its length only (the note names the test barrel)
