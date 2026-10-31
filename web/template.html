@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <style>
-:root{--bg:#0e1014;--surface:#171a21;--surface2:#222732;--border:#2d333f;--text:#e8eaee;--muted:#8a93a3;--accent:#4c8dff;--accent-h:#6aa0ff;--on-accent:#fff;--side:#12151b;--danger:#e5534b;--hand:#5fd1b4;color-scheme:dark}
+:root{--best:#4c8dff;--bg:#0e1014;--surface:#171a21;--surface2:#222732;--border:#2d333f;--text:#e8eaee;--muted:#8a93a3;--accent:#4c8dff;--accent-h:#6aa0ff;--on-accent:#fff;--side:#12151b;--danger:#e5534b;--hand:#5fd1b4;color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{font-size:calc(16px * var(--ts,1))}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
@@ -410,7 +410,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .h2h th small.swarn,.h2hm .swarn{display:block;color:var(--danger);font-weight:700;font-size:.75rem}
 .mrow .mname .setup{white-space:nowrap}
 .h2h td.c{min-width:9.5em}
-.h2h .v{font-weight:700}.h2h .best{color:var(--accent)}
+.h2h .v{font-weight:700}.h2h .best{color:var(--best)}
 .h2h .gap{font-size:.75rem;color:var(--muted);margin-left:6px}.h2h .gap.best{font-weight:700}
 .h2h .badge{display:inline-block;margin-left:8px;min-width:24px;font-size:.75rem;padding:1px 5px}
 .h2h tr.sep td{border-bottom:2px solid var(--border)}
@@ -442,7 +442,7 @@ details.btab table td:first-child,details.btab table th:first-child{text-align:l
   .mload.hl{border-left:3px solid var(--hand)}
   .mload .mi{flex:1;min-width:0}.mload small{display:block;color:var(--muted);font-size:.72rem;font-weight:700}
   .mload b{line-height:1.3;word-break:break-word}.mload .mf{font-size:.8rem;color:var(--muted);margin-top:3px}
-  .mload .best{color:var(--accent);font-weight:700}
+  .mload .best{color:var(--best);font-weight:700}
   .mload .mo{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.75rem;color:var(--muted)}
   .mload .mo .badge{margin:0}
   .mcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
@@ -453,11 +453,11 @@ details.btab table td:first-child,details.btab table th:first-child{text-align:l
   .mrow .mname{grid-column:1/4;font-size:.8rem;color:var(--muted);font-weight:600;line-height:1.3}
   .mrow .mname.hl{color:var(--hand)}
   .chips.mdr{margin:4px 0 6px}.chips.mdr button{min-height:32px;padding:5px 11px}
-  .mrow .mv{font-weight:700}.mrow .best{color:var(--accent)}
+  .mrow .mv{font-weight:700}.mrow .best{color:var(--best)}
   .mrow .mg{font-size:.75rem;color:var(--muted)}.mrow .mg.best{font-weight:700}
   .mrow .badge{min-width:26px;font-size:.75rem;padding:2px 5px}
   .mbar{grid-column:1/4;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
-  .mbar i{display:block;height:100%;background:var(--muted);border-radius:3px}.mbar i.b{background:var(--accent)}
+  .mbar i{display:block;height:100%;background:var(--muted);border-radius:3px}.mbar i.b{background:var(--best)}
 }
 .sect{font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.04em;margin:18px 0 0}
 </style>
@@ -486,6 +486,7 @@ function applyTheme(name){
   const t=THEMES[name];if(!t)return;THEME=name;
   const st=document.documentElement.style;
   for(const [k,v] of Object.entries(THEME_VARS))st.setProperty(v,t[k]);
+  st.setProperty("--best",t.best||t.accent);   // Head to Head winners: a theme's "best" colour, else the accent
   st.colorScheme=t.scheme;
   const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t.side;
   try{localStorage.setItem(THEME_KEY,name);}catch(e){}

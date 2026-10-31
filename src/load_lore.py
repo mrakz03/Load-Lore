@@ -355,6 +355,8 @@ def pick_key(cat, item):
 
 # Color themes (desktop and, via build_web.py, the phone/web version). "side" is the web
 # sidebar / bottom bar; "scheme" tells the browser whether form controls should be light or dark.
+# Optional: "best" colours Head to Head winners (else the accent; Graphite: gold, its grey accent
+# read like plain text, Zeke Oct 31 2026).
 THEMES = {
     "Classic": dict(bg="#0e1014", surface="#171a21", surface_2="#222732", border="#2d333f",
                     text="#e8eaee", muted="#8a93a3", accent="#4c8dff", accent_hover="#6aa0ff",
@@ -364,7 +366,8 @@ THEMES = {
                   on_accent="#ffffff", side="#ffffff", danger="#c62828", hand="#0f8a6c", scheme="light"),
     "Graphite": dict(bg="#121212", surface="#1c1c1c", surface_2="#282828", border="#383838",
                      text="#ededed", muted="#9e9e9e", accent="#d4d4d4", accent_hover="#ffffff",
-                     on_accent="#121212", side="#171717", danger="#ef6b62", hand="#9be0c9", scheme="dark"),
+                     on_accent="#121212", side="#171717", danger="#ef6b62", hand="#9be0c9", scheme="dark",
+                     best="#f2c94c"),
     "Woodland camo": dict(bg="#0f120c", surface="#181d14", surface_2="#232a1c", border="#343e2a",
                           text="#e7eadf", muted="#98a088", accent="#8aa155", accent_hover="#a3ba6a",
                           on_accent="#10140b", side="#13170f", danger="#e0664f", hand="#c9b27c",
@@ -390,12 +393,13 @@ DEFAULT_THEME = "Classic"
 def apply_theme(name):
     """Point the palette globals at a theme; screens built afterwards use it."""
     global BG, SURFACE, SURFACE_2, BORDER, TEXT, MUTED, ACCENT, ACCENT_HOVER, ON_ACCENT, DANGER, HAND_FG
-    global SIDE
+    global SIDE, BEST
     t = THEMES.get(name) or THEMES[DEFAULT_THEME]
     BG, SURFACE, SURFACE_2, BORDER = t["bg"], t["surface"], t["surface_2"], t["border"]
     SIDE = t["side"]
     TEXT, MUTED, ACCENT, ACCENT_HOVER = t["text"], t["muted"], t["accent"], t["accent_hover"]
     ON_ACCENT, DANGER, HAND_FG = t["on_accent"], t["danger"], t["hand"]
+    BEST = t.get("best", ACCENT)
 
 
 apply_theme(DEFAULT_THEME)
@@ -5702,15 +5706,16 @@ class HeadToHeadView:
                 if key not in row["keys"]:
                     self._cell(card, r, c, "—", 11, MUTED)
                     continue
+                best = key in row["best"]
                 box = tk.Frame(card, bg=SURFACE)
                 box.grid(row=r, column=c, sticky="w", padx=12, pady=4)
-                best = key in row["best"]
-                a.label(box, h2h_value(key, row["stats"][key]), 11, ACCENT if best else TEXT,
+                a.label(box, h2h_value(key, row["stats"][key]), 11, BEST if best else TEXT,
                         True).pack(side="left")
                 gap = "best" if best else h2h_gap(row["gap"][key])
                 if key in ("velocity", "energy") and row["dist"] != dist:
                     gap += f"  at {row['dist']:g} yd"
-                a.label(box, gap, 9, ACCENT if best else MUTED, best).pack(side="left", padx=(6, 0))
+                # the "best" tag stays grey like the web's .gap (only the figure is coloured)
+                a.label(box, gap, 9, MUTED, best).pack(side="left", padx=(6, 0))
                 if grades:
                     Badge(box, a, grade_relative(row["scores"][key]), 9).pack(
                         side="left", padx=(8, 0))
@@ -5720,8 +5725,8 @@ class HeadToHeadView:
         most = max(len(row["best"]) for row in rows)
         for c, row in enumerate(rows, start=1):
             k = len(row["best"])
-            self._cell(card, r, c, f"{k} of {len(row['keys'])}", 10,
-                       ACCENT if k == most and k else TEXT, k == most and k > 0)
+            win = k == most and k > 0
+            self._cell(card, r, c, f"{k} of {len(row['keys'])}", 10, BEST if win else TEXT, win)
         r += 1
         a.label(card, "", 4).grid(row=r, column=0)
 
@@ -5743,8 +5748,8 @@ class HeadToHeadView:
             for k in (2, 3):
                 dr.columnconfigure(3 * c + k, minsize=col_w + 2 * pad, uniform="dr")
 
-        def cell(r, c, text, color=TEXT, bold=False, size=11, py=3):
-            a.label(dr, text, size, color, bold, bg=SURFACE, anchor="e").grid(
+        def cell(r, c, text, color=TEXT, bold=False, size=11, py=3, win=False):
+            a.label(dr, text, size, BEST if win else color, bold or win, bg=SURFACE, anchor="e").grid(
                 row=r, column=c, sticky="nsew", padx=pad, pady=py)
 
         table = h2h_downrange([(row["cat"], row["item"]) for row in rows])
@@ -5781,8 +5786,8 @@ class HeadToHeadView:
                     continue
                 v, e = x
                 vb, eb = v >= v_top - 1e-9, e >= e_top - 1e-9
-                cell(i, 3 * c + 2, f"{v:,.0f}", ACCENT if vb else TEXT, vb)
-                cell(i, 3 * c + 3, f"{e:,.0f}", ACCENT if eb else TEXT, eb)
+                cell(i, 3 * c + 2, f"{v:,.0f}", win=vb)
+                cell(i, 3 * c + 3, f"{e:,.0f}", win=eb)
             if i < len(table) + 2:
                 a.rule(dr, i, 3 * n + 1)                    # a thin line between distances
         a.label(dr, "", 2, bg=SURFACE).grid(row=last, column=0)
