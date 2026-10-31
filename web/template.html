@@ -768,7 +768,7 @@ const BUCK_IN={"000":.36,"00":.33,"0":.32,"1":.30,"2":.27,"3":.25,"4":.24},SHOT_
 const brandOf=it=>((it.load||it.label||"").split(/\s+/)[0]||"").toLowerCase();
 const brandCmp=(a,b)=>{const x=brandOf(a.it),y=brandOf(b.it);return (x<y?-1:x>y?1:0)||a.it.bullet_gr-b.it.bullet_gr||cmpStr((a.it.load||a.it.label).toLowerCase(),(b.it.load||b.it.label).toLowerCase());};
 const cmpStr=(x,y)=>x<y?-1:x>y?1:0;
-const DEFAULT_SORT=()=>GRADES?"score":"brand";
+const DEFAULT_SORT=()=>GRADES?"score":"brandl";   // grades off: brand (product line) (Zeke, Oct 31 2026)
 // Sort: brand (product line) (Zeke, Oct 31 2026): DATA.lines = PRODUCT_LINES as [lowercase prefix,
 // line], longest first; unlined loads after the lines, then bullet weight / payload lightest first.
 // product_line / line_sort_key on desktop.
@@ -1467,7 +1467,7 @@ function openLoads(cat,pane){
   </div>
   <!-- the brand / load filter and sort sit right above the list (issue #26) -->
   <div class="sortrow above"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
-      <select id="ls">${GRADES?'<option value="score">Sort: best value</option>':""}<option value="brand">Sort: brand (grain weight)</option><option value="brandl">Sort: brand (product line)</option>${cat.grain_style?'<option value="grain">Sort: heaviest bullet</option><option value="grainl">Sort: lightest bullet</option>':'<option value="shot">Sort: shot size</option>'}<option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
+      <select id="ls">${GRADES?'<option value="score">Sort: best value</option>':""}<option value="brandl">Sort: brand (product line)</option><option value="brand">Sort: brand (grain weight)</option>${cat.grain_style?'<option value="grain">Sort: heaviest bullet</option><option value="grainl">Sort: lightest bullet</option>':'<option value="shot">Sort: shot size</option>'}<option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
   <div class="pchk hidden" id="lpr" role="group" aria-label="Show +P loads"></div>
   <div class="cnt" id="lcnt"></div><div class="lgrid" id="lres"></div>
   <div class="note" id="lnote"></div>`;
@@ -1619,8 +1619,10 @@ function openLoads(cat,pane){
     // a heading sorts by its column; clicking the sorted heading again goes back to the default
     // order (Grains: heaviest, then lightest, then the default order; Zeke, Oct 28 2026)
     box.querySelectorAll(".lhead button").forEach(b=>b.onclick=()=>{const k=b.dataset.k,cur=$$("#ls").value;
-      // Load: brand (grain weight), then brand (product line), then the default order
-      $$("#ls").value=k==="grain"&&cur==="grain"?"grainl":k==="brand"&&cur==="brand"?"brandl":k===cur||k==="grain"&&cur==="grainl"||k==="brand"&&cur==="brandl"?DEFAULT_SORT():k;render();});
+      // Load: brand (grain weight), then brand (product line), then the default order (grades off: the
+      // default is brand (product line), so it switches between the two)
+      $$("#ls").value=k==="brand"?(cur==="brand"?"brandl":cur==="brandl"&&GRADES?"score":"brand")
+        :k==="grain"&&cur==="grain"?"grainl":k===cur||k==="grain"&&cur==="grainl"?DEFAULT_SORT():k;render();});
     box.querySelectorAll(".lc").forEach(c=>{
       const lab=c.dataset.i;
       c.onclick=e=>{if(e.target.closest(".prow,.hbtns,.btab"))return;L.open=L.open===lab?null:lab;render();};

@@ -4174,11 +4174,14 @@ class LoadsView:
         # heaviest, then lightest, then the default order (Zeke, Oct 28 2026; same as the web)
         if col == "Load":
             # Load: brand (grain weight), then brand (product line), then the default order
-            # (Zeke, Oct 31 2026); with grades off the default order is already brand (grain)
-            if self.sort["col"] == "Load" and self.sort.get("line"):
+            # (Zeke, Oct 31 2026); with grades off the default order is brand (product line),
+            # so the heading just switches between the two brand sorts
+            grades = self.app.show_grades
+            if self.sort["col"] == "Load" and not self.sort.get("line"):
+                self.sort = ({"col": "Load", "desc": False, "line": True} if grades
+                             else {"col": "#", "desc": False})
+            elif self.sort["col"] == "Load":
                 self.sort = {"col": "#", "desc": False}
-            elif self.sort["col"] == "Load" or (self.sort["col"] == "#" and not self.app.show_grades):
-                self.sort = {"col": "Load", "desc": False, "line": True}
             else:
                 self.sort = {"col": "Load", "desc": False}
         elif self.sort["col"] == col and col == "Grains" and self.sort["desc"]:
@@ -4197,10 +4200,10 @@ class LoadsView:
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
                 and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))
                 and self._press_ok(r["item"])]
-        # with grades off the default order is by brand, lightest bullet / payload first
-        # (Zeke, Oct 31 2026); the Load heading sorts that way too, or by product line
+        # with grades off the default order is brand (product line) (Zeke, Oct 31 2026); the
+        # Load heading sorts by brand (grain weight) or brand (product line)
         keys = {"#": (lambda r: (self.group_order.get(r["group"], 0), r["rank"])) if self.app.show_grades
-                else brand_sort_key, "Load": line_sort_key if self.sort.get("line") else brand_sort_key,
+                else line_sort_key, "Load": line_sort_key if self.sort.get("line") else brand_sort_key,
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
                 "Grains": lambda r: r["item"].bullet_gr,
                 # biggest shot first, then the most pellets, then the heaviest payload
