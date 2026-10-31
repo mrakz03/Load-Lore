@@ -838,9 +838,9 @@ const ICON={
   settings:'<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>'};
 // Settings (theme, text size, S-F grades): a tab on phones, the bottom of the sidebar on wide screens
 // the tools: key, title, Home-screen blurb (same as TOOLS in the desktop app)
-const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or your own handload, graded against each other."],
+const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or your own handload, in one sortable list."],
   ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges or categories."],
-  ["hand","Handloads","Build and save your own reloads. They're graded in the Load Dictionary and can go head to head."]];
+  ["hand","Handloads","Build and save your own reloads. They show up in the Load Dictionary and can go head to head."]];
 const toolTitle=k=>(TOOLS.find(t=>t[0]===k)||TOOLS[0])[1];
 // the Load Dictionary, the main tool, sits in the middle of the phone's tab bar
 const NAVS=[["home","Home",ICON.home],["h2h","Head to Head",ICON.h2h],["loads","Load Dictionary",ICON.loads],["hand","Handloads",ICON.hand],["settings","Settings",ICON.settings]];

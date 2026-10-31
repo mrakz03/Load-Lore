@@ -334,10 +334,10 @@ def metric_keys(cat):
 
 # The tools: (key, title, blurb on the Home screen)
 TOOLS = (("loads", "Load Dictionary", "Every load of a cartridge, factory or your own handload, "
-                                      "graded against each other."),
+                                      "in one sortable list."),
          ("h2h", "Head to Head", "Put 2 to 5 loads side by side, even from different cartridges "
                                  "or categories."),
-         ("hand", "Handloads", "Build and save your own reloads. They're graded in the Load "
+         ("hand", "Handloads", "Build and save your own reloads. They show up in the Load "
                                "Dictionary and can go head to head."))
 NAV_ORDER = ("loads", "h2h", "hand")     # the PC sidebar (Zeke, Oct 25 2026): Load Dictionary first; phones keep NAVS
 H2H_MIN, H2H_MAX = 2, 5
