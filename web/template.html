@@ -141,14 +141,15 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   #lres .pdet .srcb{align-self:center;background:none;border:0;padding:0;font:inherit;font-size:.9rem;font-weight:700;color:var(--accent);cursor:pointer}
   /* a factory load: the opened "About these figures" note fills the space right of the price row and
      the Ballistic table link (Zeke, Oct 31 2026) */
-  #lres .lc:not(.hl) .det{display:grid;grid-template-columns:max-content max-content minmax(0,1fr);align-items:start;gap:20px 14px;padding:14px 0 8px}   /* roomier (Zeke, Oct 31 2026) */
+  #lres .lc:not(.hl) .det{display:grid;grid-template-columns:max-content max-content minmax(0,1fr);align-items:start;gap:0 14px;padding:14px 0 8px}   /* roomier, evenly spaced (Zeke, Oct 31 2026): margins, not row gaps, so a missing grade line leaves no extra gap */
   #lres .lc:not(.hl) .det>*{grid-column:1/-1;margin:0}
+  #lres .lc:not(.hl) .det>.pdet,#lres .lc:not(.hl) .det>.muted{margin-bottom:20px}
   #lres .lc:not(.hl) .det>.prow{grid-column:1;grid-row:3;align-self:center}
   #lres .lc:not(.hl) .det>.hbtns{grid-column:2;grid-row:3;align-self:center}
   #lres .lc:not(.hl) .det>.srcd{grid-column:3;grid-row:3/span 2;margin:0 0 0 16px}
-  #lres .lc:not(.hl) .det>.btab:not(.srcd){grid-row:4}#lres .lc:not(.hl) .det:has(>.srcd[open])>.btab:not(.srcd){grid-column:1/3}
+  #lres .lc:not(.hl) .det>.btab:not(.srcd){grid-row:4;margin-top:16px}#lres .lc:not(.hl) .det:has(>.srcd[open])>.btab:not(.srcd){grid-column:1/3}
   #lres .pdet .srcb::before{content:"▸\00a0 "}#lres .pdet .srcb.on::before{content:"▾\00a0 "}
-  #lres .pdet .psub{color:var(--text);font-size:.9rem;margin-bottom:18px}
+  #lres .pdet .psub{color:var(--muted);font-size:.9rem;font-weight:600;margin-bottom:20px}
   #lres .pdet .tiles{display:flex;flex-wrap:wrap;gap:14px 38px}
   #lres .pdet .tile .l{display:block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
   #lres .pdet .tile .tv{display:flex;align-items:center;gap:8px;font-size:1.15rem;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}
@@ -1565,7 +1566,7 @@ function openLoads(cat,pane){
         ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}</div>
         <div class="trow">${tcols.map(c=>`<span${c[0]==="Load"?' class="ln"':c[0]==="#"?' class="rk"':""}>${c[2](r)}</span>`).join("")}</div>
         ${open?`<div class="det">
-          <div class="pdet"><div class="psub">(${esc([it.cartridge||$$("#lc").value,it.handload?"":payload,cat.grain_style?(out.barrel?`figures for your ${g(out.barrel)} in barrel (estimate)`:it.barrel_in?g(it.barrel_in)+" in test barrel":"test barrel not listed"):"",it.sg?`stability ${it.sg.toFixed(2)} in a 1:${g(it.twist)} twist: ${stabilityText(it.sg)}`:""].filter(Boolean).join("  ·  "))})</div>
+          <div class="pdet"><div class="psub">${esc([it.cartridge||$$("#lc").value,it.handload?"":payload,cat.grain_style?(out.barrel?`figures for your ${g(out.barrel)} in barrel (estimate)`:it.barrel_in?g(it.barrel_in)+" in test barrel":"test barrel not listed"):"",it.sg?`stability ${it.sg.toFixed(2)} in a 1:${g(it.twist)} twist: ${stabilityText(it.sg)}`:""].filter(Boolean).join("  ·  "))}</div>
           <div class="tiles">${[["Velocity",r.st.velocity.toFixed(0)+" fps","velocity"],["Energy",r.st.energy.toFixed(0)+" ft-lbs","energy"],["Recoil",r.st.recoil.toFixed(1)+" ft-lbs","recoil"],["Price","$"+r.st.cost.toFixed(2)+(edited?" ✎":""),"cost"]]
             .concat(cat.terminal?[["Taylor KO",r.st.taylor.toFixed(1),"taylor"],["HITS",`${r.st.hits.toFixed(0)} <small>(${hitsClass(r.st.hits)})</small>`,"hits"]]:[])
             .map(([l,v,k])=>`<div class="tile"><span class="l">${l}</span><span class="tv">${l==="HITS"?v:esc(v)}${GRADES?badge(gradeRel(r.sc[k])):""}</span></div>`).join("")}${it.handload?"":`<button class="srcb${L.srcOpen?" on":""}">About these figures</button>`}</div></div>
