@@ -4147,7 +4147,8 @@ class LoadsView:
         else:
             title = f"{item.label}  ·  {item.cartridge}"
         self.d_title.config(text=title)
-        info = [f"{st['weight']:g} {'gr' if self.cat.grain_style else 'gr payload'}"]
+        # the title already gives a bullet's weight; a shot payload goes here
+        info = [] if self.cat.grain_style else [f"{st['weight']:g} gr payload"]
         if self.cat.grain_style:
             # your own barrel: its length only (the note names the test barrel)
             info.append(f"estimated figures for your {self.barrel:g} in barrel" if self.barrel
