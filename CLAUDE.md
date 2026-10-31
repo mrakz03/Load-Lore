@@ -238,9 +238,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Colour themes live in THEMES (load_lore.py); build_web.py passes the same table to
   the web version. Classic is the default and the original look. Use the palette globals
   (BG, SURFACE, TEXT, ACCENT, ON_ACCENT, DANGER, HAND_FG...) / CSS variables, never hard-coded colours.
-  Head to Head winners use BEST / --best (a theme's optional "best" colour, else its accent); a theme
-  with "best_bg" also tints the winning cells with an edge (_win / td.win). Graphite has both (gold,
-  Zeke Oct 31 2026: its grey accent read like plain text).
+  Head to Head winners use BEST / --best (a theme's optional "best" colour, else its accent). Graphite's
+  is gold (Zeke Oct 31 2026: its grey accent read like plain text; he chose gold text, no cell tint).
 - Desktop UI sizes come from measured text (App.fit_columns, _sidebar_width), not fixed pixel
   counts: fonts are in points and grow with screen DPI, so fixed widths cut text off on HiDPI.
   The Load column fits the longest full name, re-measured per cartridge; grow_to_fit widens

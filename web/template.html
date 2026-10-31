@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <style>
-:root{--best:#4c8dff;--best-bg:transparent;--best-edge:transparent;--bg:#0e1014;--surface:#171a21;--surface2:#222732;--border:#2d333f;--text:#e8eaee;--muted:#8a93a3;--accent:#4c8dff;--accent-h:#6aa0ff;--on-accent:#fff;--side:#12151b;--danger:#e5534b;--hand:#5fd1b4;color-scheme:dark}
+:root{--best:#4c8dff;--bg:#0e1014;--surface:#171a21;--surface2:#222732;--border:#2d333f;--text:#e8eaee;--muted:#8a93a3;--accent:#4c8dff;--accent-h:#6aa0ff;--on-accent:#fff;--side:#12151b;--danger:#e5534b;--hand:#5fd1b4;color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{font-size:calc(16px * var(--ts,1))}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
@@ -411,7 +411,6 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .mrow .mname .setup{white-space:nowrap}
 .h2h td.c{min-width:9.5em}
 .h2h .v{font-weight:700}.h2h .best{color:var(--best)}
-.h2h td.win,.h2h table.dr td.best{background:var(--best-bg)}.h2h td.win{box-shadow:inset 3px 0 0 var(--best-edge)}
 .h2h .gap{font-size:.75rem;color:var(--muted);margin-left:6px}.h2h .gap.best{font-weight:700}
 .h2h .badge{display:inline-block;margin-left:8px;min-width:24px;font-size:.75rem;padding:1px 5px}
 .h2h tr.sep td{border-bottom:2px solid var(--border)}
@@ -487,9 +486,7 @@ function applyTheme(name){
   const t=THEMES[name];if(!t)return;THEME=name;
   const st=document.documentElement.style;
   for(const [k,v] of Object.entries(THEME_VARS))st.setProperty(v,t[k]);
-  // Head to Head winners: "best" colour (else the accent); themes with best_bg also tint the cell (Graphite)
-  st.setProperty("--best",t.best||t.accent);st.setProperty("--best-bg",t.best_bg||"transparent");
-  st.setProperty("--best-edge",t.best_bg?(t.best||t.accent):"transparent");
+  st.setProperty("--best",t.best||t.accent);   // Head to Head winners: a theme's "best" colour, else the accent
   st.colorScheme=t.scheme;
   const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t.side;
   try{localStorage.setItem(THEME_KEY,name);}catch(e){}
@@ -1851,7 +1848,7 @@ function openH2H(pane){
     if(pk.length<H2H_MIN){box.innerHTML=`<div class="cnt">Pick at least ${H2H_MIN} loads to put them head to head.</div>`;return;}
     const rows=h2hRows(pk,dist,guns,dictWeights,priceOf,groups,brls,tws),rcats=[...new Set(rows.map(r=>r.cat))],keys=h2hKeys(rcats);
     const badge=(gr,big)=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}${big?";margin-left:0;font-size:.95rem;padding:3px 8px":""}">${gr}</span>`;
-    const line=(name,cells,cls)=>`<tr${cls?` class="${cls}"`:""}><td>${name}</td>${cells.map(c=>`<td class="${c.includes("v best")?"c win":"c"}">${c}</td>`).join("")}</tr>`;
+    const line=(name,cells,cls)=>`<tr${cls?` class="${cls}"`:""}><td>${name}</td>${cells.map(c=>`<td class="c">${c}</td>`).join("")}</tr>`;
     const payload=r=>r.cat.show_oz?`${r.it.bullet_gr.toFixed(0)} gr (${(r.it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(r.it.bullet_gr)} gr`;
     const most=Math.max(...rows.map(r=>r.best.size)),setups=h2hSetups(rows),setup=i=>(setups[i]?`<small class="setup">${esc(setups[i])}</small>`:"")+(stabilityWarn(rows[i].it)?`<small class="swarn">${esc(stabilityWarn(rows[i].it))}</small>`:"");
     let h=`<div class="h2hw"><div class="h2h"><table><thead><tr><th></th>${rows.map((r,i)=>`<th class="${r.it.handload?"hl":""}"><small>${esc(r.it.cartridge)}</small>${esc(r.it.label)}${r.it.handload?" <small>handload</small>":""}${setup(i)}</th>`).join("")}</tr></thead><tbody>`;
