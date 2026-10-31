@@ -5714,7 +5714,8 @@ class HeadToHeadView:
                 gap = "best" if best else h2h_gap(row["gap"][key])
                 if key in ("velocity", "energy") and row["dist"] != dist:
                     gap += f"  at {row['dist']:g} yd"
-                a.label(box, gap, 9, BEST if best else MUTED, best).pack(side="left", padx=(6, 0))
+                # the "best" tag stays grey like the web's .gap (only the figure is coloured)
+                a.label(box, gap, 9, MUTED, best).pack(side="left", padx=(6, 0))
                 if grades:
                     Badge(box, a, grade_relative(row["scores"][key]), 9).pack(
                         side="left", padx=(8, 0))
