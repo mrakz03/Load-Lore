@@ -797,6 +797,21 @@ def source_line(cat, barrel, twist, handloads=False):
     return text + (" Handloads are your own figures." if handloads else "")
 
 
+def test_barrel_text(item):
+    """The opened load's facts-line part on where its listed speed comes from (Zeke, Oct 31 2026;
+    web: testBarrelText)."""
+    b = item.barrel_in
+    if item.handload:
+        return f"{b:g} in test barrel" if b else ""
+    if not b:
+        return "maker's figures (test barrel not listed)"
+    if item.source == "estimate":
+        return f"our estimate for a {b:g} in barrel"
+    if item.source == "tested":
+        return f"chronographed from a {b:g} in barrel"
+    return f"maker's figures from a {b:g} in test barrel"
+
+
 def fire_source_note(cat, item, barrel, twist):
     """The opened load's note on a barrel or twist of your own ("" when there is none)."""
     out = []
@@ -4111,8 +4126,7 @@ class LoadsView:
         if self.cat.grain_style:
             # your own barrel: its length only (the note names the test barrel)
             info.append(f"estimated figures for your {self.barrel:g} in barrel" if self.barrel
-                        else f"{item.barrel_in:g} in test barrel" if item.barrel_in
-                        else "test barrel length not listed")
+                        else test_barrel_text(item))
             if getattr(item, "sg", 0):
                 info.append(f"stability {item.sg:.2f} in a 1:{item.twist:g} twist: "
                             f"{stability_text(item.sg)}")
