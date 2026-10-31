@@ -749,6 +749,12 @@ const brandOf=it=>((it.load||it.label||"").split(/\s+/)[0]||"").toLowerCase();
 const brandCmp=(a,b)=>{const x=brandOf(a.it),y=brandOf(b.it);return (x<y?-1:x>y?1:0)||a.it.bullet_gr-b.it.bullet_gr||cmpStr((a.it.load||a.it.label).toLowerCase(),(b.it.load||b.it.label).toLowerCase());};
 const cmpStr=(x,y)=>x<y?-1:x>y?1:0;
 const DEFAULT_SORT=()=>GRADES?"score":"brand";
+// Sort: brand (product line) (Zeke, Oct 31 2026): DATA.lines = PRODUCT_LINES as [lowercase prefix,
+// line], longest first; unlined loads after the lines, then bullet weight / payload lightest first.
+// product_line / line_sort_key on desktop.
+const productLine=it=>{const n=(it.load||it.label||"").toLowerCase();for(const [p,l] of DATA.lines)if(n.startsWith(p)&&(n.length===p.length||n[p.length]===" "))return l;return "";};
+const lineCmp=(a,b)=>{const x=brandOf(a.it),y=brandOf(b.it);if(x!==y)return x<y?-1:1;const p=productLine(a.it),q=productLine(b.it);
+  return (p==="")-(q==="")||cmpStr(p,q)||a.it.bullet_gr-b.it.bullet_gr||cmpStr((a.it.load||a.it.label).toLowerCase(),(b.it.load||b.it.label).toLowerCase());};
 function shotSize(it){
   const name=it.load||"";
   let seg=name.split(" · ").find(s=>s.includes('"'))||name;
@@ -1441,7 +1447,7 @@ function openLoads(cat,pane){
   </div>
   <!-- the brand / load filter and sort sit right above the list (issue #26) -->
   <div class="sortrow above"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
-      <select id="ls">${GRADES?'<option value="score">Sort: best value</option>':""}<option value="brand">Sort: brand</option>${cat.grain_style?'<option value="grain">Sort: heaviest bullet</option><option value="grainl">Sort: lightest bullet</option>':'<option value="shot">Sort: shot size</option>'}<option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
+      <select id="ls">${GRADES?'<option value="score">Sort: best value</option>':""}<option value="brand">Sort: brand (grain weight)</option><option value="brandl">Sort: brand (product line)</option>${cat.grain_style?'<option value="grain">Sort: heaviest bullet</option><option value="grainl">Sort: lightest bullet</option>':'<option value="shot">Sort: shot size</option>'}<option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
   <div class="pchk hidden" id="lpr" role="group" aria-label="Show +P loads"></div>
   <div class="cnt" id="lcnt"></div><div class="lgrid" id="lres"></div>
   <div class="note" id="lnote"></div>`;
@@ -1531,7 +1537,7 @@ function openLoads(cat,pane){
     countChips();
     let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>matchesFilter(r.it)&&pressOk(r.it));
     const key=$$("#ls").value;
-    const cmp={brand:brandCmp,score:(a,b)=>(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
+    const cmp={brand:brandCmp,brandl:lineCmp,score:(a,b)=>(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
       // biggest shot first, then the most pellets, then the heaviest payload
       shot:(a,b)=>{const x=shotSize(a.it),y=shotSize(b.it);return y[0]-x[0]||y[1]-x[1]||b.st.weight-a.st.weight;},
       // bullet weight in grains, ties by the default order
@@ -1551,7 +1557,7 @@ function openLoads(cat,pane){
       .concat([["Price","cost",r=>"$"+r.st.cost.toFixed(2)+(!r.it.handload&&typeof L.prices[priceKey(cat,r.it)]==="number"?" ✎":""),"auto"]])
       .concat(GRADES?[["Score","score",r=>r.overall.toFixed(0),"auto"],["Grade","score",r=>badge(r.grade),"auto"]]:[]).filter(Boolean);
     box.style.setProperty("--lcols",tcols.map(c=>c[3]).join(" "));
-    const lhead=`<div class="lhead">${tcols.map(c=>c[1]?`<button data-k="${c[1]}" class="${c===tcols.find(x=>x[1]===key||x[1]==="grain"&&key==="grainl")?(key==="grainl"?"on up":"on"):""}${c[0]==="#"?" rk":""}${c[0]==="Load"?" ln":""}">${esc(c[0])}</button>`:`<span${c[0]==="Load"?' class="ln"':""}>${esc(c[0])}</span>`).join("")}</div>`;
+    const lhead=`<div class="lhead">${tcols.map(c=>c[1]?`<button data-k="${c[1]}" class="${c===tcols.find(x=>x[1]===key||x[1]==="grain"&&key==="grainl"||x[1]==="brand"&&key==="brandl")?(key==="grainl"?"on up":"on"):""}${c[0]==="#"?" rk":""}${c[0]==="Load"?" ln":""}">${esc(c[0])}</button>`:`<span${c[0]==="Load"?' class="ln"':""}>${esc(c[0])}</span>`).join("")}</div>`;
     // where the figures come from, right over the list's headings (Zeke, Oct 30 2026)
     const srcl=`<div class="srcl">${esc(sourceLine(cat,out.barrel,out.twist,out.rows.some(r=>r.it.handload)))}</div>`;
     box.innerHTML=(rows.length?srcl+lhead:"")+rows.map((r,n)=>{
@@ -1592,7 +1598,8 @@ function openLoads(cat,pane){
     // a heading sorts by its column; clicking the sorted heading again goes back to the default
     // order (Grains: heaviest, then lightest, then the default order; Zeke, Oct 28 2026)
     box.querySelectorAll(".lhead button").forEach(b=>b.onclick=()=>{const k=b.dataset.k,cur=$$("#ls").value;
-      $$("#ls").value=k==="grain"&&cur==="grain"?"grainl":k===cur||k==="grain"&&cur==="grainl"?DEFAULT_SORT():k;render();});
+      // Load: brand (grain weight), then brand (product line), then the default order
+      $$("#ls").value=k==="grain"&&cur==="grain"?"grainl":k==="brand"&&cur==="brand"?"brandl":k===cur||k==="grain"&&cur==="grainl"||k==="brand"&&cur==="brandl"?DEFAULT_SORT():k;render();});
     box.querySelectorAll(".lc").forEach(c=>{
       const lab=c.dataset.i;
       c.onclick=e=>{if(e.target.closest(".prow,.hbtns,.btab"))return;L.open=L.open===lab?null:lab;render();};

@@ -145,6 +145,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   is the dictionary's default order (desktop "#" key, web DEFAULT_SORT) and "Sort: best value" is gone;
   the "Scoring weights" link is hidden too, and a bad weight entry falls back to the category default
   (_weights / GRADES check) instead of blanking the list.
+  Two brand sorts (Oct 31 2026, Zeke): "Sort: brand (grain weight)" (#ls brand) and "Sort: brand (product
+  line)" (#ls brandl: product_line / productLine from PRODUCT_LINES, web DATA.lines = LINE_PREFIXES, longest
+  prefix wins, "A=B" aliases; unlined loads after the lines, then lightest first; line_sort_key / lineCmp).
+  The Load heading (desktop, PC web) cycles brand (grain) -> brand (product line) -> default. A new product
+  line in the data needs a PRODUCT_LINES entry or it sorts with its brand's unlined loads.
 - Grain weight sort (Oct 28 2026, Zeke): bullet categories (rifle, rimfire, handgun). Web sort menu
   "Sort: heaviest bullet" / "Sort: lightest bullet" (#ls grain / grainl); PC tables (desktop LoadsView, web
   >=900 px) have a Grains column whose heading sorts heaviest first, click again for lightest, so the

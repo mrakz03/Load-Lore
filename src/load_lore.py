@@ -235,6 +235,94 @@ def brand_sort_key(row):
     return brand_of(it), it.bullet_gr, (it.load or it.label).lower()
 
 
+# Product lines for "Sort: brand (product line)" (Zeke, Oct 31 2026): each brand's lines as they
+# start a load's name after the brand. The longest match wins ("Premium Gold Medal" before
+# "Premium"); "A=B" files A under line B (the same product named two ways). A load matching none
+# goes with its brand's other unlined loads, after the named lines. build_web.py passes the
+# prefixes to the web as DATA.lines.
+PRODUCT_LINES = {
+    "Barnes": ["VOR-TX", "Precision Match", "Pioneer", "Suppressor Series"],
+    "Black Hills": ["Gold", "HoneyBadger"],
+    "Buffalo Bore": ["Anti-Personnel", "Outdoorsman", "Supercharged", "Premium Supercharged",
+                     "Dangerous Game", "Tactical", "Penetrator", "Deer Grenade", "Short Barrel",
+                     "Low Recoil", "Lower Recoil", "Barnes", "Hard Cast", "Heavy"],
+    "CCI": ["Blazer", "Blazer Brass", "Blazer Aluminum", "Mini-Mag", "Maxi-Mag", "Maxi Mag=Maxi-Mag",
+            "Stinger", "Velocitor", "Clean-22", "Quiet-22", "Suppressor", "Standard Velocity",
+            "Green Tag", "CB", "Pistol Match", "Uppercut", "AR Tactical", "Hunter Series", "VNT", "A17"],
+    "ELEY": ["tenex", "match", "team", "club", "contact", "force", "ultra", "biathlon", "sport/target",
+             "subsonic", "high velocity", "semi-auto benchrest", "bullseye"],
+    "Federal": ["+Peak", "Premium +Peak=+Peak", "All-American", "American Eagle", "Black Cloud",
+                "Champion", "Force X2", "Fusion", "Gold Medal", "Premium Gold Medal=Gold Medal",
+                "Game Load", "HammerDown", "Premium Hammerdown=HammerDown", "Hevi-Bismuth",
+                "Master Class", "Military Grade", "Punch", "Personal Defense Punch=Punch", "Personal Defense",
+                "Power-Shok", "Raptor", "Shorty", "Speed-Shok", "Subsonic", "Syntech", "Top Gun",
+                "Train+Protect", "Ultra Steel", "Upland Steel", "Varmint & Predator", "Premium",
+                "Premium Big Game", "Premium Personal Defense HST",
+                "Premium Personal Defense Hydra-Shok", "Premium Hunting Handgun", "Premium Safari",
+                "Premium Heavyweight TSS", "Premium High Over All", "Premium Prairie Storm",
+                "Premium Upland", "Premium Grand Slam", "Premium 3rd Degree", "Premium Buckshot",
+                "Premium Hi-Bird", "Premium Freight Train", "Premium Terminal Ascent",
+                "Premium Trophy Bonded", "Premium Trophy Copper", "Premium Swift A-Frame",
+                "Premium TruBall", "Premium Barnes", "Premium Berger", "Premium Varmint",
+                "Premium Paper Flyer"],
+    "Fiocchi": ["Backwoods Hunter", "CovertX", "Cowboy Action", "Crusher", "Super Crusher",
+                "Defense Dynamics", "Field Dynamics", "Flyway", "Golden Goose", "Golden Pheasant",
+                "Golden Turkey", "Golden Waterfowl", "Heritage", "Hyperformance", "Little Rino",
+                "Paper Little Rino", "White Rino", "Range Dynamics", "Shooting Dynamics", "VIP",
+                "Steel Target", "Arkansas Steel"],
+    "Hornady": ["American Gunner", "American Whitetail", "BLACK", "Backcountry Defense",
+                "Critical Defense", "Critical Duty", "Custom", "Dangerous Game", "ELD Match",
+                "Match", "ELD-VT", "Frontier", "Handgun Hunter", "LEVERevolution", "Outfitter",
+                "Precision Hunter", "Subsonic", "Superformance", "V-MAX"],
+    "IMI": ["Razor Core"],
+    "Lapua": ["Mega", "Naturalis", "Scenar", "Scenar-L"],
+    "Norma": ["Bondstrike", "Oryx", "Tipstrike", "Whitetail"],
+    "Nosler": ["Trophy Grade", "Defense", "Match Grade"],
+    "PMC": ["Bronze", "X-TAC"],
+    "PPU": ["GROM", "Z-GROM", "Match"],
+    "Remington": ["Core-Lokt", "Core-Lokt Tipped", "Core-Lokt Copper", "Duck Club", "Express",
+                  "Golden Saber", "Gun Club", "HTP", "Hypersonic Steel", "Nitro 27", "Nitro Magnum",
+                  "Nitro Pigeon", "Nitro Turkey", "Nitro-Steel", "Performance Wheelgun", "Premier",
+                  "Premier AccuTip", "Premier STS", "Premier TSS", "Premier Swift Scirocco",
+                  "Premier MatchKing", "Premier Nitro", "Premier Royal Flush", "Slugger", "UMC",
+                  "Ultimate Defense", "Managed Recoil", "Managed-Recoil=Managed Recoil", "Game Loads", "Pheasant Loads",
+                  "Heavy Dove", "Final Strut"],
+    "SIG Sauer": ["Elite", "Elite V-Crown", "Elite Ball", "Elite Match", "365", "Marksman",
+                  "Platinum Hunter", "Legion", "ROSE", "Match Elite"],
+    "Sellier & Bellot": ["XRG Defense", "eXergy", "Sierra GameKing", "Nontox", "HPBT Match"],
+    "Speer": ["Gold Dot", "Lawman"],
+    "Underwood": ["Xtreme Defender", "Xtreme Hunter", "Xtreme Penetrator"],
+    "Winchester": ["AA", "American Lever", "Ballistic Silvertip", "Big Bore", "Copper Impact",
+                   "Deer Season", "Defender", "Double-X", "Drylok", "Expedition Big Game",
+                   "Last Call", "Longbeard", "Match", "Power-Point", "Power Max", "Silvertip",
+                   "Super Clean", "Super Pheasant", "Super Suppressed", "Super Target", "Super-X",
+                   "Supreme", "USA", "USA Ready", "USA Forged", "USA Valor", "USA White",
+                   "Varmint", "Varmint-X", "Wildcat", "Win1911", "WinClean", "Xpert", "Bismuth"],
+}
+# (lowercase prefix, line it files under), longest prefix first
+LINE_PREFIXES = sorted(
+    ((f"{b} {e.split('=')[0]}".lower(), f"{b} {e.split('=')[-1]}".lower())
+     for b, lines in PRODUCT_LINES.items() for e in lines),
+    key=lambda p: -len(p[0]))
+
+
+def product_line(item):
+    """A load's product line ("federal fusion"), or "" when its name starts with none of them."""
+    name = (item.load or item.label).lower()
+    for pre, line in LINE_PREFIXES:
+        if name.startswith(pre) and (len(name) == len(pre) or name[len(pre)] == " "):
+            return line
+    return ""
+
+
+def line_sort_key(row):
+    """Sort: brand, then product line (unlined loads after the lines), then bullet weight /
+    payload (lightest first), then the name."""
+    it = row["item"]
+    line = product_line(it)
+    return brand_of(it), line == "", line, it.bullet_gr, (it.load or it.label).lower()
+
+
 def default_weights(cat):
     return dict(zip(METRICS, cat.weights))
 
@@ -4035,7 +4123,16 @@ class LoadsView:
         first = col in ("Grains", "Shot", self.cat.payload_col, "Velocity", "Energy", "Taylor", "HITS", "Score")
         # clicking the sorted heading again goes back to the default order; Grains goes
         # heaviest, then lightest, then the default order (Zeke, Oct 28 2026; same as the web)
-        if self.sort["col"] == col and col == "Grains" and self.sort["desc"]:
+        if col == "Load":
+            # Load: brand (grain weight), then brand (product line), then the default order
+            # (Zeke, Oct 31 2026); with grades off the default order is already brand (grain)
+            if self.sort["col"] == "Load" and self.sort.get("line"):
+                self.sort = {"col": "#", "desc": False}
+            elif self.sort["col"] == "Load" or (self.sort["col"] == "#" and not self.app.show_grades):
+                self.sort = {"col": "Load", "desc": False, "line": True}
+            else:
+                self.sort = {"col": "Load", "desc": False}
+        elif self.sort["col"] == col and col == "Grains" and self.sort["desc"]:
             self.sort["desc"] = False
         elif self.sort["col"] == col or col == "#":
             self.sort = {"col": "#", "desc": False}
@@ -4052,9 +4149,9 @@ class LoadsView:
                 and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))
                 and self._press_ok(r["item"])]
         # with grades off the default order is by brand, lightest bullet / payload first
-        # (Zeke, Oct 31 2026); the Load heading sorts that way too
+        # (Zeke, Oct 31 2026); the Load heading sorts that way too, or by product line
         keys = {"#": (lambda r: (self.group_order.get(r["group"], 0), r["rank"])) if self.app.show_grades
-                else brand_sort_key, "Load": brand_sort_key,
+                else brand_sort_key, "Load": line_sort_key if self.sort.get("line") else brand_sort_key,
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
                 "Grains": lambda r: r["item"].bullet_gr,
                 # biggest shot first, then the most pellets, then the heaviest payload
