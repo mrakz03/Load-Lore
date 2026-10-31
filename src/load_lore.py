@@ -3533,8 +3533,9 @@ class LoadsView:
         self.d_title.grid(row=0, column=0, sticky="w", padx=18, pady=(14, 2))
         close_button(a, d, self._close_detail).grid(row=0, column=1, sticky="ne", padx=(0, 10),
                                                     pady=(10, 0))
-        self.d_info = a.label(d, "", 12, MUTED, anchor="w", justify="left",
-                              wraplength=a.px(820))
+        # the facts line: muted but semi-bold, so it reads over the figures (Zeke, Oct 31 2026)
+        self.d_info = a.label(d, "", 12, MUTED, True, anchor="w", justify="left",
+                              wraplength=a.px(660))
         self.d_info.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
         # the four factors sit side by side, packed to the left (no stretched columns)
         factors = tk.Frame(d, bg=SURFACE)
@@ -3551,6 +3552,11 @@ class LoadsView:
             badge = Badge(line, a, "", 12)
             badge.pack(side="left", padx=(6, 0))
             self.d_badges[key] = (val, badge)
+        # "About these figures" at the right end of the facts line: the figures fill the panel's
+        # width, so it can't follow HITS as on PC web (Zeke, Oct 31 2026)
+        self.src_toggle = tk.Label(d, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
+                                   cursor="hand2")
+        self.src_toggle.bind("<Button-1>", lambda e: self._toggle_source())
         priceline = tk.Frame(d, bg=SURFACE)
         self.priceline = priceline
         priceline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
@@ -3569,11 +3575,7 @@ class LoadsView:
         self.d_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
                               wraplength=a.px(820))
         self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 6))
-        # where a factory load's figures come from, folded away behind a link (Zeke, Oct 31 2026)
-        self.src_toggle = tk.Label(d, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
-                                   cursor="hand2")
-        self.src_toggle.grid(row=5, column=0, sticky="w", padx=18, pady=(4, 0))
-        self.src_toggle.bind("<Button-1>", lambda e: self._toggle_source())
+        # where a factory load's figures come from, folded away behind the link above
         self.src_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
                                 wraplength=a.px(820))
         self.src_note.grid(row=6, column=0, sticky="w", padx=18, pady=(4, 0))
@@ -4108,14 +4110,12 @@ class LoadsView:
         info = [f"{st['weight']:g} {'gr' if self.cat.grain_style else 'gr payload'}"]
         if self.cat.grain_style:
             # your own barrel: its length only (the note names the test barrel)
-            info.append(f"figures for your {self.barrel:g} in barrel (estimate)" if self.barrel
+            info.append(f"estimated figures for your {self.barrel:g} in barrel" if self.barrel
                         else f"{item.barrel_in:g} in test barrel" if item.barrel_in
                         else "test barrel length not listed")
             if getattr(item, "sg", 0):
                 info.append(f"stability {item.sg:.2f} in a 1:{item.twist:g} twist: "
                             f"{stability_text(item.sg)}")
-        if item.purpose:
-            info.append(item.purpose)
         if item.handload and item.info:
             h = item.info
             if h.get("bullet"):
@@ -4175,7 +4175,7 @@ class LoadsView:
             self.src_note.grid_remove()
             return
         self.src_toggle.config(text=("▾" if is_open else "▸") + "  About these figures")
-        self.src_toggle.grid()
+        self.src_toggle.grid(row=1, column=0, columnspan=2, sticky="ne", padx=18)
         self.src_note.config(text=text)
         self.src_note.grid() if is_open else self.src_note.grid_remove()
 

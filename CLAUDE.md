@@ -95,8 +95,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   its note starts with fire_source_note / fireSourceNote (test barrel -> your barrel, twist) then
   "Listed figures: " + the SOURCE_NOTES text. Oct 31 2026 (Zeke): on a factory load that note sits in a collapsed
   "About these figures" drop-down (web details.srcd, L.srcOpen; desktop src_toggle / _draw_source,
-  source_open; PC web puts the link (.srcb) at the right end of the figure tiles, the desktop app on its own line under the
-  price row, which has no room for it); a handload's disclaimer stays in view.
+  source_open); a handload's disclaimer stays in view. PC web (Zeke, Oct 31 2026): the link (.srcb) follows
+  the HITS tile, the opened note fills the space right of the price row (.det grid), the facts line is
+  muted semi-bold without the purpose ("estimated figures for your 20 in barrel"), bigger tiles, even
+  spacing. The desktop app: the same facts line, the link at the right end of the facts line (the
+  figures fill the panel), the note on its own line under the price row. Phones unchanged.
 - Barrel length: at_barrel / atBarrel copy each load (.base = the listed load, .at_in = the length) with
   v x (length / test barrel)^n. Test barrel = the load's barrel_in, else its cartridge's usual one
   (usual_test_barrels -> TEST_BARRELS, web cat.test_barrels: the length most of its loads list, e.g.
