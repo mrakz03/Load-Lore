@@ -3543,7 +3543,7 @@ class LoadsView:
         self.detail = a.card(outer, padx=4, pady=4)
         d = self.detail.body
         d.columnconfigure(0, weight=1)
-        self.d_title = a.label(d, "", 16, TEXT, True, anchor="w", justify="left",
+        self.d_title = a.label(d, "", 14, TEXT, True, anchor="w", justify="left",
                                wraplength=a.px(820))
         self.d_title.grid(row=0, column=0, sticky="w", padx=18, pady=(14, 2))
         close_button(a, d, self._close_detail).grid(row=0, column=1, sticky="ne", padx=(0, 10),
