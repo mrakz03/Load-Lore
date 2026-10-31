@@ -3554,52 +3554,72 @@ class LoadsView:
         self.d_info.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
         # the four factors sit side by side, packed to the left (no stretched columns)
         factors = tk.Frame(d, bg=SURFACE)
-        factors.grid(row=2, column=0, sticky="w", padx=18)
+        factors.grid(row=2, column=0, columnspan=2, sticky="w", padx=18)
+        self.factors, self.d_cells = factors, []
         self.d_badges = {}
+        self.d_sub = {}
         for i, key in enumerate(self.keys):
             cell = tk.Frame(factors, bg=SURFACE)
-            cell.pack(side="left", padx=(0, 34))
+            cell.pack(side="left", padx=(0, 30))
+            self.d_cells.append(cell)
             a.label(cell, METRICS[key][0].upper(), 10, MUTED, True).pack(anchor="w")
             line = tk.Frame(cell, bg=SURFACE)
             line.pack(anchor="w", pady=(4, 0))
             val = a.label(line, "", 16, TEXT, True)
             val.pack(side="left")
+            if key == "hits":
+                # HITS's game class in small grey type, as on PC web, so the link fits after it
+                self.d_sub[key] = a.label(line, "", 10, MUTED)
+                self.d_sub[key].pack(side="left", padx=(5, 0), anchor="s", pady=(0, 3))
             badge = Badge(line, a, "", 12)
             badge.pack(side="left", padx=(6, 0))
             self.d_badges[key] = (val, badge)
-        # "About these figures" at the right end of the facts line: the figures fill the panel's
-        # width, so it can't follow HITS as on PC web (Zeke, Oct 31 2026)
+        # "About these figures" follows the HITS figure, as on PC web (Zeke, Oct 31 2026)
         self.src_toggle = tk.Label(d, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
                                    cursor="hand2")
         self.src_toggle.bind("<Button-1>", lambda e: self._toggle_source())
-        priceline = tk.Frame(d, bg=SURFACE)
+        self.d_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
+                              wraplength=a.px(820))
+        self.d_note.grid(row=3, column=0, sticky="w", padx=18, pady=(12, 0))
+        # price row, Head to Head button and Ballistic table link on the left; the opened
+        # source note fills the space right of them (PC web's layout)
+        lower = tk.Frame(d, bg=SURFACE)
+        lower.grid(row=4, column=0, columnspan=2, sticky="ew", padx=18, pady=(16, 0))
+        lower.columnconfigure(1, weight=1)
+        self.lower = lower
+        left = tk.Frame(lower, bg=SURFACE)
+        self.left = left
+        left.grid(row=0, column=0, sticky="nw")
+        btns = tk.Frame(left, bg=SURFACE)
+        btns.pack(anchor="w")
+        priceline = tk.Frame(btns, bg=SURFACE)
         self.priceline = priceline
-        priceline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
-        self.handline = tk.Frame(d, bg=SURFACE)
-        self.handline.grid(row=3, column=0, sticky="w", padx=18, pady=(14, 0))
+        priceline.grid(row=0, column=0, sticky="w")
+        self.handline = tk.Frame(btns, bg=SURFACE)
+        self.handline.grid(row=0, column=0, sticky="w")
         a.button(self.handline, "Edit in Handloads  ›",
                  lambda: a.show_hand(self.selected.hid if self.selected else None)).pack(side="left")
         self.handline.grid_remove()
-        self.h2h_btn = a.button(d, "", self._h2h_click)
-        self.h2h_btn.grid(row=3, column=0, columnspan=2, sticky="e", padx=18, pady=(14, 0))
-        a.label(priceline, "YOUR PRICE PER ROUND ($)", 9, MUTED, True).pack(side="left")
-        a.field(priceline, ttk.Entry, textvariable=self.price_var, width=8, font=a.f(11))[0].pack(
+        self.h2h_btn = a.button(btns, "", self._h2h_click)
+        self.h2h_btn.grid(row=0, column=1, sticky="w", padx=(14, 0))
+        a.label(priceline, "Your price $", 10, MUTED).pack(side="left")
+        a.field(priceline, ttk.Entry, textvariable=self.price_var, width=7, font=a.f(11))[0].pack(
             side="left", padx=8)
         a.button(priceline, "Set price", self._set_price, "primary").pack(side="left")
-        a.button(priceline, "Use catalog estimate", self._reset_price).pack(side="left", padx=8)
-        self.d_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
-                              wraplength=a.px(820))
-        self.d_note.grid(row=4, column=0, sticky="w", padx=18, pady=(10, 6))
-        # where a factory load's figures come from, folded away behind the link above
-        self.src_note = a.label(d, "", 10, MUTED, anchor="w", justify="left",
-                                wraplength=a.px(820))
-        self.src_note.grid(row=6, column=0, sticky="w", padx=18, pady=(4, 0))
-        self.bt_toggle = tk.Label(d, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
+        # only once a price was typed, as on PC web
+        self.reset_btn = a.button(priceline, "Use estimate", self._reset_price)
+        self.bt_toggle = tk.Label(left, text="", bg=SURFACE, fg=ACCENT, font=a.f(11, True),
                                   cursor="hand2")
-        self.bt_toggle.grid(row=7, column=0, sticky="w", padx=18, pady=(4, 14))
+        self.bt_toggle.pack(anchor="w", pady=(12, 14))
         self.bt_toggle.bind("<Button-1>", lambda e: self._toggle_ballistics())
+        # where a factory load's figures come from, folded away behind the link above
+        self.src_note = a.label(lower, "", 10, MUTED, anchor="nw", justify="left",
+                                wraplength=a.px(440))
+        self.src_note.grid(row=0, column=1, sticky="nw", padx=(28, 0))
+        # the gaps between the figures and the note's width follow the panel's width
+        d.bind("<Configure>", lambda e: self.root.after_idle(self._fit_detail), add="+")
         self.bt_frame = tk.Frame(d, bg=SURFACE)
-        self.bt_frame.grid(row=8, column=0, columnspan=2, sticky="w", padx=18, pady=(0, 16))
+        self.bt_frame.grid(row=5, column=0, columnspan=2, sticky="w", padx=18, pady=(0, 16))
         self.bt_frame.grid_remove()
         self.detail.grid(row=5, column=0, sticky="ew", pady=(14, 0))
         self.detail.grid_remove()
@@ -4140,7 +4160,9 @@ class LoadsView:
         vals = {"velocity": f"{st['velocity']:.0f} fps", "energy": f"{st['energy']:.0f} ft-lbs",
                 "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": f"${st['cost']:.2f}",
                 "taylor": f"{st['taylor']:.1f}",
-                "hits": f"{st['hits']:.0f} ({hits_class(st['hits'])})"}
+                "hits": f"{st['hits']:.0f}"}
+        if "hits" in self.d_sub:
+            self.d_sub["hits"].config(text=hits_class(st['hits']))
         for key, (val, badge) in self.d_badges.items():
             grade = grade_relative(row["scores"][key])
             val.config(text=vals[key])
@@ -4156,6 +4178,10 @@ class LoadsView:
         else:
             self.handline.grid_remove()
             self.priceline.grid()
+            if self.app.price_key(self.cat, item) in self.app.settings.get("prices", {}):
+                self.reset_btn.pack(side="left", padx=(8, 0))
+            else:
+                self.reset_btn.pack_forget()
         src = SOURCE_NOTES.get(item.source, DEFAULT_SOURCE_NOTE)
         own = fire_source_note(self.cat, item, self.barrel, self.twist)
         if own:
@@ -4185,13 +4211,52 @@ class LoadsView:
         """The "About these figures" link and, opened, the selected load's source note."""
         text, is_open = getattr(self, "src_text", ""), getattr(self, "source_open", False)
         if not text:
-            self.src_toggle.grid_remove()
+            self.src_toggle.pack_forget()
             self.src_note.grid_remove()
             return
         self.src_toggle.config(text=("▾" if is_open else "▸") + "  About these figures")
-        self.src_toggle.grid(row=1, column=0, columnspan=2, sticky="ne", padx=18)
         self.src_note.config(text=text)
         self.src_note.grid() if is_open else self.src_note.grid_remove()
+        self._fit_detail()
+
+    def _fit_detail(self):
+        """Fit the opened load's figures and link on one line: the gaps between them shrink
+        with the panel (34 px down to 12 px); if the link still doesn't fit it goes beside
+        the Ballistic table link. The source note fills what's right of the price row, or
+        goes under it when that's too narrow."""
+        a = self.app
+        if not self.detail.winfo_ismapped():
+            return
+        width = self.detail.body.winfo_width() - a.px(36)
+        cells = [c for c in self.d_cells if c.winfo_manager()]
+        link = bool(getattr(self, "src_text", ""))
+        self.root.update_idletasks()
+        need = sum(c.winfo_reqwidth() for c in cells)
+        link_w = self.src_toggle.winfo_reqwidth() if link else 0
+        gaps = len(cells) - (0 if link else 1)
+        gap = max(a.px(12), min(a.px(34), (width - need - link_w) // max(1, gaps)))
+        for c in cells:
+            c.pack_configure(padx=(0, gap))
+        fits = need + link_w + gap * gaps <= width
+        if link:
+            self.src_toggle.pack_forget()
+            if fits:
+                self.src_toggle.pack(in_=self.factors, side="left", anchor="s", pady=(0, 4))
+            else:
+                self.src_toggle.pack(in_=self.left, side="left", anchor="w", padx=(24, 0),
+                                     pady=(12, 14), after=self.bt_toggle)
+                self.bt_toggle.pack_configure(side="left")
+            self.src_toggle.lift()
+        if fits:
+            self.bt_toggle.pack_configure(side="top")
+        room = self.lower.winfo_width() - self.left.winfo_reqwidth() - a.px(28)
+        if room >= a.px(260):
+            self.src_note.grid_configure(row=0, column=1, columnspan=1, padx=(a.px(28), 0),
+                                         pady=0)
+            self.src_note.config(wraplength=room)
+        else:
+            self.src_note.grid_configure(row=1, column=0, columnspan=2, padx=0, pady=(0, 12))
+            self.src_note.config(wraplength=max(a.px(200), self.lower.winfo_width()))
 
     def _toggle_ballistics(self):
         self.ballistics_open = not getattr(self, "ballistics_open", False)
