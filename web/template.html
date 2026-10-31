@@ -141,19 +141,19 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   #lres .pdet .srcb{align-self:center;background:none;border:0;padding:0;font:inherit;font-size:.9rem;font-weight:700;color:var(--accent);cursor:pointer}
   /* a factory load: the opened "About these figures" note fills the space right of the price row and
      the Ballistic table link (Zeke, Oct 31 2026) */
-  #lres .lc:not(.hl) .det{display:grid;grid-template-columns:max-content max-content minmax(0,1fr);align-items:start;gap:0 14px;padding:14px 0 8px}   /* roomier, evenly spaced (Zeke, Oct 31 2026): margins, not row gaps, so a missing grade line leaves no extra gap */
+  #lres .lc:not(.hl) .det{display:grid;grid-template-columns:max-content max-content minmax(0,1fr);align-items:start;gap:0 14px;padding:14px 0 2px}   /* roomier, evenly spaced (Zeke, Oct 31 2026): margins, not row gaps, so a missing grade line leaves no extra gap */
   #lres .lc:not(.hl) .det>*{grid-column:1/-1;margin:0}
   #lres .lc:not(.hl) .det>.pdet,#lres .lc:not(.hl) .det>.muted{margin-bottom:20px}
   #lres .lc:not(.hl) .det>.prow{grid-column:1;grid-row:3;align-self:center}
   #lres .lc:not(.hl) .det>.hbtns{grid-column:2;grid-row:3;align-self:center}
   #lres .lc:not(.hl) .det>.srcd{grid-column:3;grid-row:3/span 2;margin:0 0 0 16px}
-  #lres .lc:not(.hl) .det>.btab:not(.srcd){grid-row:4;margin-top:16px}#lres .lc:not(.hl) .det:has(>.srcd[open])>.btab:not(.srcd){grid-column:1/3}
+  #lres .lc:not(.hl) .det>.btab:not(.srcd){grid-row:4;margin-top:8px}#lres .lc:not(.hl) .det:has(>.srcd[open])>.btab:not(.srcd){grid-column:1/3}
   #lres .pdet .srcb::before{content:"▸\00a0 "}#lres .pdet .srcb.on::before{content:"▾\00a0 "}
   #lres .pdet .psub{color:var(--muted);font-size:.9rem;font-weight:600;margin-bottom:20px}
-  #lres .pdet .tiles{display:flex;flex-wrap:wrap;gap:14px 38px}
-  #lres .pdet .tile .l{display:block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-  #lres .pdet .tile .tv{display:flex;align-items:center;gap:8px;font-size:1.15rem;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}
-  #lres .pdet .tile small{font-size:.8rem;color:var(--muted);font-weight:600}
+  #lres .pdet .tiles{display:flex;flex-wrap:wrap;gap:14px clamp(18px,2.4vw,40px)}
+  #lres .pdet .tile .l{display:block;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  #lres .pdet .tile .tv{display:flex;align-items:center;gap:8px;font-size:1.27rem;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}
+  #lres .pdet .tile small{font-size:.85rem;color:var(--muted);font-weight:600}
   #lres .pdet .badge{font-size:.8rem;min-width:26px;padding:2px 6px}
 }
 @media(min-width:1500px){   /* big PC windows: the dictionary fills the window, its settings in a column beside the table */
