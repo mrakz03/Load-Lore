@@ -767,18 +767,14 @@ def firearm_text(cat, gun, barrel, twist):
 
 def firearm_note(cat):
     """What the "Firearm setup" settings change, and that the listed figures are the makers'
-    (web: DATA.fire_notes)."""
+    (web: DATA.fire_notes). Kept short (Zeke, Oct 31 2026)."""
     if not cat.barrel_in:
-        return ("Velocity and energy are the makers' published figures. Recoil is worked out "
-                "for this gun weight.")
-    listed = ("Velocity and energy are each maker's published figures from its own test barrel"
-              + (", except loads marked (est.): most carbine figures are our estimates from the "
-                 "maker's handgun figures" if cat.title == "Pistol Caliber Carbine" else "")
-              + ". Recoil is worked out for this gun weight.")
-    return (listed + " Type your own barrel length or twist rate and the figures become "
-            "estimates for your firearm. Twist rate changes no speed: it checks whether each "
-            "bullet spins fast enough to fly point first (Miller's rule, bullet length "
-            "estimated) and trims the BC of one that barely does.")
+        return "Velocity and energy are the makers' figures. Recoil uses this gun weight."
+    return (("Listed figures are the makers' or reviewers' chronograph tests; loads marked (est.) "
+             "are our estimates" if cat.title == "Pistol Caliber Carbine"
+             else "Listed figures are the makers', from their test barrels")
+            + ". Recoil uses this gun weight. Your own barrel or twist makes the figures "
+            "estimates; twist only checks that the bullet spins fast enough to fly straight.")
 
 
 def source_line(cat, barrel, twist, handloads=False):
