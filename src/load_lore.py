@@ -767,18 +767,50 @@ def firearm_text(cat, gun, barrel, twist):
 
 def firearm_note(cat):
     """What the "Firearm setup" settings change, and that the listed figures are the makers'
-    (web: DATA.fire_notes)."""
+    (web: DATA.fire_notes). Kept short (Zeke, Oct 31 2026)."""
     if not cat.barrel_in:
-        return ("Velocity and energy are the makers' published figures. Recoil is worked out "
-                "for this gun weight.")
-    listed = ("Velocity and energy are each maker's published figures from its own test barrel"
-              + (", except loads marked (est.): most carbine figures are our estimates from the "
-                 "maker's handgun figures" if cat.title == "Pistol Caliber Carbine" else "")
-              + ". Recoil is worked out for this gun weight.")
-    return (listed + " Type your own barrel length or twist rate and the figures become "
-            "estimates for your firearm. Twist rate changes no speed: it checks whether each "
-            "bullet spins fast enough to fly point first (Miller's rule, bullet length "
-            "estimated) and trims the BC of one that barely does.")
+        return "Velocity and energy are the makers' figures. Recoil uses this gun weight."
+    return (("Listed figures are the makers' or reviewers' chronograph tests; loads marked (est.) "
+             "are our estimates" if cat.title == "Pistol Caliber Carbine"
+             else "Listed figures are the makers', from their test barrels")
+            + ". Recoil uses this gun weight. Your own barrel or twist makes the figures "
+            "estimates; twist only checks that the bullet spins fast enough to fly straight.")
+
+
+def source_line(cat, barrel, twist, handloads=False):
+    """The line over the dictionary's load list: where its figures come from, and that a barrel
+    or twist of your own makes them estimates (Zeke, Oct 30 2026; web: sourceLine)."""
+    pcc = cat.title == "Pistol Caliber Carbine"
+    own = ([f"{barrel:g} in barrel"] if barrel and cat.barrel_in else []) + (
+        [f"1:{twist:g} twist"] if twist and cat.barrel_in else [])
+    if own:
+        text = (f"Estimated figures for your firearm setup ({', '.join(own)}), worked out from "
+                + ("the makers' published, reviewer-tested and our estimated carbine figures."
+                   if pcc else "manufacturer-published data."))
+    elif pcc:
+        text = ("Makers' published carbine figures, reviewer chronograph tests, and our estimates "
+                "for loads marked (est.). Downrange figures, recoil and grades are worked out "
+                "from them.")
+    else:
+        text = ("Manufacturer-published data. Downrange figures, recoil and grades are worked "
+                "out from it.")
+    return text + (" Handloads are your own figures." if handloads else "")
+
+
+def fire_source_note(cat, item, barrel, twist):
+    """The opened load's note on a barrel or twist of your own ("" when there is none)."""
+    out = []
+    if barrel and cat.barrel_in:
+        test = test_barrel(cat, base_load(item))
+        out.append(f"Estimate for your firearm setup: the listed velocity, from a {test:g} in "
+                   f"test barrel, is moved to your {barrel:g} in barrel, and downrange figures, "
+                   "recoil and grade follow from it." if getattr(item, "at_in", 0) else
+                   f"Your {barrel:g} in barrel is this load's test barrel, so its listed "
+                   "velocity is used.")
+    if getattr(item, "sg", 0):
+        out.append(f"Spin stability in your 1:{item.twist:g} twist is our estimate "
+                   f"({stability_text(item.sg)}).")
+    return " ".join(out)
 
 
 # --------------------------------------------------------------------------- #
@@ -3338,7 +3370,9 @@ class LoadsView:
         # the web's layout: the cartridge on its own line, distance and gun weight under it
         top = tk.Frame(card, bg=SURFACE)
         top.grid(row=0, column=0, sticky="ew")
-        top.columnconfigure((0, 1), weight=1, uniform="n")
+        # the Firearm setup summary gets two thirds of the row, so it reads whole (Zeke, Oct 30 2026)
+        top.columnconfigure(0, weight=1, uniform="n")
+        top.columnconfigure(1, weight=2, uniform="n")
         a.label(top, cat.cartridge_label, 8, MUTED, True).grid(row=0, column=0, columnspan=2,
                                                                 sticky="w")
         # the cartridge menu opens a search pop-up: type "6.5" or "mag" to narrow it down
@@ -3446,6 +3480,9 @@ class LoadsView:
         self.count_lbl = a.label(above, self._choose_text(),
                                  10, MUTED, bg=BG, anchor="e")
         self.count_lbl.grid(row=1, column=1, sticky="e", pady=(4, 0), padx=(16, 0))
+        # where the figures come from, right over the table's headings (Zeke, Oct 30 2026)
+        self.src_lbl = a.label(above, "", 9, MUTED, bg=BG, anchor="w", justify="left")
+        self.src_lbl.grid(row=2, column=0, columnspan=2, sticky="w", pady=(a.px(8), 0))
         # bullets get a Grains column (the Load cell then shows just the name)
         self.cols = ["#", "Load"] + (["Grains"] if cat.grain_style else ["Shot", cat.payload_col])
         if cat.grain_style:
@@ -3692,12 +3729,9 @@ class LoadsView:
         return v
 
     def _fire_count(self):
-        """", 16 in barrel, 1:8 twist (estimates)" for the count line, or ""."""
-        parts = ([f"{self.barrel:g} in barrel"] if self.barrel else []) + (
-            [f"1:{self.twist:g} twist"] if self.twist else [])
-        warn = ("  ·  ⚠ = spin too slow (red: won't stabilise)"
+        """The ⚠ legend for the count line, or "" (the line over the table names the setup)."""
+        return ("  ·  ⚠ = spin too slow (red: won't stabilise)"
                 if any(stability_warn(r["item"]) for r in self.rows) else "")
-        return (f", {', '.join(parts)} (estimates)" if parts else "") + warn
 
     @staticmethod
     def _barrel(var, cat, cart):
@@ -3926,6 +3960,7 @@ class LoadsView:
             self.tree.delete(*self.tree.get_children())
             self.rows = []
             self.count_lbl.config(text=self._choose_text())
+            self.src_lbl.config(text="")
             return
         if not items:                                # a cartridge with no factory loads yet
             self.tree.delete(*self.tree.get_children())
@@ -3934,6 +3969,7 @@ class LoadsView:
             self.detail.grid_remove()
             self.count_lbl.config(text=f"No factory loads listed for {cart}. Add your own in the "
                                        "Handloads tab to grade it.")
+            self.src_lbl.config(text="")
             return
         if self.purpose != "All":
             items = [x for x in items if self._purpose_of(x) == self.purpose]
@@ -4006,7 +4042,9 @@ class LoadsView:
             vals = [r["rank"], name + ("  (handload)" if it.handload else "")
                     + ("  ⚠" if stability_warn(it) else "")]
             if self.cat.grain_style:
-                vals += [f"{it.bullet_gr:g}", f"{it.barrel_in:g}\"" if it.barrel_in else "—", it.purpose]
+                # your own barrel length replaces each load's test barrel (Zeke, Oct 30 2026)
+                brl = self.barrel or it.barrel_in
+                vals += [f"{it.bullet_gr:g}", f"{brl:g}\"" if brl else "—", it.purpose]
             else:
                 vals += [shot_size(it)[2], f"{st['weight']:g}"]
             vals += [f"{st['velocity']:.0f}", f"{st['energy']:.0f}", f"{st['recoil']:.1f}"]
@@ -4026,6 +4064,8 @@ class LoadsView:
                  f"{'' if self.purpose == 'All' else '  ·  ' + self.purpose}: {len(data)} of "
                  f"{len(self.rows)} loads at {self.dist:g} yards"
                  + self._fire_count())
+        self.src_lbl.config(text=source_line(self.cat, self.barrel, self.twist,
+                                             any(r["item"].handload for r in self.rows)))
         if keep:
             self.tree.selection_set(keep)
             self.tree.see(keep)
@@ -4059,10 +4099,10 @@ class LoadsView:
         self.d_title.config(text=f"{item.cartridge}  ·  {item.label}")
         info = [f"{st['weight']:g} {'gr' if self.cat.grain_style else 'gr payload'}"]
         if self.cat.grain_style:
-            info.append(f"{item.barrel_in:g} in test barrel" if item.barrel_in
+            # your own barrel: its length only (the note names the test barrel)
+            info.append(f"figures for your {self.barrel:g} in barrel (estimate)" if self.barrel
+                        else f"{item.barrel_in:g} in test barrel" if item.barrel_in
                         else "test barrel length not listed")
-            if self.barrel:
-                info.append(f"figures for a {self.barrel:g} in barrel (estimate)")
             if getattr(item, "sg", 0):
                 info.append(f"stability {item.sg:.2f} in a 1:{item.twist:g} twist: "
                             f"{stability_text(item.sg)}")
@@ -4095,6 +4135,9 @@ class LoadsView:
             self.handline.grid_remove()
             self.priceline.grid()
         src = SOURCE_NOTES.get(item.source, DEFAULT_SOURCE_NOTE)
+        own = fire_source_note(self.cat, item, self.barrel, self.twist)
+        if own:
+            src = own + ("  " if item.handload else "  Listed figures: ") + src
         if item.handload and item.info and item.info.get("notes"):
             src = item.info["notes"] + "  " + src
         rank = (f"Overall {row['grade']}  ·  {row['overall']:.0f}  ·  Rank #{row['rank']} of "

@@ -87,6 +87,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   Head to Head has one "Firearm setup for each load" link: under each load a Gun / Barrel / Twist line
   (fire_open / fireOpen; guns, barrels, twists by row position; blank = usual gun / listed).
   at_firearm / atFirearm = at_barrel then the twist check; h2h_rows / h2hRows take barrels and twists.
+  Oct 30 2026 (Zeke): the summary box takes two thirds of its row and wraps, never cut off. A line over
+  the dictionary's table (source_line / sourceLine; web .srcl, phones over the cards) says where the
+  figures come from (maker data, PCC's tested / (est.) figures, handloads) or "Estimated figures for your
+  firearm setup (...)". With your own barrel the Barrel column shows that length for every load, the
+  opened load's facts line says "figures for your X in barrel (estimate)" instead of the test barrel, and
+  its note starts with fire_source_note / fireSourceNote (test barrel -> your barrel, twist) then
+  "Listed figures: " + the SOURCE_NOTES text.
 - Barrel length: at_barrel / atBarrel copy each load (.base = the listed load, .at_in = the length) with
   v x (length / test barrel)^n. Test barrel = the load's barrel_in, else its cartridge's usual one
   (usual_test_barrels -> TEST_BARRELS, web cat.test_barrels: the length most of its loads list, e.g.
@@ -164,7 +171,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   At >=1500 px the dictionary page (.wrap.dict) fills the window: settings card, filter and sort in a
   left column, the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
   column (cartridge box over load box) beside the results; that column grows with the window (520 px at
-  1500 px wide up to 720 px, so long load names fit; Zeke, Oct 28 2026), a load box's title shows the full name. An opened load on PC web shows a facts line
+  1500 px wide up to 720 px, so long load names fit; Zeke, Oct 28 2026), a load box's title shows the full name. An opened dictionary load names its cartridge (Oct 30 2026, Zeke): phones a small grey line over the
+  load name (.lc .nm .ct), PC web first in the facts line, desktop in the panel title. An opened load on PC web shows a facts line
   and a tile per factor (.pdet, desktop panel style) instead of the phone's figure rows (.fr).
   Handloads (>=900 px): each cartridge group is a table too (Handload, Bullet, Powder, Velocity, Energy,
   Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); >=1500 px it fills the window (.handp).
