@@ -139,6 +139,12 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   menu, desktop a "Shot" column (click its heading). shot_size / shotSize read the load name's
   largest shot (slugs first, then 000-4 Buck, T/BBB/BB/B, #1-#9 as (17-n)/100 in), then most
   pellets, then heaviest payload.
+- Brand sort (Oct 31 2026, Zeke): brand_of / brandOf = the load name's first word (no two brands share
+  one), then bullet weight / payload lightest first, then the name (brand_sort_key / brandCmp). Web
+  "Sort: brand" (#ls brand) and the PC table's Load heading; desktop the Load heading. With grades off it
+  is the dictionary's default order (desktop "#" key, web DEFAULT_SORT) and "Sort: best value" is gone;
+  the "Scoring weights" link is hidden too, and a bad weight entry falls back to the category default
+  (_weights / GRADES check) instead of blanking the list.
 - Grain weight sort (Oct 28 2026, Zeke): bullet categories (rifle, rimfire, handgun). Web sort menu
   "Sort: heaviest bullet" / "Sort: lightest bullet" (#ls grain / grainl); PC tables (desktop LoadsView, web
   >=900 px) have a Grains column whose heading sorts heaviest first, click again for lightest, so the

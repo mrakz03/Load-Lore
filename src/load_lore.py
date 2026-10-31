@@ -222,6 +222,19 @@ def version_text():
     return "dev" if APP_VERSION == "dev" else f"v{APP_VERSION}"
 
 
+def brand_of(item):
+    """A load's brand for sorting: the first word of its name (every factory load name starts
+    with its brand, and no two brands share a first word: Black Hills, Buffalo Bore, SIG Sauer,
+    Sellier & Bellot)."""
+    return ((item.load or item.label).split() or [""])[0].lower()
+
+
+def brand_sort_key(row):
+    """Sort: brand, then bullet weight / payload (lightest first), then the name."""
+    it = row["item"]
+    return brand_of(it), it.bullet_gr, (it.load or it.label).lower()
+
+
 def default_weights(cat):
     return dict(zip(METRICS, cat.weights))
 
@@ -3647,9 +3660,22 @@ class LoadsView:
         self._gun_auto = typical_gun_lb(self.cat, self.cart_var.get())
         self.gun_var.set(f"{self._gun_auto:g}")
 
+    def _weights(self):
+        """The scoring weights typed in; with grades off (the boxes hidden) a bad entry falls
+        back to the category's default instead of stopping the list."""
+        out, dflt = {}, default_weights(self.cat)
+        for k, v in self.weight_vars.items():
+            try:
+                out[k] = self._num(v, f"{METRICS[k][0]} weight", 0, 10)
+            except ValueError:
+                if self.app.show_grades:
+                    raise
+                out[k] = dflt[k]
+        return out
+
     def _toggle_weights(self):
         self.weights_open = not self.weights_open
-        if self.weights_open:
+        if self.weights_open and self.app.show_grades:
             self.weights_frame.grid()
         else:
             self.weights_frame.grid_remove()
@@ -3661,6 +3687,15 @@ class LoadsView:
         badges. With grades off the list keeps its default order, just without the ranks
         (issue #4)."""
         on = self.app.show_grades
+        # the scoring weights only matter with grades shown (Zeke, Oct 31 2026): hidden with
+        # them, so a stray value can't blank the list (refresh then uses the defaults)
+        if on:
+            self.weights_toggle.grid()
+            if self.weights_open:
+                self.weights_frame.grid()
+        else:
+            self.weights_toggle.grid_remove()
+            self.weights_frame.grid_remove()
         self.tree.configure(displaycolumns=[c for c in self.cols
                                             if on or c not in ("#", "Score", "Grade")])
         # without the # column the load names would sit against the table's edge: the empty
@@ -3980,8 +4015,7 @@ class LoadsView:
                       if self.cat.barrel_in and self.barrel_var.get().strip() else 0.0)
             twist = (self._twist(self.twist_var, "Twist rate")
                      if self.cat.barrel_in and self.twist_var.get().strip() else 0.0)
-            weights = {k: self._num(v, f"{METRICS[k][0]} weight", 0, 10)
-                       for k, v in self.weight_vars.items()}
+            weights = self._weights()
         except ValueError as exc:
             self.status.config(text=str(exc))
             return
@@ -4017,7 +4051,10 @@ class LoadsView:
         data = [r for r in self.rows if all(t in r["item"].label.lower() for t in terms)
                 and (self.source == "All" or r["item"].handload == (self.source == "Handloads"))
                 and self._press_ok(r["item"])]
-        keys = {"#": lambda r: (self.group_order.get(r["group"], 0), r["rank"]), "Load": lambda r: (r["item"].label.lower(), r["stats"]["weight"]),
+        # with grades off the default order is by brand, lightest bullet / payload first
+        # (Zeke, Oct 31 2026); the Load heading sorts that way too
+        keys = {"#": (lambda r: (self.group_order.get(r["group"], 0), r["rank"])) if self.app.show_grades
+                else brand_sort_key, "Load": brand_sort_key,
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
                 "Grains": lambda r: r["item"].bullet_gr,
                 # biggest shot first, then the most pellets, then the heaviest payload
