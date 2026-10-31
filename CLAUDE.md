@@ -93,7 +93,15 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   firearm setup (...)". With your own barrel the Barrel column shows that length for every load, the
   opened load's facts line says "figures for your X in barrel (estimate)" instead of the test barrel, and
   its note starts with fire_source_note / fireSourceNote (test barrel -> your barrel, twist) then
-  "Listed figures: " + the SOURCE_NOTES text.
+  "Listed figures: " + the SOURCE_NOTES text. Oct 31 2026 (Zeke): on a factory load that note sits in a collapsed
+  "About these figures" drop-down (web details.srcd, L.srcOpen; desktop src_toggle / _draw_source,
+  source_open); a handload's disclaimer stays in view. PC web (Zeke, Oct 31 2026): the link (.srcb) follows
+  the HITS tile, the opened note fills the space right of the price row (.det grid), the facts line is
+  muted semi-bold without the purpose ("estimated figures for your 20 in barrel"), bigger tiles, even
+  spacing. The desktop app (Oct 31 2026, Zeke): the same layout: HITS's game class in small grey
+  type, the link after HITS (gaps shrink with the panel; if it still won't fit it sits beside "Ballistic
+  table": LoadsView._fit_detail), the note right of the price row / Head to Head button (under them
+  when too narrow), "Your price $" with "Use estimate" only once a price is set. Phones unchanged.
 - Barrel length: at_barrel / atBarrel copy each load (.base = the listed load, .at_in = the length) with
   v x (length / test barrel)^n. Test barrel = the load's barrel_in, else its cartridge's usual one
   (usual_test_barrels -> TEST_BARRELS, web cat.test_barrels: the length most of its loads list, e.g.
@@ -183,7 +191,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   left column, the table beside it; Head to Head (.wrap.h2hp) likewise puts the load picker in a left
   column (cartridge box over load box) beside the results; that column grows with the window (520 px at
   1500 px wide up to 720 px, so long load names fit; Zeke, Oct 28 2026), a load box's title shows the full name. An opened dictionary load names its cartridge (Oct 30 2026, Zeke): phones a small grey line over the
-  load name (.lc .nm .ct), PC web first in the facts line, desktop in the panel title. An opened load on PC web shows a facts line
+  load name (.lc .nm .ct), PC web first in the facts line, desktop in the panel title after the load's name
+  ("Hornady Superformance SST  ·  .308 Winchester  ·  165 gr", 14 pt, Zeke Oct 31 2026; its facts
+  line, 10.5 pt and in brackets, leaves the bullet weight out since the title has it). An opened load on PC web shows a facts line
   and a tile per factor (.pdet, desktop panel style) instead of the phone's figure rows (.fr).
   Handloads (>=900 px): each cartridge group is a table too (Handload, Bullet, Powder, Velocity, Energy,
   Price, Grade; shares the #lres table CSS via :is(#lres,#hlist .lgrid)); >=1500 px it fills the window (.handp).
