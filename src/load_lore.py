@@ -3549,7 +3549,7 @@ class LoadsView:
         close_button(a, d, self._close_detail).grid(row=0, column=1, sticky="ne", padx=(0, 10),
                                                     pady=(10, 0))
         # the facts line: muted but semi-bold, so it reads over the figures (Zeke, Oct 31 2026)
-        self.d_info = a.label(d, "", 12, MUTED, True, anchor="w", justify="left",
+        self.d_info = a.label(d, "", 10.5, MUTED, True, anchor="w", justify="left",
                               wraplength=a.px(660))
         self.d_info.grid(row=1, column=0, sticky="w", padx=18, pady=(0, 14))
         # the four factors sit side by side, packed to the left (no stretched columns)
