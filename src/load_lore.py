@@ -241,7 +241,7 @@ def brand_sort_key(row):
 # goes with its brand's other unlined loads, after the named lines. build_web.py passes the
 # prefixes to the web as DATA.lines.
 PRODUCT_LINES = {
-    "Barnes": ["VOR-TX", "Precision Match", "Pioneer", "Suppressor Series"],
+    "Barnes": ["VOR-TX", "Precision Match", "Pioneer", "Suppressor Series", "Harvest Collection"],
     "Black Hills": ["Gold", "HoneyBadger"],
     "Buffalo Bore": ["Anti-Personnel", "Outdoorsman", "Supercharged", "Premium Supercharged",
                      "Dangerous Game", "Tactical", "Penetrator", "Deer Grenade", "Short Barrel",
@@ -256,7 +256,7 @@ PRODUCT_LINES = {
                 "Game Load", "HammerDown", "Premium Hammerdown=HammerDown", "Hevi-Bismuth",
                 "Master Class", "Military Grade", "Punch", "Personal Defense Punch=Punch", "Personal Defense",
                 "Power-Shok", "Raptor", "Shorty", "Speed-Shok", "Subsonic", "Syntech", "Top Gun",
-                "Train+Protect", "Ultra Steel", "Upland Steel", "Varmint & Predator", "Premium",
+                "Train+Protect", "Training", "Ultra Steel", "Upland Steel", "Varmint & Predator", "Premium",
                 "Premium Big Game", "Premium Personal Defense HST",
                 "Premium Personal Defense Hydra-Shok", "Premium Hunting Handgun", "Premium Safari",
                 "Premium Heavyweight TSS", "Premium High Over All", "Premium Prairie Storm",
@@ -277,7 +277,7 @@ PRODUCT_LINES = {
     "IMI": ["Razor Core"],
     "Lapua": ["Mega", "Naturalis", "Scenar", "Scenar-L"],
     "Norma": ["Bondstrike", "Oryx", "Tipstrike", "Whitetail"],
-    "Nosler": ["Trophy Grade", "Defense", "Match Grade"],
+    "Nosler": ["Trophy Grade", "Defense", "Match Grade", "Whitetail Country"],
     "PMC": ["Bronze", "X-TAC"],
     "PPU": ["GROM", "Z-GROM", "Match"],
     "Remington": ["Core-Lokt", "Core-Lokt Tipped", "Core-Lokt Copper", "Duck Club", "Express",

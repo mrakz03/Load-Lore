@@ -378,6 +378,15 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   Hornady Critical Defense .22 WMR print handgun figures only (Winchester marks Silvertip "handgun only"), so they are
   Handgun-only, purpose Defense. Winchester Defender .22 WMR has only the catalog's rifle figure (1910 fps), so it stays in
   Rimfire Rifle (purpose Hunting: a lone Defense load there would have nothing to be graded against).
+- Nov 1 2026 new-release check (Zeke): SHOT 2026 lists compared with the data; most were in. Added 21 rifle
+  loads: Federal Training (Federal's own name for bulk American Eagle loads, same speed, slightly lower BC;
+  Zeke wanted them as their own rows), Winchester Supreme Long Range .308 / .30-06, Barnes Harvest Collection
+  (velocities from retailer listings: barnesbullets.com loads specs by script), Nosler Whitetail Country
+  (BC from nosler.com, velocity from retailer listings: nosler.com shows none), Black Hills 6mm ARC MKX.
+  Not added (no published velocity found): Remington Hard Cast / Core-Lokt 2026 loads, Barnes Harvest .223 and
+  2026 additions, Black Hills 6.5 / .308 MKX, other Nosler Whitetail Country loads, rest of Hornady Backcountry
+  Defense. .400 Legend (new loads from Hornady, Barnes, Nosler, Remington) is not a cartridge in the app.
+  List: /mnt/project-files/catalogs/new-loads-2026-11-01.md (not in the repo).
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
