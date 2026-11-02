@@ -213,6 +213,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - PC Home, category list and Settings (Oct 25 2026, Zeke): top left, compact cards in one column (icon beside the text), zoomed
   with the window up to 1.15x (desktop App._menu_layout / _zoomed, re-laid out on resize; web
   fitMenu sets CSS zoom at >=900 px). Phones keep their centred layout.
+- Your own cartridges (Nov 2 2026, Zeke: older / obsolete ones): the handload form's cartridge list
+  ends with "+ Add a cartridge that isn't listed" (typed text: 'Add "..." as a new cartridge'; desktop
+  LoadSearch add=, web pickSheet o.add). It asks NEW CARTRIDGE NAME, TYPE (a bullet category: gun weight,
+  sight-in, barrel math) and BULLET DIAMETER (IN). Nothing stores the cartridge itself: it lives in its
+  handloads' category / cartridge / diameter_in (so backups and old data are unchanged) and goes away
+  with its last handload. own_diameter / ownDiameter gives its diameter to later handloads;
+  new_cartridge / newCartridge reuse a listed name of that type and refuse one listed under another.
 - Handload bullets go by diameter, not cartridge (one .257 bullet fits .250 Savage, .25-06, .257
   Roberts): the form lists only makers with a bullets.csv bullet of the cartridge's DIAMETERS
   size, then that maker's bullets; any other maker can be typed (web:
