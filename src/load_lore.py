@@ -3110,6 +3110,44 @@ def handload_cartridges(app):
             for cat, carts in per for c in carts}
 
 
+NEW_CARTRIDGE = "New cartridge (below)"      # the handload form's cartridge box text for one
+
+
+def own_diameter(app, cat, cart):
+    """A cartridge's bullet diameter: DIAMETERS, else (a cartridge the user added) the one its
+    handloads were saved with. None when neither knows."""
+    d = DIAMETERS.get(cart)
+    if d:
+        return d
+    for r in app.hand_rows:
+        if r.get("category") == cat.title and r.get("cartridge") == cart:
+            v = _opt_float(r.get("diameter_in", ""))
+            if v:
+                return v
+    return None
+
+
+def new_cartridge(opts, name, cat):
+    """(category, cartridge) for a cartridge typed into the handload form: one already in the
+    list under that type is used as it is; one listed under another type is refused (it
+    would make a second cartridge of the same name). Raises ValueError."""
+    name = " ".join(name.split())
+    if not name:
+        raise ValueError("Enter the new cartridge's name.")
+    if len(name) > 60:
+        raise ValueError("Keep the cartridge's name under 60 characters.")
+    if cat is None:
+        raise ValueError("Pick the new cartridge's type.")
+    same = [(c, x) for c, x in opts.values() if x.lower() == name.lower()]
+    for c, x in same:
+        if c is cat:
+            return c, x
+    if same:
+        raise ValueError(f"{same[0][1]} is already in the list ({cat_name(same[0][0])}). "
+                         "Pick it there, or choose that type.")
+    return cat, name
+
+
 def disclaimer(app, parent, bg):
     """The handload safety note under a bold DISCLAIMER heading (Zeke), wrapping to its width."""
     app.label(parent, "DISCLAIMER", 9, TEXT, True, bg=bg, anchor="w").pack(anchor="w")
@@ -3159,6 +3197,10 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     if duplicate and V["name"].get():
         V["name"].set(V["name"].get() + " (copy)")
     bullets = app.bullets
+    kinds = {cat_name(c): c for c in CATEGORIES if c.grain_style}     # a new cartridge's types
+    for k in ("new_name", "new_type", "new_dia"):
+        V[k] = tk.StringVar()
+    V["new_type"].set(next(iter(kinds)))
 
     def lab(text, row, col, span=1, pady=(10, 3)):
         app.label(body, text, 9, MUTED, True).grid(
@@ -3183,58 +3225,88 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     lab("CARTRIDGE", 0, 0, 2, (16, 3))
     lab("PURPOSE", 0, 2, 1, (16, 3))
     cart_box = ent(V["cartridge"], 1, 0, 2, "combo")
-    LoadSearch(app, cart_box, list(opts), lambda n: refresh_bullets(),
-               head=lambda t: cat_name(opts[t][0]), label=lambda t: opts[t][1], hint="Cartridge")
+    LoadSearch(app, cart_box, list(opts), lambda n: (show_new(), refresh_bullets()),
+               head=lambda t: cat_name(opts[t][0]), label=lambda t: opts[t][1], hint="Cartridge",
+               add=(lambda q: f"+  Add \u201c{q}\u201d as a new cartridge" if q
+                    else "+  Add a cartridge that isn't listed", lambda q: add_cartridge(q)))
     LoadSearch(app, ent(V["purpose"], 1, 2, 1, "combo"), list(PURPOSES), lambda n: None,
                hint="Purpose")
-    lab("LOAD NAME (OPTIONAL)", 2, 0, 3)
-    ent(V["name"], 3, 0, 3)
+    # a cartridge that isn't in the list (older / obsolete ones, Zeke Nov 2026): its name, its
+    # type (the category: gun weight, sight-in, barrel math) and its bullet diameter. It is
+    # saved with its handloads (category, cartridge, diameter_in), so nothing else stores it.
+    lab("NEW CARTRIDGE NAME", 2, 0)
+    lab("TYPE", 2, 1)
+    lab("BULLET DIAMETER (IN)", 2, 2)
+    new_name = ent(V["new_name"], 3, 0)
+    LoadSearch(app, ent(V["new_type"], 3, 1, 1, "combo"), list(kinds), lambda n: None,
+               hint="Type")
+    ent(V["new_dia"], 3, 2)
+    app.label(body, "The type sets the usual gun weight, sight-in distance and barrel math.",
+              9, MUTED, anchor="w").grid(
+        row=4, column=0, columnspan=3, sticky="w", padx=18, pady=(4, 0))
+    new_rows = [w for r in (2, 3, 4) for w in body.grid_slaves(row=r)]
 
-    section("BULLET", 4)
-    lab("MAKER", 6, 0, 1, (6, 3))
-    lab("BULLET", 6, 1, 2, (6, 3))
+    def is_new():
+        return V["cartridge"].get() == NEW_CARTRIDGE
+
+    def show_new(*_):
+        for w in new_rows:
+            w.grid() if is_new() else w.grid_remove()
+
+    def add_cartridge(typed):
+        V["new_name"].set(" ".join(typed.split()))
+        V["cartridge"].set(NEW_CARTRIDGE)
+        show_new()
+        new_name.focus_set()
+        new_name.icursor("end")
+    lab("LOAD NAME (OPTIONAL)", 5, 0, 3)
+    ent(V["name"], 6, 0, 3)
+
+    section("BULLET", 7)
+    lab("MAKER", 9, 0, 1, (6, 3))
+    lab("BULLET", 9, 1, 2, (6, 3))
     # pick from the library, or type your own maker / bullet / powder
-    maker_search = LoadSearch(app, ent(V["bullet_maker"], 7, 0, 1, "combo"), [],
+    maker_search = LoadSearch(app, ent(V["bullet_maker"], 10, 0, 1, "combo"), [],
                               lambda n: (V["bullet"].set(""), refresh_bullets()),
                               hint="Bullet maker", own=True)
-    bullet_search = LoadSearch(app, ent(V["bullet"], 7, 1, 2, "combo"), [],
+    bullet_search = LoadSearch(app, ent(V["bullet"], 10, 1, 2, "combo"), [],
                                lambda n: pick_bullet(), hint="Bullet", own=True)
-    lab("WEIGHT (GR)", 8, 0)
-    lab("DIAMETER (IN)", 8, 1)
-    lab("BC (G1)", 8, 2)
-    ent(V["bullet_gr"], 9, 0)
-    ent(V["diameter_in"], 9, 1)
-    ent(V["bc_g1"], 9, 2)
+    lab("WEIGHT (GR)", 11, 0)
+    lab("DIAMETER (IN)", 11, 1)
+    lab("BC (G1)", 11, 2)
+    ent(V["bullet_gr"], 12, 0)
+    ent(V["diameter_in"], 12, 1)
+    ent(V["bc_g1"], 12, 2)
     note = app.label(body, "Pick a maker and bullet to fill these in, or type your own. Leave "
                            "diameter / BC blank to estimate them.", 9, MUTED, anchor="w")
-    note.grid(row=10, column=0, columnspan=3, sticky="w", padx=18, pady=(4, 0))
+    note.grid(row=13, column=0, columnspan=3, sticky="w", padx=18, pady=(4, 0))
 
-    section("POWDER AND PERFORMANCE", 11)
-    lab("POWDER", 13, 0, 1, (6, 3))
-    lab("CHARGE (GR)", 13, 1, 1, (6, 3))
-    lab("MUZZLE VELOCITY (FPS)", 13, 2, 1, (6, 3))
-    LoadSearch(app, ent(V["powder"], 14, 0, 1, "combo"), list(POWDERS), lambda n: None,
+    section("POWDER AND PERFORMANCE", 14)
+    lab("POWDER", 16, 0, 1, (6, 3))
+    lab("CHARGE (GR)", 16, 1, 1, (6, 3))
+    lab("MUZZLE VELOCITY (FPS)", 16, 2, 1, (6, 3))
+    LoadSearch(app, ent(V["powder"], 17, 0, 1, "combo"), list(POWDERS), lambda n: None,
                hint="Powder", own=True)
-    ent(V["powder_gr"], 14, 1)
-    ent(V["muzzle_fps"], 14, 2)
-    lab("BARREL LENGTH (IN, OPTIONAL)", 15, 0, 2)
-    ent(V["barrel_in"], 16, 0)
+    ent(V["powder_gr"], 17, 1)
+    ent(V["muzzle_fps"], 17, 2)
+    lab("BARREL LENGTH (IN, OPTIONAL)", 18, 0, 2)
+    ent(V["barrel_in"], 19, 0)
 
-    section("COST PER ROUND", 17)
+    section("COST PER ROUND", 20)
     for i, (t, k) in enumerate((("BULLET ($ EACH)", "bullet_cost"), ("POWDER ($ PER LB)", "powder_cost_lb"),
                                 ("PRIMER ($ EACH)", "primer_cost"))):
-        lab(t, 19, i, 1, (6, 3))
-        ent(V[k], 20, i)
+        lab(t, 22, i, 1, (6, 3))
+        ent(V[k], 23, i)
     for i, (t, k) in enumerate((("BRASS ($ EACH)", "brass_cost"), ("BRASS RELOADS", "brass_reuse"),
                                 ("OR TOTAL PER ROUND ($)", "total"))):
-        lab(t, 21, i)
-        ent(V[k], 22, i)
+        lab(t, 24, i)
+        ent(V[k], 25, i)
     cost_lbl = app.label(body, "", 11, TEXT, True, anchor="w")
-    cost_lbl.grid(row=23, column=0, columnspan=3, sticky="w", padx=18, pady=(8, 0))
-    lab("NOTES (OPTIONAL)", 24, 0, 3)
-    ent(V["notes"], 25, 0, 3)
+    cost_lbl.grid(row=26, column=0, columnspan=3, sticky="w", padx=18, pady=(8, 0))
+    lab("NOTES (OPTIONAL)", 27, 0, 3)
+    ent(V["notes"], 28, 0, 3)
     note = tk.Frame(body, bg=body.cget("bg"))
-    note.grid(row=26, column=0, columnspan=3, sticky="ew", padx=18, pady=(10, 0))
+    note.grid(row=29, column=0, columnspan=3, sticky="ew", padx=18, pady=(10, 0))
     disclaimer(app, note, body.cget("bg"))
 
     def num(key, label, lo, hi=None, blank=False):
@@ -3268,10 +3340,20 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
             c = None
         cost_lbl.config(text="" if not c else f"Cost per round: ${c:.2f}")
 
+    def cart_diameter():
+        """The picked cartridge's bullet diameter (a new one's as typed), or None."""
+        if is_new():
+            try:
+                d = float(V["new_dia"].get())
+            except ValueError:
+                return None
+            return d if 0.1 <= d <= 0.7 else None
+        pick = pick_of(V["cartridge"].get())
+        return own_diameter(app, *pick) if pick else None
+
     def fits(b):
         """The library bullet is the cartridge's diameter (bullets go by diameter, not cartridge)."""
-        pick = pick_of(V["cartridge"].get())
-        d = DIAMETERS.get(pick[1]) if pick else None
+        d = cart_diameter()
         return not d or abs(b["diameter"] - d) <= 0.003
 
     def refresh_bullets(*_):
@@ -3292,20 +3374,27 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
                 break
 
     V["cartridge"].trace_add("write", refresh_bullets)
+    V["new_dia"].trace_add("write", refresh_bullets)
     V["bullet_maker"].trace_add("write", refresh_bullets)
     for k in ("bullet_cost", "powder_cost_lb", "powder_gr", "primer_cost", "brass_cost",
               "brass_reuse", "total"):
         V[k].trace_add("write", update_cost)
     refresh_bullets()
     update_cost()
+    show_new()
 
     def save(_e=None):
         try:
-            pick = pick_of(V["cartridge"].get())
-            if pick is None:
-                raise ValueError("Pick a cartridge from the list." if V["cartridge"].get().strip()
-                                 else "Enter a cartridge.")
-            cat, cart = pick
+            cart_dia = None
+            if is_new():
+                cat, cart = new_cartridge(opts, V["new_name"].get(), kinds.get(V["new_type"].get()))
+                cart_dia = num("new_dia", "The cartridge's bullet diameter", 0.1, 0.7)
+            else:
+                pick = pick_of(V["cartridge"].get())
+                if pick is None:
+                    raise ValueError("Pick a cartridge from the list." if V["cartridge"].get().strip()
+                                     else "Enter a cartridge.")
+                cat, cart = pick
             gr = num("bullet_gr", "Bullet weight", 1, 2000)
             fps = num("muzzle_fps", "Muzzle velocity", 100, 5500)
             charge = num("powder_gr", "Powder charge", 0.1, 300)
@@ -3313,7 +3402,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
             bc = num("bc_g1", "Ballistic coefficient", 0.01, 1.5, True)
             barrel = num("barrel_in", "Barrel length", 1, 60, True)
             if dia is None:
-                dia = DIAMETERS.get(cart) or bullet_diameter(cart, gr)
+                dia = cart_dia or own_diameter(app, cat, cart) or bullet_diameter(cart, gr)
             if not dia:                       # a "gauge" / "bore" name has no bullet diameter
                 raise ValueError("Enter the bullet diameter.")
             if bc is None:
@@ -3351,7 +3440,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
             on_saved(row)
 
     btns = tk.Frame(body, bg=SURFACE)
-    btns.grid(row=27, column=0, columnspan=3, sticky="w", padx=18, pady=(14, 18))
+    btns.grid(row=30, column=0, columnspan=3, sticky="w", padx=18, pady=(14, 18))
     app.button(btns, "Save handload", save, "primary").pack(side="left")
     app.button(btns, "Cancel", win.destroy).pack(side="left", padx=8)
     win.bind("<Escape>", lambda e: win.destroy())
@@ -4530,10 +4619,12 @@ class LoadSearch:
     pick; last is the box text of the last pick. hint: the grey text an empty box shows, like
     the web's placeholder (a string, or a function for one that changes). own: lets the user
     keep what they typed when it isn't in the list (a last row 'Use "..."'; makers, bullets and
-    powders in the handload form)."""
+    powders in the handload form). add: (text(typed), on_add(typed)) puts a last row that is
+    always there (the handload form's "Add a cartridge that isn't listed"); picking it calls
+    on_add with the search text and leaves the box as it was."""
 
     def __init__(self, app, box, names, on_pick, value=None, head=None, label=None, hint=None,
-                 own=False):
+                 own=False, add=None):
         self.app, self.box, self.names, self.on_pick = app, box, names, on_pick
         self.value = value or (lambda n: n)
         self.head, self.label = head, label or (lambda n: n)
@@ -4547,7 +4638,7 @@ class LoadSearch:
         box.bind("<Key>", self._key)
         for ev in ("<<Paste>>", "<<Cut>>", "<<Clear>>"):
             box.bind(ev, lambda e: "break")
-        self.hint, self.own = hint, own
+        self.hint, self.own, self.add = hint, own, add
         self.hint_label = None
         if hint is not None:
             self.hint_label = tk.Label(box, bg=SURFACE_2, fg=MUTED, font=box.cget("font"),
@@ -4593,7 +4684,7 @@ class LoadSearch:
         return [n for n in order if all(w in n.lower() for w in words)]
 
     def open(self, typed=""):
-        if self.popup is not None or not (self.names or self.own):
+        if self.popup is not None or not (self.names or self.own or self.add):
             return
         a = self.app
         # drawn like a refined menu (and like the web version): a rounded search field with a
@@ -4691,7 +4782,12 @@ class LoadSearch:
             if first and self.at is None and self.value(n) == cur:
                 self.at = len(self.rows) - 1
         q = self.query.get().strip()
-        if self.own and q and not any(self.value(n).lower() == q.lower() for n in matches):
+        if self.add:                          # always offered, last
+            self.rows.append((q, "add"))
+            self.texts.append(self.add[0](q))
+            self.tops.append(y)
+            y += self.row_h
+        elif self.own and q and not any(self.value(n).lower() == q.lower() for n in matches):
             self.rows.append((q,))            # the user's own text, not a list entry
             self.texts.append(f"Use \u201c{q}\u201d")
             self.tops.append(y)
@@ -4731,7 +4827,7 @@ class LoadSearch:
                              fill=ACCENT, outline="")
             c.create_text(a.px(14), top + self.row_h / 2, text=text, anchor="w",
                           fill=ON_ACCENT if on else TEXT, font=self.font)
-            if self._val(name) == cur:        # the current pick
+            if self._val(name) == cur and name[1:] != ("add",):    # the current pick
                 c.create_text(w - a.px(16), top + self.row_h / 2, text="\u2713", anchor="e",
                               fill=ON_ACCENT if on else ACCENT, font=self.font)
         c.config(scrollregion=(0, 0, w, self.total))
@@ -4850,6 +4946,9 @@ class LoadSearch:
             return "break"
         name = self.rows[i]
         self.close(refocus=True)
+        if isinstance(name, tuple) and name[1:] == ("add",):
+            self.add[1](name[0])
+            return "break"
         self.box.tk.globalsetvar(self.var, self._val(name))
         self.last = self._val(name)
         self.on_pick(name[0] if isinstance(name, tuple) else name)

@@ -385,6 +385,8 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .sheet.pop .slist [role=option].cur::after{content:"\2713";color:var(--accent)}
 .sheet.pop .slist [role=option].on{background:var(--accent);color:var(--on-accent)}
 .sheet.pop .slist [role=option].on.cur::after{color:var(--on-accent)}
+.slist .sadd{color:var(--accent);font-weight:600}
+.hnew[hidden]{display:none}
 .sheet.pop .slist .hd{position:static;padding:12px 10px 4px;background:none;border-bottom:0;font-size:.68rem}
 .selcover{position:absolute;inset:0;background:none;border:0;padding:0;cursor:pointer}
 .sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:flex;align-items:flex-end}
@@ -1208,6 +1210,29 @@ function handCarts(){
   const cnt={};per.forEach(([c,cs])=>cs.forEach(x=>{cnt[x]=(cnt[x]||0)+1;}));
   return per.flatMap(([c,cs])=>cs.map(x=>({text:cnt[x]>1?`${x}  ·  ${CAT_TAGS[c.title]||c.title}`:x,cat:c,cart:x})));
 }
+// a cartridge that isn't in the list (older / obsolete ones, Zeke Nov 2026): the handload form
+// asks its name, type (category) and bullet diameter, and it is saved with its handloads
+// (category, cartridge, diameter_in), so nothing else stores it. Same as the desktop app.
+const NEWC="__newcart__";
+const HAND_KINDS=CATEGORIES.filter(c=>c.grain_style);
+// a cartridge's bullet diameter: DIAMETERS, else (one the user added) its handloads'
+function ownDiameter(cat,cart){
+  if(DIAMETERS[cart])return DIAMETERS[cart];
+  const r=readHand().find(x=>x.category===cat.title&&x.cartridge===cart&&+x.diameter_in>0);
+  return r?+r.diameter_in:0;
+}
+// {cat, cart} for a typed new cartridge: one already listed under that type is used as it is;
+// one listed under another type is refused (it would make a second cartridge of that name)
+function newCartridge(opts,name,cat){
+  name=(name||"").trim().split(/\s+/).join(" ");
+  if(!name)throw new Error("Enter the new cartridge's name.");
+  if(name.length>60)throw new Error("Keep the cartridge's name under 60 characters.");
+  if(!cat)throw new Error("Pick the new cartridge's type.");
+  const same=opts.filter(o=>o.cart.toLowerCase()===name.toLowerCase());
+  const mine=same.find(o=>o.cat===cat);if(mine)return {cat,cart:mine.cart};
+  if(same.length)throw new Error(`${same[0].cart} is already in the list (${catName(same[0].cat)}). Pick it there, or choose that type.`);
+  return {cat,cart:name};
+}
 // the Handloads tab's add / edit form (any category: the cartridge picks it)
 function handDialog(rec,done){
   const edit=!!(rec&&rec.id&&readHand().some(x=>x.id===rec.id));
@@ -1216,7 +1241,10 @@ function handDialog(rec,done){
   const pickOf=t=>{t=(t||"").trim();const lo=t.toLowerCase();return opts.find(o=>o.text===t)||opts.find(o=>o.text.toLowerCase()===lo)||opts.find(o=>o.cart.toLowerCase()===lo)||null;};
   const [m,close]=modal(`
     <h3 style="margin:0 0 4px">${edit?"Edit handload":"New handload"}</h3>
-    <label class="l" style="margin-top:12px">CARTRIDGE</label><div><select id="hc"><option value="">Choose…</option>${[...new Set(opts.map(o=>o.cat))].map(c=>`<optgroup label="${esc(catName(c))}">${opts.filter(o=>o.cat===c).map(o=>`<option value="${esc(o.text)}">${esc(o.cart)}</option>`).join("")}</optgroup>`).join("")}</select></div>
+    <label class="l" style="margin-top:12px">CARTRIDGE</label><div><select id="hc"><option value="">Choose…</option>${[...new Set(opts.map(o=>o.cat))].map(c=>`<optgroup label="${esc(catName(c))}">${opts.filter(o=>o.cat===c).map(o=>`<option value="${esc(o.text)}">${esc(o.cart)}</option>`).join("")}</optgroup>`).join("")}<option value="${NEWC}">New cartridge (below)</option></select></div>
+    <div class="hnew" hidden style="margin-top:12px"><label class="l">NEW CARTRIDGE NAME</label><input id="hnn" autocomplete="off" placeholder="e.g. .32-20 Winchester"></div>
+    <div class="g2 hnew" hidden><div><label class="l">TYPE</label><select id="hnt">${HAND_KINDS.map(c=>`<option value="${esc(c.title)}">${esc(catName(c))}</option>`).join("")}</select></div><div><label class="l">BULLET DIAMETER (IN)</label><input id="hnd" inputmode="decimal" placeholder="e.g. .312"></div></div>
+    <div class="note hnew" hidden>The type sets the usual gun weight, sight-in distance and barrel math.</div>
     <div class="g2"><div><label class="l">BULLET MAKER</label><select id="hbm"></select><input id="hbmo" autocomplete="off" placeholder="Type the maker" aria-label="Bullet maker" style="display:none;margin-top:6px"></div><div><label class="l">BULLET (LIBRARY)</label><select id="hbl"></select></div></div>
     <div class="g2"><div><label class="l">BULLET NAME</label><input id="hbn" autocomplete="off" placeholder="e.g. ELD-M"></div><div><label class="l">LOAD NAME (OPTIONAL)</label><input id="hn" autocomplete="off"></div></div>
     <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal"></div></div>
@@ -1230,7 +1258,11 @@ function handDialog(rec,done){
     <div class="safety"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div>
     <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button></div>`);
   const q=x=>$(x,m);
-  const diaOf=c=>{const o=pickOf(c);return o?DIAMETERS[o.cart]||0:0;};
+  const isNew=()=>q("#hc").value===NEWC;
+  const diaOf=c=>{
+    if(c===NEWC){const d=parseFloat(q("#hnd").value);return d>=0.1&&d<=0.7?d:0;}
+    const o=pickOf(c);return o?ownDiameter(o.cat,o.cart):0;};
+  const showNew=()=>m.querySelectorAll(".hnew").forEach(x=>{x.hidden=!isNew();});
   const val=(id,v)=>{q("#"+id).value=v==null||v===0||v===""?"":v;};
   // phones: the form's pickers open the bottom sheet (pickSheet) instead of the system list
   const touch=matchMedia("(pointer:coarse)").matches;
@@ -1268,14 +1300,17 @@ function handDialog(rec,done){
   q("#hbm").onchange=()=>{showOther();fillBullets();if(q("#hbm").value===OTHER)q("#hbmo").focus();};
   q("#hbl").onchange=()=>{const b=BULLETS[+q("#hbl").value];if(!b)return;q("#hbn").value=b.name;q("#hgr").value=g(b.weight);q("#hdm").value=g(b.diameter);q("#hbc").value=g(b.bc);};
   ["hcb","hcp","hcr","hcs","hcu","hct","hpg"].forEach(i=>q("#"+i).addEventListener("input",showCost));
-  q("#hc").onchange=fillMakers;
+  q("#hc").onchange=()=>{showNew();fillMakers();};
   // the cartridge box opens a searchable list of cartridges under their category headings: the
   // bottom sheet on touch screens, a search pop-up under the box with a mouse (Zeke, Oct 28 2026)
   const hc=q("#hc"),cv=document.createElement("button");
   cv.type="button";cv.className="selcover";cv.setAttribute("aria-label","Choose a cartridge");
   hc.parentElement.style.position="relative";hc.tabIndex=-1;hc.parentElement.appendChild(cv);
   const cartPick={text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>catName(o.cat),none:"cartridge",
-    cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;fillMakers();}};
+    cur:()=>pickOf(hc.value),pick:o=>{hc.value=o.text;showNew();fillMakers();},
+    add:{text:t=>t?`+ Add “${t}” as a new cartridge`:"+ Add a cartridge that isn't listed",
+      pick:t=>{hc.value=NEWC;q("#hnn").value=t;showNew();fillMakers();if(!touch||!t)q("#hnn").focus();}}};
+  q("#hnd").addEventListener("input",fillMakers);
   const openCart=typed=>touch?pickSheet(opts,cartPick):pickSheet(opts,cartPick,{el:hc,input:cv,typed:typed||""});
   cv.onclick=()=>openCart();
   cv.onfocus=()=>hc.classList.add("focus");cv.onblur=()=>hc.classList.remove("focus");
@@ -1291,7 +1326,7 @@ function handDialog(rec,done){
     pw.onfocus=()=>{if(!pw.readOnly)return;pw.blur();pickSheet(POWDERS.concat([OTHERP]),{text:x=>x===OTHERP?"Other powder (type it)":x,none:"powder",
       cur:()=>POWDERS.find(x=>x===pw.value.trim()),pick:x=>{if(x===OTHERP){pw.readOnly=false;pw.value="";pw.focus();}else pw.value=x;}});};
     pw.onblur=()=>{pw.readOnly=true;};
-    sheetSelect("hbm","bullet maker");sheetSelect("hbl","bullet");sheetSelect("hpu","purpose");
+    sheetSelect("hbm","bullet maker");sheetSelect("hbl","bullet");sheetSelect("hpu","purpose");sheetSelect("hnt","cartridge type");
   }
   // prefill
   const o0=opts.find(o=>o.cart===rec.cartridge&&o.cat.title===rec.category)||opts.find(o=>o.cart===rec.cartridge);
@@ -1318,10 +1353,13 @@ function handDialog(rec,done){
         const v=Number(t);if(!isFinite(v))throw new Error(`${label} must be a number.`);
         if(v<lo||(hi!=null&&v>hi))throw new Error(`${label} must be ${hi!=null?`between ${g(lo)} and ${g(hi)}`:`${g(lo)} or more`}.`);
         return v;};
-      const pk=pickOf(q("#hc").value);if(!pk)throw new Error("Choose a cartridge.");
+      let cdm=0;
+      const pk=isNew()?newCartridge(opts,q("#hnn").value,HAND_KINDS.find(c=>c.title===q("#hnt").value)):pickOf(q("#hc").value);
+      if(!pk)throw new Error("Choose a cartridge.");
+      if(isNew())cdm=num("hnd","The cartridge's bullet diameter",0.1,0.7);
       const cart=pk.cart,cat=pk.cat;
       const gr=num("hgr","Bullet weight",1,2000),fps=num("hfps","Velocity",100,5500),pg=num("hpg","Powder charge",0.1,300);
-      let dm=num("hdm","Diameter",0.1,0.7,true);if(dm==null)dm=DIAMETERS[cart]||bulletDiameter({cartridge:cart,bullet_gr:gr});if(!dm)throw new Error("Enter the bullet diameter.");
+      let dm=num("hdm","Diameter",0.1,0.7,true);if(dm==null)dm=cdm||ownDiameter(cat,cart)||bulletDiameter({cartridge:cart,bullet_gr:gr});if(!dm)throw new Error("Enter the bullet diameter.");
       let bc=num("hbc","Ballistic coefficient",0.01,1.5,true);
       if(bc==null)bc=+(gr/7000/(dm*dm)*(cat.group==="Handgun"?0.95:1.7)).toFixed(3);
       const bl=num("hbl2","Barrel length",1,60,true);
@@ -1385,18 +1423,24 @@ function pickSheet(items,o,anchor){
   m.innerHTML=`<div class="sheet${anchor?" pop":""}" role="dialog" aria-label="Choose a ${esc(o.none)}">${anchor?"":`<div class="shead"><b>Choose a ${esc(o.none)}</b><button class="sx" aria-label="Close">×</button></div>`}
     ${anchor?'<div class="sqw"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>':""}<input class="sq" type="search" placeholder="Search" autocomplete="off" aria-label="Search">${anchor?"</div>":""}<div class="slist" role="listbox"></div></div>`;
   const sq=m.querySelector(".sq"),list=m.querySelector(".slist");
+  const ADD={};   // o.add {text(typed), pick(typed)}: a last row that is always there (a new cartridge)
   let shown=[],at=-1;
   const mark=()=>list.querySelectorAll("[role=option]").forEach((r,i)=>r.classList.toggle("on",i===at));
   const draw=first=>{
     const words=sq.value.toLowerCase().split(/\s+/).filter(Boolean);
     shown=items.filter(x=>{const t=find(x).toLowerCase();return words.every(w=>t.includes(w));});
+    const none=shown.length?"":`<div class="none">No ${o.none} matches “${esc(sq.value.trim())}”</div>`;
+    if(o.add)shown.push(ADD);
     let last=null;
-    list.innerHTML=shown.length?shown.map((x,i)=>{const h=o.head?o.head(x):null,top=h!==last?`<div class="hd">${esc(h)}</div>`:"";last=h;
-      return `${top}<div role="option" class="${x===c?"cur":""}" aria-selected="${x===c}" data-i="${i}">${esc(o.text(x))}</div>`;}).join(""):`<div class="none">No ${o.none} matches “${esc(sq.value.trim())}”</div>`;
+    list.innerHTML=(shown.length?shown.map((x,i)=>{
+      if(x===ADD)return `<div role="option" class="sadd" aria-selected="false" data-i="${i}">${esc(o.add.text(sq.value.trim()))}</div>`;
+      const h=o.head?o.head(x):null,top=h!==last?`<div class="hd">${esc(h)}</div>`:"";last=h;
+      return `${top}<div role="option" class="${x===c?"cur":""}" aria-selected="${x===c}" data-i="${i}">${esc(o.text(x))}</div>`;}).join(""):"")+(o.add?"":none);
+    if(o.add&&none)list.insertAdjacentHTML("afterbegin",none);
     if(anchor){at=shown.length?(first?Math.max(0,shown.indexOf(c)):0):-1;mark();}
   };
   const close=()=>{m.remove();document.body.style.overflow=under?"hidden":"";if(openModalClose===close)openModalClose=under;if(anchor)anchor.input.focus();};
-  const choose=x=>{close();o.pick(x);};
+  const choose=x=>{const t=sq.value.trim();close();if(x===ADD)o.add.pick(t);else o.pick(x);};
   if(anchor)sq.value=anchor.typed;
   draw(true);
   m.onclick=e=>{
