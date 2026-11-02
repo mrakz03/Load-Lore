@@ -433,7 +433,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .h2h table.dr th small{display:block;font-weight:600}
 .h2h table.dr th.ld small{font-weight:400;margin-top:2px}
 .h2h table.dr .l0{border-left:1px solid var(--border)}
-details.btab{margin-top:10px}details.srcd .note{margin-top:2px}
+details.btab{margin-top:10px}details.hcd{margin-top:14px}details.hcd>summary{font-size:.8rem;letter-spacing:.04em}details.srcd .note{margin-top:2px}
 details.btab summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.9rem;padding:6px 0}
 details.btab table th,details.btab table td{text-align:right;padding:7px 8px}
 details.btab th small{display:block;font-weight:600;color:var(--muted)}
@@ -1250,9 +1250,9 @@ function handDialog(rec,done){
     <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal"></div></div>
     <div class="g2"><div><label class="l">POWDER</label><input id="hpw" list="hpl" autocomplete="off"><datalist id="hpl">${POWDERS.map(c=>`<option value="${esc(c)}">`).join("")}</datalist></div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div></div>
     <div class="g3"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"></div><div><label class="l">BARREL (IN)</label><input id="hbl2" inputmode="decimal"></div><div><label class="l">PURPOSE</label><select id="hpu">${PURPOSES.map(x=>`<option>${x}</option>`).join("")}</select></div></div>
-    <label class="l" style="margin-top:16px">COST (OPTIONAL BREAKDOWN)</label>
+    <details class="btab hcd" id="hcd"><summary>Cost (optional breakdown)</summary>
     <div class="g3"><div><label class="l">BULLET $ EACH</label><input id="hcb" inputmode="decimal"></div><div><label class="l">POWDER $ / LB</label><input id="hcp" inputmode="decimal"></div><div><label class="l">PRIMER $ EACH</label><input id="hcr" inputmode="decimal"></div></div>
-    <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div>
+    <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div></details>
     <div class="costlbl" id="hcost"></div>
     <label class="l" style="margin-top:14px">NOTES</label><input id="hno" autocomplete="off">
     <div class="safety"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div>
@@ -1342,6 +1342,7 @@ function handDialog(rec,done){
   val("hcb",rec.bullet_cost);val("hcp",rec.powder_cost_lb);val("hcr",rec.primer_cost);val("hcs",rec.brass_cost);q("#hcu").value=rec.brass_reuse||5;
   const hasParts=+rec.bullet_cost||+rec.powder_cost_lb||+rec.primer_cost||+rec.brass_cost;
   if(rec.cost&&!hasParts)val("hct",rec.cost);
+  if(hasParts||+rec.cost)q("#hcd").open=true;   // the cost drop-down opens when there is a cost
   val("hno",rec.notes);showCost();
   q("#hcancel").onclick=close;
   q("#hsave").onclick=()=>{

@@ -3292,7 +3292,12 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     lab("BARREL LENGTH (IN, OPTIONAL)", 18, 0, 2)
     ent(V["barrel_in"], 19, 0)
 
-    section("COST PER ROUND", 20)
+    # the cost parts sit in a drop-down, closed unless this handload has a cost already
+    tk.Frame(body, bg=BORDER, height=1).grid(row=20, column=0, columnspan=3, sticky="ew",
+                                             padx=18, pady=(16, 0))
+    cost_toggle = tk.Label(body, text="", bg=body.cget("bg"), fg=ACCENT, font=app.f(9, True),
+                           cursor="hand2", anchor="w")
+    cost_toggle.grid(row=21, column=0, columnspan=3, sticky="w", padx=18, pady=(8, 0))
     for i, (t, k) in enumerate((("BULLET ($ EACH)", "bullet_cost"), ("POWDER ($ PER LB)", "powder_cost_lb"),
                                 ("PRIMER ($ EACH)", "primer_cost"))):
         lab(t, 22, i, 1, (6, 3))
@@ -3303,6 +3308,19 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
         ent(V[k], 25, i)
     cost_lbl = app.label(body, "", 11, TEXT, True, anchor="w")
     cost_lbl.grid(row=26, column=0, columnspan=3, sticky="w", padx=18, pady=(8, 0))
+    cost_rows = [w for r in (22, 23, 24, 25) for w in body.grid_slaves(row=r)]
+    cost_open = [any(V[k].get().strip() not in ("", "0", "0.0") for k in (
+        "bullet_cost", "powder_cost_lb", "primer_cost", "brass_cost", "total"))]
+
+    def show_cost(flip=False):
+        if flip:
+            cost_open[0] = not cost_open[0]
+        for w in cost_rows:
+            w.grid() if cost_open[0] else w.grid_remove()
+        cost_toggle.config(text=("\u25be" if cost_open[0] else "\u25b8")
+                           + "  COST (OPTIONAL BREAKDOWN)")
+    cost_toggle.bind("<Button-1>", lambda e: show_cost(True))
+    show_cost()
     lab("NOTES (OPTIONAL)", 27, 0, 3)
     ent(V["notes"], 28, 0, 3)
     note = tk.Frame(body, bg=body.cget("bg"))
