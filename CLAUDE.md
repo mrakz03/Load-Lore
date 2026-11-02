@@ -180,6 +180,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore use the
   my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
   replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
+  The form's cost parts sit in a "Cost (optional breakdown)" drop-down (Zeke, Nov 2 2026: web
+  details.hcd, desktop cost_toggle / show_cost), closed unless the handload already has a cost.
   On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open
   pickSheet too (sheetSelect puts a clear button over a <select>; powder has "Other powder (type
   it)"); pickSheet over a dialog hands the back button back to the dialog when it closes.
