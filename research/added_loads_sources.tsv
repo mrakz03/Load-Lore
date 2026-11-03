@@ -1170,3 +1170,24 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 4.6x30mm	Fiocchi Hyperformance Tipped Hollow Point	38	1950	0.227	partial	blackstoneshooting.com listing of Fiocchi 46EXD Hyperformance (1950 fps; BC of the Hornady 38 gr V-MAX)
 5.56x45mm NATO	IMI M855 FMJ (steel core)	62	3020	0.304	partial	elbitsystems.com small-caliber ammunition catalog (920 m/s from 20"); luckygunner.com/5-56x45-62-grain-fmj-imi-m855-1200-rounds lists 3100 fps (BC of the PMC 62 gr steel penetrator load) (price as Federal XM855)
 5.56x45mm NATO	IMI Razor Core OTM-BT	69	2788	0.301	partial	elbitsystems.com small-caliber ammunition catalog (850 m/s from 20") (BC of the 69 gr Sierra MatchKing / Black Hills 5.56 OTM) (price estimated: Match median x IMI ratio)
+.308 Winchester	Federal Training FMJ BT	150	2820	0.408	published	federalpremium.com/rifle/federal-training/ (AE308DB, 50 rounds; same load as American Eagle AE308D); price targetsportsusa.com $62.50/50
+5.56x45mm NATO	Federal Training 5.56 FMJ BT	55	3165	0.246	published	federalpremium.com/rifle/federal-training/ (FC556F200, 200 rounds) (price as Federal American Eagle 5.56 XM193)
+.223 Remington	Federal Training FMJ	55	3240	0.269	published	federalpremium.com/rifle/federal-training/ (FC223F500, 500 rounds) (price as Federal American Eagle 55 FMJ BT)
+.308 Winchester	Winchester Supreme Long Range BC Max	175	2650	0.505	published	winchester.com/Products/Ammunition/Rifle/Supreme Long Range (S308BC) (price as the 6.5 Creedmoor SLR load)
+.30-06 Springfield	Winchester Supreme Long Range BC Max	195	2570	0.589	published	winchester.com/Products/Ammunition/Rifle/Supreme Long Range (S3006BC) (price as the 6.5 Creedmoor SLR load)
+6mm ARC	Black Hills Gold Sierra MatchKing-X	107	2417	0.527	partial	simplemanarmory.com listing of Black Hills 6mm ARC 107 SMK-X (2417 fps from 18 in, $56.19/20); BC of the Sierra 107 gr MatchKing (Sierra: MKX keeps the MatchKing's BC)
+.243 Winchester	Barnes Harvest Collection Sierra Tipped GameKing	90	3200	0.409	partial	kygunco.com listing of Barnes 32398 (3200 fps, $35.47/20) (BC scaled from Federal Premium Big Game ELD-X 90 gr)
+6.5 Creedmoor	Barnes Harvest Collection Sierra Tipped GameKing	140	2700	0.563	published	brownells.com listing (2700 fps, $40.99/20); BC from americanhunter.org Harvest Collection review
+6.5 PRC	Barnes Harvest Collection Sierra Tipped GameKing	145	2910	0.634	partial	kygunco.com listing of Barnes 32401 (2910 fps, $43.99/20) (BC scaled from Federal Premium Big Game ELD-X 143 gr)
+.270 Winchester	Barnes Harvest Collection Sierra Tipped GameKing	140	2960	0.508	published	kygunco.com listing of Barnes 32399 (2960 fps, $35.47/20); BC from americanhunter.org Harvest Collection review
+7mm Remington Magnum	Barnes Harvest Collection Sierra Tipped GameKing	150	3000	0.515	partial	kygunco.com listing of Barnes 32402 (3000 fps, $40.42/20) (BC scaled from Federal Premium Big Game Swift Scirocco II 150 gr)
+.308 Winchester	Barnes Harvest Collection Sierra Tipped GameKing	165	2680	0.517	published	kygunco.com listing of Barnes 32404 (2680 fps, $36.99/20); BC from americanhunter.org Harvest Collection review
+.30-06 Springfield	Barnes Harvest Collection Sierra Tipped GameKing	180	2700	0.510	partial	kygunco.com listing of Barnes 32403 (2700 fps, $36.55/20) (BC scaled from Federal Fusion Tipped 180 gr)
+.300 Winchester Magnum	Barnes Harvest Collection Sierra Tipped GameKing	180	2960	0.509	partial	kygunco.com and xcal.com listings of Barnes 32405 (2960 fps, $45.29/20) (BC scaled from Federal Fusion Tipped 180 gr)
+6.5 Creedmoor	Nosler Whitetail Country Solid Base	140	2650	0.495	published	cabelas.ca Nosler Whitetail Country listing (2650 fps); BC + barrel nosler.com (40105); price ~ retail $35/20
+.270 Winchester	Nosler Whitetail Country Solid Base	130	3060	0.424	published	cabelas.ca Nosler Whitetail Country listing (3060 fps); BC + barrel nosler.com (40110)
+7mm-08 Remington	Nosler Whitetail Country Solid Base	140	2825	0.459	published	cabelas.ca Nosler Whitetail Country listing (2825 fps); BC + barrel nosler.com (40115)
+.30-30 Winchester	Nosler Whitetail Country Solid Base RN	150	2390	0.232	published	cabelas.ca Nosler Whitetail Country listing (2390 fps); BC + barrel nosler.com (40135)
+.308 Winchester	Nosler Whitetail Country Solid Base	165	2800	0.442	published	cabelas.ca Nosler Whitetail Country listing (2800 fps); BC + barrel nosler.com (40120)
+.30-06 Springfield	Nosler Whitetail Country Solid Base	165	2900	0.442	published	cabelas.ca Nosler Whitetail Country listing (2900 fps); BC + barrel nosler.com (40125)
+.350 Legend	Nosler Whitetail Country Straight-Wall	180	2100	0.245	published	governorsgunclub.com listing of Nosler Whitetail Country 350 Legend 180gr (2100 fps); BC + barrel nosler.com (40130)

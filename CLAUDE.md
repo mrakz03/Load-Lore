@@ -180,6 +180,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore use the
   my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
   replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
+  The form's cost parts sit in a "Cost (optional breakdown)" drop-down (Zeke, Nov 2 2026: web
+  details.hcd, desktop cost_toggle / show_cost), closed unless the handload already has a cost.
   On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open
   pickSheet too (sheetSelect puts a clear button over a <select>; powder has "Other powder (type
   it)"); pickSheet over a dialog hands the back button back to the dialog when it closes.
@@ -213,6 +215,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - PC Home, category list and Settings (Oct 25 2026, Zeke): top left, compact cards in one column (icon beside the text), zoomed
   with the window up to 1.15x (desktop App._menu_layout / _zoomed, re-laid out on resize; web
   fitMenu sets CSS zoom at >=900 px). Phones keep their centred layout.
+- Your own cartridges (Nov 2 2026, Zeke: older / obsolete ones): the handload form's cartridge list
+  ends with "+ Add a cartridge that isn't listed" (typed text: 'Add "..." as a new cartridge'; desktop
+  LoadSearch add=, web pickSheet o.add). It asks NEW CARTRIDGE NAME, TYPE (a bullet category: gun weight,
+  sight-in, barrel math) and BULLET DIAMETER (IN). Nothing stores the cartridge itself: it lives in its
+  handloads' category / cartridge / diameter_in (so backups and old data are unchanged) and goes away
+  with its last handload. own_diameter / ownDiameter gives its diameter to later handloads;
+  new_cartridge / newCartridge reuse a listed name of that type and refuse one listed under another.
 - Handload bullets go by diameter, not cartridge (one .257 bullet fits .250 Savage, .25-06, .257
   Roberts): the form lists only makers with a bullets.csv bullet of the cartridge's DIAMETERS
   size, then that maker's bullets; any other maker can be typed (web:
@@ -378,6 +387,15 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   Hornady Critical Defense .22 WMR print handgun figures only (Winchester marks Silvertip "handgun only"), so they are
   Handgun-only, purpose Defense. Winchester Defender .22 WMR has only the catalog's rifle figure (1910 fps), so it stays in
   Rimfire Rifle (purpose Hunting: a lone Defense load there would have nothing to be graded against).
+- Nov 1 2026 new-release check (Zeke): SHOT 2026 lists compared with the data; most were in. Added 21 rifle
+  loads: Federal Training (Federal's own name for bulk American Eagle loads, same speed, slightly lower BC;
+  Zeke wanted them as their own rows), Winchester Supreme Long Range .308 / .30-06, Barnes Harvest Collection
+  (velocities from retailer listings: barnesbullets.com loads specs by script), Nosler Whitetail Country
+  (BC from nosler.com, velocity from retailer listings: nosler.com shows none), Black Hills 6mm ARC MKX.
+  Not added (no published velocity found): Remington Hard Cast / Core-Lokt 2026 loads, Barnes Harvest .223 and
+  2026 additions, Black Hills 6.5 / .308 MKX, other Nosler Whitetail Country loads, rest of Hornady Backcountry
+  Defense. .400 Legend (new loads from Hornady, Barnes, Nosler, Remington) is not a cartridge in the app.
+  List: /mnt/project-files/catalogs/new-loads-2026-11-01.md (not in the repo).
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
