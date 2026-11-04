@@ -2325,11 +2325,15 @@ class App:
                   darkcolor=[("active", MUTED)])
         s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", ON_ACCENT)])
         # a thin line under each row, like the web's table rows: the row background is an image
-        # (fill + a 1 px BORDER line at the bottom) stretched to the row, accent when selected
+        # (fill + a 1 px BORDER line at the bottom) stretched to the row, accent when selected.
+        # Ttk stretches an image element by tiling it, one copy per image-sized piece: a 3 x 3 px
+        # image took tens of thousands of copies per row, about a second per redraw of the
+        # table (Zeke, Nov 4 2026: "super slow" on Linux). A row-sized image is a few copies.
+        rh = self.px(30)
         def row_png(fill):
-            img = tk.PhotoImage(width=3, height=3)
-            img.put(fill, to=(0, 0, 3, 2))
-            img.put(BORDER, to=(0, 2, 3, 3))
+            img = tk.PhotoImage(width=1024, height=rh)
+            img.put(fill, to=(0, 0, 1024, rh - 1))
+            img.put(BORDER, to=(0, rh - 1, 1024, rh))
             return img
         self._row_imgs = (row_png(SURFACE), row_png(ACCENT))
         name = f"Rowline{len(getattr(self, '_row_names', ()))}.row"     # one element per theme
