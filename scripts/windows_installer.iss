@@ -3,7 +3,7 @@
 ;   ISCC.exe /DAppVersion=1.4 scripts\windows_installer.iss
 ; Installs per user (no admin prompt) so the app can save handloads and settings next to the .exe.
 ; Reinstalling a newer version upgrades in place: it first removes the data files the old
-; version shipped (ammo_*, loads_*, bullets.csv), so files a release drops don't linger.
+; version shipped (ammo_*, loads_*, bullets.csv, popularity.csv), so files a release drops don't linger.
 ; my_calibers.csv, my_handloads.csv and settings.json are never touched.
 ; The app's own updater (Settings > Updates) downloads this installer and runs it with /SILENT.
 ; Before the rename (Oct 2026) the app was CartridgeCalculator.exe in ...\Programs\Cartridge Calculator:
@@ -45,6 +45,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Type: files; Name: "{app}\ammo_*.csv"
 Type: files; Name: "{app}\loads_*.csv"
 Type: files; Name: "{app}\bullets.csv"
+Type: files; Name: "{app}\popularity.csv"
 ; NOTICE.md and DISCLAIMER.md were combined into LEGAL.md
 Type: files; Name: "{app}\NOTICE.md"
 Type: files; Name: "{app}\DISCLAIMER.md"
