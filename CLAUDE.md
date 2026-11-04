@@ -164,6 +164,17 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   "Sort: heaviest bullet" / "Sort: lightest bullet" (#ls grain / grainl); PC tables (desktop LoadsView, web
   >=900 px) have a Grains column whose heading sorts heaviest first, click again for lightest, so the
   Load cell there shows just the name (cards and labels keep "· 150 gr").
+- Most popular sort (Nov 4 2026, Zeke): no per-load sales figures exist anywhere, so it is Impact Guns'
+  "Best Selling" order per cartridge / gauge page (read Nov 4 2026; research/popularity_sources.md,
+  every listing in research/popularity_listings.tsv). data/popularity.csv (cartridge, load, bullet_gr,
+  rank, impact_listing) gives 933 loads a place; popularity_key drops " (est.)" / " (handgun muzzle
+  velocity)" so copies share it; popularity_of / web it.pop (build_web.py adds pop to each load,
+  DATA.pop_source = POPULARITY_SOURCE). popular_sort_key / popCmp: ranked first, then the rest (and
+  handloads) by brand (product line). Web "Sort: most popular" (#ls pop); PC tables (desktop, web
+  >=900 px) a "Popular" column with each load's place among the loads listed (popular_places /
+  popPlaces), "—" without one; clicking it again goes back to the default order. The count line names
+  the source while it is the sort. popularity.csv is shipped data (SHIPPED_DATA, .iss, install.sh).
+  A load renamed in loads_*.csv loses its place unless popularity.csv is renamed too.
 - Load labels read "Load  ·  150 gr" (make_label / makeLabel). Saved prices are keyed by label;
   keys from the old weight-first format are converted on read (_rename_price_key / readPrices).
 - Handloads: my_handloads.csv (desktop) / localStorage (web). Never commit user files

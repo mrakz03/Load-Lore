@@ -323,6 +323,62 @@ def line_sort_key(row):
     return brand_of(it), line == "", line, it.bullet_gr, (it.load or it.label).lower()
 
 
+# "Sort: most popular" (Zeke, Nov 4 2026). No maker or store publishes sales counts per load, so
+# popularity is one big retailer's own sales ranking: Impact Guns' "Best Selling" order on each
+# cartridge / gauge page (impactguns.com, read Nov 4 2026). popularity.csv gives each matched load
+# the place its listing held there (research/popularity_sources.md says how the listings were
+# matched). Loads Impact Guns doesn't list, or lists without sales (its A-Z tail), have no place and
+# sort after the ranked ones by brand (product line); so do handloads. build_web.py passes the
+# places to the web as DATA.pop (popKey / popularityOf there).
+POPULARITY_FILENAME = "popularity.csv"
+POPULARITY_SOURCE = "Impact Guns' best-seller order, Nov 2026"
+_POPULARITY = None
+
+
+def popularity_key(cartridge, load, bullet_gr):
+    """'9mm Luger|Federal American Eagle FMJ|115': a PCC estimate's " (est.)" and a .22's
+    " (handgun muzzle velocity)" are dropped, so the same product shares its place."""
+    name = re.sub(r" \((?:est\.|handgun muzzle velocity)\)", "", load or "")
+    return f"{cartridge}|{name}|{float(bullet_gr):g}"
+
+
+def load_popularity(path):
+    places = {}
+    try:
+        with open(path, newline="", encoding="utf-8-sig") as f:
+            for r in csv.DictReader(f):
+                try:
+                    places[popularity_key(r["cartridge"], r["load"], r["bullet_gr"])] = int(r["rank"])
+                except (KeyError, ValueError):
+                    continue
+    except (OSError, csv.Error, UnicodeDecodeError):
+        pass                                       # no file: nothing is ranked
+    return places
+
+
+def popularity_of(item):
+    """The load's place in its cartridge's best-seller list (lower sells more), or None."""
+    global _POPULARITY
+    if _POPULARITY is None:
+        _POPULARITY = load_popularity(os.path.join(app_dir(), POPULARITY_FILENAME))
+    if item.handload:
+        return None
+    return _POPULARITY.get(popularity_key(item.cartridge, item.load, item.bullet_gr))
+
+
+def popular_sort_key(row):
+    """Sort: most popular first; loads without a place after them, by brand (product line)."""
+    p = popularity_of(row["item"])
+    return (p is None, p or 0) + line_sort_key(row)
+
+
+def popular_places(items):
+    """{id(item): 1, 2, 3...}: each ranked load's place among the loads listed (the store's
+    places counted again over just these loads, so the most popular one reads 1)."""
+    ranked = sorted((p, n) for n, p in enumerate(popularity_of(it) for it in items) if p is not None)
+    return {id(items[n]): k + 1 for k, (_, n) in enumerate(ranked)}
+
+
 def default_weights(cat):
     return dict(zip(METRICS, cat.weights))
 
@@ -1305,7 +1361,8 @@ SUMS_ASSET = "SHA256SUMS.txt"                      # made by the release job in 
 ASSET_PREFIX = "LoadLore-"
 ASSET_SUFFIX = {"windows": "-Setup.exe", "linux": "-Linux.tar.gz"}
 PROGRAM = "LoadLore"                               # the Linux program, in a LoadLore folder in the tar
-SHIPPED_DATA = ("ammo_*.csv", "loads_*.csv", BULLETS_FILENAME, "NOTICE.md", "DISCLAIMER.md")
+SHIPPED_DATA = ("ammo_*.csv", "loads_*.csv", BULLETS_FILENAME, POPULARITY_FILENAME, "NOTICE.md",
+                "DISCLAIMER.md")
 # certificate bundles of the common Linux distros: the packaged app's OpenSSL was built on
 # Ubuntu and only looks where Ubuntu keeps them, so on Fedora etc. it would find none
 CA_BUNDLES = ("/etc/ssl/certs/ca-certificates.crt", "/etc/pki/tls/certs/ca-bundle.crt",
@@ -3717,7 +3774,8 @@ class LoadsView:
         self.cols += ["Velocity", "Energy", "Recoil"]
         if cat.terminal:
             self.cols += ["Taylor", "HITS"]
-        self.cols += ["Price", "Score", "Grade"]
+        # each load's place in the store's best-seller list (Sort: most popular, Nov 4 2026)
+        self.cols += ["Popular", "Price", "Score", "Grade"]
         # the table sits in a rounded box like the web's tables
         tbox = a.card(tbl, radius=10, padx=3, pady=3)
         tbox.grid(row=1, column=0, sticky="nsew")
@@ -4321,6 +4379,7 @@ class LoadsView:
                 "Energy": lambda r: r["stats"]["energy"],
                 "Recoil": lambda r: r["stats"]["recoil"],
                 "Taylor": lambda r: r["stats"]["taylor"], "HITS": lambda r: r["stats"]["hits"],
+                "Popular": popular_sort_key,
                 "Price": lambda r: r["stats"]["cost"], "Score": lambda r: r["overall"],
                 "Grade": lambda r: r["overall"]}
         data.sort(key=keys[self.sort["col"]], reverse=self.sort["desc"])
@@ -4328,6 +4387,7 @@ class LoadsView:
         self.iid_row = {}
         keep = None
         cells = []
+        places = popular_places([r["item"] for r in data])
         for r in data:
             st = r["stats"]
             it = r["item"]
@@ -4343,7 +4403,7 @@ class LoadsView:
             vals += [f"{st['velocity']:.0f}", f"{st['energy']:.0f}", f"{st['recoil']:.1f}"]
             if self.cat.terminal:
                 vals += [f"{st['taylor']:.1f}", f"{st['hits']:.0f}"]
-            vals += [f"{st['cost']:.2f}" + (" ✎" if r["custom_price"] else ""),
+            vals += [places.get(id(it), "—"), f"{st['cost']:.2f}" + (" ✎" if r["custom_price"] else ""),
                      f"{r['overall']:.0f}", r["grade"]]
             cells.append(vals)
             iid = self.tree.insert("", "end", values=vals, tags=(("hand",) if it.handload else ())
@@ -4356,7 +4416,8 @@ class LoadsView:
             text=f"{self.cart_var.get()}"
                  f"{'' if self.purpose == 'All' else '  ·  ' + self.purpose}: {len(data)} of "
                  f"{len(self.rows)} loads at {self.dist:g} yards"
-                 + self._fire_count())
+                 + self._fire_count()
+                 + (f"  ·  popularity: {POPULARITY_SOURCE}" if self.sort["col"] == "Popular" else ""))
         self.src_lbl.config(text=source_line(self.cat, self.barrel, self.twist,
                                              any(r["item"].handload for r in self.rows)))
         if keep:
