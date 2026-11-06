@@ -10,7 +10,7 @@ assets/web/...             web version: home-screen icons (iPhone apple-touch-ic
 """
 import os
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets")
@@ -23,16 +23,7 @@ ACCENT_DARK, ACCENT_LIGHT = (44, 92, 186), (130, 176, 255)
 PAGES, PAGES_SHADE = (238, 230, 210), (200, 190, 166)
 BRASS, BRASS_LIGHT, BRASS_DARK = (205, 160, 62), (240, 207, 120), (150, 112, 38)
 COPPER, COPPER_LIGHT = (190, 104, 52), (226, 142, 86)
-FONTS = ("/usr/share/fonts/opentype/inter/Inter-ExtraBold.otf",
-         "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")
 SS = 4          # draw 4x larger, then shrink: smooth edges
-
-
-def _font(px):
-    for path in FONTS:
-        if os.path.exists(path):
-            return ImageFont.truetype(path, px)
-    return ImageFont.load_default()
 
 
 def _ogive(cx, half_w, base_y, tip_y, steps=40):
