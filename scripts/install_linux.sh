@@ -47,7 +47,7 @@ cp "$SRC/LoadLore" "$APPDIR/LoadLore.new"
 chmod +x "$APPDIR/LoadLore.new"
 mv -f "$APPDIR/LoadLore.new" "$APPDIR/LoadLore"
 # clear the data files an older version shipped, so ones a release drops don't linger
-rm -f "$APPDIR"/ammo_*.csv "$APPDIR"/loads_*.csv "$APPDIR"/bullets.csv "$APPDIR"/popularity.csv
+rm -f "$APPDIR"/ammo_*.csv "$APPDIR"/loads_*.csv "$APPDIR"/bullets.csv
 cp "$SRC"/*.csv "$APPDIR/"
 if [ -f "$SRC/icon.png" ]; then cp "$SRC/icon.png" "$APPDIR/"; fi
 rm -f "$APPDIR"/NOTICE.md "$APPDIR"/DISCLAIMER.md   # combined into LEGAL.md
