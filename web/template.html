@@ -204,8 +204,6 @@ h1{font-size:1.45rem;margin:0}
 h2{font-size:1.45rem;margin:6px 0 0}
 .muted{color:var(--muted)}
 .sub{color:var(--muted);margin:4px 0 18px;font-size:.95rem}
-.grid{display:grid;grid-template-columns:1fr;gap:12px}
-@media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
 .cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;color:var(--text);cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:6px;min-height:118px}
 .cat:active{background:var(--surface2);border-color:var(--accent)}
 @media(hover:hover){.cat:hover{background:var(--surface2);border-color:var(--accent)}}   /* phones: no hover left stuck on a tapped card */
@@ -230,17 +228,13 @@ select:focus,select.focus,input:focus{outline:none;border-color:var(--accent)}
 .weights{margin-top:8px}
 .wrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(5.4em,1fr));gap:8px}
 .wrow label{font-size:.8rem;color:var(--muted)}
-.wnote{font-size:.8rem;font-weight:700;margin-top:8px}
 .btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 button.btn{background:var(--surface2);color:var(--text);border:0;border-radius:8px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}
 button.btn:hover{background:var(--border)}
 button.btn.p{background:var(--accent);color:var(--on-accent)}button.btn.p:hover{background:var(--accent-h)}
 .hidden{display:none!important}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .size{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted)}
 .size button{background:var(--surface2);color:var(--text);border:0;border-radius:6px;font:inherit;font-weight:800;min-width:40px;min-height:36px;cursor:pointer}
-.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-@media(max-width:480px){.filters{grid-template-columns:1fr}}
 .cnt{font-size:.8rem;color:var(--muted);margin-top:8px}
 .srcl{grid-column:1/-1;font-size:.8rem;color:var(--muted);padding:2px 0}   /* where the list's figures come from */
 @media(min-width:900px){#lres>.srcl{padding:8px 0 6px}}
@@ -261,7 +255,6 @@ hr{border:0;border-top:1px solid var(--border);margin:10px 0}
 .help{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.4}
 .tblwrap .pc{display:none}
 @media (max-width:600px){   /* phone: cartridge stacks over the load name; other figures are one tap away */
-  .tblwrap .mn{display:none}
   .tblwrap .pc{display:block;font-size:.75rem;color:var(--muted)}
   .tblwrap .ld{white-space:normal;text-align:left}
 }
@@ -677,7 +670,7 @@ function testBarrelText(it){
   return it.source==="estimate"?`our estimate for a ${g(b)} in barrel`:it.source==="tested"?`chronographed from a ${g(b)} in barrel`:`maker's figures from a ${g(b)} in test barrel`;
 }
 // the opened load's note on a barrel or twist of your own ("" when there is none; fire_source_note)
-function fireSourceNote(cat,it,barrel,twist){
+function fireSourceNote(cat,it,barrel){
   const out=[];
   if(barrel&&cat.barrel_in)out.push(it.at_in?`Estimate for your firearm setup: the listed velocity, from a ${g(testBarrel(cat,it.base||it))} in test barrel, is moved to your ${g(barrel)} in barrel, and downrange figures, recoil and grade follow from it.`
     :`Your ${g(barrel)} in barrel is this load's test barrel, so its listed velocity is used.`);
@@ -1207,7 +1200,7 @@ const CAT_TAGS=DATA.cat_tags||{};
 function handCarts(){
   const per=CATEGORIES.filter(c=>c.grain_style&&state.detail[c.title]).map(c=>{
     syncHand(c);return [c,[...withHandloadOnly(groupBy(state.detail[c.title],false),state.loads[c.title]||[]).keys()]];});
-  const cnt={};per.forEach(([c,cs])=>cs.forEach(x=>{cnt[x]=(cnt[x]||0)+1;}));
+  const cnt={};per.forEach(([,cs])=>cs.forEach(x=>{cnt[x]=(cnt[x]||0)+1;}));
   return per.flatMap(([c,cs])=>cs.map(x=>({text:cnt[x]>1?`${x}  ·  ${CAT_TAGS[c.title]||c.title}`:x,cat:c,cart:x})));
 }
 // a cartridge that isn't in the list (older / obsolete ones, Zeke Nov 2026): the handload form
@@ -1625,7 +1618,7 @@ function openLoads(cat,pane){
     const lhead=`<div class="lhead">${tcols.map(c=>c[1]?`<button data-k="${c[1]}" class="${c===tcols.find(x=>x[1]===key||x[1]==="grain"&&key==="grainl"||x[1]==="brand"&&key==="brandl")?(key==="grainl"?"on up":"on"):""}${c[0]==="#"?" rk":""}${c[0]==="Load"?" ln":""}">${esc(c[0])}</button>`:`<span${c[0]==="Load"?' class="ln"':""}>${esc(c[0])}</span>`).join("")}</div>`;
     // where the figures come from, right over the list's headings (Zeke, Oct 30 2026)
     const srcl=`<div class="srcl">${esc(sourceLine(cat,out.barrel,out.twist,out.rows.some(r=>r.it.handload)))}</div>`;
-    box.innerHTML=(rows.length?srcl+lhead:"")+rows.map((r,n)=>{
+    box.innerHTML=(rows.length?srcl+lhead:"")+rows.map(r=>{
       const it=r.it,open=L.open===keyOf(it), edited=!it.handload&&typeof L.prices[priceKey(cat,it)]==="number";
       const fb=k=>GRADES?badge(gradeRel(r.sc[k])):`<span style="width:32px"></span>`;
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
@@ -1657,9 +1650,9 @@ function openLoads(cat,pane){
           ${ballisticHTML(it,cat,L.btOpen)}
           <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button></div>
           ${it.handload?`<div class="hbtns"><button class="btn hedit">Edit in Handloads ›</button></div>
-          <div class="note">${esc([fireSourceNote(cat,it,out.barrel,out.twist),SOURCE_NOTES.handload].filter(Boolean).join(" "))}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
+          <div class="note">${esc([fireSourceNote(cat,it,out.barrel),SOURCE_NOTES.handload].filter(Boolean).join(" "))}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
           <!-- where the figures come from, folded away behind a link (Zeke, Oct 31 2026) -->
-          <details class="btab srcd"${L.srcOpen?" open":""}><summary>About these figures</summary><div class="note">${esc((fireSourceNote(cat,it,out.barrel,out.twist)?fireSourceNote(cat,it,out.barrel,out.twist)+" Listed figures: ":"")+(SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE))} Catalog price estimate: $${it.default_cost.toFixed(2)}.</div></details></div>`}`:""}
+          <details class="btab srcd"${L.srcOpen?" open":""}><summary>About these figures</summary><div class="note">${esc((fireSourceNote(cat,it,out.barrel)?fireSourceNote(cat,it,out.barrel)+" Listed figures: ":"")+(SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE))} Catalog price estimate: $${it.default_cost.toFixed(2)}.</div></details></div>`}`:""}
       </div>`;}).join("")||`<div class="muted">No loads match that filter.</div>`;
     // a heading sorts by its column; clicking the sorted heading again goes back to the default
     // order (Grains: heaviest, then lightest, then the default order; Zeke, Oct 28 2026)

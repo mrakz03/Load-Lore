@@ -142,7 +142,6 @@ class Category:
     payload_col: str = "Grains"
     grain_style: bool = True     # labels read "ELD-M  ·  168 gr"; False = group + load text
     show_oz: bool = False        # also show payload in ounces (shotgun)
-    legacy_filename: str = ""    # older file name to fall back to
     weights: tuple = DEFAULT_WEIGHTS   # velocity, energy, recoil, cost, Taylor KO, HITS
     loads_filename: str = ""     # manufacturer loads for the Load Dictionary / Head to Head
     step_yd: float = 100         # downrange / ballistic tables: 0, step, 2 x step ... 5 x step
@@ -159,7 +158,6 @@ class Category:
 CATEGORIES = (
     Category("Centerfire Rifle", "Hunting, precision and military rounds",
              "ammo_centerfire_rifle.csv", 0, 2000, 8.0, "RIFLE WEIGHT (LB)",
-             legacy_filename="ammo_data.csv",
              loads_filename="loads_centerfire_rifle.csv", barrel_in=24),
     Category("Handgun", "Pistol and revolver rounds",
              "ammo_handgun.csv", 0, 500, 2.0, "HANDGUN WEIGHT (LB)",
@@ -917,7 +915,7 @@ def test_barrel_text(item):
     return f"maker's figures from a {b:g} in test barrel"
 
 
-def fire_source_note(cat, item, barrel, twist):
+def fire_source_note(cat, item, barrel):
     """The opened load's note on a barrel or twist of your own ("" when there is none)."""
     out = []
     if barrel and cat.barrel_in:
@@ -2053,10 +2051,8 @@ class App:
 
     # ---- data ------------------------------------------------------------ #
     def _load_category(self, cat):
-        names = [cat.filename] + ([cat.legacy_filename] if cat.legacy_filename else [])
-        path = next((p for p in (os.path.join(app_dir(), n) for n in names)
-                     if os.path.exists(p)), None)
-        if path is None:
+        path = os.path.join(app_dir(), cat.filename)
+        if not os.path.exists(path):
             return {"loads": [], "problems": [], "error": f"{cat.filename} not found", "detail": [], "detail_error": ""}
         try:
             loads, problems = load_data(path, cat.grain_style)
@@ -4478,7 +4474,7 @@ class LoadsView:
             else:
                 self.reset_btn.pack_forget()
         src = SOURCE_NOTES.get(item.source, DEFAULT_SOURCE_NOTE)
-        own = fire_source_note(self.cat, item, self.barrel, self.twist)
+        own = fire_source_note(self.cat, item, self.barrel)
         if own:
             src = own + ("  " if item.handload else "  Listed figures: ") + src
         if item.handload and item.info and item.info.get("notes"):
@@ -5426,7 +5422,6 @@ class HeadToHeadView:
     category's scoring weights, so the two tools always agree."""
     tab = "h2h"
     cat = None
-    FACTORS = ("velocity", "energy", "recoil", "cost", "taylor", "hits")
 
     def __init__(self, app, stage, snap=None):
         self.app, self.root = app, app.root
