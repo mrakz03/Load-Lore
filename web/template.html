@@ -777,12 +777,6 @@ const DEFAULT_SORT=()=>GRADES?"score":"brandl";   // grades off: brand (product 
 const productLine=it=>{const n=(it.load||it.label||"").toLowerCase();for(const [p,l] of DATA.lines)if(n.startsWith(p)&&(n.length===p.length||n[p.length]===" "))return l;return "";};
 const lineCmp=(a,b)=>{const x=brandOf(a.it),y=brandOf(b.it);if(x!==y)return x<y?-1:1;const p=productLine(a.it),q=productLine(b.it);
   return (p==="")-(q==="")||cmpStr(p,q)||a.it.bullet_gr-b.it.bullet_gr||cmpStr((a.it.load||a.it.label).toLowerCase(),(b.it.load||b.it.label).toLowerCase());};
-// Sort: most popular (Nov 4 2026): it.pop = the load's place in Impact Guns' best-seller list for its
-// cartridge (build_web.py from data/popularity.csv, DATA.pop_source says so); loads without one
-// (and handloads) after the ranked ones, by brand (product line). popular_sort_key on desktop.
-const popOf=it=>it.handload?0:(it.base||it).pop||0;
-const popCmp=(a,b)=>{const x=popOf(a.it),y=popOf(b.it);return (!x)-(!y)||x-y||lineCmp(a,b);};
-const popPlaces=rows=>{const m=new Map();rows.filter(r=>popOf(r.it)).sort((a,b)=>popOf(a.it)-popOf(b.it)).forEach((r,n)=>m.set(r,n+1));return m;};
 function shotSize(it){
   const name=it.load||"";
   let seg=name.split(" · ").find(s=>s.includes('"'))||name;
@@ -1518,7 +1512,7 @@ function openLoads(cat,pane){
   </div>
   <!-- the brand / load filter and sort sit right above the list (issue #26) -->
   <div class="sortrow above"><input id="lf" type="search" placeholder="Filter by brand or load, e.g. hornady" autocomplete="off">
-      <select id="ls">${GRADES?'<option value="score">Sort: best value</option>':""}<option value="brandl">Sort: brand (product line)</option><option value="brand">Sort: brand (grain weight)</option>${cat.grain_style?'<option value="grain">Sort: heaviest bullet</option><option value="grainl">Sort: lightest bullet</option>':'<option value="shot">Sort: shot size</option>'}<option value="pop">Sort: most popular</option><option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
+      <select id="ls">${GRADES?'<option value="score">Sort: best value</option>':""}<option value="brandl">Sort: brand (product line)</option><option value="brand">Sort: brand (grain weight)</option>${cat.grain_style?'<option value="grain">Sort: heaviest bullet</option><option value="grainl">Sort: lightest bullet</option>':'<option value="shot">Sort: shot size</option>'}<option value="cost">Sort: lowest price</option><option value="velocity">Sort: fastest</option><option value="energy">Sort: most energy</option>${cat.terminal?'<option value="taylor">Sort: highest Taylor KO</option><option value="hits">Sort: highest HITS</option>':""}<option value="recoil">Sort: least recoil</option></select></div>
   <div class="pchk hidden" id="lpr" role="group" aria-label="Show +P loads"></div>
   <div class="cnt" id="lcnt"></div><div class="lgrid" id="lres"></div>
   <div class="note" id="lnote"></div>`;
@@ -1608,7 +1602,7 @@ function openLoads(cat,pane){
     countChips();
     let rows=out.rows.filter(r=>(L.src==="All"||(L.src==="Handloads")===!!r.it.handload)).filter(r=>matchesFilter(r.it)&&pressOk(r.it));
     const key=$$("#ls").value;
-    const cmp={brand:brandCmp,brandl:lineCmp,pop:popCmp,score:(a,b)=>(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
+    const cmp={brand:brandCmp,brandl:lineCmp,score:(a,b)=>(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
       // biggest shot first, then the most pellets, then the heaviest payload
       shot:(a,b)=>{const x=shotSize(a.it),y=shotSize(b.it);return y[0]-x[0]||y[1]-x[1]||b.st.weight-a.st.weight;},
       // bullet weight in grains, ties by the default order
@@ -1616,8 +1610,7 @@ function openLoads(cat,pane){
       grainl:(a,b)=>a.it.bullet_gr-b.it.bullet_gr||(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
       cost:(a,b)=>a.st.cost-b.st.cost,velocity:(a,b)=>b.st.velocity-a.st.velocity,energy:(a,b)=>b.st.energy-a.st.energy,taylor:(a,b)=>b.st.taylor-a.st.taylor,hits:(a,b)=>b.st.hits-a.st.hits,recoil:(a,b)=>a.st.recoil-b.st.recoil}[key];
     rows.sort(cmp);
-    $$("#lcnt").textContent=`${rows.length} of ${out.rows.length} loads at ${g(out.dist)} yards`+(L.purpose!=="All"?` · ${L.purpose} only`:"")+(out.multi&&GRADES?" · ranked within each load type":"")+(key==="pop"?` · popularity: ${DATA.pop_source}`:"");
-    const places=popPlaces(rows);
+    $$("#lcnt").textContent=`${rows.length} of ${out.rows.length} loads at ${g(out.dist)} yards`+(L.purpose!=="All"?` · ${L.purpose} only`:"")+(out.multi&&GRADES?" · ranked within each load type":"");
     // PC (>=900 px): the list reads as a table like the desktop app's, one row per load with its
     // figures in columns; phones keep the cards (.top) and never show .lhead / .trow
     const badge=(gr)=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
@@ -1626,7 +1619,7 @@ function openLoads(cat,pane){
         :[["Shot","shot",r=>esc(shotSize(r.it)[2]),"auto"],[cat.payload_col,null,r=>g(r.st.weight),"auto"]])
       .concat([["Velocity","velocity",r=>r.st.velocity.toFixed(0),"auto"],["Energy","energy",r=>r.st.energy.toFixed(0),"auto"],["Recoil","recoil",r=>r.st.recoil.toFixed(1),"auto"]])
       .concat(cat.terminal?[["Taylor","taylor",r=>r.st.taylor.toFixed(1),"auto"],["HITS","hits",r=>r.st.hits.toFixed(0),"auto"]]:[])
-      .concat([["Popular","pop",r=>places.get(r)||"—","auto"],["Price","cost",r=>"$"+r.st.cost.toFixed(2)+(!r.it.handload&&typeof L.prices[priceKey(cat,r.it)]==="number"?" ✎":""),"auto"]])
+      .concat([["Price","cost",r=>"$"+r.st.cost.toFixed(2)+(!r.it.handload&&typeof L.prices[priceKey(cat,r.it)]==="number"?" ✎":""),"auto"]])
       .concat(GRADES?[["Score","score",r=>r.overall.toFixed(0),"auto"],["Grade","score",r=>badge(r.grade),"auto"]]:[]).filter(Boolean);
     box.style.setProperty("--lcols",tcols.map(c=>c[3]).join(" "));
     const lhead=`<div class="lhead">${tcols.map(c=>c[1]?`<button data-k="${c[1]}" class="${c===tcols.find(x=>x[1]===key||x[1]==="grain"&&key==="grainl"||x[1]==="brand"&&key==="brandl")?(key==="grainl"?"on up":"on"):""}${c[0]==="#"?" rk":""}${c[0]==="Load"?" ln":""}">${esc(c[0])}</button>`:`<span${c[0]==="Load"?' class="ln"':""}>${esc(c[0])}</span>`).join("")}</div>`;
