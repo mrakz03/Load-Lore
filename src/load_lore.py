@@ -1352,6 +1352,7 @@ def write_settings(data):
 
 # ---- updates (Settings > Updates): the newest GitHub release, installed in place ---- #
 UPDATE_REPO = "mrakz03/Load-Lore"
+WEB_SITE = "https://loadlore.net/"                # the web app, where Load Lore lives now
 REPO_PAGE = f"https://github.com/{UPDATE_REPO}"      # Settings > Source code (web too)
 RELEASES_PAGE = f"{REPO_PAGE}/releases/latest"
 LATEST_RELEASE_API = f"https://api.github.com/repos/{UPDATE_REPO}/releases/latest"
@@ -1556,6 +1557,13 @@ def release_asset(release, method):
     if named:
         return named[-1]
     raise ValueError(f"Release v{release['version']} has no {exact}.")
+
+
+def has_desktop_files(release):
+    """Whether `release` ships a Windows or Linux build (releases after the move to the web,
+    Nov 2026, have only the Android app)."""
+    return any(n.startswith(ASSET_PREFIX) and n.endswith(suffix)
+               for n in release["assets"] for suffix in ASSET_SUFFIX.values())
 
 
 def download_verified(release, name, folder):
@@ -2317,11 +2325,15 @@ class App:
                   darkcolor=[("active", MUTED)])
         s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", ON_ACCENT)])
         # a thin line under each row, like the web's table rows: the row background is an image
-        # (fill + a 1 px BORDER line at the bottom) stretched to the row, accent when selected
+        # (fill + a 1 px BORDER line at the bottom) stretched to the row, accent when selected.
+        # Ttk stretches an image element by tiling it, one copy per image-sized piece: a 3 x 3 px
+        # image took tens of thousands of copies per row, about a second per redraw of the
+        # table (Zeke, Nov 4 2026: "super slow" on Linux). A row-sized image is a few copies.
+        rh = self.px(30)
         def row_png(fill):
-            img = tk.PhotoImage(width=3, height=3)
-            img.put(fill, to=(0, 0, 3, 2))
-            img.put(BORDER, to=(0, 2, 3, 3))
+            img = tk.PhotoImage(width=1024, height=rh)
+            img.put(fill, to=(0, 0, 1024, rh - 1))
+            img.put(BORDER, to=(0, rh - 1, 1024, rh))
             return img
         self._row_imgs = (row_png(SURFACE), row_png(ACCENT))
         name = f"Rowline{len(getattr(self, '_row_names', ()))}.row"     # one element per theme
@@ -2746,6 +2758,7 @@ class App:
             self.label(wrap, "Explore the velocity, energy, recoil and cost of over 3,500 commercially "
                        "available rounds, or put loads head to head.", 11, MUTED, bg=BG, anchor="w", justify="left",
                        wraplength=width).pack(anchor="w", pady=(self.px(8), self.px(18)))
+            self._moved_card(wrap, width).pack(fill="x", pady=(0, self.px(14)))
             for key, title, blurb in TOOLS:
                 self._feature_card(wrap, key, title, blurb, lambda t=key: self.show_picker(t),
                                    width).pack(fill="x", pady=(0, self.px(10)))
@@ -2758,6 +2771,25 @@ class App:
             go.pack(side="left")
             go.bind("<Button-1>", lambda e: self.show_settings())
         self._update_scroll()
+
+    def _moved_card(self, parent, width):
+        """The last desktop release (Nov 2026, Zeke): Load Lore is web-only from here on. This
+        copy keeps working; the card points to the website and to Back up for the handloads."""
+        card = self.card(parent, border=ACCENT, padx=18, pady=14)
+        self.label(card.body, "Load Lore now lives at loadlore.net", 12, TEXT, True, bg=SURFACE,
+                   anchor="w").pack(anchor="w")
+        self.label(card.body, "This is the last version of the desktop app. It keeps working, but new loads "
+                   "and features only go to the website (it works on phones too). To take your handloads "
+                   "along, use Back up in Handloads, then Restore on the website.", 10, MUTED, bg=SURFACE,
+                   anchor="w", justify="left", wraplength=width - self.px(40)).pack(anchor="w", pady=(self.px(4), self.px(10)))
+        row = tk.Frame(card.body, bg=SURFACE)
+        row.pack(anchor="w")
+        self.button(row, "Open loadlore.net", lambda: webbrowser.open(WEB_SITE), "primary",
+                    size=10, padx=14, pady=6).pack(side="left")
+        if self.hand_rows:
+            self.button(row, "Back up handloads", self.show_hand, size=10, padx=14,
+                        pady=6).pack(side="left", padx=(self.px(8), 0))
+        return card
 
     def _feature_card(self, parent, key, title, blurb, command, width):
         """A Home card like the web's .fcard on a PC: accent icon tile beside the title and a
@@ -2833,6 +2865,10 @@ class App:
                 if not on_start:
                     self._set_update(state="latest", release=rel)
                 return
+            if not has_desktop_files(rel):     # a web / Android-only release: nothing to install
+                if not on_start:
+                    self._set_update(state="web", release=rel)
+                return
             self._set_update(state="available", release=rel)
             if on_start and messagebox.askyesno(
                     "Update available", f"Load Lore v{rel['version']} is available (you have "
@@ -2895,9 +2931,13 @@ class App:
                  "latest": f"You have the newest version (v{APP_VERSION})",
                  "available": f"v{rel and rel['version']} is available (you have v{APP_VERSION})",
                  "downloading": f"Downloading v{rel and rel['version']}…",
+                 "web": "No more desktop updates: Load Lore is on loadlore.net now",
                  "error": u.get("message", "")}
         box = row("Updates", notes[u["state"]])
-        if u["state"] == "available":
+        if u["state"] == "web":
+            self.button(box, "Open loadlore.net", lambda: webbrowser.open(WEB_SITE),
+                        "primary").pack(side="left", padx=(0, 10))
+        elif u["state"] == "available":
             text = f"Update to v{rel['version']}" if update_method() else "Download"
             self.button(box, text, self.start_update, "primary").pack(side="left", padx=(0, 10))
         else:
