@@ -4,7 +4,7 @@
 
 A field guide to factory ammunition. Look up major brand's loads for a cartridge, get specs for each load, check their ballistic tables, and put up to five loads head to head. Reloaders can add their own handloads and see how they stack up.
 
-**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also runs as a desktop app on Windows and Linux and as an Android app.
+**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also comes as an Android app. The Windows and Linux desktop app is being retired: it gets small fixes through v1.14.x, and from v1.15 on everything new is on the website.
 
 > **Still in development.** Most of it works well, but you may run into rough edges, a load whose figures need fixing, or a missing factory load. If something looks wrong or you have any suggestions, please [open an issue](https://github.com/mrakz03/Load-Lore/issues).
 
@@ -89,6 +89,8 @@ Each factor is scored against the typical (median) load of the same cartridge: t
 The easiest way is the web version at **[loadlore.net](https://loadlore.net)**: it runs in any browser, on a computer or phone, and is always up to date. Your handloads and settings stay in that browser (use **Back up** in Handloads to move them).
 
 The apps are on the [Releases](https://github.com/mrakz03/Load-Lore/releases) page.
+
+**The desktop app's last updates are v1.14.x.** From v1.15 on, releases have only the Android app and new loads and features go to the website. Your desktop copy keeps working. To move your handloads, press **Back up** in its Handloads tab, then **Restore** on loadlore.net and choose that file (saved prices and settings don't carry over).
 
 - **Windows**: run `LoadLore-v<version>-Setup.exe`. No admin password needed, and a newer installer upgrades in place, keeping your handloads and settings. The installer isn't code-signed, so if Windows says "Windows protected your PC", click More info, then Run anyway. A portable .zip is also available.
 - **Linux**: unpack and run the installer, which adds the app to your launcher. Run it again with a newer release to update, or with `--uninstall` to remove it.
