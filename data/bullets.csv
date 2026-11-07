@@ -1093,7 +1093,7 @@ Sierra,MatchKing X HPBT #2232,0.308,200,0.553,Match,rifle
 Sierra,Pro-Hunter FN #2000,0.308,150,0.185,Hunting,rifle
 Sierra,Pro-Hunter FN #2010,0.308,170,0.205,Hunting,rifle
 Sierra,Pro-Hunter HP/FN #2020,0.308,125,0.119,Hunting,rifle
-Sierra,Pro-Hunter RN #2100,0.308,110,0.144,Hunting,rifle
+Sierra,Pro-Hunter RN #2100,0.308,110,0.144,Hunting,both
 Sierra,Pro-Hunter RN #2135,0.308,150,0.200,Hunting,rifle
 Sierra,Pro-Hunter RN #2170,0.308,180,0.240,Hunting,rifle
 Sierra,Pro-Hunter RN #2180,0.308,220,0.310,Hunting,rifle
@@ -1259,7 +1259,7 @@ Speer,Hot-Cor Spitzer SP #2053,0.308,180,0.441,Hunting,rifle
 Speer,Hot-Cor Spitzer SP #2211,0.308,200,0.478,Hunting,rifle
 Speer,Impact #TB308H1,0.308,172,0.567,Hunting,rifle
 Speer,Impact #TB308H2,0.308,190,0.595,Hunting,rifle
-Speer,TMJ RN #1846,0.308,110,0.179,Target,rifle
+Speer,TMJ RN #1846,0.308,110,0.179,Target,both
 Speer,TNT HP #1986,0.308,125,0.341,Varmint,rifle
 Speer,Target Match BTHP #2040,0.308,168,0.534,Match,rifle
 Speer,Varmint HP #1835,0.308,110,0.150,Varmint,rifle

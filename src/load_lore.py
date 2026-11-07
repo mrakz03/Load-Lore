@@ -3158,11 +3158,12 @@ NEW_CARTRIDGE = "New cartridge (below)"      # the handload form's cartridge box
 
 LEAD_BULLET = re.compile(r"\bLead\b(?!-)|Plated")   # cast / swaged lead and plated bullets
 # cartridges whose guns take a wider span of bullet sizes (in over the listed diameter): .44-40
-# is .427 on paper, but Uberti / Marlin / Winchester barrels shoot .429-.430 bullets
-FIT_SPAN = {0.427: 0.0035}
+# is .427 on paper, but Uberti / Marlin / Winchester barrels shoot .429-.430 bullets; .350 Legend
+# is .355, but Hornady sells its .357 Sub-X for it (and .357 handgun bullets are loaded in it)
+FIT_SPAN = {".44-40 Winchester": 0.0035, ".350 Legend": 0.0025}
 
 
-def bullet_fits(b, d, handgun, bullets):
+def bullet_fits(b, d, handgun, bullets, cart=None):
     """A library bullet for a cartridge of diameter d: the same diameter within 0.0015 in (a .308
     bullet is too small for a .311 bore, a .357 too big for a 9mm); lead and plated bullets may run up
     to .0035 over (sized .358 for 9mm and .357, Speer's .360 wadcutter). A handgun cartridge (Handgun /
@@ -3173,7 +3174,7 @@ def bullet_fits(b, d, handgun, bullets):
 
     def near(x):
         off = x["diameter"] - d
-        over = max(0.0035 if LEAD_BULLET.search(x.get("name", "")) else 0.0015, FIT_SPAN.get(d, 0))
+        over = max(0.0035 if LEAD_BULLET.search(x.get("name", "")) else 0.0015, FIT_SPAN.get(cart, 0))
         return -0.0015 - 1e-9 <= off <= over + 1e-9
 
     if not near(b):
@@ -3450,7 +3451,9 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
         """The library bullet is the cartridge's diameter (bullets go by diameter, not cartridge);
         handgun cartridges skip rifle bullets (bullet_fits)."""
         cat = cart_category()
-        return bullet_fits(b, cart_diameter(), bool(cat and cat.group == "Handgun"), bullets)
+        pick = None if is_new() else pick_of(V["cartridge"].get())
+        return bullet_fits(b, cart_diameter(), bool(cat and cat.group == "Handgun"), bullets,
+                           pick[1] if pick else None)
 
     def refresh_bullets(*_):
         """Makers list only those with a bullet of this diameter; bullets only the picked maker's."""
