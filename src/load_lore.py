@@ -2790,13 +2790,14 @@ class App:
         self._update_scroll()
 
     def _moved_card(self, parent, width):
-        """The last desktop release (Nov 2026, Zeke): Load Lore is web-only from here on. This
-        copy keeps working; the card points to the website and to Back up for the handloads."""
+        """Desktop updates end with v1.14.x (Nov 2026, Zeke): small fixes still come as 1.14.x
+        releases, v1.15 on is web-only. This copy keeps working; the card points to the website
+        and to Back up for the handloads."""
         card = self.card(parent, border=ACCENT, padx=18, pady=14)
         self.label(card.body, "Load Lore now lives at loadlore.net", 12, TEXT, True, bg=SURFACE,
                    anchor="w").pack(anchor="w")
-        self.label(card.body, "This is the final version of the desktop app. New loads "
-                   "and features only go to the website. To take your handloads "
+        self.label(card.body, "Desktop updates end with v1.14.x: small fixes still come here, but new "
+                   "loads and features from v1.15 on only go to the website. To take your handloads "
                    "along to the website, use 'Back up' in Handloads, then 'Restore' on the website.", 10, MUTED, bg=SURFACE,
                    anchor="w", justify="left", wraplength=width - self.px(40)).pack(anchor="w", pady=(self.px(4), self.px(10)))
         row = tk.Frame(card.body, bg=SURFACE)
