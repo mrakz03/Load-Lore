@@ -1241,6 +1241,11 @@ def read_settings():
             data["prices"] = {new: v for k, v in data["prices"].items() for new in _rename_price_key(k)}
         elif "prices" in data:                          # a hand-edited file: setting a price would crash
             del data["prices"]
+        if isinstance(data.get("favorites"), list):     # "category|cartridge|label or handload id"
+            data["favorites"] = list(dict.fromkeys(
+                _rename_price_key(k)[0] for k in data["favorites"] if isinstance(k, str)))
+        elif "favorites" in data:
+            del data["favorites"]
         return data
     except (OSError, ValueError):
         return {}
@@ -2133,6 +2138,49 @@ class App:
         self.settings["show_grades"] = bool(on)
         write_settings(self.settings)
 
+    # ---- favorite loads (Zeke, Nov 7 2026) --------------------------------- #
+    # starred in the Load Dictionary's table, listed on the Favorite loads page; kept in
+    # settings.json "favorites" by pick_key ("category|cartridge|label", a handload by its id)
+    @staticmethod
+    def fav_key(cat, item):
+        return "|".join(pick_key(cat, item))
+
+    def is_fav(self, cat, item):
+        return self.fav_key(cat, item) in self.settings.get("favorites", [])
+
+    def toggle_fav(self, cat, item):
+        favs = self.settings.setdefault("favorites", [])
+        key = self.fav_key(cat, item)
+        if key in favs:
+            favs.remove(key)
+        else:
+            favs.append(key)
+        write_settings(self.settings)
+        return key in favs
+
+    def fav_items(self):
+        """[(category, load)] of every favorite still in the data, in category order."""
+        favs = set(self.settings.get("favorites", []))
+        out = []
+        if not favs:
+            return out
+        for c in CATEGORIES:
+            if self.data[c.title]["error"]:
+                continue
+            out += [(c, it) for it in self.data[c.title]["detail"] + self.hand_loads(c)
+                    if self.fav_key(c, it) in favs]
+        return out
+
+    def show_favs(self):
+        """Favorite loads: every starred load, reached from the Load Dictionary's category list."""
+        self._stash()
+        self.mode, self.cat, self.view = "loads", None, None
+        stage = self._new_stage()
+        self.root.title(f"{APP_TITLE} — Favorite loads")
+        self._draw_chrome()
+        self.view = FavoritesView(self, stage)
+        self._update_scroll()
+
     # ---- Head to Head picks ------------------------------------------------ #
     def add_to_h2h(self, cat, item):
         """Add a load to the Head to Head list. Returns the new count, or None if it was
@@ -2218,6 +2266,8 @@ class App:
                 self.h2h_snap.update(snap or {})
                 self.view = None
                 self.show_h2h()
+            elif tab == "favs":
+                self.show_favs()
             else:
                 self.show_picker(self.mode)
         else:
@@ -2606,7 +2656,7 @@ class App:
     def _toggle_group(self, name):
         """Open or close a drop-down entry (Handgun) in the sidebar and the category list."""
         self.open_groups ^= {name}
-        if self.mode in ("loads",) and self.cat is None:
+        if self.mode in ("loads",) and self.cat is None and getattr(self.view, "tab", "") != "favs":
             self.show_picker(self.mode)
         else:
             self._draw_chrome()
@@ -2993,7 +3043,7 @@ class App:
         """Remember what the open tool has on screen, for when you come back to it."""
         if self.view is None:
             return
-        if self.view.tab == "hand":
+        if self.view.tab in ("hand", "favs"):
             return
         if self.view.tab == "h2h":
             self.h2h_snap.update(self.view.snapshot())
@@ -3085,6 +3135,19 @@ class App:
             for cat in cats if shown else []:
                 card(cat_name(cat), cat.blurb, counts([cat]), lambda ct=cat: self.go(ct, mode),
                      sub=self.px(28))
+        # every starred load (Zeke, Nov 7 2026)
+        n = len(self.fav_items())
+        link = tk.Frame(wrap, bg=BG, cursor="hand2")
+        link.pack(anchor="w", pady=(self.px(6), 0))
+        star = tk.Label(link, text="★", bg=BG, fg=BEST, font=self.f(11), cursor="hand2")
+        star.pack(side="left")
+        text = tk.Label(link, text=f" Favorite loads{f' ({n})' if n else ''}  ›", bg=BG, fg=ACCENT,
+                        font=self.f(11, True), cursor="hand2")
+        text.pack(side="left")
+        for w in (link, star, text):
+            w.bind("<Button-1>", lambda e: self.show_favs())
+            w.bind("<Enter>", lambda e: text.config(fg=ACCENT_HOVER))
+            w.bind("<Leave>", lambda e: text.config(fg=ACCENT))
 
     def header(self, parent, cat, active):
         """Back link and the page title."""
@@ -3796,7 +3859,7 @@ class LoadsView:
         self.src_lbl = a.label(above, "", 9, MUTED, bg=BG, anchor="w", justify="left")
         self.src_lbl.grid(row=2, column=0, columnspan=2, sticky="w", pady=(a.px(8), 0))
         # bullets get a Grains column (the Load cell then shows just the name)
-        self.cols = ["#", "Load"] + (["Grains"] if cat.grain_style else ["Shot", cat.payload_col])
+        self.cols = ["#", "Load", "★"] + (["Grains"] if cat.grain_style else ["Shot", cat.payload_col])
         if cat.grain_style:
             self.cols += ["Barrel", "Use"]
         self.cols += ["Velocity", "Energy", "Recoil"]
@@ -3815,7 +3878,8 @@ class LoadsView:
         self.tree.configure(yscrollcommand=scroll.set)
         for col in self.cols:
             # widths are measured from the text in _render; the Load column takes spare room
-            self.tree.column(col, anchor="w" if col in ("Load", "Use") else "center")
+            self.tree.column(col, anchor="w" if col in ("Load", "Use") else "center",
+                             stretch=col != "★")
             self.tree.heading(col, text=col, command=lambda c=col: self._sort_by(c))
         self.col_widths, self.sized = {}, None     # sized = cartridge the widths were measured for
         hscroll = ttk.Scrollbar(frame, orient="horizontal", command=self.tree.xview)
@@ -3835,6 +3899,7 @@ class LoadsView:
         self.tree.tag_configure("hand", foreground=HAND_FG)
         self.tree.tag_configure("spin", foreground=DANGER)    # won't stabilise in the twist set
         self.tree.bind("<<TreeviewSelect>>", lambda e: self._on_select())
+        self.tree.bind("<Button-1>", self._star_click, add="+")
 
         # ---- selected load
         self.detail = a.card(outer, padx=4, pady=4)
@@ -4398,6 +4463,10 @@ class LoadsView:
                 else line_sort_key, "Load": line_sort_key if self.sort.get("line") else brand_sort_key,
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
                 "Grains": lambda r: r["item"].bullet_gr,
+                # favorites first, then the default order
+                "★": lambda r: (not self.app.is_fav(self.cat, base_load(r["item"])),
+                                self.group_order.get(r["group"], 0), r["rank"]) if self.app.show_grades
+                else (not self.app.is_fav(self.cat, base_load(r["item"])),) + tuple(line_sort_key(r)),
                 # biggest shot first, then the most pellets, then the heaviest payload
                 "Shot": lambda r: shot_size(r["item"])[:2] + (r["stats"]["weight"],),
                 "Barrel": lambda r: r["item"].barrel_in or 999,
@@ -4418,7 +4487,8 @@ class LoadsView:
             it = r["item"]
             name = (it.load or it.label) if self.cat.grain_style else it.label
             vals = [r["rank"], name + ("  (handload)" if it.handload else "")
-                    + ("  ⚠" if stability_warn(it) else "")]
+                    + ("  ⚠" if stability_warn(it) else ""),
+                    "★" if self.app.is_fav(self.cat, base_load(it)) else "☆"]
             if self.cat.grain_style:
                 # your own barrel length replaces each load's test barrel (Zeke, Oct 30 2026)
                 brl = self.barrel or it.barrel_in
@@ -4466,6 +4536,26 @@ class LoadsView:
             self.app.root.update_idletasks()
             self.app.grow_to_fit(sum(self.col_widths.values()) - self.tree.winfo_width())
         self.fit_table_height()
+
+    def _star_click(self, event):
+        """A click on a row's star adds the load to the favorites (or takes it off) without
+        opening it."""
+        if self.tree.identify_region(event.x, event.y) != "cell":
+            return None
+        col = self.tree.identify_column(event.x)            # "#3": the shown columns, 1-based
+        shown = list(self.tree.cget("displaycolumns"))
+        if shown == ["#all"]:
+            shown = self.cols
+        try:
+            name = shown[int(col[1:]) - 1]
+        except (ValueError, IndexError):
+            return None
+        iid = self.tree.identify_row(event.y)
+        if name != "★" or iid not in self.iid_row:
+            return None
+        on = self.app.toggle_fav(self.cat, base_load(self.iid_row[iid]["item"]))
+        self.tree.set(iid, "★", "★" if on else "☆")
+        return "break"
 
     def _on_select(self):
         sel = self.tree.selection()
@@ -5108,6 +5198,128 @@ class LoadSearch:
         if getattr(self.app, "search_popup", None) is self:
             self.app.search_popup = None
         return "break"
+
+
+class FavoritesView:
+    """Favorite loads (Zeke, Nov 7 2026): every load starred in the Load Dictionary, grouped by
+    cartridge, with its dictionary figures; a click opens it there, the star takes it off."""
+    tab = "favs"
+    cat = None
+
+    def __init__(self, app, stage):
+        self.app, self.root = app, app.root
+        a = app
+        wrap = tk.Frame(stage, bg=BG)
+        wrap.pack(fill="both", expand=True, padx=a.px(34), pady=(a.px(26), a.px(28)))
+        wrap.columnconfigure(0, weight=1)
+        back = tk.Label(wrap, text="‹  Categories", bg=BG, fg=ACCENT, font=a.f(10, True), cursor="hand2")
+        back.grid(row=0, column=0, sticky="w")
+        back.bind("<Button-1>", lambda e: a.show_picker("loads"))
+        back.bind("<Enter>", lambda e: back.config(fg=ACCENT_HOVER))
+        back.bind("<Leave>", lambda e: back.config(fg=ACCENT))
+        a.label(wrap, "Favorite loads", 17, TEXT, True, bg=BG, anchor="w").grid(
+            row=1, column=0, sticky="w", pady=(a.px(4), 0))
+        a.label(wrap, "Loads you starred in the Load Dictionary.", 11, MUTED, bg=BG, anchor="w").grid(
+            row=2, column=0, sticky="w", pady=(2, 6))
+        self.list = tk.Frame(wrap, bg=BG)
+        self.list.grid(row=3, column=0, sticky="ew")
+        self.list.columnconfigure(0, weight=1)
+        self.draw()
+
+    def snapshot(self):
+        return {}
+
+    def grade(self, cat, item):
+        """Its Load Dictionary row: against every load of its cartridge, at the dictionary's distance."""
+        app = self.app
+        loads = [x for x in app.data[cat.title]["detail"] + app.hand_loads(cat)
+                 if x.cartridge == item.cartridge]
+        try:
+            dist = float(app.carry.get(cat.title, {}).get("dist", cat.default_distance))
+        except (TypeError, ValueError):
+            dist = cat.default_distance
+        return h2h_rows([(cat, item)], dist, None, app.dict_weights, app.price_for,
+                        {(cat.title, item.cartridge): loads})[0]
+
+    def draw(self):
+        a = self.app
+        for w in self.list.winfo_children():
+            w.destroy()
+        items = a.fav_items()
+        if not items:
+            card = a.card(self.list, padx=4, pady=4)
+            card.grid(row=0, column=0, sticky="ew", pady=(a.px(16), 0))
+            a.label(card.body, "No favorites yet", 13, TEXT, True).pack(pady=(22, 4))
+            a.label(card.body, "Click the ☆ beside a load in the Load Dictionary's table to keep "
+                               "it here.", 10, MUTED).pack(pady=(0, 22), padx=20)
+            return a._update_scroll()
+        order = {c.title: i for i, c in enumerate(CATEGORIES)}
+        items.sort(key=lambda p: (order[p[0].title], p[1].cartridge.lower(),
+                                  line_sort_key({"item": p[1]})))
+        row, last = 0, None
+        for c, it in items:
+            if (c.title, it.cartridge) != last:
+                last = (c.title, it.cartridge)
+                head = tk.Frame(self.list, bg=BG)
+                head.grid(row=row, column=0, sticky="w", pady=(18, 6))
+                a.label(head, it.cartridge, 12, TEXT, True, bg=BG).pack(side="left")
+                a.label(head, f"  ·  {cat_name(c)}", 10, MUTED, True, bg=BG).pack(side="left")
+                row += 1
+            self._card(c, it).grid(row=row, column=0, sticky="ew", pady=(0, 8))
+            row += 1
+        a._update_scroll()
+
+    def _card(self, cat, it):
+        a = self.app
+        r = self.grade(cat, it)
+        box = a.card(self.list, padx=4, pady=4)
+        box.configure(cursor="hand2")
+        card = box.body
+        card.columnconfigure(0, weight=1)
+        name = it.load if cat.grain_style else it.label
+        if cat.grain_style:
+            name += f"  ·  {it.bullet_gr:g} gr"
+        use = "Handload" if it.handload else (it.purpose or it.group or "")
+        title = a.label(card, name, 12, TEXT, True, anchor="w", justify="left")
+        title.grid(row=0, column=0, sticky="w", padx=(12, 8), pady=(8, 0))
+        star = tk.Label(card, text="★", bg=SURFACE, fg=BEST, font=a.f(15), cursor="hand2")
+        star.grid(row=0, column=2, rowspan=2, sticky="ne", padx=(4, 12), pady=(4, 0))
+        star.bind("<Button-1>", lambda e: (a.toggle_fav(cat, it), self.draw(), "break")[-1])
+        clickable = [box, box.canvas, card, title]
+        if a.show_grades:
+            b = Badge(card, a, r["grade"], 10)
+            b.grid(row=0, column=1, rowspan=2, sticky="ne", padx=4, pady=(8, 0))
+            clickable.append(b)
+        st = r["stats"]
+        stats = a.label(card, (f"{use}    " if use else "") + f"{st['velocity']:.0f} fps    "
+                              f"{st['energy']:.0f} ft-lbs    ${st['cost']:.2f} a round    at {r['dist']:g} yd",
+                        10, MUTED, anchor="w")
+        stats.grid(row=1, column=0, sticky="w", padx=12, pady=(2, 8))
+        clickable.append(stats)
+        for w in clickable:
+            w.bind("<Button-1>", lambda e: self._open(cat, it))
+            w.bind("<Enter>", lambda e: box.recolour(SURFACE_2, ACCENT, (card, title, stats, star))
+                   if hasattr(box, "recolour") else None)
+            w.bind("<Leave>", lambda e: box.recolour(SURFACE, BORDER, (card, title, stats, star))
+                   if hasattr(box, "recolour") else None)
+        return box
+
+    def _open(self, cat, it):
+        """Open the load in its Load Dictionary: its cartridge, nothing filtering it out, selected."""
+        a = self.app
+        carry = a.carry.setdefault(cat.title, {})
+        carry.update(cart=it.cartridge, purpose="All", source="All")
+        if pressure_of(it.load):
+            carry["pressure"] = dict(carry.get("pressure", {}), **{pressure_of(it.load): True})
+        a.go(cat, "loads")
+        view = a.view
+        if isinstance(view, LoadsView) and view.cat is cat:
+            key = a.fav_key(cat, it)
+            for x in view.groups.get(it.cartridge, []):
+                if a.fav_key(cat, x) == key:
+                    view.selected = x
+                    view._reselect()
+                    break
 
 
 class HandloadsView:
