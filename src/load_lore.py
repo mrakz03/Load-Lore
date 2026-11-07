@@ -1670,7 +1670,8 @@ def merge_handload_rows(rows, text, categories):
         try:
             ok = (row.get("category") in categories and row["cartridge"] and
                   all(float(row.get(k) or 0) > 0 for k in ("bullet_gr", "muzzle_fps", "bc_g1",
-                                                            "powder_gr", "cost")))
+                                                            "powder_gr")) and
+                  float(row.get("cost") or 0) >= 0)                # the cost is optional
         except ValueError:
             ok = False
         if not ok:
@@ -1732,14 +1733,14 @@ def load_from_handload_row(row, grain_style=True):
         muzzle_fps=float(row["muzzle_fps"]),
         bc_g1=float(row["bc_g1"]),
         powder_gr=float(row["powder_gr"]),
-        default_cost=float(row["cost"]),
+        default_cost=_opt_float(row.get("cost", "")) or 0.0,    # 0 = no cost given (Nov 2026)
         source="handload",
         barrel_in=_opt_float(row.get("barrel_in", "")),
         purpose=row.get("purpose", ""),
         diameter_in=_opt_float(row.get("diameter_in", "")),
         handload=True, hid=row.get("id", ""), info=dict(row),
     )
-    if min(item.bullet_gr, item.muzzle_fps, item.bc_g1, item.powder_gr, item.default_cost) <= 0:
+    if min(item.bullet_gr, item.muzzle_fps, item.bc_g1, item.powder_gr) <= 0 or item.default_cost < 0:
         raise ValueError("values must be positive")
     item.label = make_label(item, grain_style)
     return item
@@ -1748,7 +1749,15 @@ def load_from_handload_row(row, grain_style=True):
 # --------------------------------------------------------------------------- #
 # Scoring
 # --------------------------------------------------------------------------- #
+def money(cost):
+    """"$1.25", or "—" for a handload saved without a cost."""
+    return "\u2014" if cost is None else f"${cost:.2f}"
+
+
 def compute_stats(item, distance_yd, gun_lb, cost=None):
+    """A load's figures. "cost" is None for a handload saved without a cost (Zeke, Nov 2026):
+    it shows "—" and is graded without the cost factor (relative_scores)."""
+    cost = item.default_cost if cost is None else cost
     v = velocity_at(item.muzzle_fps, item.bc_g1, distance_yd)
     d = item.diameter_in or bullet_diameter(item.cartridge, item.bullet_gr)
     return {
@@ -1756,7 +1765,7 @@ def compute_stats(item, distance_yd, gun_lb, cost=None):
         "velocity": v,
         "energy": energy_ftlbs(item.bullet_gr, v),
         "recoil": recoil_ftlbs(item.bullet_gr, item.muzzle_fps, item.powder_gr, gun_lb),
-        "cost": item.default_cost if cost is None else cost,
+        "cost": cost if cost and cost > 0 else None,
         "taylor": taylor_ko(item.bullet_gr, v, d),
         "hits": hits_index(item.bullet_gr, v, d),
     }
@@ -1799,13 +1808,25 @@ def relative_scores(stats_list, weights):
     Returns [(per-metric scores, overall)] on the within-cartridge scale."""
     if not stats_list:
         return []
-    refs = {k: statistics.median(s[k] for s in stats_list) for k in METRICS}
-    per = {k: _spread([metric_score(s[k], refs[k], METRICS[k][1]) for s in stats_list])
-           for k in METRICS}
+    # a factor a load lacks (None: a handload with no cost) is scored over the loads that have it
+    # and left out of that load's weighted average, so it is graded on the other factors
+    per = {}
+    for k in METRICS:
+        idx = [i for i, s in enumerate(stats_list) if s[k] is not None]
+        per[k] = [None] * len(stats_list)
+        if idx:
+            ref = statistics.median(stats_list[i][k] for i in idx)
+            for i, v in zip(idx, _spread([metric_score(stats_list[i][k], ref, METRICS[k][1])
+                                          for i in idx])):
+                per[k][i] = v
     total_w = sum(weights.values())
     w = weights if total_w > 0 else {k: 1.0 for k in METRICS}
-    total_w = sum(w.values())
-    raw = [sum(per[k][i] * w[k] for k in METRICS) / total_w for i in range(len(stats_list))]
+    raw = []
+    for i in range(len(stats_list)):
+        have = [k for k in METRICS if per[k][i] is not None]
+        tw = sum(w[k] for k in have)
+        raw.append(sum(per[k][i] * w[k] for k in have) / tw if tw > 0 else
+                   sum(per[k][i] for k in have) / max(len(have), 1))
     overall = _spread(raw)
     return [({k: per[k][i] for k in METRICS}, overall[i]) for i in range(len(stats_list))]
 
@@ -3580,9 +3601,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
                 ("primer_cost", "Primer cost", 0, None), ("brass_cost", "Brass cost", 0, None),
                 ("brass_reuse", "Brass reloads", 1, 1000))}
             total = num("total", "Total cost", 0, blank=True)
-            cost = parts_cost() if total is None else total
-            if not cost or cost <= 0:
-                raise ValueError("Enter what a round costs (the parts, or a total per round).")
+            cost = parts_cost() if total is None else total    # optional (Zeke, Nov 2026)
         except ValueError as exc:
             messagebox.showerror("Check your input", str(exc), parent=win)
             return
@@ -3593,7 +3612,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
                    bullet_gr=f"{gr:g}", diameter_in=f"{dia:g}", bc_g1=f"{bc:g}",
                    powder=V["powder"].get().strip(), powder_gr=f"{charge:g}", muzzle_fps=f"{fps:g}",
                    barrel_in=f"{barrel:g}" if barrel else "", purpose=V["purpose"].get(),
-                   cost=f"{cost:.4f}", notes=V["notes"].get().strip(),
+                   cost=f"{cost:.4f}" if cost and cost > 0 else "", notes=V["notes"].get().strip(),
                    **{k: "" if v is None else f"{v:g}" for k, v in parts.items()})
         try:
             app.save_handload(row)
@@ -4421,7 +4440,8 @@ class LoadsView:
                                 by_type=not self.cat.grain_style)
         self.group_order = {k: n for n, k in enumerate(dict.fromkeys(r["group"] for r in self.rows))}
         for r in self.rows:
-            r["custom_price"] = abs(r["stats"]["cost"] - r["item"].default_cost) > 1e-9
+            r["custom_price"] = (r["stats"]["cost"] is not None and
+                                 abs(r["stats"]["cost"] - r["item"].default_cost) > 1e-9)
         self.dist = dist
         self._render()
 
@@ -4475,7 +4495,7 @@ class LoadsView:
                 "Energy": lambda r: r["stats"]["energy"],
                 "Recoil": lambda r: r["stats"]["recoil"],
                 "Taylor": lambda r: r["stats"]["taylor"], "HITS": lambda r: r["stats"]["hits"],
-                "Price": lambda r: r["stats"]["cost"], "Score": lambda r: r["overall"],
+                "Price": lambda r: (r["stats"]["cost"] is None, r["stats"]["cost"] or 0), "Score": lambda r: r["overall"],
                 "Grade": lambda r: r["overall"]}
         data.sort(key=keys[self.sort["col"]], reverse=self.sort["desc"])
         self.tree.delete(*self.tree.get_children())
@@ -4498,7 +4518,7 @@ class LoadsView:
             vals += [f"{st['velocity']:.0f}", f"{st['energy']:.0f}", f"{st['recoil']:.1f}"]
             if self.cat.terminal:
                 vals += [f"{st['taylor']:.1f}", f"{st['hits']:.0f}"]
-            vals += [f"{st['cost']:.2f}" + (" ✎" if r["custom_price"] else ""),
+            vals += [("\u2014" if st["cost"] is None else f"{st['cost']:.2f}") + (" ✎" if r["custom_price"] else ""),
                      f"{r['overall']:.0f}", r["grade"]]
             cells.append(vals)
             iid = self.tree.insert("", "end", values=vals, tags=(("hand",) if it.handload else ())
@@ -4588,20 +4608,20 @@ class LoadsView:
         # in brackets under the title (Zeke, Oct 31 2026)
         self.d_info.config(text=f"({'  ·  '.join(info)})" if info else "")
         vals = {"velocity": f"{st['velocity']:.0f} fps", "energy": f"{st['energy']:.0f} ft-lbs",
-                "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": f"${st['cost']:.2f}",
+                "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": money(st["cost"]),
                 "taylor": f"{st['taylor']:.1f}",
                 "hits": f"{st['hits']:.0f}"}
         if "hits" in self.d_sub:
             self.d_sub["hits"].config(text=hits_class(st['hits']))
         for key, (val, badge) in self.d_badges.items():
-            grade = grade_relative(row["scores"][key])
             val.config(text=vals[key])
-            if self.app.show_grades:
+            if self.app.show_grades and row["scores"][key] is not None:
+                grade = grade_relative(row["scores"][key])
                 badge.set(grade)
                 badge.pack(side="left", padx=(6, 0))
             else:
                 badge.pack_forget()
-        self.price_var.set(f"{st['cost']:.2f}")
+        self.price_var.set("" if st["cost"] is None else f"{st['cost']:.2f}")
         if item.handload:
             self.priceline.grid_remove()
             self.handline.grid()
@@ -5235,6 +5255,8 @@ class FavoritesView:
         app = self.app
         loads = [x for x in app.data[cat.title]["detail"] + app.hand_loads(cat)
                  if x.cartridge == item.cartridge]
+        if item.handload:          # hand_loads makes new objects each call: use this list's copy
+            item = next((x for x in loads if x.handload and x.hid == item.hid), item)
         try:
             dist = float(app.carry.get(cat.title, {}).get("dist", cat.default_distance))
         except (TypeError, ValueError):
@@ -5295,7 +5317,7 @@ class FavoritesView:
             clickable.append(b)
         st = r["stats"]
         stats = a.label(card, (f"{use}    " if use else "") + f"{st['velocity']:.0f} fps    "
-                              f"{st['energy']:.0f} ft-lbs    ${st['cost']:.2f} a round    at {r['dist']:g} yd",
+                              f"{st['energy']:.0f} ft-lbs    {'no cost given' if st['cost'] is None else money(st['cost']) + ' a round'}    at {r['dist']:g} yd",
                         10, MUTED, anchor="w")
         clickable.append(stats)
         for w in clickable:
@@ -5333,7 +5355,7 @@ class FavoritesView:
         cells = tk.Frame(card, bg=SURFACE)
         cells.grid(row=4, column=0, columnspan=3, sticky="w", padx=12)
         vals = {"velocity": f"{st['velocity']:.0f} fps", "energy": f"{st['energy']:.0f} ft-lbs",
-                "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": f"${st['cost']:.2f}",
+                "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": money(st["cost"]),
                 "taylor": f"{st['taylor']:.1f}", "hits": f"{st['hits']:.0f}"}
         for k in metric_keys(cat):
             cell = tk.Frame(cells, bg=SURFACE)
@@ -5345,7 +5367,7 @@ class FavoritesView:
             if k == "hits":
                 a.label(line, hits_class(st["hits"]), 10, MUTED).pack(side="left", padx=(5, 0),
                                                                      anchor="s", pady=(0, 3))
-            if a.show_grades:
+            if a.show_grades and r["scores"][k] is not None:
                 b = Badge(line, a, "", 12)
                 b.set(grade_relative(r["scores"][k]))
                 b.pack(side="left", padx=(6, 0))
@@ -5578,7 +5600,7 @@ class HandloadsView:
             clickable += [gbox, rk]
         st = r["stats"]
         stats = a.label(card, f"{st['velocity']:.0f} fps    {st['energy']:.0f} ft-lbs    "
-                              f"${st['cost']:.2f} a round    at {r['dist']:g} yd", 10, MUTED, anchor="w")
+                              f"{'no cost given' if st['cost'] is None else money(st['cost']) + ' a round'}    at {r['dist']:g} yd", 10, MUTED, anchor="w")
         stats.grid(row=1, column=0, sticky="w", padx=12, pady=(2, 8))
         clickable.append(stats)
         for w in clickable:
@@ -5625,7 +5647,8 @@ class HandloadsView:
             a.label(cost, "Per round", 10, TEXT, True).grid(row=n_parts + 1, column=0, sticky="w")
             a.label(cost, f"${it.default_cost:.2f}", 10, TEXT, True).grid(row=n_parts + 1, column=1, sticky="e")
         else:
-            a.label(det, f"${it.default_cost:.2f} a round", 10, TEXT, True, anchor="w").grid(
+            a.label(det, f"${it.default_cost:.2f} a round" if it.default_cost > 0 else "\u2014",
+                    10, TEXT, True, anchor="w").grid(
                 row=n, column=1, sticky="w", pady=2)
         if rec.get("notes"):
             n += 1
@@ -6374,10 +6397,14 @@ def h2h_rows(picked, dist, guns, weights_of, price_of, groups, barrels=None, twi
             done[key] = {id(base_load(r["item"])): r for r in score_loads(
                 items, d, gun,
                 weights_of(icat), [price_of(icat, x) for x in items], by_type=not icat.grain_style)}
-        rows.append(dict(done[key][id(it)], cat=icat, dist=d, gun=gun, keys=metric_keys(icat),
+        sr = done[key][id(it)]                  # a factor it lacks (no cost given) is left out
+        rows.append(dict(sr, cat=icat, dist=d, gun=gun,
+                         keys=[k for k in metric_keys(icat) if sr["stats"][k] is not None],
                          best=set(), gap={}))
     for key in h2h_keys([r["cat"] for r in rows]):
         have = [r for r in rows if key in r["keys"]]
+        if not have:                    # only loads with no cost given
+            continue
         hi = METRICS[key][1]
         vals = [r["stats"][key] for r in have]
         lead = max(vals) if hi else min(vals)
