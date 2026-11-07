@@ -51,6 +51,14 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (pressure_of / pressureOf reads the load name; Train+Protect and +Peak aren't +P) hides those
   loads from the list without changing any grade; ticked by default, kept per category while the
   app is open (snapshot / shared), not in settings.json.
+- Favorite loads (Nov 7 2026, Zeke): a star on every Load Dictionary load (web: outline / filled SVG
+  .fav at the right of a phone card, after the name in the PC table, empty stars only on hover there;
+  desktop: a narrow "★" column after Load, click the cell; its heading sorts favorites first). Kept by
+  pick_key / pickKey text ("category|cartridge|label", a handload by its id): web localStorage
+  cartridge_calc_favs_v1, desktop settings.json "favorites" (renamed / moved cartridges follow like
+  prices). "★ Favorite loads (N) ›" under the category cards opens the Favorite loads page (web #favs,
+  showFavs; desktop FavoritesView / show_favs): starred loads grouped by cartridge with their dictionary
+  figures; a click opens the load in its dictionary (goFav / FavoritesView._open), the star removes it.
 - Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
   (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
   card and the sidebar entry open / close them (menu_entries / menuEntries, open_groups / OPEN_GROUPS,

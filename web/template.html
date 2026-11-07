@@ -104,30 +104,30 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .lhead,.lc .trow,.lc .pdet{display:none}
 @media(min-width:900px){   /* PC: the load list is one table like the desktop app's (phones keep the cards);
                               the rows share the list's columns (subgrid), so each column fits its widest figure */
-  :is(#lres,#hlist .lgrid){display:grid;grid-template-columns:var(--lcols);gap:0 16px;padding:0 14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow-x:auto;font-size:.9rem}   /* a narrow window scrolls the table sideways, like the desktop app */
+  :is(#lres,#hlist .lgrid,#flist .lgrid){display:grid;grid-template-columns:var(--lcols);gap:0 16px;padding:0 14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow-x:auto;font-size:.9rem}   /* a narrow window scrolls the table sideways, like the desktop app */
   #lres>.muted{grid-column:1/-1;padding:12px 0}
-  :is(#lres,#hlist .lgrid) .lhead,:is(#lres,#hlist .lgrid) .lc,:is(#lres,#hlist .lgrid) .lc .trow{grid-column:1/-1;display:grid;grid-template-columns:subgrid;align-items:center}
-  :is(#lres,#hlist .lgrid) .lhead{margin:0 -14px;padding:8px 14px;background:var(--surface2);font-size:.78rem;font-weight:700;color:var(--muted)}
-  :is(#lres,#hlist .lgrid) .lhead>*{text-align:center;white-space:nowrap}:is(#lres,#hlist .lgrid) .lhead>.rk,:is(#lres,#hlist .lgrid) .lhead>.ln{text-align:left}
-  :is(#lres,#hlist .lgrid) .lhead button{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
-  :is(#lres,#hlist .lgrid) .lhead button:hover{color:var(--text)}:is(#lres,#hlist .lgrid) .lhead button.on{color:var(--accent)}
-  :is(#lres,#hlist .lgrid) .lhead button.on::after{content:" ▾"}:is(#lres,#hlist .lgrid) .lhead button.on.up::after{content:" ▴"}
-  :is(#lres,#hlist .lgrid) .lc{border:0;border-top:1px solid var(--border);border-radius:0;margin:0 -14px;padding:7px 14px;background:none}
-  :is(#lres,#hlist .lgrid) .lhead+.lc{border-top:0}
-  :is(#lres,#hlist .lgrid) .lc:hover{background:var(--surface2)}
-  :is(#lres,#hlist .lgrid) .lc.open{box-shadow:inset 3px 0 0 var(--accent);background:none}
-  :is(#lres,#hlist .lgrid) .lc.open .trow>span{color:var(--accent)}
-  :is(#lres,#hlist .lgrid) .lc.hl{box-shadow:inset 3px 0 0 var(--accent)}
-  :is(#lres,#hlist .lgrid) .lc .top,#hlist .lc .st{display:none}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead,:is(#lres,#hlist .lgrid,#flist .lgrid) .lc,:is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow{grid-column:1/-1;display:grid;grid-template-columns:subgrid;align-items:center}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead{margin:0 -14px;padding:8px 14px;background:var(--surface2);font-size:.78rem;font-weight:700;color:var(--muted)}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead>*{text-align:center;white-space:nowrap}:is(#lres,#hlist .lgrid,#flist .lgrid) .lhead>.rk,:is(#lres,#hlist .lgrid,#flist .lgrid) .lhead>.ln{text-align:left}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead button{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead button:hover{color:var(--text)}:is(#lres,#hlist .lgrid,#flist .lgrid) .lhead button.on{color:var(--accent)}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead button.on::after{content:" ▾"}:is(#lres,#hlist .lgrid,#flist .lgrid) .lhead button.on.up::after{content:" ▴"}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc{border:0;border-top:1px solid var(--border);border-radius:0;margin:0 -14px;padding:7px 14px;background:none}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead+.lc{border-top:0}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc:hover{background:var(--surface2)}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc.open{box-shadow:inset 3px 0 0 var(--accent);background:none}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc.open .trow>span{color:var(--accent)}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc.hl{box-shadow:inset 3px 0 0 var(--accent)}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .top,#hlist .lc .st,#flist .lc .st{display:none}
   #hlist .lgrid{margin:0 0 6px}#hlist .lc.hl:not(.open){box-shadow:none}
   #hlist .lgrid .lc .trow>.bp{text-align:left;white-space:normal;color:var(--muted)}
   #hlist .lc>.hdet,#hlist .lc>.hbtns,#hlist .lc>.hlinks{grid-column:1/-1}
   #hlist .lc>.hdet{margin:10px 0 0;max-width:760px}#hlist .lc>.hlinks{margin-bottom:6px}
-  :is(#lres,#hlist .lgrid) .lc .trow>span{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
-  :is(#lres,#hlist .lgrid) .lc .trow>.ln{text-align:left;white-space:normal;font-weight:600;line-height:1.3}
-  :is(#lres,#hlist .lgrid) .lc .trow .wt{white-space:nowrap}
-  :is(#lres,#hlist .lgrid) .lc .trow>.rk{text-align:left;color:var(--muted);font-weight:700}
-  :is(#lres,#hlist .lgrid) .lc .trow .badge{display:inline-flex}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow>span{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow>.ln{text-align:left;white-space:normal;font-weight:600;line-height:1.3}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow .wt{white-space:nowrap}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow>.rk{text-align:left;color:var(--muted);font-weight:700}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow .badge{display:inline-flex}
   #lres .lc .det{grid-column:1/-1;margin:6px 0 4px;padding-top:10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
   #lres .lc .det>*{flex:1 1 100%;margin:0}
   #lres .lc .det .fr{display:none}
@@ -182,7 +182,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .h2hp .slot .ls,.h2hp .slot .fire3{grid-column:2}
   .h2hp .slots{gap:12px}.h2hp .slot+.slot{border-top:1px solid var(--border);padding-top:12px}
 }
-@media(min-width:900px) and (max-width:1199px){:is(#lres,#hlist .lgrid){gap:0 10px;font-size:.84rem}:is(#lres,#hlist .lgrid) .lhead{font-size:.72rem}}   /* small PC windows: tighter columns */
+@media(min-width:900px) and (max-width:1199px){:is(#lres,#hlist .lgrid,#flist .lgrid){gap:0 10px;font-size:.84rem}:is(#lres,#hlist .lgrid,#flist .lgrid) .lhead{font-size:.72rem}}   /* small PC windows: tighter columns */
 .prow{display:flex;gap:8px;align-items:center;margin-top:8px}.prow input{max-width:7.5em}
 .prow .btn{padding:9px 12px;font-size:.85rem}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
@@ -308,6 +308,15 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
   .hnote{margin-top:auto;padding-top:14px;text-align:center}
 }
 .dis{display:block;color:var(--text);margin-bottom:2px}
+.fav{background:none;border:0;padding:2px;margin:-2px 0 0;cursor:pointer;color:var(--muted);line-height:0;flex:none;border-radius:6px}
+.fav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
+.fav:not(.on){opacity:.55}.fav.on{color:var(--best)}.fav.on svg{fill:currentColor}
+.fav:focus-visible{outline:2px solid var(--accent);opacity:1}
+.lc .trow .fav{margin:0 0 0 8px;vertical-align:-4px}.lc .trow .fav svg{width:17px;height:17px}
+@media(hover:hover){.fav:hover{opacity:1;color:var(--best)}.lc .trow .fav:not(.on){opacity:0}.lc:hover .trow .fav:not(.on){opacity:.55}.lc .trow .fav:not(.on):focus-visible{opacity:1}}   /* PC: an empty star shows only on the row under the mouse */
+.nw{white-space:nowrap}
+.favlink{margin-top:14px;display:inline-flex;align-items:center;gap:6px}.favic{color:var(--best);font-size:1.05em}
+#flist .lc .st{margin-left:0}
 .hgrp{margin:20px 0 8px;font-size:1rem}.hgrp small{color:var(--muted);font-weight:600}
 .hdet{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 16px;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;font-size:.92rem}
 .hdet>span:nth-child(odd){color:var(--muted)}
@@ -799,6 +808,28 @@ for(const cat of CATEGORIES){
 // saved price keys: old cartridge names, and "150 gr  ·  Load" labels (weight first, before v1.5)
 function readPrices(){try{const o=JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{},out={};for(const [k,v] of Object.entries(o)){const p=k.split("|");if(p.length<3){out[k]=v;continue;}const r=p.slice(2).join("|"),m=/^(\d+(?:\.\d+)?) gr  ·  (.+)$/.exec(r),n=RENAMED[p[1]]||p[1],cat=movedCat(p[0],n);for(const c of SPLIT[n]||[n])out[`${cat}|${c}|${m?`${m[2]}  ·  ${m[1]} gr`:r}`]=v;}return out;}catch(e){return {};}}
 function writePrices(o){try{localStorage.setItem(PRICE_KEY,JSON.stringify(o));return true;}catch(e){return false;}}
+// favorite loads (Zeke, Nov 7 2026): a list of pickKeys ("Centerfire Rifle|6.5 Creedmoor|label", a
+// handload by its id) kept on this device; renamed / moved cartridges follow like saved prices
+const FAV_KEY="cartridge_calc_favs_v1";
+let FAVS=null;
+function readFavs(){
+  if(FAVS)return FAVS;FAVS=new Set();
+  try{for(const k of JSON.parse(localStorage.getItem(FAV_KEY)||"[]")||[]){const p=String(k).split("|");if(p.length<3){FAVS.add(k);continue;}const n=RENAMED[p[1]]||p[1];FAVS.add(`${movedCat(p[0],n)}|${(SPLIT[n]||[n])[0]}|${p.slice(2).join("|")}`);}}catch(e){}
+  return FAVS;
+}
+function toggleFav(k){const f=readFavs();if(f.has(k))f.delete(k);else f.add(k);try{localStorage.setItem(FAV_KEY,JSON.stringify([...f]));}catch(e){}return f.has(k);}
+const STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3-4.6-4.4 6.3-.9z"/></svg>';
+const favBtn=k=>{const on=readFavs().has(k);return `<button class="fav${on?" on":""}" data-fav="${esc(k)}" aria-pressed="${on}" aria-label="Favorite" title="${on?"Remove from favorites":"Add to favorites"}">${STAR}</button>`;};
+// a table row's name with its star: the star stays on the line of the name's last word
+const starName=(t,k)=>{const i=t.lastIndexOf(" ");return `${esc(t.slice(0,i+1))}<span class="nw">${esc(t.slice(i+1))}${favBtn(k)}</span>`;};
+// a star click: flip it (and the row's other star: phone card + PC row) without opening the load
+function wireFavs(root,after){
+  root.querySelectorAll(".fav").forEach(b=>b.onclick=e=>{
+    e.stopPropagation();const on=toggleFav(b.dataset.fav);
+    root.querySelectorAll(".fav").forEach(x=>{if(x.dataset.fav!==b.dataset.fav)return;x.classList.toggle("on",on);x.setAttribute("aria-pressed",on);x.title=on?"Remove from favorites":"Add to favorites";});
+    if(after)after();
+  });
+}
 const priceKey=(cat,it)=>`${cat.title}|${it.cartridge}|${it.label}`;
 const shared={};   // category title -> values carried between the two tabs
 // ammo_*.csv cartridges with no factory loads (e.g. .32-40) still get an empty entry, after the
@@ -879,7 +910,7 @@ function lastCat(){try{return localStorage.getItem("cartridge_calc_cat");}catch(
 function drawChrome(){
   const nav=$("#nav");
   nav.innerHTML=NAVS.map(([k,t,ic])=>{
-    const on=NAV.mode===k;
+    const on=NAV.mode===k||k==="loads"&&NAV.mode==="favs";   // Favorite loads belongs to the Load Dictionary
     return `<button data-nav="${k}" class="${on?"on":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
       (on&&k==="loads"?`<div class="sub">${menuEntries().map(e=>{
         const btn=c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}${c.group?" child":""}">${esc(catName(c))}</button>`;
@@ -889,14 +920,14 @@ function drawChrome(){
       }).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
-  nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(NAV.mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
+  nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate("loads",CATEGORIES.find(c=>c.title===b.dataset.cat)));
   nav.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
 }
 // In-app history: every page change is a browser history entry (#settings, #loads/Handgun...),
 // so the browser's back arrow and the phone's back button step back through the app's pages
 // instead of leaving it. how: "pop" (moving through history, add nothing), "replace" (swap
 // this entry), else a new entry. depth counts the app's entries before this one.
-const NAV_MODES=["home","loads","h2h","hand","settings"];
+const NAV_MODES=["home","loads","h2h","hand","settings","favs"];
 const navState=()=>({mode:NAV.mode,cat:NAV.cat?NAV.cat.title:null});
 const navURL=()=>NAV.mode==="home"?location.pathname+location.search:"#"+NAV.mode+(NAV.cat?"/"+encodeURIComponent(NAV.cat.title):"");
 function navRecord(how){
@@ -931,7 +962,7 @@ function navigate(mode,cat,hid,how){   // hid: the handload the Handloads tab op
   if(NAV.cat&&NAV.cat.group)OPEN_GROUPS.add(NAV.cat.group);   // back on the list, its drop-down is open
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
-  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="hand")showHand(hid);else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
+  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="hand")showHand(hid);else if(mode==="favs")showFavs();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
   window.scrollTo(0,0);
   fitMenu();
 }
@@ -989,9 +1020,53 @@ function showPicker(mode){
       // Handgun: a drop-down; its categories show indented under it once it is tapped
       const [g,cs]=e,shown=OPEN_GROUPS.has(g);
       return `<button class="cat grp" data-group="${esc(g)}" aria-expanded="${shown}"><b>${esc(g)}&nbsp; ${shown?"▾":"▸"}</b><span class="b">${esc((DATA.group_blurbs||{})[g]||"")}</span><span class="c">${count(cs)}</span></button>`+(shown?cs.map(card).join(""):"");
-    }).join("")}</div>`;
+    }).join("")}</div>
+    <button class="link favlink" id="favgo">${STAR_TXT} Favorite loads${favCount()?` (${favCount()})`:""} ›</button>`;
+  $("#favgo").onclick=()=>navigate("favs");
   app.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
   app.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
+}
+
+// ---------- Favorite loads ----------
+// every starred load of every category, grouped by cartridge like the Handloads tab, with its
+// Load Dictionary figures (that category's distance and weights); a click opens it in the dictionary
+const STAR_TXT='<span class="favic" aria-hidden="true">★</span>';
+function favItems(){
+  const f=readFavs(),out=[];if(!f.size)return out;
+  for(const c of CATEGORIES.filter(hasDetail)){syncHand(c);for(const it of state.detail[c.title])if(f.has(pickKey(c,it)))out.push([c,it]);}
+  return out;
+}
+const favCount=()=>favItems().length;
+function showFavs(){
+  document.title=`${APP_TITLE} — Favorite loads`;
+  app.classList.remove("dict","h2hp","home","picker");app.classList.add("wide","handp");
+  app.innerHTML=`<div class="phead"><button class="link back" id="fback">‹ Categories</button><h2>Favorite loads</h2><p class="sub">Loads you starred in the Load Dictionary, saved on this device.</p></div><div id="flist"></div>`;
+  $("#fback").onclick=()=>navigate("loads");
+  function draw(){
+    const all=favItems();
+    if(!all.length){$("#flist").innerHTML=`<div class="card hempty"><b>No favorites yet</b><p class="muted" style="margin:6px 0 0">Tap the ☆ beside a load in the Load Dictionary to keep it here.</p></div>`;return;}
+    const groups=new Map();
+    all.sort((a,b)=>CATEGORIES.indexOf(a[0])-CATEGORIES.indexOf(b[0])||a[1].cartridge.localeCompare(b[1].cartridge)||lineCmp({it:a[1]},{it:b[1]}))
+      .forEach(p=>{const k=p[0].title+"|"+p[1].cartridge;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(p);});
+    const badge=gr=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
+    const money=v=>"$"+v.toFixed(2);
+    $("#flist").innerHTML=[...groups.values()].map(list=>{
+      const c0=list[0][0],gs=c0.grain_style;
+      const cols=["minmax(12em,1fr)","auto","auto","auto","auto","auto"].concat(GRADES?["auto"]:[]).join(" ");
+      const d=handGrade(c0,list[0][1]).dist;
+      return `<h3 class="hgrp">${esc(list[0][1].cartridge)} <small>· ${esc(catName(c0))}</small></h3><div class="lgrid" style="margin-top:0;--lcols:${cols}"><div class="lhead"><span class="ln">Load</span><span>${gs?"Grains":"Shot"}</span><span>Use</span><span>Velocity at ${g(d)} yd</span><span>Energy</span><span>Price</span>${GRADES?"<span>Grade</span>":""}</div>${list.map(([c,it])=>{
+        const r=handGrade(c,it),k=pickKey(c,it),use=it.handload?"Handload":(it.purpose||it.group||"—");
+        return `<div class="lc${it.handload?" hl":""}" data-k="${esc(k)}" tabindex="0" role="link" aria-label="Open ${esc(it.load)} in the Load Dictionary"><div class="top"><div class="nm">${esc(it.load)}${gs?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}<span class="chip">${esc(use)}</span></div>${GRADES?`<div class="sc">${badge(r.grade)}</div>`:""}${favBtn(k)}</div>
+          <div class="trow"><span class="ln">${starName(it.load,k)}</span><span>${gs?g(it.bullet_gr):esc(shotSize(it)[2])}</span><span>${esc(use)}</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
+          <div class="st"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span><b>${money(r.st.cost)}</b> a round</span><span>at ${g(r.dist)} yd</span></div></div>`;}).join("")}</div>`;}).join("");
+    wireFavs($("#flist"));
+    $("#flist").querySelectorAll(".lc").forEach(el=>{
+      const p=all.find(([c,it])=>pickKey(c,it)===el.dataset.k);if(!p)return;const [c,it]=p;
+      const open=()=>{shared[c.title]=Object.assign({},shared[c.title],{goFav:{cart:it.cartridge,key:it.hid||it.label,load:it.load}});navigate("loads",c);};
+      el.onclick=open;el.onkeydown=e=>{if((e.key==="Enter"||e.key===" ")&&e.target===el){e.preventDefault();open();}};
+    });
+  }
+  draw();
 }
 
 function openCategory(cat,tab){
@@ -1620,7 +1695,7 @@ function openLoads(cat,pane){
     // PC (>=900 px): the list reads as a table like the desktop app's, one row per load with its
     // figures in columns; phones keep the cards (.top) and never show .lhead / .trow
     const badge=(gr)=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
-    const tcols=[GRADES&&["#","score",r=>r.rank,"auto"],["Load","brand",r=>`${esc(cat.grain_style?r.it.load:makeLabel(r.it,cat))}${r.it.handload?'<span class="chip">Handload</span>':""}${warn(r.it)}`,"minmax(9em,1fr)"]]
+    const tcols=[GRADES&&["#","score",r=>r.rank,"auto"],["Load","brand",r=>`${starName(cat.grain_style?r.it.load:makeLabel(r.it,cat),pickKey(cat,r.it))}${r.it.handload?'<span class="chip">Handload</span>':""}${warn(r.it)}`,"minmax(9em,1fr)"]]
       .concat(cat.grain_style?[["Grains","grain",r=>g(r.it.bullet_gr),"auto"],["Barrel",null,r=>out.barrel||r.it.barrel_in?g(out.barrel||r.it.barrel_in)+'"':"—","auto"],["Use",null,r=>esc(purposeOf(r.it)||"—"),"auto"]]
         :[["Shot","shot",r=>esc(shotSize(r.it)[2]),"auto"],[cat.payload_col,null,r=>g(r.st.weight),"auto"]])
       .concat([["Velocity","velocity",r=>r.st.velocity.toFixed(0),"auto"],["Energy","energy",r=>r.st.energy.toFixed(0),"auto"],["Recoil","recoil",r=>r.st.recoil.toFixed(1),"auto"]])
@@ -1637,7 +1712,7 @@ function openLoads(cat,pane){
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top">${GRADES?`<span class="rk">#${r.rank}</span>`:""}
         <div class="nm">${open?`<small class="ct">${esc(it.cartridge||$$("#lc").value)}</small>`:""}${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}${warn(it)}</div>
-        ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}</div>
+        ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}${favBtn(pickKey(cat,it))}</div>
         <div class="trow">${tcols.map(c=>`<span${c[0]==="Load"?' class="ln"':c[0]==="#"?' class="rk"':""}>${c[2](r)}</span>`).join("")}</div>
         ${open?`<div class="det">
           <div class="pdet"><div class="psub">${esc([it.cartridge||$$("#lc").value,it.handload?"":payload,cat.grain_style?(out.barrel?`estimated figures for your ${g(out.barrel)} in barrel`:testBarrelText(it)):"",it.sg?`stability ${it.sg.toFixed(2)} in a 1:${g(it.twist)} twist: ${stabilityText(it.sg)}`:""].filter(Boolean).join("  ·  "))}</div>
@@ -1674,6 +1749,7 @@ function openLoads(cat,pane){
       // default is brand (product line), so it switches between the two)
       $$("#ls").value=k==="brand"?(cur==="brand"?"brandl":cur==="brandl"&&GRADES?"score":"brand")
         :k==="grain"&&cur==="grain"?"grainl":k===cur||k==="grain"&&cur==="grainl"?DEFAULT_SORT():k;render();});
+    wireFavs(box);
     box.querySelectorAll(".lc").forEach(c=>{
       const lab=c.dataset.i;
       c.onclick=e=>{if(e.target.closest(".prow,.hbtns,.btab"))return;L.open=L.open===lab?null:lab;render();};
@@ -1716,8 +1792,14 @@ function openLoads(cat,pane){
     if(go.cartridge!==$$("#lc").value){setCart(go.cartridge);$$("#lc").onchange();}
     L.purpose="All";L.src="All";const it=all.find(x=>x.hid===go.id);L.open=it?keyOf(it):null;
   }
+  // opened from Favorite loads: that cartridge, that load open, nothing filtering it out
+  const gf=sh.goFav;delete sh.goFav;
+  if(gf&&groups.has(gf.cart)){
+    if(gf.cart!==$$("#lc").value){setCart(gf.cart);$$("#lc").onchange();}
+    L.purpose="All";L.src="All";const pr=pressureOf(gf.load);if(pr)L.press[pr]=true;L.open=gf.key;
+  }
   buildChips();render();
-  if(go){const c=pane.querySelector(".lc.open");if(c)c.scrollIntoView({block:"center"});}
+  if(go||gf){const c=pane.querySelector(".lc.open");if(c)c.scrollIntoView({block:"center"});}
 }
 
 // ---------- Head to Head tab ----------
@@ -1958,7 +2040,7 @@ $("#ver").textContent=VERSION_TEXT;
     if(openModalClose){openModalClose();return;}
     if(NAV.mode==="home")AppPlugin.exitApp();
     else if(history.state&&history.state.depth>0)history.back();
-    else if(NAV.cat)navigate(NAV.mode,null,null,"replace");
+    else if(NAV.cat||NAV.mode==="favs")navigate("loads",null,null,"replace");
     else navigate("home",null,null,"replace");
   });
 })();
