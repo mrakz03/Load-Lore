@@ -518,6 +518,9 @@ const MKEYS = Object.keys(METRICS);
 const TYPICAL_SCORE = 70.0;
 const HIGH_K = -Math.log(1 - TYPICAL_SCORE/100), LOW_K = -Math.log(TYPICAL_SCORE/100);
 const GRADE_COLORS = {S:["#a98bff","#1b0a40"],A:["#2fbf71","#06210f"],B:["#4c8dff","#06152e"],C:["#e5b93c","#2b2005"],D:["#e98a3c","#2e1704"],F:["#e5534b","#2e0a08"]};
+// a grade chip ("A" on its colour) and a price, for the load lists
+const badge=gr=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
+const money=v=>"$"+v.toFixed(2);
 const SOURCE_NOTES = {
   catalog:"Weight and velocity come from the manufacturer's 2026 catalog. The ballistic coefficient is the catalog's own figure or is worked out from its published downrange velocities; powder charge (recoil) and price are estimated.",
   published:"Weight, velocity and ballistic coefficient are manufacturer-published; powder charge (used for recoil) is estimated.",
@@ -1057,7 +1060,6 @@ function showFavs(){
   // an opened favorite: the dictionary's facts line and figure tiles, its notes, ballistic table,
   // Head to Head and a link on to the Load Dictionary
   function favDetail(c,it,r){
-    const badge=gr=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
     const edited=!it.handload&&typeof readPrices()[priceKey(c,it)]==="number";
     const payload=c.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
     const facts=[it.handload?"":payload,c.grain_style?testBarrelText(it):"",r.dist?`at ${g(r.dist)} yd`:""].filter(Boolean).join("  ·  ");
@@ -1077,8 +1079,6 @@ function showFavs(){
     const groups=new Map();
     all.sort((a,b)=>CATEGORIES.indexOf(a[0])-CATEGORIES.indexOf(b[0])||a[1].cartridge.localeCompare(b[1].cartridge)||lineCmp({it:a[1]},{it:b[1]}))
       .forEach(p=>{const k=p[0].title+"|"+p[1].cartridge;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(p);});
-    const badge=gr=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
-    const money=v=>"$"+v.toFixed(2);
     $("#flist").innerHTML=[...groups.values()].map(list=>{
       const c0=list[0][0],gs=c0.grain_style;
       const cols=["minmax(12em,1fr)","auto","auto","auto","auto","auto"].concat(GRADES?["auto"]:[]).join(" ");
@@ -1196,8 +1196,6 @@ function showHand(openId){
     const groups=new Map();
     shown.sort((a,b)=>CATEGORIES.indexOf(a[0])-CATEGORIES.indexOf(b[0])||a[1].cartridge.localeCompare(b[1].cartridge)||a[1].label.localeCompare(b[1].label))
       .forEach(p=>{const k=p[0].title+"|"+p[1].cartridge;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(p);});
-    const badge=gr=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
-    const money=v=>"$"+v.toFixed(2);
     // PC (>=900 px): each cartridge's handloads are a table like the dictionary's (.lhead / .trow)
     const cols=["minmax(10em,1.3fr)","minmax(8em,1fr)","minmax(7em,.8fr)","auto","auto","auto"].concat(GRADES?["auto"]:[]).join(" ");
     const lhead=d=>`<div class="lhead"><span class="ln">Handload</span><span class="ln">Bullet</span><span class="ln">Powder</span><span>Velocity at ${g(d)} yd</span><span>Energy</span><span>Price</span>${GRADES?"<span>Grade</span>":""}</div>`;
@@ -1732,7 +1730,6 @@ function openLoads(cat,pane){
     $$("#lcnt").textContent=`${rows.length} of ${out.rows.length} loads at ${g(out.dist)} yards`+(L.purpose!=="All"?` · ${L.purpose} only`:"")+(out.multi&&GRADES?" · ranked within each load type":"");
     // PC (>=900 px): the list reads as a table like the desktop app's, one row per load with its
     // figures in columns; phones keep the cards (.top) and never show .lhead / .trow
-    const badge=(gr)=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
     const tcols=[GRADES&&["#","score",r=>r.rank,"auto"],["Load","brand",r=>`${starName(cat.grain_style?r.it.load:makeLabel(r.it,cat),pickKey(cat,r.it))}${r.it.handload?'<span class="chip">Handload</span>':""}${warn(r.it)}`,"minmax(9em,1fr)"]]
       .concat(cat.grain_style?[["Grains","grain",r=>g(r.it.bullet_gr),"auto"],["Barrel",null,r=>out.barrel||r.it.barrel_in?g(out.barrel||r.it.barrel_in)+'"':"—","auto"],["Use",null,r=>esc(purposeOf(r.it)||"—"),"auto"]]
         :[["Shot","shot",r=>esc(shotSize(r.it)[2]),"auto"],[cat.payload_col,null,r=>g(r.st.weight),"auto"]])
