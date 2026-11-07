@@ -307,6 +307,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   and copies assets/android/res over the Capacitor project after `cap add android`.
 
 ## Release
+- Desktop end of life (Nov 2026, Zeke): Windows / Linux builds continue for v1.14.x fix releases only;
+  v1.15 on is web + Android. The desktop Home card (App._moved_card) says so and points to loadlore.net
+  and Back up; Settings > Updates says "No more desktop updates" once the latest release has no desktop
+  files (has_desktop_files). Before the desktop app is removed from next, a `desktop` branch is made
+  from the last 1.14.x release so it can be relaunched (tags and releases keep it too).
 - Build artifacts (the files on an Actions run page) are kept 7 days (retention-days); releases
   keep their own copies. Old private Load-Lore-old artifacts counted against the 500 MB free quota.
 - In-app updates (Windows/Linux, Settings > Updates, App.check_updates / start_update): asks the
