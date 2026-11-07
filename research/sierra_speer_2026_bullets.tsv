@@ -1,0 +1,406 @@
+maker	name	diameter_in	weight_gr	bc_g1	source
+Sierra	Tipped VarmintKing #1032	0.204	32	0.221	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1036	0.204	36	0.255	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1039	0.204	39	0.287	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Hornet #1100	0.223	40	0.117	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Hornet #1110	0.223	45	0.132	Sierra 2026 Bullet Guide
+Sierra	GameKing FMJBT #1355	0.224	55	0.272	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1390	0.224	55	0.185	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1365	0.224	55	0.250	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #9362	0.224	62	0.298	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1395	0.224	65	0.303	Sierra 2026 Bullet Guide
+Sierra	MatchKing HP #1400	0.224	53	0.224	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1410	0.224	52	0.225	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1380	0.224	69	0.301	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #9377	0.224	77	0.372	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT Cannelure #9377C	0.224	77	0.372	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #9390	0.224	80	0.461	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #9290	0.224	90	0.563	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1396	0.224	95	0.600	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #9380	0.224	77	0.372	Sierra 2026 Bullet Guide (no BC printed; estimated from #9377 77 gr BC 0.372 scaled by weight)
+Sierra	Tipped GameKing #4062	0.224	64	0.323	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #7171	0.224	69	0.370	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7160	0.224	60	0.323	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7169	0.224	69	0.375	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7177	0.224	77	0.420	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7188	0.224	88	0.480	Sierra 2026 Bullet Guide (no BC printed; estimated from #7177 77 gr BC 0.42 scaled by weight)
+Sierra	Tipped VarmintKing #1440	0.224	40	0.196	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1450	0.224	50	0.248	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1455	0.224	55	0.271	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #7170	0.224	69	0.357	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #1385	0.224	40	0.155	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #1375	0.224	60	0.246	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Hornet #1200	0.224	40	0.116	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Hornet #1210	0.224	45	0.131	Sierra 2026 Bullet Guide
+Sierra	VarmintKing SMP #1370	0.224	63	0.231	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer #1310	0.224	45	0.210	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer #1330	0.224	50	0.222	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer #1360	0.224	55	0.237	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer Blitz #1340	0.224	50	0.222	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer Blitz #1345	0.224	55	0.237	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1530	0.243	85	0.311	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1560	0.243	100	0.430	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1505	0.243	70	0.259	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1537	0.243	95	0.490	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1565	0.243	105	0.537	Sierra 2026 Bullet Guide (no BC printed; estimated from #1570 107 gr BC 0.547 scaled by weight)
+Sierra	MatchKing HPBT-CN #1570	0.243	107	0.547	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1575	0.243	110	0.617	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #1571	0.243	107	0.447	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #1540	0.243	100	0.373	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4100	0.243	90	0.490	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4110	0.243	100	0.515	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7295	0.243	95	0.500	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7207	0.243	107	0.574	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7216	0.243	116	0.622	Sierra 2026 Bullet Guide (no BC printed; estimated from #7207 107 gr BC 0.574 scaled by weight)
+Sierra	Tipped VarmintKing #1502	0.243	55	0.225	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1507	0.243	70	0.299	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #1500	0.243	60	0.182	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #1510	0.243	75	0.217	Sierra 2026 Bullet Guide
+Sierra	VarmintKing SBT Blitz #1515	0.243	80	0.319	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer #1520	0.243	85	0.315	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1615	0.257	90	0.250	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1625	0.257	100	0.355	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1630	0.257	117	0.410	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1628	0.257	100	0.394	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #9631	0.257	131	0.596	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4210	0.257	110	0.447	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #7331	0.257	131	0.532	Sierra 2026 Bullet Guide (no BC printed; estimated from #4210 110 gr BC 0.447 scaled by weight)
+Sierra	Tipped MatchKing #7334	0.257	134	0.610	Sierra 2026 Bullet Guide (no BC printed; estimated from #9631 131 gr BC 0.596 scaled by weight)
+Sierra	Tipped VarmintKing #1605	0.257	70	0.260	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1616	0.257	90	0.388	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1785	0.257	105	0.425	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer #1610	0.257	87	0.293	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1728	0.264	130	0.355	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1730	0.264	140	0.495	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1711	0.264	100	0.361	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1715	0.264	107	0.430	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1725	0.264	120	0.421	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1740	0.264	140	0.535	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1744	0.264	144	0.550	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1727	0.264	123	0.510	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1729	0.264	130	0.584	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1742	0.264	142	0.626	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1755	0.264	150	0.713	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #1743	0.264	142	0.595	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #1720	0.264	120	0.356	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4320	0.264	120	0.482	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4330	0.264	130	0.510	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4340	0.264	140	0.563	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4345	0.264	145	0.597	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7407	0.264	107	0.445	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7430	0.264	130	0.518	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7450	0.264	153	0.642	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #1710	0.264	100	0.259	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1835	0.277	140	0.337	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1820	0.277	130	0.436	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1845	0.277	140	0.457	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1840	0.277	150	0.483	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1815	0.277	115	0.324	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1833	0.277	135	0.488	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #1834	0.277	135	0.505	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #1830	0.277	130	0.370	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4440	0.277	140	0.508	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4475	0.277	175	0.560	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1912	0.284	140	0.375	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1925	0.284	160	0.384	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1905	0.284	140	0.416	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1913	0.284	150	0.436	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1920	0.284	160	0.455	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1940	0.284	175	0.533	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1915	0.284	150	0.429	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1930	0.284	168	0.488	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1975	0.284	175	0.608	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1980	0.284	180	0.660	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1981	0.284	180	0.676	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1983	0.284	183	0.707	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1997	0.284	197	0.780	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #1976	0.284	175	0.597	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #1900	0.284	120	0.328	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #1910	0.284	140	0.377	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4540	0.284	140	0.545	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4550	0.284	150	0.545	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4565	0.284	165	0.610	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4580	0.284	180	0.632	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7660	0.284	160	0.600	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7685	0.284	185	0.694	Sierra 2026 Bullet Guide (no BC printed; estimated from #7660 160 gr BC 0.6 scaled by weight)
+Sierra	VarmintKing HP #1895	0.284	100	0.209	Sierra 2026 Bullet Guide
+Sierra	GameKing #2236	0.308	205	0.480	Sierra 2026 Bullet Guide
+Sierra	GameKing FMJBT #2115	0.308	150	0.408	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #2140	0.308	165	0.363	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2125	0.308	150	0.380	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2145	0.308	165	0.404	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2160	0.308	180	0.501	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2165	0.308	200	0.560	Sierra 2026 Bullet Guide
+Sierra	MatchKing HP-CN #2121	0.308	125	0.349	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2190	0.308	150	0.417	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2155	0.308	155	0.450	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2200	0.308	168	0.462	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2275	0.308	175	0.505	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2210	0.308	190	0.533	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2230	0.308	200	0.565	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2240	0.308	220	0.629	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #2269	0.308	169	0.527	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #2277	0.308	177	0.545	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #2231	0.308	200	0.715	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #9240	0.308	210	0.670	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #2237	0.308	215	0.680	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #2251	0.308	230	0.800	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN Palma #2156	0.308	155	0.504	Sierra 2026 Bullet Guide
+Sierra	MatchKing X #2175	0.308	175	0.505	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #2232	0.308	200	0.553	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter FN #2000	0.308	150	0.185	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter FN #2010	0.308	170	0.205	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter HP/FN #2020	0.308	125	0.119	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter RN #2100	0.308	110	0.144	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter RN #2135	0.308	150	0.200	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter RN #2170	0.308	180	0.240	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter RN #2180	0.308	220	0.310	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2120	0.308	125	0.279	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2130	0.308	150	0.336	Sierra 2026 Bullet Guide
+Sierra	Sports Master RN #8005	0.308	85	0.102	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4625	0.308	125	0.318	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4665	0.308	165	0.530	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4680	0.308	180	0.515	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4681	0.308	180	0.543	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4695	0.308	195	0.588	Sierra 2026 Bullet Guide (no BC printed; estimated from #4681 180 gr BC 0.543 scaled by weight)
+Sierra	Tipped GameKing #4610	0.308	210	0.621	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7725	0.308	125	0.343	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7755	0.308	155	0.519	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7768	0.308	168	0.535	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7775	0.308	175	0.545	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7795	0.308	195	0.610	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7720	0.308	220	0.688	Sierra 2026 Bullet Guide (no BC printed; estimated from #7795 195 gr BC 0.61 scaled by weight)
+Sierra	VarmintKing HP #2110	0.308	110	0.177	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #2116	0.308	115	0.267	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #2124	0.308	135	0.308	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #2136	0.308	150	0.334	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2315	0.311	174	0.499	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2305	0.311	125	0.274	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2300	0.311	150	0.344	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2310	0.311	180	0.411	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8030	0.312	90	0.125	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2420	0.323	220	0.521	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2415	0.323	200	0.520	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2400	0.323	150	0.336	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2410	0.323	175	0.381	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2610	0.338	215	0.485	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2600	0.338	250	0.565	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2650	0.338	250	0.587	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #9300	0.338	300	0.768	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2620	0.338	225	0.462	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8100	0.355	90	0.095	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8110	0.355	115	0.127	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8124	0.355	124	0.120	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8125	0.355	125	0.124	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8147	0.355	147	0.157	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FMJ #8105	0.355	95	0.094	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FMJ #8115	0.355	115	0.107	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FMJ #8120	0.355	125	0.115	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9990	0.355	90	0.094	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9924	0.355	124	0.120	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9925	0.355	125	0.122	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9947	0.355	147	0.162	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8360	0.357	158	0.100	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8320	0.357	125	0.133	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8325	0.357	140	0.078	Sierra 2026 Bullet Guide
+Sierra	Sports Master JSP #8310	0.357	125	0.133	Sierra 2026 Bullet Guide
+Sierra	Sports Master JSP #8340	0.357	158	0.100	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FPJ #8370	0.357	180	0.147	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2850	0.358	225	0.370	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter #2755	0.358	155	0.182	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter RN #2800	0.358	200	0.148	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2950	0.375	250	0.353	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #3000	0.375	300	0.475	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #9350	0.375	350	0.805	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter FN #2900	0.375	200	0.195	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter JHP #3100	0.400	200	0.156	Sierra 2026 Bullet Guide (no BC printed; estimated from #8460 180 gr BC 0.14 scaled by weight)
+Sierra	Sports Master JHP #8430	0.400	150	0.120	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8445	0.400	165	0.130	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8460	0.400	180	0.140	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9465	0.400	165	0.132	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8500	0.410	170	0.123	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8520	0.410	210	0.165	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8600	0.4295	180	0.130	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8620	0.4295	210	0.160	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8610	0.4295	240	0.185	Sierra 2026 Bullet Guide
+Sierra	Sports Master JSP #8630	0.4295	300	0.230	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FPJ #8615	0.4295	250	0.213	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter FN #8760	0.4515	260	0.164	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8826	0.4515	225	0.157	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8820	0.4515	240	0.150	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8835	0.4515	185	0.105	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8805	0.4515	230	0.145	Sierra 2026 Bullet Guide
+Sierra	Sports Master JSP #8830	0.4515	300	0.192	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FMJ #8815	0.4515	230	0.140	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FPJ #8825	0.4515	200	0.120	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9820	0.4515	200	0.118	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter HP/FN #8900	0.458	300	0.120	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter HP/FN #8950	0.458	400	0.152	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #5350	0.500	350	0.155	Sierra 2026 Bullet Guide
+Sierra	Sports Master JSP #5400	0.500	400	0.185	Sierra 2026 Bullet Guide
+Speer	TNT HP #1015	0.204	39	0.202	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP #22462GDB	0.224	62	0.310	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP #22475GDB2	0.224	75	0.411	Speer 2026 catalog
+Speer	Gold Dot Rifle SP #22455GDB	0.224	55	0.250	Speer 2026 catalog
+Speer	JHP #1014	0.224	33	0.080	Speer 2026 catalog
+Speer	TNT Green #1021	0.224	30	0.091	Speer 2026 catalog
+Speer	TNT Green #1028	0.224	50	0.190	Speer 2026 catalog
+Speer	TNT HP #1030	0.224	50	0.228	Speer 2026 catalog
+Speer	TNT HP #1032	0.224	55	0.233	Speer 2026 catalog
+Speer	Target Match BTHP #1036	0.224	52	0.230	Speer 2026 catalog
+Speer	Varmint Bee SPFN #1024	0.224	46	0.087	Speer 2026 catalog
+Speer	Varmint HP #1035	0.224	52	0.225	Speer 2026 catalog
+Speer	Varmint Semi-Spitzer SP #1053	0.224	70	0.219	Speer 2026 catalog
+Speer	Varmint Spire SP #1017	0.224	40	0.144	Speer 2026 catalog
+Speer	Varmint Spitzer SP #1023	0.224	45	0.143	Speer 2026 catalog
+Speer	Varmint Spitzer SP #1029	0.224	50	0.207	Speer 2026 catalog
+Speer	Varmint Spitzer SP #1047	0.224	55	0.212	Speer 2026 catalog
+Speer	Grand Slam GSSP #1222	0.243	100	0.327	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1213	0.243	85	0.380	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1220	0.243	100	0.446	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1217	0.243	90	0.365	Speer 2026 catalog
+Speer	Impact #TB243H3	0.243	95	0.429	Speer 2026 catalog
+Speer	TNT HP #1206	0.243	70	0.279	Speer 2026 catalog
+Speer	Varmint HP #1205	0.243	75	0.192	Speer 2026 catalog
+Speer	Gold Dot HP #3985	0.251	35	0.091	Speer 2026 catalog
+Speer	Grand Slam GSSP #1415	0.257	120	0.356	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1408	0.257	100	0.393	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1410	0.257	120	0.480	Speer 2026 catalog
+Speer	Hot-Cor SPFN #1237	0.257	75	0.135	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1241	0.257	87	0.300	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1405	0.257	100	0.334	Speer 2026 catalog
+Speer	TNT HP #1246	0.257	87	0.337	Speer 2026 catalog
+Speer	Varmint HP #1407	0.257	100	0.263	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP #264120GDB	0.264	120	0.457	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP Creedmoor #264140GDB	0.264	140	0.571	Speer 2026 catalog
+Speer	Grand Slam GSSP #1444A	0.264	140	0.498	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1441	0.264	140	0.498	Speer 2026 catalog
+Speer	Impact #TB264H1	0.264	140	0.646	Speer 2026 catalog
+Speer	Impact #TB264H2	0.264	156	0.628	Speer 2026 catalog (G1 and G7 columns swapped in the catalog; G1 0.628 used)
+Speer	TNT HP #1445	0.264	90	0.281	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP 6.8 SPC #277115GDB	0.277	115	0.401	Speer 2026 catalog
+Speer	Gold Dot Rifle SP #27790GDB	0.277	90	0.253	Speer 2026 catalog
+Speer	Grand Slam GSSP #1465	0.277	130	0.332	Speer 2026 catalog
+Speer	Grand Slam GSSP #1608	0.277	150	0.378	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1458	0.277	130	0.412	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1604	0.277	150	0.489	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1459	0.277	130	0.383	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1605	0.277	150	0.455	Speer 2026 catalog
+Speer	Impact #TB277H1	0.277	150	0.575	Speer 2026 catalog
+Speer	TNT HP #1446	0.277	90	0.303	Speer 2026 catalog
+Speer	Varmint HP #1447	0.277	100	0.201	Speer 2026 catalog
+Speer	Grand Slam GSSP #1632	0.284	145	0.353	Speer 2026 catalog
+Speer	Grand Slam GSSP #1638	0.284	160	0.389	Speer 2026 catalog
+Speer	Grand Slam GSSP #1643	0.284	175	0.436	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1624	0.284	130	0.424	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1628	0.284	145	0.472	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1634	0.284	160	0.519	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1623	0.284	130	0.368	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1629	0.284	145	0.416	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1635	0.284	160	0.504	Speer 2026 catalog
+Speer	Impact #TB284H1	0.284	175	0.540	Speer 2026 catalog
+Speer	TNT HP #1616	0.284	110	0.384	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP #308150GDB	0.308	150	0.503	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP #308168GDB	0.308	168	0.572	Speer 2026 catalog
+Speer	Gold Dot Rifle SP 300 BLK #308150BLKGDB	0.308	150	0.463	Speer 2026 catalog
+Speer	Grand Slam GSSP #2038	0.308	165	0.354	Speer 2026 catalog
+Speer	Grand Slam GSSP #2063	0.308	180	0.374	Speer 2026 catalog
+Speer	Hot-Cor BTSP #2022	0.308	150	0.417	Speer 2026 catalog
+Speer	Hot-Cor BTSP #2034	0.308	165	0.520	Speer 2026 catalog
+Speer	Hot-Cor BTSP #2052	0.308	180	0.545	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2007	0.308	130	0.213	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2011	0.308	150	0.255	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2041	0.308	170	0.298	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2023	0.308	150	0.377	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2035	0.308	165	0.444	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2053	0.308	180	0.441	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2211	0.308	200	0.478	Speer 2026 catalog
+Speer	Impact #TB308H1	0.308	172	0.567	Speer 2026 catalog
+Speer	Impact #TB308H2	0.308	190	0.595	Speer 2026 catalog
+Speer	TMJ RN #1846	0.308	110	0.179	Speer 2026 catalog
+Speer	TNT HP #1986	0.308	125	0.341	Speer 2026 catalog
+Speer	Target Match BTHP #2040	0.308	168	0.534	Speer 2026 catalog
+Speer	Varmint HP #1835	0.308	110	0.150	Speer 2026 catalog
+Speer	Varmint HP #2005	0.308	130	0.244	Speer 2026 catalog
+Speer	Gold Dot Rifle SP #310123GDB	0.310	123	0.321	Speer 2026 catalog
+Speer	Hot-Cor SPRN #2223	0.311	180	0.299	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2217	0.311	150	0.351	Speer 2026 catalog
+Speer	Lead Hollow Base WC #4600	0.314	98	0.044	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2259	0.321	170	0.283	Speer 2026 catalog
+Speer	Hot-Cor Semi-Spitzer SP #2283	0.323	170	0.311	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2277	0.323	150	0.343	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2285	0.323	200	0.440	Speer 2026 catalog
+Speer	Grand Slam GSSP #2408	0.338	250	0.436	Speer 2026 catalog
+Speer	Hot-Cor BTSP #2406	0.338	225	0.497	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2405	0.338	200	0.426	Speer 2026 catalog
+Speer	Gold Dot HP #3992	0.355	90	0.101	Speer 2026 catalog
+Speer	Gold Dot HP #3994	0.355	115	0.125	Speer 2026 catalog
+Speer	Gold Dot HP #3998	0.355	124	0.134	Speer 2026 catalog
+Speer	Gold Dot HP #4360	0.355	125	0.141	Speer 2026 catalog
+Speer	Gold Dot HP #4002	0.355	147	0.164	Speer 2026 catalog
+Speer	TMJ FN #4362	0.355	125	0.147	Speer 2026 catalog
+Speer	TMJ FN #4006	0.355	147	0.188	Speer 2026 catalog
+Speer	TMJ RN #4001	0.355	95	0.131	Speer 2026 catalog
+Speer	TMJ RN #3995	0.355	115	0.151	Speer 2026 catalog
+Speer	TMJ RN #3993	0.355	124	0.159	Speer 2026 catalog
+Speer	Copper Plated RN #4712	0.356	115	0.151	Speer 2026 catalog (catalog prints 0.360 for this 9mm bullet; 0.356 like Speer's other 9mm lead/plated bullet (4602))
+Speer	Lead RN #4602	0.356	125	0.155	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #4215	0.357	158	0.168	Speer 2026 catalog
+Speer	Gold Dot HP/CANN #4012	0.357	125	0.140	Speer 2026 catalog
+Speer	Gold Dot Short Barrel HP/CANN #4009	0.357	110	0.117	Speer 2026 catalog
+Speer	Gold Dot Short Barrel HP/CANN #4014	0.357	135	0.141	Speer 2026 catalog
+Speer	JHP/CANN #4007	0.357	110	0.113	Speer 2026 catalog
+Speer	JHP/CANN #4013	0.357	125	0.129	Speer 2026 catalog
+Speer	JHP/CANN #4211	0.357	158	0.163	Speer 2026 catalog
+Speer	JSP/CANN #4217	0.357	158	0.164	Speer 2026 catalog
+Speer	TMJ FN/CANN #4015	0.357	125	0.146	Speer 2026 catalog
+Speer	TMJ FN/CANN #4207	0.357	158	0.173	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2435	0.358	180	0.236	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2453	0.358	250	0.422	Speer 2026 catalog
+Speer	Lead RN #4648	0.358	158	0.170	Speer 2026 catalog
+Speer	Lead SWC #4624	0.358	158	0.123	Speer 2026 catalog
+Speer	Lead SWC HP #4628	0.358	158	0.121	Speer 2026 catalog
+Speer	Lead Wadcutter #4618	0.360	148	0.050	Speer 2026 catalog
+Speer	TMJ RN #4375	0.364	95	0.127	Speer 2026 catalog
+Speer	Hot-Cor Semi-Spitzer SP #2459	0.366	270	0.361	Speer 2026 catalog
+Speer	Hot-Cor BTSP #2472	0.375	270	0.478	Speer 2026 catalog
+Speer	Hot-Cor Semi-Spitzer SP #2471	0.375	235	0.301	Speer 2026 catalog
+Speer	Copper Plated FN #4713	0.400	180	0.143	Speer 2026 catalog
+Speer	Gold Dot HP #4400	0.400	155	0.123	Speer 2026 catalog
+Speer	Gold Dot HP #4397	0.400	165	0.138	Speer 2026 catalog
+Speer	Gold Dot HP #4406	0.400	180	0.143	Speer 2026 catalog
+Speer	TMJ FN #4399	0.400	155	0.125	Speer 2026 catalog
+Speer	TMJ FN #4410	0.400	165	0.135	Speer 2026 catalog
+Speer	TMJ FN #4402	0.400	180	0.143	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #4430	0.410	210	0.185	Speer 2026 catalog
+Speer	Hot-Cor Mag-Tip #2477	0.416	350	0.332	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #4455	0.429	240	0.175	Speer 2026 catalog
+Speer	DeepCurl SP/CANN #4456	0.429	240	0.175	Speer 2026 catalog
+Speer	DeepCurl SP/CANN #4461	0.429	270	0.193	Speer 2026 catalog
+Speer	Gold Dot HP/CANN #4427	0.429	200	0.145	Speer 2026 catalog
+Speer	Gold Dot HP/CANN #4428	0.429	210	0.154	Speer 2026 catalog
+Speer	JSP/CANN #4454	0.429	240	0.169	Speer 2026 catalog
+Speer	Copper Plated RN #4714	0.450	230	0.153	Speer 2026 catalog
+Speer	Gold Dot HP #4470	0.451	185	0.109	Speer 2026 catalog
+Speer	Gold Dot HP #4478	0.451	200	0.138	Speer 2026 catalog
+Speer	Gold Dot HP #4483	0.451	230	0.143	Speer 2026 catalog
+Speer	Gold Dot Short Barrel HP #4482	0.451	230	0.148	Speer 2026 catalog
+Speer	JSP/CANN #4485	0.451	300	0.199	Speer 2026 catalog
+Speer	TMJ FN #4476	0.451	185	0.094	Speer 2026 catalog
+Speer	TMJ RN #4480	0.451	230	0.153	Speer 2026 catalog
+Speer	TMJ SWC #4473	0.451	185	0.094	Speer 2026 catalog
+Speer	TMJ SWC #4475	0.451	200	0.128	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #4484	0.452	250	0.165	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #3974	0.452	300	0.233	Speer 2026 catalog
+Speer	JHP/CANN #4481	0.452	260	0.183	Speer 2026 catalog
+Speer	Lead RN #4691	0.452	230	0.160	Speer 2026 catalog
+Speer	Lead SWC #4678	0.452	200	0.170	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2478	0.458	350	0.218	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2479	0.458	400	0.259	Speer 2026 catalog
+Speer	JHP/CANN #2482	0.458	300	0.206	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #3973	0.475	275	0.162	Speer 2026 catalog
+Speer	DeepCurl SP/CANN #3978	0.475	325	0.191	Speer 2026 catalog
+Speer	DeepCurl HP #4493	0.500	300	0.155	Speer 2026 catalog
+Speer	DeepCurl SP/CANN #4491	0.500	350	0.178	Speer 2026 catalog
+Speer	JHP #4495	0.500	325	0.169	Speer 2026 catalog
+Speer	TMJ FN #4490	0.500	300	0.157	Speer 2026 catalog
