@@ -452,7 +452,7 @@ cartridge	load	bullet_gr	muzzle_fps	barrel_in	source
 .38 Special	Remington HTP Semi-Jacketed Hollow Point +P (est.)	125	1135	16	estimate: handload-list 945 fps from 4 in x (16/4)^0.132 (standard cartridges)
 .38 Special	Remington UMC Jacketed Hollow Point +P (est.)	125	1135	16	estimate: handload-list 945 fps from 4 in x (16/4)^0.132 (standard cartridges)
 .38 Special	SIG Sauer Elite V-Crown JHP +P (est.)	125	1065	16	estimate: handload-list 965 fps from 7.7 in x (16/7.7)^0.132 (standard cartridges)
-.38 Special	Speer Lawman Training Total Metal Jacket (est.)	125	1040	16	estimate: handload-list 865 fps from 4 in x (16/4)^0.132 (standard cartridges)
+.38 Special	Speer Lawman Training Total Metal Jacket (est.)	125	1050	16	estimate: Speer 2026 catalog 875 fps from 4 in x (16/4)^0.132 (standard cartridges)
 .38 Special	Winchester Silvertip Plated JHP +P (est.)	125	1135	16	estimate: handload-list 945 fps from 4 in x (16/4)^0.132 (standard cartridges)
 .38 Special	Winchester Super-X Jacketed Hollow Point +P (est.)	125	1135	16	estimate: handload-list 945 fps from 4 in x (16/4)^0.132 (standard cartridges)
 .38 Special	Winchester USA Jacketed Flat Point (est.)	125	1020	16	estimate: handload-list 850 fps from 4 in x (16/4)^0.132 (standard cartridges)
@@ -731,3 +731,12 @@ cartridge	load	bullet_gr	muzzle_fps	barrel_in	source
 .44-40 Winchester	Hornady Custom Cowboy (est.)	205	810	16	estimate: handload-list 725 fps from 7 in x (16/7)^0.132 (standard cartridges)
 .44-40 Winchester	Fiocchi Cowboy Action LRNFP (est.)	210	835	16	estimate: handload-list 725 fps from 5.5 in x (16/5.5)^0.132 (standard cartridges)
 .44-40 Winchester	Winchester USA Lead (est.)	225	865	16	estimate: handload-list 750 fps from 5.5 in x (16/5.5)^0.132 (standard cartridges)
+.327 Federal Magnum	Speer Gold Dot Personal Protection Hollow Point (est.)	100	2040	16	estimate: Speer 2026 catalog 1500 fps from 4 in x (16/4)^0.221
+9mm Luger	Speer Gold Dot Personal Protection Hollow Point (est.)	147	1065	16	estimate: Speer 2026 catalog 985 fps from 4 in x (16/4)^0.057
+.38 Special	Speer Gold Dot Personal Protection Hollow Point +P (est.)	125	1135	16	estimate: Speer 2026 catalog 945 fps from 4 in x (16/4)^0.132
+.44 Special	Speer Gold Dot Personal Protection Hollow Point (est.)	200	995	16	estimate: Speer 2026 catalog 875 fps from 6 in x (16/6)^0.132
+.45 ACP	Speer Gold Dot Personal Protection Hollow Point (est.)	230	950	16	estimate: Speer 2026 catalog 890 fps from 5 in x (16/5)^0.057
+9mm Luger	Speer Lawman Training Total Metal Jacket (est.)	115	1300	16	estimate: Speer 2026 catalog 1200 fps from 4 in x (16/4)^0.057
+.40 S&W	Speer Lawman Training Total Metal Jacket (1050 fps) (est.)	165	1135	16	estimate: Speer 2026 catalog 1050 fps from 4 in x (16/4)^0.057
+.40 S&W	Speer Lawman Clean-Fire Training Total Metal Jacket (est.)	165	1135	16	estimate: Speer 2026 catalog 1050 fps from 4 in x (16/4)^0.057
+.45 ACP	Speer Lawman Clean-Fire Training Total Metal Jacket (est.)	230	905	16	estimate: Speer 2026 catalog 845 fps from 5 in x (16/5)^0.057

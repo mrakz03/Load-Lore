@@ -171,6 +171,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 9mm Luger,Sellier & Bellot Subsonic FMJ (est.),150,1085,0.172,4.4,0.83,,estimate,,16,Subsonic
 9mm Luger,Fiocchi Range Dynamics FMJ (est.),158,920,0.170,3.3,0.30,,estimate,,16,Target
 9mm Luger,PPU Subsonic FMJ (est.),158,1065,0.170,4.4,0.70,,estimate,,16,Subsonic
+9mm Luger,Speer Gold Dot Personal Protection Hollow Point (est.),147,1065,0.168,4.2,1.30,,estimate,,16,Defense
+9mm Luger,Speer Lawman Training Total Metal Jacket (est.),115,1300,0.182,4.9,0.34,,estimate,,16,Target
 .40 S&W,Black Hills HoneyBadger (est.),115,1425,0.098,5.6,1.95,,estimate,,16,Defense
 .40 S&W,Winchester Super Clean Zinc FMJ (est.),120,1355,0.127,5.2,0.41,,estimate,,16,Target
 .40 S&W,Buffalo Bore Barnes TAC-XP (lead-free) (est.),125,1540,0.107,7.0,2.46,,estimate,,16,Defense
@@ -260,6 +262,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .40 S&W,Federal Premium Hunting Handgun Solid Core (est.),200,1080,0.206,5.6,1.65,,estimate,,16,Hunting
 .40 S&W,Nosler Defense Bonded JHP (est.),200,975,0.202,4.5,2.17,,estimate,,16,Defense
 .40 S&W,Federal Syntech Action Pistol TSJ (est.),205,900,0.174,3.9,0.60,,estimate,,16,Target
+.40 S&W,Speer Lawman Training Total Metal Jacket (1050 fps) (est.),165,1135,0.139,5.1,0.40,,estimate,,16,Target
+.40 S&W,Speer Lawman Clean-Fire Training Total Metal Jacket (est.),165,1135,0.139,5.1,0.50,,estimate,,16,Target
 10mm Auto,Black Hills HoneyBadger (est.),115,1710,0.098,9.8,2.10,,estimate,,16,Defense
 10mm Auto,Sellier & Bellot XRG Defense (est.),130,1455,0.110,8.1,1.00,,estimate,,16,Defense
 10mm Auto,Hornady Handgun Hunter MonoFlex (est.),135,1405,0.103,7.8,1.90,,estimate,,16,Hunting
@@ -420,6 +424,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 ACP,Winchester WinClean Brass Enclosed Base (est.),230,890,0.184,5.1,0.80,,estimate,,16,Target
 .45 ACP,Federal Premium Hunting Handgun Solid Core +P (est.),240,1070,0.186,7.6,1.05,,estimate,,16,Hunting
 .45 ACP,Buffalo Bore Outdoorsman Hard Cast FN +P (est.),255,990,0.173,6.9,1.94,,estimate,,16,Hunting
+.45 ACP,Speer Gold Dot Personal Protection Hollow Point (est.),230,950,0.147,5.7,1.80,,estimate,,16,Defense
+.45 ACP,Speer Lawman Clean-Fire Training Total Metal Jacket (est.),230,905,0.157,5.2,0.61,,estimate,,16,Target
 5.7x28mm,Fiocchi Jacketed Frangible (est.),35,2285,0.128,4.0,1.00,,estimate,,16,Target
 5.7x28mm,Federal American Eagle TMJ (est.),40,2140,0.137,3.4,0.60,,estimate,,16,Target
 5.7x28mm,Fiocchi Range Dynamics FMJ (est.),40,2220,0.146,4.3,0.83,,estimate,,16,Target
@@ -452,7 +458,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .38 Special,Remington HTP Semi-Jacketed Hollow Point +P (est.),125,1135,0.162,4.1,1.25,,estimate,,16,Defense
 .38 Special,Remington UMC Jacketed Hollow Point +P (est.),125,1135,0.162,4.1,0.63,,estimate,,16,Defense
 .38 Special,SIG Sauer Elite V-Crown JHP +P (est.),125,1065,0.132,4.3,1.20,,estimate,,16,Defense
-.38 Special,Speer Lawman Training Total Metal Jacket (est.),125,1040,0.133,3.4,0.46,,estimate,,16,Target
+.38 Special,Speer Lawman Training Total Metal Jacket (est.),125,1050,0.133,3.4,0.46,,estimate,,16,Target
 .38 Special,Winchester Silvertip Plated JHP +P (est.),125,1135,0.170,4.1,1.00,,estimate,,16,Defense
 .38 Special,Winchester Super-X Jacketed Hollow Point +P (est.),125,1135,0.170,4.1,1.39,,estimate,,16,Defense
 .38 Special,Winchester USA Jacketed Flat Point (est.),125,1020,0.127,3.3,0.36,,estimate,,16,Target
@@ -508,6 +514,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .38 Special,Speer Lawman Clean-Fire Training Total Metal Jacket +P (est.),158,1080,0.168,4.7,0.46,,estimate,,16,Target
 .38 Special,Speer Lawman Training Total Metal Jacket +P (est.),158,1080,0.168,4.7,0.46,,estimate,,16,Target
 .38 Special,Winchester USA Lead (est.),158,960,0.135,3.7,0.36,,estimate,,16,Target
+.38 Special,Speer Gold Dot Personal Protection Hollow Point +P (est.),125,1135,0.143,4.1,1.49,,estimate,,16,Defense
 .357 Magnum,Remington HTP Semi-Jacketed Hollow Point (est.),110,1760,0.098,10.3,1.40,,estimate,,16,Defense
 .357 Magnum,Sellier & Bellot XRG Defense (est.),110,1975,0.135,15.5,1.37,,estimate,,16,Defense
 .357 Magnum,Winchester USA Jacketed Hollow Point (est.),110,1760,0.102,10.3,0.80,,estimate,,16,Defense
@@ -593,6 +600,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .327 Federal Magnum,Federal Premium Personal Defense HST (est.),104,2070,0.160,8.9,1.60,,estimate,,16,Defense
 .327 Federal Magnum,Federal Premium Hammerdown Revolver Carbine Bonded Hollow Point,127,1650,0.198,12.8,1.70,,catalog,,20,Hunting
 .327 Federal Magnum,Buffalo Bore Outdoorsman Hard Cast Keith (est.),130,1765,0.181,8.1,2.01,,estimate,,16,Hunting
+.327 Federal Magnum,Speer Gold Dot Personal Protection Hollow Point (est.),100,2040,0.163,8.3,1.72,,estimate,,16,Defense
 .41 Magnum,Buffalo Bore JHP (est.),170,2240,0.137,14.7,2.68,,estimate,,16,Hunting
 .41 Magnum,Buffalo Bore Barnes XPB (lead-free) (est.),180,2105,0.145,13.7,3.38,,estimate,,16,Hunting
 .41 Magnum,Hornady LEVERevolution FTX (est.),190,1795,0.168,15.8,1.55,yes,estimate,,16,Hunting
@@ -617,6 +625,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .44 Special,Winchester USA Lead (est.),240,900,0.154,5.0,1.37,,estimate,,16,Target
 .44 Special,Remington Performance Wheelgun Lead Round Nose (est.),246,905,0.158,5.2,1.52,,estimate,,16,Target
 .44 Special,Buffalo Bore Outdoorsman Keith SWC-GC (est.),255,1200,0.188,9.5,1.86,,estimate,,16,Hunting
+.44 Special,Speer Gold Dot Personal Protection Hollow Point (est.),200,995,0.149,5.6,2.00,,estimate,,16,Defense
 .44 Magnum,Black Hills HoneyBadger (est.),160,2075,0.118,29.4,2.30,,estimate,,16,Hunting
 .44 Magnum,Underwood Xtreme Hunter (est.),160,2235,0.109,33.0,1.72,,estimate,,16,Hunting
 .44 Magnum,Buffalo Bore Anti-Personnel JHP (est.),180,1865,0.124,25.8,2.68,,estimate,,16,Defense
