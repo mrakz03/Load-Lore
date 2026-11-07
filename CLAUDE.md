@@ -240,7 +240,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   catalog (e.g. .25 ACP / 9x18 XTPs, .348 / .375 FTX) were kept. Diameter match (Nov 7 2026): within 0.0015 in
   (a .311 bullet is not listed for .308, .357 not for 9mm), lead / plated bullets (LEAD_BULLET: "Lead" or
   "Plated" in the name) up to 0.0035 over (sized .358 for 9mm, Speer's .360 wadcutter for .357), .44-40
-  (.427) up to .4305 (FIT_SPAN: Uberti / Marlin barrels shoot .429-.430).
+  (.427) up to .4305 and .350 Legend (.355) up to .3575 (FIT_SPAN, by cartridge: Uberti / Marlin .44-40 barrels
+  shoot .429-.430; Hornady sells its .357 Sub-X for .350 Legend). The .30 Carbine bullets (Sierra #2100, Speer
+  #1846) are "both", so 7.62x25mm Tokarev lists them.
   bullets.csv "use" column (rifle / handgun / both; Zeke, Nov 7 2026): handgun cartridges (Category.group
   Handgun: Pistol / Revolver and PCC, or a new cartridge of that type) skip rifle bullets unless no handgun
   bullet of that size exists (5.7x28mm lists .224 rifle bullets): bullet_fits / bulletFits. A new bullet row

@@ -1227,12 +1227,12 @@ function newCartridge(opts,name,cat){
   return {cat,cart:name};
 }
 // a library bullet for a cartridge of diameter d (desktop bullet_fits): same diameter within 0.0015 in,
-// lead / plated bullets up to .0035 over, .44-40 (.427) takes up to .4305 (FIT_SPAN); handgun cartridges
+// lead / plated bullets up to .0035 over, FIT_SPAN widens it per cartridge (.44-40, .350 Legend); handgun cartridges
 // skip rifle bullets unless no handgun bullet of that size exists
-const LEAD_BULLET=/\bLead\b(?!-)|Plated/,FIT_SPAN={0.427:0.0035};
-function bulletFits(b,d,handgun){
+const LEAD_BULLET=/\bLead\b(?!-)|Plated/,FIT_SPAN={".44-40 Winchester":0.0035,".350 Legend":0.0025};
+function bulletFits(b,d,handgun,cart){
   if(!d)return true;
-  const near=x=>{const off=x.diameter-d,over=Math.max(LEAD_BULLET.test(x.name||"")?0.0035:0.0015,FIT_SPAN[d]||0);return off>=-0.0015-1e-9&&off<=over+1e-9;};
+  const near=x=>{const off=x.diameter-d,over=Math.max(LEAD_BULLET.test(x.name||"")?0.0035:0.0015,FIT_SPAN[cart]||0);return off>=-0.0015-1e-9&&off<=over+1e-9;};
   if(!near(b))return false;
   if(handgun&&b.use==="rifle")return !BULLETS.some(x=>near(x)&&(x.use==="handgun"||x.use==="both"));
   return true;
@@ -1283,7 +1283,7 @@ function handDialog(rec,done){
   // bullets go by diameter, not cartridge: the makers listed are those with a bullet of this
   // diameter; "Other maker" opens a box to type any maker (#hbmo)
   const catOf=c=>c===NEWC?HAND_KINDS.find(k=>k.title===q("#hnt").value):(pickOf(c)||{}).cat;
-  const OTHER="__other__",fits=b=>{const c=q("#hc").value,k=catOf(c);return bulletFits(b,diaOf(c),!!(k&&k.group==="Handgun"));};
+  const OTHER="__other__",fits=b=>{const c=q("#hc").value,k=catOf(c),o=c===NEWC?null:pickOf(c);return bulletFits(b,diaOf(c),!!(k&&k.group==="Handgun"),o&&o.cart);};
   const makerOf=()=>q("#hbm").value===OTHER?q("#hbmo").value.trim():q("#hbm").value;
   const fillMakers=()=>{
     const makers=[...new Set(BULLETS.filter(fits).map(b=>b.maker))].sort(),cur=q("#hbm").value;
