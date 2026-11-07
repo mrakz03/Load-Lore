@@ -242,7 +242,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   "Plated" in the name) up to 0.0035 over (sized .358 for 9mm, Speer's .360 wadcutter for .357), .44-40
   (.427) up to .4305 and .350 Legend (.355) up to .3575 (FIT_SPAN, by cartridge: Uberti / Marlin .44-40 barrels
   shoot .429-.430; Hornady sells its .357 Sub-X for .350 Legend). The .30 Carbine bullets (Sierra #2100, Speer
-  #1846) are "both", so 7.62x25mm Tokarev lists them.
+  #1846) are "both", so 7.62x25mm Tokarev lists them. MAX_BULLET_GR caps a cartridge's bullet weight: 5.7x28mm lists only .224 bullets of
+  40 gr or less (Zeke, Nov 7 2026: 5.7 loads are always light).
   bullets.csv "use" column (rifle / handgun / both; Zeke, Nov 7 2026): handgun cartridges (Category.group
   Handgun: Pistol / Revolver and PCC, or a new cartridge of that type) skip rifle bullets unless no handgun
   bullet of that size exists (5.7x28mm lists .224 rifle bullets): bullet_fits / bulletFits. A new bullet row
@@ -418,6 +419,8 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   Tactical, Federal Gold Medal, Hornady Match) and .338 Norma Magnum (3: Norma, Black Hills, Berger), all
   Match, from maker pages and retailer listings (none in the 2026 catalogs; the Federal and Hornady .300 NM
   loads may be discontinued). Typical guns 13 / 15 lb (precision rifles). Sources in added_loads_sources.tsv.
+  Later that day Zeke had the possibly discontinued Federal Gold Medal (GM300NMBH1) and Hornady Match (82176) .300 NM
+  loads removed (rows kept in research/removed_loads.tsv).
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
