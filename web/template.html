@@ -1226,6 +1226,15 @@ function newCartridge(opts,name,cat){
   if(same.length)throw new Error(`${same[0].cart} is already in the list (${catName(same[0].cat)}). Pick it there, or choose that type.`);
   return {cat,cart:name};
 }
+// a library bullet for a cartridge of diameter d (desktop bullet_fits): same diameter within 0.0035 in;
+// handgun cartridges skip rifle bullets unless no handgun bullet of that size exists (5.7x28mm)
+function bulletFits(b,d,handgun){
+  if(!d)return true;
+  const near=x=>Math.abs(x.diameter-d)<=0.0035;
+  if(!near(b))return false;
+  if(handgun&&b.use==="rifle")return !BULLETS.some(x=>near(x)&&(x.use==="handgun"||x.use==="both"));
+  return true;
+}
 // the Handloads tab's add / edit form (any category: the cartridge picks it)
 function handDialog(rec,done){
   const edit=!!(rec&&rec.id&&readHand().some(x=>x.id===rec.id));
@@ -1271,7 +1280,8 @@ function handDialog(rec,done){
   };
   // bullets go by diameter, not cartridge: the makers listed are those with a bullet of this
   // diameter; "Other maker" opens a box to type any maker (#hbmo)
-  const OTHER="__other__",fits=b=>{const d=diaOf(q("#hc").value);return !d||Math.abs(b.diameter-d)<=0.0035;};
+  const catOf=c=>c===NEWC?HAND_KINDS.find(k=>k.title===q("#hnt").value):(pickOf(c)||{}).cat;
+  const OTHER="__other__",fits=b=>{const c=q("#hc").value,k=catOf(c);return bulletFits(b,diaOf(c),!!(k&&k.group==="Handgun"));};
   const makerOf=()=>q("#hbm").value===OTHER?q("#hbmo").value.trim():q("#hbm").value;
   const fillMakers=()=>{
     const makers=[...new Set(BULLETS.filter(fits).map(b=>b.maker))].sort(),cur=q("#hbm").value;
@@ -1304,6 +1314,7 @@ function handDialog(rec,done){
     add:{text:t=>t?`+ Add “${t}” as a new cartridge`:"+ Add a cartridge that isn't listed",
       pick:t=>{hc.value=NEWC;q("#hnn").value=t;showNew();fillMakers();if(!touch||!t)q("#hnn").focus();}}};
   q("#hnd").addEventListener("input",fillMakers);
+  q("#hnt").addEventListener("change",fillMakers);
   const openCart=typed=>touch?pickSheet(opts,cartPick):pickSheet(opts,cartPick,{el:hc,input:cv,typed:typed||""});
   cv.onclick=()=>openCart();
   cv.onfocus=()=>hc.classList.add("focus");cv.onblur=()=>hc.classList.remove("focus");

@@ -1601,7 +1601,8 @@ def _launch_env():
 
 # ---- handloads (my_handloads.csv) and the bullet library (bullets.csv) ---- #
 def read_bullets():
-    """Common bullets: [{maker, name, diameter, weight, bc, type}]. Empty if the file is missing."""
+    """Common bullets: [{maker, name, diameter, weight, bc, type, use}] (use: rifle / handgun / both).
+    Empty if the file is missing."""
     path = os.path.join(app_dir(), BULLETS_FILENAME)
     out = []
     try:
@@ -1610,7 +1611,8 @@ def read_bullets():
                 try:
                     out.append(dict(maker=row["maker"].strip(), name=row["name"].strip(),
                                     diameter=float(row["diameter_in"]), weight=float(row["weight_gr"]),
-                                    bc=float(row["bc_g1"]), type=row.get("type", "").strip()))
+                                    bc=float(row["bc_g1"]), type=row.get("type", "").strip(),
+                                    use=(row.get("use") or "").strip()))
                 except (KeyError, ValueError):
                     continue
     except (OSError, csv.Error, UnicodeDecodeError):
@@ -3154,6 +3156,21 @@ def handload_cartridges(app):
 NEW_CARTRIDGE = "New cartridge (below)"      # the handload form's cartridge box text for one
 
 
+def bullet_fits(b, d, handgun, bullets):
+    """A library bullet for a cartridge of diameter d: the same diameter (within 0.0035 in: lead
+    bullets run up to .003 over, a .360 wadcutter for .357). A handgun cartridge (Handgun / PCC)
+    skips bullets marked rifle, unless no handgun bullet of that size exists (5.7x28mm takes .224
+    rifle bullets). Web: bulletFits."""
+    if not d:
+        return True
+    near = lambda x: abs(x["diameter"] - d) <= 0.0035
+    if not near(b):
+        return False
+    if handgun and b.get("use") == "rifle":
+        return not any(near(x) and x.get("use") in ("handgun", "both") for x in bullets)
+    return True
+
+
 def own_diameter(app, cat, cart):
     """A cartridge's bullet diameter: DIAMETERS, else (a cartridge the user added) the one its
     handloads were saved with. None when neither knows."""
@@ -3410,10 +3427,18 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
         pick = pick_of(V["cartridge"].get())
         return own_diameter(app, *pick) if pick else None
 
+    def cart_category():
+        """The picked cartridge's category (a new one's type), or None."""
+        if is_new():
+            return kinds.get(V["new_type"].get())
+        pick = pick_of(V["cartridge"].get())
+        return pick[0] if pick else None
+
     def fits(b):
-        """The library bullet is the cartridge's diameter (bullets go by diameter, not cartridge)."""
-        d = cart_diameter()
-        return not d or abs(b["diameter"] - d) <= 0.0035  # 0.0035: lead bullets run up to .003 over (a .360 wadcutter for .357)
+        """The library bullet is the cartridge's diameter (bullets go by diameter, not cartridge);
+        handgun cartridges skip rifle bullets (bullet_fits)."""
+        cat = cart_category()
+        return bullet_fits(b, cart_diameter(), bool(cat and cat.group == "Handgun"), bullets)
 
     def refresh_bullets(*_):
         """Makers list only those with a bullet of this diameter; bullets only the picked maker's."""
@@ -3434,6 +3459,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
 
     V["cartridge"].trace_add("write", refresh_bullets)
     V["new_dia"].trace_add("write", refresh_bullets)
+    V["new_type"].trace_add("write", refresh_bullets)
     V["bullet_maker"].trace_add("write", refresh_bullets)
     for k in ("bullet_cost", "powder_cost_lb", "powder_gr", "primer_cost", "brass_cost",
               "brass_reuse", "total"):

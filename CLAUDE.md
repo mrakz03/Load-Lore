@@ -237,6 +237,11 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (research/replaced_bullets_2026-11.tsv); each row's source, and the BCs a catalog didn't print (scaled by
   weight from the same line), in research/bullet_catalog_sources.tsv. Diameter match allows 0.0035 in
   (oversized lead bullets, Speer's .360 wadcutter for .357).
+  bullets.csv "use" column (rifle / handgun / both; Zeke, Nov 7 2026): handgun cartridges (Category.group
+  Handgun: Pistol / Revolver and PCC, or a new cartridge of that type) skip rifle bullets unless no handgun
+  bullet of that size exists (5.7x28mm lists .224 rifle bullets): bullet_fits / bulletFits. A new bullet row
+  needs its use set (handgun lines: XTP, Gold Dot, Sports Master, XPB, TAC-XP, ASP...; "both" for lever /
+  handgun bullets like FTX .44/.45 Colt and Barnes Buster .44/.45/.500).
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
 - Recoil (recoil_ftlbs / recoil): standard free recoil, bullet + powder gas at GAS_FPS 4000, gas counted
   once (a 1.75x gas factor read 40-60% high; fixed Oct 2026 against Chuck Hawks' recoil table).
