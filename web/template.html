@@ -1226,11 +1226,13 @@ function newCartridge(opts,name,cat){
   if(same.length)throw new Error(`${same[0].cart} is already in the list (${catName(same[0].cat)}). Pick it there, or choose that type.`);
   return {cat,cart:name};
 }
-// a library bullet for a cartridge of diameter d (desktop bullet_fits): same diameter within 0.0035 in;
-// handgun cartridges skip rifle bullets unless no handgun bullet of that size exists (5.7x28mm)
+// a library bullet for a cartridge of diameter d (desktop bullet_fits): same diameter within 0.0015 in,
+// lead / plated bullets up to .0035 over, .44-40 (.427) takes up to .4305 (FIT_SPAN); handgun cartridges
+// skip rifle bullets unless no handgun bullet of that size exists
+const LEAD_BULLET=/\bLead\b(?!-)|Plated/,FIT_SPAN={0.427:0.0035};
 function bulletFits(b,d,handgun){
   if(!d)return true;
-  const near=x=>Math.abs(x.diameter-d)<=0.0035;
+  const near=x=>{const off=x.diameter-d,over=Math.max(LEAD_BULLET.test(x.name||"")?0.0035:0.0015,FIT_SPAN[d]||0);return off>=-0.0015-1e-9&&off<=over+1e-9;};
   if(!near(b))return false;
   if(handgun&&b.use==="rifle")return !BULLETS.some(x=>near(x)&&(x.use==="handgun"||x.use==="both"));
   return true;
