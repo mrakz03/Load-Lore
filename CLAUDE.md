@@ -396,6 +396,10 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   2026 additions, Black Hills 6.5 / .308 MKX, other Nosler Whitetail Country loads, rest of Hornady Backcountry
   Defense. .400 Legend (new loads from Hornady, Barnes, Nosler, Remington) is not a cartridge in the app.
   List: /mnt/project-files/catalogs/new-loads-2026-11-01.md (not in the repo).
+- Nov 7 2026 (Zeke): .300 Norma Magnum (5 loads: Norma Golden Target, Berger Hybrid Target / Hybrid OTM
+  Tactical, Federal Gold Medal, Hornady Match) and .338 Norma Magnum (3: Norma, Black Hills, Berger), all
+  Match, from maker pages and retailer listings (none in the 2026 catalogs; the Federal and Hornady .300 NM
+  loads may be discontinued). Typical guns 13 / 15 lb (precision rifles). Sources in added_loads_sources.tsv.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 

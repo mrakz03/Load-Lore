@@ -240,6 +240,7 @@ def brand_sort_key(row):
 # prefixes to the web as DATA.lines.
 PRODUCT_LINES = {
     "Barnes": ["VOR-TX", "Precision Match", "Pioneer", "Suppressor Series", "Harvest Collection"],
+    "Berger": ["Hybrid Target", "Hybrid OTM Tactical"],
     "Black Hills": ["Gold", "HoneyBadger"],
     "Buffalo Bore": ["Anti-Personnel", "Outdoorsman", "Supercharged", "Premium Supercharged",
                      "Dangerous Game", "Tactical", "Penetrator", "Deer Grenade", "Short Barrel",
@@ -274,7 +275,7 @@ PRODUCT_LINES = {
                 "Precision Hunter", "Subsonic", "Superformance", "V-MAX"],
     "IMI": ["Razor Core"],
     "Lapua": ["Mega", "Naturalis", "Scenar", "Scenar-L"],
-    "Norma": ["Bondstrike", "Oryx", "Tipstrike", "Whitetail"],
+    "Norma": ["Bondstrike", "Golden Target", "Oryx", "Tipstrike", "Whitetail"],
     "Nosler": ["Trophy Grade", "Defense", "Match Grade", "Whitetail Country"],
     "PMC": ["Bronze", "X-TAC"],
     "PPU": ["GROM", "Z-GROM", "Match"],
@@ -600,7 +601,8 @@ def recoil_ftlbs(bullet_gr, muzzle_fps, powder_gr, gun_lb):
 # 8 lb read 340+ ft-lbs; in its usual ~30 lb rifle it is about 95 (no muzzle brake).
 GUN_LB = {     # per category: the same cartridge can be in a rifle and a handgun (.44 Magnum)
     "Centerfire Rifle": {
-        ".50 BMG": 30.0, ".338 Lapua Magnum": 15.0, ".416 Remington Magnum": 10.0,
+        ".50 BMG": 30.0, ".338 Lapua Magnum": 15.0, ".338 Norma Magnum": 15.0,
+        ".300 Norma Magnum": 13.0, ".416 Remington Magnum": 10.0,
         ".458 Winchester Magnum": 10.0, ".458 Lott": 10.0, ".375 H&H Magnum": 9.5,
         ".375 Ruger": 9.5},
     "Handgun": {
@@ -644,10 +646,11 @@ BARREL_MAX_IN = {
         ".270 WSM": 24, ".270 Winchester": 26, ".277 Fury": 20, ".28 Nosler": 26,
         ".280 Remington": 24, ".30 Carbine": 18, ".30 Thompson/Center": 24,
         ".30-06 Springfield": 26, ".30-30 Winchester": 26, ".30-40 Krag": 30, ".300 Blackout": 20,
-        ".300 PRC": 26, ".300 Remington Ultra Mag": 26, ".300 Savage": 24, ".300 WSM": 26,
-        ".300 Weatherby Magnum": 28, ".300 Winchester Magnum": 26, ".303 British": 26,
-        ".308 Winchester": 26, ".32-40 Winchester": 30, ".338 ARC": 20, ".338 Lapua Magnum": 30,
-        ".338 Winchester Magnum": 26, ".348 Winchester": 24, ".35 Remington": 22,
+        ".300 Norma Magnum": 30, ".300 PRC": 26, ".300 Remington Ultra Mag": 26, ".300 Savage": 24,
+        ".300 WSM": 26, ".300 Weatherby Magnum": 28, ".300 Winchester Magnum": 26,
+        ".303 British": 26, ".308 Winchester": 26, ".32-40 Winchester": 30, ".338 ARC": 20,
+        ".338 Lapua Magnum": 30, ".338 Norma Magnum": 30, ".338 Winchester Magnum": 26,
+        ".348 Winchester": 24, ".35 Remington": 22,
         ".35 Whelen": 24, ".350 Legend": 22, ".358 Winchester": 22, ".375 H&H Magnum": 26,
         ".375 Ruger": 24, ".38-55 Winchester": 28, ".416 Remington Magnum": 24,
         ".444 Marlin": 24, ".45-70 Government": 34, ".450 Bushmaster": 22, ".458 Lott": 24,
@@ -994,6 +997,8 @@ DIAMETERS = {
     ".300 WSM": 0.308,
     ".338 Winchester Magnum": 0.338,
     ".338 Lapua Magnum": 0.338,
+    ".338 Norma Magnum": 0.338,
+    ".300 Norma Magnum": 0.308,
     ".338 ARC": 0.338,
     ".375 H&H Magnum": 0.375,
     ".375 Ruger": 0.375,

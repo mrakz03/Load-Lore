@@ -1191,3 +1191,11 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 .308 Winchester	Nosler Whitetail Country Solid Base	165	2800	0.442	published	cabelas.ca Nosler Whitetail Country listing (2800 fps); BC + barrel nosler.com (40120)
 .30-06 Springfield	Nosler Whitetail Country Solid Base	165	2900	0.442	published	cabelas.ca Nosler Whitetail Country listing (2900 fps); BC + barrel nosler.com (40125)
 .350 Legend	Nosler Whitetail Country Straight-Wall	180	2100	0.245	published	governorsgunclub.com listing of Nosler Whitetail Country 350 Legend 180gr (2100 fps); BC + barrel nosler.com (40130)
+.300 Norma Magnum	Berger Hybrid Target	215	3017	0.691	published	bergerbullets.com product page, item 62020 (3017 fps, G1 0.691, 26 in); price EuroOptic box of 20
+.300 Norma Magnum	Federal Gold Medal Berger Hybrid Hunter	215	3000	0.691	published	Federal GM300NMBH1, retailer listings (Lucky Gunner: 3000 fps, G1 0.691; KY Gun Co $6.15/rd); not in Federal's 2026 catalog
+.300 Norma Magnum	Hornady Match ELD Match	225	2850	0.777	published	Hornady 82176, Palmetto State Armory listing (2850 fps, G1 0.777, $5.70/rd); not in Hornady's 2026 ballistics pages
+.300 Norma Magnum	Berger Hybrid OTM Tactical	230	2934	0.743	partial	Berger 62010, Target Sports USA listing (2934 fps, $5.50/rd); BC = Berger 230 Hybrid OTM Tactical G1
+.300 Norma Magnum	Norma Golden Target Berger Hybrid	230	2985	0.743	published	Norma 20174602, Lucky Gunner listing (2985 fps, G1 0.743, $5.00/rd)
+.338 Norma Magnum	Norma Golden Target Sierra MatchKing	300	2657	0.768	published	norma-ammunition.com Match King 20185272 (810 m/s = 2657 fps, G1 0.768, 24 in); price KY Gun Co $4.24/rd
+.338 Norma Magnum	Black Hills Sierra MatchKing	300	2725	0.768	partial	Black Hills 2C338NORMAGN1, Target Sports USA listing (2725 fps, $5.75/rd); BC = Sierra 300 gr MatchKing G1
+.338 Norma Magnum	Berger Hybrid OTM Tactical	300	2725	0.818	partial	Berger 85010, Bosque Outdoors listing (2725 fps); price Graf's $5.90/rd; BC = Berger 300 Hybrid OTM Tactical G1
