@@ -226,6 +226,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (og:) tags whose address is SITE in build_web.py (https://loadlore.net/, Zeke's custom domain for Pages), an apple-touch-icon and a
   manifest with display "browser" (a plain home-screen shortcut, no install prompt; Zeke wanted it
   unobtrusive). make_icons.py draws those icons into assets/web/; build_web.py copies them into www.
+  Search results (Nov 7 2026, Zeke: Google ran the Home cards together, "Load DictionaryEvery load..."): the Home
+  cards, the Home note and the sidebar carry data-nosnippet so Google uses the meta description or the hero line;
+  a canonical link, JSON-LD (WebSite name "Load Lore" + WebApplication) and, on the live build only, robots.txt +
+  sitemap.xml (build_web.py). Keep the description free of grading talk (grades are optional).
 - PC Home, category list and Settings (Oct 25 2026, Zeke): top left, compact cards in one column (icon beside the text), zoomed
   with the window up to 1.15x (desktop App._menu_layout / _zoomed, re-laid out on resize; web
   fitMenu sets CSS zoom at >=900 px). Phones keep their centred layout.

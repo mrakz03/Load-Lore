@@ -5,7 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e1014">
 <title>In Like Flint - Load Lore</title>
-<meta name="description" content="Explore the velocity, energy, recoil and cost of over 3,500 commercially available rounds and your own handloads, or put loads head to head. Free and open source.">
+<meta name="description" content="Look up the velocity, energy, recoil and price of over 3,500 factory loads, compare them head to head, and keep your own handloads. Free and open source.">
+<link rel="canonical" href="__SITE__">
+<!-- for search engines: the site's name (Google shows it above the result) and what it is -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"WebSite","name":"Load Lore","alternateName":["In Like Flint - Load Lore","Load Lore: In Like Flint"],"url":"__SITE__"},
+ {"@type":"WebApplication","name":"Load Lore","url":"__SITE__","applicationCategory":"ReferenceApplication","operatingSystem":"Web, Android",
+  "description":"A free ammunition reference: velocity, energy, recoil and price of over 3,500 factory loads, loads compared head to head, and your own handloads.",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true}]}
+</script>
 <!-- link previews (texts, Discord, Facebook); the image needs the full address of the site -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Load Lore">
@@ -480,8 +489,8 @@ details.btab table td:first-child,details.btab table th:first-child{text-align:l
 </head>
 <body>
 <div class="shell">
-  <aside class="side">
-    <div class="brand"><div><small>In Like Flint</small><b>Load Lore</b><div class="ver" id="ver"></div></div></div>
+  <aside class="side" data-nosnippet>
+    <div class="brand" data-nosnippet><div><small>In Like Flint</small><b>Load Lore</b><div class="ver" id="ver"></div></div></div>
     <nav class="nav" id="nav" aria-label="Main"></nav>
   </aside>
   <main class="main">
@@ -1005,8 +1014,8 @@ addEventListener("resize",()=>{clearTimeout(fitMenuJob);fitMenuJob=setTimeout(fi
 function showHome(){
   document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","picker");app.classList.add("home");
   app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Explore the velocity, energy, recoil and cost of over 3,500 commercially available rounds, or put loads head to head.</p></div>
-  <div class="feat">${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>
-  <p class="homenote">Figures are estimates. Nothing you see here is reloading data. <button class="link" data-go="settings">Disclaimer in Settings ›</button></p>`;
+  <div class="feat" data-nosnippet>${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>
+  <div class="homenote" data-nosnippet>Figures are estimates. Nothing you see here is reloading data. <button class="link" data-go="settings">Disclaimer in Settings ›</button></div>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
 }
 // GitHub's mark (Octicons mark-github), drawn in the text colour
