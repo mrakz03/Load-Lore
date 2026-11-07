@@ -3161,6 +3161,9 @@ LEAD_BULLET = re.compile(r"\bLead\b(?!-)|Plated")   # cast / swaged lead and pla
 # is .427 on paper, but Uberti / Marlin / Winchester barrels shoot .429-.430 bullets; .350 Legend
 # is .355, but Hornady sells its .357 Sub-X for it (and .357 handgun bullets are loaded in it)
 FIT_SPAN = {".44-40 Winchester": 0.0035, ".350 Legend": 0.0025}
+# cartridges that only take light bullets of their size (gr): 5.7x28mm takes nothing over 55 gr (Zeke, Nov 7 2026),
+# so its list leaves out the heavier .224 rifle bullets
+MAX_BULLET_GR = {"5.7x28mm": 55}
 
 
 def bullet_fits(b, d, handgun, bullets, cart=None):
@@ -3177,7 +3180,7 @@ def bullet_fits(b, d, handgun, bullets, cart=None):
         over = max(0.0035 if LEAD_BULLET.search(x.get("name", "")) else 0.0015, FIT_SPAN.get(cart, 0))
         return -0.0015 - 1e-9 <= off <= over + 1e-9
 
-    if not near(b):
+    if not near(b) or b.get("weight", 0) > MAX_BULLET_GR.get(cart, 1e9):
         return False
     if handgun and b.get("use") == "rifle":
         return not any(near(x) and x.get("use") in ("handgun", "both") for x in bullets)

@@ -955,8 +955,6 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .300 Blackout,Black Hills Open Tip Match Subsonic,220,1050,0.669,8.0,1.75,,partial,,16,Subsonic
 .300 Blackout,PPU Subsonic FMJ Boat Tail,220,1050,0.626,8.0,1.11,,partial,,24,Subsonic
 .300 Norma Magnum,Berger Hybrid Target,215,3017,0.691,88,5.45,,published,,26,Match
-.300 Norma Magnum,Federal Gold Medal Berger Hybrid Hunter,215,3000,0.691,88,6.15,,published,,,Match
-.300 Norma Magnum,Hornady Match ELD Match,225,2850,0.777,86.5,5.70,,published,,,Match
 .300 Norma Magnum,Berger Hybrid OTM Tactical,230,2934,0.743,86,5.50,,partial,,,Match
 .300 Norma Magnum,Norma Golden Target Berger Hybrid,230,2985,0.743,86,5.00,yes,published,,,Match
 .300 PRC,Hornady American Whitetail SST,165,3200,0.447,81.8,3.12,,catalog,,24,Hunting
