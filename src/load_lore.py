@@ -3413,7 +3413,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     def fits(b):
         """The library bullet is the cartridge's diameter (bullets go by diameter, not cartridge)."""
         d = cart_diameter()
-        return not d or abs(b["diameter"] - d) <= 0.003
+        return not d or abs(b["diameter"] - d) <= 0.0035  # 0.0035: lead bullets run up to .003 over (a .360 wadcutter for .357)
 
     def refresh_bullets(*_):
         """Makers list only those with a bullet of this diameter; bullets only the picked maker's."""

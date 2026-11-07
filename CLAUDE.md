@@ -230,6 +230,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (.257, .311/.312, .321, .323, .348, .365, .366, .410, .416, .475, .500, .510, .251), sources in
   research/added_bullets_sources.tsv (Nosler 2024 and Speer charts, Sierra pages, or the BC printed
   for the factory load with the same bullet). .221 (5.45x39mm) still has none.
+  Nov 2026 (Zeke): the Sierra, Speer, Barnes, Berger and Nosler bullets are their catalogs' full lists (Sierra 2026
+  Bullet Guide, Speer 2026 catalog, Barnes 2026 bullet poster, Berger 2024 catalog, Nosler 2026 Product Guide;
+  944 rows, named line + style + part number, e.g. "MatchKing HPBT-CN #1742"; bulk boxes counted once,
+  muzzleloader / sabot bullets and round balls left out). Their older rows were replaced
+  (research/replaced_bullets_2026-11.tsv); each row's source, and the BCs a catalog didn't print (scaled by
+  weight from the same line), in research/bullet_catalog_sources.tsv. Diameter match allows 0.0035 in
+  (oversized lead bullets, Speer's .360 wadcutter for .357).
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
 - Recoil (recoil_ftlbs / recoil): standard free recoil, bullet + powder gas at GAS_FPS 4000, gas counted
   once (a 1.75x gas factor read 40-60% high; fixed Oct 2026 against Chuck Hawks' recoil table).
