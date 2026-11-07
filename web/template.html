@@ -317,6 +317,17 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .nw{white-space:nowrap}
 .favlink{margin-top:14px;display:inline-flex;align-items:center;gap:6px}.favic{color:var(--best);font-size:1.05em}
 #flist .lc .st{margin-left:0}
+#flist .lc.open{border-color:var(--accent)}#flist .lc.open .st{display:none}
+.fdet{margin:12px 0 2px;border-top:1px solid var(--border);padding-top:12px;cursor:default}
+.fdet .psub{color:var(--muted);font-size:.85rem;font-weight:600;margin-bottom:14px}
+.fdet .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:14px 18px}
+.fdet .tile .l{display:block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.fdet .tile .tv{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:1.15rem;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}
+.fdet .tile small{font-size:.8rem;color:var(--muted);font-weight:600}
+.fdet .badge{font-size:.75rem;min-width:24px;padding:2px 6px}
+.fdet .hbtns{align-items:center;gap:8px 18px}
+@media(min-width:900px){#flist .lc>.fdet{grid-column:1/-1;margin:6px 0 4px}#flist .lgrid .lc.open{box-shadow:inset 3px 0 0 var(--accent)}
+  .fdet .tiles{display:flex;flex-wrap:wrap;gap:14px clamp(18px,2.4vw,40px)}.fdet .tile .tv{font-size:1.27rem}}
 .hgrp{margin:20px 0 8px;font-size:1rem}.hgrp small{color:var(--muted);font-weight:600}
 .hdet{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 16px;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;font-size:.92rem}
 .hdet>span:nth-child(odd){color:var(--muted)}
@@ -1042,6 +1053,24 @@ function showFavs(){
   app.classList.remove("dict","h2hp","home","picker");app.classList.add("wide","handp");
   app.innerHTML=`<div class="phead"><button class="link back" id="fback">‹ Categories</button><h2>Favorite loads</h2><p class="sub">Loads you starred in the Load Dictionary, saved on this device.</p></div><div id="flist"></div>`;
   $("#fback").onclick=()=>navigate("loads");
+  const F={open:null,srcOpen:false,btOpen:false};
+  // an opened favorite: the dictionary's facts line and figure tiles, its notes, ballistic table,
+  // Head to Head and a link on to the Load Dictionary
+  function favDetail(c,it,r){
+    const badge=gr=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
+    const edited=!it.handload&&typeof readPrices()[priceKey(c,it)]==="number";
+    const payload=c.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
+    const facts=[it.handload?"":payload,c.grain_style?testBarrelText(it):"",r.dist?`at ${g(r.dist)} yd`:""].filter(Boolean).join("  ·  ");
+    const tiles=[["Velocity",r.st.velocity.toFixed(0)+" fps","velocity"],["Energy",r.st.energy.toFixed(0)+" ft-lbs","energy"],["Recoil",r.st.recoil.toFixed(1)+" ft-lbs","recoil"],["Cost","$"+r.st.cost.toFixed(2)+(edited?" ✎":""),"cost"]]
+      .concat(c.terminal?[["Taylor KO",r.st.taylor.toFixed(1),"taylor"],["HITS",`${r.st.hits.toFixed(0)} <small>${hitsClass(r.st.hits)}</small>`,"hits"]]:[]);
+    const note=it.handload?SOURCE_NOTES.handload:`${SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE} Catalog price estimate: $${it.default_cost.toFixed(2)}.`;
+    return `<div class="fdet"><div class="psub">(${esc(facts)})</div>
+      <div class="tiles">${tiles.map(([l,v,k])=>`<div class="tile"><span class="l">${l}</span><span class="tv">${l==="HITS"?v:esc(v)}${GRADES&&r.sc?badge(gradeRel(r.sc[k])):""}</span></div>`).join("")}</div>
+      ${GRADES?`<div class="muted" style="font-size:.8rem;margin-top:10px">Overall ${r.grade} · ${r.overall.toFixed(0)} · ranks #${r.rank} of ${r.peers} ${esc(it.cartridge)} loads.</div>`:""}
+      <details class="btab srcd fsrc"${F.srcOpen?" open":""}><summary>${it.handload?"Disclaimer":"About these figures"}</summary><div class="note">${esc(note)}</div></details>
+      ${ballisticHTML(it,c,F.btOpen)}
+      <div class="hbtns"><button class="btn fh2h">${h2hText(c,it)}</button><button class="link fdict">Open in Load Dictionary ›</button></div></div>`;
+  }
   function draw(){
     const all=favItems();
     if(!all.length){$("#flist").innerHTML=`<div class="card hempty"><b>No favorites yet</b><p class="muted" style="margin:6px 0 0">Tap the ☆ beside a load in the Load Dictionary to keep it here.</p></div>`;return;}
@@ -1056,14 +1085,23 @@ function showFavs(){
       const d=handGrade(c0,list[0][1]).dist;
       return `<h3 class="hgrp">${esc(list[0][1].cartridge)} <small>· ${esc(catName(c0))}</small></h3><div class="lgrid" style="margin-top:0;--lcols:${cols}"><div class="lhead"><span class="ln">Load</span><span>${gs?"Grains":"Shot"}</span><span>Use</span><span>Velocity at ${g(d)} yd</span><span>Energy</span><span>Price</span>${GRADES?"<span>Grade</span>":""}</div>${list.map(([c,it])=>{
         const r=handGrade(c,it),k=pickKey(c,it),use=it.handload?"Handload":(it.purpose||it.group||"—");
-        return `<div class="lc${it.handload?" hl":""}" data-k="${esc(k)}" tabindex="0" role="link" aria-label="Open ${esc(it.load)} in the Load Dictionary"><div class="top"><div class="nm">${esc(it.load)}${gs?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}<span class="chip">${esc(use)}</span></div>${GRADES?`<div class="sc">${badge(r.grade)}</div>`:""}${favBtn(k)}</div>
+        const open=F.open===k;
+        return `<div class="lc${it.handload?" hl":""}${open?" open":""}" data-k="${esc(k)}" tabindex="0" role="button" aria-expanded="${open}" aria-label="${esc(it.load)}: show its figures"><div class="top"><div class="nm">${esc(it.load)}${gs?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}<span class="chip">${esc(use)}</span></div>${GRADES?`<div class="sc">${badge(r.grade)}</div>`:""}${favBtn(k)}</div>
           <div class="trow"><span class="ln">${starName(it.load,k)}</span><span>${gs?g(it.bullet_gr):esc(shotSize(it)[2])}</span><span>${esc(use)}</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
-          <div class="st"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span><b>${money(r.st.cost)}</b> a round</span><span>at ${g(r.dist)} yd</span></div></div>`;}).join("")}</div>`;}).join("");
-    wireFavs($("#flist"));
+          <div class="st"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span><b>${money(r.st.cost)}</b> a round</span><span>at ${g(r.dist)} yd</span></div>${open?favDetail(c,it,r):""}</div>`;}).join("")}</div>`;}).join("");
+    wireFavs($("#flist"),()=>{if(!favItems().some(([c,it])=>pickKey(c,it)===F.open))F.open=null;});
     $("#flist").querySelectorAll(".lc").forEach(el=>{
       const p=all.find(([c,it])=>pickKey(c,it)===el.dataset.k);if(!p)return;const [c,it]=p;
-      const open=()=>{shared[c.title]=Object.assign({},shared[c.title],{goFav:{cart:it.cartridge,key:it.hid||it.label,load:it.load}});navigate("loads",c);};
-      el.onclick=open;el.onkeydown=e=>{if((e.key==="Enter"||e.key===" ")&&e.target===el){e.preventDefault();open();}};
+      const k=el.dataset.k,toggle=()=>{F.open=F.open===k?null:k;draw();const o=$("#flist .lc.open");if(o&&o.getBoundingClientRect().bottom>innerHeight)o.scrollIntoView({block:"nearest"});};
+      el.onclick=e=>{if(e.target.closest(".fdet"))return;toggle();};
+      el.onkeydown=e=>{if((e.key==="Enter"||e.key===" ")&&e.target===el){e.preventDefault();toggle();}};
+      if(F.open!==k)return;
+      const sd=el.querySelector("details.fsrc"),bt=el.querySelector("details.btab:not(.srcd)");
+      if(sd)sd.addEventListener("toggle",()=>{F.srcOpen=sd.open;});
+      if(bt)bt.addEventListener("toggle",()=>{F.btOpen=bt.open;});
+      el.querySelector(".fdict").onclick=()=>{shared[c.title]=Object.assign({},shared[c.title],{goFav:{cart:it.cartridge,key:it.hid||it.label,load:it.load}});navigate("loads",c);};
+      const hb=el.querySelector(".fh2h");
+      hb.onclick=()=>{const pk=pickKey(c,it);if(H2H.includes(pk)||H2H.length>=H2H_MAX){navigate("h2h");return;}H2H.push(pk);hb.textContent=h2hText(c,it);};
     });
   }
   draw();

@@ -58,7 +58,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   cartridge_calc_favs_v1, desktop settings.json "favorites" (renamed / moved cartridges follow like
   prices). "★ Favorite loads (N) ›" under the category cards opens the Favorite loads page (web #favs,
   showFavs; desktop FavoritesView / show_favs): starred loads grouped by cartridge with their dictionary
-  figures; a click opens the load in its dictionary (goFav / FavoritesView._open), the star removes it.
+  figures; a click opens that load's figures in place (Zeke, Nov 7 2026: favDetail / FavoritesView._details:
+  the dictionary panel's facts line and tiles, About these figures, ballistic table, + Head to Head), and its
+  "Open in Load Dictionary ›" opens it there (goFav / FavoritesView._open); the star removes it.
 - Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
   (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
   card and the sidebar entry open / close them (menu_entries / menuEntries, open_groups / OPEN_GROUPS,

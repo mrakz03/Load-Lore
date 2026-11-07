@@ -5208,6 +5208,7 @@ class FavoritesView:
 
     def __init__(self, app, stage):
         self.app, self.root = app, app.root
+        self.open_key, self.src_open, self.bt_open = None, False, False
         a = app
         wrap = tk.Frame(stage, bg=BG)
         wrap.pack(fill="both", expand=True, padx=a.px(34), pady=(a.px(26), a.px(28)))
@@ -5272,7 +5273,9 @@ class FavoritesView:
     def _card(self, cat, it):
         a = self.app
         r = self.grade(cat, it)
-        box = a.card(self.list, padx=4, pady=4)
+        key = a.fav_key(cat, it)
+        is_open = key == self.open_key
+        box = a.card(self.list, border=ACCENT if is_open else BORDER, padx=4, pady=4)
         box.configure(cursor="hand2")
         card = box.body
         card.columnconfigure(0, weight=1)
@@ -5294,15 +5297,122 @@ class FavoritesView:
         stats = a.label(card, (f"{use}    " if use else "") + f"{st['velocity']:.0f} fps    "
                               f"{st['energy']:.0f} ft-lbs    ${st['cost']:.2f} a round    at {r['dist']:g} yd",
                         10, MUTED, anchor="w")
-        stats.grid(row=1, column=0, sticky="w", padx=12, pady=(2, 8))
         clickable.append(stats)
         for w in clickable:
-            w.bind("<Button-1>", lambda e: self._open(cat, it))
-            w.bind("<Enter>", lambda e: box.recolour(SURFACE_2, ACCENT, (card, title, stats, star))
-                   if hasattr(box, "recolour") else None)
-            w.bind("<Leave>", lambda e: box.recolour(SURFACE, BORDER, (card, title, stats, star))
-                   if hasattr(box, "recolour") else None)
+            w.bind("<Button-1>", lambda e: self._toggle(key))
+        if is_open:
+            self._details(card, cat, it, r)            # the figures replace the one-line summary
+        else:
+            stats.grid(row=1, column=0, sticky="w", padx=12, pady=(2, 8))
+            for w in clickable:
+                w.bind("<Enter>", lambda e: box.recolour(SURFACE_2, ACCENT, (card, title, stats, star)))
+                w.bind("<Leave>", lambda e: box.recolour(SURFACE, BORDER, (card, title, stats, star)))
         return box
+
+    def _toggle(self, key):
+        self.open_key = None if self.open_key == key else key
+        self.draw()
+
+    def _details(self, card, cat, it, r):
+        """An opened favorite (Zeke, Nov 7 2026): the Load Dictionary panel's facts line and figures,
+        "About these figures", the ballistic table, Head to Head and a link on to the dictionary."""
+        a, st = self.app, r["stats"]
+        clickable = []
+        tk.Frame(card, bg=BORDER, height=1).grid(row=2, column=0, columnspan=3, sticky="ew", padx=12,
+                                                pady=(6, 0))
+        facts = [] if it.handload else [f"{it.bullet_gr:g} gr" if cat.grain_style
+                                         else f"{st['weight']:g} gr payload"]
+        if cat.grain_style:
+            facts.append(test_barrel_text(it))
+        if r["dist"]:
+            facts.append(f"at {r['dist']:g} yd")
+        facts = [f for f in facts if f]
+        info = a.label(card, f"({'  ·  '.join(facts)})" if facts else "", 10.5, MUTED, True, anchor="w")
+        info.grid(row=3, column=0, columnspan=3, sticky="w", padx=12, pady=(10, 10))
+        clickable.append(info)
+        cells = tk.Frame(card, bg=SURFACE)
+        cells.grid(row=4, column=0, columnspan=3, sticky="w", padx=12)
+        vals = {"velocity": f"{st['velocity']:.0f} fps", "energy": f"{st['energy']:.0f} ft-lbs",
+                "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": f"${st['cost']:.2f}",
+                "taylor": f"{st['taylor']:.1f}", "hits": f"{st['hits']:.0f}"}
+        for k in metric_keys(cat):
+            cell = tk.Frame(cells, bg=SURFACE)
+            cell.pack(side="left", padx=(0, a.px(30)))
+            a.label(cell, METRICS[k][0].upper(), 10, MUTED, True).pack(anchor="w")
+            line = tk.Frame(cell, bg=SURFACE)
+            line.pack(anchor="w", pady=(4, 0))
+            a.label(line, vals[k], 16, TEXT, True).pack(side="left")
+            if k == "hits":
+                a.label(line, hits_class(st["hits"]), 10, MUTED).pack(side="left", padx=(5, 0),
+                                                                     anchor="s", pady=(0, 3))
+            if a.show_grades:
+                b = Badge(line, a, "", 12)
+                b.set(grade_relative(r["scores"][k]))
+                b.pack(side="left", padx=(6, 0))
+        if a.show_grades:
+            a.label(card, f"Overall {r['grade']}  ·  {r['overall']:.0f}  ·  ranks #{r['rank']} of "
+                          f"{r['peers']} {it.cartridge} loads.", 9, MUTED, anchor="w").grid(
+                row=5, column=0, columnspan=3, sticky="w", padx=12, pady=(8, 0))
+        links = tk.Frame(card, bg=SURFACE)
+        links.grid(row=6, column=0, columnspan=3, sticky="w", padx=12, pady=(10, 0))
+
+        def toggle(attr):
+            setattr(self, attr, not getattr(self, attr))
+            self.draw()
+        name = "Disclaimer" if it.handload else "About these figures"
+        for text, attr in ((name, "src_open"), ("Ballistic table", "bt_open")):
+            t = tk.Label(links, text=("▾" if getattr(self, attr) else "▸") + "  " + text, bg=SURFACE,
+                         fg=ACCENT, font=a.f(11, True), cursor="hand2")
+            t.pack(side="left", padx=(0, a.px(24)))
+            t.bind("<Button-1>", lambda e, at=attr: toggle(at))
+        row = 7
+        if self.src_open:
+            note = HANDLOAD_NOTE if it.handload else (
+                SOURCE_NOTES.get(it.source, DEFAULT_SOURCE_NOTE)
+                + f" Catalog price estimate: ${it.default_cost:.2f}.")
+            n = a.label(card, note, 10, MUTED, anchor="w", justify="left", wraplength=a.px(820))
+            n.grid(row=row, column=0, columnspan=3, sticky="w", padx=12, pady=(8, 0))
+            clickable.append(n)
+            row += 1
+        if self.bt_open:
+            bt = tk.Frame(card, bg=SURFACE)
+            bt.grid(row=row, column=0, columnspan=3, sticky="w", padx=12, pady=(10, 0))
+            heads = ["Yards", "Velocity (fps)", "Energy (ft-lbs)", "Path (in)",
+                     f"Wind drift (in, {WIND_MPH:g} mph)"]
+            for c, h in enumerate(heads):
+                a.label(bt, h, 10, MUTED, True, anchor="e").grid(
+                    row=0, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=(0, 6))
+            a.rule(bt, 0, len(heads))
+            table = ballistic_table(it, cat)
+            for i, (yd, v, e, path, drift) in enumerate(table, start=1):
+                for c, text in enumerate((f"{yd:g}", f"{v:,.0f}", f"{e:,.0f}",
+                                          "0.0" if abs(path) < 0.05 else f"{path:+.1f}", f"{drift:.1f}")):
+                    a.label(bt, text, 11, TEXT, c == 0, anchor="e").grid(
+                        row=i, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=4)
+                if i < len(table):
+                    a.rule(bt, i, len(heads))
+            a.label(bt, f"Zeroed at {cat.zero_yd:g} yd with the sight {cat.sight_in:g} in above the "
+                        f"bore; drop and drift are estimates from the G1 BC, sea-level air.",
+                    9, MUTED, anchor="w", justify="left", wraplength=a.px(760)).grid(
+                row=99, column=0, columnspan=5, sticky="w", pady=(8, 0))
+            row += 1
+        btns = tk.Frame(card, bg=SURFACE)
+        btns.grid(row=row, column=0, columnspan=3, sticky="w", padx=12, pady=(12, 10))
+        pk = pick_key(cat, it)
+        h2h = (f"In Head to Head ({len(a.h2h)} of {H2H_MAX})  ›" if pk in a.h2h else
+               f"Head to Head is full ({H2H_MAX})  ›" if len(a.h2h) >= H2H_MAX else "+  Head to Head")
+
+        def to_h2h():
+            if a.add_to_h2h(cat, it) is None:
+                return a.show_h2h()
+            self.draw()
+        a.button(btns, h2h, to_h2h, size=10, padx=14, pady=7).pack(side="left")
+        link = tk.Label(btns, text="Open in Load Dictionary  ›", bg=SURFACE, fg=ACCENT,
+                        font=a.f(10, True), cursor="hand2")
+        link.pack(side="left", padx=(a.px(18), 0))
+        link.bind("<Button-1>", lambda e: self._open(cat, it))
+        for w in clickable:
+            w.bind("<Button-1>", lambda e, k=a.fav_key(cat, it): self._toggle(k))
 
     def _open(self, cat, it):
         """Open the load in its Load Dictionary: its cartridge, nothing filtering it out, selected."""
