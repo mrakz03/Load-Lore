@@ -243,7 +243,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (.427) up to .4305 and .350 Legend (.355) up to .3575 (FIT_SPAN, by cartridge: Uberti / Marlin .44-40 barrels
   shoot .429-.430; Hornady sells its .357 Sub-X for .350 Legend). The .30 Carbine bullets (Sierra #2100, Speer
   #1846) are "both", so 7.62x25mm Tokarev lists them. MAX_BULLET_GR caps a cartridge's bullet weight: 5.7x28mm lists only .224 bullets of
-  40 gr or less (Zeke, Nov 7 2026: 5.7 loads are always light).
+  55 gr or less (Zeke, Nov 7 2026: 5.7 loads are light, nothing over 55 gr).
   bullets.csv "use" column (rifle / handgun / both; Zeke, Nov 7 2026): handgun cartridges (Category.group
   Handgun: Pistol / Revolver and PCC, or a new cartridge of that type) skip rifle bullets unless no handgun
   bullet of that size exists (5.7x28mm lists .224 rifle bullets): bullet_fits / bulletFits. A new bullet row

@@ -1229,7 +1229,7 @@ function newCartridge(opts,name,cat){
 // a library bullet for a cartridge of diameter d (desktop bullet_fits): same diameter within 0.0015 in,
 // lead / plated bullets up to .0035 over, FIT_SPAN widens it per cartridge (.44-40, .350 Legend); handgun cartridges
 // skip rifle bullets unless no handgun bullet of that size exists
-const LEAD_BULLET=/\bLead\b(?!-)|Plated/,FIT_SPAN={".44-40 Winchester":0.0035,".350 Legend":0.0025},MAX_BULLET_GR={"5.7x28mm":40};
+const LEAD_BULLET=/\bLead\b(?!-)|Plated/,FIT_SPAN={".44-40 Winchester":0.0035,".350 Legend":0.0025},MAX_BULLET_GR={"5.7x28mm":55};
 function bulletFits(b,d,handgun,cart){
   if(!d)return true;
   const near=x=>{const off=x.diameter-d,over=Math.max(LEAD_BULLET.test(x.name||"")?0.0035:0.0015,FIT_SPAN[cart]||0);return off>=-0.0015-1e-9&&off<=over+1e-9;};
