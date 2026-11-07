@@ -114,12 +114,13 @@ METRICS = {
     "taylor": ("Taylor KO", True),      # Taylor Knock-Out factor (bullet weight x velocity x diameter)
     "hits": ("HITS", True),             # Hornady Index of Terminal Standards
 }
-TERMINAL_KEYS = ("taylor", "hits")     # need a bullet diameter, so they don't apply to shotshells
-# Default scoring weights: velocity / energy / recoil / cost / Taylor KO / HITS.
-# 3 / 3 / 1 / 3 / 3 / 3 -> about 19% each, recoil 6%. Shotshells have no Taylor KO / HITS
-# (no bullet diameter), so the Shotgun category keeps those two at 0.
-DEFAULT_WEIGHTS = (3, 3, 1, 3, 3, 3)
-
+TERMINAL_KEYS = ("taylor", "hits")     # need a bullet diameter, so they don't ap
+    "H4350", "H4831SC", "H1000", "Varget", "H4895", "H335", "H322", "CFE 223", "Benchmark",
+    "Lil'Gun", "H110", "H4198", "Titegroup", "Longshot", "Universal", "Clays", "HS-6", "H380",
+    "Retumbo", "Superformance", "H414", "H4227",
+    "IMR 4064", "IMR 4350", "IMR 4895", "IMR 4831", "IMR 3031", "IMR 7828", "IMR 4198",
+    "IMR 8208 XBR", "IMR 4227", "IMR 4759",
+    "Reloder 7", "Reloder 10X", "Reloder 15", "Reloder 16", "Reloder 17", "Relode
 # Curve shape. A load that matches the category's typical (median) value for a
 # factor scores TYPICAL_SCORE on it. Higher-is-better factors climb toward 100
 # with diminishing returns; lower-is-better factors fall away more gently.
@@ -140,12 +141,12 @@ class Category:
     cartridge_label: str = "CARTRIDGE"
     payload_row: str = "Bullet weight"
     payload_col: str = "Grains"
-    grain_style: bool = True     # labels read "ELD-M  ·  168 gr"; False = group + load text
-    show_oz: bool = False        # also show payload in ounces (shotgun)
-    weights: tuple = DEFAULT_WEIGHTS   # velocity, energy, recoil, cost, Taylor KO, HITS
-    loads_filename: str = ""     # manufacturer loads for the Load Dictionary / Head to Head
-    step_yd: float = 100         # downrange / ballistic tables: 0, step, 2 x step ... 5 x step
-    zero_yd: float = 100         # ballistic table: zero range
+    "H4350", "H4831SC", "H1000", "Varget", "H4895", "H335", "H322", "CFE 223", "Benchmark",
+    "Lil'Gun", "H110", "H4198", "Titegroup", "Longshot", "Universal", "Clays", "HS-6", "H380",
+    "Retumbo", "Superformance", "H414", "H4227",
+    "IMR 4064", "IMR 4350", "IMR 4895", "IMR 4831", "IMR 3031", "IMR 7828", "IMR 4198",
+    "IMR 8208 XBR", "IMR 4227", "IMR 4759",
+    "Reloder 7", "Reloder 10X", "Reloder 15", "Reloder 16", "Reloder 17", "Relode
     sight_in: float = 1.5        # ballistic table: sight height over the bore (inches)
     terminal: bool = True        # show Taylor KO / HITS (needs a bullet diameter; not for shot)
     group: str = ""              # the menu entry it sits under (Handgun: a drop-down of two)
@@ -165,10 +166,13 @@ CATEGORIES = (
              group="Handgun", menu="Pistol / Revolver", barrel_in=4),
     # handgun cartridges fired from carbines and lever guns: published, reviewer-tested or
     # estimated (source "estimate") carbine velocities
-    Category("Pistol Caliber Carbine", "Handgun rounds from carbine and lever-gun barrels",
-             "ammo_pcc.csv", 0, 300, 6.5, "CARBINE WEIGHT (LB)",
-             loads_filename="loads_pcc.csv", step_yd=50, zero_yd=50, sight_in=2.0,
-             group="Handgun", barrel_in=16,
+    Category("Pistol Caliber Carbine", "Handgun rounds from carbine and lever-gun
+    "H4350", "H4831SC", "H1000", "Varget", "H4895", "H335", "H322", "CFE 223", "Benchmark",
+    "Lil'Gun", "H110", "H4198", "Titegroup", "Longshot", "Universal", "Clays", "HS-6", "H380",
+    "Retumbo", "Superformance", "H414", "H4227",
+    "IMR 4064", "IMR 4350", "IMR 4895", "IMR 4831", "IMR 3031", "IMR 7828", "IMR 4198",
+    "IMR 8208 XBR", "IMR 4227", "IMR 4759",
+    "Reloder 7", "Reloder 10X", "Reloder 15", "Reloder 16", "Reloder 17", "Relode
              note="Loads marked (est.) have no published carbine velocity: it is worked out from "
                   "the maker's handgun figure for a 16 in barrel."),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
@@ -2774,9 +2778,9 @@ class App:
         card = self.card(parent, border=ACCENT, padx=18, pady=14)
         self.label(card.body, "Load Lore now lives at loadlore.net", 12, TEXT, True, bg=SURFACE,
                    anchor="w").pack(anchor="w")
-        self.label(card.body, "This is the last version of the desktop app. It keeps working, but new loads "
-                   "and features only go to the website (it works on phones too). To take your handloads "
-                   "along, use Back up in Handloads, then Restore on the website.", 10, MUTED, bg=SURFACE,
+        self.label(card.body, "This is the final version of the desktop app. New loads "
+                   "and features only go to the website. To take your handloads "
+                   "along to the website, use 'Back up' in Handloads, then 'Restore' on the website.", 10, MUTED, bg=SURFACE,
                    anchor="w", justify="left", wraplength=width - self.px(40)).pack(anchor="w", pady=(self.px(4), self.px(10)))
         row = tk.Frame(card.body, bg=SURFACE)
         row.pack(anchor="w")
