@@ -3156,14 +3156,26 @@ def handload_cartridges(app):
 NEW_CARTRIDGE = "New cartridge (below)"      # the handload form's cartridge box text for one
 
 
+LEAD_BULLET = re.compile(r"\bLead\b(?!-)|Plated")   # cast / swaged lead and plated bullets
+# cartridges whose guns take a wider span of bullet sizes (in over the listed diameter): .44-40
+# is .427 on paper, but Uberti / Marlin / Winchester barrels shoot .429-.430 bullets
+FIT_SPAN = {0.427: 0.0035}
+
+
 def bullet_fits(b, d, handgun, bullets):
-    """A library bullet for a cartridge of diameter d: the same diameter (within 0.0035 in: lead
-    bullets run up to .003 over, a .360 wadcutter for .357). A handgun cartridge (Handgun / PCC)
-    skips bullets marked rifle, unless no handgun bullet of that size exists (5.7x28mm takes .224
+    """A library bullet for a cartridge of diameter d: the same diameter within 0.0015 in (a .308
+    bullet is too small for a .311 bore, a .357 too big for a 9mm); lead and plated bullets may run up
+    to .0035 over (sized .358 for 9mm and .357, Speer's .360 wadcutter). A handgun cartridge (Handgun /
+    PCC) skips bullets marked rifle, unless no handgun bullet of that size exists (5.7x28mm takes .224
     rifle bullets). Web: bulletFits."""
     if not d:
         return True
-    near = lambda x: abs(x["diameter"] - d) <= 0.0035
+
+    def near(x):
+        off = x["diameter"] - d
+        over = max(0.0035 if LEAD_BULLET.search(x.get("name", "")) else 0.0015, FIT_SPAN.get(d, 0))
+        return -0.0015 - 1e-9 <= off <= over + 1e-9
+
     if not near(b):
         return False
     if handgun and b.get("use") == "rifle":

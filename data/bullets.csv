@@ -1,118 +1,407 @@
 maker,name,diameter_in,weight_gr,bc_g1,type,use
+Hornady,NTX #17016,0.172,15.5,0.115,Varmint,rifle
 Hornady,V-MAX,0.172,17,0.125,Varmint,rifle
-Hornady,V-MAX,0.172,20,0.141,Varmint,rifle
-Hornady,V-MAX,0.172,25,0.175,Varmint,rifle
-Hornady,V-MAX,0.204,32,0.234,Varmint,rifle
-Hornady,V-MAX,0.204,40,0.275,Varmint,rifle
-Hornady,V-MAX,0.224,40,0.200,Varmint,rifle
-Hornady,V-MAX,0.224,50,0.242,Varmint,rifle
-Hornady,V-MAX,0.224,55,0.255,Varmint,rifle
-Hornady,V-MAX,0.224,60,0.290,Varmint,rifle
-Hornady,BTHP Match,0.224,68,0.355,Match,rifle
-Hornady,ELD Match,0.224,73,0.398,Match,rifle
-Hornady,ELD Match,0.224,75,0.467,Match,rifle
-Hornady,ELD Match,0.224,80,0.485,Match,rifle
-Hornady,FMJ-BT,0.224,55,0.243,Target,rifle
-Hornady,SST,0.243,95,0.379,Hunting,rifle
-Hornady,SST,0.243,100,0.405,Hunting,rifle
-Hornady,ELD-X,0.243,103,0.512,Hunting,rifle
-Hornady,ELD Match,0.243,108,0.536,Match,rifle
-Hornady,V-MAX,0.243,58,0.185,Varmint,rifle
-Hornady,V-MAX,0.243,75,0.330,Varmint,rifle
-Hornady,V-MAX,0.243,87,0.360,Varmint,rifle
-Hornady,ELD Match,0.264,120,0.486,Match,rifle
-Hornady,ELD Match,0.264,130,0.554,Match,rifle
-Hornady,ELD Match,0.264,140,0.646,Match,rifle
-Hornady,ELD-X,0.264,143,0.623,Hunting,rifle
-Hornady,ELD Match,0.264,147,0.697,Match,rifle
-Hornady,SST,0.264,129,0.485,Hunting,rifle
-Hornady,InterLock,0.264,140,0.490,Hunting,rifle
-Hornady,InterLock,0.277,130,0.409,Hunting,rifle
-Hornady,SST,0.277,130,0.447,Hunting,rifle
-Hornady,ELD-X,0.277,145,0.536,Hunting,rifle
-Hornady,SST,0.284,139,0.486,Hunting,rifle
-Hornady,SST,0.284,150,0.526,Hunting,rifle
-Hornady,ELD-X,0.284,162,0.631,Hunting,rifle
-Hornady,ELD-X,0.284,175,0.689,Hunting,rifle
-Hornady,ELD Match,0.284,180,0.777,Match,rifle
-Hornady,InterLock,0.284,154,0.433,Hunting,rifle
-Hornady,InterLock,0.308,150,0.372,Hunting,rifle
-Hornady,InterLock,0.308,165,0.447,Hunting,rifle
-Hornady,InterLock,0.308,180,0.481,Hunting,rifle
-Hornady,SST,0.308,150,0.415,Hunting,rifle
-Hornady,SST,0.308,165,0.447,Hunting,rifle
-Hornady,SST,0.308,180,0.478,Hunting,rifle
-Hornady,ELD-X,0.308,178,0.552,Hunting,rifle
-Hornady,ELD-X,0.308,200,0.597,Hunting,rifle
-Hornady,ELD Match,0.308,168,0.523,Match,rifle
-Hornady,ELD Match,0.308,178,0.547,Match,rifle
-Hornady,BTHP Match,0.308,168,0.447,Match,rifle
-Hornady,A-MAX,0.308,155,0.439,Match,rifle
-Hornady,FMJ-BT,0.308,150,0.409,Target,rifle
-Swift,Scirocco II,0.308,180,0.528,Hunting,rifle
-Hornady,SST,0.338,225,0.454,Hunting,rifle
-Hornady,ELD-X,0.338,230,0.616,Hunting,rifle
-Hornady,ELD Match,0.338,285,0.829,Match,rifle
-Hornady,InterLock RN,0.358,200,0.254,Hunting,rifle
-Hornady,InterLock,0.358,225,0.355,Hunting,rifle
-Hornady,FTX,0.358,200,0.250,Hunting,rifle
-Hornady,FTX,0.375,235,0.231,Hunting,rifle
-Hornady,DGX,0.375,270,0.320,Hunting,rifle
-Hornady,DGS,0.375,300,0.275,Hunting,rifle
-Hornady,InterLock,0.375,270,0.343,Hunting,rifle
-Hornady,FTX,0.429,225,0.145,Hunting,both
-Hornady,XTP,0.429,240,0.152,Hunting,handgun
-Hornady,XTP,0.429,300,0.206,Hunting,handgun
-Hornady,FTX,0.451,250,0.140,Hunting,both
-Hornady,MonoFlex,0.458,250,0.178,Hunting,rifle
-Hornady,FTX,0.458,325,0.234,Hunting,rifle
-Hornady,InterLock RN,0.458,350,0.169,Hunting,rifle
-Hornady,InterLock FP,0.458,500,0.239,Hunting,rifle
-Hornady,DGX,0.458,500,0.296,Hunting,rifle
-Hornady,DGS,0.458,500,0.293,Hunting,rifle
-Hornady,XTP,0.355,115,0.115,Defense,handgun
-Hornady,XTP,0.355,124,0.133,Defense,handgun
-Hornady,XTP,0.355,147,0.150,Defense,handgun
-Hornady,FMJ,0.355,115,0.115,Target,handgun
-Hornady,FMJ-RN,0.355,124,0.120,Target,handgun
-Hornady,XTP,0.357,125,0.150,Defense,handgun
-Hornady,XTP,0.357,158,0.200,Hunting,handgun
-Hornady,XTP,0.357,180,0.230,Hunting,handgun
-Hornady,XTP,0.400,155,0.130,Defense,handgun
-Hornady,XTP,0.400,180,0.153,Defense,handgun
-Hornady,XTP,0.451,185,0.115,Defense,handgun
-Hornady,XTP,0.451,230,0.183,Defense,handgun
-Hornady,XTP,0.429,240,0.170,Hunting,handgun
-Hornady,XTP,0.429,300,0.202,Hunting,handgun
-Hornady,Hollow Point,0.224,40,0.138,Target,rifle
-Hornady,Hollow Point,0.224,35,0.125,Varmint,rifle
-Hornady,InterLock,0.257,100,0.356,Hunting,rifle
-Hornady,InterLock BTSP,0.257,117,0.399,Hunting,rifle
-Hornady,SST,0.257,117,0.397,Hunting,rifle
-Hornady,ELD-X,0.257,110,0.473,Hunting,rifle
-Hornady,ELD-X,0.257,128,0.644,Hunting,rifle
-Hornady,ELD Match,0.257,134,0.658,Match,rifle
-Hornady,CX,0.257,90,0.278,Hunting,rifle
-Hornady,FTX,0.257,110,0.346,Hunting,rifle
-Hornady,InterLock,0.312,150,0.367,Hunting,rifle
-Hornady,XTP,0.312,60,0.092,Defense,handgun
-Hornady,InterLock RN,0.323,170,0.217,Hunting,rifle
-Hornady,FTX,0.348,200,0.326,Hunting,rifle
-Hornady,XTP,0.365,95,0.127,Defense,handgun
-Hornady,InterLock SP-RP,0.366,286,0.407,Hunting,rifle
-Swift,A-Frame,0.366,286,0.385,Hunting,rifle
-Hornady,FTX,0.410,190,0.168,Hunting,both
-Hornady,XTP,0.410,210,0.186,Hunting,handgun
-Hornady,DGS,0.416,400,0.324,Hunting,rifle
-Hornady,DGX Bonded,0.416,400,0.324,Hunting,rifle
-Swift,A-Frame,0.416,400,0.367,Hunting,rifle
-Hornady,XTP Mag,0.475,325,0.152,Hunting,handgun
-Hornady,XTP,0.500,300,0.122,Hunting,handgun
-Hornady,FTX,0.500,300,0.122,Hunting,both
-Hornady,FP-XTP,0.500,500,0.204,Hunting,handgun
-Swift,A-Frame,0.500,325,0.143,Hunting,both
-Hornady,A-MAX,0.510,750,1.068,Match,rifle
+Hornady,V-MAX #21710,0.172,20,0.185,Varmint,rifle
+Hornady,V-MAX #17105,0.172,25,0.230,Varmint,rifle
+Hornady,NTX #22000,0.204,24,0.170,Varmint,rifle
+Hornady,V-MAX #22004,0.204,32,0.210,Varmint,rifle
+Hornady,V-MAX #22006,0.204,40,0.275,Varmint,rifle
+Hornady,V-MAX #2207,0.2215,60,0.285,Varmint,rifle
+Hornady,A-Tip Match #22799,0.224,76,0.413,Match,rifle
+Hornady,A-Tip Match #2286,0.224,90,0.585,Match,rifle
+Hornady,AeroMatch #22771,0.224,69,0.315,Match,rifle
+Hornady,AeroMatch #22777,0.224,77,0.355,Match,rifle
+Hornady,CX #22402,0.224,50,0.164,Hunting,rifle
+Hornady,CX #22765,0.224,65,0.365,Hunting,rifle
+Hornady,CX #22813,0.224,70,0.392,Hunting,rifle
+Hornady,ELD Match #22491,0.224,52,0.247,Match,rifle
+Hornady,ELD Match #22774,0.224,73,0.398,Match,rifle
+Hornady,ELD Match #22791,0.224,75,0.467,Match,rifle
+Hornady,ELD Match #22831,0.224,80,0.485,Match,rifle
+Hornady,ELD Match #22834,0.224,88,0.545,Match,rifle
+Hornady,ELD-VT #22762,0.224,62,0.395,Varmint,rifle
+Hornady,ELD-VT #22772,0.224,69,0.424,Varmint,rifle
+Hornady,ELD-X #22833,0.224,80,0.485,Hunting,rifle
+Hornady,FMJ #22760B,0.224,62,0.274,Target,rifle
+Hornady,FMJ-BT W/C #2267,0.224,55,0.243,Target,rifle
+Hornady,Match BTHP #2249,0.224,52,0.229,Match,rifle
+Hornady,Match BTHP #2263B,0.224,55,0.254,Match,rifle
+Hornady,Match BTHP #2278,0.224,68,0.355,Match,rifle
+Hornady,Match BTHP #2279,0.224,75,0.395,Match,rifle
+Hornady,Match BTHP W/C #2249C,0.224,52,0.229,Match,rifle
+Hornady,Match BTHP W/C #2278C,0.224,68,0.355,Match,rifle
+Hornady,Match BTHP W/C #2279C,0.224,75,0.395,Match,rifle
+Hornady,Match HP #2250,0.224,53,0.218,Match,rifle
+Hornady,NTX #22240,0.224,35,0.177,Varmint,rifle
+Hornady,Traditional Varmint #2230,0.224,45,0.202,Varmint,rifle
+Hornady,Traditional Varmint #2229,0.224,45,0.108,Varmint,rifle
+Hornady,Traditional Varmint #2240,0.224,50,0.214,Varmint,rifle
+Hornady,Traditional Varmint #2245,0.224,50,0.214,Varmint,rifle
+Hornady,Traditional Varmint #2260,0.224,55,0.235,Varmint,rifle
+Hornady,Traditional Varmint #2265,0.224,55,0.235,Varmint,rifle
+Hornady,Traditional Varmint #2266,0.224,55,0.235,Varmint,rifle
+Hornady,Traditional Varmint #2270,0.224,60,0.264,Varmint,rifle
+Hornady,V-MAX #22252,0.224,35,0.109,Varmint,rifle
+Hornady,V-MAX #22241,0.224,40,0.200,Varmint,rifle
+Hornady,V-MAX #22261,0.224,50,0.242,Varmint,rifle
+Hornady,V-MAX #22265,0.224,53,0.290,Varmint,rifle
+Hornady,V-MAX #22271,0.224,55,0.255,Varmint,rifle
+Hornady,V-MAX #22272,0.224,55,0.255,Varmint,rifle
+Hornady,V-MAX #22281,0.224,60,0.265,Varmint,rifle
+Hornady,A-Tip Match #24531,0.243,110,0.604,Match,rifle
+Hornady,AeroMatch #24573,0.243,105,0.536,Match,rifle
+Hornady,CX #243704,0.243,80,0.273,Hunting,rifle
+Hornady,CX #24444,0.243,90,0.418,Hunting,rifle
+Hornady,ELD Match #24561,0.243,108,0.536,Match,rifle
+Hornady,ELD Match #245301,0.243,109,0.585,Match,rifle
+Hornady,ELD-VT #24372,0.243,80,0.405,Varmint,rifle
+Hornady,ELD-X #2441,0.243,90,0.409,Hunting,rifle
+Hornady,ELD-X #24550,0.243,103,0.512,Hunting,rifle
+Hornady,InterLock BTSP #2453,0.243,100,0.405,Hunting,rifle
+Hornady,Match BTHP #2458,0.243,105,0.530,Match,rifle
+Hornady,SST #24532,0.243,95,0.355,Hunting,rifle
+Hornady,Traditional Varmint #2442,0.243,87,0.376,Varmint,rifle
+Hornady,V-MAX #22411,0.243,58,0.250,Varmint,rifle
+Hornady,V-MAX #22415,0.243,65,0.280,Varmint,rifle
+Hornady,V-MAX #22420,0.243,75,0.330,Varmint,rifle
+Hornady,V-MAX #22440,0.243,87,0.400,Varmint,rifle
 Hornady,XTP,0.251,35,0.074,Defense,handgun
+Hornady,A-Tip Match #2562,0.257,138,0.695,Match,rifle
+Hornady,CX #254104,0.257,90,0.273,Hunting,rifle
+Hornady,CX #2543,0.257,112,0.373,Hunting,rifle
+Hornady,ELD Match #2561,0.257,134,0.645,Match,rifle
+Hornady,ELD-VT #25412,0.257,95,0.453,Varmint,rifle
+Hornady,ELD-X #25418,0.257,110,0.465,Hunting,rifle
+Hornady,ELD-X #25417,0.257,128,0.633,Hunting,rifle
+Hornady,FP #2510,0.257,60,0.101,Hunting,rifle
+Hornady,FTX #2542,0.257,110,0.340,Hunting,rifle
+Hornady,InterLock,0.257,100,0.356,Hunting,rifle
+Hornady,InterLock BTSP #2552,0.257,117,0.391,Hunting,rifle
+Hornady,InterLock RN #2550,0.257,117,0.243,Hunting,rifle
+Hornady,SST #25522,0.257,117,0.390,Hunting,rifle
+Hornady,V-MAX #22520,0.257,75,0.290,Varmint,rifle
+Hornady,A-Tip Match #26179,0.264,135,0.637,Match,rifle
+Hornady,A-Tip Match #2638,0.264,153,0.704,Match,rifle
+Hornady,AeroMatch #26303,0.264,140,0.608,Match,rifle
+Hornady,CX #26111,0.264,90,0.356,Hunting,rifle
+Hornady,CX #261104,0.264,120,0.428,Hunting,rifle
+Hornady,CX #26178,0.264,130,0.489,Hunting,rifle
+Hornady,ELD Match #26100,0.264,100,0.385,Match,rifle
+Hornady,ELD Match #26175,0.264,120,0.486,Match,rifle
+Hornady,ELD Match #26176,0.264,123,0.506,Match,rifle
+Hornady,ELD Match #26177,0.264,130,0.554,Match,rifle
+Hornady,ELD Match #26331,0.264,140,0.646,Match,rifle
+Hornady,ELD Match #26333,0.264,147,0.697,Match,rifle
+Hornady,ELD-VT #26103,0.264,100,0.448,Varmint,rifle
+Hornady,ELD-X #2635,0.264,143,0.623,Hunting,rifle
+Hornady,InterLock RN #2640,0.264,160,0.283,Hunting,rifle
+Hornady,InterLock SP #2620,0.264,129,0.445,Hunting,rifle
+Hornady,InterLock SP #2630,0.264,140,0.465,Hunting,rifle
+Hornady,Match BTHP #26174,0.264,123,0.450,Match,rifle
+Hornady,Match BTHP #26335,0.264,140,0.580,Match,rifle
+Hornady,SST #26173,0.264,123,0.510,Hunting,rifle
+Hornady,SST #26202,0.264,129,0.485,Hunting,rifle
+Hornady,SST #26302,0.264,140,0.520,Hunting,rifle
+Hornady,V-MAX #22601,0.264,95,0.365,Varmint,rifle
+Hornady,CX #271904,0.277,100,0.262,Hunting,rifle
+Hornady,CX #273704,0.277,130,0.403,Hunting,rifle
+Hornady,ELD-X #27356,0.277,145,0.536,Hunting,rifle
+Hornady,InterLock BTSP #2735,0.277,140,0.486,Hunting,rifle
+Hornady,InterLock SP #2730,0.277,130,0.409,Hunting,rifle
+Hornady,InterLock SP #2740,0.277,150,0.462,Hunting,rifle
+Hornady,Match BTHP #27200,0.277,110,0.360,Match,rifle
+Hornady,SST #2716,0.277,120,0.400,Hunting,rifle
+Hornady,SST #27302,0.277,130,0.460,Hunting,rifle
+Hornady,SST #27352,0.277,140,0.495,Hunting,rifle
+Hornady,SST #27402,0.277,150,0.525,Hunting,rifle
+Hornady,V-MAX W/C #22721,0.277,110,0.370,Varmint,rifle
+Hornady,A-Tip Match #2836,0.284,166,0.664,Match,rifle
+Hornady,A-Tip Match #28506,0.284,190,0.838,Match,rifle
+Hornady,CX #282704,0.284,139,0.429,Hunting,rifle
+Hornady,CX #28284,0.284,150,0.455,Hunting,rifle
+Hornady,CX #2837,0.284,160,0.596,Hunting,rifle
+Hornady,ELD Match #28403,0.284,162,0.670,Match,rifle
+Hornady,ELD Match #28503,0.284,180,0.796,Match,rifle
+Hornady,ELD-X #2826,0.284,150,0.574,Hunting,rifle
+Hornady,ELD-X #2840,0.284,162,0.631,Hunting,rifle
+Hornady,ELD-X #2841,0.284,175,0.689,Hunting,rifle
+Hornady,InterLock BTSP #2825,0.284,139,0.453,Hunting,rifle
+Hornady,InterLock BTSP #2845,0.284,162,0.514,Hunting,rifle
+Hornady,InterLock SP #2820,0.284,139,0.392,Hunting,rifle
+Hornady,InterLock SP #2830,0.284,154,0.433,Hunting,rifle
+Hornady,InterLock SP #2850,0.284,175,0.462,Hunting,rifle
+Hornady,SST #28202,0.284,139,0.486,Hunting,rifle
+Hornady,SST #28302,0.284,154,0.525,Hunting,rifle
+Hornady,SST #28452,0.284,162,0.550,Hunting,rifle
+Hornady,V-MAX #22810,0.284,120,0.365,Varmint,rifle
+Hornady,A-Tip Match #30717,0.308,176,0.564,Match,rifle
+Hornady,A-Tip Match #3091,0.308,230,0.823,Match,rifle
+Hornady,A-Tip Match #3092,0.308,250,0.878,Match,rifle
+Hornady,AeroMatch #30507,0.308,168,0.440,Match,rifle
+Hornady,AeroMatch #30719,0.308,175,0.485,Match,rifle
+Hornady,CX #301914,0.308,110,0.312,Hunting,rifle
+Hornady,CX #303704,0.308,150,0.418,Hunting,rifle
+Hornady,CX #304704,0.308,165,0.440,Hunting,rifle
+Hornady,CX #301934,0.308,180,0.469,Hunting,rifle
+Hornady,CX #30738,0.308,190,0.575,Hunting,rifle
+Hornady,ELD Match #30313,0.308,155,0.461,Match,rifle
+Hornady,ELD Match #30506,0.308,168,0.523,Match,rifle
+Hornady,ELD Match #30713,0.308,178,0.547,Match,rifle
+Hornady,ELD Match #30951,0.308,195,0.584,Match,rifle
+Hornady,ELD Match #30731,0.308,208,0.690,Match,rifle
+Hornady,ELD Match #30904,0.308,225,0.777,Match,rifle
+Hornady,ELD-VT #30620,0.308,174,0.573,Varmint,rifle
+Hornady,ELD-X #3074,0.308,178,0.552,Hunting,rifle
+Hornady,ELD-X #3076,0.308,200,0.597,Hunting,rifle
+Hornady,ELD-X #3077,0.308,212,0.663,Hunting,rifle
+Hornady,ELD-X #3078,0.308,220,0.654,Hunting,rifle
+Hornady,FMJ #30196,0.308,125,0.250,Target,rifle
+Hornady,FMJ #30192,0.308,125,0.320,Target,rifle
+Hornady,FMJ-BT #3037,0.308,150,0.398,Target,rifle
+Hornady,FTX #3027,0.308,135,0.274,Hunting,rifle
+Hornady,FTX #30395,0.308,160,0.330,Hunting,rifle
+Hornady,FTX #30396,0.308,160,0.395,Hunting,rifle
+Hornady,InterLock BTSP #3033,0.308,150,0.349,Hunting,rifle
+Hornady,InterLock BTSP #3045,0.308,165,0.435,Hunting,rifle
+Hornady,InterLock BTSP #3072,0.308,180,0.452,Hunting,rifle
+Hornady,InterLock FP #3060,0.308,170,0.189,Hunting,rifle
+Hornady,InterLock RN #3035,0.308,150,0.186,Hunting,rifle
+Hornady,InterLock RN #3075,0.308,180,0.241,Hunting,rifle
+Hornady,InterLock RN #3090,0.308,220,0.300,Hunting,rifle
+Hornady,InterLock SP #3031,0.308,150,0.338,Hunting,rifle
+Hornady,InterLock SP #3040,0.308,165,0.387,Hunting,rifle
+Hornady,InterLock SP #3070,0.308,180,0.425,Hunting,rifle
+Hornady,Match BTHP #3039,0.308,155,0.405,Match,rifle
+Hornady,Match BTHP #30501,0.308,168,0.450,Match,rifle
+Hornady,Match BTHP #30715,0.308,178,0.530,Match,rifle
+Hornady,Match BTHP #30733,0.308,208,0.620,Match,rifle
+Hornady,Match BTHP W/C #3039C,0.308,155,0.405,Match,rifle
+Hornady,MonoFlex #30310,0.308,140,0.295,Hunting,rifle
+Hornady,SST #3019,0.308,125,0.305,Hunting,rifle
+Hornady,SST #30302,0.308,150,0.415,Hunting,rifle
+Hornady,SST #30452,0.308,165,0.447,Hunting,rifle
+Hornady,SST #30702,0.308,180,0.480,Hunting,rifle
+Hornady,SST 300 Savage #30303,0.308,150,0.370,Hunting,rifle
+Hornady,Sub-X #30718,0.308,175,0.300,Hunting,rifle
+Hornady,Sub-X #30730,0.308,190,0.437,Hunting,rifle
+Hornady,Traditional Varmint #3010,0.308,110,0.256,Varmint,rifle
+Hornady,V-MAX #23010,0.308,110,0.290,Varmint,rifle
+Hornady,XTP #31000,0.309,90,0.115,Defense,handgun
+Hornady,FMJ #3147B,0.31,123,0.266,Target,rifle
+Hornady,InterLock SP #3140,0.31,123,0.252,Hunting,rifle
+Hornady,SST #3142,0.31,123,0.295,Hunting,rifle
+Hornady,FMJ #3131,0.3105,174,0.470,Target,rifle
+Hornady,Sub-X #3148,0.3115,255,0.365,Hunting,rifle
+Hornady,InterLock RN #3130,0.312,174,0.262,Hunting,rifle
+Hornady,InterLock SP #3120,0.312,150,0.361,Hunting,rifle
+Hornady,XTP,0.312,60,0.092,Defense,handgun
+Hornady,XTP #32050,0.312,85,0.145,Defense,handgun
+Hornady,XTP #32070,0.312,100,0.170,Defense,handgun
+Hornady,FTX #32005,0.321,165,0.310,Hunting,rifle
+Hornady,InterLock FP #3210,0.321,170,0.249,Hunting,rifle
+Hornady,InterLock RN #3235,0.323,170,0.217,Hunting,rifle
+Hornady,InterLock SP #3232,0.323,150,0.290,Hunting,rifle
+Hornady,InterLock SP #3236,0.323,195,0.410,Hunting,rifle
+Hornady,SST #3233,0.323,170,0.445,Hunting,rifle
+Hornady,A-Tip Match #33389,0.338,300,0.863,Match,rifle
+Hornady,CX #332704,0.338,185,0.407,Hunting,rifle
+Hornady,CX #332014,0.338,225,0.490,Hunting,rifle
+Hornady,CX #33283,0.338,240,0.611,Hunting,rifle
+Hornady,ELD Match #33381,0.338,285,0.829,Match,rifle
+Hornady,ELD-X #33210,0.338,230,0.616,Hunting,rifle
+Hornady,ELD-X #33371,0.338,270,0.757,Hunting,rifle
+Hornady,FTX #33104,0.338,200,0.430,Hunting,rifle
+Hornady,InterLock RN #3330,0.338,250,0.291,Hunting,rifle
+Hornady,InterLock SP-RP #3320,0.338,225,0.397,Hunting,rifle
+Hornady,InterLock SP-RP #3335,0.338,250,0.431,Hunting,rifle
+Hornady,SST #33102,0.338,200,0.455,Hunting,rifle
+Hornady,SST #33202,0.338,225,0.515,Hunting,rifle
+Hornady,Sub-X #33394,0.338,307,0.375,Hunting,rifle
+Hornady,FTX,0.348,200,0.326,Hunting,rifle
+Hornady,DGH #35548,0.355,138,0.190,Hunting,handgun
+Hornady,FMJ-RN #35527B,0.355,100,0.115,Target,handgun
+Hornady,FMJ-RN #35557,0.355,115,0.140,Target,handgun
+Hornady,FMJ-RN #35577B,0.355,124,0.145,Target,handgun
+Hornady,FMJ-RN-BT #35597B,0.355,147,0.212,Target,handgun
+Hornady,FTX #3502,0.355,165,0.250,Hunting,both
+Hornady,HAP #35528B,0.355,115,0.129,Target,handgun
+Hornady,InterLock #3501,0.355,170,0.215,Hunting,both
+Hornady,XTP #35500,0.355,90,0.099,Defense,handgun
+Hornady,XTP #35540,0.355,115,0.129,Defense,handgun
+Hornady,XTP #35571,0.355,124,0.165,Defense,handgun
+Hornady,XTP #35580,0.355,147,0.212,Defense,handgun
+Hornady,HAP #35572B,0.356,125,0.158,Target,handgun
+Hornady,DGH #3576,0.357,165,0.210,Hunting,handgun
+Hornady,FP-XTP #35730,0.357,125,0.148,Hunting,handgun
+Hornady,FP-XTP #35780,0.357,158,0.199,Hunting,handgun
+Hornady,FTX #35745,0.357,140,0.160,Defense,both
+Hornady,Sub-X #3503,0.357,250,0.265,Hunting,rifle
+Hornady,XTP #35700,0.357,110,0.131,Defense,handgun
+Hornady,XTP #35710,0.357,125,0.151,Defense,handgun
+Hornady,XTP #35740,0.357,140,0.169,Defense,handgun
+Hornady,XTP #35750,0.357,158,0.206,Defense,handgun
+Hornady,XTP #35771,0.357,180,0.230,Defense,handgun
+Hornady,FTX #35105,0.358,200,0.300,Hunting,rifle
+Hornady,Frontier Lead HBWC #10208,0.358,148,0.047,Target,handgun
+Hornady,Frontier Lead LRN #10508,0.358,158,0.159,Target,handgun
+Hornady,Frontier Lead SWC #10408,0.358,158,0.135,Target,handgun
+Hornady,Frontier Lead SWC-HP #10428,0.358,158,0.139,Target,handgun
+Hornady,InterLock,0.358,225,0.355,Hunting,rifle
+Hornady,InterLock RN #3515,0.358,200,0.195,Hunting,rifle
+Hornady,InterLock SP #3510,0.358,200,0.282,Hunting,rifle
+Hornady,InterLock SP-RP #3520,0.358,250,0.375,Hunting,rifle
+Hornady,XTP,0.365,95,0.127,Defense,handgun
+Hornady,DGS #3565,0.366,300,0.280,Hunting,rifle
+Hornady,InterLock SP-RP #3560,0.366,286,0.400,Hunting,rifle
+Hornady,A-Tip Match #3729,0.375,390,0.987,Match,rifle
+Hornady,CX #37084,0.375,250,0.403,Hunting,rifle
+Hornady,DGS #3727,0.375,300,0.275,Hunting,rifle
+Hornady,DGX Bonded #37214,0.375,300,0.275,Hunting,rifle
+Hornady,FTX,0.375,235,0.231,Hunting,rifle
+Hornady,InterLock SP-RP #3711,0.375,270,0.380,Hunting,rifle
+Hornady,DGH #40071,0.4,200,0.199,Hunting,handgun
+Hornady,FMJ-FP #40047,0.4,180,0.164,Target,handgun
+Hornady,HAP #40042B,0.4,180,0.164,Target,handgun
+Hornady,HAP #40061B,0.4,200,0.199,Target,handgun
+Hornady,XTP #40000,0.4,155,0.137,Hunting,handgun
+Hornady,XTP #40040,0.4,180,0.164,Hunting,handgun
+Hornady,XTP #40060,0.4,200,0.199,Hunting,handgun
+Hornady,DGS #4103,0.41,400,0.325,Hunting,rifle
+Hornady,DGX Bonded #41044,0.41,400,0.325,Hunting,rifle
+Hornady,FTX,0.410,190,0.168,Hunting,both
+Hornady,XTP #41000,0.41,210,0.182,Hunting,handgun
+Hornady,InterLock #41051,0.411,300,0.250,Hunting,rifle
+Hornady,A-Tip Match #41697,0.416,500,0.976,Match,rifle
+Hornady,DGS #4167,0.416,400,0.319,Hunting,rifle
+Hornady,DGX Bonded #41694,0.416,400,0.319,Hunting,rifle
+Hornady,DGS #4241,0.423,400,0.315,Hunting,rifle
+Hornady,DGX Bonded #42404,0.423,400,0.315,Hunting,rifle
+Hornady,DGH #44202,0.43,240,0.205,Hunting,handgun
+Hornady,FTX #44105,0.43,225,0.150,Defense,both
+Hornady,FTX #4305,0.43,265,0.225,Hunting,rifle
+Hornady,XTP #44050,0.43,180,0.138,Hunting,handgun
+Hornady,XTP #44100,0.43,200,0.170,Hunting,handgun
+Hornady,XTP #44200,0.43,240,0.205,Hunting,handgun
+Hornady,XTP #44280,0.43,300,0.245,Hunting,handgun
+Hornady,FMJ-RN #45177,0.451,230,0.184,Target,handgun
+Hornady,HAP #45105B,0.451,185,0.139,Target,handgun
+Hornady,HAP #45159B,0.451,200,0.151,Target,handgun
+Hornady,HAP #45161B,0.451,230,0.188,Target,handgun
+Hornady,XTP #45100,0.451,185,0.139,Hunting,handgun
+Hornady,XTP #45140,0.451,200,0.151,Hunting,handgun
+Hornady,XTP #45160,0.451,230,0.188,Hunting,handgun
+Hornady,DGH #45208,0.452,300,0.200,Hunting,handgun
+Hornady,FTX #45215,0.452,200,0.145,Defense,both
+Hornady,FTX #45218,0.452,225,0.140,Defense,both
+Hornady,FTX #45201,0.452,250,0.210,Hunting,rifle
+Hornady,InterLock #45204,0.452,245,0.165,Hunting,both
+Hornady,Sub-X #45031,0.452,395,0.300,Hunting,rifle
+Hornady,XTP #45200,0.452,250,0.146,Hunting,handgun
+Hornady,XTP #45230,0.452,300,0.180,Hunting,handgun
+Hornady,XTP Mag #45220,0.452,240,0.160,Hunting,handgun
+Hornady,XTP Mag #45235,0.452,300,0.200,Hunting,handgun
+Hornady,Frontier Lead FP Cowboy #12458,0.454,255,0.117,Target,handgun
+Hornady,DGS #45033,0.458,480,0.285,Hunting,rifle
+Hornady,DGS #4507,0.458,500,0.295,Hunting,rifle
+Hornady,DGX Bonded #45034,0.458,480,0.285,Hunting,rifle
+Hornady,DGX Bonded #45054,0.458,500,0.295,Hunting,rifle
+Hornady,FTX #45015,0.458,325,0.230,Hunting,rifle
+Hornady,InterLock FP #4503,0.458,350,0.195,Hunting,rifle
+Hornady,InterLock HP #4500,0.458,300,0.197,Hunting,rifle
+Hornady,InterLock RN #4502,0.458,350,0.189,Hunting,rifle
+Hornady,MonoFlex #45010,0.458,250,0.182,Hunting,rifle
+Hornady,Sub-X #45052,0.458,410,0.285,Hunting,rifle
+Hornady,DGS #4748,0.474,500,0.290,Hunting,rifle
+Hornady,DGX Bonded #47474,0.474,500,0.290,Hunting,rifle
+Hornady,XTP Mag,0.475,325,0.152,Hunting,handgun
+Hornady,DGH #50109,0.5,500,0.200,Hunting,handgun
+Hornady,FTX #50102,0.5,300,0.200,Defense,both
+Hornady,XTP Mag #50101,0.5,300,0.120,Hunting,handgun
+Hornady,XTP Mag #50100,0.5,350,0.145,Hunting,handgun
+Hornady,DGS #5051,0.505,525,0.270,Hunting,rifle
+Hornady,DGX Bonded #5050,0.505,525,0.270,Hunting,rifle
+Hornady,A-Tip Match #5165,0.51,750,1.050,Match,rifle
+Hornady,DGS #5155,0.51,570,0.295,Hunting,rifle
+Hornady,DGX Bonded #51504,0.51,570,0.295,Hunting,rifle
+Swift,Scirocco,0.224,62,0.307,Hunting,rifle
+Swift,Scirocco,0.224,75,0.419,Hunting,rifle
+Swift,Scirocco,0.243,90,0.419,Hunting,rifle
+Swift,A-Frame,0.257,100,0.318,Hunting,rifle
+Swift,A-Frame,0.257,120,0.382,Hunting,rifle
+Swift,Scirocco,0.257,100,0.429,Hunting,rifle
+Swift,A-Frame,0.264,120,0.344,Hunting,rifle
+Swift,A-Frame,0.264,140,0.401,Hunting,rifle
+Swift,Scirocco,0.264,130,0.571,Hunting,rifle
+Swift,A-Frame,0.277,130,0.323,Hunting,rifle
+Swift,A-Frame,0.277,140,0.414,Hunting,rifle
+Swift,A-Frame,0.277,150,0.444,Hunting,rifle
+Swift,Scirocco,0.277,130,0.450,Hunting,rifle
+Swift,A-Frame,0.284,140,0.335,Hunting,rifle
+Swift,A-Frame,0.284,160,0.450,Hunting,rifle
+Swift,A-Frame,0.284,175,0.493,Hunting,rifle
+Swift,Scirocco,0.284,150,0.515,Hunting,rifle
+Swift,Zephyr,0.284,175,0.681,Hunting,rifle
+Swift,A-Frame,0.308,165,0.367,Hunting,rifle
+Swift,A-Frame,0.308,180,0.400,Hunting,rifle
+Swift,A-Frame,0.308,200,0.444,Hunting,rifle
+Swift,A-Frame Lever,0.308,150,0.220,Hunting,rifle
+Swift,A-Frame Lever,0.308,170,0.266,Hunting,rifle
+Swift,Scirocco,0.308,150,0.430,Hunting,rifle
+Swift,Scirocco,0.308,165,0.470,Hunting,rifle
+Swift,Scirocco,0.308,180,0.520,Hunting,rifle
+Swift,A-Frame Revolver,0.312,100,0.165,Hunting,handgun
+Swift,A-Frame,0.323,200,0.357,Hunting,rifle
+Swift,A-Frame,0.323,220,0.393,Hunting,rifle
+Swift,A-Frame,0.338,225,0.384,Hunting,rifle
+Swift,A-Frame,0.338,250,0.427,Hunting,rifle
+Swift,A-Frame,0.338,275,0.469,Hunting,rifle
+Swift,Scirocco,0.338,210,0.507,Hunting,rifle
+Swift,A-Frame Lever,0.348,200,0.245,Hunting,rifle
+Swift,A-Frame Revolver,0.357,158,0.183,Hunting,handgun
+Swift,A-Frame Revolver,0.357,180,0.189,Hunting,handgun
+Swift,A-Frame,0.358,225,0.312,Hunting,rifle
+Swift,A-Frame,0.358,250,0.347,Hunting,rifle
+Swift,A-Frame,0.358,280,0.388,Hunting,rifle
+Swift,A-Frame,0.366,250,0.285,Hunting,rifle
+Swift,A-Frame,0.366,286,0.385,Hunting,rifle
+Swift,A-Frame,0.366,300,0.342,Hunting,rifle
+Swift,Break-Away Solid,0.366,286,0.385,Hunting,rifle
+Swift,A-Frame,0.375,250,0.271,Hunting,rifle
+Swift,A-Frame,0.375,270,0.349,Hunting,rifle
+Swift,A-Frame,0.375,300,0.325,Hunting,rifle
+Swift,Break-Away Solid,0.375,300,0.325,Hunting,rifle
+Swift,A-Frame Pistol,0.4,180,0.155,Hunting,handgun
+Swift,A-Frame Pistol,0.4,200,0.190,Hunting,handgun
+Swift,A-Frame,0.41,350,0.321,Hunting,rifle
+Swift,A-Frame,0.41,400,0.367,Hunting,rifle
+Swift,A-Frame Revolver,0.41,210,0.159,Hunting,handgun
+Swift,Break-Away Solid,0.41,400,0.367,Hunting,rifle
+Swift,A-Frame,0.416,350,0.321,Hunting,rifle
+Swift,A-Frame,0.416,400,0.367,Hunting,rifle
+Swift,Break-Away Solid,0.416,400,0.367,Hunting,rifle
+Swift,A-Frame,0.423,400,0.375,Hunting,rifle
+Swift,Break-Away Solid,0.423,400,0.375,Hunting,rifle
+Swift,A-Frame Revolver,0.429,240,0.119,Hunting,handgun
+Swift,A-Frame Revolver,0.429,280,0.139,Hunting,handgun
+Swift,A-Frame Revolver,0.429,300,0.147,Hunting,handgun
+Swift,A-Frame Revolver,0.452,265,0.129,Hunting,handgun
+Swift,A-Frame Revolver,0.452,300,0.153,Hunting,handgun
+Swift,A-Frame Revolver,0.452,325,0.171,Hunting,handgun
+Swift,A-Frame,0.457,400,0.258,Hunting,rifle
+Swift,A-Frame,0.457,450,0.325,Hunting,rifle
+Swift,A-Frame,0.457,500,0.361,Hunting,rifle
+Swift,A-Frame Lever,0.457,350,0.172,Hunting,rifle
+Swift,Break-Away Solid,0.457,500,0.361,Hunting,rifle
+Swift,A-Frame,0.474,500,0.364,Hunting,rifle
+Swift,Break-Away Solid,0.474,500,0.364,Hunting,rifle
+Swift,A-Frame Revolver,0.499,325,0.135,Hunting,both
+Swift,A-Frame,0.505,535,0.285,Hunting,rifle
+Swift,A-Frame,0.505,570,0.306,Hunting,rifle
+Swift,Break-Away Solid,0.505,570,0.306,Hunting,rifle
+Swift,A-Frame,0.509,535,0.285,Hunting,rifle
+Swift,A-Frame,0.509,570,0.306,Hunting,rifle
+Swift,A-Frame Lever,0.509,450,0.180,Hunting,rifle
+Swift,Break-Away Solid,0.509,570,0.306,Hunting,rifle
 Barnes,Varmin-A-Tor FB #30092,0.204,32,0.159,Varmint,rifle
 Barnes,Varmint Grenade FB #30090,0.204,26,0.131,Varmint,rifle
 Barnes,LRX BT #32471,0.224,65,0.341,Hunting,rifle

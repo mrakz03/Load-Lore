@@ -230,13 +230,17 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (.257, .311/.312, .321, .323, .348, .365, .366, .410, .416, .475, .500, .510, .251), sources in
   research/added_bullets_sources.tsv (Nosler 2024 and Speer charts, Sierra pages, or the BC printed
   for the factory load with the same bullet). .221 (5.45x39mm) still has none.
-  Nov 2026 (Zeke): the Sierra, Speer, Barnes, Berger and Nosler bullets are their catalogs' full lists (Sierra 2026
-  Bullet Guide, Speer 2026 catalog, Barnes 2026 bullet poster, Berger 2024 catalog, Nosler 2026 Product Guide;
-  944 rows, named line + style + part number, e.g. "MatchKing HPBT-CN #1742"; bulk boxes counted once,
+  Nov 2026 (Zeke): the Sierra, Speer, Barnes, Berger, Nosler, Hornady and Swift bullets are their catalogs' full lists (Sierra 2026
+  Bullet Guide, Speer 2026 catalog, Barnes 2026 bullet poster, Berger 2024 catalog, Nosler 2026 Product Guide,
+  Hornady 2026 catalog pp. 72-101, swiftbullets.com product pages (Swift has no part numbers: names are the line);
+  1,347 rows, named line + style + part number, e.g. "MatchKing HPBT-CN #1742"; bulk boxes counted once,
   muzzleloader / sabot bullets and round balls left out). Their older rows were replaced
   (research/replaced_bullets_2026-11.tsv); each row's source, and the BCs a catalog didn't print (scaled by
-  weight from the same line), in research/bullet_catalog_sources.tsv. Diameter match allows 0.0035 in
-  (oversized lead bullets, Speer's .360 wadcutter for .357).
+  weight from the same line), in research/bullet_catalog_sources.tsv. Ten older Hornady rows not in the 2026
+  catalog (e.g. .25 ACP / 9x18 XTPs, .348 / .375 FTX) were kept. Diameter match (Nov 7 2026): within 0.0015 in
+  (a .311 bullet is not listed for .308, .357 not for 9mm), lead / plated bullets (LEAD_BULLET: "Lead" or
+  "Plated" in the name) up to 0.0035 over (sized .358 for 9mm, Speer's .360 wadcutter for .357), .44-40
+  (.427) up to .4305 (FIT_SPAN: Uberti / Marlin barrels shoot .429-.430).
   bullets.csv "use" column (rifle / handgun / both; Zeke, Nov 7 2026): handgun cartridges (Category.group
   Handgun: Pistol / Revolver and PCC, or a new cartridge of that type) skip rifle bullets unless no handgun
   bullet of that size exists (5.7x28mm lists .224 rifle bullets): bullet_fits / bulletFits. A new bullet row
