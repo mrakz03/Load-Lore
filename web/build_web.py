@@ -66,4 +66,15 @@ if BETA:  # Cloudflare Pages reads _headers: noindex on every file (icons too), 
         f.write("/*\n  X-Robots-Tag: noindex, nofollow\n")
 elif os.path.exists(os.path.join(here, "www", "_headers")):
     os.remove(os.path.join(here, "www", "_headers"))
+# robots.txt + sitemap.xml for search engines (Google Search Console asks for the sitemap's address);
+# the beta site gets neither: it is noindex
+for name in ("robots.txt", "sitemap.xml"):
+    if os.path.exists(os.path.join(here, "www", name)):
+        os.remove(os.path.join(here, "www", name))
+if not BETA:
+    with open(os.path.join(here, "www", "robots.txt"), "w", encoding="utf-8") as f:
+        f.write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}sitemap.xml\n")
+    with open(os.path.join(here, "www", "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+                f"  <url><loc>{SITE}</loc></url>\n</urlset>\n")
 print("wrote www/index.html")
