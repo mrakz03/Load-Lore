@@ -142,7 +142,6 @@ class Category:
     payload_col: str = "Grains"
     grain_style: bool = True     # labels read "ELD-M  ·  168 gr"; False = group + load text
     show_oz: bool = False        # also show payload in ounces (shotgun)
-    legacy_filename: str = ""    # older file name to fall back to
     weights: tuple = DEFAULT_WEIGHTS   # velocity, energy, recoil, cost, Taylor KO, HITS
     loads_filename: str = ""     # manufacturer loads for the Load Dictionary / Head to Head
     step_yd: float = 100         # downrange / ballistic tables: 0, step, 2 x step ... 5 x step
@@ -159,7 +158,6 @@ class Category:
 CATEGORIES = (
     Category("Centerfire Rifle", "Hunting, precision and military rounds",
              "ammo_centerfire_rifle.csv", 0, 2000, 8.0, "RIFLE WEIGHT (LB)",
-             legacy_filename="ammo_data.csv",
              loads_filename="loads_centerfire_rifle.csv", barrel_in=24),
     Category("Handgun", "Pistol and revolver rounds",
              "ammo_handgun.csv", 0, 500, 2.0, "HANDGUN WEIGHT (LB)",
@@ -242,6 +240,7 @@ def brand_sort_key(row):
 # prefixes to the web as DATA.lines.
 PRODUCT_LINES = {
     "Barnes": ["VOR-TX", "Precision Match", "Pioneer", "Suppressor Series", "Harvest Collection"],
+    "Berger": ["Hybrid Target", "Hybrid OTM Tactical"],
     "Black Hills": ["Gold", "HoneyBadger"],
     "Buffalo Bore": ["Anti-Personnel", "Outdoorsman", "Supercharged", "Premium Supercharged",
                      "Dangerous Game", "Tactical", "Penetrator", "Deer Grenade", "Short Barrel",
@@ -276,7 +275,7 @@ PRODUCT_LINES = {
                 "Precision Hunter", "Subsonic", "Superformance", "V-MAX"],
     "IMI": ["Razor Core"],
     "Lapua": ["Mega", "Naturalis", "Scenar", "Scenar-L"],
-    "Norma": ["Bondstrike", "Oryx", "Tipstrike", "Whitetail"],
+    "Norma": ["Bondstrike", "Golden Target", "Oryx", "Tipstrike", "Whitetail"],
     "Nosler": ["Trophy Grade", "Defense", "Match Grade", "Whitetail Country"],
     "PMC": ["Bronze", "X-TAC"],
     "PPU": ["GROM", "Z-GROM", "Match"],
@@ -602,7 +601,8 @@ def recoil_ftlbs(bullet_gr, muzzle_fps, powder_gr, gun_lb):
 # 8 lb read 340+ ft-lbs; in its usual ~30 lb rifle it is about 95 (no muzzle brake).
 GUN_LB = {     # per category: the same cartridge can be in a rifle and a handgun (.44 Magnum)
     "Centerfire Rifle": {
-        ".50 BMG": 30.0, ".338 Lapua Magnum": 15.0, ".416 Remington Magnum": 10.0,
+        ".50 BMG": 30.0, ".338 Lapua Magnum": 15.0, ".338 Norma Magnum": 15.0,
+        ".300 Norma Magnum": 13.0, ".416 Remington Magnum": 10.0,
         ".458 Winchester Magnum": 10.0, ".458 Lott": 10.0, ".375 H&H Magnum": 9.5,
         ".375 Ruger": 9.5},
     "Handgun": {
@@ -646,10 +646,11 @@ BARREL_MAX_IN = {
         ".270 WSM": 24, ".270 Winchester": 26, ".277 Fury": 20, ".28 Nosler": 26,
         ".280 Remington": 24, ".30 Carbine": 18, ".30 Thompson/Center": 24,
         ".30-06 Springfield": 26, ".30-30 Winchester": 26, ".30-40 Krag": 30, ".300 Blackout": 20,
-        ".300 PRC": 26, ".300 Remington Ultra Mag": 26, ".300 Savage": 24, ".300 WSM": 26,
-        ".300 Weatherby Magnum": 28, ".300 Winchester Magnum": 26, ".303 British": 26,
-        ".308 Winchester": 26, ".32-40 Winchester": 30, ".338 ARC": 20, ".338 Lapua Magnum": 30,
-        ".338 Winchester Magnum": 26, ".348 Winchester": 24, ".35 Remington": 22,
+        ".300 Norma Magnum": 30, ".300 PRC": 26, ".300 Remington Ultra Mag": 26, ".300 Savage": 24,
+        ".300 WSM": 26, ".300 Weatherby Magnum": 28, ".300 Winchester Magnum": 26,
+        ".303 British": 26, ".308 Winchester": 26, ".32-40 Winchester": 30, ".338 ARC": 20,
+        ".338 Lapua Magnum": 30, ".338 Norma Magnum": 30, ".338 Winchester Magnum": 26,
+        ".348 Winchester": 24, ".35 Remington": 22,
         ".35 Whelen": 24, ".350 Legend": 22, ".358 Winchester": 22, ".375 H&H Magnum": 26,
         ".375 Ruger": 24, ".38-55 Winchester": 28, ".416 Remington Magnum": 24,
         ".444 Marlin": 24, ".45-70 Government": 34, ".450 Bushmaster": 22, ".458 Lott": 24,
@@ -917,7 +918,7 @@ def test_barrel_text(item):
     return f"maker's figures from a {b:g} in test barrel"
 
 
-def fire_source_note(cat, item, barrel, twist):
+def fire_source_note(cat, item, barrel):
     """The opened load's note on a barrel or twist of your own ("" when there is none)."""
     out = []
     if barrel and cat.barrel_in:
@@ -996,6 +997,8 @@ DIAMETERS = {
     ".300 WSM": 0.308,
     ".338 Winchester Magnum": 0.338,
     ".338 Lapua Magnum": 0.338,
+    ".338 Norma Magnum": 0.338,
+    ".300 Norma Magnum": 0.308,
     ".338 ARC": 0.338,
     ".375 H&H Magnum": 0.375,
     ".375 Ruger": 0.375,
@@ -1238,6 +1241,11 @@ def read_settings():
             data["prices"] = {new: v for k, v in data["prices"].items() for new in _rename_price_key(k)}
         elif "prices" in data:                          # a hand-edited file: setting a price would crash
             del data["prices"]
+        if isinstance(data.get("favorites"), list):     # "category|cartridge|label or handload id"
+            data["favorites"] = list(dict.fromkeys(
+                _rename_price_key(k)[0] for k in data["favorites"] if isinstance(k, str)))
+        elif "favorites" in data:
+            del data["favorites"]
         return data
     except (OSError, ValueError):
         return {}
@@ -1296,6 +1304,7 @@ def write_settings(data):
 
 # ---- updates (Settings > Updates): the newest GitHub release, installed in place ---- #
 UPDATE_REPO = "mrakz03/Load-Lore"
+WEB_SITE = "https://loadlore.net/"                # the web app, where Load Lore lives now
 REPO_PAGE = f"https://github.com/{UPDATE_REPO}"      # Settings > Source code (web too)
 RELEASES_PAGE = f"{REPO_PAGE}/releases/latest"
 LATEST_RELEASE_API = f"https://api.github.com/repos/{UPDATE_REPO}/releases/latest"
@@ -1501,6 +1510,13 @@ def release_asset(release, method):
     raise ValueError(f"Release v{release['version']} has no {exact}.")
 
 
+def has_desktop_files(release):
+    """Whether `release` ships a Windows or Linux build (releases after the move to the web,
+    Nov 2026, have only the Android app)."""
+    return any(n.startswith(ASSET_PREFIX) and n.endswith(suffix)
+               for n in release["assets"] for suffix in ASSET_SUFFIX.values())
+
+
 def download_verified(release, name, folder):
     """Download one file of a release into `folder` and check it against the release's
     SHA256SUMS.txt. Returns its path. Raises ValueError if it's missing or doesn't match."""
@@ -1590,7 +1606,8 @@ def _launch_env():
 
 # ---- handloads (my_handloads.csv) and the bullet library (bullets.csv) ---- #
 def read_bullets():
-    """Common bullets: [{maker, name, diameter, weight, bc, type}]. Empty if the file is missing."""
+    """Common bullets: [{maker, name, diameter, weight, bc, type, use}] (use: rifle / handgun / both).
+    Empty if the file is missing."""
     path = os.path.join(app_dir(), BULLETS_FILENAME)
     out = []
     try:
@@ -1599,7 +1616,8 @@ def read_bullets():
                 try:
                     out.append(dict(maker=row["maker"].strip(), name=row["name"].strip(),
                                     diameter=float(row["diameter_in"]), weight=float(row["weight_gr"]),
-                                    bc=float(row["bc_g1"]), type=row.get("type", "").strip()))
+                                    bc=float(row["bc_g1"]), type=row.get("type", "").strip(),
+                                    use=(row.get("use") or "").strip()))
                 except (KeyError, ValueError):
                     continue
     except (OSError, csv.Error, UnicodeDecodeError):
@@ -1652,7 +1670,8 @@ def merge_handload_rows(rows, text, categories):
         try:
             ok = (row.get("category") in categories and row["cartridge"] and
                   all(float(row.get(k) or 0) > 0 for k in ("bullet_gr", "muzzle_fps", "bc_g1",
-                                                            "powder_gr", "cost")))
+                                                            "powder_gr")) and
+                  float(row.get("cost") or 0) >= 0)                # the cost is optional
         except ValueError:
             ok = False
         if not ok:
@@ -1714,14 +1733,14 @@ def load_from_handload_row(row, grain_style=True):
         muzzle_fps=float(row["muzzle_fps"]),
         bc_g1=float(row["bc_g1"]),
         powder_gr=float(row["powder_gr"]),
-        default_cost=float(row["cost"]),
+        default_cost=_opt_float(row.get("cost", "")) or 0.0,    # 0 = no cost given (Nov 2026)
         source="handload",
         barrel_in=_opt_float(row.get("barrel_in", "")),
         purpose=row.get("purpose", ""),
         diameter_in=_opt_float(row.get("diameter_in", "")),
         handload=True, hid=row.get("id", ""), info=dict(row),
     )
-    if min(item.bullet_gr, item.muzzle_fps, item.bc_g1, item.powder_gr, item.default_cost) <= 0:
+    if min(item.bullet_gr, item.muzzle_fps, item.bc_g1, item.powder_gr) <= 0 or item.default_cost < 0:
         raise ValueError("values must be positive")
     item.label = make_label(item, grain_style)
     return item
@@ -1730,7 +1749,15 @@ def load_from_handload_row(row, grain_style=True):
 # --------------------------------------------------------------------------- #
 # Scoring
 # --------------------------------------------------------------------------- #
+def money(cost):
+    """"$1.25", or "—" for a handload saved without a cost."""
+    return "\u2014" if cost is None else f"${cost:.2f}"
+
+
 def compute_stats(item, distance_yd, gun_lb, cost=None):
+    """A load's figures. "cost" is None for a handload saved without a cost (Zeke, Nov 2026):
+    it shows "—" and is graded without the cost factor (relative_scores)."""
+    cost = item.default_cost if cost is None else cost
     v = velocity_at(item.muzzle_fps, item.bc_g1, distance_yd)
     d = item.diameter_in or bullet_diameter(item.cartridge, item.bullet_gr)
     return {
@@ -1738,7 +1765,7 @@ def compute_stats(item, distance_yd, gun_lb, cost=None):
         "velocity": v,
         "energy": energy_ftlbs(item.bullet_gr, v),
         "recoil": recoil_ftlbs(item.bullet_gr, item.muzzle_fps, item.powder_gr, gun_lb),
-        "cost": item.default_cost if cost is None else cost,
+        "cost": cost if cost and cost > 0 else None,
         "taylor": taylor_ko(item.bullet_gr, v, d),
         "hits": hits_index(item.bullet_gr, v, d),
     }
@@ -1781,13 +1808,25 @@ def relative_scores(stats_list, weights):
     Returns [(per-metric scores, overall)] on the within-cartridge scale."""
     if not stats_list:
         return []
-    refs = {k: statistics.median(s[k] for s in stats_list) for k in METRICS}
-    per = {k: _spread([metric_score(s[k], refs[k], METRICS[k][1]) for s in stats_list])
-           for k in METRICS}
+    # a factor a load lacks (None: a handload with no cost) is scored over the loads that have it
+    # and left out of that load's weighted average, so it is graded on the other factors
+    per = {}
+    for k in METRICS:
+        idx = [i for i, s in enumerate(stats_list) if s[k] is not None]
+        per[k] = [None] * len(stats_list)
+        if idx:
+            ref = statistics.median(stats_list[i][k] for i in idx)
+            for i, v in zip(idx, _spread([metric_score(stats_list[i][k], ref, METRICS[k][1])
+                                          for i in idx])):
+                per[k][i] = v
     total_w = sum(weights.values())
     w = weights if total_w > 0 else {k: 1.0 for k in METRICS}
-    total_w = sum(w.values())
-    raw = [sum(per[k][i] * w[k] for k in METRICS) / total_w for i in range(len(stats_list))]
+    raw = []
+    for i in range(len(stats_list)):
+        have = [k for k in METRICS if per[k][i] is not None]
+        tw = sum(w[k] for k in have)
+        raw.append(sum(per[k][i] * w[k] for k in have) / tw if tw > 0 else
+                   sum(per[k][i] for k in have) / max(len(have), 1))
     overall = _spread(raw)
     return [({k: per[k][i] for k in METRICS}, overall[i]) for i in range(len(stats_list))]
 
@@ -2045,10 +2084,8 @@ class App:
 
     # ---- data ------------------------------------------------------------ #
     def _load_category(self, cat):
-        names = [cat.filename] + ([cat.legacy_filename] if cat.legacy_filename else [])
-        path = next((p for p in (os.path.join(app_dir(), n) for n in names)
-                     if os.path.exists(p)), None)
-        if path is None:
+        path = os.path.join(app_dir(), cat.filename)
+        if not os.path.exists(path):
             return {"loads": [], "problems": [], "error": f"{cat.filename} not found", "detail": [], "detail_error": ""}
         try:
             loads, problems = load_data(path, cat.grain_style)
@@ -2121,6 +2158,49 @@ class App:
     def set_show_grades(self, on):
         self.settings["show_grades"] = bool(on)
         write_settings(self.settings)
+
+    # ---- favorite loads (Zeke, Nov 7 2026) --------------------------------- #
+    # starred in the Load Dictionary's table, listed on the Favorite loads page; kept in
+    # settings.json "favorites" by pick_key ("category|cartridge|label", a handload by its id)
+    @staticmethod
+    def fav_key(cat, item):
+        return "|".join(pick_key(cat, item))
+
+    def is_fav(self, cat, item):
+        return self.fav_key(cat, item) in self.settings.get("favorites", [])
+
+    def toggle_fav(self, cat, item):
+        favs = self.settings.setdefault("favorites", [])
+        key = self.fav_key(cat, item)
+        if key in favs:
+            favs.remove(key)
+        else:
+            favs.append(key)
+        write_settings(self.settings)
+        return key in favs
+
+    def fav_items(self):
+        """[(category, load)] of every favorite still in the data, in category order."""
+        favs = set(self.settings.get("favorites", []))
+        out = []
+        if not favs:
+            return out
+        for c in CATEGORIES:
+            if self.data[c.title]["error"]:
+                continue
+            out += [(c, it) for it in self.data[c.title]["detail"] + self.hand_loads(c)
+                    if self.fav_key(c, it) in favs]
+        return out
+
+    def show_favs(self):
+        """Favorite loads: every starred load, reached from the Load Dictionary's category list."""
+        self._stash()
+        self.mode, self.cat, self.view = "loads", None, None
+        stage = self._new_stage()
+        self.root.title(f"{APP_TITLE} — Favorite loads")
+        self._draw_chrome()
+        self.view = FavoritesView(self, stage)
+        self._update_scroll()
 
     # ---- Head to Head picks ------------------------------------------------ #
     def add_to_h2h(self, cat, item):
@@ -2207,6 +2287,8 @@ class App:
                 self.h2h_snap.update(snap or {})
                 self.view = None
                 self.show_h2h()
+            elif tab == "favs":
+                self.show_favs()
             else:
                 self.show_picker(self.mode)
         else:
@@ -2260,11 +2342,15 @@ class App:
                   darkcolor=[("active", MUTED)])
         s.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", ON_ACCENT)])
         # a thin line under each row, like the web's table rows: the row background is an image
-        # (fill + a 1 px BORDER line at the bottom) stretched to the row, accent when selected
+        # (fill + a 1 px BORDER line at the bottom) stretched to the row, accent when selected.
+        # Ttk stretches an image element by tiling it, one copy per image-sized piece: a 3 x 3 px
+        # image took tens of thousands of copies per row, about a second per redraw of the
+        # table (Zeke, Nov 4 2026: "super slow" on Linux). A row-sized image is a few copies.
+        rh = self.px(30)
         def row_png(fill):
-            img = tk.PhotoImage(width=3, height=3)
-            img.put(fill, to=(0, 0, 3, 2))
-            img.put(BORDER, to=(0, 2, 3, 3))
+            img = tk.PhotoImage(width=1024, height=rh)
+            img.put(fill, to=(0, 0, 1024, rh - 1))
+            img.put(BORDER, to=(0, rh - 1, 1024, rh))
             return img
         self._row_imgs = (row_png(SURFACE), row_png(ACCENT))
         name = f"Rowline{len(getattr(self, '_row_names', ()))}.row"     # one element per theme
@@ -2591,7 +2677,7 @@ class App:
     def _toggle_group(self, name):
         """Open or close a drop-down entry (Handgun) in the sidebar and the category list."""
         self.open_groups ^= {name}
-        if self.mode in ("loads",) and self.cat is None:
+        if self.mode in ("loads",) and self.cat is None and getattr(self.view, "tab", "") != "favs":
             self.show_picker(self.mode)
         else:
             self._draw_chrome()
@@ -2689,6 +2775,7 @@ class App:
             self.label(wrap, "Explore the velocity, energy, recoil and cost of over 3,500 commercially "
                        "available rounds, or put loads head to head.", 11, MUTED, bg=BG, anchor="w", justify="left",
                        wraplength=width).pack(anchor="w", pady=(self.px(8), self.px(18)))
+            self._moved_card(wrap, width).pack(fill="x", pady=(0, self.px(14)))
             for key, title, blurb in TOOLS:
                 self._feature_card(wrap, key, title, blurb, lambda t=key: self.show_picker(t),
                                    width).pack(fill="x", pady=(0, self.px(10)))
@@ -2701,6 +2788,25 @@ class App:
             go.pack(side="left")
             go.bind("<Button-1>", lambda e: self.show_settings())
         self._update_scroll()
+
+    def _moved_card(self, parent, width):
+        """The last desktop release (Nov 2026, Zeke): Load Lore is web-only from here on. This
+        copy keeps working; the card points to the website and to Back up for the handloads."""
+        card = self.card(parent, border=ACCENT, padx=18, pady=14)
+        self.label(card.body, "Load Lore now lives at loadlore.net", 12, TEXT, True, bg=SURFACE,
+                   anchor="w").pack(anchor="w")
+        self.label(card.body, "This is the final version of the desktop app. New loads "
+                   "and features only go to the website. To take your handloads "
+                   "along to the website, use 'Back up' in Handloads, then 'Restore' on the website.", 10, MUTED, bg=SURFACE,
+                   anchor="w", justify="left", wraplength=width - self.px(40)).pack(anchor="w", pady=(self.px(4), self.px(10)))
+        row = tk.Frame(card.body, bg=SURFACE)
+        row.pack(anchor="w")
+        self.button(row, "Open loadlore.net", lambda: webbrowser.open(WEB_SITE), "primary",
+                    size=10, padx=14, pady=6).pack(side="left")
+        if self.hand_rows:
+            self.button(row, "Back up handloads", self.show_hand, size=10, padx=14,
+                        pady=6).pack(side="left", padx=(self.px(8), 0))
+        return card
 
     def _feature_card(self, parent, key, title, blurb, command, width):
         """A Home card like the web's .fcard on a PC: accent icon tile beside the title and a
@@ -2776,6 +2882,10 @@ class App:
                 if not on_start:
                     self._set_update(state="latest", release=rel)
                 return
+            if not has_desktop_files(rel):     # a web / Android-only release: nothing to install
+                if not on_start:
+                    self._set_update(state="web", release=rel)
+                return
             self._set_update(state="available", release=rel)
             if on_start and messagebox.askyesno(
                     "Update available", f"Load Lore v{rel['version']} is available (you have "
@@ -2838,9 +2948,13 @@ class App:
                  "latest": f"You have the newest version (v{APP_VERSION})",
                  "available": f"v{rel and rel['version']} is available (you have v{APP_VERSION})",
                  "downloading": f"Downloading v{rel and rel['version']}…",
+                 "web": "No more desktop updates: Load Lore is on loadlore.net now",
                  "error": u.get("message", "")}
         box = row("Updates", notes[u["state"]])
-        if u["state"] == "available":
+        if u["state"] == "web":
+            self.button(box, "Open loadlore.net", lambda: webbrowser.open(WEB_SITE),
+                        "primary").pack(side="left", padx=(0, 10))
+        elif u["state"] == "available":
             text = f"Update to v{rel['version']}" if update_method() else "Download"
             self.button(box, text, self.start_update, "primary").pack(side="left", padx=(0, 10))
         else:
@@ -2950,7 +3064,7 @@ class App:
         """Remember what the open tool has on screen, for when you come back to it."""
         if self.view is None:
             return
-        if self.view.tab == "hand":
+        if self.view.tab in ("hand", "favs"):
             return
         if self.view.tab == "h2h":
             self.h2h_snap.update(self.view.snapshot())
@@ -3042,6 +3156,19 @@ class App:
             for cat in cats if shown else []:
                 card(cat_name(cat), cat.blurb, counts([cat]), lambda ct=cat: self.go(ct, mode),
                      sub=self.px(28))
+        # every starred load (Zeke, Nov 7 2026)
+        n = len(self.fav_items())
+        link = tk.Frame(wrap, bg=BG, cursor="hand2")
+        link.pack(anchor="w", pady=(self.px(6), 0))
+        star = tk.Label(link, text="★", bg=BG, fg=BEST, font=self.f(11), cursor="hand2")
+        star.pack(side="left")
+        text = tk.Label(link, text=f" Favorite loads{f' ({n})' if n else ''}  ›", bg=BG, fg=ACCENT,
+                        font=self.f(11, True), cursor="hand2")
+        text.pack(side="left")
+        for w in (link, star, text):
+            w.bind("<Button-1>", lambda e: self.show_favs())
+            w.bind("<Enter>", lambda e: text.config(fg=ACCENT_HOVER))
+            w.bind("<Leave>", lambda e: text.config(fg=ACCENT))
 
     def header(self, parent, cat, active):
         """Back link and the page title."""
@@ -3111,6 +3238,37 @@ def handload_cartridges(app):
 
 
 NEW_CARTRIDGE = "New cartridge (below)"      # the handload form's cartridge box text for one
+
+
+LEAD_BULLET = re.compile(r"\bLead\b(?!-)|Plated")   # cast / swaged lead and plated bullets
+# cartridges whose guns take a wider span of bullet sizes (in over the listed diameter): .44-40
+# is .427 on paper, but Uberti / Marlin / Winchester barrels shoot .429-.430 bullets; .350 Legend
+# is .355, but Hornady sells its .357 Sub-X for it (and .357 handgun bullets are loaded in it)
+FIT_SPAN = {".44-40 Winchester": 0.0035, ".350 Legend": 0.0025}
+# cartridges that only take light bullets of their size (gr): 5.7x28mm takes nothing over 55 gr (Zeke, Nov 7 2026),
+# so its list leaves out the heavier .224 rifle bullets
+MAX_BULLET_GR = {"5.7x28mm": 55}
+
+
+def bullet_fits(b, d, handgun, bullets, cart=None):
+    """A library bullet for a cartridge of diameter d: the same diameter within 0.0015 in (a .308
+    bullet is too small for a .311 bore, a .357 too big for a 9mm); lead and plated bullets may run up
+    to .0035 over (sized .358 for 9mm and .357, Speer's .360 wadcutter). A handgun cartridge (Handgun /
+    PCC) skips bullets marked rifle, unless no handgun bullet of that size exists (5.7x28mm takes .224
+    rifle bullets). Web: bulletFits."""
+    if not d:
+        return True
+
+    def near(x):
+        off = x["diameter"] - d
+        over = max(0.0035 if LEAD_BULLET.search(x.get("name", "")) else 0.0015, FIT_SPAN.get(cart, 0))
+        return -0.0015 - 1e-9 <= off <= over + 1e-9
+
+    if not near(b) or b.get("weight", 0) > MAX_BULLET_GR.get(cart, 1e9):
+        return False
+    if handgun and b.get("use") == "rifle":
+        return not any(near(x) and x.get("use") in ("handgun", "both") for x in bullets)
+    return True
 
 
 def own_diameter(app, cat, cart):
@@ -3369,10 +3527,20 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
         pick = pick_of(V["cartridge"].get())
         return own_diameter(app, *pick) if pick else None
 
+    def cart_category():
+        """The picked cartridge's category (a new one's type), or None."""
+        if is_new():
+            return kinds.get(V["new_type"].get())
+        pick = pick_of(V["cartridge"].get())
+        return pick[0] if pick else None
+
     def fits(b):
-        """The library bullet is the cartridge's diameter (bullets go by diameter, not cartridge)."""
-        d = cart_diameter()
-        return not d or abs(b["diameter"] - d) <= 0.003
+        """The library bullet is the cartridge's diameter (bullets go by diameter, not cartridge);
+        handgun cartridges skip rifle bullets (bullet_fits)."""
+        cat = cart_category()
+        pick = None if is_new() else pick_of(V["cartridge"].get())
+        return bullet_fits(b, cart_diameter(), bool(cat and cat.group == "Handgun"), bullets,
+                           pick[1] if pick else None)
 
     def refresh_bullets(*_):
         """Makers list only those with a bullet of this diameter; bullets only the picked maker's."""
@@ -3393,6 +3561,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
 
     V["cartridge"].trace_add("write", refresh_bullets)
     V["new_dia"].trace_add("write", refresh_bullets)
+    V["new_type"].trace_add("write", refresh_bullets)
     V["bullet_maker"].trace_add("write", refresh_bullets)
     for k in ("bullet_cost", "powder_cost_lb", "powder_gr", "primer_cost", "brass_cost",
               "brass_reuse", "total"):
@@ -3432,9 +3601,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
                 ("primer_cost", "Primer cost", 0, None), ("brass_cost", "Brass cost", 0, None),
                 ("brass_reuse", "Brass reloads", 1, 1000))}
             total = num("total", "Total cost", 0, blank=True)
-            cost = parts_cost() if total is None else total
-            if not cost or cost <= 0:
-                raise ValueError("Enter what a round costs (the parts, or a total per round).")
+            cost = parts_cost() if total is None else total    # optional (Zeke, Nov 2026)
         except ValueError as exc:
             messagebox.showerror("Check your input", str(exc), parent=win)
             return
@@ -3445,7 +3612,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
                    bullet_gr=f"{gr:g}", diameter_in=f"{dia:g}", bc_g1=f"{bc:g}",
                    powder=V["powder"].get().strip(), powder_gr=f"{charge:g}", muzzle_fps=f"{fps:g}",
                    barrel_in=f"{barrel:g}" if barrel else "", purpose=V["purpose"].get(),
-                   cost=f"{cost:.4f}", notes=V["notes"].get().strip(),
+                   cost=f"{cost:.4f}" if cost and cost > 0 else "", notes=V["notes"].get().strip(),
                    **{k: "" if v is None else f"{v:g}" for k, v in parts.items()})
         try:
             app.save_handload(row)
@@ -3711,7 +3878,7 @@ class LoadsView:
         self.src_lbl = a.label(above, "", 9, MUTED, bg=BG, anchor="w", justify="left")
         self.src_lbl.grid(row=2, column=0, columnspan=2, sticky="w", pady=(a.px(8), 0))
         # bullets get a Grains column (the Load cell then shows just the name)
-        self.cols = ["#", "Load"] + (["Grains"] if cat.grain_style else ["Shot", cat.payload_col])
+        self.cols = ["#", "Load", "★"] + (["Grains"] if cat.grain_style else ["Shot", cat.payload_col])
         if cat.grain_style:
             self.cols += ["Barrel", "Use"]
         self.cols += ["Velocity", "Energy", "Recoil"]
@@ -3730,7 +3897,8 @@ class LoadsView:
         self.tree.configure(yscrollcommand=scroll.set)
         for col in self.cols:
             # widths are measured from the text in _render; the Load column takes spare room
-            self.tree.column(col, anchor="w" if col in ("Load", "Use") else "center")
+            self.tree.column(col, anchor="w" if col in ("Load", "Use") else "center",
+                             stretch=col != "★")
             self.tree.heading(col, text=col, command=lambda c=col: self._sort_by(c))
         self.col_widths, self.sized = {}, None     # sized = cartridge the widths were measured for
         hscroll = ttk.Scrollbar(frame, orient="horizontal", command=self.tree.xview)
@@ -3750,6 +3918,7 @@ class LoadsView:
         self.tree.tag_configure("hand", foreground=HAND_FG)
         self.tree.tag_configure("spin", foreground=DANGER)    # won't stabilise in the twist set
         self.tree.bind("<<TreeviewSelect>>", lambda e: self._on_select())
+        self.tree.bind("<Button-1>", self._star_click, add="+")
 
         # ---- selected load
         self.detail = a.card(outer, padx=4, pady=4)
@@ -4271,7 +4440,8 @@ class LoadsView:
                                 by_type=not self.cat.grain_style)
         self.group_order = {k: n for n, k in enumerate(dict.fromkeys(r["group"] for r in self.rows))}
         for r in self.rows:
-            r["custom_price"] = abs(r["stats"]["cost"] - r["item"].default_cost) > 1e-9
+            r["custom_price"] = (r["stats"]["cost"] is not None and
+                                 abs(r["stats"]["cost"] - r["item"].default_cost) > 1e-9)
         self.dist = dist
         self._render()
 
@@ -4313,6 +4483,10 @@ class LoadsView:
                 else line_sort_key, "Load": line_sort_key if self.sort.get("line") else brand_sort_key,
                 self.cat.payload_col: lambda r: r["stats"]["weight"],
                 "Grains": lambda r: r["item"].bullet_gr,
+                # favorites first, then the default order
+                "★": lambda r: (not self.app.is_fav(self.cat, base_load(r["item"])),
+                                self.group_order.get(r["group"], 0), r["rank"]) if self.app.show_grades
+                else (not self.app.is_fav(self.cat, base_load(r["item"])),) + tuple(line_sort_key(r)),
                 # biggest shot first, then the most pellets, then the heaviest payload
                 "Shot": lambda r: shot_size(r["item"])[:2] + (r["stats"]["weight"],),
                 "Barrel": lambda r: r["item"].barrel_in or 999,
@@ -4321,7 +4495,7 @@ class LoadsView:
                 "Energy": lambda r: r["stats"]["energy"],
                 "Recoil": lambda r: r["stats"]["recoil"],
                 "Taylor": lambda r: r["stats"]["taylor"], "HITS": lambda r: r["stats"]["hits"],
-                "Price": lambda r: r["stats"]["cost"], "Score": lambda r: r["overall"],
+                "Price": lambda r: (r["stats"]["cost"] is None, r["stats"]["cost"] or 0), "Score": lambda r: r["overall"],
                 "Grade": lambda r: r["overall"]}
         data.sort(key=keys[self.sort["col"]], reverse=self.sort["desc"])
         self.tree.delete(*self.tree.get_children())
@@ -4333,7 +4507,8 @@ class LoadsView:
             it = r["item"]
             name = (it.load or it.label) if self.cat.grain_style else it.label
             vals = [r["rank"], name + ("  (handload)" if it.handload else "")
-                    + ("  ⚠" if stability_warn(it) else "")]
+                    + ("  ⚠" if stability_warn(it) else ""),
+                    "★" if self.app.is_fav(self.cat, base_load(it)) else "☆"]
             if self.cat.grain_style:
                 # your own barrel length replaces each load's test barrel (Zeke, Oct 30 2026)
                 brl = self.barrel or it.barrel_in
@@ -4343,7 +4518,7 @@ class LoadsView:
             vals += [f"{st['velocity']:.0f}", f"{st['energy']:.0f}", f"{st['recoil']:.1f}"]
             if self.cat.terminal:
                 vals += [f"{st['taylor']:.1f}", f"{st['hits']:.0f}"]
-            vals += [f"{st['cost']:.2f}" + (" ✎" if r["custom_price"] else ""),
+            vals += [("\u2014" if st["cost"] is None else f"{st['cost']:.2f}") + (" ✎" if r["custom_price"] else ""),
                      f"{r['overall']:.0f}", r["grade"]]
             cells.append(vals)
             iid = self.tree.insert("", "end", values=vals, tags=(("hand",) if it.handload else ())
@@ -4382,6 +4557,26 @@ class LoadsView:
             self.app.grow_to_fit(sum(self.col_widths.values()) - self.tree.winfo_width())
         self.fit_table_height()
 
+    def _star_click(self, event):
+        """A click on a row's star adds the load to the favorites (or takes it off) without
+        opening it."""
+        if self.tree.identify_region(event.x, event.y) != "cell":
+            return None
+        col = self.tree.identify_column(event.x)            # "#3": the shown columns, 1-based
+        shown = list(self.tree.cget("displaycolumns"))
+        if shown == ["#all"]:
+            shown = self.cols
+        try:
+            name = shown[int(col[1:]) - 1]
+        except (ValueError, IndexError):
+            return None
+        iid = self.tree.identify_row(event.y)
+        if name != "★" or iid not in self.iid_row:
+            return None
+        on = self.app.toggle_fav(self.cat, base_load(self.iid_row[iid]["item"]))
+        self.tree.set(iid, "★", "★" if on else "☆")
+        return "break"
+
     def _on_select(self):
         sel = self.tree.selection()
         row = self.iid_row.get(sel[0]) if sel else None
@@ -4413,20 +4608,20 @@ class LoadsView:
         # in brackets under the title (Zeke, Oct 31 2026)
         self.d_info.config(text=f"({'  ·  '.join(info)})" if info else "")
         vals = {"velocity": f"{st['velocity']:.0f} fps", "energy": f"{st['energy']:.0f} ft-lbs",
-                "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": f"${st['cost']:.2f}",
+                "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": money(st["cost"]),
                 "taylor": f"{st['taylor']:.1f}",
                 "hits": f"{st['hits']:.0f}"}
         if "hits" in self.d_sub:
             self.d_sub["hits"].config(text=hits_class(st['hits']))
         for key, (val, badge) in self.d_badges.items():
-            grade = grade_relative(row["scores"][key])
             val.config(text=vals[key])
-            if self.app.show_grades:
+            if self.app.show_grades and row["scores"][key] is not None:
+                grade = grade_relative(row["scores"][key])
                 badge.set(grade)
                 badge.pack(side="left", padx=(6, 0))
             else:
                 badge.pack_forget()
-        self.price_var.set(f"{st['cost']:.2f}")
+        self.price_var.set("" if st["cost"] is None else f"{st['cost']:.2f}")
         if item.handload:
             self.priceline.grid_remove()
             self.handline.grid()
@@ -4438,7 +4633,7 @@ class LoadsView:
             else:
                 self.reset_btn.pack_forget()
         src = SOURCE_NOTES.get(item.source, DEFAULT_SOURCE_NOTE)
-        own = fire_source_note(self.cat, item, self.barrel, self.twist)
+        own = fire_source_note(self.cat, item, self.barrel)
         if own:
             src = own + ("  " if item.handload else "  Listed figures: ") + src
         if item.handload and item.info and item.info.get("notes"):
@@ -5025,6 +5220,240 @@ class LoadSearch:
         return "break"
 
 
+class FavoritesView:
+    """Favorite loads (Zeke, Nov 7 2026): every load starred in the Load Dictionary, grouped by
+    cartridge, with its dictionary figures; a click opens it there, the star takes it off."""
+    tab = "favs"
+    cat = None
+
+    def __init__(self, app, stage):
+        self.app, self.root = app, app.root
+        self.open_key, self.src_open, self.bt_open = None, False, False
+        a = app
+        wrap = tk.Frame(stage, bg=BG)
+        wrap.pack(fill="both", expand=True, padx=a.px(34), pady=(a.px(26), a.px(28)))
+        wrap.columnconfigure(0, weight=1)
+        back = tk.Label(wrap, text="‹  Categories", bg=BG, fg=ACCENT, font=a.f(10, True), cursor="hand2")
+        back.grid(row=0, column=0, sticky="w")
+        back.bind("<Button-1>", lambda e: a.show_picker("loads"))
+        back.bind("<Enter>", lambda e: back.config(fg=ACCENT_HOVER))
+        back.bind("<Leave>", lambda e: back.config(fg=ACCENT))
+        a.label(wrap, "Favorite loads", 17, TEXT, True, bg=BG, anchor="w").grid(
+            row=1, column=0, sticky="w", pady=(a.px(4), 0))
+        a.label(wrap, "Loads you starred in the Load Dictionary.", 11, MUTED, bg=BG, anchor="w").grid(
+            row=2, column=0, sticky="w", pady=(2, 6))
+        self.list = tk.Frame(wrap, bg=BG)
+        self.list.grid(row=3, column=0, sticky="ew")
+        self.list.columnconfigure(0, weight=1)
+        self.draw()
+
+    def snapshot(self):
+        return {}
+
+    def grade(self, cat, item):
+        """Its Load Dictionary row: against every load of its cartridge, at the dictionary's distance."""
+        app = self.app
+        loads = [x for x in app.data[cat.title]["detail"] + app.hand_loads(cat)
+                 if x.cartridge == item.cartridge]
+        if item.handload:          # hand_loads makes new objects each call: use this list's copy
+            item = next((x for x in loads if x.handload and x.hid == item.hid), item)
+        try:
+            dist = float(app.carry.get(cat.title, {}).get("dist", cat.default_distance))
+        except (TypeError, ValueError):
+            dist = cat.default_distance
+        return h2h_rows([(cat, item)], dist, None, app.dict_weights, app.price_for,
+                        {(cat.title, item.cartridge): loads})[0]
+
+    def draw(self):
+        a = self.app
+        for w in self.list.winfo_children():
+            w.destroy()
+        items = a.fav_items()
+        if not items:
+            card = a.card(self.list, padx=4, pady=4)
+            card.grid(row=0, column=0, sticky="ew", pady=(a.px(16), 0))
+            a.label(card.body, "No favorites yet", 13, TEXT, True).pack(pady=(22, 4))
+            a.label(card.body, "Click the ☆ beside a load in the Load Dictionary's table to keep "
+                               "it here.", 10, MUTED).pack(pady=(0, 22), padx=20)
+            return a._update_scroll()
+        order = {c.title: i for i, c in enumerate(CATEGORIES)}
+        items.sort(key=lambda p: (order[p[0].title], p[1].cartridge.lower(),
+                                  line_sort_key({"item": p[1]})))
+        row, last = 0, None
+        for c, it in items:
+            if (c.title, it.cartridge) != last:
+                last = (c.title, it.cartridge)
+                head = tk.Frame(self.list, bg=BG)
+                head.grid(row=row, column=0, sticky="w", pady=(18, 6))
+                a.label(head, it.cartridge, 12, TEXT, True, bg=BG).pack(side="left")
+                a.label(head, f"  ·  {cat_name(c)}", 10, MUTED, True, bg=BG).pack(side="left")
+                row += 1
+            self._card(c, it).grid(row=row, column=0, sticky="ew", pady=(0, 8))
+            row += 1
+        a._update_scroll()
+
+    def _card(self, cat, it):
+        a = self.app
+        r = self.grade(cat, it)
+        key = a.fav_key(cat, it)
+        is_open = key == self.open_key
+        box = a.card(self.list, border=ACCENT if is_open else BORDER, padx=4, pady=4)
+        box.configure(cursor="hand2")
+        card = box.body
+        card.columnconfigure(0, weight=1)
+        name = it.load if cat.grain_style else it.label
+        if cat.grain_style:
+            name += f"  ·  {it.bullet_gr:g} gr"
+        use = "Handload" if it.handload else (it.purpose or it.group or "")
+        title = a.label(card, name, 12, TEXT, True, anchor="w", justify="left")
+        title.grid(row=0, column=0, sticky="w", padx=(12, 8), pady=(8, 0))
+        star = tk.Label(card, text="★", bg=SURFACE, fg=BEST, font=a.f(15), cursor="hand2")
+        star.grid(row=0, column=2, rowspan=2, sticky="ne", padx=(4, 12), pady=(4, 0))
+        star.bind("<Button-1>", lambda e: (a.toggle_fav(cat, it), self.draw(), "break")[-1])
+        clickable = [box, box.canvas, card, title]
+        if a.show_grades:
+            b = Badge(card, a, r["grade"], 10)
+            b.grid(row=0, column=1, rowspan=2, sticky="ne", padx=4, pady=(8, 0))
+            clickable.append(b)
+        st = r["stats"]
+        stats = a.label(card, (f"{use}    " if use else "") + f"{st['velocity']:.0f} fps    "
+                              f"{st['energy']:.0f} ft-lbs    {'no cost given' if st['cost'] is None else money(st['cost']) + ' a round'}    at {r['dist']:g} yd",
+                        10, MUTED, anchor="w")
+        clickable.append(stats)
+        for w in clickable:
+            w.bind("<Button-1>", lambda e: self._toggle(key))
+        if is_open:
+            self._details(card, cat, it, r)            # the figures replace the one-line summary
+        else:
+            stats.grid(row=1, column=0, sticky="w", padx=12, pady=(2, 8))
+            for w in clickable:
+                w.bind("<Enter>", lambda e: box.recolour(SURFACE_2, ACCENT, (card, title, stats, star)))
+                w.bind("<Leave>", lambda e: box.recolour(SURFACE, BORDER, (card, title, stats, star)))
+        return box
+
+    def _toggle(self, key):
+        self.open_key = None if self.open_key == key else key
+        self.draw()
+
+    def _details(self, card, cat, it, r):
+        """An opened favorite (Zeke, Nov 7 2026): the Load Dictionary panel's facts line and figures,
+        "About these figures", the ballistic table, Head to Head and a link on to the dictionary."""
+        a, st = self.app, r["stats"]
+        clickable = []
+        tk.Frame(card, bg=BORDER, height=1).grid(row=2, column=0, columnspan=3, sticky="ew", padx=12,
+                                                pady=(6, 0))
+        facts = [] if it.handload else [f"{it.bullet_gr:g} gr" if cat.grain_style
+                                         else f"{st['weight']:g} gr payload"]
+        if cat.grain_style:
+            facts.append(test_barrel_text(it))
+        if r["dist"]:
+            facts.append(f"at {r['dist']:g} yd")
+        facts = [f for f in facts if f]
+        info = a.label(card, f"({'  ·  '.join(facts)})" if facts else "", 10.5, MUTED, True, anchor="w")
+        info.grid(row=3, column=0, columnspan=3, sticky="w", padx=12, pady=(10, 10))
+        clickable.append(info)
+        cells = tk.Frame(card, bg=SURFACE)
+        cells.grid(row=4, column=0, columnspan=3, sticky="w", padx=12)
+        vals = {"velocity": f"{st['velocity']:.0f} fps", "energy": f"{st['energy']:.0f} ft-lbs",
+                "recoil": f"{st['recoil']:.1f} ft-lbs", "cost": money(st["cost"]),
+                "taylor": f"{st['taylor']:.1f}", "hits": f"{st['hits']:.0f}"}
+        for k in metric_keys(cat):
+            cell = tk.Frame(cells, bg=SURFACE)
+            cell.pack(side="left", padx=(0, a.px(30)))
+            a.label(cell, METRICS[k][0].upper(), 10, MUTED, True).pack(anchor="w")
+            line = tk.Frame(cell, bg=SURFACE)
+            line.pack(anchor="w", pady=(4, 0))
+            a.label(line, vals[k], 16, TEXT, True).pack(side="left")
+            if k == "hits":
+                a.label(line, hits_class(st["hits"]), 10, MUTED).pack(side="left", padx=(5, 0),
+                                                                     anchor="s", pady=(0, 3))
+            if a.show_grades and r["scores"][k] is not None:
+                b = Badge(line, a, "", 12)
+                b.set(grade_relative(r["scores"][k]))
+                b.pack(side="left", padx=(6, 0))
+        if a.show_grades:
+            a.label(card, f"Overall {r['grade']}  ·  {r['overall']:.0f}  ·  ranks #{r['rank']} of "
+                          f"{r['peers']} {it.cartridge} loads.", 9, MUTED, anchor="w").grid(
+                row=5, column=0, columnspan=3, sticky="w", padx=12, pady=(8, 0))
+        links = tk.Frame(card, bg=SURFACE)
+        links.grid(row=6, column=0, columnspan=3, sticky="w", padx=12, pady=(10, 0))
+
+        def toggle(attr):
+            setattr(self, attr, not getattr(self, attr))
+            self.draw()
+        name = "Disclaimer" if it.handload else "About these figures"
+        for text, attr in ((name, "src_open"), ("Ballistic table", "bt_open")):
+            t = tk.Label(links, text=("▾" if getattr(self, attr) else "▸") + "  " + text, bg=SURFACE,
+                         fg=ACCENT, font=a.f(11, True), cursor="hand2")
+            t.pack(side="left", padx=(0, a.px(24)))
+            t.bind("<Button-1>", lambda e, at=attr: toggle(at))
+        row = 7
+        if self.src_open:
+            note = HANDLOAD_NOTE if it.handload else (
+                SOURCE_NOTES.get(it.source, DEFAULT_SOURCE_NOTE)
+                + f" Catalog price estimate: ${it.default_cost:.2f}.")
+            n = a.label(card, note, 10, MUTED, anchor="w", justify="left", wraplength=a.px(820))
+            n.grid(row=row, column=0, columnspan=3, sticky="w", padx=12, pady=(8, 0))
+            clickable.append(n)
+            row += 1
+        if self.bt_open:
+            bt = tk.Frame(card, bg=SURFACE)
+            bt.grid(row=row, column=0, columnspan=3, sticky="w", padx=12, pady=(10, 0))
+            heads = ["Yards", "Velocity (fps)", "Energy (ft-lbs)", "Path (in)",
+                     f"Wind drift (in, {WIND_MPH:g} mph)"]
+            for c, h in enumerate(heads):
+                a.label(bt, h, 10, MUTED, True, anchor="e").grid(
+                    row=0, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=(0, 6))
+            a.rule(bt, 0, len(heads))
+            table = ballistic_table(it, cat)
+            for i, (yd, v, e, path, drift) in enumerate(table, start=1):
+                for c, text in enumerate((f"{yd:g}", f"{v:,.0f}", f"{e:,.0f}",
+                                          "0.0" if abs(path) < 0.05 else f"{path:+.1f}", f"{drift:.1f}")):
+                    a.label(bt, text, 11, TEXT, c == 0, anchor="e").grid(
+                        row=i, column=c, sticky="e", padx=(0 if c == 0 else 26, 0), pady=4)
+                if i < len(table):
+                    a.rule(bt, i, len(heads))
+            a.label(bt, f"Zeroed at {cat.zero_yd:g} yd with the sight {cat.sight_in:g} in above the "
+                        f"bore; drop and drift are estimates from the G1 BC, sea-level air.",
+                    9, MUTED, anchor="w", justify="left", wraplength=a.px(760)).grid(
+                row=99, column=0, columnspan=5, sticky="w", pady=(8, 0))
+            row += 1
+        btns = tk.Frame(card, bg=SURFACE)
+        btns.grid(row=row, column=0, columnspan=3, sticky="w", padx=12, pady=(12, 10))
+        pk = pick_key(cat, it)
+        h2h = (f"In Head to Head ({len(a.h2h)} of {H2H_MAX})  ›" if pk in a.h2h else
+               f"Head to Head is full ({H2H_MAX})  ›" if len(a.h2h) >= H2H_MAX else "+  Head to Head")
+
+        def to_h2h():
+            if a.add_to_h2h(cat, it) is None:
+                return a.show_h2h()
+            self.draw()
+        a.button(btns, h2h, to_h2h, size=10, padx=14, pady=7).pack(side="left")
+        link = tk.Label(btns, text="Open in Load Dictionary  ›", bg=SURFACE, fg=ACCENT,
+                        font=a.f(10, True), cursor="hand2")
+        link.pack(side="left", padx=(a.px(18), 0))
+        link.bind("<Button-1>", lambda e: self._open(cat, it))
+        for w in clickable:
+            w.bind("<Button-1>", lambda e, k=a.fav_key(cat, it): self._toggle(k))
+
+    def _open(self, cat, it):
+        """Open the load in its Load Dictionary: its cartridge, nothing filtering it out, selected."""
+        a = self.app
+        carry = a.carry.setdefault(cat.title, {})
+        carry.update(cart=it.cartridge, purpose="All", source="All")
+        if pressure_of(it.load):
+            carry["pressure"] = dict(carry.get("pressure", {}), **{pressure_of(it.load): True})
+        a.go(cat, "loads")
+        view = a.view
+        if isinstance(view, LoadsView) and view.cat is cat:
+            key = a.fav_key(cat, it)
+            for x in view.groups.get(it.cartridge, []):
+                if a.fav_key(cat, x) == key:
+                    view.selected = x
+                    view._reselect()
+                    break
+
+
 class HandloadsView:
     """The Handloads tab: every handload of every category in one place, to add, edit,
     duplicate, delete, back up and restore. Each card shows the load's Load Dictionary grade
@@ -5171,7 +5600,7 @@ class HandloadsView:
             clickable += [gbox, rk]
         st = r["stats"]
         stats = a.label(card, f"{st['velocity']:.0f} fps    {st['energy']:.0f} ft-lbs    "
-                              f"${st['cost']:.2f} a round    at {r['dist']:g} yd", 10, MUTED, anchor="w")
+                              f"{'no cost given' if st['cost'] is None else money(st['cost']) + ' a round'}    at {r['dist']:g} yd", 10, MUTED, anchor="w")
         stats.grid(row=1, column=0, sticky="w", padx=12, pady=(2, 8))
         clickable.append(stats)
         for w in clickable:
@@ -5218,7 +5647,8 @@ class HandloadsView:
             a.label(cost, "Per round", 10, TEXT, True).grid(row=n_parts + 1, column=0, sticky="w")
             a.label(cost, f"${it.default_cost:.2f}", 10, TEXT, True).grid(row=n_parts + 1, column=1, sticky="e")
         else:
-            a.label(det, f"${it.default_cost:.2f} a round", 10, TEXT, True, anchor="w").grid(
+            a.label(det, f"${it.default_cost:.2f} a round" if it.default_cost > 0 else "\u2014",
+                    10, TEXT, True, anchor="w").grid(
                 row=n, column=1, sticky="w", pady=2)
         if rec.get("notes"):
             n += 1
@@ -5386,7 +5816,6 @@ class HeadToHeadView:
     category's scoring weights, so the two tools always agree."""
     tab = "h2h"
     cat = None
-    FACTORS = ("velocity", "energy", "recoil", "cost", "taylor", "hits")
 
     def __init__(self, app, stage, snap=None):
         self.app, self.root = app, app.root
@@ -5968,10 +6397,14 @@ def h2h_rows(picked, dist, guns, weights_of, price_of, groups, barrels=None, twi
             done[key] = {id(base_load(r["item"])): r for r in score_loads(
                 items, d, gun,
                 weights_of(icat), [price_of(icat, x) for x in items], by_type=not icat.grain_style)}
-        rows.append(dict(done[key][id(it)], cat=icat, dist=d, gun=gun, keys=metric_keys(icat),
+        sr = done[key][id(it)]                  # a factor it lacks (no cost given) is left out
+        rows.append(dict(sr, cat=icat, dist=d, gun=gun,
+                         keys=[k for k in metric_keys(icat) if sr["stats"][k] is not None],
                          best=set(), gap={}))
     for key in h2h_keys([r["cat"] for r in rows]):
         have = [r for r in rows if key in r["keys"]]
+        if not have:                    # only loads with no cost given
+            continue
         hi = METRICS[key][1]
         vals = [r["stats"][key] for r in have]
         lead = max(vals) if hi else min(vals)

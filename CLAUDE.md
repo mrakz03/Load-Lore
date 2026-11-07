@@ -51,6 +51,16 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (pressure_of / pressureOf reads the load name; Train+Protect and +Peak aren't +P) hides those
   loads from the list without changing any grade; ticked by default, kept per category while the
   app is open (snapshot / shared), not in settings.json.
+- Favorite loads (Nov 7 2026, Zeke): a star on every Load Dictionary load (web: outline / filled SVG
+  .fav at the right of a phone card, after the name in the PC table, empty stars only on hover there;
+  desktop: a narrow "★" column after Load, click the cell; its heading sorts favorites first). Kept by
+  pick_key / pickKey text ("category|cartridge|label", a handload by its id): web localStorage
+  cartridge_calc_favs_v1, desktop settings.json "favorites" (renamed / moved cartridges follow like
+  prices). "★ Favorite loads (N) ›" under the category cards opens the Favorite loads page (web #favs,
+  showFavs; desktop FavoritesView / show_favs): starred loads grouped by cartridge with their dictionary
+  figures; a click opens that load's figures in place (Zeke, Nov 7 2026: favDetail / FavoritesView._details:
+  the dictionary panel's facts line and tiles, About these figures, ballistic table, + Head to Head), and its
+  "Open in Load Dictionary ›" opens it there (goFav / FavoritesView._open); the star removes it.
 - Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
   (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
   card and the sidebar entry open / close them (menu_entries / menuEntries, open_groups / OPEN_GROUPS,
@@ -182,6 +192,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
   The form's cost parts sit in a "Cost (optional breakdown)" drop-down (Zeke, Nov 2 2026: web
   details.hcd, desktop cost_toggle / show_cost), closed unless the handload already has a cost.
+  The cost is optional (Zeke, Nov 7 2026): a handload saved without one keeps cost 0 / blank, shows
+  "—" for price (money / money()), sorts after priced loads, and is graded without the cost factor
+  (relative_scores / relativeScores leave a None / null factor out of that load's weighted average;
+  other loads' grades are unchanged). Head to Head leaves cost out of its keys ("no cost given").
   On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open
   pickSheet too (sheetSelect puts a clear button over a <select>; powder has "Other powder (type
   it)"); pickSheet over a dialog hands the back button back to the dialog when it closes.
@@ -230,6 +244,25 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (.257, .311/.312, .321, .323, .348, .365, .366, .410, .416, .475, .500, .510, .251), sources in
   research/added_bullets_sources.tsv (Nosler 2024 and Speer charts, Sierra pages, or the BC printed
   for the factory load with the same bullet). .221 (5.45x39mm) still has none.
+  Nov 2026 (Zeke): the Sierra, Speer, Barnes, Berger, Nosler, Hornady and Swift bullets are their catalogs' full lists (Sierra 2026
+  Bullet Guide, Speer 2026 catalog, Barnes 2026 bullet poster, Berger 2024 catalog, Nosler 2026 Product Guide,
+  Hornady 2026 catalog pp. 72-101, swiftbullets.com product pages (Swift has no part numbers: names are the line);
+  1,347 rows, named line + style + part number, e.g. "MatchKing HPBT-CN #1742"; bulk boxes counted once,
+  muzzleloader / sabot bullets and round balls left out). Their older rows were replaced
+  (research/replaced_bullets_2026-11.tsv); each row's source, and the BCs a catalog didn't print (scaled by
+  weight from the same line), in research/bullet_catalog_sources.tsv. Ten older Hornady rows not in the 2026
+  catalog (e.g. .25 ACP / 9x18 XTPs, .348 / .375 FTX) were kept. Diameter match (Nov 7 2026): within 0.0015 in
+  (a .311 bullet is not listed for .308, .357 not for 9mm), lead / plated bullets (LEAD_BULLET: "Lead" or
+  "Plated" in the name) up to 0.0035 over (sized .358 for 9mm, Speer's .360 wadcutter for .357), .44-40
+  (.427) up to .4305 and .350 Legend (.355) up to .3575 (FIT_SPAN, by cartridge: Uberti / Marlin .44-40 barrels
+  shoot .429-.430; Hornady sells its .357 Sub-X for .350 Legend). The .30 Carbine bullets (Sierra #2100, Speer
+  #1846) are "both", so 7.62x25mm Tokarev lists them. MAX_BULLET_GR caps a cartridge's bullet weight: 5.7x28mm lists only .224 bullets of
+  55 gr or less (Zeke, Nov 7 2026: 5.7 loads are light, nothing over 55 gr).
+  bullets.csv "use" column (rifle / handgun / both; Zeke, Nov 7 2026): handgun cartridges (Category.group
+  Handgun: Pistol / Revolver and PCC, or a new cartridge of that type) skip rifle bullets unless no handgun
+  bullet of that size exists (5.7x28mm lists .224 rifle bullets): bullet_fits / bulletFits. A new bullet row
+  needs its use set (handgun lines: XTP, Gold Dot, Sports Master, XPB, TAC-XP, ASP...; "both" for lever /
+  handgun bullets like FTX .44/.45 Colt and Barnes Buster .44/.45/.500).
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
 - Recoil (recoil_ftlbs / recoil): standard free recoil, bullet + powder gas at GAS_FPS 4000, gas counted
   once (a 1.75x gas factor read 40-60% high; fixed Oct 2026 against Chuck Hawks' recoil table).
@@ -396,6 +429,12 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   2026 additions, Black Hills 6.5 / .308 MKX, other Nosler Whitetail Country loads, rest of Hornady Backcountry
   Defense. .400 Legend (new loads from Hornady, Barnes, Nosler, Remington) is not a cartridge in the app.
   List: /mnt/project-files/catalogs/new-loads-2026-11-01.md (not in the repo).
+- Nov 7 2026 (Zeke): .300 Norma Magnum (5 loads: Norma Golden Target, Berger Hybrid Target / Hybrid OTM
+  Tactical, Federal Gold Medal, Hornady Match) and .338 Norma Magnum (3: Norma, Black Hills, Berger), all
+  Match, from maker pages and retailer listings (none in the 2026 catalogs; the Federal and Hornady .300 NM
+  loads may be discontinued). Typical guns 13 / 15 lb (precision rifles). Sources in added_loads_sources.tsv.
+  Later that day Zeke had the possibly discontinued Federal Gold Medal (GM300NMBH1) and Hornady Match (82176) .300 NM
+  loads removed (rows kept in research/removed_loads.tsv).
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 

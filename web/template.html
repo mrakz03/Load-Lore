@@ -104,30 +104,30 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .lhead,.lc .trow,.lc .pdet{display:none}
 @media(min-width:900px){   /* PC: the load list is one table like the desktop app's (phones keep the cards);
                               the rows share the list's columns (subgrid), so each column fits its widest figure */
-  :is(#lres,#hlist .lgrid){display:grid;grid-template-columns:var(--lcols);gap:0 16px;padding:0 14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow-x:auto;font-size:.9rem}   /* a narrow window scrolls the table sideways, like the desktop app */
+  :is(#lres,#hlist .lgrid,#flist .lgrid){display:grid;grid-template-columns:var(--lcols);gap:0 16px;padding:0 14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow-x:auto;font-size:.9rem}   /* a narrow window scrolls the table sideways, like the desktop app */
   #lres>.muted{grid-column:1/-1;padding:12px 0}
-  :is(#lres,#hlist .lgrid) .lhead,:is(#lres,#hlist .lgrid) .lc,:is(#lres,#hlist .lgrid) .lc .trow{grid-column:1/-1;display:grid;grid-template-columns:subgrid;align-items:center}
-  :is(#lres,#hlist .lgrid) .lhead{margin:0 -14px;padding:8px 14px;background:var(--surface2);font-size:.78rem;font-weight:700;color:var(--muted)}
-  :is(#lres,#hlist .lgrid) .lhead>*{text-align:center;white-space:nowrap}:is(#lres,#hlist .lgrid) .lhead>.rk,:is(#lres,#hlist .lgrid) .lhead>.ln{text-align:left}
-  :is(#lres,#hlist .lgrid) .lhead button{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
-  :is(#lres,#hlist .lgrid) .lhead button:hover{color:var(--text)}:is(#lres,#hlist .lgrid) .lhead button.on{color:var(--accent)}
-  :is(#lres,#hlist .lgrid) .lhead button.on::after{content:" ▾"}:is(#lres,#hlist .lgrid) .lhead button.on.up::after{content:" ▴"}
-  :is(#lres,#hlist .lgrid) .lc{border:0;border-top:1px solid var(--border);border-radius:0;margin:0 -14px;padding:7px 14px;background:none}
-  :is(#lres,#hlist .lgrid) .lhead+.lc{border-top:0}
-  :is(#lres,#hlist .lgrid) .lc:hover{background:var(--surface2)}
-  :is(#lres,#hlist .lgrid) .lc.open{box-shadow:inset 3px 0 0 var(--accent);background:none}
-  :is(#lres,#hlist .lgrid) .lc.open .trow>span{color:var(--accent)}
-  :is(#lres,#hlist .lgrid) .lc.hl{box-shadow:inset 3px 0 0 var(--accent)}
-  :is(#lres,#hlist .lgrid) .lc .top,#hlist .lc .st{display:none}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead,:is(#lres,#hlist .lgrid,#flist .lgrid) .lc,:is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow{grid-column:1/-1;display:grid;grid-template-columns:subgrid;align-items:center}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead{margin:0 -14px;padding:8px 14px;background:var(--surface2);font-size:.78rem;font-weight:700;color:var(--muted)}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead>*{text-align:center;white-space:nowrap}:is(#lres,#hlist .lgrid,#flist .lgrid) .lhead>.rk,:is(#lres,#hlist .lgrid,#flist .lgrid) .lhead>.ln{text-align:left}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead button{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead button:hover{color:var(--text)}:is(#lres,#hlist .lgrid,#flist .lgrid) .lhead button.on{color:var(--accent)}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead button.on::after{content:" ▾"}:is(#lres,#hlist .lgrid,#flist .lgrid) .lhead button.on.up::after{content:" ▴"}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc{border:0;border-top:1px solid var(--border);border-radius:0;margin:0 -14px;padding:7px 14px;background:none}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lhead+.lc{border-top:0}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc:hover{background:var(--surface2)}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc.open{box-shadow:inset 3px 0 0 var(--accent);background:none}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc.open .trow>span{color:var(--accent)}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc.hl{box-shadow:inset 3px 0 0 var(--accent)}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .top,#hlist .lc .st,#flist .lc .st{display:none}
   #hlist .lgrid{margin:0 0 6px}#hlist .lc.hl:not(.open){box-shadow:none}
   #hlist .lgrid .lc .trow>.bp{text-align:left;white-space:normal;color:var(--muted)}
   #hlist .lc>.hdet,#hlist .lc>.hbtns,#hlist .lc>.hlinks{grid-column:1/-1}
   #hlist .lc>.hdet{margin:10px 0 0;max-width:760px}#hlist .lc>.hlinks{margin-bottom:6px}
-  :is(#lres,#hlist .lgrid) .lc .trow>span{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
-  :is(#lres,#hlist .lgrid) .lc .trow>.ln{text-align:left;white-space:normal;font-weight:600;line-height:1.3}
-  :is(#lres,#hlist .lgrid) .lc .trow .wt{white-space:nowrap}
-  :is(#lres,#hlist .lgrid) .lc .trow>.rk{text-align:left;color:var(--muted);font-weight:700}
-  :is(#lres,#hlist .lgrid) .lc .trow .badge{display:inline-flex}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow>span{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow>.ln{text-align:left;white-space:normal;font-weight:600;line-height:1.3}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow .wt{white-space:nowrap}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow>.rk{text-align:left;color:var(--muted);font-weight:700}
+  :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow .badge{display:inline-flex}
   #lres .lc .det{grid-column:1/-1;margin:6px 0 4px;padding-top:10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
   #lres .lc .det>*{flex:1 1 100%;margin:0}
   #lres .lc .det .fr{display:none}
@@ -182,7 +182,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .h2hp .slot .ls,.h2hp .slot .fire3{grid-column:2}
   .h2hp .slots{gap:12px}.h2hp .slot+.slot{border-top:1px solid var(--border);padding-top:12px}
 }
-@media(min-width:900px) and (max-width:1199px){:is(#lres,#hlist .lgrid){gap:0 10px;font-size:.84rem}:is(#lres,#hlist .lgrid) .lhead{font-size:.72rem}}   /* small PC windows: tighter columns */
+@media(min-width:900px) and (max-width:1199px){:is(#lres,#hlist .lgrid,#flist .lgrid){gap:0 10px;font-size:.84rem}:is(#lres,#hlist .lgrid,#flist .lgrid) .lhead{font-size:.72rem}}   /* small PC windows: tighter columns */
 .prow{display:flex;gap:8px;align-items:center;margin-top:8px}.prow input{max-width:7.5em}
 .prow .btn{padding:9px 12px;font-size:.85rem}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
@@ -204,8 +204,6 @@ h1{font-size:1.45rem;margin:0}
 h2{font-size:1.45rem;margin:6px 0 0}
 .muted{color:var(--muted)}
 .sub{color:var(--muted);margin:4px 0 18px;font-size:.95rem}
-.grid{display:grid;grid-template-columns:1fr;gap:12px}
-@media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
 .cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;color:var(--text);cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:6px;min-height:118px}
 .cat:active{background:var(--surface2);border-color:var(--accent)}
 @media(hover:hover){.cat:hover{background:var(--surface2);border-color:var(--accent)}}   /* phones: no hover left stuck on a tapped card */
@@ -230,17 +228,13 @@ select:focus,select.focus,input:focus{outline:none;border-color:var(--accent)}
 .weights{margin-top:8px}
 .wrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(5.4em,1fr));gap:8px}
 .wrow label{font-size:.8rem;color:var(--muted)}
-.wnote{font-size:.8rem;font-weight:700;margin-top:8px}
 .btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 button.btn{background:var(--surface2);color:var(--text);border:0;border-radius:8px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}
 button.btn:hover{background:var(--border)}
 button.btn.p{background:var(--accent);color:var(--on-accent)}button.btn.p:hover{background:var(--accent-h)}
 .hidden{display:none!important}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .size{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted)}
 .size button{background:var(--surface2);color:var(--text);border:0;border-radius:6px;font:inherit;font-weight:800;min-width:40px;min-height:36px;cursor:pointer}
-.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-@media(max-width:480px){.filters{grid-template-columns:1fr}}
 .cnt{font-size:.8rem;color:var(--muted);margin-top:8px}
 .srcl{grid-column:1/-1;font-size:.8rem;color:var(--muted);padding:2px 0}   /* where the list's figures come from */
 @media(min-width:900px){#lres>.srcl{padding:8px 0 6px}}
@@ -261,7 +255,6 @@ hr{border:0;border-top:1px solid var(--border);margin:10px 0}
 .help{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.4}
 .tblwrap .pc{display:none}
 @media (max-width:600px){   /* phone: cartridge stacks over the load name; other figures are one tap away */
-  .tblwrap .mn{display:none}
   .tblwrap .pc{display:block;font-size:.75rem;color:var(--muted)}
   .tblwrap .ld{white-space:normal;text-align:left}
 }
@@ -315,6 +308,26 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
   .hnote{margin-top:auto;padding-top:14px;text-align:center}
 }
 .dis{display:block;color:var(--text);margin-bottom:2px}
+.fav{background:none;border:0;padding:2px;margin:-2px 0 0;cursor:pointer;color:var(--muted);line-height:0;flex:none;border-radius:6px}
+.fav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
+.fav:not(.on){opacity:.55}.fav.on{color:var(--best)}.fav.on svg{fill:currentColor}
+.fav:focus-visible{outline:2px solid var(--accent);opacity:1}
+.lc .trow .fav{margin:0 0 0 8px;vertical-align:-4px}.lc .trow .fav svg{width:17px;height:17px}
+@media(hover:hover){.fav:hover{opacity:1;color:var(--best)}.lc .trow .fav:not(.on){opacity:0}.lc:hover .trow .fav:not(.on){opacity:.55}.lc .trow .fav:not(.on):focus-visible{opacity:1}}   /* PC: an empty star shows only on the row under the mouse */
+.nw{white-space:nowrap}
+.favlink{margin-top:14px;display:inline-flex;align-items:center;gap:6px}.favic{color:var(--best);font-size:1.05em}
+#flist .lc .st{margin-left:0}
+#flist .lc.open{border-color:var(--accent)}#flist .lc.open .st{display:none}
+.fdet{margin:12px 0 2px;border-top:1px solid var(--border);padding-top:12px;cursor:default}
+.fdet .psub{color:var(--muted);font-size:.85rem;font-weight:600;margin-bottom:14px}
+.fdet .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:14px 18px}
+.fdet .tile .l{display:block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.fdet .tile .tv{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:1.15rem;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}
+.fdet .tile small{font-size:.8rem;color:var(--muted);font-weight:600}
+.fdet .badge{font-size:.75rem;min-width:24px;padding:2px 6px}
+.fdet .hbtns{align-items:center;gap:8px 18px}
+@media(min-width:900px){#flist .lc>.fdet{grid-column:1/-1;margin:6px 0 4px}#flist .lgrid .lc.open{box-shadow:inset 3px 0 0 var(--accent)}
+  .fdet .tiles{display:flex;flex-wrap:wrap;gap:14px clamp(18px,2.4vw,40px)}.fdet .tile .tv{font-size:1.27rem}}
 .hgrp{margin:20px 0 8px;font-size:1rem}.hgrp small{color:var(--muted);font-weight:600}
 .hdet{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 16px;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;font-size:.92rem}
 .hdet>span:nth-child(odd){color:var(--muted)}
@@ -505,6 +518,10 @@ const MKEYS = Object.keys(METRICS);
 const TYPICAL_SCORE = 70.0;
 const HIGH_K = -Math.log(1 - TYPICAL_SCORE/100), LOW_K = -Math.log(TYPICAL_SCORE/100);
 const GRADE_COLORS = {S:["#a98bff","#1b0a40"],A:["#2fbf71","#06210f"],B:["#4c8dff","#06152e"],C:["#e5b93c","#2b2005"],D:["#e98a3c","#2e1704"],F:["#e5534b","#2e0a08"]};
+// a grade chip ("A" on its colour) and a price, for the load lists
+const badge=gr=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
+const money=v=>v==null?"—":"$"+v.toFixed(2);   // null: no cost given
+const fbadge=v=>v==null?"":badge(gradeRel(v));   // a factor's grade badge, none when the load lacks it
 const SOURCE_NOTES = {
   catalog:"Weight and velocity come from the manufacturer's 2026 catalog. The ballistic coefficient is the catalog's own figure or is worked out from its published downrange velocities; powder charge (recoil) and price are estimated.",
   published:"Weight, velocity and ballistic coefficient are manufacturer-published; powder charge (used for recoil) is estimated.",
@@ -677,7 +694,7 @@ function testBarrelText(it){
   return it.source==="estimate"?`our estimate for a ${g(b)} in barrel`:it.source==="tested"?`chronographed from a ${g(b)} in barrel`:`maker's figures from a ${g(b)} in test barrel`;
 }
 // the opened load's note on a barrel or twist of your own ("" when there is none; fire_source_note)
-function fireSourceNote(cat,it,barrel,twist){
+function fireSourceNote(cat,it,barrel){
   const out=[];
   if(barrel&&cat.barrel_in)out.push(it.at_in?`Estimate for your firearm setup: the listed velocity, from a ${g(testBarrel(cat,it.base||it))} in test barrel, is moved to your ${g(barrel)} in barrel, and downrange figures, recoil and grade follow from it.`
     :`Your ${g(barrel)} in barrel is this load's test barrel, so its listed velocity is used.`);
@@ -713,7 +730,7 @@ function computeStats(item,dist,gun,cost){
   return {weight:item.bullet_gr,velocity:v,energy:energy(item.bullet_gr,v),
           taylor:taylorKO(item.bullet_gr,v,d),hits:hitsIndex(item.bullet_gr,v,d),
           recoil:recoil(item.bullet_gr,item.muzzle_fps,item.powder_gr,gun),
-          cost:cost==null?item.default_cost:cost};
+          cost:(c=>c>0?c:null)(cost==null?item.default_cost:cost)};   // null: a handload with no cost (Nov 2026)
 }
 function median(a){const s=[...a].sort((x,y)=>x-y),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2;}
 function metricScore(value,ref,hi){
@@ -745,12 +762,19 @@ function spread(vals){
 }
 function relativeScores(statsList,weights){
   if(!statsList.length)return [];
-  const refs={},per={};
-  for(const k of MKEYS)refs[k]=median(statsList.map(s=>s[k]));
-  for(const k of MKEYS)per[k]=spread(statsList.map(s=>metricScore(s[k],refs[k],METRICS[k][1])));
-  let w=weights,tot=MKEYS.reduce((a,k)=>a+w[k],0);
-  if(tot<=0){w=Object.fromEntries(MKEYS.map(k=>[k,1]));tot=MKEYS.length;}
-  const raw=statsList.map((_,i)=>MKEYS.reduce((a,k)=>a+per[k][i]*w[k],0)/tot);
+  // a factor a load lacks (null: a handload with no cost) is scored over the loads that have it and
+  // left out of that load's weighted average, so it is graded on the other factors (relative_scores)
+  const per={};
+  for(const k of MKEYS){
+    const idx=statsList.map((s,i)=>s[k]==null?-1:i).filter(i=>i>=0);
+    per[k]=statsList.map(()=>null);
+    if(idx.length){const ref=median(idx.map(i=>statsList[i][k]));
+      spread(idx.map(i=>metricScore(statsList[i][k],ref,METRICS[k][1]))).forEach((v,j)=>{per[k][idx[j]]=v;});}
+  }
+  let w=weights;
+  if(MKEYS.reduce((a,k)=>a+w[k],0)<=0)w=Object.fromEntries(MKEYS.map(k=>[k,1]));
+  const raw=statsList.map((_,i)=>{const have=MKEYS.filter(k=>per[k][i]!=null),tw=have.reduce((a,k)=>a+w[k],0);
+    return tw>0?have.reduce((a,k)=>a+per[k][i]*w[k],0)/tw:have.reduce((a,k)=>a+per[k][i],0)/Math.max(have.length,1);});
   const overall=spread(raw);
   return statsList.map((_,i)=>[Object.fromEntries(MKEYS.map(k=>[k,per[k][i]])),overall[i]]);
 }
@@ -806,6 +830,28 @@ for(const cat of CATEGORIES){
 // saved price keys: old cartridge names, and "150 gr  ·  Load" labels (weight first, before v1.5)
 function readPrices(){try{const o=JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{},out={};for(const [k,v] of Object.entries(o)){const p=k.split("|");if(p.length<3){out[k]=v;continue;}const r=p.slice(2).join("|"),m=/^(\d+(?:\.\d+)?) gr  ·  (.+)$/.exec(r),n=RENAMED[p[1]]||p[1],cat=movedCat(p[0],n);for(const c of SPLIT[n]||[n])out[`${cat}|${c}|${m?`${m[2]}  ·  ${m[1]} gr`:r}`]=v;}return out;}catch(e){return {};}}
 function writePrices(o){try{localStorage.setItem(PRICE_KEY,JSON.stringify(o));return true;}catch(e){return false;}}
+// favorite loads (Zeke, Nov 7 2026): a list of pickKeys ("Centerfire Rifle|6.5 Creedmoor|label", a
+// handload by its id) kept on this device; renamed / moved cartridges follow like saved prices
+const FAV_KEY="cartridge_calc_favs_v1";
+let FAVS=null;
+function readFavs(){
+  if(FAVS)return FAVS;FAVS=new Set();
+  try{for(const k of JSON.parse(localStorage.getItem(FAV_KEY)||"[]")||[]){const p=String(k).split("|");if(p.length<3){FAVS.add(k);continue;}const n=RENAMED[p[1]]||p[1];FAVS.add(`${movedCat(p[0],n)}|${(SPLIT[n]||[n])[0]}|${p.slice(2).join("|")}`);}}catch(e){}
+  return FAVS;
+}
+function toggleFav(k){const f=readFavs();if(f.has(k))f.delete(k);else f.add(k);try{localStorage.setItem(FAV_KEY,JSON.stringify([...f]));}catch(e){}return f.has(k);}
+const STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3-4.6-4.4 6.3-.9z"/></svg>';
+const favBtn=k=>{const on=readFavs().has(k);return `<button class="fav${on?" on":""}" data-fav="${esc(k)}" aria-pressed="${on}" aria-label="Favorite" title="${on?"Remove from favorites":"Add to favorites"}">${STAR}</button>`;};
+// a table row's name with its star: the star stays on the line of the name's last word
+const starName=(t,k)=>{const i=t.lastIndexOf(" ");return `${esc(t.slice(0,i+1))}<span class="nw">${esc(t.slice(i+1))}${favBtn(k)}</span>`;};
+// a star click: flip it (and the row's other star: phone card + PC row) without opening the load
+function wireFavs(root,after){
+  root.querySelectorAll(".fav").forEach(b=>b.onclick=e=>{
+    e.stopPropagation();const on=toggleFav(b.dataset.fav);
+    root.querySelectorAll(".fav").forEach(x=>{if(x.dataset.fav!==b.dataset.fav)return;x.classList.toggle("on",on);x.setAttribute("aria-pressed",on);x.title=on?"Remove from favorites":"Add to favorites";});
+    if(after)after();
+  });
+}
 const priceKey=(cat,it)=>`${cat.title}|${it.cartridge}|${it.label}`;
 const shared={};   // category title -> values carried between the two tabs
 // ammo_*.csv cartridges with no factory loads (e.g. .32-40) still get an empty entry, after the
@@ -886,7 +932,7 @@ function lastCat(){try{return localStorage.getItem("cartridge_calc_cat");}catch(
 function drawChrome(){
   const nav=$("#nav");
   nav.innerHTML=NAVS.map(([k,t,ic])=>{
-    const on=NAV.mode===k;
+    const on=NAV.mode===k||k==="loads"&&NAV.mode==="favs";   // Favorite loads belongs to the Load Dictionary
     return `<button data-nav="${k}" class="${on?"on":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
       (on&&k==="loads"?`<div class="sub">${menuEntries().map(e=>{
         const btn=c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}${c.group?" child":""}">${esc(catName(c))}</button>`;
@@ -896,14 +942,14 @@ function drawChrome(){
       }).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
-  nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(NAV.mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
+  nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate("loads",CATEGORIES.find(c=>c.title===b.dataset.cat)));
   nav.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
 }
 // In-app history: every page change is a browser history entry (#settings, #loads/Handgun...),
 // so the browser's back arrow and the phone's back button step back through the app's pages
 // instead of leaving it. how: "pop" (moving through history, add nothing), "replace" (swap
 // this entry), else a new entry. depth counts the app's entries before this one.
-const NAV_MODES=["home","loads","h2h","hand","settings"];
+const NAV_MODES=["home","loads","h2h","hand","settings","favs"];
 const navState=()=>({mode:NAV.mode,cat:NAV.cat?NAV.cat.title:null});
 const navURL=()=>NAV.mode==="home"?location.pathname+location.search:"#"+NAV.mode+(NAV.cat?"/"+encodeURIComponent(NAV.cat.title):"");
 function navRecord(how){
@@ -938,7 +984,7 @@ function navigate(mode,cat,hid,how){   // hid: the handload the Handloads tab op
   if(NAV.cat&&NAV.cat.group)OPEN_GROUPS.add(NAV.cat.group);   // back on the list, its drop-down is open
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
-  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="hand")showHand(hid);else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
+  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="hand")showHand(hid);else if(mode==="favs")showFavs();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
   window.scrollTo(0,0);
   fitMenu();
 }
@@ -996,9 +1042,77 @@ function showPicker(mode){
       // Handgun: a drop-down; its categories show indented under it once it is tapped
       const [g,cs]=e,shown=OPEN_GROUPS.has(g);
       return `<button class="cat grp" data-group="${esc(g)}" aria-expanded="${shown}"><b>${esc(g)}&nbsp; ${shown?"▾":"▸"}</b><span class="b">${esc((DATA.group_blurbs||{})[g]||"")}</span><span class="c">${count(cs)}</span></button>`+(shown?cs.map(card).join(""):"");
-    }).join("")}</div>`;
+    }).join("")}</div>
+    <button class="link favlink" id="favgo">${STAR_TXT} Favorite loads${favCount()?` (${favCount()})`:""} ›</button>`;
+  $("#favgo").onclick=()=>navigate("favs");
   app.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
   app.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
+}
+
+// ---------- Favorite loads ----------
+// every starred load of every category, grouped by cartridge like the Handloads tab, with its
+// Load Dictionary figures (that category's distance and weights); a click opens it in the dictionary
+const STAR_TXT='<span class="favic" aria-hidden="true">★</span>';
+function favItems(){
+  const f=readFavs(),out=[];if(!f.size)return out;
+  for(const c of CATEGORIES.filter(hasDetail)){syncHand(c);for(const it of state.detail[c.title])if(f.has(pickKey(c,it)))out.push([c,it]);}
+  return out;
+}
+const favCount=()=>favItems().length;
+function showFavs(){
+  document.title=`${APP_TITLE} — Favorite loads`;
+  app.classList.remove("dict","h2hp","home","picker");app.classList.add("wide","handp");
+  app.innerHTML=`<div class="phead"><button class="link back" id="fback">‹ Categories</button><h2>Favorite loads</h2><p class="sub">Loads you starred in the Load Dictionary, saved on this device.</p></div><div id="flist"></div>`;
+  $("#fback").onclick=()=>navigate("loads");
+  const F={open:null,srcOpen:false,btOpen:false};
+  // an opened favorite: the dictionary's facts line and figure tiles, its notes, ballistic table,
+  // Head to Head and a link on to the Load Dictionary
+  function favDetail(c,it,r){
+    const edited=!it.handload&&typeof readPrices()[priceKey(c,it)]==="number";
+    const payload=c.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
+    const facts=[it.handload?"":payload,c.grain_style?testBarrelText(it):"",r.dist?`at ${g(r.dist)} yd`:""].filter(Boolean).join("  ·  ");
+    const tiles=[["Velocity",r.st.velocity.toFixed(0)+" fps","velocity"],["Energy",r.st.energy.toFixed(0)+" ft-lbs","energy"],["Recoil",r.st.recoil.toFixed(1)+" ft-lbs","recoil"],["Cost",money(r.st.cost)+(edited?" ✎":""),"cost"]]
+      .concat(c.terminal?[["Taylor KO",r.st.taylor.toFixed(1),"taylor"],["HITS",`${r.st.hits.toFixed(0)} <small>${hitsClass(r.st.hits)}</small>`,"hits"]]:[]);
+    const note=it.handload?SOURCE_NOTES.handload:`${SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE} Catalog price estimate: $${it.default_cost.toFixed(2)}.`;
+    return `<div class="fdet"><div class="psub">(${esc(facts)})</div>
+      <div class="tiles">${tiles.map(([l,v,k])=>`<div class="tile"><span class="l">${l}</span><span class="tv">${l==="HITS"?v:esc(v)}${GRADES&&r.sc?fbadge(r.sc[k]):""}</span></div>`).join("")}</div>
+      ${GRADES?`<div class="muted" style="font-size:.8rem;margin-top:10px">Overall ${r.grade} · ${r.overall.toFixed(0)} · ranks #${r.rank} of ${r.peers} ${esc(it.cartridge)} loads.</div>`:""}
+      <details class="btab srcd fsrc"${F.srcOpen?" open":""}><summary>${it.handload?"Disclaimer":"About these figures"}</summary><div class="note">${esc(note)}</div></details>
+      ${ballisticHTML(it,c,F.btOpen)}
+      <div class="hbtns"><button class="btn fh2h">${h2hText(c,it)}</button><button class="link fdict">Open in Load Dictionary ›</button></div></div>`;
+  }
+  function draw(){
+    const all=favItems();
+    if(!all.length){$("#flist").innerHTML=`<div class="card hempty"><b>No favorites yet</b><p class="muted" style="margin:6px 0 0">Tap the ☆ beside a load in the Load Dictionary to keep it here.</p></div>`;return;}
+    const groups=new Map();
+    all.sort((a,b)=>CATEGORIES.indexOf(a[0])-CATEGORIES.indexOf(b[0])||a[1].cartridge.localeCompare(b[1].cartridge)||lineCmp({it:a[1]},{it:b[1]}))
+      .forEach(p=>{const k=p[0].title+"|"+p[1].cartridge;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(p);});
+    $("#flist").innerHTML=[...groups.values()].map(list=>{
+      const c0=list[0][0],gs=c0.grain_style;
+      const cols=["minmax(12em,1fr)","auto","auto","auto","auto","auto"].concat(GRADES?["auto"]:[]).join(" ");
+      const d=handGrade(c0,list[0][1]).dist;
+      return `<h3 class="hgrp">${esc(list[0][1].cartridge)} <small>· ${esc(catName(c0))}</small></h3><div class="lgrid" style="margin-top:0;--lcols:${cols}"><div class="lhead"><span class="ln">Load</span><span>${gs?"Grains":"Shot"}</span><span>Use</span><span>Velocity at ${g(d)} yd</span><span>Energy</span><span>Price</span>${GRADES?"<span>Grade</span>":""}</div>${list.map(([c,it])=>{
+        const r=handGrade(c,it),k=pickKey(c,it),use=it.handload?"Handload":(it.purpose||it.group||"—");
+        const open=F.open===k;
+        return `<div class="lc${it.handload?" hl":""}${open?" open":""}" data-k="${esc(k)}" tabindex="0" role="button" aria-expanded="${open}" aria-label="${esc(it.load)}: show its figures"><div class="top"><div class="nm">${esc(it.load)}${gs?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}<span class="chip">${esc(use)}</span></div>${GRADES?`<div class="sc">${badge(r.grade)}</div>`:""}${favBtn(k)}</div>
+          <div class="trow"><span class="ln">${starName(it.load,k)}</span><span>${gs?g(it.bullet_gr):esc(shotSize(it)[2])}</span><span>${esc(use)}</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
+          <div class="st"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span>${r.st.cost==null?"no cost given":`<b>${money(r.st.cost)}</b> a round`}</span><span>at ${g(r.dist)} yd</span></div>${open?favDetail(c,it,r):""}</div>`;}).join("")}</div>`;}).join("");
+    wireFavs($("#flist"),()=>{if(!favItems().some(([c,it])=>pickKey(c,it)===F.open))F.open=null;});
+    $("#flist").querySelectorAll(".lc").forEach(el=>{
+      const p=all.find(([c,it])=>pickKey(c,it)===el.dataset.k);if(!p)return;const [c,it]=p;
+      const k=el.dataset.k,toggle=()=>{F.open=F.open===k?null:k;draw();const o=$("#flist .lc.open");if(o&&o.getBoundingClientRect().bottom>innerHeight)o.scrollIntoView({block:"nearest"});};
+      el.onclick=e=>{if(e.target.closest(".fdet"))return;toggle();};
+      el.onkeydown=e=>{if((e.key==="Enter"||e.key===" ")&&e.target===el){e.preventDefault();toggle();}};
+      if(F.open!==k)return;
+      const sd=el.querySelector("details.fsrc"),bt=el.querySelector("details.btab:not(.srcd)");
+      if(sd)sd.addEventListener("toggle",()=>{F.srcOpen=sd.open;});
+      if(bt)bt.addEventListener("toggle",()=>{F.btOpen=bt.open;});
+      el.querySelector(".fdict").onclick=()=>{shared[c.title]=Object.assign({},shared[c.title],{goFav:{cart:it.cartridge,key:it.hid||it.label,load:it.load}});navigate("loads",c);};
+      const hb=el.querySelector(".fh2h");
+      hb.onclick=()=>{const pk=pickKey(c,it);if(H2H.includes(pk)||H2H.length>=H2H_MAX){navigate("h2h");return;}H2H.push(pk);hb.textContent=h2hText(c,it);};
+    });
+  }
+  draw();
 }
 
 function openCategory(cat,tab){
@@ -1028,7 +1142,7 @@ function writeHand(a){try{localStorage.setItem(HAND_KEY,JSON.stringify(a));retur
 const handName=r=>r.name||([r.bullet_maker,r.bullet].filter(Boolean).join(" ")||"Handload")+` ${g(+r.bullet_gr)} gr`+(r.powder?` + ${r.powder} ${g(+r.powder_gr)} gr`:"");
 function handItem(r,cat){
   const it={cartridge:r.cartridge,load:handName(r),bullet_gr:+r.bullet_gr,muzzle_fps:+r.muzzle_fps,bc_g1:+r.bc_g1,powder_gr:+r.powder_gr,
-    default_cost:+r.cost,source:"handload",group:"",is_default:false,barrel_in:+r.barrel_in||0,purpose:r.purpose||"",
+    default_cost:+r.cost||0,source:"handload",group:"",is_default:false,barrel_in:+r.barrel_in||0,purpose:r.purpose||"",
     diameter_in:+r.diameter_in||0,handload:true,hid:r.id,rec:r};
   it.label=makeLabel(it,cat);return it;
 }
@@ -1090,8 +1204,6 @@ function showHand(openId){
     const groups=new Map();
     shown.sort((a,b)=>CATEGORIES.indexOf(a[0])-CATEGORIES.indexOf(b[0])||a[1].cartridge.localeCompare(b[1].cartridge)||a[1].label.localeCompare(b[1].label))
       .forEach(p=>{const k=p[0].title+"|"+p[1].cartridge;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(p);});
-    const badge=gr=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
-    const money=v=>"$"+v.toFixed(2);
     // PC (>=900 px): each cartridge's handloads are a table like the dictionary's (.lhead / .trow)
     const cols=["minmax(10em,1.3fr)","minmax(8em,1fr)","minmax(7em,.8fr)","auto","auto","auto"].concat(GRADES?["auto"]:[]).join(" ");
     const lhead=d=>`<div class="lhead"><span class="ln">Handload</span><span class="ln">Bullet</span><span class="ln">Powder</span><span>Velocity at ${g(d)} yd</span><span>Energy</span><span>Price</span>${GRADES?"<span>Grade</span>":""}</div>`;
@@ -1101,13 +1213,13 @@ function showHand(openId){
       return `<div class="lc hl ${open?"open":""}" data-id="${esc(rec.id)}"><div class="top"><div class="nm">${esc(it.load)}</div>
         ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">#${r.rank} of ${r.peers}</span></div>`:""}</div>
         <div class="trow"><span class="ln">${esc(it.load)}</span><span class="bp">${esc(bullet)} · ${g(it.bullet_gr)} gr</span><span class="bp">${esc(rec.powder||"—")} · ${g(it.powder_gr)} gr</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
-        <div class="st" style="margin-left:0"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span><b>${money(r.st.cost)}</b> a round</span><span>at ${g(r.dist)} yd</span></div>
+        <div class="st" style="margin-left:0"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span>${r.st.cost==null?"no cost given":`<b>${money(r.st.cost)}</b> a round`}</span><span>at ${g(r.dist)} yd</span></div>
         ${open?`<div class="hdet">
           <span>Bullet</span><span>${esc(bullet)} · ${g(it.bullet_gr)} gr${rec.diameter_in?` · ${g(+rec.diameter_in)} in`:""} · BC ${g(it.bc_g1)}</span>
           <span>Powder</span><span>${rec.powder?esc(rec.powder)+" · ":""}${g(it.powder_gr)} gr</span>
           <span>Velocity</span><span>${g(it.muzzle_fps)} fps${it.barrel_in?` from a ${g(it.barrel_in)} in barrel`:""}</span>
           ${it.purpose?`<span>Purpose</span><span>${esc(it.purpose)}</span>`:""}
-          <span>Cost</span><span>${hasP?`<span class="hcost"><span>Bullet</span><span>${money(cp.b)}</span><span>Powder</span><span>${money(cp.p)}</span><span>Primer</span><span>${money(cp.pr)}</span><span>Brass${+rec.brass_reuse>1?` (÷${g(+rec.brass_reuse)} reloads)`:""}</span><span>${money(cp.br)}</span><span class="t">Per round</span><span class="t">${money(it.default_cost)}</span></span>`:`${money(it.default_cost)} a round`}</span>
+          <span>Cost</span><span>${hasP?`<span class="hcost"><span>Bullet</span><span>${money(cp.b)}</span><span>Powder</span><span>${money(cp.p)}</span><span>Primer</span><span>${money(cp.pr)}</span><span>Brass${+rec.brass_reuse>1?` (÷${g(+rec.brass_reuse)} reloads)`:""}</span><span>${money(cp.br)}</span><span class="t">Per round</span><span class="t">${money(it.default_cost)}</span></span>`:it.default_cost>0?`${money(it.default_cost)} a round`:"—"}</span>
           ${rec.notes?`<span>Notes</span><span style="font-weight:500">${esc(rec.notes)}</span>`:""}
           ${GRADES?`<span>Grade</span><span style="font-weight:500">${r.grade} · ${r.overall.toFixed(0)}, ranks #${r.rank} of ${r.peers} ${esc(it.cartridge)} loads in the Load Dictionary</span>`:""}
         </div>
@@ -1161,7 +1273,7 @@ function mergeHand(text){
     const r={};head.forEach((k,i)=>{r[k]=(line[i]||"").trim();});
     r.cartridge=canon(r.cartridge);
     r.category=movedCat(r.category,r.cartridge);
-    const ok=known.has(r.category)&&r.cartridge&&["bullet_gr","muzzle_fps","bc_g1","powder_gr","cost"].every(k=>+r[k]>0);
+    const ok=known.has(r.category)&&r.cartridge&&["bullet_gr","muzzle_fps","bc_g1","powder_gr"].every(k=>+r[k]>0)&&!(+r.cost<0);   // cost optional
     if(!ok){skip++;continue;}
     ["bullet_gr","diameter_in","bc_g1","powder_gr","muzzle_fps","barrel_in","cost","bullet_cost","powder_cost_lb","primer_cost","brass_cost","brass_reuse"].forEach(k=>{r[k]=+r[k]||0;});
     if(!r.brass_reuse)r.brass_reuse=5;
@@ -1207,7 +1319,7 @@ const CAT_TAGS=DATA.cat_tags||{};
 function handCarts(){
   const per=CATEGORIES.filter(c=>c.grain_style&&state.detail[c.title]).map(c=>{
     syncHand(c);return [c,[...withHandloadOnly(groupBy(state.detail[c.title],false),state.loads[c.title]||[]).keys()]];});
-  const cnt={};per.forEach(([c,cs])=>cs.forEach(x=>{cnt[x]=(cnt[x]||0)+1;}));
+  const cnt={};per.forEach(([,cs])=>cs.forEach(x=>{cnt[x]=(cnt[x]||0)+1;}));
   return per.flatMap(([c,cs])=>cs.map(x=>({text:cnt[x]>1?`${x}  ·  ${CAT_TAGS[c.title]||c.title}`:x,cat:c,cart:x})));
 }
 // a cartridge that isn't in the list (older / obsolete ones, Zeke Nov 2026): the handload form
@@ -1232,6 +1344,17 @@ function newCartridge(opts,name,cat){
   const mine=same.find(o=>o.cat===cat);if(mine)return {cat,cart:mine.cart};
   if(same.length)throw new Error(`${same[0].cart} is already in the list (${catName(same[0].cat)}). Pick it there, or choose that type.`);
   return {cat,cart:name};
+}
+// a library bullet for a cartridge of diameter d (desktop bullet_fits): same diameter within 0.0015 in,
+// lead / plated bullets up to .0035 over, FIT_SPAN widens it per cartridge (.44-40, .350 Legend); handgun cartridges
+// skip rifle bullets unless no handgun bullet of that size exists
+const LEAD_BULLET=/\bLead\b(?!-)|Plated/,FIT_SPAN={".44-40 Winchester":0.0035,".350 Legend":0.0025},MAX_BULLET_GR={"5.7x28mm":55};
+function bulletFits(b,d,handgun,cart){
+  if(!d)return true;
+  const near=x=>{const off=x.diameter-d,over=Math.max(LEAD_BULLET.test(x.name||"")?0.0035:0.0015,FIT_SPAN[cart]||0);return off>=-0.0015-1e-9&&off<=over+1e-9;};
+  if(!near(b)||(b.weight||0)>(MAX_BULLET_GR[cart]??1e9))return false;
+  if(handgun&&b.use==="rifle")return !BULLETS.some(x=>near(x)&&(x.use==="handgun"||x.use==="both"));
+  return true;
 }
 // the Handloads tab's add / edit form (any category: the cartridge picks it)
 function handDialog(rec,done){
@@ -1278,7 +1401,8 @@ function handDialog(rec,done){
   };
   // bullets go by diameter, not cartridge: the makers listed are those with a bullet of this
   // diameter; "Other maker" opens a box to type any maker (#hbmo)
-  const OTHER="__other__",fits=b=>{const d=diaOf(q("#hc").value);return !d||Math.abs(b.diameter-d)<=0.003;};
+  const catOf=c=>c===NEWC?HAND_KINDS.find(k=>k.title===q("#hnt").value):(pickOf(c)||{}).cat;
+  const OTHER="__other__",fits=b=>{const c=q("#hc").value,k=catOf(c),o=c===NEWC?null:pickOf(c);return bulletFits(b,diaOf(c),!!(k&&k.group==="Handgun"),o&&o.cart);};
   const makerOf=()=>q("#hbm").value===OTHER?q("#hbmo").value.trim():q("#hbm").value;
   const fillMakers=()=>{
     const makers=[...new Set(BULLETS.filter(fits).map(b=>b.maker))].sort(),cur=q("#hbm").value;
@@ -1311,6 +1435,7 @@ function handDialog(rec,done){
     add:{text:t=>t?`+ Add “${t}” as a new cartridge`:"+ Add a cartridge that isn't listed",
       pick:t=>{hc.value=NEWC;q("#hnn").value=t;showNew();fillMakers();if(!touch||!t)q("#hnn").focus();}}};
   q("#hnd").addEventListener("input",fillMakers);
+  q("#hnt").addEventListener("change",fillMakers);
   const openCart=typed=>touch?pickSheet(opts,cartPick):pickSheet(opts,cartPick,{el:hc,input:cv,typed:typed||""});
   cv.onclick=()=>openCart();
   cv.onfocus=()=>hc.classList.add("focus");cv.onblur=()=>hc.classList.remove("focus");
@@ -1367,12 +1492,12 @@ function handDialog(rec,done){
       const parts={bullet_cost:num("hcb","Bullet cost",0,null,true)||0,powder_cost_lb:num("hcp","Powder cost",0,null,true)||0,primer_cost:num("hcr","Primer cost",0,null,true)||0,brass_cost:num("hcs","Brass cost",0,null,true)||0,brass_reuse:num("hcu","Brass reuses",1,1000,true)||5};
       const tot=num("hct","Total cost",0,null,true);
       const cost=tot>0?tot:costParts(Object.assign({powder_gr:pg},parts)).total;
-      if(!(cost>0))throw new Error("Enter a cost per round (a total, or the bullet, powder, primer and brass prices).");
+      // the cost is optional (Zeke, Nov 2026): none given saves 0, shown "—" and graded without cost
       const mk=makerOf(),bn=q("#hbn").value.trim(),pw=q("#hpw").value.trim();
       let name=q("#hn").value.trim();
       if(!name)name=[mk,bn,g(gr)+" gr"].filter(Boolean).join(" ")+(pw?` + ${pw} ${g(pg)} gr`:` + ${g(pg)} gr`);
       r=Object.assign({id:edit?rec.id:"h"+Date.now()+Math.random().toString(36).slice(2,6),category:cat.title,cartridge:cart,name,bullet_maker:mk,bullet:bn,
-        bullet_gr:gr,diameter_in:dm,bc_g1:bc,powder:pw,powder_gr:pg,muzzle_fps:fps,barrel_in:bl||0,purpose:q("#hpu").value,cost:+cost.toFixed(4),notes:q("#hno").value.trim()},
+        bullet_gr:gr,diameter_in:dm,bc_g1:bc,powder:pw,powder_gr:pg,muzzle_fps:fps,barrel_in:bl||0,purpose:q("#hpu").value,cost:cost>0?+cost.toFixed(4):0,notes:q("#hno").value.trim()},
         tot>0?{bullet_cost:0,powder_cost_lb:0,primer_cost:0,brass_cost:0,brass_reuse:5}:parts);
     }catch(e){alert(e.message);return;}
     const rows=readHand();const i=rows.findIndex(x=>x.id===r.id);
@@ -1608,36 +1733,35 @@ function openLoads(cat,pane){
       // bullet weight in grains, ties by the default order
       grain:(a,b)=>b.it.bullet_gr-a.it.bullet_gr||(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
       grainl:(a,b)=>a.it.bullet_gr-b.it.bullet_gr||(a.it.group||"").localeCompare(b.it.group||"")||b.overall-a.overall,
-      cost:(a,b)=>a.st.cost-b.st.cost,velocity:(a,b)=>b.st.velocity-a.st.velocity,energy:(a,b)=>b.st.energy-a.st.energy,taylor:(a,b)=>b.st.taylor-a.st.taylor,hits:(a,b)=>b.st.hits-a.st.hits,recoil:(a,b)=>a.st.recoil-b.st.recoil}[key];
+      cost:(a,b)=>(a.st.cost==null)-(b.st.cost==null)||a.st.cost-b.st.cost,velocity:(a,b)=>b.st.velocity-a.st.velocity,energy:(a,b)=>b.st.energy-a.st.energy,taylor:(a,b)=>b.st.taylor-a.st.taylor,hits:(a,b)=>b.st.hits-a.st.hits,recoil:(a,b)=>a.st.recoil-b.st.recoil}[key];
     rows.sort(cmp);
     $$("#lcnt").textContent=`${rows.length} of ${out.rows.length} loads at ${g(out.dist)} yards`+(L.purpose!=="All"?` · ${L.purpose} only`:"")+(out.multi&&GRADES?" · ranked within each load type":"");
     // PC (>=900 px): the list reads as a table like the desktop app's, one row per load with its
     // figures in columns; phones keep the cards (.top) and never show .lhead / .trow
-    const badge=(gr)=>`<span class="badge" style="background:${GRADE_COLORS[gr][0]};color:${GRADE_COLORS[gr][1]}">${gr}</span>`;
-    const tcols=[GRADES&&["#","score",r=>r.rank,"auto"],["Load","brand",r=>`${esc(cat.grain_style?r.it.load:makeLabel(r.it,cat))}${r.it.handload?'<span class="chip">Handload</span>':""}${warn(r.it)}`,"minmax(9em,1fr)"]]
+    const tcols=[GRADES&&["#","score",r=>r.rank,"auto"],["Load","brand",r=>`${starName(cat.grain_style?r.it.load:makeLabel(r.it,cat),pickKey(cat,r.it))}${r.it.handload?'<span class="chip">Handload</span>':""}${warn(r.it)}`,"minmax(9em,1fr)"]]
       .concat(cat.grain_style?[["Grains","grain",r=>g(r.it.bullet_gr),"auto"],["Barrel",null,r=>out.barrel||r.it.barrel_in?g(out.barrel||r.it.barrel_in)+'"':"—","auto"],["Use",null,r=>esc(purposeOf(r.it)||"—"),"auto"]]
         :[["Shot","shot",r=>esc(shotSize(r.it)[2]),"auto"],[cat.payload_col,null,r=>g(r.st.weight),"auto"]])
       .concat([["Velocity","velocity",r=>r.st.velocity.toFixed(0),"auto"],["Energy","energy",r=>r.st.energy.toFixed(0),"auto"],["Recoil","recoil",r=>r.st.recoil.toFixed(1),"auto"]])
       .concat(cat.terminal?[["Taylor","taylor",r=>r.st.taylor.toFixed(1),"auto"],["HITS","hits",r=>r.st.hits.toFixed(0),"auto"]]:[])
-      .concat([["Price","cost",r=>"$"+r.st.cost.toFixed(2)+(!r.it.handload&&typeof L.prices[priceKey(cat,r.it)]==="number"?" ✎":""),"auto"]])
+      .concat([["Price","cost",r=>money(r.st.cost)+(!r.it.handload&&typeof L.prices[priceKey(cat,r.it)]==="number"?" ✎":""),"auto"]])
       .concat(GRADES?[["Score","score",r=>r.overall.toFixed(0),"auto"],["Grade","score",r=>badge(r.grade),"auto"]]:[]).filter(Boolean);
     box.style.setProperty("--lcols",tcols.map(c=>c[3]).join(" "));
     const lhead=`<div class="lhead">${tcols.map(c=>c[1]?`<button data-k="${c[1]}" class="${c===tcols.find(x=>x[1]===key||x[1]==="grain"&&key==="grainl"||x[1]==="brand"&&key==="brandl")?(key==="grainl"?"on up":"on"):""}${c[0]==="#"?" rk":""}${c[0]==="Load"?" ln":""}">${esc(c[0])}</button>`:`<span${c[0]==="Load"?' class="ln"':""}>${esc(c[0])}</span>`).join("")}</div>`;
     // where the figures come from, right over the list's headings (Zeke, Oct 30 2026)
     const srcl=`<div class="srcl">${esc(sourceLine(cat,out.barrel,out.twist,out.rows.some(r=>r.it.handload)))}</div>`;
-    box.innerHTML=(rows.length?srcl+lhead:"")+rows.map((r,n)=>{
+    box.innerHTML=(rows.length?srcl+lhead:"")+rows.map(r=>{
       const it=r.it,open=L.open===keyOf(it), edited=!it.handload&&typeof L.prices[priceKey(cat,it)]==="number";
-      const fb=k=>GRADES?badge(gradeRel(r.sc[k])):`<span style="width:32px"></span>`;
+      const fb=k=>GRADES&&r.sc[k]!=null?fbadge(r.sc[k]):`<span style="width:32px"></span>`;
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top">${GRADES?`<span class="rk">#${r.rank}</span>`:""}
         <div class="nm">${open?`<small class="ct">${esc(it.cartridge||$$("#lc").value)}</small>`:""}${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}${warn(it)}</div>
-        ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}</div>
+        ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}${favBtn(pickKey(cat,it))}</div>
         <div class="trow">${tcols.map(c=>`<span${c[0]==="Load"?' class="ln"':c[0]==="#"?' class="rk"':""}>${c[2](r)}</span>`).join("")}</div>
         ${open?`<div class="det">
           <div class="pdet"><div class="psub">${esc([it.cartridge||$$("#lc").value,it.handload?"":payload,cat.grain_style?(out.barrel?`estimated figures for your ${g(out.barrel)} in barrel`:testBarrelText(it)):"",it.sg?`stability ${it.sg.toFixed(2)} in a 1:${g(it.twist)} twist: ${stabilityText(it.sg)}`:""].filter(Boolean).join("  ·  "))}</div>
-          <div class="tiles">${[["Velocity",r.st.velocity.toFixed(0)+" fps","velocity"],["Energy",r.st.energy.toFixed(0)+" ft-lbs","energy"],["Recoil",r.st.recoil.toFixed(1)+" ft-lbs","recoil"],["Price","$"+r.st.cost.toFixed(2)+(edited?" ✎":""),"cost"]]
+          <div class="tiles">${[["Velocity",r.st.velocity.toFixed(0)+" fps","velocity"],["Energy",r.st.energy.toFixed(0)+" ft-lbs","energy"],["Recoil",r.st.recoil.toFixed(1)+" ft-lbs","recoil"],["Price",money(r.st.cost)+(edited?" ✎":""),"cost"]]
             .concat(cat.terminal?[["Taylor KO",r.st.taylor.toFixed(1),"taylor"],["HITS",`${r.st.hits.toFixed(0)} <small>(${hitsClass(r.st.hits)})</small>`,"hits"]]:[])
-            .map(([l,v,k])=>`<div class="tile"><span class="l">${l}</span><span class="tv">${l==="HITS"?v:esc(v)}${GRADES?badge(gradeRel(r.sc[k])):""}</span></div>`).join("")}${it.handload?"":`<button class="srcb${L.srcOpen?" on":""}">About these figures</button>`}</div></div>
+            .map(([l,v,k])=>`<div class="tile"><span class="l">${l}</span><span class="tv">${l==="HITS"?v:esc(v)}${GRADES?fbadge(r.sc[k]):""}</span></div>`).join("")}${it.handload?"":`<button class="srcb${L.srcOpen?" on":""}">About these figures</button>`}</div></div>
           ${it.handload?"":`<div class="row fr"><span class="muted">${cat.grain_style?"Bullet weight":"Payload"}</span><span class="v">${payload}</span><span style="width:32px"></span></div>`}
           ${cat.grain_style?`<div class="row fr"><span class="muted">Test barrel</span><span class="v">${it.barrel_in?g(it.barrel_in)+" in":"not listed"}</span><span style="width:32px"></span></div>`:""}
           ${out.barrel?`<div class="row fr"><span class="muted">Figures for</span><span class="v">${g(out.barrel)} in barrel <small class="muted">(estimate)</small></span><span style="width:32px"></span></div>`:""}
@@ -1650,16 +1774,16 @@ function openLoads(cat,pane){
           <div class="row"><span class="muted">Powder</span><span class="v">${esc(r0.powder||"—")} ${g(it.powder_gr)} gr</span><span style="width:32px"></span></div>
           ${hasP?`<div class="row"><span class="muted">Cost breakdown</span><span class="v" style="font-size:.85rem;font-weight:600">bullet $${cp.b.toFixed(2)} · powder $${cp.p.toFixed(2)} · primer $${cp.pr.toFixed(2)} · brass $${cp.br.toFixed(2)}</span><span style="width:32px"></span></div>`:""}
           ${r0.notes?`<div class="row"><span class="muted">Notes</span><span class="v" style="font-weight:500">${esc(r0.notes)}</span><span style="width:32px"></span></div>`:""}`;})():""}
-          <div class="row fr"><span class="muted">Price</span><span class="v">$${r.st.cost.toFixed(2)}${edited?" ✎":""}</span>${fb("cost")}</div>
+          <div class="row fr"><span class="muted">Price</span><span class="v">${money(r.st.cost)}${edited?" ✎":""}</span>${fb("cost")}</div>
           ${cat.terminal?`<div class="row fr"><span class="muted">Taylor KO</span><span class="v">${r.st.taylor.toFixed(1)}</span>${fb("taylor")}</div>
           <div class="row fr"><span class="muted">HITS</span><span class="v">${r.st.hits.toFixed(0)} <small class="muted">(${hitsClass(r.st.hits)})</small></span>${fb("hits")}</div>`:""}
           ${GRADES?`<div class="muted" style="font-size:.8rem;margin-top:4px">Overall ${r.grade} · ${r.overall.toFixed(0)} · ranks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}. Grades compare loads of this cartridge only.</div>`:""}
           ${ballisticHTML(it,cat,L.btOpen)}
           <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button></div>
           ${it.handload?`<div class="hbtns"><button class="btn hedit">Edit in Handloads ›</button></div>
-          <div class="note">${esc([fireSourceNote(cat,it,out.barrel,out.twist),SOURCE_NOTES.handload].filter(Boolean).join(" "))}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
+          <div class="note">${esc([fireSourceNote(cat,it,out.barrel),SOURCE_NOTES.handload].filter(Boolean).join(" "))}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
           <!-- where the figures come from, folded away behind a link (Zeke, Oct 31 2026) -->
-          <details class="btab srcd"${L.srcOpen?" open":""}><summary>About these figures</summary><div class="note">${esc((fireSourceNote(cat,it,out.barrel,out.twist)?fireSourceNote(cat,it,out.barrel,out.twist)+" Listed figures: ":"")+(SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE))} Catalog price estimate: $${it.default_cost.toFixed(2)}.</div></details></div>`}`:""}
+          <details class="btab srcd"${L.srcOpen?" open":""}><summary>About these figures</summary><div class="note">${esc((fireSourceNote(cat,it,out.barrel)?fireSourceNote(cat,it,out.barrel)+" Listed figures: ":"")+(SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE))} Catalog price estimate: $${it.default_cost.toFixed(2)}.</div></details></div>`}`:""}
       </div>`;}).join("")||`<div class="muted">No loads match that filter.</div>`;
     // a heading sorts by its column; clicking the sorted heading again goes back to the default
     // order (Grains: heaviest, then lightest, then the default order; Zeke, Oct 28 2026)
@@ -1668,6 +1792,7 @@ function openLoads(cat,pane){
       // default is brand (product line), so it switches between the two)
       $$("#ls").value=k==="brand"?(cur==="brand"?"brandl":cur==="brandl"&&GRADES?"score":"brand")
         :k==="grain"&&cur==="grain"?"grainl":k===cur||k==="grain"&&cur==="grainl"?DEFAULT_SORT():k;render();});
+    wireFavs(box);
     box.querySelectorAll(".lc").forEach(c=>{
       const lab=c.dataset.i;
       c.onclick=e=>{if(e.target.closest(".prow,.hbtns,.btab"))return;L.open=L.open===lab?null:lab;render();};
@@ -1710,8 +1835,14 @@ function openLoads(cat,pane){
     if(go.cartridge!==$$("#lc").value){setCart(go.cartridge);$$("#lc").onchange();}
     L.purpose="All";L.src="All";const it=all.find(x=>x.hid===go.id);L.open=it?keyOf(it):null;
   }
+  // opened from Favorite loads: that cartridge, that load open, nothing filtering it out
+  const gf=sh.goFav;delete sh.goFav;
+  if(gf&&groups.has(gf.cart)){
+    if(gf.cart!==$$("#lc").value){setCart(gf.cart);$$("#lc").onchange();}
+    L.purpose="All";L.src="All";const pr=pressureOf(gf.load);if(pr)L.press[pr]=true;L.open=gf.key;
+  }
   buildChips();render();
-  if(go){const c=pane.querySelector(".lc.open");if(c)c.scrollIntoView({block:"center"});}
+  if(go||gf){const c=pane.querySelector(".lc.open");if(c)c.scrollIntoView({block:"center"});}
 }
 
 // ---------- Head to Head tab ----------
@@ -1736,10 +1867,11 @@ function h2hRows(picked,dist,guns,weightsOf,priceOf,groups,barrels,twists){
       const items=groups.get(grp).map(x=>atFirearm(x,ic,barrel,twist));
       done.set(key,new Map(scoreLoads(items,d,gun,weightsOf(ic),items.map(x=>priceOf(ic,x.base||x)),!ic.grain_style).map(r=>[r.it.base||r.it,r])));
     }
-    rows.push(Object.assign({},done.get(key).get(it),{cat:ic,dist:d,gun,keys:keysOf(ic),best:new Set(),gap:{}}));
+    const sr=done.get(key).get(it);
+    rows.push(Object.assign({},sr,{cat:ic,dist:d,gun,keys:keysOf(ic).filter(k=>sr.st[k]!=null),best:new Set(),gap:{}}));   // no cost given: cost left out
   }
   for(const k of h2hKeys(rows.map(r=>r.cat))){
-    const have=rows.filter(r=>r.keys.includes(k)),vals=have.map(r=>r.st[k]),lead=METRICS[k][1]?Math.max(...vals):Math.min(...vals);
+    const have=rows.filter(r=>r.keys.includes(k));if(!have.length)continue;const vals=have.map(r=>r.st[k]),lead=METRICS[k][1]?Math.max(...vals):Math.min(...vals);
     have.forEach((r,i)=>{if(Math.abs(vals[i]-lead)<=1e-9*Math.max(1,Math.abs(lead)))r.best.add(k);r.gap[k]=lead===0?0:100*(vals[i]-lead)/Math.abs(lead);});
   }
   return rows;
@@ -1862,9 +1994,9 @@ function openH2H(pane){
     for(const k of keys){
       const hi=METRICS[k][1],vals=rows.filter(r=>r.keys.includes(k)).map(r=>r.st[k]),top=Math.max(...vals),low=Math.min(...vals);
       h+=`<div class="mcard"><div class="mt">${METRICS[k][0]}${k==="velocity"||k==="energy"?` <small>at ${g(dist)} yd</small>`:""}<small class="hint">${hi?"higher is better":"lower is better"}</small></div>`+
-        rows.map(r=>{if(!r.keys.includes(k))return `<div class="mrow">${name(r)}<span class="mv">—</span><span class="mg">does not apply</span><span></span></div>`;
+        rows.map(r=>{if(!r.keys.includes(k))return `<div class="mrow">${name(r)}<span class="mv">—</span><span class="mg">${k==="cost"&&r.it.handload?"no cost given":"does not apply"}</span><span></span></div>`;
           const b=r.best.has(k),v=r.st[k],w=hi?(top>0?v/top:0):(v>0?low/v:1),at=(k==="velocity"||k==="energy")&&r.dist!==dist?` at ${g(r.dist)} yd`:"";
-          return `<div class="mrow">${name(r)}<span class="mv${b?" best":""}">${h2hValue(k,v)}</span><span class="mg${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?badge(gradeRel(r.sc[k])):"<span></span>"}${bar(w,b)}</div>`;}).join("")+`</div>`;
+          return `<div class="mrow">${name(r)}<span class="mv${b?" best":""}">${h2hValue(k,v)}</span><span class="mg${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?fbadge(r.sc[k])||"<span></span>":"<span></span>"}${bar(w,b)}</div>`;}).join("")+`</div>`;
     }
     // downrange: pick a distance, then the same bubble rows with names
     const dr=h2hDownrange(rows.map(r=>[r.cat,r.it]));
@@ -1908,7 +2040,7 @@ function openH2H(pane){
     h+=line("Purpose",rows.map(r=>esc(r.it.purpose||r.it.group||"—")));
     for(const k of keys){
       h+=line(METRICS[k][0]+(k==="velocity"||k==="energy"?` at ${g(dist)} yd`:""),rows.map(r=>{if(!r.keys.includes(k))return `<span class="gap">—</span>`;const b=r.best.has(k),at=(k==="velocity"||k==="energy")&&r.dist!==dist?` at ${g(r.dist)} yd`:"";
-        return `<span class="v${b?" best":""}">${h2hValue(k,r.st[k])}</span><span class="gap${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?badge(gradeRel(r.sc[k])):""}`;}));
+        return `<span class="v${b?" best":""}">${h2hValue(k,r.st[k])}</span><span class="gap${b?" best":""}">${b?"best":h2hGap(r.gap[k])}${at}</span>${GRADES?fbadge(r.sc[k]):""}`;}));
     }
     h+=line("Best in",rows.map(r=>`<span class="${r.best.size===most&&most?"v best":""}">${r.best.size} of ${r.keys.length}</span>`));
     h+=`</tbody></table></div><div class="sect">DOWNRANGE</div><div class="h2h drw"><table class="dr"><thead><tr><th></th>${rows.map((r,n)=>{const i=r.it.label.lastIndexOf("  ·  "),nm=i<0?r.it.label:r.it.label.slice(0,i),wt=i<0?"":r.it.label.slice(i+5);return `<th colspan="2" class="ld l0${r.it.handload?" hl":""}"><small class="ct">${esc(r.it.cartridge)}</small><span class="nm">${esc(nm)}</span>${wt?`<small>${esc(wt)}</small>`:""}${setup(n)}</th>`;}).join("")}</tr><tr><th class="yd" style="color:var(--muted)">Yards</th>${rows.map(()=>`<th class="l0">Velocity (fps)</th><th>Energy (ft-lbs)</th>`).join("")}</tr></thead><tbody>`;
@@ -1952,7 +2084,7 @@ $("#ver").textContent=VERSION_TEXT;
     if(openModalClose){openModalClose();return;}
     if(NAV.mode==="home")AppPlugin.exitApp();
     else if(history.state&&history.state.depth>0)history.back();
-    else if(NAV.cat)navigate(NAV.mode,null,null,"replace");
+    else if(NAV.cat||NAV.mode==="favs")navigate("loads",null,null,"replace");
     else navigate("home",null,null,"replace");
   });
 })();

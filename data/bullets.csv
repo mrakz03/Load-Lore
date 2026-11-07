@@ -1,239 +1,1348 @@
-maker,name,diameter_in,weight_gr,bc_g1,type
-Hornady,V-MAX,0.172,17,0.125,Varmint
-Hornady,V-MAX,0.172,20,0.141,Varmint
-Hornady,V-MAX,0.172,25,0.175,Varmint
-Hornady,V-MAX,0.204,32,0.234,Varmint
-Hornady,V-MAX,0.204,40,0.275,Varmint
-Hornady,V-MAX,0.224,40,0.200,Varmint
-Hornady,V-MAX,0.224,50,0.242,Varmint
-Hornady,V-MAX,0.224,55,0.255,Varmint
-Hornady,V-MAX,0.224,60,0.290,Varmint
-Hornady,BTHP Match,0.224,68,0.355,Match
-Hornady,ELD Match,0.224,73,0.398,Match
-Hornady,ELD Match,0.224,75,0.467,Match
-Hornady,ELD Match,0.224,80,0.485,Match
-Hornady,FMJ-BT,0.224,55,0.243,Target
-Sierra,BlitzKing,0.224,40,0.185,Varmint
-Sierra,BlitzKing,0.224,50,0.222,Varmint
-Sierra,BlitzKing,0.224,55,0.258,Varmint
-Sierra,BlitzKing,0.224,60,0.280,Varmint
-Sierra,MatchKing,0.224,69,0.301,Match
-Sierra,MatchKing,0.224,77,0.372,Match
-Sierra,GameKing,0.224,55,0.267,Hunting
-Nosler,Ballistic Tip,0.224,50,0.238,Hunting
-Nosler,Ballistic Tip,0.224,55,0.267,Hunting
-Nosler,Custom Competition,0.224,77,0.372,Match
-Speer,TNT,0.224,50,0.220,Varmint
-Speer,Gold Dot,0.224,62,0.230,Defense
-Barnes,TSX,0.224,62,0.298,Hunting
-Berger,Match VLD Target,0.224,80,0.456,Match
-Hornady,SST,0.243,95,0.379,Hunting
-Hornady,SST,0.243,100,0.405,Hunting
-Hornady,ELD-X,0.243,103,0.512,Hunting
-Hornady,ELD Match,0.243,108,0.536,Match
-Hornady,V-MAX,0.243,58,0.185,Varmint
-Hornady,V-MAX,0.243,75,0.330,Varmint
-Hornady,V-MAX,0.243,87,0.360,Varmint
-Sierra,MatchKing,0.243,107,0.527,Match
-Sierra,GameKing,0.243,100,0.430,Hunting
-Nosler,Ballistic Tip,0.243,95,0.379,Hunting
-Nosler,Partition,0.243,100,0.384,Hunting
-Berger,Hybrid Target,0.243,105,0.536,Match
-Hornady,ELD Match,0.264,120,0.486,Match
-Hornady,ELD Match,0.264,130,0.554,Match
-Hornady,ELD Match,0.264,140,0.646,Match
-Hornady,ELD-X,0.264,143,0.623,Hunting
-Hornady,ELD Match,0.264,147,0.697,Match
-Hornady,SST,0.264,129,0.485,Hunting
-Hornady,InterLock,0.264,140,0.490,Hunting
-Sierra,MatchKing,0.264,123,0.510,Match
-Sierra,MatchKing,0.264,140,0.585,Match
-Sierra,MatchKing,0.264,142,0.595,Match
-Sierra,GameKing,0.264,140,0.535,Hunting
-Nosler,AccuBond,0.264,140,0.509,Hunting
-Nosler,Partition,0.264,140,0.432,Hunting
-Nosler,AccuBond Long Range,0.264,142,0.617,Hunting
-Berger,Hybrid Target,0.264,140,0.607,Match
-Berger,Elite Hunter,0.264,156,0.643,Hunting
-Barnes,TTSX,0.264,120,0.395,Hunting
-Hornady,InterLock,0.277,130,0.409,Hunting
-Hornady,SST,0.277,130,0.447,Hunting
-Hornady,ELD-X,0.277,145,0.536,Hunting
-Sierra,GameKing,0.277,140,0.486,Hunting
-Sierra,GameKing,0.277,150,0.547,Hunting
-Sierra,MatchKing,0.277,135,0.480,Match
-Nosler,AccuBond,0.277,150,0.496,Hunting
-Nosler,Partition,0.277,150,0.465,Hunting
-Barnes,TTSX,0.277,130,0.395,Hunting
-Hornady,SST,0.284,139,0.486,Hunting
-Hornady,SST,0.284,150,0.526,Hunting
-Hornady,ELD-X,0.284,162,0.631,Hunting
-Hornady,ELD-X,0.284,175,0.689,Hunting
-Hornady,ELD Match,0.284,180,0.777,Match
-Hornady,InterLock,0.284,154,0.433,Hunting
-Sierra,MatchKing,0.284,168,0.617,Match
-Sierra,MatchKing,0.284,175,0.696,Match
-Sierra,GameKing,0.284,160,0.571,Hunting
-Nosler,AccuBond,0.284,160,0.531,Hunting
-Nosler,Partition,0.284,160,0.475,Hunting
-Berger,Hybrid Target,0.284,180,0.675,Match
-Barnes,TTSX,0.284,140,0.452,Hunting
-Hornady,InterLock,0.308,150,0.372,Hunting
-Hornady,InterLock,0.308,165,0.447,Hunting
-Hornady,InterLock,0.308,180,0.481,Hunting
-Hornady,SST,0.308,150,0.415,Hunting
-Hornady,SST,0.308,165,0.447,Hunting
-Hornady,SST,0.308,180,0.478,Hunting
-Hornady,ELD-X,0.308,178,0.552,Hunting
-Hornady,ELD-X,0.308,200,0.597,Hunting
-Hornady,ELD Match,0.308,168,0.523,Match
-Hornady,ELD Match,0.308,178,0.547,Match
-Hornady,BTHP Match,0.308,168,0.447,Match
-Hornady,A-MAX,0.308,155,0.439,Match
-Hornady,FMJ-BT,0.308,150,0.409,Target
-Sierra,MatchKing,0.308,155,0.450,Match
-Sierra,MatchKing,0.308,168,0.462,Match
-Sierra,MatchKing,0.308,175,0.505,Match
-Sierra,MatchKing,0.308,190,0.533,Match
-Sierra,GameKing,0.308,150,0.435,Hunting
-Sierra,GameKing,0.308,165,0.477,Hunting
-Sierra,GameKing,0.308,180,0.530,Hunting
-Sierra,Pro-Hunter,0.308,180,0.384,Hunting
-Nosler,Ballistic Tip,0.308,150,0.435,Hunting
-Nosler,Ballistic Tip,0.308,165,0.475,Hunting
-Nosler,AccuBond,0.308,180,0.507,Hunting
-Nosler,Partition,0.308,180,0.474,Hunting
-Nosler,Partition,0.308,200,0.481,Hunting
-Nosler,Custom Competition,0.308,168,0.462,Match
-Speer,Hot-Cor,0.308,150,0.321,Hunting
-Speer,Hot-Cor,0.308,180,0.376,Hunting
-Speer,Grand Slam,0.308,180,0.434,Hunting
-Berger,Hybrid Target,0.308,175,0.536,Match
-Berger,Elite Hunter,0.308,185,0.527,Hunting
-Barnes,TTSX,0.308,168,0.470,Hunting
-Barnes,TSX,0.308,180,0.472,Hunting
-Swift,Scirocco II,0.308,180,0.528,Hunting
-Hornady,SST,0.338,225,0.454,Hunting
-Hornady,ELD-X,0.338,230,0.616,Hunting
-Hornady,ELD Match,0.338,285,0.829,Match
-Sierra,MatchKing,0.338,250,0.675,Match
-Sierra,GameKing,0.338,250,0.557,Hunting
-Nosler,AccuBond,0.338,225,0.551,Hunting
-Nosler,Partition,0.338,250,0.473,Hunting
-Hornady,InterLock RN,0.358,200,0.254,Hunting
-Hornady,InterLock,0.358,225,0.355,Hunting
-Hornady,FTX,0.358,200,0.250,Hunting
-Hornady,FTX,0.375,235,0.231,Hunting
-Hornady,DGX,0.375,270,0.320,Hunting
-Hornady,DGS,0.375,300,0.275,Hunting
-Hornady,InterLock,0.375,270,0.343,Hunting
-Hornady,FTX,0.429,225,0.145,Hunting
-Hornady,XTP,0.429,240,0.152,Hunting
-Hornady,XTP,0.429,300,0.206,Hunting
-Hornady,FTX,0.451,250,0.140,Hunting
-Hornady,MonoFlex,0.458,250,0.178,Hunting
-Hornady,FTX,0.458,325,0.234,Hunting
-Hornady,InterLock RN,0.458,350,0.169,Hunting
-Hornady,InterLock FP,0.458,500,0.239,Hunting
-Hornady,DGX,0.458,500,0.296,Hunting
-Hornady,DGS,0.458,500,0.293,Hunting
-Speer,Hot-Cor,0.458,400,0.220,Hunting
-Speer,Gold Dot,0.355,115,0.123,Defense
-Speer,Gold Dot,0.355,124,0.133,Defense
-Speer,Gold Dot,0.355,147,0.158,Defense
-Speer,TMJ,0.355,115,0.109,Target
-Speer,TMJ,0.355,124,0.121,Target
-Speer,Gold Dot,0.400,155,0.150,Defense
-Speer,Gold Dot,0.400,180,0.152,Defense
-Speer,Gold Dot,0.451,200,0.131,Defense
-Speer,Gold Dot,0.451,230,0.165,Defense
-Speer,TMJ,0.451,230,0.150,Target
-Hornady,XTP,0.355,115,0.115,Defense
-Hornady,XTP,0.355,124,0.133,Defense
-Hornady,XTP,0.355,147,0.150,Defense
-Hornady,FMJ,0.355,115,0.115,Target
-Hornady,FMJ-RN,0.355,124,0.120,Target
-Hornady,XTP,0.357,125,0.150,Defense
-Hornady,XTP,0.357,158,0.200,Hunting
-Hornady,XTP,0.357,180,0.230,Hunting
-Hornady,XTP,0.400,155,0.130,Defense
-Hornady,XTP,0.400,180,0.153,Defense
-Hornady,XTP,0.451,185,0.115,Defense
-Hornady,XTP,0.451,230,0.183,Defense
-Hornady,XTP,0.429,240,0.170,Hunting
-Hornady,XTP,0.429,300,0.202,Hunting
-Sierra,JHC,0.355,115,0.130,Defense
-Sierra,JHP,0.355,125,0.140,Defense
-Sierra,JHP,0.451,230,0.165,Defense
-Sierra,JHC,0.429,240,0.150,Hunting
-Sierra,JSP,0.429,300,0.205,Hunting
-Nosler,JHP,0.355,115,0.115,Defense
-Nosler,JHP,0.451,230,0.165,Defense
-Berger,Hollow Point,0.355,124,0.130,Target
-Berger,Flat Point,0.451,200,0.115,Target
-Berger,Hollow Point Target,0.451,230,0.150,Match
-Hornady,Hollow Point,0.224,40,0.138,Target
-Hornady,Hollow Point,0.224,35,0.125,Varmint
-Speer,Hot-Cor Hunting,0.358,200,0.250,Hunting
-Sierra,GameKing,0.224,53,0.230,Hunting
-Hornady,InterLock,0.257,100,0.356,Hunting
-Hornady,InterLock BTSP,0.257,117,0.399,Hunting
-Hornady,SST,0.257,117,0.397,Hunting
-Hornady,ELD-X,0.257,110,0.473,Hunting
-Hornady,ELD-X,0.257,128,0.644,Hunting
-Hornady,ELD Match,0.257,134,0.658,Match
-Hornady,CX,0.257,90,0.278,Hunting
-Hornady,FTX,0.257,110,0.346,Hunting
-Sierra,GameKing SBT,0.257,100,0.355,Hunting
-Sierra,GameKing SBT,0.257,117,0.410,Hunting
-Nosler,Ballistic Tip Varmint,0.257,85,0.329,Varmint
-Nosler,Ballistic Tip,0.257,100,0.393,Hunting
-Nosler,Ballistic Tip,0.257,115,0.453,Hunting
-Nosler,Partition,0.257,100,0.377,Hunting
-Nosler,Partition,0.257,115,0.389,Hunting
-Nosler,Partition,0.257,120,0.391,Hunting
-Nosler,AccuBond,0.257,110,0.418,Hunting
-Nosler,E-Tip,0.257,100,0.409,Hunting
-Speer,Flat Nose SP,0.257,75,0.133,Hunting
-Speer,Spitzer SP,0.257,87,0.300,Varmint
-Speer,Spitzer SP,0.257,100,0.369,Hunting
-Speer,Spitzer SP Boat Tail,0.257,100,0.393,Hunting
-Speer,Spitzer SP,0.257,120,0.410,Hunting
-Speer,Spitzer SP Boat Tail,0.257,120,0.435,Hunting
-Speer,Trophy Bonded Bear Claw,0.257,115,0.372,Hunting
-Barnes,TSX,0.257,100,0.336,Hunting
-Hornady,InterLock,0.312,150,0.367,Hunting
-Speer,Spitzer SP,0.311,150,0.411,Hunting
-Speer,Round Nose SP,0.311,180,0.328,Hunting
-Hornady,XTP,0.312,60,0.092,Defense
-Sierra,Sports Master JHC,0.312,90,0.125,Defense
-Speer,Flat Nose SP,0.321,170,0.297,Hunting
-Hornady,InterLock RN,0.323,170,0.217,Hunting
-Nosler,Ballistic Tip,0.323,180,0.394,Hunting
-Nosler,E-Tip,0.323,180,0.427,Hunting
-Nosler,Partition,0.323,200,0.426,Hunting
-Nosler,AccuBond,0.323,200,0.450,Hunting
-Nosler,Custom Competition,0.323,200,0.520,Match
-Hornady,FTX,0.348,200,0.326,Hunting
-Hornady,XTP,0.365,95,0.127,Defense
-Nosler,AccuBond,0.366,250,0.494,Hunting
-Nosler,E-Tip,0.366,250,0.494,Hunting
-Nosler,Partition,0.366,286,0.482,Hunting
-Hornady,InterLock SP-RP,0.366,286,0.407,Hunting
-Swift,A-Frame,0.366,286,0.385,Hunting
-Barnes,TSX,0.366,250,0.361,Hunting
-Hornady,FTX,0.410,190,0.168,Hunting
-Hornady,XTP,0.410,210,0.186,Hunting
-Sierra,Sports Master JHC,0.410,210,0.165,Hunting
-Hornady,DGS,0.416,400,0.324,Hunting
-Hornady,DGX Bonded,0.416,400,0.324,Hunting
-Swift,A-Frame,0.416,400,0.367,Hunting
-Speer,Mag Tip SP,0.416,350,0.332,Hunting
-Speer,Trophy Bonded Bear Claw,0.416,400,0.374,Hunting
-Hornady,XTP Mag,0.475,325,0.152,Hunting
-Hornady,XTP,0.500,300,0.122,Hunting
-Hornady,FTX,0.500,300,0.122,Hunting
-Hornady,FP-XTP,0.500,500,0.204,Hunting
-Swift,A-Frame,0.500,325,0.143,Hunting
-Hornady,A-MAX,0.510,750,1.068,Match
-Hornady,XTP,0.251,35,0.074,Defense
+maker,name,diameter_in,weight_gr,bc_g1,type,use
+Hornady,NTX #17016,0.172,15.5,0.115,Varmint,rifle
+Hornady,V-MAX,0.172,17,0.125,Varmint,rifle
+Hornady,V-MAX #21710,0.172,20,0.185,Varmint,rifle
+Hornady,V-MAX #17105,0.172,25,0.230,Varmint,rifle
+Hornady,NTX #22000,0.204,24,0.170,Varmint,rifle
+Hornady,V-MAX #22004,0.204,32,0.210,Varmint,rifle
+Hornady,V-MAX #22006,0.204,40,0.275,Varmint,rifle
+Hornady,V-MAX #2207,0.2215,60,0.285,Varmint,rifle
+Hornady,A-Tip Match #22799,0.224,76,0.413,Match,rifle
+Hornady,A-Tip Match #2286,0.224,90,0.585,Match,rifle
+Hornady,AeroMatch #22771,0.224,69,0.315,Match,rifle
+Hornady,AeroMatch #22777,0.224,77,0.355,Match,rifle
+Hornady,CX #22402,0.224,50,0.164,Hunting,rifle
+Hornady,CX #22765,0.224,65,0.365,Hunting,rifle
+Hornady,CX #22813,0.224,70,0.392,Hunting,rifle
+Hornady,ELD Match #22491,0.224,52,0.247,Match,rifle
+Hornady,ELD Match #22774,0.224,73,0.398,Match,rifle
+Hornady,ELD Match #22791,0.224,75,0.467,Match,rifle
+Hornady,ELD Match #22831,0.224,80,0.485,Match,rifle
+Hornady,ELD Match #22834,0.224,88,0.545,Match,rifle
+Hornady,ELD-VT #22762,0.224,62,0.395,Varmint,rifle
+Hornady,ELD-VT #22772,0.224,69,0.424,Varmint,rifle
+Hornady,ELD-X #22833,0.224,80,0.485,Hunting,rifle
+Hornady,FMJ #22760B,0.224,62,0.274,Target,rifle
+Hornady,FMJ-BT W/C #2267,0.224,55,0.243,Target,rifle
+Hornady,Match BTHP #2249,0.224,52,0.229,Match,rifle
+Hornady,Match BTHP #2263B,0.224,55,0.254,Match,rifle
+Hornady,Match BTHP #2278,0.224,68,0.355,Match,rifle
+Hornady,Match BTHP #2279,0.224,75,0.395,Match,rifle
+Hornady,Match BTHP W/C #2249C,0.224,52,0.229,Match,rifle
+Hornady,Match BTHP W/C #2278C,0.224,68,0.355,Match,rifle
+Hornady,Match BTHP W/C #2279C,0.224,75,0.395,Match,rifle
+Hornady,Match HP #2250,0.224,53,0.218,Match,rifle
+Hornady,NTX #22240,0.224,35,0.177,Varmint,rifle
+Hornady,Traditional Varmint #2230,0.224,45,0.202,Varmint,rifle
+Hornady,Traditional Varmint #2229,0.224,45,0.108,Varmint,rifle
+Hornady,Traditional Varmint #2240,0.224,50,0.214,Varmint,rifle
+Hornady,Traditional Varmint #2245,0.224,50,0.214,Varmint,rifle
+Hornady,Traditional Varmint #2260,0.224,55,0.235,Varmint,rifle
+Hornady,Traditional Varmint #2265,0.224,55,0.235,Varmint,rifle
+Hornady,Traditional Varmint #2266,0.224,55,0.235,Varmint,rifle
+Hornady,Traditional Varmint #2270,0.224,60,0.264,Varmint,rifle
+Hornady,V-MAX #22252,0.224,35,0.109,Varmint,rifle
+Hornady,V-MAX #22241,0.224,40,0.200,Varmint,rifle
+Hornady,V-MAX #22261,0.224,50,0.242,Varmint,rifle
+Hornady,V-MAX #22265,0.224,53,0.290,Varmint,rifle
+Hornady,V-MAX #22271,0.224,55,0.255,Varmint,rifle
+Hornady,V-MAX #22272,0.224,55,0.255,Varmint,rifle
+Hornady,V-MAX #22281,0.224,60,0.265,Varmint,rifle
+Hornady,A-Tip Match #24531,0.243,110,0.604,Match,rifle
+Hornady,AeroMatch #24573,0.243,105,0.536,Match,rifle
+Hornady,CX #243704,0.243,80,0.273,Hunting,rifle
+Hornady,CX #24444,0.243,90,0.418,Hunting,rifle
+Hornady,ELD Match #24561,0.243,108,0.536,Match,rifle
+Hornady,ELD Match #245301,0.243,109,0.585,Match,rifle
+Hornady,ELD-VT #24372,0.243,80,0.405,Varmint,rifle
+Hornady,ELD-X #2441,0.243,90,0.409,Hunting,rifle
+Hornady,ELD-X #24550,0.243,103,0.512,Hunting,rifle
+Hornady,InterLock BTSP #2453,0.243,100,0.405,Hunting,rifle
+Hornady,Match BTHP #2458,0.243,105,0.530,Match,rifle
+Hornady,SST #24532,0.243,95,0.355,Hunting,rifle
+Hornady,Traditional Varmint #2442,0.243,87,0.376,Varmint,rifle
+Hornady,V-MAX #22411,0.243,58,0.250,Varmint,rifle
+Hornady,V-MAX #22415,0.243,65,0.280,Varmint,rifle
+Hornady,V-MAX #22420,0.243,75,0.330,Varmint,rifle
+Hornady,V-MAX #22440,0.243,87,0.400,Varmint,rifle
+Hornady,XTP,0.251,35,0.074,Defense,handgun
+Hornady,A-Tip Match #2562,0.257,138,0.695,Match,rifle
+Hornady,CX #254104,0.257,90,0.273,Hunting,rifle
+Hornady,CX #2543,0.257,112,0.373,Hunting,rifle
+Hornady,ELD Match #2561,0.257,134,0.645,Match,rifle
+Hornady,ELD-VT #25412,0.257,95,0.453,Varmint,rifle
+Hornady,ELD-X #25418,0.257,110,0.465,Hunting,rifle
+Hornady,ELD-X #25417,0.257,128,0.633,Hunting,rifle
+Hornady,FP #2510,0.257,60,0.101,Hunting,rifle
+Hornady,FTX #2542,0.257,110,0.340,Hunting,rifle
+Hornady,InterLock,0.257,100,0.356,Hunting,rifle
+Hornady,InterLock BTSP #2552,0.257,117,0.391,Hunting,rifle
+Hornady,InterLock RN #2550,0.257,117,0.243,Hunting,rifle
+Hornady,SST #25522,0.257,117,0.390,Hunting,rifle
+Hornady,V-MAX #22520,0.257,75,0.290,Varmint,rifle
+Hornady,A-Tip Match #26179,0.264,135,0.637,Match,rifle
+Hornady,A-Tip Match #2638,0.264,153,0.704,Match,rifle
+Hornady,AeroMatch #26303,0.264,140,0.608,Match,rifle
+Hornady,CX #26111,0.264,90,0.356,Hunting,rifle
+Hornady,CX #261104,0.264,120,0.428,Hunting,rifle
+Hornady,CX #26178,0.264,130,0.489,Hunting,rifle
+Hornady,ELD Match #26100,0.264,100,0.385,Match,rifle
+Hornady,ELD Match #26175,0.264,120,0.486,Match,rifle
+Hornady,ELD Match #26176,0.264,123,0.506,Match,rifle
+Hornady,ELD Match #26177,0.264,130,0.554,Match,rifle
+Hornady,ELD Match #26331,0.264,140,0.646,Match,rifle
+Hornady,ELD Match #26333,0.264,147,0.697,Match,rifle
+Hornady,ELD-VT #26103,0.264,100,0.448,Varmint,rifle
+Hornady,ELD-X #2635,0.264,143,0.623,Hunting,rifle
+Hornady,InterLock RN #2640,0.264,160,0.283,Hunting,rifle
+Hornady,InterLock SP #2620,0.264,129,0.445,Hunting,rifle
+Hornady,InterLock SP #2630,0.264,140,0.465,Hunting,rifle
+Hornady,Match BTHP #26174,0.264,123,0.450,Match,rifle
+Hornady,Match BTHP #26335,0.264,140,0.580,Match,rifle
+Hornady,SST #26173,0.264,123,0.510,Hunting,rifle
+Hornady,SST #26202,0.264,129,0.485,Hunting,rifle
+Hornady,SST #26302,0.264,140,0.520,Hunting,rifle
+Hornady,V-MAX #22601,0.264,95,0.365,Varmint,rifle
+Hornady,CX #271904,0.277,100,0.262,Hunting,rifle
+Hornady,CX #273704,0.277,130,0.403,Hunting,rifle
+Hornady,ELD-X #27356,0.277,145,0.536,Hunting,rifle
+Hornady,InterLock BTSP #2735,0.277,140,0.486,Hunting,rifle
+Hornady,InterLock SP #2730,0.277,130,0.409,Hunting,rifle
+Hornady,InterLock SP #2740,0.277,150,0.462,Hunting,rifle
+Hornady,Match BTHP #27200,0.277,110,0.360,Match,rifle
+Hornady,SST #2716,0.277,120,0.400,Hunting,rifle
+Hornady,SST #27302,0.277,130,0.460,Hunting,rifle
+Hornady,SST #27352,0.277,140,0.495,Hunting,rifle
+Hornady,SST #27402,0.277,150,0.525,Hunting,rifle
+Hornady,V-MAX W/C #22721,0.277,110,0.370,Varmint,rifle
+Hornady,A-Tip Match #2836,0.284,166,0.664,Match,rifle
+Hornady,A-Tip Match #28506,0.284,190,0.838,Match,rifle
+Hornady,CX #282704,0.284,139,0.429,Hunting,rifle
+Hornady,CX #28284,0.284,150,0.455,Hunting,rifle
+Hornady,CX #2837,0.284,160,0.596,Hunting,rifle
+Hornady,ELD Match #28403,0.284,162,0.670,Match,rifle
+Hornady,ELD Match #28503,0.284,180,0.796,Match,rifle
+Hornady,ELD-X #2826,0.284,150,0.574,Hunting,rifle
+Hornady,ELD-X #2840,0.284,162,0.631,Hunting,rifle
+Hornady,ELD-X #2841,0.284,175,0.689,Hunting,rifle
+Hornady,InterLock BTSP #2825,0.284,139,0.453,Hunting,rifle
+Hornady,InterLock BTSP #2845,0.284,162,0.514,Hunting,rifle
+Hornady,InterLock SP #2820,0.284,139,0.392,Hunting,rifle
+Hornady,InterLock SP #2830,0.284,154,0.433,Hunting,rifle
+Hornady,InterLock SP #2850,0.284,175,0.462,Hunting,rifle
+Hornady,SST #28202,0.284,139,0.486,Hunting,rifle
+Hornady,SST #28302,0.284,154,0.525,Hunting,rifle
+Hornady,SST #28452,0.284,162,0.550,Hunting,rifle
+Hornady,V-MAX #22810,0.284,120,0.365,Varmint,rifle
+Hornady,A-Tip Match #30717,0.308,176,0.564,Match,rifle
+Hornady,A-Tip Match #3091,0.308,230,0.823,Match,rifle
+Hornady,A-Tip Match #3092,0.308,250,0.878,Match,rifle
+Hornady,AeroMatch #30507,0.308,168,0.440,Match,rifle
+Hornady,AeroMatch #30719,0.308,175,0.485,Match,rifle
+Hornady,CX #301914,0.308,110,0.312,Hunting,rifle
+Hornady,CX #303704,0.308,150,0.418,Hunting,rifle
+Hornady,CX #304704,0.308,165,0.440,Hunting,rifle
+Hornady,CX #301934,0.308,180,0.469,Hunting,rifle
+Hornady,CX #30738,0.308,190,0.575,Hunting,rifle
+Hornady,ELD Match #30313,0.308,155,0.461,Match,rifle
+Hornady,ELD Match #30506,0.308,168,0.523,Match,rifle
+Hornady,ELD Match #30713,0.308,178,0.547,Match,rifle
+Hornady,ELD Match #30951,0.308,195,0.584,Match,rifle
+Hornady,ELD Match #30731,0.308,208,0.690,Match,rifle
+Hornady,ELD Match #30904,0.308,225,0.777,Match,rifle
+Hornady,ELD-VT #30620,0.308,174,0.573,Varmint,rifle
+Hornady,ELD-X #3074,0.308,178,0.552,Hunting,rifle
+Hornady,ELD-X #3076,0.308,200,0.597,Hunting,rifle
+Hornady,ELD-X #3077,0.308,212,0.663,Hunting,rifle
+Hornady,ELD-X #3078,0.308,220,0.654,Hunting,rifle
+Hornady,FMJ #30196,0.308,125,0.250,Target,rifle
+Hornady,FMJ #30192,0.308,125,0.320,Target,rifle
+Hornady,FMJ-BT #3037,0.308,150,0.398,Target,rifle
+Hornady,FTX #3027,0.308,135,0.274,Hunting,rifle
+Hornady,FTX #30395,0.308,160,0.330,Hunting,rifle
+Hornady,FTX #30396,0.308,160,0.395,Hunting,rifle
+Hornady,InterLock BTSP #3033,0.308,150,0.349,Hunting,rifle
+Hornady,InterLock BTSP #3045,0.308,165,0.435,Hunting,rifle
+Hornady,InterLock BTSP #3072,0.308,180,0.452,Hunting,rifle
+Hornady,InterLock FP #3060,0.308,170,0.189,Hunting,rifle
+Hornady,InterLock RN #3035,0.308,150,0.186,Hunting,rifle
+Hornady,InterLock RN #3075,0.308,180,0.241,Hunting,rifle
+Hornady,InterLock RN #3090,0.308,220,0.300,Hunting,rifle
+Hornady,InterLock SP #3031,0.308,150,0.338,Hunting,rifle
+Hornady,InterLock SP #3040,0.308,165,0.387,Hunting,rifle
+Hornady,InterLock SP #3070,0.308,180,0.425,Hunting,rifle
+Hornady,Match BTHP #3039,0.308,155,0.405,Match,rifle
+Hornady,Match BTHP #30501,0.308,168,0.450,Match,rifle
+Hornady,Match BTHP #30715,0.308,178,0.530,Match,rifle
+Hornady,Match BTHP #30733,0.308,208,0.620,Match,rifle
+Hornady,Match BTHP W/C #3039C,0.308,155,0.405,Match,rifle
+Hornady,MonoFlex #30310,0.308,140,0.295,Hunting,rifle
+Hornady,SST #3019,0.308,125,0.305,Hunting,rifle
+Hornady,SST #30302,0.308,150,0.415,Hunting,rifle
+Hornady,SST #30452,0.308,165,0.447,Hunting,rifle
+Hornady,SST #30702,0.308,180,0.480,Hunting,rifle
+Hornady,SST 300 Savage #30303,0.308,150,0.370,Hunting,rifle
+Hornady,Sub-X #30718,0.308,175,0.300,Hunting,rifle
+Hornady,Sub-X #30730,0.308,190,0.437,Hunting,rifle
+Hornady,Traditional Varmint #3010,0.308,110,0.256,Varmint,rifle
+Hornady,V-MAX #23010,0.308,110,0.290,Varmint,rifle
+Hornady,XTP #31000,0.309,90,0.115,Defense,handgun
+Hornady,FMJ #3147B,0.31,123,0.266,Target,rifle
+Hornady,InterLock SP #3140,0.31,123,0.252,Hunting,rifle
+Hornady,SST #3142,0.31,123,0.295,Hunting,rifle
+Hornady,FMJ #3131,0.3105,174,0.470,Target,rifle
+Hornady,Sub-X #3148,0.3115,255,0.365,Hunting,rifle
+Hornady,InterLock RN #3130,0.312,174,0.262,Hunting,rifle
+Hornady,InterLock SP #3120,0.312,150,0.361,Hunting,rifle
+Hornady,XTP,0.312,60,0.092,Defense,handgun
+Hornady,XTP #32050,0.312,85,0.145,Defense,handgun
+Hornady,XTP #32070,0.312,100,0.170,Defense,handgun
+Hornady,FTX #32005,0.321,165,0.310,Hunting,rifle
+Hornady,InterLock FP #3210,0.321,170,0.249,Hunting,rifle
+Hornady,InterLock RN #3235,0.323,170,0.217,Hunting,rifle
+Hornady,InterLock SP #3232,0.323,150,0.290,Hunting,rifle
+Hornady,InterLock SP #3236,0.323,195,0.410,Hunting,rifle
+Hornady,SST #3233,0.323,170,0.445,Hunting,rifle
+Hornady,A-Tip Match #33389,0.338,300,0.863,Match,rifle
+Hornady,CX #332704,0.338,185,0.407,Hunting,rifle
+Hornady,CX #332014,0.338,225,0.490,Hunting,rifle
+Hornady,CX #33283,0.338,240,0.611,Hunting,rifle
+Hornady,ELD Match #33381,0.338,285,0.829,Match,rifle
+Hornady,ELD-X #33210,0.338,230,0.616,Hunting,rifle
+Hornady,ELD-X #33371,0.338,270,0.757,Hunting,rifle
+Hornady,FTX #33104,0.338,200,0.430,Hunting,rifle
+Hornady,InterLock RN #3330,0.338,250,0.291,Hunting,rifle
+Hornady,InterLock SP-RP #3320,0.338,225,0.397,Hunting,rifle
+Hornady,InterLock SP-RP #3335,0.338,250,0.431,Hunting,rifle
+Hornady,SST #33102,0.338,200,0.455,Hunting,rifle
+Hornady,SST #33202,0.338,225,0.515,Hunting,rifle
+Hornady,Sub-X #33394,0.338,307,0.375,Hunting,rifle
+Hornady,FTX,0.348,200,0.326,Hunting,rifle
+Hornady,DGH #35548,0.355,138,0.190,Hunting,handgun
+Hornady,FMJ-RN #35527B,0.355,100,0.115,Target,handgun
+Hornady,FMJ-RN #35557,0.355,115,0.140,Target,handgun
+Hornady,FMJ-RN #35577B,0.355,124,0.145,Target,handgun
+Hornady,FMJ-RN-BT #35597B,0.355,147,0.212,Target,handgun
+Hornady,FTX #3502,0.355,165,0.250,Hunting,both
+Hornady,HAP #35528B,0.355,115,0.129,Target,handgun
+Hornady,InterLock #3501,0.355,170,0.215,Hunting,both
+Hornady,XTP #35500,0.355,90,0.099,Defense,handgun
+Hornady,XTP #35540,0.355,115,0.129,Defense,handgun
+Hornady,XTP #35571,0.355,124,0.165,Defense,handgun
+Hornady,XTP #35580,0.355,147,0.212,Defense,handgun
+Hornady,HAP #35572B,0.356,125,0.158,Target,handgun
+Hornady,DGH #3576,0.357,165,0.210,Hunting,handgun
+Hornady,FP-XTP #35730,0.357,125,0.148,Hunting,handgun
+Hornady,FP-XTP #35780,0.357,158,0.199,Hunting,handgun
+Hornady,FTX #35745,0.357,140,0.160,Defense,both
+Hornady,Sub-X #3503,0.357,250,0.265,Hunting,rifle
+Hornady,XTP #35700,0.357,110,0.131,Defense,handgun
+Hornady,XTP #35710,0.357,125,0.151,Defense,handgun
+Hornady,XTP #35740,0.357,140,0.169,Defense,handgun
+Hornady,XTP #35750,0.357,158,0.206,Defense,handgun
+Hornady,XTP #35771,0.357,180,0.230,Defense,handgun
+Hornady,FTX #35105,0.358,200,0.300,Hunting,rifle
+Hornady,Frontier Lead HBWC #10208,0.358,148,0.047,Target,handgun
+Hornady,Frontier Lead LRN #10508,0.358,158,0.159,Target,handgun
+Hornady,Frontier Lead SWC #10408,0.358,158,0.135,Target,handgun
+Hornady,Frontier Lead SWC-HP #10428,0.358,158,0.139,Target,handgun
+Hornady,InterLock,0.358,225,0.355,Hunting,rifle
+Hornady,InterLock RN #3515,0.358,200,0.195,Hunting,rifle
+Hornady,InterLock SP #3510,0.358,200,0.282,Hunting,rifle
+Hornady,InterLock SP-RP #3520,0.358,250,0.375,Hunting,rifle
+Hornady,XTP,0.365,95,0.127,Defense,handgun
+Hornady,DGS #3565,0.366,300,0.280,Hunting,rifle
+Hornady,InterLock SP-RP #3560,0.366,286,0.400,Hunting,rifle
+Hornady,A-Tip Match #3729,0.375,390,0.987,Match,rifle
+Hornady,CX #37084,0.375,250,0.403,Hunting,rifle
+Hornady,DGS #3727,0.375,300,0.275,Hunting,rifle
+Hornady,DGX Bonded #37214,0.375,300,0.275,Hunting,rifle
+Hornady,FTX,0.375,235,0.231,Hunting,rifle
+Hornady,InterLock SP-RP #3711,0.375,270,0.380,Hunting,rifle
+Hornady,DGH #40071,0.4,200,0.199,Hunting,handgun
+Hornady,FMJ-FP #40047,0.4,180,0.164,Target,handgun
+Hornady,HAP #40042B,0.4,180,0.164,Target,handgun
+Hornady,HAP #40061B,0.4,200,0.199,Target,handgun
+Hornady,XTP #40000,0.4,155,0.137,Hunting,handgun
+Hornady,XTP #40040,0.4,180,0.164,Hunting,handgun
+Hornady,XTP #40060,0.4,200,0.199,Hunting,handgun
+Hornady,DGS #4103,0.41,400,0.325,Hunting,rifle
+Hornady,DGX Bonded #41044,0.41,400,0.325,Hunting,rifle
+Hornady,FTX,0.410,190,0.168,Hunting,both
+Hornady,XTP #41000,0.41,210,0.182,Hunting,handgun
+Hornady,InterLock #41051,0.411,300,0.250,Hunting,rifle
+Hornady,A-Tip Match #41697,0.416,500,0.976,Match,rifle
+Hornady,DGS #4167,0.416,400,0.319,Hunting,rifle
+Hornady,DGX Bonded #41694,0.416,400,0.319,Hunting,rifle
+Hornady,DGS #4241,0.423,400,0.315,Hunting,rifle
+Hornady,DGX Bonded #42404,0.423,400,0.315,Hunting,rifle
+Hornady,DGH #44202,0.43,240,0.205,Hunting,handgun
+Hornady,FTX #44105,0.43,225,0.150,Defense,both
+Hornady,FTX #4305,0.43,265,0.225,Hunting,rifle
+Hornady,XTP #44050,0.43,180,0.138,Hunting,handgun
+Hornady,XTP #44100,0.43,200,0.170,Hunting,handgun
+Hornady,XTP #44200,0.43,240,0.205,Hunting,handgun
+Hornady,XTP #44280,0.43,300,0.245,Hunting,handgun
+Hornady,FMJ-RN #45177,0.451,230,0.184,Target,handgun
+Hornady,HAP #45105B,0.451,185,0.139,Target,handgun
+Hornady,HAP #45159B,0.451,200,0.151,Target,handgun
+Hornady,HAP #45161B,0.451,230,0.188,Target,handgun
+Hornady,XTP #45100,0.451,185,0.139,Hunting,handgun
+Hornady,XTP #45140,0.451,200,0.151,Hunting,handgun
+Hornady,XTP #45160,0.451,230,0.188,Hunting,handgun
+Hornady,DGH #45208,0.452,300,0.200,Hunting,handgun
+Hornady,FTX #45215,0.452,200,0.145,Defense,both
+Hornady,FTX #45218,0.452,225,0.140,Defense,both
+Hornady,FTX #45201,0.452,250,0.210,Hunting,rifle
+Hornady,InterLock #45204,0.452,245,0.165,Hunting,both
+Hornady,Sub-X #45031,0.452,395,0.300,Hunting,rifle
+Hornady,XTP #45200,0.452,250,0.146,Hunting,handgun
+Hornady,XTP #45230,0.452,300,0.180,Hunting,handgun
+Hornady,XTP Mag #45220,0.452,240,0.160,Hunting,handgun
+Hornady,XTP Mag #45235,0.452,300,0.200,Hunting,handgun
+Hornady,Frontier Lead FP Cowboy #12458,0.454,255,0.117,Target,handgun
+Hornady,DGS #45033,0.458,480,0.285,Hunting,rifle
+Hornady,DGS #4507,0.458,500,0.295,Hunting,rifle
+Hornady,DGX Bonded #45034,0.458,480,0.285,Hunting,rifle
+Hornady,DGX Bonded #45054,0.458,500,0.295,Hunting,rifle
+Hornady,FTX #45015,0.458,325,0.230,Hunting,rifle
+Hornady,InterLock FP #4503,0.458,350,0.195,Hunting,rifle
+Hornady,InterLock HP #4500,0.458,300,0.197,Hunting,rifle
+Hornady,InterLock RN #4502,0.458,350,0.189,Hunting,rifle
+Hornady,MonoFlex #45010,0.458,250,0.182,Hunting,rifle
+Hornady,Sub-X #45052,0.458,410,0.285,Hunting,rifle
+Hornady,DGS #4748,0.474,500,0.290,Hunting,rifle
+Hornady,DGX Bonded #47474,0.474,500,0.290,Hunting,rifle
+Hornady,XTP Mag,0.475,325,0.152,Hunting,handgun
+Hornady,DGH #50109,0.5,500,0.200,Hunting,handgun
+Hornady,FTX #50102,0.5,300,0.200,Defense,both
+Hornady,XTP Mag #50101,0.5,300,0.120,Hunting,handgun
+Hornady,XTP Mag #50100,0.5,350,0.145,Hunting,handgun
+Hornady,DGS #5051,0.505,525,0.270,Hunting,rifle
+Hornady,DGX Bonded #5050,0.505,525,0.270,Hunting,rifle
+Hornady,A-Tip Match #5165,0.51,750,1.050,Match,rifle
+Hornady,DGS #5155,0.51,570,0.295,Hunting,rifle
+Hornady,DGX Bonded #51504,0.51,570,0.295,Hunting,rifle
+Swift,Scirocco,0.224,62,0.307,Hunting,rifle
+Swift,Scirocco,0.224,75,0.419,Hunting,rifle
+Swift,Scirocco,0.243,90,0.419,Hunting,rifle
+Swift,A-Frame,0.257,100,0.318,Hunting,rifle
+Swift,A-Frame,0.257,120,0.382,Hunting,rifle
+Swift,Scirocco,0.257,100,0.429,Hunting,rifle
+Swift,A-Frame,0.264,120,0.344,Hunting,rifle
+Swift,A-Frame,0.264,140,0.401,Hunting,rifle
+Swift,Scirocco,0.264,130,0.571,Hunting,rifle
+Swift,A-Frame,0.277,130,0.323,Hunting,rifle
+Swift,A-Frame,0.277,140,0.414,Hunting,rifle
+Swift,A-Frame,0.277,150,0.444,Hunting,rifle
+Swift,Scirocco,0.277,130,0.450,Hunting,rifle
+Swift,A-Frame,0.284,140,0.335,Hunting,rifle
+Swift,A-Frame,0.284,160,0.450,Hunting,rifle
+Swift,A-Frame,0.284,175,0.493,Hunting,rifle
+Swift,Scirocco,0.284,150,0.515,Hunting,rifle
+Swift,Zephyr,0.284,175,0.681,Hunting,rifle
+Swift,A-Frame,0.308,165,0.367,Hunting,rifle
+Swift,A-Frame,0.308,180,0.400,Hunting,rifle
+Swift,A-Frame,0.308,200,0.444,Hunting,rifle
+Swift,A-Frame Lever,0.308,150,0.220,Hunting,rifle
+Swift,A-Frame Lever,0.308,170,0.266,Hunting,rifle
+Swift,Scirocco,0.308,150,0.430,Hunting,rifle
+Swift,Scirocco,0.308,165,0.470,Hunting,rifle
+Swift,Scirocco,0.308,180,0.520,Hunting,rifle
+Swift,A-Frame Revolver,0.312,100,0.165,Hunting,handgun
+Swift,A-Frame,0.323,200,0.357,Hunting,rifle
+Swift,A-Frame,0.323,220,0.393,Hunting,rifle
+Swift,A-Frame,0.338,225,0.384,Hunting,rifle
+Swift,A-Frame,0.338,250,0.427,Hunting,rifle
+Swift,A-Frame,0.338,275,0.469,Hunting,rifle
+Swift,Scirocco,0.338,210,0.507,Hunting,rifle
+Swift,A-Frame Lever,0.348,200,0.245,Hunting,rifle
+Swift,A-Frame Revolver,0.357,158,0.183,Hunting,handgun
+Swift,A-Frame Revolver,0.357,180,0.189,Hunting,handgun
+Swift,A-Frame,0.358,225,0.312,Hunting,rifle
+Swift,A-Frame,0.358,250,0.347,Hunting,rifle
+Swift,A-Frame,0.358,280,0.388,Hunting,rifle
+Swift,A-Frame,0.366,250,0.285,Hunting,rifle
+Swift,A-Frame,0.366,286,0.385,Hunting,rifle
+Swift,A-Frame,0.366,300,0.342,Hunting,rifle
+Swift,Break-Away Solid,0.366,286,0.385,Hunting,rifle
+Swift,A-Frame,0.375,250,0.271,Hunting,rifle
+Swift,A-Frame,0.375,270,0.349,Hunting,rifle
+Swift,A-Frame,0.375,300,0.325,Hunting,rifle
+Swift,Break-Away Solid,0.375,300,0.325,Hunting,rifle
+Swift,A-Frame Pistol,0.4,180,0.155,Hunting,handgun
+Swift,A-Frame Pistol,0.4,200,0.190,Hunting,handgun
+Swift,A-Frame,0.41,350,0.321,Hunting,rifle
+Swift,A-Frame,0.41,400,0.367,Hunting,rifle
+Swift,A-Frame Revolver,0.41,210,0.159,Hunting,handgun
+Swift,Break-Away Solid,0.41,400,0.367,Hunting,rifle
+Swift,A-Frame,0.416,350,0.321,Hunting,rifle
+Swift,A-Frame,0.416,400,0.367,Hunting,rifle
+Swift,Break-Away Solid,0.416,400,0.367,Hunting,rifle
+Swift,A-Frame,0.423,400,0.375,Hunting,rifle
+Swift,Break-Away Solid,0.423,400,0.375,Hunting,rifle
+Swift,A-Frame Revolver,0.429,240,0.119,Hunting,handgun
+Swift,A-Frame Revolver,0.429,280,0.139,Hunting,handgun
+Swift,A-Frame Revolver,0.429,300,0.147,Hunting,handgun
+Swift,A-Frame Revolver,0.452,265,0.129,Hunting,handgun
+Swift,A-Frame Revolver,0.452,300,0.153,Hunting,handgun
+Swift,A-Frame Revolver,0.452,325,0.171,Hunting,handgun
+Swift,A-Frame,0.457,400,0.258,Hunting,rifle
+Swift,A-Frame,0.457,450,0.325,Hunting,rifle
+Swift,A-Frame,0.457,500,0.361,Hunting,rifle
+Swift,A-Frame Lever,0.457,350,0.172,Hunting,rifle
+Swift,Break-Away Solid,0.457,500,0.361,Hunting,rifle
+Swift,A-Frame,0.474,500,0.364,Hunting,rifle
+Swift,Break-Away Solid,0.474,500,0.364,Hunting,rifle
+Swift,A-Frame Revolver,0.499,325,0.135,Hunting,both
+Swift,A-Frame,0.505,535,0.285,Hunting,rifle
+Swift,A-Frame,0.505,570,0.306,Hunting,rifle
+Swift,Break-Away Solid,0.505,570,0.306,Hunting,rifle
+Swift,A-Frame,0.509,535,0.285,Hunting,rifle
+Swift,A-Frame,0.509,570,0.306,Hunting,rifle
+Swift,A-Frame Lever,0.509,450,0.180,Hunting,rifle
+Swift,Break-Away Solid,0.509,570,0.306,Hunting,rifle
+Barnes,Varmin-A-Tor FB #30092,0.204,32,0.159,Varmint,rifle
+Barnes,Varmint Grenade FB #30090,0.204,26,0.131,Varmint,rifle
+Barnes,LRX BT #32471,0.224,65,0.341,Hunting,rifle
+Barnes,LRX BT #30881,0.224,77,0.404,Hunting,rifle
+Barnes,MPG FB #30195,0.224,55,0.225,Target,rifle
+Barnes,Match Burner BT #30162,0.224,69,0.339,Match,rifle
+Barnes,Match Burner BT #32050,0.224,77,0.352,Match,rifle
+Barnes,Match Burner BT #30164,0.224,85,0.410,Match,rifle
+Barnes,Match Burner FB #30160,0.224,52,0.224,Match,rifle
+Barnes,TAC-TX BT #32469,0.224,70,0.323,Hunting,rifle
+Barnes,TSX BT #30190,0.224,62,0.287,Hunting,rifle
+Barnes,TSX BT #30193,0.224,70,0.323,Hunting,rifle
+Barnes,TSX BT #30204,0.224,78,0.383,Hunting,rifle
+Barnes,TSX FB #30176,0.224,45,0.188,Hunting,rifle
+Barnes,TSX FB #30174,0.224,50,0.197,Hunting,rifle
+Barnes,TSX FB #30180,0.224,53,0.204,Hunting,rifle
+Barnes,TSX FB #30182,0.224,55,0.209,Hunting,rifle
+Barnes,TTSX BT #30187,0.224,55,0.272,Hunting,rifle
+Barnes,TTSX BT #30188,0.224,62,0.294,Hunting,rifle
+Barnes,TTSX FB #30185,0.224,50,0.229,Hunting,rifle
+Barnes,Varmin-A-Tor FB #30168,0.224,40,0.153,Varmint,rifle
+Barnes,Varmin-A-Tor FB #30178,0.224,50,0.192,Varmint,rifle
+Barnes,Varmint Grenade FB #30170,0.224,30,0.101,Varmint,rifle
+Barnes,Varmint Grenade FB #30171,0.224,36,0.149,Varmint,rifle
+Barnes,Varmint Grenade FB #30198,0.224,50,0.183,Varmint,rifle
+Barnes,LRX BT #30862,0.243,95,0.436,Hunting,rifle
+Barnes,Match Burner BT #30206,0.243,105,0.511,Match,rifle
+Barnes,Match Burner BT #30864,0.243,112,0.624,Match,rifle
+Barnes,Match Burner FB #30205,0.243,68,0.267,Match,rifle
+Barnes,TAC-TX BT #32470,0.243,90,0.353,Hunting,rifle
+Barnes,TSX BT #30212,0.243,85,0.333,Hunting,rifle
+Barnes,TTSX BT #30208,0.243,80,0.331,Hunting,rifle
+Barnes,Varmin-A-Tor FB #30207,0.243,58,0.173,Varmint,rifle
+Barnes,Varmin-A-Tor FB #30210,0.243,72,0.208,Varmint,rifle
+Barnes,Varmint Grenade FB #30214,0.243,62,0.199,Varmint,rifle
+Barnes,LRX BT #30479,0.257,101,0.400,Hunting,rifle
+Barnes,LRX BT #32472,0.257,117,0.530,Hunting,rifle
+Barnes,TSX BT #30222,0.257,100,0.336,Hunting,rifle
+Barnes,TSX FB #30224,0.257,115,0.335,Hunting,rifle
+Barnes,TTSX BT #30218,0.257,80,0.316,Hunting,rifle
+Barnes,TTSX BT #30220,0.257,100,0.357,Hunting,rifle
+Barnes,LRX BT #30228,0.264,127,0.468,Hunting,rifle
+Barnes,Match Burner BT #30234,0.264,120,0.476,Match,rifle
+Barnes,Match Burner BT #30230,0.264,140,0.586,Match,rifle
+Barnes,Match Burner BT #30100,0.264,145,0.703,Match,rifle
+Barnes,TAC-TX BT #31142,0.264,115,0.387,Hunting,rifle
+Barnes,TSX BT #30244,0.264,120,0.381,Hunting,rifle
+Barnes,TSX BT #31140,0.264,130,0.411,Hunting,rifle
+Barnes,TTSX BT #30240,0.264,100,0.359,Hunting,rifle
+Barnes,TTSX BT #30242,0.264,120,0.412,Hunting,rifle
+Barnes,LRX BT #30262,0.277,129,0.463,Hunting,rifle
+Barnes,LRX BT #32112,0.277,155,0.540,Hunting,rifle
+Barnes,MPG FB #30249,0.277,85,0.229,Target,rifle
+Barnes,TSX BT #30260,0.277,110,0.323,Hunting,rifle
+Barnes,TSX BT #30264,0.277,130,0.374,Hunting,rifle
+Barnes,TSX BT #30266,0.277,140,0.404,Hunting,rifle
+Barnes,TSX FB #30254,0.277,85,0.246,Hunting,rifle
+Barnes,TSX FB #30269,0.277,150,0.386,Hunting,rifle
+Barnes,TTSX BT #30271,0.277,95,0.292,Hunting,rifle
+Barnes,TTSX BT #30274,0.277,110,0.377,Hunting,rifle
+Barnes,TTSX BT #30276,0.277,130,0.392,Hunting,rifle
+Barnes,LRX BT #30295,0.284,139,0.434,Hunting,rifle
+Barnes,LRX BT #30282,0.284,145,0.449,Hunting,rifle
+Barnes,LRX BT #32395,0.284,152,0.467,Hunting,rifle
+Barnes,LRX BT #32348,0.284,160,0.608,Hunting,rifle
+Barnes,LRX BT #30284,0.284,168,0.513,Hunting,rifle
+Barnes,Match Burner BT #30285,0.284,171,0.645,Match,rifle
+Barnes,TSX BT #30287,0.284,120,0.349,Hunting,rifle
+Barnes,TSX BT #30289,0.284,140,0.394,Hunting,rifle
+Barnes,TSX BT #30293,0.284,150,0.408,Hunting,rifle
+Barnes,TSX FB #30291,0.284,160,0.392,Hunting,rifle
+Barnes,TSX FB #30294,0.284,175,0.417,Hunting,rifle
+Barnes,TTSX BT #30298,0.284,120,0.373,Hunting,rifle
+Barnes,TTSX BT #30300,0.284,140,0.412,Hunting,rifle
+Barnes,TTSX BT #30303,0.284,150,0.424,Hunting,rifle
+Barnes,TTSX FB #30296,0.284,110,0.319,Hunting,rifle
+Barnes,LRX BT #30318,0.308,175,0.508,Hunting,rifle
+Barnes,LRX BT #30377,0.308,190,0.541,Hunting,rifle
+Barnes,LRX BT #30374,0.308,200,0.546,Hunting,rifle
+Barnes,LRX BT #30311,0.308,208,0.633,Hunting,rifle
+Barnes,LRX BT BR #30376,0.308,212,0.705,Hunting,rifle
+Barnes,MPG FB #30331,0.308,150,0.357,Target,rifle
+Barnes,Match Burner BT #30381,0.308,155,0.467,Match,rifle
+Barnes,Match Burner BT #30385,0.308,175,0.521,Match,rifle
+Barnes,Original FN FB #30360,0.308,190,0.296,Hunting,rifle
+Barnes,TAC-TX BT #30320,0.308,120,0.358,Hunting,rifle
+Barnes,TAC-TX FB #30321,0.308,110,0.289,Hunting,rifle
+Barnes,TSX BT #30345,0.308,130,0.340,Hunting,rifle
+Barnes,TSX BT #30347,0.308,150,0.369,Hunting,rifle
+Barnes,TSX BT #30349,0.308,165,0.398,Hunting,rifle
+Barnes,TSX BT #30351,0.308,168,0.404,Hunting,rifle
+Barnes,TSX BT #30353,0.308,180,0.453,Hunting,rifle
+Barnes,TSX FB #30341,0.308,110,0.264,Hunting,rifle
+Barnes,TSX FB #30356,0.308,200,0.423,Hunting,rifle
+Barnes,TSX FN FB #30334,0.308,150,0.184,Hunting,rifle
+Barnes,TTSX BT #30364,0.308,130,0.350,Hunting,rifle
+Barnes,TTSX BT #30366,0.308,150,0.420,Hunting,rifle
+Barnes,TTSX BT #30368,0.308,165,0.442,Hunting,rifle
+Barnes,TTSX BT #30370,0.308,168,0.470,Hunting,rifle
+Barnes,TTSX BT #30372,0.308,180,0.484,Hunting,rifle
+Barnes,TTSX FB #30362,0.308,110,0.295,Hunting,rifle
+Barnes,MPG FB #30388,0.310,108,0.243,Target,rifle
+Barnes,TSX BT #30391,0.310,123,0.275,Hunting,rifle
+Barnes,TSX FB #30393,0.311,150,0.322,Hunting,rifle
+Barnes,TSX BT #30396,0.323,180,0.381,Hunting,rifle
+Barnes,TSX BT #30398,0.323,200,0.421,Hunting,rifle
+Barnes,TTSX BT #30400,0.323,160,0.400,Hunting,rifle
+Barnes,LRX BT #31150,0.338,250,0.602,Hunting,rifle
+Barnes,LRX BT #30434,0.338,265,0.575,Hunting,rifle
+Barnes,LRX BT #30432,0.338,280,0.667,Hunting,rifle
+Barnes,TSX BT #30408,0.338,185,0.352,Hunting,rifle
+Barnes,TSX BT #30410,0.338,210,0.404,Hunting,rifle
+Barnes,TSX BT #30417,0.338,285,0.585,Hunting,rifle
+Barnes,TSX FB #30412,0.338,225,0.386,Hunting,rifle
+Barnes,TSX FB #30415,0.338,250,0.425,Hunting,rifle
+Barnes,TTSX BT #30426,0.338,185,0.432,Hunting,rifle
+Barnes,TTSX BT #30428,0.338,210,0.482,Hunting,rifle
+Barnes,TTSX BT #30430,0.338,225,0.514,Hunting,rifle
+Barnes,TTSX FB #30424,0.338,160,0.342,Hunting,rifle
+Barnes,Original FN FB #30437,0.348,220,0.301,Hunting,rifle
+Barnes,Original FN FB #30438,0.348,250,0.342,Hunting,rifle
+Barnes,TAC-XP FB #30440,0.355,80,0.107,Defense,handgun
+Barnes,TAC-XP FB #30444,0.355,95,0.120,Defense,handgun
+Barnes,TAC-XP FB #30442,0.355,115,0.167,Defense,handgun
+Barnes,TAC-XP FB #30446,0.355,125,0.159,Defense,handgun
+Barnes,TSX FN FB #32078,0.355,170,0.198,Hunting,rifle
+Barnes,TAC-XP FB #30449,0.357,110,0.156,Defense,handgun
+Barnes,TAC-XP FB #30451,0.357,125,0.160,Defense,handgun
+Barnes,XPB #30453,0.357,140,0.151,Hunting,handgun
+Barnes,TSX FB #30455,0.358,200,0.284,Hunting,rifle
+Barnes,TSX FB #30457,0.358,225,0.359,Hunting,rifle
+Barnes,TSX FN FB #31112,0.358,180,0.193,Hunting,rifle
+Barnes,TTSX BT #30461,0.358,200,0.369,Hunting,rifle
+Barnes,TTSX FB #30459,0.358,180,0.295,Hunting,rifle
+Barnes,Banded Solid RN #30466,0.366,250,0.214,Hunting,rifle
+Barnes,Banded Solid RN #30467,0.366,286,0.247,Hunting,rifle
+Barnes,TSX FB #30469,0.366,250,0.361,Hunting,rifle
+Barnes,TSX FB #30473,0.366,286,0.411,Hunting,rifle
+Barnes,TTSX BT #30475,0.366,250,0.440,Hunting,rifle
+Barnes,Banded Solid RN #30783,0.375,270,0.207,Hunting,rifle
+Barnes,Banded Solid RN #30785,0.375,300,0.230,Hunting,rifle
+Barnes,Banded Solid RN #30787,0.375,350,0.283,Hunting,rifle
+Barnes,LRX BT #30483,0.375,270,0.449,Hunting,rifle
+Barnes,Original FN FB #30496,0.375,255,0.290,Hunting,rifle
+Barnes,Original FN FB #30497,0.375,255,0.290,Hunting,rifle
+Barnes,TSX FB #30486,0.375,235,0.270,Hunting,rifle
+Barnes,TSX FB #30489,0.375,270,0.326,Hunting,rifle
+Barnes,TSX FB #30491,0.375,300,0.357,Hunting,rifle
+Barnes,TSX FB #30494,0.375,350,0.425,Hunting,rifle
+Barnes,TTSX BT #30484,0.375,250,0.424,Hunting,rifle
+Barnes,Original FN FB #30498,0.377,255,0.290,Hunting,rifle
+Barnes,TAC-XP FB #30500,0.400,125,0.113,Defense,handgun
+Barnes,TAC-XP FB #30502,0.400,140,0.128,Defense,handgun
+Barnes,TAC-XP FB #30504,0.400,155,0.189,Defense,handgun
+Barnes,TSX FB #32473,0.400,190,0.183,Hunting,rifle
+Barnes,TSX FB #30514,0.410,400,0.399,Hunting,rifle
+Barnes,XPB #30512,0.410,180,0.126,Hunting,handgun
+Barnes,TSX FB #30516,0.411,300,0.281,Hunting,rifle
+Barnes,Banded Solid RN #30520,0.416,350,0.217,Hunting,rifle
+Barnes,Banded Solid RN #30526,0.416,400,0.261,Hunting,rifle
+Barnes,TSX FB #30527,0.416,300,0.298,Hunting,rifle
+Barnes,TSX FB #30529,0.416,350,0.345,Hunting,rifle
+Barnes,TSX FB #30532,0.416,400,0.392,Hunting,rifle
+Barnes,TTSX BT #30519,0.416,350,0.444,Hunting,rifle
+Barnes,Banded Solid RN #30536,0.422,400,0.261,Hunting,rifle
+Barnes,TSX FB #30537,0.422,400,0.378,Hunting,rifle
+Barnes,Buster FN FB #30545,0.429,300,0.241,Hunting,both
+Barnes,TAC-XP FB #30539,0.429,200,0.138,Defense,handgun
+Barnes,XPB #30541,0.429,200,0.138,Hunting,handgun
+Barnes,XPB #30543,0.429,225,0.166,Hunting,handgun
+Barnes,Buster FN FB #30572,0.451,325,0.206,Hunting,both
+Barnes,TAC-XP FB #30550,0.451,160,0.133,Defense,handgun
+Barnes,TAC-XP FB #30552,0.451,185,0.167,Defense,handgun
+Barnes,TSX FB #30628,0.451,275,0.215,Hunting,rifle
+Barnes,TTSX BT #30996,0.451,250,0.196,Hunting,rifle
+Barnes,XPB #30556,0.451,200,0.130,Hunting,handgun
+Barnes,XPB #30554,0.451,200,0.160,Hunting,handgun
+Barnes,XPB #30558,0.451,225,0.146,Hunting,handgun
+Barnes,XPB #30562,0.451,250,0.141,Hunting,handgun
+Barnes,XPB #30548,0.451,275,0.215,Hunting,handgun
+Barnes,Banded Solid RN #30791,0.458,450,0.267,Hunting,rifle
+Barnes,Banded Solid RN #30792,0.458,500,0.301,Hunting,rifle
+Barnes,Buster FN FB #30644,0.458,400,0.242,Hunting,rifle
+Barnes,Original FN FB #30612,0.458,300,0.227,Hunting,rifle
+Barnes,Original FN FB #30614,0.458,400,0.302,Hunting,rifle
+Barnes,Original SSP #30611,0.458,300,0.291,Hunting,rifle
+Barnes,Original SSP #30613,0.458,400,0.389,Hunting,rifle
+Barnes,TSX FB #30629,0.458,250,0.136,Hunting,rifle
+Barnes,TSX FB #30615,0.458,300,0.234,Hunting,rifle
+Barnes,TSX FB #30630,0.458,300,0.163,Hunting,rifle
+Barnes,TSX FB #30617,0.458,350,0.278,Hunting,rifle
+Barnes,TSX FB #30619,0.458,450,0.369,Hunting,rifle
+Barnes,TSX FB #30622,0.458,500,0.412,Hunting,rifle
+Barnes,TTSX BT #30642,0.458,300,0.236,Hunting,rifle
+Barnes,Banded Solid FN #30649,0.474,500,0.243,Hunting,rifle
+Barnes,TSX FB #30647,0.474,500,0.363,Hunting,rifle
+Barnes,XPB #30659,0.475,275,0.155,Hunting,handgun
+Barnes,Buster FN FB #30672,0.500,400,0.220,Hunting,both
+Barnes,XPB #30663,0.500,275,0.141,Hunting,handgun
+Barnes,XPB #30665,0.500,325,0.228,Hunting,handgun
+Barnes,XPB #30667,0.500,375,0.261,Hunting,handgun
+Barnes,Banded Solid RN #30685,0.504,525,0.267,Hunting,rifle
+Barnes,TSX FB #30688,0.505,525,0.320,Hunting,rifle
+Barnes,Banded Solid FN #30690,0.509,570,0.243,Hunting,rifle
+Barnes,TSX FB #30692,0.509,570,0.369,Hunting,rifle
+Barnes,Banded Solid Bore Rider #30703,0.510,750,1.070,Hunting,rifle
+Barnes,Banded Solid Bore Rider #30707,0.510,800,1.095,Hunting,rifle
+Barnes,Banded Solid RN #30694,0.510,535,0.238,Hunting,rifle
+Barnes,Original FN FB #30682,0.510,300,0.183,Hunting,rifle
+Barnes,Original FN FB #30683,0.510,450,0.274,Hunting,rifle
+Barnes,TSX BT #30700,0.510,647,0.572,Hunting,rifle
+Barnes,Banded Solid FN #30713,0.583,750,0.257,Hunting,rifle
+Barnes,TSX FB #30712,0.583,750,0.402,Hunting,rifle
+Barnes,Banded Solid FN #30714,0.618,900,0.380,Hunting,rifle
+Berger,FB Varmint #17308,0.172,25,0.152,Varmint,rifle
+Berger,BT Varmint #20304,0.204,40,0.227,Varmint,rifle
+Berger,FB Varmint #20303,0.204,35,0.179,Varmint,rifle
+Berger,BT Target #22420,0.224,73,0.348,Match,rifle
+Berger,FB Target #22408,0.224,52,0.235,Match,rifle
+Berger,FB Target #22410,0.224,55,0.254,Match,rifle
+Berger,FB Varmint #22303,0.224,40,0.151,Varmint,rifle
+Berger,FB Varmint #22309,0.224,52,0.201,Varmint,rifle
+Berger,FB Varmint #22311,0.224,55,0.209,Varmint,rifle
+Berger,FB Varmint #22312,0.224,60,0.271,Varmint,rifle
+Berger,Fullbore Target #22427,0.224,80.5,0.441,Match,rifle
+Berger,LRHT #22485,0.224,85.5,0.524,Match,rifle
+Berger,OTM Tactical #22101,0.224,77,0.374,Match,rifle
+Berger,VLD Target #22418,0.224,70,0.374,Match,rifle
+Berger,VLD Target #22421,0.224,75,0.421,Match,rifle
+Berger,VLD Target #22422,0.224,80,0.455,Match,rifle
+Berger,VLD Target #22423,0.224,90,0.534,Match,rifle
+Berger,BT Target #24408,0.243,65,0.281,Match,rifle
+Berger,BT Target #24425,0.243,90,0.409,Match,rifle
+Berger,BT Target #24428,0.243,105,0.494,Match,rifle
+Berger,BT Target #24431,0.243,108,0.522,Match,rifle
+Berger,Classic Hybrid Hunter #24570,0.243,95,0.434,Hunting,rifle
+Berger,Elite Hunter #24556,0.243,108,0.559,Hunting,rifle
+Berger,FB Target #24411,0.243,68,0.255,Match,rifle
+Berger,FB Varmint #24321,0.243,80,0.300,Varmint,rifle
+Berger,High BC FB Varmint #24313,0.243,69,0.289,Varmint,rifle
+Berger,High BC Varmint #24323,0.243,88,0.380,Varmint,rifle
+Berger,Hybrid Target #24433,0.243,105,0.536,Match,rifle
+Berger,LRHT #24485,0.243,109,0.568,Match,rifle
+Berger,VLD Hunting #24524,0.243,87,0.427,Hunting,rifle
+Berger,VLD Hunting #24527,0.243,95,0.467,Hunting,rifle
+Berger,VLD Hunting #24528,0.243,105,0.545,Hunting,rifle
+Berger,VLD Hunting #24530,0.243,115,0.568,Hunting,rifle
+Berger,VLD Target #24427,0.243,95,0.467,Match,rifle
+Berger,VLD Target #24429,0.243,105,0.517,Match,rifle
+Berger,VLD Target #24430,0.243,115,0.563,Match,rifle
+Berger,Elite Hunter #25586,0.257,133,0.613,Hunting,rifle
+Berger,LRHT #25485,0.257,135,0.650,Match,rifle
+Berger,VLD Hunting #25513,0.257,115,0.483,Hunting,rifle
+Berger,AR Hybrid OTM Tactical #26195,0.264,130,0.560,Match,rifle
+Berger,BT Target #26402,0.264,120,0.468,Match,rifle
+Berger,Classic Hybrid Hunter #26571,0.264,135,0.584,Hunting,rifle
+Berger,EOL Elite Hunter #26550,0.264,156,0.679,Hunting,rifle
+Berger,Elite Hunter #26552,0.264,140,0.606,Hunting,rifle
+Berger,Hybrid Target #26414,0.264,140,0.607,Match,rifle
+Berger,LRHT #26485,0.264,144,0.655,Match,rifle
+Berger,LRHT #26486,0.264,153.5,0.694,Match,rifle
+Berger,Long Range BT #26409,0.264,140,0.593,Match,rifle
+Berger,VLD Hunting #26503,0.264,130,0.562,Hunting,rifle
+Berger,VLD Hunting #26504,0.264,140,0.600,Hunting,rifle
+Berger,VLD Target #26403,0.264,130,0.562,Match,rifle
+Berger,VLD Target #26401,0.264,140,0.593,Match,rifle
+Berger,Classic Hybrid Hunter #27570,0.277,130,0.490,Hunting,rifle
+Berger,Classic Hybrid Hunter #27571,0.277,140,0.528,Hunting,rifle
+Berger,EOL Elite Hunter #27575,0.277,170,0.662,Hunting,rifle
+Berger,VLD Hunting #27501,0.277,130,0.462,Hunting,rifle
+Berger,VLD Hunting #27502,0.277,140,0.504,Hunting,rifle
+Berger,VLD Hunting #27503,0.277,150,0.518,Hunting,rifle
+Berger,Classic Hybrid Hunter #28571,0.284,150,0.505,Hunting,rifle
+Berger,Classic Hybrid Hunter #28570,0.284,168,0.566,Hunting,rifle
+Berger,EOL Elite Hunter #28550,0.284,195,0.755,Hunting,rifle
+Berger,Elite Hunter #28554,0.284,175,0.656,Hunting,rifle
+Berger,F-Open Target #28408,0.284,184,0.695,Match,rifle
+Berger,Hybrid Target #28407,0.284,180,0.680,Match,rifle
+Berger,LRHT #28485,0.284,190,0.751,Match,rifle
+Berger,VLD Hunting #28503,0.284,140,0.500,Hunting,rifle
+Berger,VLD Hunting #28501,0.284,168,0.618,Hunting,rifle
+Berger,VLD Hunting #28502,0.284,180,0.673,Hunting,rifle
+Berger,VLD Target #28401,0.284,168,0.628,Match,rifle
+Berger,VLD Target #28405,0.284,180,0.683,Match,rifle
+Berger,Classic Hybrid Hunter #30570,0.308,168,0.498,Hunting,rifle
+Berger,Classic Hybrid Hunter #30571,0.308,185,0.533,Hunting,rifle
+Berger,EOL Elite Hunter #30560,0.308,245,0.807,Hunting,rifle
+Berger,Elite Hunter #30554,0.308,180,0.576,Hunting,rifle
+Berger,Elite Hunter #30555,0.308,205,0.631,Hunting,rifle
+Berger,FB Target #30421,0.308,115,0.289,Match,rifle
+Berger,FB Target #30407,0.308,150,0.393,Match,rifle
+Berger,Fullbore Target #30416,0.308,155.5,0.473,Match,rifle
+Berger,Hybrid OTM Tactical #30112,0.308,230,0.710,Match,rifle
+Berger,Hybrid Target #30426,0.308,155,0.478,Match,rifle
+Berger,Hybrid Target #30425,0.308,168,0.515,Match,rifle
+Berger,Hybrid Target #30424,0.308,185,0.576,Match,rifle
+Berger,Hybrid Target #30427,0.308,200,0.616,Match,rifle
+Berger,Hybrid Target #30429,0.308,215,0.691,Match,rifle
+Berger,Hybrid Target #30430,0.308,230,0.717,Match,rifle
+Berger,Hybrid Target 200.20X #30417,0.308,200,0.640,Match,rifle
+Berger,Juggernaut OTM Tactical #30107,0.308,185,0.682,Match,rifle
+Berger,Juggernaut Target #30418,0.308,185,0.555,Match,rifle
+Berger,LRHT #30485,0.308,208,0.689,Match,rifle
+Berger,LRHT #30486,0.308,220,0.717,Match,rifle
+Berger,LRHT #30487,0.308,245,0.846,Match,rifle
+Berger,Long Range BT #30420,0.308,175,0.512,Match,rifle
+Berger,OTM Tactical #30105,0.308,175,0.512,Match,rifle
+Berger,VLD Hunting #30508,0.308,155,0.464,Hunting,rifle
+Berger,VLD Hunting #30510,0.308,168,0.498,Hunting,rifle
+Berger,VLD Hunting #30512,0.308,175,0.518,Hunting,rifle
+Berger,VLD Hunting #30513,0.308,185,0.558,Hunting,rifle
+Berger,VLD Hunting #30514,0.308,190,0.566,Hunting,rifle
+Berger,VLD Hunting #30515,0.308,210,0.625,Hunting,rifle
+Berger,VLD Target #30410,0.308,168,0.507,Match,rifle
+Berger,VLD Target #30412,0.308,175,0.512,Match,rifle
+Berger,VLD Target #30413,0.308,185,0.543,Match,rifle
+Berger,VLD Target #30415,0.308,210,0.621,Match,rifle
+Berger,Elite Hunter #33554,0.338,250,0.685,Hunting,rifle
+Berger,Elite Hunter #33556,0.338,300,0.814,Hunting,rifle
+Berger,Hybrid OTM Tactical #33107,0.338,250,0.682,Match,rifle
+Berger,Hybrid OTM Tactical #33109,0.338,300,0.822,Match,rifle
+Berger,ELR Match Solid #37379,0.375,379,0.951,Match,rifle
+Berger,ELR Match Solid #37407,0.375,407,1.022,Match,rifle
+Berger,Hybrid Target #37401,0.375,410,0.928,Match,rifle
+Nosler,Varmageddon FB Tipped #17210,0.172,20,0.183,Varmint,rifle
+Nosler,Varmageddon FBHP #17205,0.172,20,0.119,Varmint,rifle
+Nosler,Ballistic Tip Lead-Free Spitzer #45140,0.204,32,0.228,Varmint,rifle
+Nosler,Ballistic Tip Varmint Spitzer #35216,0.204,32,0.206,Varmint,rifle
+Nosler,Ballistic Tip Varmint Spitzer #52111,0.204,40,0.239,Varmint,rifle
+Nosler,Varmageddon FB Tipped #17220,0.204,32,0.204,Varmint,rifle
+Nosler,AccuBond Spitzer #53780,0.224,70,0.370,Hunting,rifle
+Nosler,Ballistic Tip Lead-Free Spitzer #45150,0.224,35,0.201,Varmint,rifle
+Nosler,Ballistic Tip Lead-Free Spitzer #45160,0.224,40,0.220,Varmint,rifle
+Nosler,Ballistic Tip Lead-Free Spitzer #45498,0.224,50,0.251,Varmint,rifle
+Nosler,Ballistic Tip Varmint Spitzer #39510,0.224,40,0.221,Varmint,rifle
+Nosler,Ballistic Tip Varmint Spitzer #39522,0.224,50,0.238,Varmint,rifle
+Nosler,Ballistic Tip Varmint Spitzer #39526,0.224,55,0.267,Varmint,rifle
+Nosler,Ballistic Tip Varmint Spitzer #34992,0.224,60,0.270,Varmint,rifle
+Nosler,Custom Competition HPBT #53294,0.224,52,0.220,Match,rifle
+Nosler,Custom Competition HPBT #17101,0.224,69,0.305,Match,rifle
+Nosler,Custom Competition HPBT #22421,0.224,77,0.340,Match,rifle
+Nosler,Custom Competition HPBT #25116,0.224,80,0.415,Match,rifle
+Nosler,Custom Competition HPBT Cannelure #53033,0.224,77,0.340,Match,rifle
+Nosler,E-Tip Spitzer #59624,0.224,55,0.305,Hunting,rifle
+Nosler,Partition Spitzer #16316,0.224,60,0.228,Hunting,rifle
+Nosler,RDF HPBT #53066,0.224,70,0.416,Match,rifle
+Nosler,RDF HPBT #53452,0.224,77,0.454,Match,rifle
+Nosler,RDF HPBT #53441,0.224,85,0.498,Match,rifle
+Nosler,Varmageddon FB Tipped #36763,0.224,35,0.120,Varmint,rifle
+Nosler,Varmageddon FB Tipped #17230,0.224,40,0.211,Varmint,rifle
+Nosler,Varmageddon FB Tipped #17223,0.224,50,0.227,Varmint,rifle
+Nosler,Varmageddon FB Tipped #36523,0.224,53,0.303,Varmint,rifle
+Nosler,Varmageddon FB Tipped #17240,0.224,55,0.255,Varmint,rifle
+Nosler,Varmageddon FBHP Cannelure #35631,0.224,62,0.251,Varmint,rifle
+Nosler,AccuBond Spitzer #56357,0.243,90,0.376,Hunting,rifle
+Nosler,Ballistic Silvertip Spitzer #51040,0.243,95,0.379,Hunting,rifle
+Nosler,Ballistic Tip Lead-Free Spitzer #45170,0.243,55,0.288,Varmint,rifle
+Nosler,Ballistic Tip Spitzer #24090,0.243,90,0.365,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #24095,0.243,95,0.379,Hunting,rifle
+Nosler,Ballistic Tip Varmint Spitzer #24055,0.243,55,0.276,Varmint,rifle
+Nosler,Ballistic Tip Varmint Spitzer #39532,0.243,70,0.310,Varmint,rifle
+Nosler,Ballistic Tip Varmint Spitzer #24080,0.243,80,0.329,Varmint,rifle
+Nosler,Custom Competition HPBT #49742,0.243,107,0.525,Match,rifle
+Nosler,E-Tip Spitzer #59165,0.243,90,0.403,Hunting,rifle
+Nosler,Partition Spitzer #16314,0.243,85,0.315,Hunting,rifle
+Nosler,Partition Spitzer #16315,0.243,95,0.365,Hunting,rifle
+Nosler,Partition Spitzer #35642,0.243,100,0.384,Hunting,rifle
+Nosler,RDF HPBT #53410,0.243,105,0.571,Match,rifle
+Nosler,RDF HPBT #53507,0.243,115,0.634,Match,rifle
+Nosler,Solid Base Spitzer #38050,0.243,100,0.388,Hunting,rifle
+Nosler,Varmageddon FB Tipped #17250,0.243,55,0.252,Varmint,rifle
+Nosler,Varmageddon FB Tipped #26123,0.243,70,0.305,Varmint,rifle
+Nosler,AccuBond Spitzer #53742,0.257,110,0.418,Hunting,rifle
+Nosler,Ballistic Silvertip Spitzer #51050,0.257,115,0.453,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #25100,0.257,100,0.393,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #25115,0.257,115,0.453,Hunting,rifle
+Nosler,Ballistic Tip Varmint Spitzer #43004,0.257,85,0.329,Varmint,rifle
+Nosler,E-Tip Spitzer #59456,0.257,100,0.409,Hunting,rifle
+Nosler,Partition Spitzer #16317,0.257,100,0.377,Hunting,rifle
+Nosler,Partition Spitzer #16318,0.257,115,0.389,Hunting,rifle
+Nosler,Partition Spitzer #35643,0.257,120,0.391,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58943,0.264,129,0.530,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58922,0.264,142,0.625,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58930,0.264,150,0.634,Hunting,rifle
+Nosler,AccuBond Spitzer #56902,0.264,130,0.488,Hunting,rifle
+Nosler,AccuBond Spitzer #57873,0.264,140,0.509,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #26100,0.264,100,0.350,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #26120,0.264,120,0.458,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #26140,0.264,140,0.509,Hunting,rifle
+Nosler,Custom Competition HPBT #53415,0.264,123,0.510,Match,rifle
+Nosler,Custom Competition HPBT #26725,0.264,140,0.529,Match,rifle
+Nosler,E-Tip Spitzer #59765,0.264,120,0.497,Hunting,rifle
+Nosler,Partition Spitzer #16319,0.264,100,0.326,Hunting,rifle
+Nosler,Partition Spitzer #16320,0.264,125,0.449,Hunting,rifle
+Nosler,Partition Spitzer #16321,0.264,140,0.490,Hunting,rifle
+Nosler,RDF HPBT #53505,0.264,130,0.615,Match,rifle
+Nosler,RDF HPBT #49824,0.264,140,0.658,Match,rifle
+Nosler,RDF HPBT #49826,0.264,150,0.670,Match,rifle
+Nosler,Solid Base Spitzer #38052,0.264,140,0.495,Hunting,rifle
+Nosler,Varmageddon FB Tipped #26129,0.264,90,0.350,Varmint,rifle
+Nosler,AccuBond Long Range Spitzer #58836,0.277,150,0.591,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #54827,0.277,165,0.620,Hunting,rifle
+Nosler,AccuBond Spitzer #54987,0.277,130,0.435,Hunting,rifle
+Nosler,AccuBond Spitzer #54765,0.277,140,0.460,Hunting,rifle
+Nosler,AccuBond Spitzer #54801,0.277,150,0.500,Hunting,rifle
+Nosler,Ballistic Silvertip Spitzer #51075,0.277,130,0.433,Hunting,rifle
+Nosler,Ballistic Silvertip Spitzer #51100,0.277,150,0.496,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #27130,0.277,130,0.433,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #27140,0.277,140,0.456,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #27150,0.277,150,0.496,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #28135,0.277,170,0.550,Hunting,rifle
+Nosler,Custom Competition HPBT Cannelure #45357,0.277,115,0.375,Match,rifle
+Nosler,E-Tip Spitzer #59298,0.277,130,0.459,Hunting,rifle
+Nosler,Partition Semi Spitzer #16324,0.277,160,0.434,Hunting,rifle
+Nosler,Partition Spitzer #16322,0.277,130,0.416,Hunting,rifle
+Nosler,Partition Spitzer #35200,0.277,140,0.432,Hunting,rifle
+Nosler,Partition Spitzer #16323,0.277,150,0.465,Hunting,rifle
+Nosler,Solid Base Spitzer #38054,0.277,130,0.424,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58734,0.284,150,0.546,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58623,0.284,168,0.616,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58517,0.284,175,0.648,Hunting,rifle
+Nosler,AccuBond Spitzer #59992,0.284,140,0.485,Hunting,rifle
+Nosler,AccuBond Spitzer #54951,0.284,150,0.493,Hunting,rifle
+Nosler,AccuBond Spitzer #54932,0.284,160,0.531,Hunting,rifle
+Nosler,Ballistic Silvertip Spitzer #51105,0.284,140,0.485,Hunting,rifle
+Nosler,Ballistic Silvertip Spitzer #51110,0.284,150,0.493,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #28120,0.284,120,0.417,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #28140,0.284,140,0.485,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #28150,0.284,150,0.493,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #28125,0.284,160,0.531,Hunting,rifle
+Nosler,Custom Competition HPBT #53418,0.284,168,0.520,Match,rifle
+Nosler,E-Tip Spitzer #59955,0.284,140,0.489,Hunting,rifle
+Nosler,E-Tip Spitzer #59426,0.284,150,0.498,Hunting,rifle
+Nosler,Partition Spitzer #16325,0.284,140,0.434,Hunting,rifle
+Nosler,Partition Spitzer #16326,0.284,150,0.456,Hunting,rifle
+Nosler,Partition Spitzer #16327,0.284,160,0.475,Hunting,rifle
+Nosler,Partition Spitzer #35645,0.284,175,0.519,Hunting,rifle
+Nosler,RDF HPBT #53432,0.284,185,0.719,Match,rifle
+Nosler,Solid Base Spitzer #38056,0.284,140,0.459,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58455,0.308,168,0.525,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58456,0.308,190,0.640,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58317,0.308,210,0.661,Hunting,rifle
+Nosler,AccuBond Spitzer #52165,0.308,125,0.366,Hunting,rifle
+Nosler,AccuBond Spitzer #56719,0.308,150,0.435,Hunting,rifle
+Nosler,AccuBond Spitzer #55602,0.308,165,0.475,Hunting,rifle
+Nosler,AccuBond Spitzer #54825,0.308,180,0.507,Hunting,rifle
+Nosler,AccuBond Spitzer #54618,0.308,200,0.588,Hunting,rifle
+Nosler,Ballistic Silvertip Round Nose #51165,0.308,150,0.232,Hunting,rifle
+Nosler,Ballistic Silvertip Spitzer #51150,0.308,150,0.435,Hunting,rifle
+Nosler,Ballistic Silvertip Spitzer #51160,0.308,168,0.490,Hunting,rifle
+Nosler,Ballistic Silvertip Spitzer #51170,0.308,180,0.507,Hunting,rifle
+Nosler,Ballistic Tip Round Nose #30181,0.308,220,0.472,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #30125,0.308,125,0.366,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #30150,0.308,150,0.435,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #30165,0.308,165,0.475,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #30168,0.308,168,0.490,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #30180,0.308,180,0.507,Hunting,rifle
+Nosler,Custom Competition HPBT #53155,0.308,155,0.450,Match,rifle
+Nosler,Custom Competition HPBT #53164,0.308,168,0.462,Match,rifle
+Nosler,Custom Competition HPBT #53952,0.308,175,0.505,Match,rifle
+Nosler,Custom Competition HPBT #53412,0.308,190,0.530,Match,rifle
+Nosler,Custom Competition HPBT #53154,0.308,220,0.690,Match,rifle
+Nosler,E-Tip Round Nose #59451,0.308,150,0.344,Hunting,rifle
+Nosler,E-Tip Spitzer #59380,0.308,110,0.245,Hunting,rifle
+Nosler,E-Tip Spitzer #59378,0.308,150,0.469,Hunting,rifle
+Nosler,E-Tip Spitzer #59415,0.308,168,0.503,Hunting,rifle
+Nosler,E-Tip Spitzer #59180,0.308,180,0.523,Hunting,rifle
+Nosler,Partition Protected Point #25396,0.308,180,0.361,Hunting,rifle
+Nosler,Partition Round Nose #16333,0.308,170,0.252,Hunting,rifle
+Nosler,Partition Semi Spitzer #16332,0.308,220,0.351,Hunting,rifle
+Nosler,Partition Spitzer #16329,0.308,150,0.387,Hunting,rifle
+Nosler,Partition Spitzer #16330,0.308,165,0.410,Hunting,rifle
+Nosler,Partition Spitzer #16331,0.308,180,0.474,Hunting,rifle
+Nosler,Partition Spitzer #35626,0.308,200,0.481,Hunting,rifle
+Nosler,RDF HPBT #53182,0.308,168,0.505,Match,rifle
+Nosler,RDF HPBT #53170,0.308,175,0.536,Match,rifle
+Nosler,RDF HPBT #53434,0.308,210,0.707,Match,rifle
+Nosler,Solid Base Round Nose #38058,0.308,150,0.232,Hunting,rifle
+Nosler,Solid Base Spitzer #38060,0.308,150,0.398,Hunting,rifle
+Nosler,Solid Base Spitzer #38062,0.308,165,0.442,Hunting,rifle
+Nosler,Varmageddon FB Tipped #34057,0.308,110,0.293,Varmint,rifle
+Nosler,Ballistic Tip Spitzer #30131,0.310,123,0.310,Hunting,rifle
+Nosler,E-Tip Spitzer #59387,0.310,123,0.316,Hunting,rifle
+Nosler,Varmageddon FB Tipped #34056,0.310,123,0.304,Varmint,rifle
+Nosler,AccuBond Spitzer #54374,0.323,200,0.450,Hunting,rifle
+Nosler,Ballistic Tip Spitzer #32180,0.323,180,0.394,Hunting,rifle
+Nosler,Custom Competition HPBT #49524,0.323,200,0.520,Match,rifle
+Nosler,E-Tip Spitzer #59265,0.323,180,0.427,Hunting,rifle
+Nosler,Partition Spitzer #35277,0.323,200,0.426,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58454,0.338,265,0.732,Hunting,rifle
+Nosler,AccuBond Long Range Spitzer #58518,0.338,300,0.785,Hunting,rifle
+Nosler,AccuBond Spitzer #57625,0.338,180,0.372,Hunting,rifle
+Nosler,AccuBond Spitzer #56382,0.338,200,0.414,Hunting,rifle
+Nosler,AccuBond Spitzer #54357,0.338,225,0.550,Hunting,rifle
+Nosler,AccuBond Spitzer #57287,0.338,250,0.575,Hunting,rifle
+Nosler,AccuBond Spitzer #54851,0.338,300,0.720,Hunting,rifle
+Nosler,Ballistic Silvertip Spitzer #51200,0.338,200,0.414,Hunting,rifle
+Nosler,Custom Competition HPBT #57520,0.338,250,0.590,Match,rifle
+Nosler,Custom Competition HPBT #53515,0.338,300,0.800,Match,rifle
+Nosler,E-Tip Spitzer #59186,0.338,200,0.425,Hunting,rifle
+Nosler,E-Tip Spitzer #59372,0.338,225,0.611,Hunting,rifle
+Nosler,E-Tip Spitzer #59385,0.338,250,0.627,Hunting,rifle
+Nosler,Partition Spitzer #16337,0.338,210,0.400,Hunting,rifle
+Nosler,Partition Spitzer #16336,0.338,225,0.454,Hunting,rifle
+Nosler,Partition Spitzer #35644,0.338,250,0.473,Hunting,rifle
+Nosler,RDF HPBT #53445,0.338,300,0.826,Match,rifle
+Nosler,ASP JHP #44848,0.355,115,0.109,Defense,handgun
+Nosler,ASP JHP #43123,0.355,124,0.118,Defense,handgun
+Nosler,ASP JHP #43258,0.355,147,0.156,Defense,handgun
+Nosler,Straight-Wall Protected Point #38064,0.355,180,0.245,Hunting,rifle
+Nosler,ASP JHP #44912,0.357,125,0.130,Defense,handgun
+Nosler,Sporting Handgun JHP #44841,0.357,158,0.182,Hunting,handgun
+Nosler,AccuBond Spitzer #50712,0.358,225,0.430,Hunting,rifle
+Nosler,Partition Spitzer #44800,0.358,225,0.421,Hunting,rifle
+Nosler,Partition Spitzer #44801,0.358,250,0.446,Hunting,rifle
+Nosler,AccuBond Spitzer Cannelure #59756,0.366,250,0.494,Hunting,rifle
+Nosler,E-Tip Spitzer #59270,0.366,250,0.494,Hunting,rifle
+Nosler,Partition Spitzer #44750,0.366,286,0.482,Hunting,rifle
+Nosler,AccuBond Spitzer Cannelure #54413,0.375,260,0.473,Hunting,rifle
+Nosler,AccuBond Spitzer Cannelure #53662,0.375,300,0.485,Hunting,rifle
+Nosler,E-Tip Spitzer #59379,0.375,260,0.490,Hunting,rifle
+Nosler,Partition Spitzer #44850,0.375,260,0.314,Hunting,rifle
+Nosler,Partition Spitzer #44845,0.375,300,0.398,Hunting,rifle
+Nosler,ASP JHP #44852,0.400,135,0.093,Defense,handgun
+Nosler,ASP JHP #44860,0.400,150,0.106,Defense,handgun
+Nosler,ASP JHP #44885,0.400,180,0.147,Defense,handgun
+Nosler,ASP JHP #44952,0.400,200,0.163,Defense,handgun
+Nosler,Straight-Wall Protected Point #38066,0.400,215,0.215,Hunting,rifle
+Nosler,Sporting Handgun JHP #43012,0.410,210,0.170,Hunting,handgun
+Nosler,ASP JHP #44917,0.429,240,0.185,Defense,handgun
+Nosler,Sporting Handgun JHP #44846,0.429,200,0.151,Hunting,handgun
+Nosler,Sporting Handgun JHP #44842,0.429,240,0.173,Hunting,handgun
+Nosler,Sporting Handgun JHP #42069,0.429,300,0.206,Hunting,handgun
+Nosler,Sporting Handgun JSP #44868,0.429,240,0.177,Hunting,handgun
+Nosler,ASP JHP #44847,0.451,185,0.142,Defense,handgun
+Nosler,ASP JHP #44922,0.451,230,0.175,Defense,handgun
+Nosler,Sporting Handgun JHP #43013,0.451,250,0.177,Hunting,handgun
+Nosler,Ballistic Tip Spitzer #31456,0.458,300,0.250,Hunting,rifle
+Nosler,Straight-Wall Protected Point #38068,0.458,300,0.191,Hunting,rifle
+Sierra,Tipped VarmintKing #1032,0.204,32,0.221,Varmint,rifle
+Sierra,Tipped VarmintKing #1036,0.204,36,0.255,Varmint,rifle
+Sierra,Tipped VarmintKing #1039,0.204,39,0.287,Varmint,rifle
+Sierra,VarmintKing Hornet #1100,0.223,40,0.117,Varmint,rifle
+Sierra,VarmintKing Hornet #1110,0.223,45,0.132,Varmint,rifle
+Sierra,GameKing FMJBT #1355,0.224,55,0.272,Hunting,rifle
+Sierra,GameKing HPBT #1390,0.224,55,0.185,Hunting,rifle
+Sierra,GameKing SBT #1365,0.224,55,0.250,Hunting,rifle
+Sierra,GameKing SBT #9362,0.224,62,0.298,Hunting,rifle
+Sierra,GameKing SBT #1395,0.224,65,0.303,Hunting,rifle
+Sierra,MatchKing HP #1400,0.224,53,0.224,Match,rifle
+Sierra,MatchKing HPBT #1410,0.224,52,0.225,Match,rifle
+Sierra,MatchKing HPBT #1380,0.224,69,0.301,Match,rifle
+Sierra,MatchKing HPBT #9377,0.224,77,0.372,Match,rifle
+Sierra,MatchKing HPBT Cannelure #9377C,0.224,77,0.372,Match,rifle
+Sierra,MatchKing HPBT-CN #9390,0.224,80,0.461,Match,rifle
+Sierra,MatchKing HPBT-CN #9290,0.224,90,0.563,Match,rifle
+Sierra,MatchKing HPBT-CN #1396,0.224,95,0.600,Match,rifle
+Sierra,MatchKing X HPBT #9380,0.224,77,0.372,Match,rifle
+Sierra,Tipped GameKing #4062,0.224,64,0.323,Hunting,rifle
+Sierra,Tipped GameKing #7171,0.224,69,0.370,Hunting,rifle
+Sierra,Tipped MatchKing #7160,0.224,60,0.323,Match,rifle
+Sierra,Tipped MatchKing #7169,0.224,69,0.375,Match,rifle
+Sierra,Tipped MatchKing #7177,0.224,77,0.420,Match,rifle
+Sierra,Tipped MatchKing #7188,0.224,88,0.480,Match,rifle
+Sierra,Tipped VarmintKing #1440,0.224,40,0.196,Varmint,rifle
+Sierra,Tipped VarmintKing #1450,0.224,50,0.248,Varmint,rifle
+Sierra,Tipped VarmintKing #1455,0.224,55,0.271,Varmint,rifle
+Sierra,Tipped VarmintKing #7170,0.224,69,0.357,Varmint,rifle
+Sierra,VarmintKing HP #1385,0.224,40,0.155,Varmint,rifle
+Sierra,VarmintKing HP #1375,0.224,60,0.246,Varmint,rifle
+Sierra,VarmintKing Hornet #1200,0.224,40,0.116,Varmint,rifle
+Sierra,VarmintKing Hornet #1210,0.224,45,0.131,Varmint,rifle
+Sierra,VarmintKing SMP #1370,0.224,63,0.231,Varmint,rifle
+Sierra,VarmintKing Spitzer #1310,0.224,45,0.210,Varmint,rifle
+Sierra,VarmintKing Spitzer #1330,0.224,50,0.222,Varmint,rifle
+Sierra,VarmintKing Spitzer #1360,0.224,55,0.237,Varmint,rifle
+Sierra,VarmintKing Spitzer Blitz #1340,0.224,50,0.222,Varmint,rifle
+Sierra,VarmintKing Spitzer Blitz #1345,0.224,55,0.237,Varmint,rifle
+Sierra,GameKing HPBT #1530,0.243,85,0.311,Hunting,rifle
+Sierra,GameKing SBT #1560,0.243,100,0.430,Hunting,rifle
+Sierra,MatchKing HPBT #1505,0.243,70,0.259,Match,rifle
+Sierra,MatchKing HPBT-CN #1537,0.243,95,0.490,Match,rifle
+Sierra,MatchKing HPBT-CN #1565,0.243,105,0.537,Match,rifle
+Sierra,MatchKing HPBT-CN #1570,0.243,107,0.547,Match,rifle
+Sierra,MatchKing HPBT-CN #1575,0.243,110,0.617,Match,rifle
+Sierra,MatchKing X HPBT #1571,0.243,107,0.447,Match,rifle
+Sierra,Pro-Hunter Spitzer #1540,0.243,100,0.373,Hunting,rifle
+Sierra,Tipped GameKing #4100,0.243,90,0.490,Hunting,rifle
+Sierra,Tipped GameKing #4110,0.243,100,0.515,Hunting,rifle
+Sierra,Tipped MatchKing #7295,0.243,95,0.500,Match,rifle
+Sierra,Tipped MatchKing #7207,0.243,107,0.574,Match,rifle
+Sierra,Tipped MatchKing #7216,0.243,116,0.622,Match,rifle
+Sierra,Tipped VarmintKing #1502,0.243,55,0.225,Varmint,rifle
+Sierra,Tipped VarmintKing #1507,0.243,70,0.299,Varmint,rifle
+Sierra,VarmintKing HP #1500,0.243,60,0.182,Varmint,rifle
+Sierra,VarmintKing HP #1510,0.243,75,0.217,Varmint,rifle
+Sierra,VarmintKing SBT Blitz #1515,0.243,80,0.319,Varmint,rifle
+Sierra,VarmintKing Spitzer #1520,0.243,85,0.315,Varmint,rifle
+Sierra,GameKing HPBT #1615,0.257,90,0.250,Hunting,rifle
+Sierra,GameKing SBT #1625,0.257,100,0.355,Hunting,rifle
+Sierra,GameKing SBT #1630,0.257,117,0.410,Hunting,rifle
+Sierra,MatchKing HPBT #1628,0.257,100,0.394,Match,rifle
+Sierra,MatchKing HPBT-CN #9631,0.257,131,0.596,Match,rifle
+Sierra,Tipped GameKing #4210,0.257,110,0.447,Hunting,rifle
+Sierra,Tipped GameKing #7331,0.257,131,0.532,Hunting,rifle
+Sierra,Tipped MatchKing #7334,0.257,134,0.610,Match,rifle
+Sierra,Tipped VarmintKing #1605,0.257,70,0.260,Varmint,rifle
+Sierra,Tipped VarmintKing #1616,0.257,90,0.388,Varmint,rifle
+Sierra,Tipped VarmintKing #1785,0.257,105,0.425,Varmint,rifle
+Sierra,VarmintKing Spitzer #1610,0.257,87,0.293,Varmint,rifle
+Sierra,GameKing HPBT #1728,0.264,130,0.355,Hunting,rifle
+Sierra,GameKing SBT #1730,0.264,140,0.495,Hunting,rifle
+Sierra,MatchKing HPBT #1711,0.264,100,0.361,Match,rifle
+Sierra,MatchKing HPBT #1715,0.264,107,0.430,Match,rifle
+Sierra,MatchKing HPBT #1725,0.264,120,0.421,Match,rifle
+Sierra,MatchKing HPBT #1740,0.264,140,0.535,Match,rifle
+Sierra,MatchKing HPBT #1744,0.264,144,0.550,Match,rifle
+Sierra,MatchKing HPBT-CN #1727,0.264,123,0.510,Match,rifle
+Sierra,MatchKing HPBT-CN #1729,0.264,130,0.584,Match,rifle
+Sierra,MatchKing HPBT-CN #1742,0.264,142,0.626,Match,rifle
+Sierra,MatchKing HPBT-CN #1755,0.264,150,0.713,Match,rifle
+Sierra,MatchKing X HPBT #1743,0.264,142,0.595,Match,rifle
+Sierra,Pro-Hunter Spitzer #1720,0.264,120,0.356,Hunting,rifle
+Sierra,Tipped GameKing #4320,0.264,120,0.482,Hunting,rifle
+Sierra,Tipped GameKing #4330,0.264,130,0.510,Hunting,rifle
+Sierra,Tipped GameKing #4340,0.264,140,0.563,Hunting,rifle
+Sierra,Tipped GameKing #4345,0.264,145,0.597,Hunting,rifle
+Sierra,Tipped MatchKing #7407,0.264,107,0.445,Match,rifle
+Sierra,Tipped MatchKing #7430,0.264,130,0.518,Match,rifle
+Sierra,Tipped MatchKing #7450,0.264,153,0.642,Match,rifle
+Sierra,VarmintKing HP #1710,0.264,100,0.259,Varmint,rifle
+Sierra,GameKing HPBT #1835,0.277,140,0.337,Hunting,rifle
+Sierra,GameKing SBT #1820,0.277,130,0.436,Hunting,rifle
+Sierra,GameKing SBT #1845,0.277,140,0.457,Hunting,rifle
+Sierra,GameKing SBT #1840,0.277,150,0.483,Hunting,rifle
+Sierra,MatchKing HPBT #1815,0.277,115,0.324,Match,rifle
+Sierra,MatchKing HPBT #1833,0.277,135,0.488,Match,rifle
+Sierra,MatchKing X HPBT #1834,0.277,135,0.505,Match,rifle
+Sierra,Pro-Hunter Spitzer #1830,0.277,130,0.370,Hunting,rifle
+Sierra,Tipped GameKing #4440,0.277,140,0.508,Hunting,rifle
+Sierra,Tipped GameKing #4475,0.277,175,0.560,Hunting,rifle
+Sierra,GameKing HPBT #1912,0.284,140,0.375,Hunting,rifle
+Sierra,GameKing HPBT #1925,0.284,160,0.384,Hunting,rifle
+Sierra,GameKing SBT #1905,0.284,140,0.416,Hunting,rifle
+Sierra,GameKing SBT #1913,0.284,150,0.436,Hunting,rifle
+Sierra,GameKing SBT #1920,0.284,160,0.455,Hunting,rifle
+Sierra,GameKing SBT #1940,0.284,175,0.533,Hunting,rifle
+Sierra,MatchKing HPBT #1915,0.284,150,0.429,Match,rifle
+Sierra,MatchKing HPBT #1930,0.284,168,0.488,Match,rifle
+Sierra,MatchKing HPBT #1975,0.284,175,0.608,Match,rifle
+Sierra,MatchKing HPBT #1980,0.284,180,0.660,Match,rifle
+Sierra,MatchKing HPBT-CN #1981,0.284,180,0.676,Match,rifle
+Sierra,MatchKing HPBT-CN #1983,0.284,183,0.707,Match,rifle
+Sierra,MatchKing HPBT-CN #1997,0.284,197,0.780,Match,rifle
+Sierra,MatchKing X HPBT #1976,0.284,175,0.597,Match,rifle
+Sierra,Pro-Hunter Spitzer #1900,0.284,120,0.328,Hunting,rifle
+Sierra,Pro-Hunter Spitzer #1910,0.284,140,0.377,Hunting,rifle
+Sierra,Tipped GameKing #4540,0.284,140,0.545,Hunting,rifle
+Sierra,Tipped GameKing #4550,0.284,150,0.545,Hunting,rifle
+Sierra,Tipped GameKing #4565,0.284,165,0.610,Hunting,rifle
+Sierra,Tipped GameKing #4580,0.284,180,0.632,Hunting,rifle
+Sierra,Tipped MatchKing #7660,0.284,160,0.600,Match,rifle
+Sierra,Tipped MatchKing #7685,0.284,185,0.694,Match,rifle
+Sierra,VarmintKing HP #1895,0.284,100,0.209,Varmint,rifle
+Sierra,GameKing #2236,0.308,205,0.480,Hunting,rifle
+Sierra,GameKing FMJBT #2115,0.308,150,0.408,Hunting,rifle
+Sierra,GameKing HPBT #2140,0.308,165,0.363,Hunting,rifle
+Sierra,GameKing SBT #2125,0.308,150,0.380,Hunting,rifle
+Sierra,GameKing SBT #2145,0.308,165,0.404,Hunting,rifle
+Sierra,GameKing SBT #2160,0.308,180,0.501,Hunting,rifle
+Sierra,GameKing SBT #2165,0.308,200,0.560,Hunting,rifle
+Sierra,MatchKing HP-CN #2121,0.308,125,0.349,Match,rifle
+Sierra,MatchKing HPBT #2190,0.308,150,0.417,Match,rifle
+Sierra,MatchKing HPBT #2155,0.308,155,0.450,Match,rifle
+Sierra,MatchKing HPBT #2200,0.308,168,0.462,Match,rifle
+Sierra,MatchKing HPBT #2275,0.308,175,0.505,Match,rifle
+Sierra,MatchKing HPBT #2210,0.308,190,0.533,Match,rifle
+Sierra,MatchKing HPBT #2230,0.308,200,0.565,Match,rifle
+Sierra,MatchKing HPBT #2240,0.308,220,0.629,Match,rifle
+Sierra,MatchKing HPBT-CN #2269,0.308,169,0.527,Match,rifle
+Sierra,MatchKing HPBT-CN #2277,0.308,177,0.545,Match,rifle
+Sierra,MatchKing HPBT-CN #2231,0.308,200,0.715,Match,rifle
+Sierra,MatchKing HPBT-CN #9240,0.308,210,0.670,Match,rifle
+Sierra,MatchKing HPBT-CN #2237,0.308,215,0.680,Match,rifle
+Sierra,MatchKing HPBT-CN #2251,0.308,230,0.800,Match,rifle
+Sierra,MatchKing HPBT-CN Palma #2156,0.308,155,0.504,Match,rifle
+Sierra,MatchKing X #2175,0.308,175,0.505,Match,rifle
+Sierra,MatchKing X HPBT #2232,0.308,200,0.553,Match,rifle
+Sierra,Pro-Hunter FN #2000,0.308,150,0.185,Hunting,rifle
+Sierra,Pro-Hunter FN #2010,0.308,170,0.205,Hunting,rifle
+Sierra,Pro-Hunter HP/FN #2020,0.308,125,0.119,Hunting,rifle
+Sierra,Pro-Hunter RN #2100,0.308,110,0.144,Hunting,both
+Sierra,Pro-Hunter RN #2135,0.308,150,0.200,Hunting,rifle
+Sierra,Pro-Hunter RN #2170,0.308,180,0.240,Hunting,rifle
+Sierra,Pro-Hunter RN #2180,0.308,220,0.310,Hunting,rifle
+Sierra,Pro-Hunter Spitzer #2120,0.308,125,0.279,Hunting,rifle
+Sierra,Pro-Hunter Spitzer #2130,0.308,150,0.336,Hunting,rifle
+Sierra,Sports Master RN #8005,0.308,85,0.102,Defense,handgun
+Sierra,Tipped GameKing #4625,0.308,125,0.318,Hunting,rifle
+Sierra,Tipped GameKing #4665,0.308,165,0.530,Hunting,rifle
+Sierra,Tipped GameKing #4680,0.308,180,0.515,Hunting,rifle
+Sierra,Tipped GameKing #4681,0.308,180,0.543,Hunting,rifle
+Sierra,Tipped GameKing #4695,0.308,195,0.588,Hunting,rifle
+Sierra,Tipped GameKing #4610,0.308,210,0.621,Hunting,rifle
+Sierra,Tipped MatchKing #7725,0.308,125,0.343,Match,rifle
+Sierra,Tipped MatchKing #7755,0.308,155,0.519,Match,rifle
+Sierra,Tipped MatchKing #7768,0.308,168,0.535,Match,rifle
+Sierra,Tipped MatchKing #7775,0.308,175,0.545,Match,rifle
+Sierra,Tipped MatchKing #7795,0.308,195,0.610,Match,rifle
+Sierra,Tipped MatchKing #7720,0.308,220,0.688,Match,rifle
+Sierra,VarmintKing HP #2110,0.308,110,0.177,Varmint,rifle
+Sierra,VarmintKing HP #2116,0.308,115,0.267,Varmint,rifle
+Sierra,VarmintKing HP #2124,0.308,135,0.308,Varmint,rifle
+Sierra,VarmintKing HP #2136,0.308,150,0.334,Varmint,rifle
+Sierra,MatchKing HPBT #2315,0.311,174,0.499,Match,rifle
+Sierra,Pro-Hunter Spitzer #2305,0.311,125,0.274,Hunting,rifle
+Sierra,Pro-Hunter Spitzer #2300,0.311,150,0.344,Hunting,rifle
+Sierra,Pro-Hunter Spitzer #2310,0.311,180,0.411,Hunting,rifle
+Sierra,Sports Master JHC #8030,0.312,90,0.125,Defense,handgun
+Sierra,GameKing SBT #2420,0.323,220,0.521,Hunting,rifle
+Sierra,MatchKing HPBT #2415,0.323,200,0.520,Match,rifle
+Sierra,Pro-Hunter Spitzer #2400,0.323,150,0.336,Hunting,rifle
+Sierra,Pro-Hunter Spitzer #2410,0.323,175,0.381,Hunting,rifle
+Sierra,GameKing SBT #2610,0.338,215,0.485,Hunting,rifle
+Sierra,GameKing SBT #2600,0.338,250,0.565,Hunting,rifle
+Sierra,MatchKing HPBT #2650,0.338,250,0.587,Match,rifle
+Sierra,MatchKing HPBT #9300,0.338,300,0.768,Match,rifle
+Sierra,Pro-Hunter Spitzer #2620,0.338,225,0.462,Hunting,rifle
+Sierra,Sports Master JHP #8100,0.355,90,0.095,Defense,handgun
+Sierra,Sports Master JHP #8110,0.355,115,0.127,Defense,handgun
+Sierra,Sports Master JHP #8124,0.355,124,0.120,Defense,handgun
+Sierra,Sports Master JHP #8125,0.355,125,0.124,Defense,handgun
+Sierra,Sports Master JHP #8147,0.355,147,0.157,Defense,handgun
+Sierra,Tournament Master FMJ #8105,0.355,95,0.094,Target,handgun
+Sierra,Tournament Master FMJ #8115,0.355,115,0.107,Target,handgun
+Sierra,Tournament Master FMJ #8120,0.355,125,0.115,Target,handgun
+Sierra,V-Crown JHP #9990,0.355,90,0.094,Defense,handgun
+Sierra,V-Crown JHP #9924,0.355,124,0.120,Defense,handgun
+Sierra,V-Crown JHP #9925,0.355,125,0.122,Defense,handgun
+Sierra,V-Crown JHP #9947,0.355,147,0.162,Defense,handgun
+Sierra,Sports Master JHC #8360,0.357,158,0.100,Defense,handgun
+Sierra,Sports Master JHP #8320,0.357,125,0.133,Defense,handgun
+Sierra,Sports Master JHP #8325,0.357,140,0.078,Defense,handgun
+Sierra,Sports Master JSP #8310,0.357,125,0.133,Defense,handgun
+Sierra,Sports Master JSP #8340,0.357,158,0.100,Defense,handgun
+Sierra,Tournament Master FPJ #8370,0.357,180,0.147,Target,handgun
+Sierra,GameKing SBT #2850,0.358,225,0.370,Hunting,rifle
+Sierra,Pro-Hunter #2755,0.358,155,0.182,Hunting,rifle
+Sierra,Pro-Hunter RN #2800,0.358,200,0.148,Hunting,rifle
+Sierra,GameKing SBT #2950,0.375,250,0.353,Hunting,rifle
+Sierra,GameKing SBT #3000,0.375,300,0.475,Hunting,rifle
+Sierra,MatchKing HPBT-CN #9350,0.375,350,0.805,Match,rifle
+Sierra,Pro-Hunter FN #2900,0.375,200,0.195,Hunting,rifle
+Sierra,Pro-Hunter JHP #3100,0.400,200,0.156,Hunting,handgun
+Sierra,Sports Master JHP #8430,0.400,150,0.120,Defense,handgun
+Sierra,Sports Master JHP #8445,0.400,165,0.130,Defense,handgun
+Sierra,Sports Master JHP #8460,0.400,180,0.140,Defense,handgun
+Sierra,V-Crown JHP #9465,0.400,165,0.132,Defense,handgun
+Sierra,Sports Master JHC #8500,0.410,170,0.123,Defense,handgun
+Sierra,Sports Master JHC #8520,0.410,210,0.165,Defense,handgun
+Sierra,Sports Master JHC #8600,0.4295,180,0.130,Defense,handgun
+Sierra,Sports Master JHC #8620,0.4295,210,0.160,Defense,handgun
+Sierra,Sports Master JHC #8610,0.4295,240,0.185,Defense,handgun
+Sierra,Sports Master JSP #8630,0.4295,300,0.230,Defense,handgun
+Sierra,Tournament Master FPJ #8615,0.4295,250,0.213,Target,handgun
+Sierra,Pro-Hunter FN #8760,0.4515,260,0.164,Hunting,both
+Sierra,Sports Master JHC #8826,0.4515,225,0.157,Defense,handgun
+Sierra,Sports Master JHC #8820,0.4515,240,0.150,Defense,handgun
+Sierra,Sports Master JHP #8835,0.4515,185,0.105,Defense,handgun
+Sierra,Sports Master JHP #8805,0.4515,230,0.145,Defense,handgun
+Sierra,Sports Master JSP #8830,0.4515,300,0.192,Defense,handgun
+Sierra,Tournament Master FMJ #8815,0.4515,230,0.140,Target,handgun
+Sierra,Tournament Master FPJ #8825,0.4515,200,0.120,Target,handgun
+Sierra,V-Crown JHP #9820,0.4515,200,0.118,Defense,handgun
+Sierra,Pro-Hunter HP/FN #8900,0.458,300,0.120,Hunting,rifle
+Sierra,Pro-Hunter HP/FN #8950,0.458,400,0.152,Hunting,rifle
+Sierra,Sports Master JHP #5350,0.500,350,0.155,Defense,handgun
+Sierra,Sports Master JSP #5400,0.500,400,0.185,Defense,handgun
+Speer,TNT HP #1015,0.204,39,0.202,Varmint,rifle
+Speer,Gold Dot Rifle BTSP #22462GDB,0.224,62,0.310,Defense,rifle
+Speer,Gold Dot Rifle BTSP #22475GDB2,0.224,75,0.411,Defense,rifle
+Speer,Gold Dot Rifle SP #22455GDB,0.224,55,0.250,Defense,rifle
+Speer,JHP #1014,0.224,33,0.080,Varmint,rifle
+Speer,TNT Green #1021,0.224,30,0.091,Varmint,rifle
+Speer,TNT Green #1028,0.224,50,0.190,Varmint,rifle
+Speer,TNT HP #1030,0.224,50,0.228,Varmint,rifle
+Speer,TNT HP #1032,0.224,55,0.233,Varmint,rifle
+Speer,Target Match BTHP #1036,0.224,52,0.230,Match,rifle
+Speer,Varmint Bee SPFN #1024,0.224,46,0.087,Varmint,rifle
+Speer,Varmint HP #1035,0.224,52,0.225,Varmint,rifle
+Speer,Varmint Semi-Spitzer SP #1053,0.224,70,0.219,Varmint,rifle
+Speer,Varmint Spire SP #1017,0.224,40,0.144,Varmint,rifle
+Speer,Varmint Spitzer SP #1023,0.224,45,0.143,Varmint,rifle
+Speer,Varmint Spitzer SP #1029,0.224,50,0.207,Varmint,rifle
+Speer,Varmint Spitzer SP #1047,0.224,55,0.212,Varmint,rifle
+Speer,Grand Slam GSSP #1222,0.243,100,0.327,Hunting,rifle
+Speer,Hot-Cor BTSP #1213,0.243,85,0.380,Hunting,rifle
+Speer,Hot-Cor BTSP #1220,0.243,100,0.446,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #1217,0.243,90,0.365,Hunting,rifle
+Speer,Impact #TB243H3,0.243,95,0.429,Hunting,rifle
+Speer,TNT HP #1206,0.243,70,0.279,Varmint,rifle
+Speer,Varmint HP #1205,0.243,75,0.192,Varmint,rifle
+Speer,Gold Dot HP #3985,0.251,35,0.091,Defense,handgun
+Speer,Grand Slam GSSP #1415,0.257,120,0.356,Hunting,rifle
+Speer,Hot-Cor BTSP #1408,0.257,100,0.393,Hunting,rifle
+Speer,Hot-Cor BTSP #1410,0.257,120,0.480,Hunting,rifle
+Speer,Hot-Cor SPFN #1237,0.257,75,0.135,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #1241,0.257,87,0.300,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #1405,0.257,100,0.334,Hunting,rifle
+Speer,TNT HP #1246,0.257,87,0.337,Varmint,rifle
+Speer,Varmint HP #1407,0.257,100,0.263,Varmint,rifle
+Speer,Gold Dot Rifle BTSP #264120GDB,0.264,120,0.457,Defense,rifle
+Speer,Gold Dot Rifle BTSP Creedmoor #264140GDB,0.264,140,0.571,Defense,rifle
+Speer,Grand Slam GSSP #1444A,0.264,140,0.498,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #1441,0.264,140,0.498,Hunting,rifle
+Speer,Impact #TB264H1,0.264,140,0.646,Hunting,rifle
+Speer,Impact #TB264H2,0.264,156,0.628,Hunting,rifle
+Speer,TNT HP #1445,0.264,90,0.281,Varmint,rifle
+Speer,Gold Dot Rifle BTSP 6.8 SPC #277115GDB,0.277,115,0.401,Defense,rifle
+Speer,Gold Dot Rifle SP #27790GDB,0.277,90,0.253,Defense,rifle
+Speer,Grand Slam GSSP #1465,0.277,130,0.332,Hunting,rifle
+Speer,Grand Slam GSSP #1608,0.277,150,0.378,Hunting,rifle
+Speer,Hot-Cor BTSP #1458,0.277,130,0.412,Hunting,rifle
+Speer,Hot-Cor BTSP #1604,0.277,150,0.489,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #1459,0.277,130,0.383,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #1605,0.277,150,0.455,Hunting,rifle
+Speer,Impact #TB277H1,0.277,150,0.575,Hunting,rifle
+Speer,TNT HP #1446,0.277,90,0.303,Varmint,rifle
+Speer,Varmint HP #1447,0.277,100,0.201,Varmint,rifle
+Speer,Grand Slam GSSP #1632,0.284,145,0.353,Hunting,rifle
+Speer,Grand Slam GSSP #1638,0.284,160,0.389,Hunting,rifle
+Speer,Grand Slam GSSP #1643,0.284,175,0.436,Hunting,rifle
+Speer,Hot-Cor BTSP #1624,0.284,130,0.424,Hunting,rifle
+Speer,Hot-Cor BTSP #1628,0.284,145,0.472,Hunting,rifle
+Speer,Hot-Cor BTSP #1634,0.284,160,0.519,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #1623,0.284,130,0.368,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #1629,0.284,145,0.416,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #1635,0.284,160,0.504,Hunting,rifle
+Speer,Impact #TB284H1,0.284,175,0.540,Hunting,rifle
+Speer,TNT HP #1616,0.284,110,0.384,Varmint,rifle
+Speer,Gold Dot Rifle BTSP #308150GDB,0.308,150,0.503,Defense,rifle
+Speer,Gold Dot Rifle BTSP #308168GDB,0.308,168,0.572,Defense,rifle
+Speer,Gold Dot Rifle SP 300 BLK #308150BLKGDB,0.308,150,0.463,Defense,rifle
+Speer,Grand Slam GSSP #2038,0.308,165,0.354,Hunting,rifle
+Speer,Grand Slam GSSP #2063,0.308,180,0.374,Hunting,rifle
+Speer,Hot-Cor BTSP #2022,0.308,150,0.417,Hunting,rifle
+Speer,Hot-Cor BTSP #2034,0.308,165,0.520,Hunting,rifle
+Speer,Hot-Cor BTSP #2052,0.308,180,0.545,Hunting,rifle
+Speer,Hot-Cor SPFN #2007,0.308,130,0.213,Hunting,rifle
+Speer,Hot-Cor SPFN #2011,0.308,150,0.255,Hunting,rifle
+Speer,Hot-Cor SPFN #2041,0.308,170,0.298,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #2023,0.308,150,0.377,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #2035,0.308,165,0.444,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #2053,0.308,180,0.441,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #2211,0.308,200,0.478,Hunting,rifle
+Speer,Impact #TB308H1,0.308,172,0.567,Hunting,rifle
+Speer,Impact #TB308H2,0.308,190,0.595,Hunting,rifle
+Speer,TMJ RN #1846,0.308,110,0.179,Target,both
+Speer,TNT HP #1986,0.308,125,0.341,Varmint,rifle
+Speer,Target Match BTHP #2040,0.308,168,0.534,Match,rifle
+Speer,Varmint HP #1835,0.308,110,0.150,Varmint,rifle
+Speer,Varmint HP #2005,0.308,130,0.244,Varmint,rifle
+Speer,Gold Dot Rifle SP #310123GDB,0.310,123,0.321,Defense,rifle
+Speer,Hot-Cor SPRN #2223,0.311,180,0.299,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #2217,0.311,150,0.351,Hunting,rifle
+Speer,Lead Hollow Base WC #4600,0.314,98,0.044,Target,handgun
+Speer,Hot-Cor SPFN #2259,0.321,170,0.283,Hunting,rifle
+Speer,Hot-Cor Semi-Spitzer SP #2283,0.323,170,0.311,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #2277,0.323,150,0.343,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #2285,0.323,200,0.440,Hunting,rifle
+Speer,Grand Slam GSSP #2408,0.338,250,0.436,Hunting,rifle
+Speer,Hot-Cor BTSP #2406,0.338,225,0.497,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #2405,0.338,200,0.426,Hunting,rifle
+Speer,Gold Dot HP #3992,0.355,90,0.101,Defense,handgun
+Speer,Gold Dot HP #3994,0.355,115,0.125,Defense,handgun
+Speer,Gold Dot HP #3998,0.355,124,0.134,Defense,handgun
+Speer,Gold Dot HP #4360,0.355,125,0.141,Defense,handgun
+Speer,Gold Dot HP #4002,0.355,147,0.164,Defense,handgun
+Speer,TMJ FN #4362,0.355,125,0.147,Target,handgun
+Speer,TMJ FN #4006,0.355,147,0.188,Target,handgun
+Speer,TMJ RN #4001,0.355,95,0.131,Target,handgun
+Speer,TMJ RN #3995,0.355,115,0.151,Target,handgun
+Speer,TMJ RN #3993,0.355,124,0.159,Target,handgun
+Speer,Copper Plated RN #4712,0.356,115,0.151,Target,handgun
+Speer,Lead RN #4602,0.356,125,0.155,Target,handgun
+Speer,DeepCurl HP/CANN #4215,0.357,158,0.168,Hunting,handgun
+Speer,Gold Dot HP/CANN #4012,0.357,125,0.140,Defense,handgun
+Speer,Gold Dot Short Barrel HP/CANN #4009,0.357,110,0.117,Defense,handgun
+Speer,Gold Dot Short Barrel HP/CANN #4014,0.357,135,0.141,Defense,handgun
+Speer,JHP/CANN #4007,0.357,110,0.113,Hunting,handgun
+Speer,JHP/CANN #4013,0.357,125,0.129,Hunting,handgun
+Speer,JHP/CANN #4211,0.357,158,0.163,Hunting,handgun
+Speer,JSP/CANN #4217,0.357,158,0.164,Hunting,handgun
+Speer,TMJ FN/CANN #4015,0.357,125,0.146,Target,handgun
+Speer,TMJ FN/CANN #4207,0.357,158,0.173,Target,handgun
+Speer,Hot-Cor SPFN #2435,0.358,180,0.236,Hunting,rifle
+Speer,Hot-Cor Spitzer SP #2453,0.358,250,0.422,Hunting,rifle
+Speer,Lead RN #4648,0.358,158,0.170,Target,handgun
+Speer,Lead SWC #4624,0.358,158,0.123,Target,handgun
+Speer,Lead SWC HP #4628,0.358,158,0.121,Target,handgun
+Speer,Lead Wadcutter #4618,0.360,148,0.050,Target,handgun
+Speer,TMJ RN #4375,0.364,95,0.127,Target,handgun
+Speer,Hot-Cor Semi-Spitzer SP #2459,0.366,270,0.361,Hunting,rifle
+Speer,Hot-Cor BTSP #2472,0.375,270,0.478,Hunting,rifle
+Speer,Hot-Cor Semi-Spitzer SP #2471,0.375,235,0.301,Hunting,rifle
+Speer,Copper Plated FN #4713,0.400,180,0.143,Target,handgun
+Speer,Gold Dot HP #4400,0.400,155,0.123,Defense,handgun
+Speer,Gold Dot HP #4397,0.400,165,0.138,Defense,handgun
+Speer,Gold Dot HP #4406,0.400,180,0.143,Defense,handgun
+Speer,TMJ FN #4399,0.400,155,0.125,Target,handgun
+Speer,TMJ FN #4410,0.400,165,0.135,Target,handgun
+Speer,TMJ FN #4402,0.400,180,0.143,Target,handgun
+Speer,DeepCurl HP/CANN #4430,0.410,210,0.185,Hunting,handgun
+Speer,Hot-Cor Mag-Tip #2477,0.416,350,0.332,Hunting,rifle
+Speer,DeepCurl HP/CANN #4455,0.429,240,0.175,Hunting,handgun
+Speer,DeepCurl SP/CANN #4456,0.429,240,0.175,Hunting,handgun
+Speer,DeepCurl SP/CANN #4461,0.429,270,0.193,Hunting,handgun
+Speer,Gold Dot HP/CANN #4427,0.429,200,0.145,Defense,handgun
+Speer,Gold Dot HP/CANN #4428,0.429,210,0.154,Defense,handgun
+Speer,JSP/CANN #4454,0.429,240,0.169,Hunting,handgun
+Speer,Copper Plated RN #4714,0.450,230,0.153,Target,handgun
+Speer,Gold Dot HP #4470,0.451,185,0.109,Defense,handgun
+Speer,Gold Dot HP #4478,0.451,200,0.138,Defense,handgun
+Speer,Gold Dot HP #4483,0.451,230,0.143,Defense,handgun
+Speer,Gold Dot Short Barrel HP #4482,0.451,230,0.148,Defense,handgun
+Speer,JSP/CANN #4485,0.451,300,0.199,Hunting,handgun
+Speer,TMJ FN #4476,0.451,185,0.094,Target,handgun
+Speer,TMJ RN #4480,0.451,230,0.153,Target,handgun
+Speer,TMJ SWC #4473,0.451,185,0.094,Target,handgun
+Speer,TMJ SWC #4475,0.451,200,0.128,Target,handgun
+Speer,DeepCurl HP/CANN #4484,0.452,250,0.165,Hunting,handgun
+Speer,DeepCurl HP/CANN #3974,0.452,300,0.233,Hunting,handgun
+Speer,JHP/CANN #4481,0.452,260,0.183,Hunting,handgun
+Speer,Lead RN #4691,0.452,230,0.160,Target,handgun
+Speer,Lead SWC #4678,0.452,200,0.170,Target,handgun
+Speer,Hot-Cor SPFN #2478,0.458,350,0.218,Hunting,rifle
+Speer,Hot-Cor SPFN #2479,0.458,400,0.259,Hunting,rifle
+Speer,JHP/CANN #2482,0.458,300,0.206,Hunting,rifle
+Speer,DeepCurl HP/CANN #3973,0.475,275,0.162,Hunting,handgun
+Speer,DeepCurl SP/CANN #3978,0.475,325,0.191,Hunting,handgun
+Speer,DeepCurl HP #4493,0.500,300,0.155,Hunting,handgun
+Speer,DeepCurl SP/CANN #4491,0.500,350,0.178,Hunting,handgun
+Speer,JHP #4495,0.500,325,0.169,Hunting,handgun
+Speer,TMJ FN #4490,0.500,300,0.157,Target,handgun

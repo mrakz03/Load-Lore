@@ -33,7 +33,7 @@ for cat in c.CATEGORIES:
                     bc_g1=x.bc_g1, powder_gr=x.powder_gr, default_cost=x.default_cost,
                     is_default=x.is_default, source=x.source, group=x.group) for x in loads]))
 bullets = [dict(maker=r["maker"], name=r["name"], diameter=float(r["diameter_in"]), weight=float(r["weight_gr"]),
-               bc=float(r["bc_g1"]), type=r["type"])
+               bc=float(r["bc_g1"]), type=r["type"], use=r.get("use") or "")
            for r in csv.DictReader(open(os.path.join(data, "bullets.csv"), encoding="utf-8-sig"))]
 # the public web address, for link previews; change it here if the site moves to its own domain
 SITE = "https://loadlore.net/"

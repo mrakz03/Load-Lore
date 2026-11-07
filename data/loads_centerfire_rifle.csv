@@ -954,6 +954,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .300 Blackout,Remington UMC OTFB (subsonic),220,940,0.680,6.4,1.01,,catalog,,,Subsonic
 .300 Blackout,Black Hills Open Tip Match Subsonic,220,1050,0.669,8.0,1.75,,partial,,16,Subsonic
 .300 Blackout,PPU Subsonic FMJ Boat Tail,220,1050,0.626,8.0,1.11,,partial,,24,Subsonic
+.300 Norma Magnum,Berger Hybrid Target,215,3017,0.691,88,5.45,,published,,26,Match
+.300 Norma Magnum,Berger Hybrid OTM Tactical,230,2934,0.743,86,5.50,,partial,,,Match
+.300 Norma Magnum,Norma Golden Target Berger Hybrid,230,2985,0.743,86,5.00,yes,published,,,Match
 .300 PRC,Hornady American Whitetail SST,165,3200,0.447,81.8,3.12,,catalog,,24,Hunting
 .300 PRC,Hornady ELD-VT,174,3150,0.572,83.6,2.72,,catalog,,24,Hunting
 .300 PRC,Hornady Outfitter CX,190,3000,0.586,82.8,4.07,,catalog,,24,Hunting
@@ -1347,6 +1350,9 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .338 Lapua Magnum,Black Hills Sierra MatchKing,300,2625,0.768,76.5,11.45,,partial,,24,Match
 .338 Lapua Magnum,Lapua Scenar OTM,300,2690,0.736,80.3,5.97,,published,,27,Match
 .338 Lapua Magnum,PPU HPBT,300,2756,0.638,84.3,3.21,,partial,,24,Match
+.338 Norma Magnum,Norma Golden Target Sierra MatchKing,300,2657,0.768,85,4.24,yes,published,,24,Match
+.338 Norma Magnum,Black Hills Sierra MatchKing,300,2725,0.768,85,5.75,,partial,,,Match
+.338 Norma Magnum,Berger Hybrid OTM Tactical,300,2725,0.818,85,5.90,,partial,,,Match
 .338 Winchester Magnum,Hornady Superformance SST,200,3030,0.463,77.3,3.48,,catalog,,24,Hunting
 .338 Winchester Magnum,Hornady Outfitter CX,225,2800,0.499,74.2,3.95,,catalog,,24,Hunting
 .338 Winchester Magnum,Hornady Superformance SST,225,2840,0.525,76.4,3.48,yes,catalog,,24,Hunting
