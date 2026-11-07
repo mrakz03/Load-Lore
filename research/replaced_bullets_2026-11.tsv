@@ -6,20 +6,41 @@ Sierra	BlitzKing	0.224	60	0.280	Varmint
 Sierra	MatchKing	0.224	69	0.301	Match
 Sierra	MatchKing	0.224	77	0.372	Match
 Sierra	GameKing	0.224	55	0.267	Hunting
+Nosler	Ballistic Tip	0.224	50	0.238	Hunting
+Nosler	Ballistic Tip	0.224	55	0.267	Hunting
+Nosler	Custom Competition	0.224	77	0.372	Match
 Speer	TNT	0.224	50	0.220	Varmint
 Speer	Gold Dot	0.224	62	0.230	Defense
+Barnes	TSX	0.224	62	0.298	Hunting
+Berger	Match VLD Target	0.224	80	0.456	Match
 Sierra	MatchKing	0.243	107	0.527	Match
 Sierra	GameKing	0.243	100	0.430	Hunting
+Nosler	Ballistic Tip	0.243	95	0.379	Hunting
+Nosler	Partition	0.243	100	0.384	Hunting
+Berger	Hybrid Target	0.243	105	0.536	Match
 Sierra	MatchKing	0.264	123	0.510	Match
 Sierra	MatchKing	0.264	140	0.585	Match
 Sierra	MatchKing	0.264	142	0.595	Match
 Sierra	GameKing	0.264	140	0.535	Hunting
+Nosler	AccuBond	0.264	140	0.509	Hunting
+Nosler	Partition	0.264	140	0.432	Hunting
+Nosler	AccuBond Long Range	0.264	142	0.617	Hunting
+Berger	Hybrid Target	0.264	140	0.607	Match
+Berger	Elite Hunter	0.264	156	0.643	Hunting
+Barnes	TTSX	0.264	120	0.395	Hunting
 Sierra	GameKing	0.277	140	0.486	Hunting
 Sierra	GameKing	0.277	150	0.547	Hunting
 Sierra	MatchKing	0.277	135	0.480	Match
+Nosler	AccuBond	0.277	150	0.496	Hunting
+Nosler	Partition	0.277	150	0.465	Hunting
+Barnes	TTSX	0.277	130	0.395	Hunting
 Sierra	MatchKing	0.284	168	0.617	Match
 Sierra	MatchKing	0.284	175	0.696	Match
 Sierra	GameKing	0.284	160	0.571	Hunting
+Nosler	AccuBond	0.284	160	0.531	Hunting
+Nosler	Partition	0.284	160	0.475	Hunting
+Berger	Hybrid Target	0.284	180	0.675	Match
+Barnes	TTSX	0.284	140	0.452	Hunting
 Sierra	MatchKing	0.308	155	0.450	Match
 Sierra	MatchKing	0.308	168	0.462	Match
 Sierra	MatchKing	0.308	175	0.505	Match
@@ -28,11 +49,23 @@ Sierra	GameKing	0.308	150	0.435	Hunting
 Sierra	GameKing	0.308	165	0.477	Hunting
 Sierra	GameKing	0.308	180	0.530	Hunting
 Sierra	Pro-Hunter	0.308	180	0.384	Hunting
+Nosler	Ballistic Tip	0.308	150	0.435	Hunting
+Nosler	Ballistic Tip	0.308	165	0.475	Hunting
+Nosler	AccuBond	0.308	180	0.507	Hunting
+Nosler	Partition	0.308	180	0.474	Hunting
+Nosler	Partition	0.308	200	0.481	Hunting
+Nosler	Custom Competition	0.308	168	0.462	Match
 Speer	Hot-Cor	0.308	150	0.321	Hunting
 Speer	Hot-Cor	0.308	180	0.376	Hunting
 Speer	Grand Slam	0.308	180	0.434	Hunting
+Berger	Hybrid Target	0.308	175	0.536	Match
+Berger	Elite Hunter	0.308	185	0.527	Hunting
+Barnes	TTSX	0.308	168	0.470	Hunting
+Barnes	TSX	0.308	180	0.472	Hunting
 Sierra	MatchKing	0.338	250	0.675	Match
 Sierra	GameKing	0.338	250	0.557	Hunting
+Nosler	AccuBond	0.338	225	0.551	Hunting
+Nosler	Partition	0.338	250	0.473	Hunting
 Speer	Hot-Cor	0.458	400	0.220	Hunting
 Speer	Gold Dot	0.355	115	0.123	Defense
 Speer	Gold Dot	0.355	124	0.133	Defense
@@ -49,10 +82,23 @@ Sierra	JHP	0.355	125	0.140	Defense
 Sierra	JHP	0.451	230	0.165	Defense
 Sierra	JHC	0.429	240	0.150	Hunting
 Sierra	JSP	0.429	300	0.205	Hunting
+Nosler	JHP	0.355	115	0.115	Defense
+Nosler	JHP	0.451	230	0.165	Defense
+Berger	Hollow Point	0.355	124	0.130	Target
+Berger	Flat Point	0.451	200	0.115	Target
+Berger	Hollow Point Target	0.451	230	0.150	Match
 Speer	Hot-Cor Hunting	0.358	200	0.250	Hunting
 Sierra	GameKing	0.224	53	0.230	Hunting
 Sierra	GameKing SBT	0.257	100	0.355	Hunting
 Sierra	GameKing SBT	0.257	117	0.410	Hunting
+Nosler	Ballistic Tip Varmint	0.257	85	0.329	Varmint
+Nosler	Ballistic Tip	0.257	100	0.393	Hunting
+Nosler	Ballistic Tip	0.257	115	0.453	Hunting
+Nosler	Partition	0.257	100	0.377	Hunting
+Nosler	Partition	0.257	115	0.389	Hunting
+Nosler	Partition	0.257	120	0.391	Hunting
+Nosler	AccuBond	0.257	110	0.418	Hunting
+Nosler	E-Tip	0.257	100	0.409	Hunting
 Speer	Flat Nose SP	0.257	75	0.133	Hunting
 Speer	Spitzer SP	0.257	87	0.300	Varmint
 Speer	Spitzer SP	0.257	100	0.369	Hunting
@@ -60,10 +106,20 @@ Speer	Spitzer SP Boat Tail	0.257	100	0.393	Hunting
 Speer	Spitzer SP	0.257	120	0.410	Hunting
 Speer	Spitzer SP Boat Tail	0.257	120	0.435	Hunting
 Speer	Trophy Bonded Bear Claw	0.257	115	0.372	Hunting
+Barnes	TSX	0.257	100	0.336	Hunting
 Speer	Spitzer SP	0.311	150	0.411	Hunting
 Speer	Round Nose SP	0.311	180	0.328	Hunting
 Sierra	Sports Master JHC	0.312	90	0.125	Defense
 Speer	Flat Nose SP	0.321	170	0.297	Hunting
+Nosler	Ballistic Tip	0.323	180	0.394	Hunting
+Nosler	E-Tip	0.323	180	0.427	Hunting
+Nosler	Partition	0.323	200	0.426	Hunting
+Nosler	AccuBond	0.323	200	0.450	Hunting
+Nosler	Custom Competition	0.323	200	0.520	Match
+Nosler	AccuBond	0.366	250	0.494	Hunting
+Nosler	E-Tip	0.366	250	0.494	Hunting
+Nosler	Partition	0.366	286	0.482	Hunting
+Barnes	TSX	0.366	250	0.361	Hunting
 Sierra	Sports Master JHC	0.410	210	0.165	Hunting
 Speer	Mag Tip SP	0.416	350	0.332	Hunting
 Speer	Trophy Bonded Bear Claw	0.416	400	0.374	Hunting

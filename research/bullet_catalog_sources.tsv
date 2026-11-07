@@ -1,0 +1,945 @@
+maker	name	diameter_in	weight_gr	bc_g1	source
+Barnes	Varmin-A-Tor FB #30092	0.204	32	0.159	Barnes 2026 bullet poster
+Barnes	Varmint Grenade FB #30090	0.204	26	0.131	Barnes 2026 bullet poster
+Barnes	LRX BT #32471	0.224	65	0.341	Barnes 2026 bullet poster (BC not printed / TBD; estimated from LRX #30881 77 gr BC 0.404 scaled by weight)
+Barnes	LRX BT #30881	0.224	77	0.404	Barnes 2026 bullet poster
+Barnes	MPG FB #30195	0.224	55	0.225	Barnes 2026 bullet poster
+Barnes	Match Burner BT #30162	0.224	69	0.339	Barnes 2026 bullet poster
+Barnes	Match Burner BT #32050	0.224	77	0.352	Barnes 2026 bullet poster
+Barnes	Match Burner BT #30164	0.224	85	0.410	Barnes 2026 bullet poster
+Barnes	Match Burner FB #30160	0.224	52	0.224	Barnes 2026 bullet poster
+Barnes	TAC-TX BT #32469	0.224	70	0.323	Barnes 2026 bullet poster (BC not printed / TBD; estimated from TSX BT #30193 70 gr BC 0.323 scaled by weight)
+Barnes	TSX BT #30190	0.224	62	0.287	Barnes 2026 bullet poster
+Barnes	TSX BT #30193	0.224	70	0.323	Barnes 2026 bullet poster
+Barnes	TSX BT #30204	0.224	78	0.383	Barnes 2026 bullet poster
+Barnes	TSX FB #30176	0.224	45	0.188	Barnes 2026 bullet poster
+Barnes	TSX FB #30174	0.224	50	0.197	Barnes 2026 bullet poster
+Barnes	TSX FB #30180	0.224	53	0.204	Barnes 2026 bullet poster
+Barnes	TSX FB #30182	0.224	55	0.209	Barnes 2026 bullet poster
+Barnes	TTSX BT #30187	0.224	55	0.272	Barnes 2026 bullet poster
+Barnes	TTSX BT #30188	0.224	62	0.294	Barnes 2026 bullet poster
+Barnes	TTSX FB #30185	0.224	50	0.229	Barnes 2026 bullet poster
+Barnes	Varmin-A-Tor FB #30168	0.224	40	0.153	Barnes 2026 bullet poster
+Barnes	Varmin-A-Tor FB #30178	0.224	50	0.192	Barnes 2026 bullet poster
+Barnes	Varmint Grenade FB #30170	0.224	30	0.101	Barnes 2026 bullet poster
+Barnes	Varmint Grenade FB #30171	0.224	36	0.149	Barnes 2026 bullet poster
+Barnes	Varmint Grenade FB #30198	0.224	50	0.183	Barnes 2026 bullet poster
+Barnes	LRX BT #30862	0.243	95	0.436	Barnes 2026 bullet poster
+Barnes	Match Burner BT #30206	0.243	105	0.511	Barnes 2026 bullet poster
+Barnes	Match Burner BT #30864	0.243	112	0.624	Barnes 2026 bullet poster
+Barnes	Match Burner FB #30205	0.243	68	0.267	Barnes 2026 bullet poster
+Barnes	TAC-TX BT #32470	0.243	90	0.353	Barnes 2026 bullet poster (BC not printed / TBD; estimated from TSX BT #30212 85 gr BC 0.333 scaled by weight)
+Barnes	TSX BT #30212	0.243	85	0.333	Barnes 2026 bullet poster
+Barnes	TTSX BT #30208	0.243	80	0.331	Barnes 2026 bullet poster
+Barnes	Varmin-A-Tor FB #30207	0.243	58	0.173	Barnes 2026 bullet poster
+Barnes	Varmin-A-Tor FB #30210	0.243	72	0.208	Barnes 2026 bullet poster
+Barnes	Varmint Grenade FB #30214	0.243	62	0.199	Barnes 2026 bullet poster
+Barnes	LRX BT #30479	0.257	101	0.400	Barnes 2026 bullet poster
+Barnes	LRX BT #32472	0.257	117	0.530	Barnes 2026 bullet poster
+Barnes	TSX BT #30222	0.257	100	0.336	Barnes 2026 bullet poster
+Barnes	TSX FB #30224	0.257	115	0.335	Barnes 2026 bullet poster
+Barnes	TTSX BT #30218	0.257	80	0.316	Barnes 2026 bullet poster
+Barnes	TTSX BT #30220	0.257	100	0.357	Barnes 2026 bullet poster
+Barnes	LRX BT #30228	0.264	127	0.468	Barnes 2026 bullet poster
+Barnes	Match Burner BT #30234	0.264	120	0.476	Barnes 2026 bullet poster
+Barnes	Match Burner BT #30230	0.264	140	0.586	Barnes 2026 bullet poster
+Barnes	Match Burner BT #30100	0.264	145	0.703	Barnes 2026 bullet poster
+Barnes	TAC-TX BT #31142	0.264	115	0.387	Barnes 2026 bullet poster
+Barnes	TSX BT #30244	0.264	120	0.381	Barnes 2026 bullet poster
+Barnes	TSX BT #31140	0.264	130	0.411	Barnes 2026 bullet poster
+Barnes	TTSX BT #30240	0.264	100	0.359	Barnes 2026 bullet poster
+Barnes	TTSX BT #30242	0.264	120	0.412	Barnes 2026 bullet poster
+Barnes	LRX BT #30262	0.277	129	0.463	Barnes 2026 bullet poster
+Barnes	LRX BT #32112	0.277	155	0.540	Barnes 2026 bullet poster
+Barnes	MPG FB #30249	0.277	85	0.229	Barnes 2026 bullet poster
+Barnes	TSX BT #30260	0.277	110	0.323	Barnes 2026 bullet poster
+Barnes	TSX BT #30264	0.277	130	0.374	Barnes 2026 bullet poster
+Barnes	TSX BT #30266	0.277	140	0.404	Barnes 2026 bullet poster
+Barnes	TSX FB #30254	0.277	85	0.246	Barnes 2026 bullet poster
+Barnes	TSX FB #30269	0.277	150	0.386	Barnes 2026 bullet poster
+Barnes	TTSX BT #30271	0.277	95	0.292	Barnes 2026 bullet poster
+Barnes	TTSX BT #30274	0.277	110	0.377	Barnes 2026 bullet poster
+Barnes	TTSX BT #30276	0.277	130	0.392	Barnes 2026 bullet poster
+Barnes	LRX BT #30295	0.284	139	0.434	Barnes 2026 bullet poster
+Barnes	LRX BT #30282	0.284	145	0.449	Barnes 2026 bullet poster
+Barnes	LRX BT #32395	0.284	152	0.467	Barnes 2026 bullet poster
+Barnes	LRX BT #32348	0.284	160	0.608	Barnes 2026 bullet poster
+Barnes	LRX BT #30284	0.284	168	0.513	Barnes 2026 bullet poster
+Barnes	Match Burner BT #30285	0.284	171	0.645	Barnes 2026 bullet poster
+Barnes	TSX BT #30287	0.284	120	0.349	Barnes 2026 bullet poster
+Barnes	TSX BT #30289	0.284	140	0.394	Barnes 2026 bullet poster
+Barnes	TSX BT #30293	0.284	150	0.408	Barnes 2026 bullet poster
+Barnes	TSX FB #30291	0.284	160	0.392	Barnes 2026 bullet poster
+Barnes	TSX FB #30294	0.284	175	0.417	Barnes 2026 bullet poster
+Barnes	TTSX BT #30298	0.284	120	0.373	Barnes 2026 bullet poster
+Barnes	TTSX BT #30300	0.284	140	0.412	Barnes 2026 bullet poster
+Barnes	TTSX BT #30303	0.284	150	0.424	Barnes 2026 bullet poster
+Barnes	TTSX FB #30296	0.284	110	0.319	Barnes 2026 bullet poster
+Barnes	LRX BT #30318	0.308	175	0.508	Barnes 2026 bullet poster
+Barnes	LRX BT #30377	0.308	190	0.541	Barnes 2026 bullet poster
+Barnes	LRX BT #30374	0.308	200	0.546	Barnes 2026 bullet poster
+Barnes	LRX BT #30311	0.308	208	0.633	Barnes 2026 bullet poster
+Barnes	LRX BT BR #30376	0.308	212	0.705	Barnes 2026 bullet poster
+Barnes	MPG FB #30331	0.308	150	0.357	Barnes 2026 bullet poster
+Barnes	Match Burner BT #30381	0.308	155	0.467	Barnes 2026 bullet poster
+Barnes	Match Burner BT #30385	0.308	175	0.521	Barnes 2026 bullet poster
+Barnes	Original FN FB #30360	0.308	190	0.296	Barnes 2026 bullet poster
+Barnes	TAC-TX BT #30320	0.308	120	0.358	Barnes 2026 bullet poster
+Barnes	TAC-TX FB #30321	0.308	110	0.289	Barnes 2026 bullet poster
+Barnes	TSX BT #30345	0.308	130	0.340	Barnes 2026 bullet poster
+Barnes	TSX BT #30347	0.308	150	0.369	Barnes 2026 bullet poster
+Barnes	TSX BT #30349	0.308	165	0.398	Barnes 2026 bullet poster
+Barnes	TSX BT #30351	0.308	168	0.404	Barnes 2026 bullet poster
+Barnes	TSX BT #30353	0.308	180	0.453	Barnes 2026 bullet poster
+Barnes	TSX FB #30341	0.308	110	0.264	Barnes 2026 bullet poster
+Barnes	TSX FB #30356	0.308	200	0.423	Barnes 2026 bullet poster
+Barnes	TSX FN FB #30334	0.308	150	0.184	Barnes 2026 bullet poster
+Barnes	TTSX BT #30364	0.308	130	0.350	Barnes 2026 bullet poster
+Barnes	TTSX BT #30366	0.308	150	0.420	Barnes 2026 bullet poster
+Barnes	TTSX BT #30368	0.308	165	0.442	Barnes 2026 bullet poster
+Barnes	TTSX BT #30370	0.308	168	0.470	Barnes 2026 bullet poster
+Barnes	TTSX BT #30372	0.308	180	0.484	Barnes 2026 bullet poster
+Barnes	TTSX FB #30362	0.308	110	0.295	Barnes 2026 bullet poster
+Barnes	MPG FB #30388	0.310	108	0.243	Barnes 2026 bullet poster
+Barnes	TSX BT #30391	0.310	123	0.275	Barnes 2026 bullet poster
+Barnes	TSX FB #30393	0.311	150	0.322	Barnes 2026 bullet poster
+Barnes	TSX BT #30396	0.323	180	0.381	Barnes 2026 bullet poster
+Barnes	TSX BT #30398	0.323	200	0.421	Barnes 2026 bullet poster
+Barnes	TTSX BT #30400	0.323	160	0.400	Barnes 2026 bullet poster
+Barnes	LRX BT #31150	0.338	250	0.602	Barnes 2026 bullet poster
+Barnes	LRX BT #30434	0.338	265	0.575	Barnes 2026 bullet poster
+Barnes	LRX BT #30432	0.338	280	0.667	Barnes 2026 bullet poster
+Barnes	TSX BT #30408	0.338	185	0.352	Barnes 2026 bullet poster
+Barnes	TSX BT #30410	0.338	210	0.404	Barnes 2026 bullet poster
+Barnes	TSX BT #30417	0.338	285	0.585	Barnes 2026 bullet poster
+Barnes	TSX FB #30412	0.338	225	0.386	Barnes 2026 bullet poster
+Barnes	TSX FB #30415	0.338	250	0.425	Barnes 2026 bullet poster
+Barnes	TTSX BT #30426	0.338	185	0.432	Barnes 2026 bullet poster
+Barnes	TTSX BT #30428	0.338	210	0.482	Barnes 2026 bullet poster
+Barnes	TTSX BT #30430	0.338	225	0.514	Barnes 2026 bullet poster
+Barnes	TTSX FB #30424	0.338	160	0.342	Barnes 2026 bullet poster
+Barnes	Original FN FB #30437	0.348	220	0.301	Barnes 2026 bullet poster
+Barnes	Original FN FB #30438	0.348	250	0.342	Barnes 2026 bullet poster (BC not printed / TBD; estimated from #30437 220 gr BC 0.301 scaled by weight)
+Barnes	TAC-XP FB #30440	0.355	80	0.107	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30444	0.355	95	0.120	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30442	0.355	115	0.167	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30446	0.355	125	0.159	Barnes 2026 bullet poster
+Barnes	TSX FN FB #32078	0.355	170	0.198	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30449	0.357	110	0.156	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30451	0.357	125	0.160	Barnes 2026 bullet poster
+Barnes	XPB #30453	0.357	140	0.151	Barnes 2026 bullet poster
+Barnes	TSX FB #30455	0.358	200	0.284	Barnes 2026 bullet poster
+Barnes	TSX FB #30457	0.358	225	0.359	Barnes 2026 bullet poster
+Barnes	TSX FN FB #31112	0.358	180	0.193	Barnes 2026 bullet poster
+Barnes	TTSX BT #30461	0.358	200	0.369	Barnes 2026 bullet poster
+Barnes	TTSX FB #30459	0.358	180	0.295	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30466	0.366	250	0.214	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30467	0.366	286	0.247	Barnes 2026 bullet poster
+Barnes	TSX FB #30469	0.366	250	0.361	Barnes 2026 bullet poster
+Barnes	TSX FB #30473	0.366	286	0.411	Barnes 2026 bullet poster
+Barnes	TTSX BT #30475	0.366	250	0.440	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30783	0.375	270	0.207	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30785	0.375	300	0.230	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30787	0.375	350	0.283	Barnes 2026 bullet poster
+Barnes	LRX BT #30483	0.375	270	0.449	Barnes 2026 bullet poster
+Barnes	Original FN FB #30496	0.375	255	0.290	Barnes 2026 bullet poster
+Barnes	Original FN FB #30497	0.375	255	0.290	Barnes 2026 bullet poster
+Barnes	TSX FB #30486	0.375	235	0.270	Barnes 2026 bullet poster
+Barnes	TSX FB #30489	0.375	270	0.326	Barnes 2026 bullet poster
+Barnes	TSX FB #30491	0.375	300	0.357	Barnes 2026 bullet poster
+Barnes	TSX FB #30494	0.375	350	0.425	Barnes 2026 bullet poster
+Barnes	TTSX BT #30484	0.375	250	0.424	Barnes 2026 bullet poster
+Barnes	Original FN FB #30498	0.377	255	0.290	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30500	0.400	125	0.113	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30502	0.400	140	0.128	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30504	0.400	155	0.189	Barnes 2026 bullet poster
+Barnes	TSX FB #32473	0.400	190	0.183	Barnes 2026 bullet poster
+Barnes	TSX FB #30514	0.410	400	0.399	Barnes 2026 bullet poster
+Barnes	XPB #30512	0.410	180	0.126	Barnes 2026 bullet poster
+Barnes	TSX FB #30516	0.411	300	0.281	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30520	0.416	350	0.217	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30526	0.416	400	0.261	Barnes 2026 bullet poster
+Barnes	TSX FB #30527	0.416	300	0.298	Barnes 2026 bullet poster
+Barnes	TSX FB #30529	0.416	350	0.345	Barnes 2026 bullet poster
+Barnes	TSX FB #30532	0.416	400	0.392	Barnes 2026 bullet poster
+Barnes	TTSX BT #30519	0.416	350	0.444	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30536	0.422	400	0.261	Barnes 2026 bullet poster
+Barnes	TSX FB #30537	0.422	400	0.378	Barnes 2026 bullet poster
+Barnes	Buster FN FB #30545	0.429	300	0.241	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30539	0.429	200	0.138	Barnes 2026 bullet poster
+Barnes	XPB #30541	0.429	200	0.138	Barnes 2026 bullet poster
+Barnes	XPB #30543	0.429	225	0.166	Barnes 2026 bullet poster
+Barnes	Buster FN FB #30572	0.451	325	0.206	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30550	0.451	160	0.133	Barnes 2026 bullet poster
+Barnes	TAC-XP FB #30552	0.451	185	0.167	Barnes 2026 bullet poster
+Barnes	TSX FB #30628	0.451	275	0.215	Barnes 2026 bullet poster
+Barnes	TTSX BT #30996	0.451	250	0.196	Barnes 2026 bullet poster
+Barnes	XPB #30556	0.451	200	0.130	Barnes 2026 bullet poster
+Barnes	XPB #30554	0.451	200	0.160	Barnes 2026 bullet poster
+Barnes	XPB #30558	0.451	225	0.146	Barnes 2026 bullet poster
+Barnes	XPB #30562	0.451	250	0.141	Barnes 2026 bullet poster
+Barnes	XPB #30548	0.451	275	0.215	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30791	0.458	450	0.267	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30792	0.458	500	0.301	Barnes 2026 bullet poster
+Barnes	Buster FN FB #30644	0.458	400	0.242	Barnes 2026 bullet poster
+Barnes	Original FN FB #30612	0.458	300	0.227	Barnes 2026 bullet poster
+Barnes	Original FN FB #30614	0.458	400	0.302	Barnes 2026 bullet poster
+Barnes	Original SSP #30611	0.458	300	0.291	Barnes 2026 bullet poster
+Barnes	Original SSP #30613	0.458	400	0.389	Barnes 2026 bullet poster
+Barnes	TSX FB #30629	0.458	250	0.136	Barnes 2026 bullet poster
+Barnes	TSX FB #30615	0.458	300	0.234	Barnes 2026 bullet poster
+Barnes	TSX FB #30630	0.458	300	0.163	Barnes 2026 bullet poster
+Barnes	TSX FB #30617	0.458	350	0.278	Barnes 2026 bullet poster
+Barnes	TSX FB #30619	0.458	450	0.369	Barnes 2026 bullet poster
+Barnes	TSX FB #30622	0.458	500	0.412	Barnes 2026 bullet poster
+Barnes	TTSX BT #30642	0.458	300	0.236	Barnes 2026 bullet poster
+Barnes	Banded Solid FN #30649	0.474	500	0.243	Barnes 2026 bullet poster
+Barnes	TSX FB #30647	0.474	500	0.363	Barnes 2026 bullet poster
+Barnes	XPB #30659	0.475	275	0.155	Barnes 2026 bullet poster
+Barnes	Buster FN FB #30672	0.500	400	0.220	Barnes 2026 bullet poster
+Barnes	XPB #30663	0.500	275	0.141	Barnes 2026 bullet poster
+Barnes	XPB #30665	0.500	325	0.228	Barnes 2026 bullet poster
+Barnes	XPB #30667	0.500	375	0.261	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30685	0.504	525	0.267	Barnes 2026 bullet poster
+Barnes	TSX FB #30688	0.505	525	0.320	Barnes 2026 bullet poster
+Barnes	Banded Solid FN #30690	0.509	570	0.243	Barnes 2026 bullet poster
+Barnes	TSX FB #30692	0.509	570	0.369	Barnes 2026 bullet poster
+Barnes	Banded Solid Bore Rider #30703	0.510	750	1.070	Barnes 2026 bullet poster
+Barnes	Banded Solid Bore Rider #30707	0.510	800	1.095	Barnes 2026 bullet poster
+Barnes	Banded Solid RN #30694	0.510	535	0.238	Barnes 2026 bullet poster
+Barnes	Original FN FB #30682	0.510	300	0.183	Barnes 2026 bullet poster
+Barnes	Original FN FB #30683	0.510	450	0.274	Barnes 2026 bullet poster
+Barnes	TSX BT #30700	0.510	647	0.572	Barnes 2026 bullet poster
+Barnes	Banded Solid FN #30713	0.583	750	0.257	Barnes 2026 bullet poster
+Barnes	TSX FB #30712	0.583	750	0.402	Barnes 2026 bullet poster
+Barnes	Banded Solid FN #30714	0.618	900	0.380	Barnes 2026 bullet poster
+Berger	FB Varmint #17308	0.172	25	0.152	Berger 2024 catalog
+Berger	BT Varmint #20304	0.204	40	0.227	Berger 2024 catalog
+Berger	FB Varmint #20303	0.204	35	0.179	Berger 2024 catalog
+Berger	BT Target #22420	0.224	73	0.348	Berger 2024 catalog
+Berger	FB Target #22408	0.224	52	0.235	Berger 2024 catalog
+Berger	FB Target #22410	0.224	55	0.254	Berger 2024 catalog
+Berger	FB Varmint #22303	0.224	40	0.151	Berger 2024 catalog
+Berger	FB Varmint #22309	0.224	52	0.201	Berger 2024 catalog
+Berger	FB Varmint #22311	0.224	55	0.209	Berger 2024 catalog
+Berger	FB Varmint #22312	0.224	60	0.271	Berger 2024 catalog
+Berger	Fullbore Target #22427	0.224	80.5	0.441	Berger 2024 catalog
+Berger	LRHT #22485	0.224	85.5	0.524	Berger 2024 catalog
+Berger	OTM Tactical #22101	0.224	77	0.374	Berger 2024 catalog
+Berger	VLD Target #22418	0.224	70	0.374	Berger 2024 catalog
+Berger	VLD Target #22421	0.224	75	0.421	Berger 2024 catalog
+Berger	VLD Target #22422	0.224	80	0.455	Berger 2024 catalog
+Berger	VLD Target #22423	0.224	90	0.534	Berger 2024 catalog
+Berger	BT Target #24408	0.243	65	0.281	Berger 2024 catalog
+Berger	BT Target #24425	0.243	90	0.409	Berger 2024 catalog
+Berger	BT Target #24428	0.243	105	0.494	Berger 2024 catalog
+Berger	BT Target #24431	0.243	108	0.522	Berger 2024 catalog
+Berger	Classic Hybrid Hunter #24570	0.243	95	0.434	Berger 2024 catalog
+Berger	Elite Hunter #24556	0.243	108	0.559	Berger 2024 catalog, reference chart (pp. 19-23)
+Berger	FB Target #24411	0.243	68	0.255	Berger 2024 catalog
+Berger	FB Varmint #24321	0.243	80	0.300	Berger 2024 catalog
+Berger	High BC FB Varmint #24313	0.243	69	0.289	Berger 2024 catalog, reference chart (pp. 19-23)
+Berger	High BC Varmint #24323	0.243	88	0.380	Berger 2024 catalog
+Berger	Hybrid Target #24433	0.243	105	0.536	Berger 2024 catalog
+Berger	LRHT #24485	0.243	109	0.568	Berger 2024 catalog
+Berger	VLD Hunting #24524	0.243	87	0.427	Berger 2024 catalog
+Berger	VLD Hunting #24527	0.243	95	0.467	Berger 2024 catalog
+Berger	VLD Hunting #24528	0.243	105	0.545	Berger 2024 catalog
+Berger	VLD Hunting #24530	0.243	115	0.568	Berger 2024 catalog
+Berger	VLD Target #24427	0.243	95	0.467	Berger 2024 catalog
+Berger	VLD Target #24429	0.243	105	0.517	Berger 2024 catalog
+Berger	VLD Target #24430	0.243	115	0.563	Berger 2024 catalog
+Berger	Elite Hunter #25586	0.257	133	0.613	Berger 2024 catalog
+Berger	LRHT #25485	0.257	135	0.650	Berger 2024 catalog
+Berger	VLD Hunting #25513	0.257	115	0.483	Berger 2024 catalog
+Berger	AR Hybrid OTM Tactical #26195	0.264	130	0.560	Berger 2024 catalog (diameter misprinted; 6.5mm = .264)
+Berger	BT Target #26402	0.264	120	0.468	Berger 2024 catalog, reference chart (pp. 19-23)
+Berger	Classic Hybrid Hunter #26571	0.264	135	0.584	Berger 2024 catalog
+Berger	EOL Elite Hunter #26550	0.264	156	0.679	Berger 2024 catalog
+Berger	Elite Hunter #26552	0.264	140	0.606	Berger 2024 catalog
+Berger	Hybrid Target #26414	0.264	140	0.607	Berger 2024 catalog (diameter misprinted; 6.5mm = .264)
+Berger	LRHT #26485	0.264	144	0.655	Berger 2024 catalog
+Berger	LRHT #26486	0.264	153.5	0.694	Berger 2024 catalog
+Berger	Long Range BT #26409	0.264	140	0.593	Berger 2024 catalog
+Berger	VLD Hunting #26503	0.264	130	0.562	Berger 2024 catalog
+Berger	VLD Hunting #26504	0.264	140	0.600	Berger 2024 catalog
+Berger	VLD Target #26403	0.264	130	0.562	Berger 2024 catalog
+Berger	VLD Target #26401	0.264	140	0.593	Berger 2024 catalog
+Berger	Classic Hybrid Hunter #27570	0.277	130	0.490	Berger 2024 catalog, reference chart (pp. 19-23)
+Berger	Classic Hybrid Hunter #27571	0.277	140	0.528	Berger 2024 catalog
+Berger	EOL Elite Hunter #27575	0.277	170	0.662	Berger 2024 catalog
+Berger	VLD Hunting #27501	0.277	130	0.462	Berger 2024 catalog
+Berger	VLD Hunting #27502	0.277	140	0.504	Berger 2024 catalog
+Berger	VLD Hunting #27503	0.277	150	0.518	Berger 2024 catalog
+Berger	Classic Hybrid Hunter #28571	0.284	150	0.505	Berger 2024 catalog
+Berger	Classic Hybrid Hunter #28570	0.284	168	0.566	Berger 2024 catalog
+Berger	EOL Elite Hunter #28550	0.284	195	0.755	Berger 2024 catalog
+Berger	Elite Hunter #28554	0.284	175	0.656	Berger 2024 catalog
+Berger	F-Open Target #28408	0.284	184	0.695	Berger 2024 catalog
+Berger	Hybrid Target #28407	0.284	180	0.680	Berger 2024 catalog
+Berger	LRHT #28485	0.284	190	0.751	Berger 2024 catalog
+Berger	VLD Hunting #28503	0.284	140	0.500	Berger 2024 catalog
+Berger	VLD Hunting #28501	0.284	168	0.618	Berger 2024 catalog
+Berger	VLD Hunting #28502	0.284	180	0.673	Berger 2024 catalog
+Berger	VLD Target #28401	0.284	168	0.628	Berger 2024 catalog
+Berger	VLD Target #28405	0.284	180	0.683	Berger 2024 catalog
+Berger	Classic Hybrid Hunter #30570	0.308	168	0.498	Berger 2024 catalog
+Berger	Classic Hybrid Hunter #30571	0.308	185	0.533	Berger 2024 catalog
+Berger	EOL Elite Hunter #30560	0.308	245	0.807	Berger 2024 catalog
+Berger	Elite Hunter #30554	0.308	180	0.576	Berger 2024 catalog
+Berger	Elite Hunter #30555	0.308	205	0.631	Berger 2024 catalog
+Berger	FB Target #30421	0.308	115	0.289	Berger 2024 catalog
+Berger	FB Target #30407	0.308	150	0.393	Berger 2024 catalog
+Berger	Fullbore Target #30416	0.308	155.5	0.473	Berger 2024 catalog
+Berger	Hybrid OTM Tactical #30112	0.308	230	0.710	Berger 2024 catalog
+Berger	Hybrid Target #30426	0.308	155	0.478	Berger 2024 catalog
+Berger	Hybrid Target #30425	0.308	168	0.515	Berger 2024 catalog
+Berger	Hybrid Target #30424	0.308	185	0.576	Berger 2024 catalog
+Berger	Hybrid Target #30427	0.308	200	0.616	Berger 2024 catalog
+Berger	Hybrid Target #30429	0.308	215	0.691	Berger 2024 catalog
+Berger	Hybrid Target #30430	0.308	230	0.717	Berger 2024 catalog
+Berger	Hybrid Target 200.20X #30417	0.308	200	0.640	Berger 2024 catalog, reference chart (pp. 19-23)
+Berger	Juggernaut OTM Tactical #30107	0.308	185	0.682	Berger 2024 catalog
+Berger	Juggernaut Target #30418	0.308	185	0.555	Berger 2024 catalog
+Berger	LRHT #30485	0.308	208	0.689	Berger 2024 catalog
+Berger	LRHT #30486	0.308	220	0.717	Berger 2024 catalog
+Berger	LRHT #30487	0.308	245	0.846	Berger 2024 catalog
+Berger	Long Range BT #30420	0.308	175	0.512	Berger 2024 catalog
+Berger	OTM Tactical #30105	0.308	175	0.512	Berger 2024 catalog
+Berger	VLD Hunting #30508	0.308	155	0.464	Berger 2024 catalog
+Berger	VLD Hunting #30510	0.308	168	0.498	Berger 2024 catalog
+Berger	VLD Hunting #30512	0.308	175	0.518	Berger 2024 catalog
+Berger	VLD Hunting #30513	0.308	185	0.558	Berger 2024 catalog
+Berger	VLD Hunting #30514	0.308	190	0.566	Berger 2024 catalog
+Berger	VLD Hunting #30515	0.308	210	0.625	Berger 2024 catalog
+Berger	VLD Target #30410	0.308	168	0.507	Berger 2024 catalog
+Berger	VLD Target #30412	0.308	175	0.512	Berger 2024 catalog, reference chart (pp. 19-23)
+Berger	VLD Target #30413	0.308	185	0.543	Berger 2024 catalog
+Berger	VLD Target #30415	0.308	210	0.621	Berger 2024 catalog
+Berger	Elite Hunter #33554	0.338	250	0.685	Berger 2024 catalog
+Berger	Elite Hunter #33556	0.338	300	0.814	Berger 2024 catalog
+Berger	Hybrid OTM Tactical #33107	0.338	250	0.682	Berger 2024 catalog
+Berger	Hybrid OTM Tactical #33109	0.338	300	0.822	Berger 2024 catalog
+Berger	ELR Match Solid #37379	0.375	379	0.951	Berger 2024 catalog
+Berger	ELR Match Solid #37407	0.375	407	1.022	Berger 2024 catalog
+Berger	Hybrid Target #37401	0.375	410	0.928	Berger 2024 catalog
+Nosler	Varmageddon FB Tipped #17210	0.172	20	0.183	Nosler 2026 Product Guide
+Nosler	Varmageddon FBHP #17205	0.172	20	0.119	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Lead-Free Spitzer #45140	0.204	32	0.228	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Varmint Spitzer #35216	0.204	32	0.206	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Varmint Spitzer #52111	0.204	40	0.239	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #17220	0.204	32	0.204	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #53780	0.224	70	0.370	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Lead-Free Spitzer #45150	0.224	35	0.201	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Lead-Free Spitzer #45160	0.224	40	0.220	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Lead-Free Spitzer #45498	0.224	50	0.251	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Varmint Spitzer #39510	0.224	40	0.221	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Varmint Spitzer #39522	0.224	50	0.238	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Varmint Spitzer #39526	0.224	55	0.267	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Varmint Spitzer #34992	0.224	60	0.270	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #53294	0.224	52	0.220	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #17101	0.224	69	0.305	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #22421	0.224	77	0.340	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #25116	0.224	80	0.415	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT Cannelure #53033	0.224	77	0.340	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59624	0.224	55	0.305	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16316	0.224	60	0.228	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53066	0.224	70	0.416	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53452	0.224	77	0.454	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53441	0.224	85	0.498	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #36763	0.224	35	0.120	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #17230	0.224	40	0.211	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #17223	0.224	50	0.227	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #36523	0.224	53	0.303	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #17240	0.224	55	0.255	Nosler 2026 Product Guide
+Nosler	Varmageddon FBHP Cannelure #35631	0.224	62	0.251	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #56357	0.243	90	0.376	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Spitzer #51040	0.243	95	0.379	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Lead-Free Spitzer #45170	0.243	55	0.288	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #24090	0.243	90	0.365	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #24095	0.243	95	0.379	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Varmint Spitzer #24055	0.243	55	0.276	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Varmint Spitzer #39532	0.243	70	0.310	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Varmint Spitzer #24080	0.243	80	0.329	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #49742	0.243	107	0.525	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59165	0.243	90	0.403	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16314	0.243	85	0.315	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16315	0.243	95	0.365	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #35642	0.243	100	0.384	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53410	0.243	105	0.571	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53507	0.243	115	0.634	Nosler 2026 Product Guide
+Nosler	Solid Base Spitzer #38050	0.243	100	0.388	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #17250	0.243	55	0.252	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #26123	0.243	70	0.305	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #53742	0.257	110	0.418	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Spitzer #51050	0.257	115	0.453	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #25100	0.257	100	0.393	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #25115	0.257	115	0.453	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Varmint Spitzer #43004	0.257	85	0.329	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59456	0.257	100	0.409	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16317	0.257	100	0.377	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16318	0.257	115	0.389	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #35643	0.257	120	0.391	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58943	0.264	129	0.530	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58922	0.264	142	0.625	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58930	0.264	150	0.634	Nosler 2026 Product Guide (BC printed without the leading 0.)
+Nosler	AccuBond Spitzer #56902	0.264	130	0.488	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #57873	0.264	140	0.509	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #26100	0.264	100	0.350	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #26120	0.264	120	0.458	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #26140	0.264	140	0.509	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #53415	0.264	123	0.510	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #26725	0.264	140	0.529	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59765	0.264	120	0.497	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16319	0.264	100	0.326	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16320	0.264	125	0.449	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16321	0.264	140	0.490	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53505	0.264	130	0.615	Nosler 2026 Product Guide
+Nosler	RDF HPBT #49824	0.264	140	0.658	Nosler 2026 Product Guide
+Nosler	RDF HPBT #49826	0.264	150	0.670	Nosler 2026 Product Guide
+Nosler	Solid Base Spitzer #38052	0.264	140	0.495	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #26129	0.264	90	0.350	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58836	0.277	150	0.591	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #54827	0.277	165	0.620	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #54987	0.277	130	0.435	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #54765	0.277	140	0.460	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #54801	0.277	150	0.500	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Spitzer #51075	0.277	130	0.433	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Spitzer #51100	0.277	150	0.496	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #27130	0.277	130	0.433	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #27140	0.277	140	0.456	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #27150	0.277	150	0.496	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #28135	0.277	170	0.550	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT Cannelure #45357	0.277	115	0.375	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59298	0.277	130	0.459	Nosler 2026 Product Guide
+Nosler	Partition Semi Spitzer #16324	0.277	160	0.434	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16322	0.277	130	0.416	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #35200	0.277	140	0.432	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16323	0.277	150	0.465	Nosler 2026 Product Guide
+Nosler	Solid Base Spitzer #38054	0.277	130	0.424	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58734	0.284	150	0.546	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58623	0.284	168	0.616	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58517	0.284	175	0.648	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #59992	0.284	140	0.485	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #54951	0.284	150	0.493	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #54932	0.284	160	0.531	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Spitzer #51105	0.284	140	0.485	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Spitzer #51110	0.284	150	0.493	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #28120	0.284	120	0.417	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #28140	0.284	140	0.485	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #28150	0.284	150	0.493	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #28125	0.284	160	0.531	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #53418	0.284	168	0.520	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59955	0.284	140	0.489	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59426	0.284	150	0.498	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16325	0.284	140	0.434	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16326	0.284	150	0.456	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16327	0.284	160	0.475	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #35645	0.284	175	0.519	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53432	0.284	185	0.719	Nosler 2026 Product Guide
+Nosler	Solid Base Spitzer #38056	0.284	140	0.459	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58455	0.308	168	0.525	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58456	0.308	190	0.640	Nosler 2026 Product Guide (two overlapping BC figures printed, 0.597 / 0.640; 0.640 used)
+Nosler	AccuBond Long Range Spitzer #58317	0.308	210	0.661	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #52165	0.308	125	0.366	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #56719	0.308	150	0.435	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #55602	0.308	165	0.475	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #54825	0.308	180	0.507	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #54618	0.308	200	0.588	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Round Nose #51165	0.308	150	0.232	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Spitzer #51150	0.308	150	0.435	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Spitzer #51160	0.308	168	0.490	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Spitzer #51170	0.308	180	0.507	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Round Nose #30181	0.308	220	0.472	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #30125	0.308	125	0.366	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #30150	0.308	150	0.435	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #30165	0.308	165	0.475	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #30168	0.308	168	0.490	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #30180	0.308	180	0.507	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #53155	0.308	155	0.450	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #53164	0.308	168	0.462	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #53952	0.308	175	0.505	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #53412	0.308	190	0.530	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #53154	0.308	220	0.690	Nosler 2026 Product Guide
+Nosler	E-Tip Round Nose #59451	0.308	150	0.344	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59380	0.308	110	0.245	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59378	0.308	150	0.469	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59415	0.308	168	0.503	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59180	0.308	180	0.523	Nosler 2026 Product Guide
+Nosler	Partition Protected Point #25396	0.308	180	0.361	Nosler 2026 Product Guide
+Nosler	Partition Round Nose #16333	0.308	170	0.252	Nosler 2026 Product Guide
+Nosler	Partition Semi Spitzer #16332	0.308	220	0.351	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16329	0.308	150	0.387	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16330	0.308	165	0.410	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16331	0.308	180	0.474	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #35626	0.308	200	0.481	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53182	0.308	168	0.505	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53170	0.308	175	0.536	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53434	0.308	210	0.707	Nosler 2026 Product Guide
+Nosler	Solid Base Round Nose #38058	0.308	150	0.232	Nosler 2026 Product Guide
+Nosler	Solid Base Spitzer #38060	0.308	150	0.398	Nosler 2026 Product Guide
+Nosler	Solid Base Spitzer #38062	0.308	165	0.442	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #34057	0.308	110	0.293	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #30131	0.310	123	0.310	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59387	0.310	123	0.316	Nosler 2026 Product Guide
+Nosler	Varmageddon FB Tipped #34056	0.310	123	0.304	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #54374	0.323	200	0.450	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #32180	0.323	180	0.394	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #49524	0.323	200	0.520	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59265	0.323	180	0.427	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #35277	0.323	200	0.426	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58454	0.338	265	0.732	Nosler 2026 Product Guide
+Nosler	AccuBond Long Range Spitzer #58518	0.338	300	0.785	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #57625	0.338	180	0.372	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #56382	0.338	200	0.414	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #54357	0.338	225	0.550	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #57287	0.338	250	0.575	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #54851	0.338	300	0.720	Nosler 2026 Product Guide
+Nosler	Ballistic Silvertip Spitzer #51200	0.338	200	0.414	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #57520	0.338	250	0.590	Nosler 2026 Product Guide
+Nosler	Custom Competition HPBT #53515	0.338	300	0.800	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59186	0.338	200	0.425	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59372	0.338	225	0.611	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59385	0.338	250	0.627	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16337	0.338	210	0.400	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #16336	0.338	225	0.454	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #35644	0.338	250	0.473	Nosler 2026 Product Guide
+Nosler	RDF HPBT #53445	0.338	300	0.826	Nosler 2026 Product Guide
+Nosler	ASP JHP #44848	0.355	115	0.109	Nosler 2026 Product Guide
+Nosler	ASP JHP #43123	0.355	124	0.118	Nosler 2026 Product Guide
+Nosler	ASP JHP #43258	0.355	147	0.156	Nosler 2026 Product Guide
+Nosler	Straight-Wall Protected Point #38064	0.355	180	0.245	Nosler 2026 Product Guide
+Nosler	ASP JHP #44912	0.357	125	0.130	Nosler 2026 Product Guide
+Nosler	Sporting Handgun JHP #44841	0.357	158	0.182	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer #50712	0.358	225	0.430	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #44800	0.358	225	0.421	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #44801	0.358	250	0.446	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer Cannelure #59756	0.366	250	0.494	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59270	0.366	250	0.494	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #44750	0.366	286	0.482	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer Cannelure #54413	0.375	260	0.473	Nosler 2026 Product Guide
+Nosler	AccuBond Spitzer Cannelure #53662	0.375	300	0.485	Nosler 2026 Product Guide
+Nosler	E-Tip Spitzer #59379	0.375	260	0.490	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #44850	0.375	260	0.314	Nosler 2026 Product Guide
+Nosler	Partition Spitzer #44845	0.375	300	0.398	Nosler 2026 Product Guide
+Nosler	ASP JHP #44852	0.400	135	0.093	Nosler 2026 Product Guide
+Nosler	ASP JHP #44860	0.400	150	0.106	Nosler 2026 Product Guide
+Nosler	ASP JHP #44885	0.400	180	0.147	Nosler 2026 Product Guide
+Nosler	ASP JHP #44952	0.400	200	0.163	Nosler 2026 Product Guide
+Nosler	Straight-Wall Protected Point #38066	0.400	215	0.215	Nosler 2026 Product Guide
+Nosler	Sporting Handgun JHP #43012	0.410	210	0.170	Nosler 2026 Product Guide
+Nosler	ASP JHP #44917	0.429	240	0.185	Nosler 2026 Product Guide
+Nosler	Sporting Handgun JHP #44846	0.429	200	0.151	Nosler 2026 Product Guide
+Nosler	Sporting Handgun JHP #44842	0.429	240	0.173	Nosler 2026 Product Guide
+Nosler	Sporting Handgun JHP #42069	0.429	300	0.206	Nosler 2026 Product Guide
+Nosler	Sporting Handgun JSP #44868	0.429	240	0.177	Nosler 2026 Product Guide
+Nosler	ASP JHP #44847	0.451	185	0.142	Nosler 2026 Product Guide
+Nosler	ASP JHP #44922	0.451	230	0.175	Nosler 2026 Product Guide
+Nosler	Sporting Handgun JHP #43013	0.451	250	0.177	Nosler 2026 Product Guide
+Nosler	Ballistic Tip Spitzer #31456	0.458	300	0.250	Nosler 2026 Product Guide
+Nosler	Straight-Wall Protected Point #38068	0.458	300	0.191	Nosler 2026 Product Guide
+Sierra	Tipped VarmintKing #1032	0.204	32	0.221	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1036	0.204	36	0.255	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1039	0.204	39	0.287	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Hornet #1100	0.223	40	0.117	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Hornet #1110	0.223	45	0.132	Sierra 2026 Bullet Guide
+Sierra	GameKing FMJBT #1355	0.224	55	0.272	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1390	0.224	55	0.185	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1365	0.224	55	0.250	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #9362	0.224	62	0.298	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1395	0.224	65	0.303	Sierra 2026 Bullet Guide
+Sierra	MatchKing HP #1400	0.224	53	0.224	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1410	0.224	52	0.225	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1380	0.224	69	0.301	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #9377	0.224	77	0.372	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT Cannelure #9377C	0.224	77	0.372	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #9390	0.224	80	0.461	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #9290	0.224	90	0.563	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1396	0.224	95	0.600	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #9380	0.224	77	0.372	Sierra 2026 Bullet Guide (no BC printed; estimated from #9377 77 gr BC 0.372 scaled by weight)
+Sierra	Tipped GameKing #4062	0.224	64	0.323	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #7171	0.224	69	0.370	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7160	0.224	60	0.323	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7169	0.224	69	0.375	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7177	0.224	77	0.420	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7188	0.224	88	0.480	Sierra 2026 Bullet Guide (no BC printed; estimated from #7177 77 gr BC 0.42 scaled by weight)
+Sierra	Tipped VarmintKing #1440	0.224	40	0.196	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1450	0.224	50	0.248	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1455	0.224	55	0.271	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #7170	0.224	69	0.357	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #1385	0.224	40	0.155	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #1375	0.224	60	0.246	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Hornet #1200	0.224	40	0.116	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Hornet #1210	0.224	45	0.131	Sierra 2026 Bullet Guide
+Sierra	VarmintKing SMP #1370	0.224	63	0.231	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer #1310	0.224	45	0.210	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer #1330	0.224	50	0.222	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer #1360	0.224	55	0.237	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer Blitz #1340	0.224	50	0.222	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer Blitz #1345	0.224	55	0.237	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1530	0.243	85	0.311	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1560	0.243	100	0.430	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1505	0.243	70	0.259	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1537	0.243	95	0.490	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1565	0.243	105	0.537	Sierra 2026 Bullet Guide (no BC printed; estimated from #1570 107 gr BC 0.547 scaled by weight)
+Sierra	MatchKing HPBT-CN #1570	0.243	107	0.547	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1575	0.243	110	0.617	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #1571	0.243	107	0.447	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #1540	0.243	100	0.373	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4100	0.243	90	0.490	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4110	0.243	100	0.515	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7295	0.243	95	0.500	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7207	0.243	107	0.574	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7216	0.243	116	0.622	Sierra 2026 Bullet Guide (no BC printed; estimated from #7207 107 gr BC 0.574 scaled by weight)
+Sierra	Tipped VarmintKing #1502	0.243	55	0.225	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1507	0.243	70	0.299	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #1500	0.243	60	0.182	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #1510	0.243	75	0.217	Sierra 2026 Bullet Guide
+Sierra	VarmintKing SBT Blitz #1515	0.243	80	0.319	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer #1520	0.243	85	0.315	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1615	0.257	90	0.250	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1625	0.257	100	0.355	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1630	0.257	117	0.410	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1628	0.257	100	0.394	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #9631	0.257	131	0.596	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4210	0.257	110	0.447	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #7331	0.257	131	0.532	Sierra 2026 Bullet Guide (no BC printed; estimated from #4210 110 gr BC 0.447 scaled by weight)
+Sierra	Tipped MatchKing #7334	0.257	134	0.610	Sierra 2026 Bullet Guide (no BC printed; estimated from #9631 131 gr BC 0.596 scaled by weight)
+Sierra	Tipped VarmintKing #1605	0.257	70	0.260	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1616	0.257	90	0.388	Sierra 2026 Bullet Guide
+Sierra	Tipped VarmintKing #1785	0.257	105	0.425	Sierra 2026 Bullet Guide
+Sierra	VarmintKing Spitzer #1610	0.257	87	0.293	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1728	0.264	130	0.355	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1730	0.264	140	0.495	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1711	0.264	100	0.361	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1715	0.264	107	0.430	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1725	0.264	120	0.421	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1740	0.264	140	0.535	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1744	0.264	144	0.550	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1727	0.264	123	0.510	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1729	0.264	130	0.584	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1742	0.264	142	0.626	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1755	0.264	150	0.713	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #1743	0.264	142	0.595	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #1720	0.264	120	0.356	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4320	0.264	120	0.482	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4330	0.264	130	0.510	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4340	0.264	140	0.563	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4345	0.264	145	0.597	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7407	0.264	107	0.445	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7430	0.264	130	0.518	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7450	0.264	153	0.642	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #1710	0.264	100	0.259	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1835	0.277	140	0.337	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1820	0.277	130	0.436	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1845	0.277	140	0.457	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1840	0.277	150	0.483	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1815	0.277	115	0.324	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1833	0.277	135	0.488	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #1834	0.277	135	0.505	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #1830	0.277	130	0.370	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4440	0.277	140	0.508	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4475	0.277	175	0.560	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1912	0.284	140	0.375	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #1925	0.284	160	0.384	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1905	0.284	140	0.416	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1913	0.284	150	0.436	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1920	0.284	160	0.455	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #1940	0.284	175	0.533	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1915	0.284	150	0.429	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1930	0.284	168	0.488	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1975	0.284	175	0.608	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #1980	0.284	180	0.660	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1981	0.284	180	0.676	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1983	0.284	183	0.707	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #1997	0.284	197	0.780	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #1976	0.284	175	0.597	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #1900	0.284	120	0.328	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #1910	0.284	140	0.377	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4540	0.284	140	0.545	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4550	0.284	150	0.545	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4565	0.284	165	0.610	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4580	0.284	180	0.632	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7660	0.284	160	0.600	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7685	0.284	185	0.694	Sierra 2026 Bullet Guide (no BC printed; estimated from #7660 160 gr BC 0.6 scaled by weight)
+Sierra	VarmintKing HP #1895	0.284	100	0.209	Sierra 2026 Bullet Guide
+Sierra	GameKing #2236	0.308	205	0.480	Sierra 2026 Bullet Guide
+Sierra	GameKing FMJBT #2115	0.308	150	0.408	Sierra 2026 Bullet Guide
+Sierra	GameKing HPBT #2140	0.308	165	0.363	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2125	0.308	150	0.380	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2145	0.308	165	0.404	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2160	0.308	180	0.501	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2165	0.308	200	0.560	Sierra 2026 Bullet Guide
+Sierra	MatchKing HP-CN #2121	0.308	125	0.349	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2190	0.308	150	0.417	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2155	0.308	155	0.450	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2200	0.308	168	0.462	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2275	0.308	175	0.505	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2210	0.308	190	0.533	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2230	0.308	200	0.565	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2240	0.308	220	0.629	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #2269	0.308	169	0.527	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #2277	0.308	177	0.545	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #2231	0.308	200	0.715	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #9240	0.308	210	0.670	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #2237	0.308	215	0.680	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #2251	0.308	230	0.800	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN Palma #2156	0.308	155	0.504	Sierra 2026 Bullet Guide
+Sierra	MatchKing X #2175	0.308	175	0.505	Sierra 2026 Bullet Guide
+Sierra	MatchKing X HPBT #2232	0.308	200	0.553	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter FN #2000	0.308	150	0.185	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter FN #2010	0.308	170	0.205	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter HP/FN #2020	0.308	125	0.119	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter RN #2100	0.308	110	0.144	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter RN #2135	0.308	150	0.200	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter RN #2170	0.308	180	0.240	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter RN #2180	0.308	220	0.310	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2120	0.308	125	0.279	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2130	0.308	150	0.336	Sierra 2026 Bullet Guide
+Sierra	Sports Master RN #8005	0.308	85	0.102	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4625	0.308	125	0.318	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4665	0.308	165	0.530	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4680	0.308	180	0.515	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4681	0.308	180	0.543	Sierra 2026 Bullet Guide
+Sierra	Tipped GameKing #4695	0.308	195	0.588	Sierra 2026 Bullet Guide (no BC printed; estimated from #4681 180 gr BC 0.543 scaled by weight)
+Sierra	Tipped GameKing #4610	0.308	210	0.621	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7725	0.308	125	0.343	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7755	0.308	155	0.519	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7768	0.308	168	0.535	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7775	0.308	175	0.545	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7795	0.308	195	0.610	Sierra 2026 Bullet Guide
+Sierra	Tipped MatchKing #7720	0.308	220	0.688	Sierra 2026 Bullet Guide (no BC printed; estimated from #7795 195 gr BC 0.61 scaled by weight)
+Sierra	VarmintKing HP #2110	0.308	110	0.177	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #2116	0.308	115	0.267	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #2124	0.308	135	0.308	Sierra 2026 Bullet Guide
+Sierra	VarmintKing HP #2136	0.308	150	0.334	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2315	0.311	174	0.499	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2305	0.311	125	0.274	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2300	0.311	150	0.344	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2310	0.311	180	0.411	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8030	0.312	90	0.125	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2420	0.323	220	0.521	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2415	0.323	200	0.520	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2400	0.323	150	0.336	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2410	0.323	175	0.381	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2610	0.338	215	0.485	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2600	0.338	250	0.565	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #2650	0.338	250	0.587	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT #9300	0.338	300	0.768	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter Spitzer #2620	0.338	225	0.462	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8100	0.355	90	0.095	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8110	0.355	115	0.127	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8124	0.355	124	0.120	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8125	0.355	125	0.124	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8147	0.355	147	0.157	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FMJ #8105	0.355	95	0.094	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FMJ #8115	0.355	115	0.107	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FMJ #8120	0.355	125	0.115	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9990	0.355	90	0.094	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9924	0.355	124	0.120	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9925	0.355	125	0.122	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9947	0.355	147	0.162	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8360	0.357	158	0.100	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8320	0.357	125	0.133	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8325	0.357	140	0.078	Sierra 2026 Bullet Guide
+Sierra	Sports Master JSP #8310	0.357	125	0.133	Sierra 2026 Bullet Guide
+Sierra	Sports Master JSP #8340	0.357	158	0.100	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FPJ #8370	0.357	180	0.147	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2850	0.358	225	0.370	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter #2755	0.358	155	0.182	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter RN #2800	0.358	200	0.148	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #2950	0.375	250	0.353	Sierra 2026 Bullet Guide
+Sierra	GameKing SBT #3000	0.375	300	0.475	Sierra 2026 Bullet Guide
+Sierra	MatchKing HPBT-CN #9350	0.375	350	0.805	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter FN #2900	0.375	200	0.195	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter JHP #3100	0.400	200	0.156	Sierra 2026 Bullet Guide (no BC printed; estimated from #8460 180 gr BC 0.14 scaled by weight)
+Sierra	Sports Master JHP #8430	0.400	150	0.120	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8445	0.400	165	0.130	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8460	0.400	180	0.140	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9465	0.400	165	0.132	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8500	0.410	170	0.123	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8520	0.410	210	0.165	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8600	0.4295	180	0.130	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8620	0.4295	210	0.160	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8610	0.4295	240	0.185	Sierra 2026 Bullet Guide
+Sierra	Sports Master JSP #8630	0.4295	300	0.230	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FPJ #8615	0.4295	250	0.213	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter FN #8760	0.4515	260	0.164	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8826	0.4515	225	0.157	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHC #8820	0.4515	240	0.150	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8835	0.4515	185	0.105	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #8805	0.4515	230	0.145	Sierra 2026 Bullet Guide
+Sierra	Sports Master JSP #8830	0.4515	300	0.192	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FMJ #8815	0.4515	230	0.140	Sierra 2026 Bullet Guide
+Sierra	Tournament Master FPJ #8825	0.4515	200	0.120	Sierra 2026 Bullet Guide
+Sierra	V-Crown JHP #9820	0.4515	200	0.118	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter HP/FN #8900	0.458	300	0.120	Sierra 2026 Bullet Guide
+Sierra	Pro-Hunter HP/FN #8950	0.458	400	0.152	Sierra 2026 Bullet Guide
+Sierra	Sports Master JHP #5350	0.500	350	0.155	Sierra 2026 Bullet Guide
+Sierra	Sports Master JSP #5400	0.500	400	0.185	Sierra 2026 Bullet Guide
+Speer	TNT HP #1015	0.204	39	0.202	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP #22462GDB	0.224	62	0.310	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP #22475GDB2	0.224	75	0.411	Speer 2026 catalog
+Speer	Gold Dot Rifle SP #22455GDB	0.224	55	0.250	Speer 2026 catalog
+Speer	JHP #1014	0.224	33	0.080	Speer 2026 catalog
+Speer	TNT Green #1021	0.224	30	0.091	Speer 2026 catalog
+Speer	TNT Green #1028	0.224	50	0.190	Speer 2026 catalog
+Speer	TNT HP #1030	0.224	50	0.228	Speer 2026 catalog
+Speer	TNT HP #1032	0.224	55	0.233	Speer 2026 catalog
+Speer	Target Match BTHP #1036	0.224	52	0.230	Speer 2026 catalog
+Speer	Varmint Bee SPFN #1024	0.224	46	0.087	Speer 2026 catalog
+Speer	Varmint HP #1035	0.224	52	0.225	Speer 2026 catalog
+Speer	Varmint Semi-Spitzer SP #1053	0.224	70	0.219	Speer 2026 catalog
+Speer	Varmint Spire SP #1017	0.224	40	0.144	Speer 2026 catalog
+Speer	Varmint Spitzer SP #1023	0.224	45	0.143	Speer 2026 catalog
+Speer	Varmint Spitzer SP #1029	0.224	50	0.207	Speer 2026 catalog
+Speer	Varmint Spitzer SP #1047	0.224	55	0.212	Speer 2026 catalog
+Speer	Grand Slam GSSP #1222	0.243	100	0.327	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1213	0.243	85	0.380	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1220	0.243	100	0.446	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1217	0.243	90	0.365	Speer 2026 catalog
+Speer	Impact #TB243H3	0.243	95	0.429	Speer 2026 catalog
+Speer	TNT HP #1206	0.243	70	0.279	Speer 2026 catalog
+Speer	Varmint HP #1205	0.243	75	0.192	Speer 2026 catalog
+Speer	Gold Dot HP #3985	0.251	35	0.091	Speer 2026 catalog
+Speer	Grand Slam GSSP #1415	0.257	120	0.356	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1408	0.257	100	0.393	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1410	0.257	120	0.480	Speer 2026 catalog
+Speer	Hot-Cor SPFN #1237	0.257	75	0.135	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1241	0.257	87	0.300	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1405	0.257	100	0.334	Speer 2026 catalog
+Speer	TNT HP #1246	0.257	87	0.337	Speer 2026 catalog
+Speer	Varmint HP #1407	0.257	100	0.263	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP #264120GDB	0.264	120	0.457	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP Creedmoor #264140GDB	0.264	140	0.571	Speer 2026 catalog
+Speer	Grand Slam GSSP #1444A	0.264	140	0.498	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1441	0.264	140	0.498	Speer 2026 catalog
+Speer	Impact #TB264H1	0.264	140	0.646	Speer 2026 catalog
+Speer	Impact #TB264H2	0.264	156	0.628	Speer 2026 catalog (G1 and G7 columns swapped in the catalog; G1 0.628 used)
+Speer	TNT HP #1445	0.264	90	0.281	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP 6.8 SPC #277115GDB	0.277	115	0.401	Speer 2026 catalog
+Speer	Gold Dot Rifle SP #27790GDB	0.277	90	0.253	Speer 2026 catalog
+Speer	Grand Slam GSSP #1465	0.277	130	0.332	Speer 2026 catalog
+Speer	Grand Slam GSSP #1608	0.277	150	0.378	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1458	0.277	130	0.412	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1604	0.277	150	0.489	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1459	0.277	130	0.383	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1605	0.277	150	0.455	Speer 2026 catalog
+Speer	Impact #TB277H1	0.277	150	0.575	Speer 2026 catalog
+Speer	TNT HP #1446	0.277	90	0.303	Speer 2026 catalog
+Speer	Varmint HP #1447	0.277	100	0.201	Speer 2026 catalog
+Speer	Grand Slam GSSP #1632	0.284	145	0.353	Speer 2026 catalog
+Speer	Grand Slam GSSP #1638	0.284	160	0.389	Speer 2026 catalog
+Speer	Grand Slam GSSP #1643	0.284	175	0.436	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1624	0.284	130	0.424	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1628	0.284	145	0.472	Speer 2026 catalog
+Speer	Hot-Cor BTSP #1634	0.284	160	0.519	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1623	0.284	130	0.368	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1629	0.284	145	0.416	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #1635	0.284	160	0.504	Speer 2026 catalog
+Speer	Impact #TB284H1	0.284	175	0.540	Speer 2026 catalog
+Speer	TNT HP #1616	0.284	110	0.384	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP #308150GDB	0.308	150	0.503	Speer 2026 catalog
+Speer	Gold Dot Rifle BTSP #308168GDB	0.308	168	0.572	Speer 2026 catalog
+Speer	Gold Dot Rifle SP 300 BLK #308150BLKGDB	0.308	150	0.463	Speer 2026 catalog
+Speer	Grand Slam GSSP #2038	0.308	165	0.354	Speer 2026 catalog
+Speer	Grand Slam GSSP #2063	0.308	180	0.374	Speer 2026 catalog
+Speer	Hot-Cor BTSP #2022	0.308	150	0.417	Speer 2026 catalog
+Speer	Hot-Cor BTSP #2034	0.308	165	0.520	Speer 2026 catalog
+Speer	Hot-Cor BTSP #2052	0.308	180	0.545	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2007	0.308	130	0.213	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2011	0.308	150	0.255	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2041	0.308	170	0.298	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2023	0.308	150	0.377	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2035	0.308	165	0.444	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2053	0.308	180	0.441	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2211	0.308	200	0.478	Speer 2026 catalog
+Speer	Impact #TB308H1	0.308	172	0.567	Speer 2026 catalog
+Speer	Impact #TB308H2	0.308	190	0.595	Speer 2026 catalog
+Speer	TMJ RN #1846	0.308	110	0.179	Speer 2026 catalog
+Speer	TNT HP #1986	0.308	125	0.341	Speer 2026 catalog
+Speer	Target Match BTHP #2040	0.308	168	0.534	Speer 2026 catalog
+Speer	Varmint HP #1835	0.308	110	0.150	Speer 2026 catalog
+Speer	Varmint HP #2005	0.308	130	0.244	Speer 2026 catalog
+Speer	Gold Dot Rifle SP #310123GDB	0.310	123	0.321	Speer 2026 catalog
+Speer	Hot-Cor SPRN #2223	0.311	180	0.299	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2217	0.311	150	0.351	Speer 2026 catalog
+Speer	Lead Hollow Base WC #4600	0.314	98	0.044	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2259	0.321	170	0.283	Speer 2026 catalog
+Speer	Hot-Cor Semi-Spitzer SP #2283	0.323	170	0.311	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2277	0.323	150	0.343	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2285	0.323	200	0.440	Speer 2026 catalog
+Speer	Grand Slam GSSP #2408	0.338	250	0.436	Speer 2026 catalog
+Speer	Hot-Cor BTSP #2406	0.338	225	0.497	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2405	0.338	200	0.426	Speer 2026 catalog
+Speer	Gold Dot HP #3992	0.355	90	0.101	Speer 2026 catalog
+Speer	Gold Dot HP #3994	0.355	115	0.125	Speer 2026 catalog
+Speer	Gold Dot HP #3998	0.355	124	0.134	Speer 2026 catalog
+Speer	Gold Dot HP #4360	0.355	125	0.141	Speer 2026 catalog
+Speer	Gold Dot HP #4002	0.355	147	0.164	Speer 2026 catalog
+Speer	TMJ FN #4362	0.355	125	0.147	Speer 2026 catalog
+Speer	TMJ FN #4006	0.355	147	0.188	Speer 2026 catalog
+Speer	TMJ RN #4001	0.355	95	0.131	Speer 2026 catalog
+Speer	TMJ RN #3995	0.355	115	0.151	Speer 2026 catalog
+Speer	TMJ RN #3993	0.355	124	0.159	Speer 2026 catalog
+Speer	Copper Plated RN #4712	0.356	115	0.151	Speer 2026 catalog (catalog prints 0.360 for this 9mm bullet; 0.356 like Speer's other 9mm lead/plated bullet (4602))
+Speer	Lead RN #4602	0.356	125	0.155	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #4215	0.357	158	0.168	Speer 2026 catalog
+Speer	Gold Dot HP/CANN #4012	0.357	125	0.140	Speer 2026 catalog
+Speer	Gold Dot Short Barrel HP/CANN #4009	0.357	110	0.117	Speer 2026 catalog
+Speer	Gold Dot Short Barrel HP/CANN #4014	0.357	135	0.141	Speer 2026 catalog
+Speer	JHP/CANN #4007	0.357	110	0.113	Speer 2026 catalog
+Speer	JHP/CANN #4013	0.357	125	0.129	Speer 2026 catalog
+Speer	JHP/CANN #4211	0.357	158	0.163	Speer 2026 catalog
+Speer	JSP/CANN #4217	0.357	158	0.164	Speer 2026 catalog
+Speer	TMJ FN/CANN #4015	0.357	125	0.146	Speer 2026 catalog
+Speer	TMJ FN/CANN #4207	0.357	158	0.173	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2435	0.358	180	0.236	Speer 2026 catalog
+Speer	Hot-Cor Spitzer SP #2453	0.358	250	0.422	Speer 2026 catalog
+Speer	Lead RN #4648	0.358	158	0.170	Speer 2026 catalog
+Speer	Lead SWC #4624	0.358	158	0.123	Speer 2026 catalog
+Speer	Lead SWC HP #4628	0.358	158	0.121	Speer 2026 catalog
+Speer	Lead Wadcutter #4618	0.360	148	0.050	Speer 2026 catalog
+Speer	TMJ RN #4375	0.364	95	0.127	Speer 2026 catalog
+Speer	Hot-Cor Semi-Spitzer SP #2459	0.366	270	0.361	Speer 2026 catalog
+Speer	Hot-Cor BTSP #2472	0.375	270	0.478	Speer 2026 catalog
+Speer	Hot-Cor Semi-Spitzer SP #2471	0.375	235	0.301	Speer 2026 catalog
+Speer	Copper Plated FN #4713	0.400	180	0.143	Speer 2026 catalog
+Speer	Gold Dot HP #4400	0.400	155	0.123	Speer 2026 catalog
+Speer	Gold Dot HP #4397	0.400	165	0.138	Speer 2026 catalog
+Speer	Gold Dot HP #4406	0.400	180	0.143	Speer 2026 catalog
+Speer	TMJ FN #4399	0.400	155	0.125	Speer 2026 catalog
+Speer	TMJ FN #4410	0.400	165	0.135	Speer 2026 catalog
+Speer	TMJ FN #4402	0.400	180	0.143	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #4430	0.410	210	0.185	Speer 2026 catalog
+Speer	Hot-Cor Mag-Tip #2477	0.416	350	0.332	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #4455	0.429	240	0.175	Speer 2026 catalog
+Speer	DeepCurl SP/CANN #4456	0.429	240	0.175	Speer 2026 catalog
+Speer	DeepCurl SP/CANN #4461	0.429	270	0.193	Speer 2026 catalog
+Speer	Gold Dot HP/CANN #4427	0.429	200	0.145	Speer 2026 catalog
+Speer	Gold Dot HP/CANN #4428	0.429	210	0.154	Speer 2026 catalog
+Speer	JSP/CANN #4454	0.429	240	0.169	Speer 2026 catalog
+Speer	Copper Plated RN #4714	0.450	230	0.153	Speer 2026 catalog
+Speer	Gold Dot HP #4470	0.451	185	0.109	Speer 2026 catalog
+Speer	Gold Dot HP #4478	0.451	200	0.138	Speer 2026 catalog
+Speer	Gold Dot HP #4483	0.451	230	0.143	Speer 2026 catalog
+Speer	Gold Dot Short Barrel HP #4482	0.451	230	0.148	Speer 2026 catalog
+Speer	JSP/CANN #4485	0.451	300	0.199	Speer 2026 catalog
+Speer	TMJ FN #4476	0.451	185	0.094	Speer 2026 catalog
+Speer	TMJ RN #4480	0.451	230	0.153	Speer 2026 catalog
+Speer	TMJ SWC #4473	0.451	185	0.094	Speer 2026 catalog
+Speer	TMJ SWC #4475	0.451	200	0.128	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #4484	0.452	250	0.165	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #3974	0.452	300	0.233	Speer 2026 catalog
+Speer	JHP/CANN #4481	0.452	260	0.183	Speer 2026 catalog
+Speer	Lead RN #4691	0.452	230	0.160	Speer 2026 catalog
+Speer	Lead SWC #4678	0.452	200	0.170	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2478	0.458	350	0.218	Speer 2026 catalog
+Speer	Hot-Cor SPFN #2479	0.458	400	0.259	Speer 2026 catalog
+Speer	JHP/CANN #2482	0.458	300	0.206	Speer 2026 catalog
+Speer	DeepCurl HP/CANN #3973	0.475	275	0.162	Speer 2026 catalog
+Speer	DeepCurl SP/CANN #3978	0.475	325	0.191	Speer 2026 catalog
+Speer	DeepCurl HP #4493	0.500	300	0.155	Speer 2026 catalog
+Speer	DeepCurl SP/CANN #4491	0.500	350	0.178	Speer 2026 catalog
+Speer	JHP #4495	0.500	325	0.169	Speer 2026 catalog
+Speer	TMJ FN #4490	0.500	300	0.157	Speer 2026 catalog

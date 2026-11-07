@@ -13,11 +13,6 @@ Hornady,ELD Match,0.224,73,0.398,Match
 Hornady,ELD Match,0.224,75,0.467,Match
 Hornady,ELD Match,0.224,80,0.485,Match
 Hornady,FMJ-BT,0.224,55,0.243,Target
-Nosler,Ballistic Tip,0.224,50,0.238,Hunting
-Nosler,Ballistic Tip,0.224,55,0.267,Hunting
-Nosler,Custom Competition,0.224,77,0.372,Match
-Barnes,TSX,0.224,62,0.298,Hunting
-Berger,Match VLD Target,0.224,80,0.456,Match
 Hornady,SST,0.243,95,0.379,Hunting
 Hornady,SST,0.243,100,0.405,Hunting
 Hornady,ELD-X,0.243,103,0.512,Hunting
@@ -25,9 +20,6 @@ Hornady,ELD Match,0.243,108,0.536,Match
 Hornady,V-MAX,0.243,58,0.185,Varmint
 Hornady,V-MAX,0.243,75,0.330,Varmint
 Hornady,V-MAX,0.243,87,0.360,Varmint
-Nosler,Ballistic Tip,0.243,95,0.379,Hunting
-Nosler,Partition,0.243,100,0.384,Hunting
-Berger,Hybrid Target,0.243,105,0.536,Match
 Hornady,ELD Match,0.264,120,0.486,Match
 Hornady,ELD Match,0.264,130,0.554,Match
 Hornady,ELD Match,0.264,140,0.646,Match
@@ -35,28 +27,15 @@ Hornady,ELD-X,0.264,143,0.623,Hunting
 Hornady,ELD Match,0.264,147,0.697,Match
 Hornady,SST,0.264,129,0.485,Hunting
 Hornady,InterLock,0.264,140,0.490,Hunting
-Nosler,AccuBond,0.264,140,0.509,Hunting
-Nosler,Partition,0.264,140,0.432,Hunting
-Nosler,AccuBond Long Range,0.264,142,0.617,Hunting
-Berger,Hybrid Target,0.264,140,0.607,Match
-Berger,Elite Hunter,0.264,156,0.643,Hunting
-Barnes,TTSX,0.264,120,0.395,Hunting
 Hornady,InterLock,0.277,130,0.409,Hunting
 Hornady,SST,0.277,130,0.447,Hunting
 Hornady,ELD-X,0.277,145,0.536,Hunting
-Nosler,AccuBond,0.277,150,0.496,Hunting
-Nosler,Partition,0.277,150,0.465,Hunting
-Barnes,TTSX,0.277,130,0.395,Hunting
 Hornady,SST,0.284,139,0.486,Hunting
 Hornady,SST,0.284,150,0.526,Hunting
 Hornady,ELD-X,0.284,162,0.631,Hunting
 Hornady,ELD-X,0.284,175,0.689,Hunting
 Hornady,ELD Match,0.284,180,0.777,Match
 Hornady,InterLock,0.284,154,0.433,Hunting
-Nosler,AccuBond,0.284,160,0.531,Hunting
-Nosler,Partition,0.284,160,0.475,Hunting
-Berger,Hybrid Target,0.284,180,0.675,Match
-Barnes,TTSX,0.284,140,0.452,Hunting
 Hornady,InterLock,0.308,150,0.372,Hunting
 Hornady,InterLock,0.308,165,0.447,Hunting
 Hornady,InterLock,0.308,180,0.481,Hunting
@@ -70,22 +49,10 @@ Hornady,ELD Match,0.308,178,0.547,Match
 Hornady,BTHP Match,0.308,168,0.447,Match
 Hornady,A-MAX,0.308,155,0.439,Match
 Hornady,FMJ-BT,0.308,150,0.409,Target
-Nosler,Ballistic Tip,0.308,150,0.435,Hunting
-Nosler,Ballistic Tip,0.308,165,0.475,Hunting
-Nosler,AccuBond,0.308,180,0.507,Hunting
-Nosler,Partition,0.308,180,0.474,Hunting
-Nosler,Partition,0.308,200,0.481,Hunting
-Nosler,Custom Competition,0.308,168,0.462,Match
-Berger,Hybrid Target,0.308,175,0.536,Match
-Berger,Elite Hunter,0.308,185,0.527,Hunting
-Barnes,TTSX,0.308,168,0.470,Hunting
-Barnes,TSX,0.308,180,0.472,Hunting
 Swift,Scirocco II,0.308,180,0.528,Hunting
 Hornady,SST,0.338,225,0.454,Hunting
 Hornady,ELD-X,0.338,230,0.616,Hunting
 Hornady,ELD Match,0.338,285,0.829,Match
-Nosler,AccuBond,0.338,225,0.551,Hunting
-Nosler,Partition,0.338,250,0.473,Hunting
 Hornady,InterLock RN,0.358,200,0.254,Hunting
 Hornady,InterLock,0.358,225,0.355,Hunting
 Hornady,FTX,0.358,200,0.250,Hunting
@@ -117,11 +84,6 @@ Hornady,XTP,0.451,185,0.115,Defense
 Hornady,XTP,0.451,230,0.183,Defense
 Hornady,XTP,0.429,240,0.170,Hunting
 Hornady,XTP,0.429,300,0.202,Hunting
-Nosler,JHP,0.355,115,0.115,Defense
-Nosler,JHP,0.451,230,0.165,Defense
-Berger,Hollow Point,0.355,124,0.130,Target
-Berger,Flat Point,0.451,200,0.115,Target
-Berger,Hollow Point Target,0.451,230,0.150,Match
 Hornady,Hollow Point,0.224,40,0.138,Target
 Hornady,Hollow Point,0.224,35,0.125,Varmint
 Hornady,InterLock,0.257,100,0.356,Hunting
@@ -132,31 +94,13 @@ Hornady,ELD-X,0.257,128,0.644,Hunting
 Hornady,ELD Match,0.257,134,0.658,Match
 Hornady,CX,0.257,90,0.278,Hunting
 Hornady,FTX,0.257,110,0.346,Hunting
-Nosler,Ballistic Tip Varmint,0.257,85,0.329,Varmint
-Nosler,Ballistic Tip,0.257,100,0.393,Hunting
-Nosler,Ballistic Tip,0.257,115,0.453,Hunting
-Nosler,Partition,0.257,100,0.377,Hunting
-Nosler,Partition,0.257,115,0.389,Hunting
-Nosler,Partition,0.257,120,0.391,Hunting
-Nosler,AccuBond,0.257,110,0.418,Hunting
-Nosler,E-Tip,0.257,100,0.409,Hunting
-Barnes,TSX,0.257,100,0.336,Hunting
 Hornady,InterLock,0.312,150,0.367,Hunting
 Hornady,XTP,0.312,60,0.092,Defense
 Hornady,InterLock RN,0.323,170,0.217,Hunting
-Nosler,Ballistic Tip,0.323,180,0.394,Hunting
-Nosler,E-Tip,0.323,180,0.427,Hunting
-Nosler,Partition,0.323,200,0.426,Hunting
-Nosler,AccuBond,0.323,200,0.450,Hunting
-Nosler,Custom Competition,0.323,200,0.520,Match
 Hornady,FTX,0.348,200,0.326,Hunting
 Hornady,XTP,0.365,95,0.127,Defense
-Nosler,AccuBond,0.366,250,0.494,Hunting
-Nosler,E-Tip,0.366,250,0.494,Hunting
-Nosler,Partition,0.366,286,0.482,Hunting
 Hornady,InterLock SP-RP,0.366,286,0.407,Hunting
 Swift,A-Frame,0.366,286,0.385,Hunting
-Barnes,TSX,0.366,250,0.361,Hunting
 Hornady,FTX,0.410,190,0.168,Hunting
 Hornady,XTP,0.410,210,0.186,Hunting
 Hornady,DGS,0.416,400,0.324,Hunting
@@ -169,6 +113,545 @@ Hornady,FP-XTP,0.500,500,0.204,Hunting
 Swift,A-Frame,0.500,325,0.143,Hunting
 Hornady,A-MAX,0.510,750,1.068,Match
 Hornady,XTP,0.251,35,0.074,Defense
+Barnes,Varmin-A-Tor FB #30092,0.204,32,0.159,Varmint
+Barnes,Varmint Grenade FB #30090,0.204,26,0.131,Varmint
+Barnes,LRX BT #32471,0.224,65,0.341,Hunting
+Barnes,LRX BT #30881,0.224,77,0.404,Hunting
+Barnes,MPG FB #30195,0.224,55,0.225,Target
+Barnes,Match Burner BT #30162,0.224,69,0.339,Match
+Barnes,Match Burner BT #32050,0.224,77,0.352,Match
+Barnes,Match Burner BT #30164,0.224,85,0.410,Match
+Barnes,Match Burner FB #30160,0.224,52,0.224,Match
+Barnes,TAC-TX BT #32469,0.224,70,0.323,Hunting
+Barnes,TSX BT #30190,0.224,62,0.287,Hunting
+Barnes,TSX BT #30193,0.224,70,0.323,Hunting
+Barnes,TSX BT #30204,0.224,78,0.383,Hunting
+Barnes,TSX FB #30176,0.224,45,0.188,Hunting
+Barnes,TSX FB #30174,0.224,50,0.197,Hunting
+Barnes,TSX FB #30180,0.224,53,0.204,Hunting
+Barnes,TSX FB #30182,0.224,55,0.209,Hunting
+Barnes,TTSX BT #30187,0.224,55,0.272,Hunting
+Barnes,TTSX BT #30188,0.224,62,0.294,Hunting
+Barnes,TTSX FB #30185,0.224,50,0.229,Hunting
+Barnes,Varmin-A-Tor FB #30168,0.224,40,0.153,Varmint
+Barnes,Varmin-A-Tor FB #30178,0.224,50,0.192,Varmint
+Barnes,Varmint Grenade FB #30170,0.224,30,0.101,Varmint
+Barnes,Varmint Grenade FB #30171,0.224,36,0.149,Varmint
+Barnes,Varmint Grenade FB #30198,0.224,50,0.183,Varmint
+Barnes,LRX BT #30862,0.243,95,0.436,Hunting
+Barnes,Match Burner BT #30206,0.243,105,0.511,Match
+Barnes,Match Burner BT #30864,0.243,112,0.624,Match
+Barnes,Match Burner FB #30205,0.243,68,0.267,Match
+Barnes,TAC-TX BT #32470,0.243,90,0.353,Hunting
+Barnes,TSX BT #30212,0.243,85,0.333,Hunting
+Barnes,TTSX BT #30208,0.243,80,0.331,Hunting
+Barnes,Varmin-A-Tor FB #30207,0.243,58,0.173,Varmint
+Barnes,Varmin-A-Tor FB #30210,0.243,72,0.208,Varmint
+Barnes,Varmint Grenade FB #30214,0.243,62,0.199,Varmint
+Barnes,LRX BT #30479,0.257,101,0.400,Hunting
+Barnes,LRX BT #32472,0.257,117,0.530,Hunting
+Barnes,TSX BT #30222,0.257,100,0.336,Hunting
+Barnes,TSX FB #30224,0.257,115,0.335,Hunting
+Barnes,TTSX BT #30218,0.257,80,0.316,Hunting
+Barnes,TTSX BT #30220,0.257,100,0.357,Hunting
+Barnes,LRX BT #30228,0.264,127,0.468,Hunting
+Barnes,Match Burner BT #30234,0.264,120,0.476,Match
+Barnes,Match Burner BT #30230,0.264,140,0.586,Match
+Barnes,Match Burner BT #30100,0.264,145,0.703,Match
+Barnes,TAC-TX BT #31142,0.264,115,0.387,Hunting
+Barnes,TSX BT #30244,0.264,120,0.381,Hunting
+Barnes,TSX BT #31140,0.264,130,0.411,Hunting
+Barnes,TTSX BT #30240,0.264,100,0.359,Hunting
+Barnes,TTSX BT #30242,0.264,120,0.412,Hunting
+Barnes,LRX BT #30262,0.277,129,0.463,Hunting
+Barnes,LRX BT #32112,0.277,155,0.540,Hunting
+Barnes,MPG FB #30249,0.277,85,0.229,Target
+Barnes,TSX BT #30260,0.277,110,0.323,Hunting
+Barnes,TSX BT #30264,0.277,130,0.374,Hunting
+Barnes,TSX BT #30266,0.277,140,0.404,Hunting
+Barnes,TSX FB #30254,0.277,85,0.246,Hunting
+Barnes,TSX FB #30269,0.277,150,0.386,Hunting
+Barnes,TTSX BT #30271,0.277,95,0.292,Hunting
+Barnes,TTSX BT #30274,0.277,110,0.377,Hunting
+Barnes,TTSX BT #30276,0.277,130,0.392,Hunting
+Barnes,LRX BT #30295,0.284,139,0.434,Hunting
+Barnes,LRX BT #30282,0.284,145,0.449,Hunting
+Barnes,LRX BT #32395,0.284,152,0.467,Hunting
+Barnes,LRX BT #32348,0.284,160,0.608,Hunting
+Barnes,LRX BT #30284,0.284,168,0.513,Hunting
+Barnes,Match Burner BT #30285,0.284,171,0.645,Match
+Barnes,TSX BT #30287,0.284,120,0.349,Hunting
+Barnes,TSX BT #30289,0.284,140,0.394,Hunting
+Barnes,TSX BT #30293,0.284,150,0.408,Hunting
+Barnes,TSX FB #30291,0.284,160,0.392,Hunting
+Barnes,TSX FB #30294,0.284,175,0.417,Hunting
+Barnes,TTSX BT #30298,0.284,120,0.373,Hunting
+Barnes,TTSX BT #30300,0.284,140,0.412,Hunting
+Barnes,TTSX BT #30303,0.284,150,0.424,Hunting
+Barnes,TTSX FB #30296,0.284,110,0.319,Hunting
+Barnes,LRX BT #30318,0.308,175,0.508,Hunting
+Barnes,LRX BT #30377,0.308,190,0.541,Hunting
+Barnes,LRX BT #30374,0.308,200,0.546,Hunting
+Barnes,LRX BT #30311,0.308,208,0.633,Hunting
+Barnes,LRX BT BR #30376,0.308,212,0.705,Hunting
+Barnes,MPG FB #30331,0.308,150,0.357,Target
+Barnes,Match Burner BT #30381,0.308,155,0.467,Match
+Barnes,Match Burner BT #30385,0.308,175,0.521,Match
+Barnes,Original FN FB #30360,0.308,190,0.296,Hunting
+Barnes,TAC-TX BT #30320,0.308,120,0.358,Hunting
+Barnes,TAC-TX FB #30321,0.308,110,0.289,Hunting
+Barnes,TSX BT #30345,0.308,130,0.340,Hunting
+Barnes,TSX BT #30347,0.308,150,0.369,Hunting
+Barnes,TSX BT #30349,0.308,165,0.398,Hunting
+Barnes,TSX BT #30351,0.308,168,0.404,Hunting
+Barnes,TSX BT #30353,0.308,180,0.453,Hunting
+Barnes,TSX FB #30341,0.308,110,0.264,Hunting
+Barnes,TSX FB #30356,0.308,200,0.423,Hunting
+Barnes,TSX FN FB #30334,0.308,150,0.184,Hunting
+Barnes,TTSX BT #30364,0.308,130,0.350,Hunting
+Barnes,TTSX BT #30366,0.308,150,0.420,Hunting
+Barnes,TTSX BT #30368,0.308,165,0.442,Hunting
+Barnes,TTSX BT #30370,0.308,168,0.470,Hunting
+Barnes,TTSX BT #30372,0.308,180,0.484,Hunting
+Barnes,TTSX FB #30362,0.308,110,0.295,Hunting
+Barnes,MPG FB #30388,0.310,108,0.243,Target
+Barnes,TSX BT #30391,0.310,123,0.275,Hunting
+Barnes,TSX FB #30393,0.311,150,0.322,Hunting
+Barnes,TSX BT #30396,0.323,180,0.381,Hunting
+Barnes,TSX BT #30398,0.323,200,0.421,Hunting
+Barnes,TTSX BT #30400,0.323,160,0.400,Hunting
+Barnes,LRX BT #31150,0.338,250,0.602,Hunting
+Barnes,LRX BT #30434,0.338,265,0.575,Hunting
+Barnes,LRX BT #30432,0.338,280,0.667,Hunting
+Barnes,TSX BT #30408,0.338,185,0.352,Hunting
+Barnes,TSX BT #30410,0.338,210,0.404,Hunting
+Barnes,TSX BT #30417,0.338,285,0.585,Hunting
+Barnes,TSX FB #30412,0.338,225,0.386,Hunting
+Barnes,TSX FB #30415,0.338,250,0.425,Hunting
+Barnes,TTSX BT #30426,0.338,185,0.432,Hunting
+Barnes,TTSX BT #30428,0.338,210,0.482,Hunting
+Barnes,TTSX BT #30430,0.338,225,0.514,Hunting
+Barnes,TTSX FB #30424,0.338,160,0.342,Hunting
+Barnes,Original FN FB #30437,0.348,220,0.301,Hunting
+Barnes,Original FN FB #30438,0.348,250,0.342,Hunting
+Barnes,TAC-XP FB #30440,0.355,80,0.107,Defense
+Barnes,TAC-XP FB #30444,0.355,95,0.120,Defense
+Barnes,TAC-XP FB #30442,0.355,115,0.167,Defense
+Barnes,TAC-XP FB #30446,0.355,125,0.159,Defense
+Barnes,TSX FN FB #32078,0.355,170,0.198,Hunting
+Barnes,TAC-XP FB #30449,0.357,110,0.156,Defense
+Barnes,TAC-XP FB #30451,0.357,125,0.160,Defense
+Barnes,XPB #30453,0.357,140,0.151,Hunting
+Barnes,TSX FB #30455,0.358,200,0.284,Hunting
+Barnes,TSX FB #30457,0.358,225,0.359,Hunting
+Barnes,TSX FN FB #31112,0.358,180,0.193,Hunting
+Barnes,TTSX BT #30461,0.358,200,0.369,Hunting
+Barnes,TTSX FB #30459,0.358,180,0.295,Hunting
+Barnes,Banded Solid RN #30466,0.366,250,0.214,Hunting
+Barnes,Banded Solid RN #30467,0.366,286,0.247,Hunting
+Barnes,TSX FB #30469,0.366,250,0.361,Hunting
+Barnes,TSX FB #30473,0.366,286,0.411,Hunting
+Barnes,TTSX BT #30475,0.366,250,0.440,Hunting
+Barnes,Banded Solid RN #30783,0.375,270,0.207,Hunting
+Barnes,Banded Solid RN #30785,0.375,300,0.230,Hunting
+Barnes,Banded Solid RN #30787,0.375,350,0.283,Hunting
+Barnes,LRX BT #30483,0.375,270,0.449,Hunting
+Barnes,Original FN FB #30496,0.375,255,0.290,Hunting
+Barnes,Original FN FB #30497,0.375,255,0.290,Hunting
+Barnes,TSX FB #30486,0.375,235,0.270,Hunting
+Barnes,TSX FB #30489,0.375,270,0.326,Hunting
+Barnes,TSX FB #30491,0.375,300,0.357,Hunting
+Barnes,TSX FB #30494,0.375,350,0.425,Hunting
+Barnes,TTSX BT #30484,0.375,250,0.424,Hunting
+Barnes,Original FN FB #30498,0.377,255,0.290,Hunting
+Barnes,TAC-XP FB #30500,0.400,125,0.113,Defense
+Barnes,TAC-XP FB #30502,0.400,140,0.128,Defense
+Barnes,TAC-XP FB #30504,0.400,155,0.189,Defense
+Barnes,TSX FB #32473,0.400,190,0.183,Hunting
+Barnes,TSX FB #30514,0.410,400,0.399,Hunting
+Barnes,XPB #30512,0.410,180,0.126,Hunting
+Barnes,TSX FB #30516,0.411,300,0.281,Hunting
+Barnes,Banded Solid RN #30520,0.416,350,0.217,Hunting
+Barnes,Banded Solid RN #30526,0.416,400,0.261,Hunting
+Barnes,TSX FB #30527,0.416,300,0.298,Hunting
+Barnes,TSX FB #30529,0.416,350,0.345,Hunting
+Barnes,TSX FB #30532,0.416,400,0.392,Hunting
+Barnes,TTSX BT #30519,0.416,350,0.444,Hunting
+Barnes,Banded Solid RN #30536,0.422,400,0.261,Hunting
+Barnes,TSX FB #30537,0.422,400,0.378,Hunting
+Barnes,Buster FN FB #30545,0.429,300,0.241,Hunting
+Barnes,TAC-XP FB #30539,0.429,200,0.138,Defense
+Barnes,XPB #30541,0.429,200,0.138,Hunting
+Barnes,XPB #30543,0.429,225,0.166,Hunting
+Barnes,Buster FN FB #30572,0.451,325,0.206,Hunting
+Barnes,TAC-XP FB #30550,0.451,160,0.133,Defense
+Barnes,TAC-XP FB #30552,0.451,185,0.167,Defense
+Barnes,TSX FB #30628,0.451,275,0.215,Hunting
+Barnes,TTSX BT #30996,0.451,250,0.196,Hunting
+Barnes,XPB #30556,0.451,200,0.130,Hunting
+Barnes,XPB #30554,0.451,200,0.160,Hunting
+Barnes,XPB #30558,0.451,225,0.146,Hunting
+Barnes,XPB #30562,0.451,250,0.141,Hunting
+Barnes,XPB #30548,0.451,275,0.215,Hunting
+Barnes,Banded Solid RN #30791,0.458,450,0.267,Hunting
+Barnes,Banded Solid RN #30792,0.458,500,0.301,Hunting
+Barnes,Buster FN FB #30644,0.458,400,0.242,Hunting
+Barnes,Original FN FB #30612,0.458,300,0.227,Hunting
+Barnes,Original FN FB #30614,0.458,400,0.302,Hunting
+Barnes,Original SSP #30611,0.458,300,0.291,Hunting
+Barnes,Original SSP #30613,0.458,400,0.389,Hunting
+Barnes,TSX FB #30629,0.458,250,0.136,Hunting
+Barnes,TSX FB #30615,0.458,300,0.234,Hunting
+Barnes,TSX FB #30630,0.458,300,0.163,Hunting
+Barnes,TSX FB #30617,0.458,350,0.278,Hunting
+Barnes,TSX FB #30619,0.458,450,0.369,Hunting
+Barnes,TSX FB #30622,0.458,500,0.412,Hunting
+Barnes,TTSX BT #30642,0.458,300,0.236,Hunting
+Barnes,Banded Solid FN #30649,0.474,500,0.243,Hunting
+Barnes,TSX FB #30647,0.474,500,0.363,Hunting
+Barnes,XPB #30659,0.475,275,0.155,Hunting
+Barnes,Buster FN FB #30672,0.500,400,0.220,Hunting
+Barnes,XPB #30663,0.500,275,0.141,Hunting
+Barnes,XPB #30665,0.500,325,0.228,Hunting
+Barnes,XPB #30667,0.500,375,0.261,Hunting
+Barnes,Banded Solid RN #30685,0.504,525,0.267,Hunting
+Barnes,TSX FB #30688,0.505,525,0.320,Hunting
+Barnes,Banded Solid FN #30690,0.509,570,0.243,Hunting
+Barnes,TSX FB #30692,0.509,570,0.369,Hunting
+Barnes,Banded Solid Bore Rider #30703,0.510,750,1.070,Hunting
+Barnes,Banded Solid Bore Rider #30707,0.510,800,1.095,Hunting
+Barnes,Banded Solid RN #30694,0.510,535,0.238,Hunting
+Barnes,Original FN FB #30682,0.510,300,0.183,Hunting
+Barnes,Original FN FB #30683,0.510,450,0.274,Hunting
+Barnes,TSX BT #30700,0.510,647,0.572,Hunting
+Barnes,Banded Solid FN #30713,0.583,750,0.257,Hunting
+Barnes,TSX FB #30712,0.583,750,0.402,Hunting
+Barnes,Banded Solid FN #30714,0.618,900,0.380,Hunting
+Berger,FB Varmint #17308,0.172,25,0.152,Varmint
+Berger,BT Varmint #20304,0.204,40,0.227,Varmint
+Berger,FB Varmint #20303,0.204,35,0.179,Varmint
+Berger,BT Target #22420,0.224,73,0.348,Match
+Berger,FB Target #22408,0.224,52,0.235,Match
+Berger,FB Target #22410,0.224,55,0.254,Match
+Berger,FB Varmint #22303,0.224,40,0.151,Varmint
+Berger,FB Varmint #22309,0.224,52,0.201,Varmint
+Berger,FB Varmint #22311,0.224,55,0.209,Varmint
+Berger,FB Varmint #22312,0.224,60,0.271,Varmint
+Berger,Fullbore Target #22427,0.224,80.5,0.441,Match
+Berger,LRHT #22485,0.224,85.5,0.524,Match
+Berger,OTM Tactical #22101,0.224,77,0.374,Match
+Berger,VLD Target #22418,0.224,70,0.374,Match
+Berger,VLD Target #22421,0.224,75,0.421,Match
+Berger,VLD Target #22422,0.224,80,0.455,Match
+Berger,VLD Target #22423,0.224,90,0.534,Match
+Berger,BT Target #24408,0.243,65,0.281,Match
+Berger,BT Target #24425,0.243,90,0.409,Match
+Berger,BT Target #24428,0.243,105,0.494,Match
+Berger,BT Target #24431,0.243,108,0.522,Match
+Berger,Classic Hybrid Hunter #24570,0.243,95,0.434,Hunting
+Berger,Elite Hunter #24556,0.243,108,0.559,Hunting
+Berger,FB Target #24411,0.243,68,0.255,Match
+Berger,FB Varmint #24321,0.243,80,0.300,Varmint
+Berger,High BC FB Varmint #24313,0.243,69,0.289,Varmint
+Berger,High BC Varmint #24323,0.243,88,0.380,Varmint
+Berger,Hybrid Target #24433,0.243,105,0.536,Match
+Berger,LRHT #24485,0.243,109,0.568,Match
+Berger,VLD Hunting #24524,0.243,87,0.427,Hunting
+Berger,VLD Hunting #24527,0.243,95,0.467,Hunting
+Berger,VLD Hunting #24528,0.243,105,0.545,Hunting
+Berger,VLD Hunting #24530,0.243,115,0.568,Hunting
+Berger,VLD Target #24427,0.243,95,0.467,Match
+Berger,VLD Target #24429,0.243,105,0.517,Match
+Berger,VLD Target #24430,0.243,115,0.563,Match
+Berger,Elite Hunter #25586,0.257,133,0.613,Hunting
+Berger,LRHT #25485,0.257,135,0.650,Match
+Berger,VLD Hunting #25513,0.257,115,0.483,Hunting
+Berger,AR Hybrid OTM Tactical #26195,0.264,130,0.560,Match
+Berger,BT Target #26402,0.264,120,0.468,Match
+Berger,Classic Hybrid Hunter #26571,0.264,135,0.584,Hunting
+Berger,EOL Elite Hunter #26550,0.264,156,0.679,Hunting
+Berger,Elite Hunter #26552,0.264,140,0.606,Hunting
+Berger,Hybrid Target #26414,0.264,140,0.607,Match
+Berger,LRHT #26485,0.264,144,0.655,Match
+Berger,LRHT #26486,0.264,153.5,0.694,Match
+Berger,Long Range BT #26409,0.264,140,0.593,Match
+Berger,VLD Hunting #26503,0.264,130,0.562,Hunting
+Berger,VLD Hunting #26504,0.264,140,0.600,Hunting
+Berger,VLD Target #26403,0.264,130,0.562,Match
+Berger,VLD Target #26401,0.264,140,0.593,Match
+Berger,Classic Hybrid Hunter #27570,0.277,130,0.490,Hunting
+Berger,Classic Hybrid Hunter #27571,0.277,140,0.528,Hunting
+Berger,EOL Elite Hunter #27575,0.277,170,0.662,Hunting
+Berger,VLD Hunting #27501,0.277,130,0.462,Hunting
+Berger,VLD Hunting #27502,0.277,140,0.504,Hunting
+Berger,VLD Hunting #27503,0.277,150,0.518,Hunting
+Berger,Classic Hybrid Hunter #28571,0.284,150,0.505,Hunting
+Berger,Classic Hybrid Hunter #28570,0.284,168,0.566,Hunting
+Berger,EOL Elite Hunter #28550,0.284,195,0.755,Hunting
+Berger,Elite Hunter #28554,0.284,175,0.656,Hunting
+Berger,F-Open Target #28408,0.284,184,0.695,Match
+Berger,Hybrid Target #28407,0.284,180,0.680,Match
+Berger,LRHT #28485,0.284,190,0.751,Match
+Berger,VLD Hunting #28503,0.284,140,0.500,Hunting
+Berger,VLD Hunting #28501,0.284,168,0.618,Hunting
+Berger,VLD Hunting #28502,0.284,180,0.673,Hunting
+Berger,VLD Target #28401,0.284,168,0.628,Match
+Berger,VLD Target #28405,0.284,180,0.683,Match
+Berger,Classic Hybrid Hunter #30570,0.308,168,0.498,Hunting
+Berger,Classic Hybrid Hunter #30571,0.308,185,0.533,Hunting
+Berger,EOL Elite Hunter #30560,0.308,245,0.807,Hunting
+Berger,Elite Hunter #30554,0.308,180,0.576,Hunting
+Berger,Elite Hunter #30555,0.308,205,0.631,Hunting
+Berger,FB Target #30421,0.308,115,0.289,Match
+Berger,FB Target #30407,0.308,150,0.393,Match
+Berger,Fullbore Target #30416,0.308,155.5,0.473,Match
+Berger,Hybrid OTM Tactical #30112,0.308,230,0.710,Match
+Berger,Hybrid Target #30426,0.308,155,0.478,Match
+Berger,Hybrid Target #30425,0.308,168,0.515,Match
+Berger,Hybrid Target #30424,0.308,185,0.576,Match
+Berger,Hybrid Target #30427,0.308,200,0.616,Match
+Berger,Hybrid Target #30429,0.308,215,0.691,Match
+Berger,Hybrid Target #30430,0.308,230,0.717,Match
+Berger,Hybrid Target 200.20X #30417,0.308,200,0.640,Match
+Berger,Juggernaut OTM Tactical #30107,0.308,185,0.682,Match
+Berger,Juggernaut Target #30418,0.308,185,0.555,Match
+Berger,LRHT #30485,0.308,208,0.689,Match
+Berger,LRHT #30486,0.308,220,0.717,Match
+Berger,LRHT #30487,0.308,245,0.846,Match
+Berger,Long Range BT #30420,0.308,175,0.512,Match
+Berger,OTM Tactical #30105,0.308,175,0.512,Match
+Berger,VLD Hunting #30508,0.308,155,0.464,Hunting
+Berger,VLD Hunting #30510,0.308,168,0.498,Hunting
+Berger,VLD Hunting #30512,0.308,175,0.518,Hunting
+Berger,VLD Hunting #30513,0.308,185,0.558,Hunting
+Berger,VLD Hunting #30514,0.308,190,0.566,Hunting
+Berger,VLD Hunting #30515,0.308,210,0.625,Hunting
+Berger,VLD Target #30410,0.308,168,0.507,Match
+Berger,VLD Target #30412,0.308,175,0.512,Match
+Berger,VLD Target #30413,0.308,185,0.543,Match
+Berger,VLD Target #30415,0.308,210,0.621,Match
+Berger,Elite Hunter #33554,0.338,250,0.685,Hunting
+Berger,Elite Hunter #33556,0.338,300,0.814,Hunting
+Berger,Hybrid OTM Tactical #33107,0.338,250,0.682,Match
+Berger,Hybrid OTM Tactical #33109,0.338,300,0.822,Match
+Berger,ELR Match Solid #37379,0.375,379,0.951,Match
+Berger,ELR Match Solid #37407,0.375,407,1.022,Match
+Berger,Hybrid Target #37401,0.375,410,0.928,Match
+Nosler,Varmageddon FB Tipped #17210,0.172,20,0.183,Varmint
+Nosler,Varmageddon FBHP #17205,0.172,20,0.119,Varmint
+Nosler,Ballistic Tip Lead-Free Spitzer #45140,0.204,32,0.228,Varmint
+Nosler,Ballistic Tip Varmint Spitzer #35216,0.204,32,0.206,Varmint
+Nosler,Ballistic Tip Varmint Spitzer #52111,0.204,40,0.239,Varmint
+Nosler,Varmageddon FB Tipped #17220,0.204,32,0.204,Varmint
+Nosler,AccuBond Spitzer #53780,0.224,70,0.370,Hunting
+Nosler,Ballistic Tip Lead-Free Spitzer #45150,0.224,35,0.201,Varmint
+Nosler,Ballistic Tip Lead-Free Spitzer #45160,0.224,40,0.220,Varmint
+Nosler,Ballistic Tip Lead-Free Spitzer #45498,0.224,50,0.251,Varmint
+Nosler,Ballistic Tip Varmint Spitzer #39510,0.224,40,0.221,Varmint
+Nosler,Ballistic Tip Varmint Spitzer #39522,0.224,50,0.238,Varmint
+Nosler,Ballistic Tip Varmint Spitzer #39526,0.224,55,0.267,Varmint
+Nosler,Ballistic Tip Varmint Spitzer #34992,0.224,60,0.270,Varmint
+Nosler,Custom Competition HPBT #53294,0.224,52,0.220,Match
+Nosler,Custom Competition HPBT #17101,0.224,69,0.305,Match
+Nosler,Custom Competition HPBT #22421,0.224,77,0.340,Match
+Nosler,Custom Competition HPBT #25116,0.224,80,0.415,Match
+Nosler,Custom Competition HPBT Cannelure #53033,0.224,77,0.340,Match
+Nosler,E-Tip Spitzer #59624,0.224,55,0.305,Hunting
+Nosler,Partition Spitzer #16316,0.224,60,0.228,Hunting
+Nosler,RDF HPBT #53066,0.224,70,0.416,Match
+Nosler,RDF HPBT #53452,0.224,77,0.454,Match
+Nosler,RDF HPBT #53441,0.224,85,0.498,Match
+Nosler,Varmageddon FB Tipped #36763,0.224,35,0.120,Varmint
+Nosler,Varmageddon FB Tipped #17230,0.224,40,0.211,Varmint
+Nosler,Varmageddon FB Tipped #17223,0.224,50,0.227,Varmint
+Nosler,Varmageddon FB Tipped #36523,0.224,53,0.303,Varmint
+Nosler,Varmageddon FB Tipped #17240,0.224,55,0.255,Varmint
+Nosler,Varmageddon FBHP Cannelure #35631,0.224,62,0.251,Varmint
+Nosler,AccuBond Spitzer #56357,0.243,90,0.376,Hunting
+Nosler,Ballistic Silvertip Spitzer #51040,0.243,95,0.379,Hunting
+Nosler,Ballistic Tip Lead-Free Spitzer #45170,0.243,55,0.288,Varmint
+Nosler,Ballistic Tip Spitzer #24090,0.243,90,0.365,Hunting
+Nosler,Ballistic Tip Spitzer #24095,0.243,95,0.379,Hunting
+Nosler,Ballistic Tip Varmint Spitzer #24055,0.243,55,0.276,Varmint
+Nosler,Ballistic Tip Varmint Spitzer #39532,0.243,70,0.310,Varmint
+Nosler,Ballistic Tip Varmint Spitzer #24080,0.243,80,0.329,Varmint
+Nosler,Custom Competition HPBT #49742,0.243,107,0.525,Match
+Nosler,E-Tip Spitzer #59165,0.243,90,0.403,Hunting
+Nosler,Partition Spitzer #16314,0.243,85,0.315,Hunting
+Nosler,Partition Spitzer #16315,0.243,95,0.365,Hunting
+Nosler,Partition Spitzer #35642,0.243,100,0.384,Hunting
+Nosler,RDF HPBT #53410,0.243,105,0.571,Match
+Nosler,RDF HPBT #53507,0.243,115,0.634,Match
+Nosler,Solid Base Spitzer #38050,0.243,100,0.388,Hunting
+Nosler,Varmageddon FB Tipped #17250,0.243,55,0.252,Varmint
+Nosler,Varmageddon FB Tipped #26123,0.243,70,0.305,Varmint
+Nosler,AccuBond Spitzer #53742,0.257,110,0.418,Hunting
+Nosler,Ballistic Silvertip Spitzer #51050,0.257,115,0.453,Hunting
+Nosler,Ballistic Tip Spitzer #25100,0.257,100,0.393,Hunting
+Nosler,Ballistic Tip Spitzer #25115,0.257,115,0.453,Hunting
+Nosler,Ballistic Tip Varmint Spitzer #43004,0.257,85,0.329,Varmint
+Nosler,E-Tip Spitzer #59456,0.257,100,0.409,Hunting
+Nosler,Partition Spitzer #16317,0.257,100,0.377,Hunting
+Nosler,Partition Spitzer #16318,0.257,115,0.389,Hunting
+Nosler,Partition Spitzer #35643,0.257,120,0.391,Hunting
+Nosler,AccuBond Long Range Spitzer #58943,0.264,129,0.530,Hunting
+Nosler,AccuBond Long Range Spitzer #58922,0.264,142,0.625,Hunting
+Nosler,AccuBond Long Range Spitzer #58930,0.264,150,0.634,Hunting
+Nosler,AccuBond Spitzer #56902,0.264,130,0.488,Hunting
+Nosler,AccuBond Spitzer #57873,0.264,140,0.509,Hunting
+Nosler,Ballistic Tip Spitzer #26100,0.264,100,0.350,Hunting
+Nosler,Ballistic Tip Spitzer #26120,0.264,120,0.458,Hunting
+Nosler,Ballistic Tip Spitzer #26140,0.264,140,0.509,Hunting
+Nosler,Custom Competition HPBT #53415,0.264,123,0.510,Match
+Nosler,Custom Competition HPBT #26725,0.264,140,0.529,Match
+Nosler,E-Tip Spitzer #59765,0.264,120,0.497,Hunting
+Nosler,Partition Spitzer #16319,0.264,100,0.326,Hunting
+Nosler,Partition Spitzer #16320,0.264,125,0.449,Hunting
+Nosler,Partition Spitzer #16321,0.264,140,0.490,Hunting
+Nosler,RDF HPBT #53505,0.264,130,0.615,Match
+Nosler,RDF HPBT #49824,0.264,140,0.658,Match
+Nosler,RDF HPBT #49826,0.264,150,0.670,Match
+Nosler,Solid Base Spitzer #38052,0.264,140,0.495,Hunting
+Nosler,Varmageddon FB Tipped #26129,0.264,90,0.350,Varmint
+Nosler,AccuBond Long Range Spitzer #58836,0.277,150,0.591,Hunting
+Nosler,AccuBond Long Range Spitzer #54827,0.277,165,0.620,Hunting
+Nosler,AccuBond Spitzer #54987,0.277,130,0.435,Hunting
+Nosler,AccuBond Spitzer #54765,0.277,140,0.460,Hunting
+Nosler,AccuBond Spitzer #54801,0.277,150,0.500,Hunting
+Nosler,Ballistic Silvertip Spitzer #51075,0.277,130,0.433,Hunting
+Nosler,Ballistic Silvertip Spitzer #51100,0.277,150,0.496,Hunting
+Nosler,Ballistic Tip Spitzer #27130,0.277,130,0.433,Hunting
+Nosler,Ballistic Tip Spitzer #27140,0.277,140,0.456,Hunting
+Nosler,Ballistic Tip Spitzer #27150,0.277,150,0.496,Hunting
+Nosler,Ballistic Tip Spitzer #28135,0.277,170,0.550,Hunting
+Nosler,Custom Competition HPBT Cannelure #45357,0.277,115,0.375,Match
+Nosler,E-Tip Spitzer #59298,0.277,130,0.459,Hunting
+Nosler,Partition Semi Spitzer #16324,0.277,160,0.434,Hunting
+Nosler,Partition Spitzer #16322,0.277,130,0.416,Hunting
+Nosler,Partition Spitzer #35200,0.277,140,0.432,Hunting
+Nosler,Partition Spitzer #16323,0.277,150,0.465,Hunting
+Nosler,Solid Base Spitzer #38054,0.277,130,0.424,Hunting
+Nosler,AccuBond Long Range Spitzer #58734,0.284,150,0.546,Hunting
+Nosler,AccuBond Long Range Spitzer #58623,0.284,168,0.616,Hunting
+Nosler,AccuBond Long Range Spitzer #58517,0.284,175,0.648,Hunting
+Nosler,AccuBond Spitzer #59992,0.284,140,0.485,Hunting
+Nosler,AccuBond Spitzer #54951,0.284,150,0.493,Hunting
+Nosler,AccuBond Spitzer #54932,0.284,160,0.531,Hunting
+Nosler,Ballistic Silvertip Spitzer #51105,0.284,140,0.485,Hunting
+Nosler,Ballistic Silvertip Spitzer #51110,0.284,150,0.493,Hunting
+Nosler,Ballistic Tip Spitzer #28120,0.284,120,0.417,Hunting
+Nosler,Ballistic Tip Spitzer #28140,0.284,140,0.485,Hunting
+Nosler,Ballistic Tip Spitzer #28150,0.284,150,0.493,Hunting
+Nosler,Ballistic Tip Spitzer #28125,0.284,160,0.531,Hunting
+Nosler,Custom Competition HPBT #53418,0.284,168,0.520,Match
+Nosler,E-Tip Spitzer #59955,0.284,140,0.489,Hunting
+Nosler,E-Tip Spitzer #59426,0.284,150,0.498,Hunting
+Nosler,Partition Spitzer #16325,0.284,140,0.434,Hunting
+Nosler,Partition Spitzer #16326,0.284,150,0.456,Hunting
+Nosler,Partition Spitzer #16327,0.284,160,0.475,Hunting
+Nosler,Partition Spitzer #35645,0.284,175,0.519,Hunting
+Nosler,RDF HPBT #53432,0.284,185,0.719,Match
+Nosler,Solid Base Spitzer #38056,0.284,140,0.459,Hunting
+Nosler,AccuBond Long Range Spitzer #58455,0.308,168,0.525,Hunting
+Nosler,AccuBond Long Range Spitzer #58456,0.308,190,0.640,Hunting
+Nosler,AccuBond Long Range Spitzer #58317,0.308,210,0.661,Hunting
+Nosler,AccuBond Spitzer #52165,0.308,125,0.366,Hunting
+Nosler,AccuBond Spitzer #56719,0.308,150,0.435,Hunting
+Nosler,AccuBond Spitzer #55602,0.308,165,0.475,Hunting
+Nosler,AccuBond Spitzer #54825,0.308,180,0.507,Hunting
+Nosler,AccuBond Spitzer #54618,0.308,200,0.588,Hunting
+Nosler,Ballistic Silvertip Round Nose #51165,0.308,150,0.232,Hunting
+Nosler,Ballistic Silvertip Spitzer #51150,0.308,150,0.435,Hunting
+Nosler,Ballistic Silvertip Spitzer #51160,0.308,168,0.490,Hunting
+Nosler,Ballistic Silvertip Spitzer #51170,0.308,180,0.507,Hunting
+Nosler,Ballistic Tip Round Nose #30181,0.308,220,0.472,Hunting
+Nosler,Ballistic Tip Spitzer #30125,0.308,125,0.366,Hunting
+Nosler,Ballistic Tip Spitzer #30150,0.308,150,0.435,Hunting
+Nosler,Ballistic Tip Spitzer #30165,0.308,165,0.475,Hunting
+Nosler,Ballistic Tip Spitzer #30168,0.308,168,0.490,Hunting
+Nosler,Ballistic Tip Spitzer #30180,0.308,180,0.507,Hunting
+Nosler,Custom Competition HPBT #53155,0.308,155,0.450,Match
+Nosler,Custom Competition HPBT #53164,0.308,168,0.462,Match
+Nosler,Custom Competition HPBT #53952,0.308,175,0.505,Match
+Nosler,Custom Competition HPBT #53412,0.308,190,0.530,Match
+Nosler,Custom Competition HPBT #53154,0.308,220,0.690,Match
+Nosler,E-Tip Round Nose #59451,0.308,150,0.344,Hunting
+Nosler,E-Tip Spitzer #59380,0.308,110,0.245,Hunting
+Nosler,E-Tip Spitzer #59378,0.308,150,0.469,Hunting
+Nosler,E-Tip Spitzer #59415,0.308,168,0.503,Hunting
+Nosler,E-Tip Spitzer #59180,0.308,180,0.523,Hunting
+Nosler,Partition Protected Point #25396,0.308,180,0.361,Hunting
+Nosler,Partition Round Nose #16333,0.308,170,0.252,Hunting
+Nosler,Partition Semi Spitzer #16332,0.308,220,0.351,Hunting
+Nosler,Partition Spitzer #16329,0.308,150,0.387,Hunting
+Nosler,Partition Spitzer #16330,0.308,165,0.410,Hunting
+Nosler,Partition Spitzer #16331,0.308,180,0.474,Hunting
+Nosler,Partition Spitzer #35626,0.308,200,0.481,Hunting
+Nosler,RDF HPBT #53182,0.308,168,0.505,Match
+Nosler,RDF HPBT #53170,0.308,175,0.536,Match
+Nosler,RDF HPBT #53434,0.308,210,0.707,Match
+Nosler,Solid Base Round Nose #38058,0.308,150,0.232,Hunting
+Nosler,Solid Base Spitzer #38060,0.308,150,0.398,Hunting
+Nosler,Solid Base Spitzer #38062,0.308,165,0.442,Hunting
+Nosler,Varmageddon FB Tipped #34057,0.308,110,0.293,Varmint
+Nosler,Ballistic Tip Spitzer #30131,0.310,123,0.310,Hunting
+Nosler,E-Tip Spitzer #59387,0.310,123,0.316,Hunting
+Nosler,Varmageddon FB Tipped #34056,0.310,123,0.304,Varmint
+Nosler,AccuBond Spitzer #54374,0.323,200,0.450,Hunting
+Nosler,Ballistic Tip Spitzer #32180,0.323,180,0.394,Hunting
+Nosler,Custom Competition HPBT #49524,0.323,200,0.520,Match
+Nosler,E-Tip Spitzer #59265,0.323,180,0.427,Hunting
+Nosler,Partition Spitzer #35277,0.323,200,0.426,Hunting
+Nosler,AccuBond Long Range Spitzer #58454,0.338,265,0.732,Hunting
+Nosler,AccuBond Long Range Spitzer #58518,0.338,300,0.785,Hunting
+Nosler,AccuBond Spitzer #57625,0.338,180,0.372,Hunting
+Nosler,AccuBond Spitzer #56382,0.338,200,0.414,Hunting
+Nosler,AccuBond Spitzer #54357,0.338,225,0.550,Hunting
+Nosler,AccuBond Spitzer #57287,0.338,250,0.575,Hunting
+Nosler,AccuBond Spitzer #54851,0.338,300,0.720,Hunting
+Nosler,Ballistic Silvertip Spitzer #51200,0.338,200,0.414,Hunting
+Nosler,Custom Competition HPBT #57520,0.338,250,0.590,Match
+Nosler,Custom Competition HPBT #53515,0.338,300,0.800,Match
+Nosler,E-Tip Spitzer #59186,0.338,200,0.425,Hunting
+Nosler,E-Tip Spitzer #59372,0.338,225,0.611,Hunting
+Nosler,E-Tip Spitzer #59385,0.338,250,0.627,Hunting
+Nosler,Partition Spitzer #16337,0.338,210,0.400,Hunting
+Nosler,Partition Spitzer #16336,0.338,225,0.454,Hunting
+Nosler,Partition Spitzer #35644,0.338,250,0.473,Hunting
+Nosler,RDF HPBT #53445,0.338,300,0.826,Match
+Nosler,ASP JHP #44848,0.355,115,0.109,Defense
+Nosler,ASP JHP #43123,0.355,124,0.118,Defense
+Nosler,ASP JHP #43258,0.355,147,0.156,Defense
+Nosler,Straight-Wall Protected Point #38064,0.355,180,0.245,Hunting
+Nosler,ASP JHP #44912,0.357,125,0.130,Defense
+Nosler,Sporting Handgun JHP #44841,0.357,158,0.182,Hunting
+Nosler,AccuBond Spitzer #50712,0.358,225,0.430,Hunting
+Nosler,Partition Spitzer #44800,0.358,225,0.421,Hunting
+Nosler,Partition Spitzer #44801,0.358,250,0.446,Hunting
+Nosler,AccuBond Spitzer Cannelure #59756,0.366,250,0.494,Hunting
+Nosler,E-Tip Spitzer #59270,0.366,250,0.494,Hunting
+Nosler,Partition Spitzer #44750,0.366,286,0.482,Hunting
+Nosler,AccuBond Spitzer Cannelure #54413,0.375,260,0.473,Hunting
+Nosler,AccuBond Spitzer Cannelure #53662,0.375,300,0.485,Hunting
+Nosler,E-Tip Spitzer #59379,0.375,260,0.490,Hunting
+Nosler,Partition Spitzer #44850,0.375,260,0.314,Hunting
+Nosler,Partition Spitzer #44845,0.375,300,0.398,Hunting
+Nosler,ASP JHP #44852,0.400,135,0.093,Defense
+Nosler,ASP JHP #44860,0.400,150,0.106,Defense
+Nosler,ASP JHP #44885,0.400,180,0.147,Defense
+Nosler,ASP JHP #44952,0.400,200,0.163,Defense
+Nosler,Straight-Wall Protected Point #38066,0.400,215,0.215,Hunting
+Nosler,Sporting Handgun JHP #43012,0.410,210,0.170,Hunting
+Nosler,ASP JHP #44917,0.429,240,0.185,Defense
+Nosler,Sporting Handgun JHP #44846,0.429,200,0.151,Hunting
+Nosler,Sporting Handgun JHP #44842,0.429,240,0.173,Hunting
+Nosler,Sporting Handgun JHP #42069,0.429,300,0.206,Hunting
+Nosler,Sporting Handgun JSP #44868,0.429,240,0.177,Hunting
+Nosler,ASP JHP #44847,0.451,185,0.142,Defense
+Nosler,ASP JHP #44922,0.451,230,0.175,Defense
+Nosler,Sporting Handgun JHP #43013,0.451,250,0.177,Hunting
+Nosler,Ballistic Tip Spitzer #31456,0.458,300,0.250,Hunting
+Nosler,Straight-Wall Protected Point #38068,0.458,300,0.191,Hunting
 Sierra,Tipped VarmintKing #1032,0.204,32,0.221,Varmint
 Sierra,Tipped VarmintKing #1036,0.204,36,0.255,Varmint
 Sierra,Tipped VarmintKing #1039,0.204,39,0.287,Varmint
