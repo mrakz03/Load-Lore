@@ -2323,8 +2323,8 @@ loads_rimfire_rifle.csv	.22 LR	ELEY team Flat-nose	40	0.33	0.33	kept (ELEY retai
 loads_rimfire_rifle.csv	.22 LR	ELEY tenex Flat-nose	40	0.46	0.46	kept (ELEY retail-checked Oct 24)
 loads_rimfire_rifle.csv	.22 LR	ELEY tenex biathlon Flat-nose	40	0.52	0.52	kept (ELEY retail-checked Oct 24)
 loads_rimfire_rifle.csv	.22 LR	ELEY ultra Round-nose extreme long range	40	0.44	0.44	kept (ELEY retail-checked Oct 24)
-loads_rimfire_rifle.csv	.22 LR	Federal Champion Solid (1200 fps)	40	0.10	0.11	retail: Federal | Champion | 40 | LRN | 49.00 | 500
-loads_rimfire_rifle.csv	.22 LR	Federal Champion Solid (1240 fps)	40	0.10	0.11	retail: Federal | Champion | 40 | LRN | 49.00 | 500
+loads_rimfire_rifle.csv	.22 LR	Federal AutoMatch Solid	40	0.10	0.11	retail: Federal | Champion | 40 | LRN | 49.00 | 500
+loads_rimfire_rifle.csv	.22 LR	Federal Champion Solid	40	0.10	0.11	retail: Federal | Champion | 40 | LRN | 49.00 | 500
 loads_rimfire_rifle.csv	.22 LR	Federal Premium Gold Medal Solid (1080 fps)	40	0.15	0.20	model: cartridge x brand ratio
 loads_rimfire_rifle.csv	.22 LR	Federal Premium Gold Medal Solid (1200 fps)	40	0.15	0.20	model: cartridge x brand ratio
 loads_rimfire_rifle.csv	.22 LR	Federal Premium Hammerdown CPHP	40	0.15	0.20	model: cartridge x brand ratio

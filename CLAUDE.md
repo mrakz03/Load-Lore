@@ -447,6 +447,10 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   loads may be discontinued). Typical guns 13 / 15 lb (precision rifles). Sources in added_loads_sources.tsv.
   Later that day Zeke had the possibly discontinued Federal Gold Medal (GM300NMBH1) and Hornady Match (82176) .300 NM
   loads removed (rows kept in research/removed_loads.tsv).
+- Nov 8 2026 (Zeke): Federal AutoMatch .22 LR (AM22, 40 gr solid, 1200 fps) was in the data as "Federal
+  Champion Solid (1200 fps)" (the 2026 catalog prints it in the Champion table); renamed "Federal AutoMatch
+  Solid" (own product line), the 1240 fps one is now plain "Federal Champion Solid". Every other Federal
+  rimfire load in the 2026 catalog is in (the 716 bird-shot load has no ballistics).
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 

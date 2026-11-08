@@ -251,7 +251,7 @@ PRODUCT_LINES = {
     "ELEY": ["tenex", "match", "team", "club", "contact", "force", "ultra", "biathlon", "sport/target",
              "subsonic", "high velocity", "semi-auto benchrest", "bullseye"],
     "Federal": ["+Peak", "Premium +Peak=+Peak", "All-American", "American Eagle", "Black Cloud",
-                "Champion", "Force X2", "Fusion", "Gold Medal", "Premium Gold Medal=Gold Medal",
+                "AutoMatch", "Champion", "Force X2", "Fusion", "Gold Medal", "Premium Gold Medal=Gold Medal",
                 "Game Load", "HammerDown", "Premium Hammerdown=HammerDown", "Hevi-Bismuth",
                 "Master Class", "Military Grade", "Punch", "Personal Defense Punch=Punch", "Personal Defense",
                 "Power-Shok", "Raptor", "Shorty", "Speed-Shok", "Subsonic", "Syntech", "Top Gun",
