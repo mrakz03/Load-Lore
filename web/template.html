@@ -1388,7 +1388,7 @@ function handDialog(rec,done){
     <div class="costlbl" id="hcost"></div>
     <label class="l" style="margin-top:14px">NOTES</label><input id="hno" autocomplete="off">
     <div class="safety"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div>
-    <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button></div>`);
+    <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button><button class="btn" id="hclear">Clear</button></div>`);
   const q=x=>$(x,m);
   const isNew=()=>q("#hc").value===NEWC;
   const diaOf=c=>{
@@ -1462,9 +1462,10 @@ function handDialog(rec,done){
     pw.onblur=()=>{pw.readOnly=true;};
     sheetSelect("hbm","bullet maker");sheetSelect("hbl","bullet");sheetSelect("hpu","purpose");sheetSelect("hnt","cartridge type");
   }
-  // prefill
+  // prefill (and Clear: fill({}) empties every box, the form stays open)
+  const fill=rec=>{
   const o0=opts.find(o=>o.cart===rec.cartridge&&o.cat.title===rec.category)||opts.find(o=>o.cart===rec.cartridge);
-  val("hc",o0?o0.text:rec.cartridge);fillMakers();
+  val("hc",o0?o0.text:rec.cartridge);val("hnn","");val("hnd","");val("hbmo","");q("#hbm").value="";showNew();fillMakers();
   if(rec.bullet_maker){
     if([...q("#hbm").options].some(o=>o.value===rec.bullet_maker))q("#hbm").value=rec.bullet_maker;
     else{q("#hbm").value=OTHER;q("#hbmo").value=rec.bullet_maker;}
@@ -1475,10 +1476,14 @@ function handDialog(rec,done){
   q("#hpu").value=rec.purpose||"Hunting";
   val("hcb",rec.bullet_cost);val("hcp",rec.powder_cost_lb);val("hcr",rec.primer_cost);val("hcs",rec.brass_cost);q("#hcu").value=rec.brass_reuse||5;
   const hasParts=+rec.bullet_cost||+rec.powder_cost_lb||+rec.primer_cost||+rec.brass_cost;
-  if(rec.cost&&!hasParts)val("hct",rec.cost);
-  if(hasParts||+rec.cost)q("#hcd").open=true;   // the cost drop-down opens when there is a cost
+  val("hct",rec.cost&&!hasParts?rec.cost:"");
+  q("#hcd").open=!!(hasParts||+rec.cost);   // the cost drop-down opens when there is a cost
   val("hno",rec.notes);showCost();
+  };
+  fill(rec);
   q("#hcancel").onclick=close;
+  // Clear (Zeke, Nov 8 2026): empties the form after a confirmation, so a stray tap loses nothing
+  q("#hclear").onclick=()=>{if(confirm("Clear every field on this form?"))fill({});};
   q("#hsave").onclick=()=>{
     let r;
     try{
