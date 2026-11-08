@@ -3629,6 +3629,24 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
     btns.grid(row=30, column=0, columnspan=3, sticky="w", padx=18, pady=(14, 18))
     app.button(btns, "Save handload", save, "primary").pack(side="left")
     app.button(btns, "Cancel", win.destroy).pack(side="left", padx=8)
+
+    def clear():
+        """Empties every box, the form stays open; asks first so a stray click loses nothing
+        (Zeke, Nov 8 2026)."""
+        if not messagebox.askyesno("Clear the form", "Clear every field on this form?",
+                                   parent=win):
+            return
+        for k, var in V.items():
+            var.set("")
+        V["brass_reuse"].set("5")
+        V["new_type"].set(next(iter(kinds)))
+        cost_open[0] = False
+        show_cost()
+        show_new()
+        refresh_bullets()
+        update_cost()
+        cart_box.focus_set()
+    app.button(btns, "Clear", clear).pack(side="left")
     win.bind("<Escape>", lambda e: win.destroy())
     try:
         win.update_idletasks()
