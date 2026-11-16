@@ -202,6 +202,16 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open
   pickSheet too (sheetSelect puts a clear button over a <select>; powder has "Other powder (type
   it)"); pickSheet over a dialog hands the back button back to the dialog when it closes.
+- Ladder tests (Nov 16 2026, Zeke; web / Android only, no desktop): "Ladder tests ›" on the Handloads tab opens
+  #ladder (showLadder / ladderList / ladderPage; an open test is #ladder/<id>, NAV.sub; the Handloads tab stays
+  lit). A test: cartridge (handCarts list or a typed one), bullet, weight, powder, barrel, date, notes, and
+  charges {gr, shots (typed velocities), group, pressure}; kept in localStorage cartridge_calc_ladder_v1 (its own
+  key, so sync can carry it). ladderAnalysis: per charge n / mean / SD / ES (two rows of one charge pooled); a
+  charge with "Pressure signs" and every charge above it are left out of the picks; flattest spot = the three
+  neighbouring charges with the least fps per grain, only if at most half the ladder's overall fps per grain
+  (else "No clear flat spot"), its middle charge picked; most consistent = lowest SD of charges with 3+ shots;
+  smallest group. SVG chart (mean line, slowest-fastest bars, flat spot shaded). "Make handload" opens
+  handDialog prefilled with the chosen charge and its average speed. LADDER_NOTE: your own results, not load data.
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), Handloads, Settings; the PC sidebar (NAV_ORDER; web: CSS order at >=900 px, Oct 25) has
   the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
