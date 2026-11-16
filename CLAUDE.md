@@ -221,14 +221,14 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   The address is SYNC in build_web.py (DATA.sync_url; LOADLORE_SYNC overrides, empty turns sync off).
 - Ladder tests (Nov 16 2026, Zeke; web / Android only, no desktop): "Ladder tests ›" on the Handloads tab opens
   #ladder (showLadder / ladderList / ladderPage; an open test is #ladder/<id>, NAV.sub; the Handloads tab stays
-  lit). A test: cartridge (handCarts list or a typed one), bullet, weight, powder, barrel, date, notes, and
+  lit; on PC its sidebar entry opens a sub-list "Your handloads" / "Ladder tests" like the Load Dictionary's, .sub.hsub). A test: cartridge (handCarts list or a typed one), bullet, weight, powder, barrel, date, notes, and
   charges {gr, shots (typed velocities), group, pressure}; kept in localStorage cartridge_calc_ladder_v1 (its own
   key, so sync can carry it). ladderAnalysis: per charge n / mean / SD / ES (two rows of one charge pooled); a
   charge with "Pressure signs" and every charge above it are left out of the picks; flattest spot = the three
   neighbouring charges with the least fps per grain, only if at most half the ladder's overall fps per grain
   (else "No clear flat spot"), its middle charge picked; most consistent = lowest SD of charges with 3+ shots;
   smallest group. SVG chart (mean line, slowest-fastest bars, flat spot shaded). "Make handload" opens
-  handDialog prefilled with the chosen charge and its average speed. LADDER_NOTE: your own results, not load data; the app does not check pressure (the Pressure signs box only records what the user saw, worded "You marked...").
+  handDialog prefilled with the chosen charge and its average speed. The test form's "Copy from a handload ›" (only when there are handloads) fills cartridge, bullet, weight, powder and barrel from one, never a charge. LADDER_NOTE: your own results, not load data; the app does not check pressure (the Pressure signs box only records what the user saw, worded "You marked...").
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), Handloads, Settings; the PC sidebar (NAV_ORDER; web: CSS order at >=900 px, Oct 25) has
   the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
