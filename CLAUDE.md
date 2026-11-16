@@ -61,6 +61,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   figures; a click opens that load's figures in place (Zeke, Nov 7 2026: favDetail / FavoritesView._details:
   the dictionary panel's facts line and tiles, About these figures, ballistic table, + Head to Head), and its
   "Open in Load Dictionary ›" opens it there (goFav / FavoritesView._open); the star removes it.
+- Ammo on hand (Nov 16 2026, Zeke; web / Android only, no desktop): an "On hand" box on every opened load
+  (Load Dictionary, Favorite loads, Handloads) with a "how many" box, "− Shot" and "+ Add" (invBox / wireInv); a
+  "120 on hand" tag beside the name in the lists (invChip). Kept by pickKey in localStorage
+  cartridge_calc_inventory_v1 ({key: {n, t: last-change date}}, its own key so handload sync can carry it;
+  savedKey follows renamed / moved cartridges like favorites). "Ammo on hand (N rounds) ›" beside Favorite loads
+  under the category cards opens the page (#inv, showInv): totals, worth at your prices, grouped by cartridge,
+  × takes a load off (a count of 0 stays listed as "none on hand").
 - Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
   (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
   card and the sidebar entry open / close them (menu_entries / menuEntries, open_groups / OPEN_GROUPS,
@@ -206,12 +213,22 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   links devices with a 12-character code (no 0/O, 1/I/L, U; shown XXXX-XXXX-XXXX), no accounts. sync/worker.js
   (Cloudflare Worker + D1, address sync.loadlore.net, deployed with wrangler from sync/) keeps one copy per code, stored
   under the code's SHA-256; 1 MB cap, rate limits, copies unused 2 years removed. The copy holds handloads,
-  favorites and saved prices (not theme / text size / grades switch). The web keeps cartridge_calc_sync_v1
+  ladder tests, ammo on hand (inventory), favorites and saved prices (SYNC_PARTS; not theme / text size / grades switch). The web keeps cartridge_calc_sync_v1
   {code, rev, base, at, err}: base = the copy it last agreed on; syncMerge is a 3-way merge per handload id /
   favorite / price key (one side changed: take it; both: this device's; a delete loses to an edit). writeHand,
   writePrices and toggleFav call syncSoon (1.5 s later); also at start, on visibilitychange and online. PUT sends
   the rev it merged with; a 409 hands back the newer copy to merge again. A 404 (copy deleted elsewhere) unlinks.
   The address is SYNC in build_web.py (DATA.sync_url; LOADLORE_SYNC overrides, empty turns sync off).
+- Ladder tests (Nov 16 2026, Zeke; web / Android only, no desktop): "Ladder tests ›" on the Handloads tab opens
+  #ladder (showLadder / ladderList / ladderPage; an open test is #ladder/<id>, NAV.sub; the Handloads tab stays
+  lit). A test: cartridge (handCarts list or a typed one), bullet, weight, powder, barrel, date, notes, and
+  charges {gr, shots (typed velocities), group, pressure}; kept in localStorage cartridge_calc_ladder_v1 (its own
+  key, so sync can carry it). ladderAnalysis: per charge n / mean / SD / ES (two rows of one charge pooled); a
+  charge with "Pressure signs" and every charge above it are left out of the picks; flattest spot = the three
+  neighbouring charges with the least fps per grain, only if at most half the ladder's overall fps per grain
+  (else "No clear flat spot"), its middle charge picked; most consistent = lowest SD of charges with 3+ shots;
+  smallest group. SVG chart (mean line, slowest-fastest bars, flat spot shaded). "Make handload" opens
+  handDialog prefilled with the chosen charge and its average speed. LADDER_NOTE: your own results, not load data; the app does not check pressure (the Pressure signs box only records what the user saw, worded "You marked...").
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), Handloads, Settings; the PC sidebar (NAV_ORDER; web: CSS order at >=900 px, Oct 25) has
   the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
