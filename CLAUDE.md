@@ -209,7 +209,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   bullet, Bullet that maker's fitting bullets, or every maker's under headings while no maker is picked; a typed
   maker has no list; picking fills weight / diameter / BC; 'Use "typed"' on either; replaced Bullet maker /
   library / Other maker / Bullet name),
-  Powder and seating (powder, charge, C.O.L.), Results (velocity, barrel, with grey .fhint notes "from manual or
+  Powder and seating (powder, charge, C.O.L.), Velocity (velocity, barrel, with grey .fhint notes "from manual or
   chrono" / "manual's test barrel or yours"), then a "More details (purpose, cost, notes)" drop-down (details.hcd),
   open when the handload has a cost, notes or a purpose other than Hunting. Optional boxes show "optional".
   A "Clear" button after Save / Cancel (Zeke, Nov 8 2026: web #hclear -> fill({}), desktop clear())
