@@ -211,7 +211,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   it)"); pickSheet over a dialog hands the back button back to the dialog when it closes.
 - Ladder tests (Nov 16 2026, Zeke; web / Android only, no desktop): "Ladder tests ›" on the Handloads tab opens
   #ladder (showLadder / ladderList / ladderPage; an open test is #ladder/<id>, NAV.sub; the Handloads tab stays
-  lit). A test: cartridge (handCarts list or a typed one), bullet, weight, powder, barrel, date, notes, and
+  lit; on PC its sidebar entry opens a sub-list "Your handloads" / "Ladder tests" like the Load Dictionary's, .sub.hsub). A test: cartridge (handCarts list or a typed one), bullet, weight, powder, barrel, date, notes, and
   charges {gr, shots (typed velocities), group, pressure}; kept in localStorage cartridge_calc_ladder_v1 (its own
   key, so sync can carry it). ladderAnalysis: per charge n / mean / SD / ES (two rows of one charge pooled); a
   charge with "Pressure signs" and every charge above it are left out of the picks; flattest spot = the three

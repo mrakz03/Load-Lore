@@ -88,7 +88,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .wrap.home,.wrap.picker{max-width:560px}
   /* PC (Zeke, Oct 25 2026): Load Dictionary above Head to Head in the sidebar (phones keep NAVS),
      Home and category cards in one column at the desktop app's sizes; fitMenu zooms the page */
-  .nav>button[data-nav=h2h]{order:1}.nav>button[data-nav=hand]{order:2}.nav>button[data-nav=settings]{order:3}
+  .nav>button[data-nav=h2h]{order:1}.nav>button[data-nav=hand]{order:2}.nav>.sub.hsub{order:2}.nav>button[data-nav=settings]{order:3}
   .feat,.pick{grid-template-columns:1fr;gap:10px}
   .fcard{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:2px;padding:16px 18px;border-radius:12px}
   .fcard .ic{grid-row:span 2;width:36px;height:36px;border-radius:9px}.fcard .ic svg{width:20px;height:20px}
@@ -1035,11 +1035,14 @@ function drawChrome(){
         if(!Array.isArray(e))return btn(e);
         const [g,cs]=e,shown=cs.includes(NAV.cat)||OPEN_GROUPS.has(g);
         return `<button data-group="${esc(g)}" aria-expanded="${shown}">${esc(g)}&nbsp; ${shown?"▾":"▸"}</button>`+(shown?cs.map(btn).join(""):"");
-      }).join("")}</div>`:"");
+      }).join("")}</div>`:"")+
+      // Handloads: its two pages, your handloads and ladder tests (Zeke, Nov 16 2026)
+      (on&&k==="hand"?`<div class="sub hsub">${[["hand","Your handloads"],["ladder","Ladder tests"]].map(([m,t])=>`<button data-hsub="${m}" class="${NAV.mode===m?"on":""}">${t}</button>`).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
   nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate("loads",CATEGORIES.find(c=>c.title===b.dataset.cat)));
   nav.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
+  nav.querySelectorAll("[data-hsub]").forEach(b=>b.onclick=()=>navigate(b.dataset.hsub));
 }
 // In-app history: every page change is a browser history entry (#settings, #loads/Handgun...),
 // so the browser's back arrow and the phone's back button step back through the app's pages
