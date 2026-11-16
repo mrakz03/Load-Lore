@@ -196,14 +196,20 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore (Settings > Data) use the
   my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
   replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
-  The form's cost parts sit in a "Cost (optional breakdown)" drop-down (Zeke, Nov 2 2026: web
-  details.hcd, desktop cost_toggle / show_cost), closed unless the handload already has a cost.
+  The form's cost parts sit in a drop-down (Zeke, Nov 2 2026: web details.hcd, now "More details";
+  desktop cost_toggle / show_cost), closed unless the handload already has a cost.
   Form order (Zeke, Nov 16 2026): LOAD NAME (OPTIONAL) first, then cartridge. C.O.L. (cartridge overall
   length, in; optional, col_in, the last HANDLOAD_FIELDS column, shown to 3 decimals) sits beside powder and
   charge; the ladder form has one too, and "Copy from a handload" / "Make handload" carry it. Powder boxes
   (handload + ladder forms: powderSelect / powderBox) are a <select> with a .selcover like the cartridge box:
   search pop-up with a mouse, bottom sheet on touch, powders under maker headings (POWDER_BRANDS in
   load_lore.py, web DATA.powder_brands; POWDERS = brands A-Z), a last row 'Use "typed"' keeps an unlisted powder.
+  Tidy form (Zeke, Nov 16 2026, web): Load name, Cartridge, then sections (.hsec, small heading + thin line):
+  Bullet (one search box #hbs: library bullets that fit, under maker headings, picking fills weight / diameter /
+  BC; 'Use "typed"' splits a leading maker name off; replaced Bullet maker / library / Other maker / Bullet name),
+  Powder and seating (powder, charge, C.O.L.), Results (velocity, barrel, with grey .fhint notes "from manual or
+  chrono" / "manual's test barrel or yours"), then a "More details (purpose, cost, notes)" drop-down (details.hcd),
+  open when the handload has a cost, notes or a purpose other than Hunting. Optional boxes show "optional".
   A "Clear" button after Save / Cancel (Zeke, Nov 8 2026: web #hclear -> fill({}), desktop clear())
   empties every box after a yes / no confirmation and keeps the form open (an edited handload keeps
   its id, so Save changes still replaces it).
@@ -211,7 +217,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   "—" for price (money / money()), sorts after priced loads, and is graded without the cost factor
   (relative_scores / relativeScores leave a None / null factor out of that load's weighted average;
   other loads' grades are unchanged). Head to Head leaves cost out of its keys ("no cost given").
-  On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open
+  On touch screens the form's pickers (cartridge, bullet, powder, purpose) open
   pickSheet too (sheetSelect puts a clear button over a <select>; powder: powderBox); pickSheet over a dialog hands the back button back to the dialog when it closes.
 - Sync between devices (Nov 16 2026, Zeke; web + Android only, not desktop): Settings > Data > "Sync" (syncDialog)
   links devices with a 12-character code (no 0/O, 1/I/L, U; shown XXXX-XXXX-XXXX), no accounts. sync/worker.js
