@@ -206,8 +206,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   load_lore.py, web DATA.powder_brands; POWDERS = brands A-Z), a last row 'Use "typed"' keeps an unlisted powder.
   Tidy form (Zeke, Nov 16 2026, web): Load name, Cartridge, then sections (.hsec, small heading + thin line):
   Bullet (Maker #hbmk + Bullet #hbs search boxes, Zeke asked for two: Maker lists makers with a fitting library
-  bullet, Bullet that maker's fitting bullets, or every maker's under headings while no maker is picked; a typed
-  maker has no list; picking fills weight / diameter / BC; 'Use "typed"' on either; replaced Bullet maker /
+  bullet, Bullet that maker's fitting bullets, or every maker's under headings while no maker is picked; picking
+  fills weight / diameter / BC; each list ends with "Other" (Zeke), which opens an optional name box under it
+  (#hbmo / #hbno, makerNow / bulletNow); an Other maker's bullet is Other too; replaced Bullet maker /
   library / Other maker / Bullet name),
   Powder and seating (powder, charge, C.O.L.), Velocity (velocity, barrel, with grey .fhint notes "from manual or
   chrono" / "manual's test barrel or yours"), then a "More details (purpose, cost, notes)" drop-down (details.hcd),
