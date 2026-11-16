@@ -294,6 +294,7 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .g2,.g3{display:grid;gap:8px;margin-top:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
 .g2>div,.g3>div{min-width:0}
 .g3.gpw{grid-template-columns:2fr 1fr 1fr}
+input.hoth{margin-top:6px}
 .hsec{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}.hsec>h4{margin:0 0 10px;font-size:.95rem}.hsec>h4+.g2,.hsec>h4+.g3{margin-top:0}   /* handload form groups (Zeke, Nov 16 2026) */
 .fhint{display:block;font-size:.72rem;line-height:1.25;color:var(--muted);margin-top:3px}   /* where a typed figure comes from (handload form) */
 @media(max-width:340px){.g3{grid-template-columns:1fr 1fr}}
@@ -1743,16 +1744,16 @@ function handDialog(rec,done){
     <div class="hnew" hidden style="margin-top:12px"><label class="l">NEW CARTRIDGE NAME</label><input id="hnn" autocomplete="off" placeholder="e.g. .32-20 Winchester"></div>
     <div class="g2 hnew" hidden><div><label class="l">TYPE</label><select id="hnt">${HAND_KINDS.map(c=>`<option value="${esc(c.title)}">${esc(catName(c))}</option>`).join("")}</select></div><div><label class="l">BULLET DIAMETER (IN)</label><input id="hnd" inputmode="decimal" placeholder="e.g. .312"></div></div>
     <div class="note hnew" hidden>The type sets the usual gun weight, sight-in distance and barrel math.</div>
-    <div class="hsec"><h4>Bullet</h4><div class="g2" style="margin-top:0"><div><label class="l">MAKER</label><div><select id="hbmk" aria-label="Bullet maker"></select></div></div><div><label class="l">BULLET</label><div><select id="hbs" aria-label="Bullet"></select></div></div></div><small class="fhint">pick a bullet to fill in weight, diameter and BC</small>
+    <div class="hsec"><h4>Bullet</h4><div class="g2" style="margin-top:0"><div><label class="l">MAKER</label><div><select id="hbmk" aria-label="Bullet maker"></select></div><input id="hbmo" class="hoth" hidden autocomplete="off" placeholder="maker (optional)" aria-label="Bullet maker"></div><div><label class="l">BULLET</label><div><select id="hbs" aria-label="Bullet"></select></div><input id="hbno" class="hoth" hidden autocomplete="off" placeholder="bullet name (optional)" aria-label="Bullet name"></div></div><small class="fhint">pick a bullet to fill in weight, diameter and BC</small>
     <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal" placeholder="optional"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal" placeholder="optional"></div></div></div>
     <div class="hsec"><h4>Powder and seating</h4><div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("hpw")}</div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN)</label><input id="hcol" inputmode="decimal" placeholder="optional"></div></div></div>
     <div class="hsec"><h4>Velocity</h4><div class="g2"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"><small class="fhint">from manual or chrono</small></div><div><label class="l">BARREL (IN)</label><input id="hbl2" inputmode="decimal" placeholder="optional"><small class="fhint">manual's test barrel or yours</small></div></div></div>
     <details class="btab hcd" id="hcd"><summary>More details <span class="muted" style="font-weight:500">(purpose, cost, notes)</span></summary>
     <div class="g2"><div><label class="l">PURPOSE</label><select id="hpu">${PURPOSES.map(x=>`<option>${x}</option>`).join("")}</select></div><div><label class="l">NOTES</label><input id="hno" autocomplete="off" placeholder="optional"></div></div>
-    <label class="l" style="margin-top:14px">COST <span style="font-weight:500;text-transform:none">(optional)</span></label>
-    <div class="g3" style="margin-top:6px"><div><label class="l">BULLET $ EACH</label><input id="hcb" inputmode="decimal"></div><div><label class="l">POWDER $ / LB</label><input id="hcp" inputmode="decimal"></div><div><label class="l">PRIMER $ EACH</label><input id="hcr" inputmode="decimal"></div></div>
+    <div class="hsec"><h4>Cost <span class="muted" style="font-weight:500">(optional)</span></h4>
+    <div class="g3"><div><label class="l">BULLET $ EACH</label><input id="hcb" inputmode="decimal"></div><div><label class="l">POWDER $ / LB</label><input id="hcp" inputmode="decimal"></div><div><label class="l">PRIMER $ EACH</label><input id="hcr" inputmode="decimal"></div></div>
     <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div>
-    <div class="costlbl" id="hcost"></div></details>
+    <div class="costlbl" id="hcost"></div></div></details>
     <div class="safety"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div>
     <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button><button class="btn" id="hclear">Clear</button></div>`);
   const q=x=>$(x,m);
@@ -1778,17 +1779,21 @@ function handDialog(rec,done){
   // then split back into two): both open the search pop-up / bottom sheet. Maker lists the makers with
   // a library bullet that fits the cartridge (by diameter, not cartridge); Bullet lists that maker's
   // fitting bullets (every maker's, under headings, while no maker is picked); picking a bullet fills
-  // weight, diameter and BC; any other maker or bullet is typed ("Use …")
+  // weight, diameter and BC; "Other" (last row; Zeke, Nov 16 2026) opens a box under it to type a name,
+  // if wanted. A maker that isn't in the library is Other, and so is its bullet
   const catOf=c=>c===NEWC?HAND_KINDS.find(k=>k.title===q("#hnt").value):(pickOf(c)||{}).cat;
   const fits=b=>{const c=q("#hc").value,k=catOf(c),o=c===NEWC?null:pickOf(c);return bulletFits(b,diaOf(c),!!(k&&k.group==="Handgun"),o&&o.cart);};
-  const MAKERS=[...new Set(BULLETS.map(b=>b.maker))].sort((x,y)=>y.length-x.length);
-  let bul={maker:"",name:""};
-  const bms=q("#hbmk"),bs=q("#hbs");
+  const LIB=new Set(BULLETS.map(b=>b.maker)),bms=q("#hbmk"),bs=q("#hbs"),mo=q("#hbmo"),bo=q("#hbno");
+  let bul={maker:"",name:"",om:false,ob:false};   // om / ob: "Other" maker / bullet, named in #hbmo / #hbno
   const show1=(sel,t)=>{sel.innerHTML=`<option value="">Choose…</option>`+(t?`<option value="1" selected>${esc(t)}</option>`:"");sel.value=t?"1":"";};
-  const setBul=(maker,name)=>{bul={maker:(maker||"").trim(),name:(name||"").trim()};show1(bms,bul.maker);show1(bs,bul.name);};
-  const typedBul=t=>{const mk=MAKERS.find(x=>t.toLowerCase().startsWith(x.toLowerCase()+" "));return mk?[mk,t.slice(mk.length).trim()]:[bul.maker,t];};
+  const drawBul=()=>{show1(bms,bul.om?"Other":bul.maker);show1(bs,bul.ob?"Other":bul.name);
+    mo.hidden=!bul.om;bo.hidden=!bul.ob;if(bul.om)mo.value=bul.maker;if(bul.ob)bo.value=bul.name;};
+  const libBul=(mk,nm)=>BULLETS.some(b=>b.maker===mk&&b.name===nm);
+  const setBul=(maker,name)=>{maker=(maker||"").trim();name=(name||"").trim();
+    const om=!!maker&&!LIB.has(maker);bul={maker,name,om,ob:om||(!!name&&!libBul(maker,name))};drawBul();};
+  const makerNow=()=>bul.om?mo.value.trim():bul.maker,bulletNow=()=>bul.ob?bo.value.trim():bul.name;
   const tidy=t=>t.split(/\s+/).join(" ").slice(0,80);
-  const typeMore=open=>{open("");const sq=document.querySelector(".sheetbg .sq");if(sq)sq.focus();};
+  const typeIn=el=>{if(!touch)el.focus();};
   const cover=(sel,label,open)=>{
     const cv=document.createElement("button");cv.type="button";cv.className="selcover";cv.setAttribute("aria-label",label);
     sel.parentElement.style.position="relative";sel.tabIndex=-1;sel.parentElement.appendChild(cv);
@@ -1798,19 +1803,19 @@ function handDialog(rec,done){
       else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();open(e.key);}
     };
     return cv;};
-  const makerPick={text:x=>x,none:"bullet maker",cur:()=>bul.maker,
-    pick:x=>{if(x!==bul.maker)setBul(x,BULLETS.some(b=>b.maker===x&&b.name===bul.name)?bul.name:"");},
-    add:{text:t=>t?`+ Use “${t}”`:"+ Type a maker that isn't listed",pick:t=>{if(t)setBul(tidy(t),BULLETS.some(b=>b.name===bul.name)?"":bul.name);else typeMore(openMaker);}}};
+  const makerPick={text:x=>x,none:"bullet maker",cur:()=>bul.om?null:bul.maker,
+    pick:x=>{const nm=bulletNow();bul={maker:x,name:libBul(x,nm)||bul.ob?nm:"",om:false,ob:bul.ob&&!libBul(x,nm)};drawBul();},
+    add:{text:t=>t?`Other: “${t}”`:"Other",pick:t=>{const nm=bulletNow();bul={maker:tidy(t),name:bul.ob?nm:"",om:true,ob:true};drawBul();typeIn(mo);}}};
   const bulPick={text:b=>`${b.name} · ${g(b.weight)} gr`,find:b=>`${b.maker} ${b.name} ${g(b.weight)} gr`,none:"bullet",
-    cur:()=>BULLETS.find(b=>b.maker===bul.maker&&b.name===bul.name),
+    cur:()=>bul.ob?null:BULLETS.find(b=>b.maker===bul.maker&&b.name===bul.name),
     pick:b=>{setBul(b.maker,b.name);q("#hgr").value=g(b.weight);q("#hdm").value=g(b.diameter);q("#hbc").value=g(b.bc);},
-    add:{text:t=>t?`+ Use “${t}”`:"+ Type a bullet that isn't listed",pick:t=>{if(t)setBul(...typedBul(tidy(t)));else typeMore(openBul);}}};
+    add:{text:t=>t?`Other: “${t}”`:"Other",pick:t=>{bul=Object.assign({},bul,{maker:makerNow(),name:tidy(t),ob:true});drawBul();typeIn(bo);}}};
   let mcv,bcv;
   const openMaker=typed=>{const list=[...new Set(BULLETS.filter(fits).map(b=>b.maker))].sort();
     touch?pickSheet(list,makerPick):pickSheet(list,makerPick,{el:bms,input:mcv,typed:typed||""});};
   const openBul=typed=>{
-    // a typed maker (not in the library) has no list: its bullet is typed too
-    const mine=!!bul.maker;
+    // an Other maker has no list: its bullet is Other too
+    const mine=!!bul.maker||bul.om;
     const list=BULLETS.filter(b=>fits(b)&&(!mine||b.maker===bul.maker)).sort((x,y)=>x.maker.localeCompare(y.maker)||x.weight-y.weight||x.name.localeCompare(y.name));
     const o=Object.assign({},bulPick,mine?{}:{head:b=>b.maker});
     touch?pickSheet(list,o):pickSheet(list,o,{el:bs,input:bcv,typed:typed||""});};
@@ -1883,7 +1888,7 @@ function handDialog(rec,done){
       const tot=num("hct","Total cost",0,null,true);
       const cost=tot>0?tot:costParts(Object.assign({powder_gr:pg},parts)).total;
       // the cost is optional (Zeke, Nov 2026): none given saves 0, shown "—" and graded without cost
-      const mk=bul.maker,bn=bul.name,pw=q("#hpw").value.trim();
+      const mk=makerNow(),bn=bulletNow(),pw=q("#hpw").value.trim();
       let name=q("#hn").value.trim();
       if(!name)name=[mk,bn,g(gr)+" gr"].filter(Boolean).join(" ")+(pw?` + ${pw} ${g(pg)} gr`:` + ${g(pg)} gr`);
       r=Object.assign({id:edit?rec.id:"h"+Date.now()+Math.random().toString(36).slice(2,6),category:cat.title,cartridge:cart,name,bullet_maker:mk,bullet:bn,
