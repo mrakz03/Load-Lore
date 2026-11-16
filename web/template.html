@@ -1736,21 +1736,21 @@ function handDialog(rec,done){
   const pickOf=t=>{t=(t||"").trim();const lo=t.toLowerCase();return opts.find(o=>o.text===t)||opts.find(o=>o.text.toLowerCase()===lo)||opts.find(o=>o.cart.toLowerCase()===lo)||null;};
   const [m,close]=modal(`
     <h3 style="margin:0 0 4px">${edit?"Edit handload":"New handload"}</h3>
-    <label class="l" style="margin-top:12px">LOAD NAME (OPTIONAL)</label><input id="hn" autocomplete="off" placeholder="e.g. Deer load">
+    <label class="l" style="margin-top:12px">LOAD NAME</label><input id="hn" autocomplete="off" placeholder="optional, e.g. Deer load">
     <label class="l" style="margin-top:14px">CARTRIDGE</label><div><select id="hc"><option value="">Choose…</option>${[...new Set(opts.map(o=>o.cat))].map(c=>`<optgroup label="${esc(catName(c))}">${opts.filter(o=>o.cat===c).map(o=>`<option value="${esc(o.text)}">${esc(o.cart)}</option>`).join("")}</optgroup>`).join("")}<option value="${NEWC}">New cartridge (below)</option></select></div>
     <div class="hnew" hidden style="margin-top:12px"><label class="l">NEW CARTRIDGE NAME</label><input id="hnn" autocomplete="off" placeholder="e.g. .32-20 Winchester"></div>
     <div class="g2 hnew" hidden><div><label class="l">TYPE</label><select id="hnt">${HAND_KINDS.map(c=>`<option value="${esc(c.title)}">${esc(catName(c))}</option>`).join("")}</select></div><div><label class="l">BULLET DIAMETER (IN)</label><input id="hnd" inputmode="decimal" placeholder="e.g. .312"></div></div>
     <div class="note hnew" hidden>The type sets the usual gun weight, sight-in distance and barrel math.</div>
     <div class="g2"><div><label class="l">BULLET MAKER</label><select id="hbm"></select><input id="hbmo" autocomplete="off" placeholder="Type the maker" aria-label="Bullet maker" style="display:none;margin-top:6px"></div><div><label class="l">BULLET (LIBRARY)</label><select id="hbl"></select></div></div>
-    <label class="l" style="margin-top:14px">BULLET NAME</label><input id="hbn" autocomplete="off" placeholder="e.g. ELD-M">
-    <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal"></div></div>
+    <label class="l" style="margin-top:14px">BULLET NAME</label><input id="hbn" autocomplete="off" placeholder="optional, e.g. ELD-M">
+    <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal" placeholder="optional"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal" placeholder="optional"></div></div>
     <div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("hpw")}</div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN)</label><input id="hcol" inputmode="decimal" placeholder="optional"></div></div>
-    <div class="g3"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"></div><div><label class="l">BARREL (IN)</label><input id="hbl2" inputmode="decimal"></div><div><label class="l">PURPOSE</label><select id="hpu">${PURPOSES.map(x=>`<option>${x}</option>`).join("")}</select></div></div>
+    <div class="g3"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"></div><div><label class="l">BARREL (IN)</label><input id="hbl2" inputmode="decimal" placeholder="optional"></div><div><label class="l">PURPOSE</label><select id="hpu">${PURPOSES.map(x=>`<option>${x}</option>`).join("")}</select></div></div>
     <details class="btab hcd" id="hcd"><summary>Cost (optional breakdown)</summary>
     <div class="g3"><div><label class="l">BULLET $ EACH</label><input id="hcb" inputmode="decimal"></div><div><label class="l">POWDER $ / LB</label><input id="hcp" inputmode="decimal"></div><div><label class="l">PRIMER $ EACH</label><input id="hcr" inputmode="decimal"></div></div>
     <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div></details>
     <div class="costlbl" id="hcost"></div>
-    <label class="l" style="margin-top:14px">NOTES</label><input id="hno" autocomplete="off">
+    <label class="l" style="margin-top:14px">NOTES</label><input id="hno" autocomplete="off" placeholder="optional">
     <div class="safety"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div>
     <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button><button class="btn" id="hclear">Clear</button></div>`);
   const q=x=>$(x,m);
@@ -2054,12 +2054,12 @@ function ladderDialog(t,done){
   const [m,close]=modal(`<h3 style="margin:0 0 4px">${edit?"Edit ladder test":"New ladder test"}</h3>
     ${hands.length?'<button type="button" class="link" id="lfromh">Copy from a handload ›</button>':""}
     <label class="l" style="margin-top:12px">CARTRIDGE</label><button type="button" class="lcart" id="lcb"></button>
-    <div class="g2"><div><label class="l">BULLET</label><input id="lbu" autocomplete="off" placeholder="e.g. Hornady ELD-M"></div><div><label class="l">WEIGHT (GR)</label><input id="lbw" inputmode="decimal"></div></div>
-    <div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("lpw")}</div><div><label class="l">BARREL (IN)</label><input id="lbr" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN)</label><input id="lcol" inputmode="decimal" placeholder="optional"></div></div>
-    ${edit?"":`<div class="g3" style="align-items:end"><div><label class="l">FIRST CHARGE (GR)</label><input id="lc0" inputmode="decimal"></div><div><label class="l">STEP (GR)</label><input id="lcs" inputmode="decimal"></div><div><label class="l">CHARGES</label><input id="lcn" inputmode="numeric"></div></div>
+    <div class="g2"><div><label class="l">BULLET</label><input id="lbu" autocomplete="off" placeholder="optional"></div><div><label class="l">WEIGHT (GR)</label><input id="lbw" inputmode="decimal" placeholder="optional"></div></div>
+    <div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("lpw")}</div><div><label class="l">BARREL (IN)</label><input id="lbr" inputmode="decimal" placeholder="optional"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN)</label><input id="lcol" inputmode="decimal" placeholder="optional"></div></div>
+    ${edit?"":`<div class="g3" style="align-items:end"><div><label class="l">FIRST CHARGE (GR)</label><input id="lc0" inputmode="decimal" placeholder="optional"></div><div><label class="l">STEP (GR)</label><input id="lcs" inputmode="decimal" placeholder="optional"></div><div><label class="l">CHARGES</label><input id="lcn" inputmode="numeric" placeholder="optional"></div></div>
     <div class="note">Optional: fills in the ladder's charges. You can add, change or remove them later.</div>`}
-    <div class="g2"><div><label class="l">TEST NAME (OPTIONAL)</label><input id="lnm" autocomplete="off"></div><div><label class="l">DATE</label><input id="ldt" type="date"></div></div>
-    <label class="l" style="margin-top:14px">NOTES (PRIMER, BRASS, WEATHER...)</label><input id="lno" autocomplete="off">
+    <div class="g2"><div><label class="l">TEST NAME</label><input id="lnm" autocomplete="off" placeholder="optional"></div><div><label class="l">DATE</label><input id="ldt" type="date"></div></div>
+    <label class="l" style="margin-top:14px">NOTES (PRIMER, BRASS, WEATHER...)</label><input id="lno" autocomplete="off" placeholder="optional">
     <div class="safety"><b class="dis">YOUR OWN RESULTS</b>${esc(LADDER_NOTE)}</div>
     <div class="btns"><button class="btn p" id="lsv">${edit?"Save changes":"Start test"}</button><button class="btn" id="lcx">Cancel</button></div>`);
   const q=x=>$(x,m),touch=matchMedia("(pointer:coarse)").matches,cb=q("#lcb");
