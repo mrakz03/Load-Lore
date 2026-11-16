@@ -211,7 +211,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (#hbmo / #hbno, makerNow / bulletNow); an Other maker's bullet is Other too; replaced Bullet maker /
   library / Other maker / Bullet name),
   Powder and seating (powder, charge, C.O.L.), Velocity (velocity, barrel, with grey .fhint notes "from manual or
-  chrono" / "manual's test barrel or yours"), then a "More details (purpose, cost, notes)" drop-down (details.hcd),
+  chrono" / "manual's test barrel or yours"), then a "More details (purpose, cost, notes)" drop-down (details.hcd; its Cost part is a .hsec heading like the others),
   open when the handload has a cost, notes or a purpose other than Hunting. Optional boxes show "optional".
   A "Clear" button after Save / Cancel (Zeke, Nov 8 2026: web #hclear -> fill({}), desktop clear())
   empties every box after a yes / no confirmation and keeps the form open (an edited handload keeps

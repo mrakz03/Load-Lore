@@ -1750,10 +1750,10 @@ function handDialog(rec,done){
     <div class="hsec"><h4>Velocity</h4><div class="g2"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"><small class="fhint">from manual or chrono</small></div><div><label class="l">BARREL (IN)</label><input id="hbl2" inputmode="decimal" placeholder="optional"><small class="fhint">manual's test barrel or yours</small></div></div></div>
     <details class="btab hcd" id="hcd"><summary>More details <span class="muted" style="font-weight:500">(purpose, cost, notes)</span></summary>
     <div class="g2"><div><label class="l">PURPOSE</label><select id="hpu">${PURPOSES.map(x=>`<option>${x}</option>`).join("")}</select></div><div><label class="l">NOTES</label><input id="hno" autocomplete="off" placeholder="optional"></div></div>
-    <label class="l" style="margin-top:14px">COST <span style="font-weight:500;text-transform:none">(optional)</span></label>
-    <div class="g3" style="margin-top:6px"><div><label class="l">BULLET $ EACH</label><input id="hcb" inputmode="decimal"></div><div><label class="l">POWDER $ / LB</label><input id="hcp" inputmode="decimal"></div><div><label class="l">PRIMER $ EACH</label><input id="hcr" inputmode="decimal"></div></div>
+    <div class="hsec"><h4>Cost <span class="muted" style="font-weight:500">(optional)</span></h4>
+    <div class="g3"><div><label class="l">BULLET $ EACH</label><input id="hcb" inputmode="decimal"></div><div><label class="l">POWDER $ / LB</label><input id="hcp" inputmode="decimal"></div><div><label class="l">PRIMER $ EACH</label><input id="hcr" inputmode="decimal"></div></div>
     <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div>
-    <div class="costlbl" id="hcost"></div></details>
+    <div class="costlbl" id="hcost"></div></div></details>
     <div class="safety"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div>
     <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button><button class="btn" id="hclear">Clear</button></div>`);
   const q=x=>$(x,m);
