@@ -373,7 +373,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lpick .l{font-size:.72rem;font-weight:700;letter-spacing:.04em;color:var(--muted)}.lpick b{font-size:1.15rem}.lpick>span:last-child{color:var(--muted);font-size:.85rem}
 @media(max-width:600px){.lpick{grid-template-columns:auto 1fr}.lpick>span:last-child{grid-column:1/-1}}
 .lmk{margin-top:12px}.lmk select{max-width:16em}
-.lwarn{color:var(--danger);font-weight:700}.lwarn.lmine{color:var(--text);font-weight:600;font-size:.9rem}
+.lwarn{color:var(--danger);font-weight:700}
 .lch{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline;margin-bottom:6px}.lch .muted{font-size:.8rem}
 .lchart svg{display:block;max-width:100%;overflow:visible}
 .lchart text{fill:var(--muted);font-size:12px;font-family:inherit}.lchart text.ax{font-weight:700;font-size:11px}
@@ -1771,7 +1771,7 @@ function ladderPage(t){
     else lines.push(`<p style="margin:0"><b>No clear flat spot.</b> <span class="muted">The speed rises about evenly${a.overall!=null?` (${a.overall.toFixed(0)} fps per grain)`:""}. Smaller steps or more shots per charge may show one.</span></p>`);
     if(a.steadiest)lines.push(`<div class="lpick"><span class="l">MOST CONSISTENT</span><b>${g(a.steadiest.gr)} gr</b><span>SD ${a.steadiest.sd.toFixed(1)} fps, ES ${fps0(a.steadiest.es)} fps over ${a.steadiest.n} shots${a.steadiest.n<5?" (five or more shots give a truer SD)":""}</span></div>`);
     if(a.tight)lines.push(`<div class="lpick"><span class="l">SMALLEST GROUP</span><b>${g(a.tight.gr)} gr</b><span>${g(a.tight.group)} in</span></div>`);
-    if(a.stop)lines.push(`<p class="lwarn lmine" style="margin:10px 0 0">You marked pressure signs at ${g(a.stop.gr)} gr, so that charge and the ones above it are left out of the picks.</p>`);
+    if(a.stop)lines.push(`<p class="lwarn" style="margin:10px 0 0">⚠ You marked pressure signs at ${g(a.stop.gr)} gr, so that charge and the ones above it are left out of the picks.</p>`);
     const pick=a.best||a.steadiest||a.ok[a.ok.length-1];
     if(a.ok.length)lines.push(`<div class="lmk"><label class="l" for="lmks">MAKE A HANDLOAD FROM</label><div class="prow" style="margin-top:0"><select id="lmks">${a.ok.map(r=>`<option value="${r.gr}"${r===pick?" selected":""}>${g(r.gr)} gr  ·  ${fps0(r.mean)} fps</option>`).join("")}</select><button class="btn p" id="lmkb">Make handload</button></div></div>`);
     sum.innerHTML=lines.join("");
