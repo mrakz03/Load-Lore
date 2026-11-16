@@ -1743,7 +1743,7 @@ function handDialog(rec,done){
     <div class="hnew" hidden style="margin-top:12px"><label class="l">NEW CARTRIDGE NAME</label><input id="hnn" autocomplete="off" placeholder="e.g. .32-20 Winchester"></div>
     <div class="g2 hnew" hidden><div><label class="l">TYPE</label><select id="hnt">${HAND_KINDS.map(c=>`<option value="${esc(c.title)}">${esc(catName(c))}</option>`).join("")}</select></div><div><label class="l">BULLET DIAMETER (IN)</label><input id="hnd" inputmode="decimal" placeholder="e.g. .312"></div></div>
     <div class="note hnew" hidden>The type sets the usual gun weight, sight-in distance and barrel math.</div>
-    <div class="hsec"><h4>Bullet</h4><div><select id="hbs" aria-label="Bullet"></select></div><small class="fhint">pick one to fill in its weight, diameter and BC, or type your own</small>
+    <div class="hsec"><h4>Bullet</h4><div class="g2" style="margin-top:0"><div><label class="l">MAKER</label><div><select id="hbmk" aria-label="Bullet maker"></select></div></div><div><label class="l">BULLET</label><div><select id="hbs" aria-label="Bullet"></select></div></div></div><small class="fhint">pick a bullet to fill in weight, diameter and BC</small>
     <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal" placeholder="optional"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal" placeholder="optional"></div></div></div>
     <div class="hsec"><h4>Powder and seating</h4><div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("hpw")}</div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN)</label><input id="hcol" inputmode="decimal" placeholder="optional"></div></div></div>
     <div class="hsec"><h4>Results</h4><div class="g2"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"><small class="fhint">from manual or chrono</small></div><div><label class="l">BARREL (IN)</label><input id="hbl2" inputmode="decimal" placeholder="optional"><small class="fhint">manual's test barrel or yours</small></div></div></div>
@@ -1774,33 +1774,47 @@ function handDialog(rec,done){
       pickSheet(opts,{text:x=>x.textContent,none,cur:()=>opts.find(x=>x.value===sel.value),pick:x=>{sel.value=x.value;sel.dispatchEvent(new Event("change"));}});
     };
   };
-  // one Bullet box (Zeke, Nov 16 2026: was maker, library, other maker and bullet name): the search
-  // pop-up / bottom sheet lists the library bullets that fit the cartridge (by diameter, not cartridge)
-  // under their maker's heading; picking one fills weight, diameter and BC; any other bullet is typed
+  // Maker + Bullet boxes (Zeke, Nov 16 2026: was maker, library, other maker and bullet name; one box,
+  // then split back into two): both open the search pop-up / bottom sheet. Maker lists the makers with
+  // a library bullet that fits the cartridge (by diameter, not cartridge); Bullet lists that maker's
+  // fitting bullets (every maker's, under headings, while no maker is picked); picking a bullet fills
+  // weight, diameter and BC; any other maker or bullet is typed ("Use …")
   const catOf=c=>c===NEWC?HAND_KINDS.find(k=>k.title===q("#hnt").value):(pickOf(c)||{}).cat;
   const fits=b=>{const c=q("#hc").value,k=catOf(c),o=c===NEWC?null:pickOf(c);return bulletFits(b,diaOf(c),!!(k&&k.group==="Handgun"),o&&o.cart);};
   const MAKERS=[...new Set(BULLETS.map(b=>b.maker))].sort((x,y)=>y.length-x.length);
   let bul={maker:"",name:""};
-  const bs=q("#hbs");
-  const setBul=(maker,name)=>{bul={maker:(maker||"").trim(),name:(name||"").trim()};const t=[bul.maker,bul.name].filter(Boolean).join(" ");
-    bs.innerHTML=`<option value="">Choose…</option>`+(t?`<option value="1" selected>${esc(t)}</option>`:"");bs.value=t?"1":"";};
-  const typedBul=t=>{t=t.split(/\s+/).join(" ").slice(0,80);const mk=MAKERS.find(x=>t.toLowerCase().startsWith(x.toLowerCase()+" "));return mk?[mk,t.slice(mk.length).trim()]:["",t];};
-  const bulPick={text:b=>`${b.name} · ${g(b.weight)} gr`,find:b=>`${b.maker} ${b.name} ${g(b.weight)} gr`,head:b=>b.maker,none:"bullet",
+  const bms=q("#hbmk"),bs=q("#hbs");
+  const show1=(sel,t)=>{sel.innerHTML=`<option value="">Choose…</option>`+(t?`<option value="1" selected>${esc(t)}</option>`:"");sel.value=t?"1":"";};
+  const setBul=(maker,name)=>{bul={maker:(maker||"").trim(),name:(name||"").trim()};show1(bms,bul.maker);show1(bs,bul.name);};
+  const typedBul=t=>{const mk=MAKERS.find(x=>t.toLowerCase().startsWith(x.toLowerCase()+" "));return mk?[mk,t.slice(mk.length).trim()]:[bul.maker,t];};
+  const tidy=t=>t.split(/\s+/).join(" ").slice(0,80);
+  const typeMore=open=>{open("");const sq=document.querySelector(".sheetbg .sq");if(sq)sq.focus();};
+  const cover=(sel,label,open)=>{
+    const cv=document.createElement("button");cv.type="button";cv.className="selcover";cv.setAttribute("aria-label",label);
+    sel.parentElement.style.position="relative";sel.tabIndex=-1;sel.parentElement.appendChild(cv);
+    cv.onclick=()=>open();cv.onfocus=()=>sel.classList.add("focus");cv.onblur=()=>sel.classList.remove("focus");
+    cv.onkeydown=e=>{
+      if(["ArrowDown","ArrowUp","Enter"," "].includes(e.key)){e.preventDefault();open();}
+      else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();open(e.key);}
+    };
+    return cv;};
+  const makerPick={text:x=>x,none:"bullet maker",cur:()=>bul.maker,
+    pick:x=>{if(x!==bul.maker)setBul(x,BULLETS.some(b=>b.maker===x&&b.name===bul.name)?bul.name:"");},
+    add:{text:t=>t?`+ Use “${t}”`:"+ Type a maker that isn't listed",pick:t=>{if(t)setBul(tidy(t),BULLETS.some(b=>b.name===bul.name)?"":bul.name);else typeMore(openMaker);}}};
+  const bulPick={text:b=>`${b.name} · ${g(b.weight)} gr`,find:b=>`${b.maker} ${b.name} ${g(b.weight)} gr`,none:"bullet",
     cur:()=>BULLETS.find(b=>b.maker===bul.maker&&b.name===bul.name),
     pick:b=>{setBul(b.maker,b.name);q("#hgr").value=g(b.weight);q("#hdm").value=g(b.diameter);q("#hbc").value=g(b.bc);},
-    add:{text:t=>t?`+ Use “${t}”`:"+ Type a bullet that isn't listed",
-      pick:t=>{if(t)setBul(...typedBul(t));else{openBul("");const sq=document.querySelector(".sheetbg .sq");if(sq)sq.focus();}}}};
-  const bcv=document.createElement("button");
-  bcv.type="button";bcv.className="selcover";bcv.setAttribute("aria-label","Choose a bullet");
-  bs.parentElement.style.position="relative";bs.tabIndex=-1;bs.parentElement.appendChild(bcv);
-  const openBul=typed=>{const list=BULLETS.filter(fits).sort((x,y)=>x.maker.localeCompare(y.maker)||x.weight-y.weight||x.name.localeCompare(y.name));
-    touch?pickSheet(list,bulPick):pickSheet(list,bulPick,{el:bs,input:bcv,typed:typed||""});};
-  bcv.onclick=()=>openBul();
-  bcv.onfocus=()=>bs.classList.add("focus");bcv.onblur=()=>bs.classList.remove("focus");
-  bcv.onkeydown=e=>{
-    if(["ArrowDown","ArrowUp","Enter"," "].includes(e.key)){e.preventDefault();openBul();}
-    else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();openBul(e.key);}
-  };
+    add:{text:t=>t?`+ Use “${t}”`:"+ Type a bullet that isn't listed",pick:t=>{if(t)setBul(...typedBul(tidy(t)));else typeMore(openBul);}}};
+  let mcv,bcv;
+  const openMaker=typed=>{const list=[...new Set(BULLETS.filter(fits).map(b=>b.maker))].sort();
+    touch?pickSheet(list,makerPick):pickSheet(list,makerPick,{el:bms,input:mcv,typed:typed||""});};
+  const openBul=typed=>{
+    // a typed maker (not in the library) has no list: its bullet is typed too
+    const mine=!!bul.maker;
+    const list=BULLETS.filter(b=>fits(b)&&(!mine||b.maker===bul.maker)).sort((x,y)=>x.maker.localeCompare(y.maker)||x.weight-y.weight||x.name.localeCompare(y.name));
+    const o=Object.assign({},bulPick,mine?{}:{head:b=>b.maker});
+    touch?pickSheet(list,o):pickSheet(list,o,{el:bs,input:bcv,typed:typed||""});};
+  mcv=cover(bms,"Choose a bullet maker",openMaker);bcv=cover(bs,"Choose a bullet",openBul);
   const showCost=()=>{
     const t=parseFloat(q("#hct").value);let c;
     if(t>0)c=t;else c=costParts({bullet_cost:q("#hcb").value,powder_gr:q("#hpg").value,powder_cost_lb:q("#hcp").value,primer_cost:q("#hcr").value,brass_cost:q("#hcs").value,brass_reuse:q("#hcu").value||5}).total;
