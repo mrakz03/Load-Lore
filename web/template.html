@@ -130,7 +130,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .top,#hlist .lc .st,#flist .lc .st{display:none}
   #hlist .lgrid{margin:0 0 6px}#hlist .lc.hl:not(.open){box-shadow:none}
   #hlist .lgrid .lc .trow>.bp{text-align:left;white-space:normal;color:var(--muted)}
-  #hlist .lc>.hdet,#hlist .lc>.hbtns,#hlist .lc>.hlinks{grid-column:1/-1}
+  #hlist .lc>.hdet,#hlist .lc>.hbtns,#hlist .lc>.hlinks,#hlist .lc>.inv{grid-column:1/-1}
   #hlist .lc>.hdet{margin:10px 0 0;max-width:760px}#hlist .lc>.hlinks{margin-bottom:6px}
   :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow>span{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
   :is(#lres,#hlist .lgrid,#flist .lgrid) .lc .trow>.ln{text-align:left;white-space:normal;font-weight:600;line-height:1.3}
@@ -144,6 +144,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   #lres .lc .det>.pdet{display:block;order:1;margin-bottom:6px}
   #lres .lc .det>.muted{order:2}
   #lres .lc .det>.prow{order:3;flex:0 0 auto}
+  #lres .lc .det>.inv{order:3}
   #lres .lc .det>.hbtns{order:4;flex:0 0 auto;margin:0}
   #lres .lc .det>.note{order:5;max-width:900px}
   #lres .lc .det>.btab{order:6}#lres .lc .det>.srcd{order:5;margin:0}#lres .lc .det>.srcd>summary{display:none}   /* PC: the drop-down's link is .srcb, at the right end of the figures */
@@ -153,10 +154,11 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   #lres .lc:not(.hl) .det{display:grid;grid-template-columns:max-content max-content minmax(0,1fr);align-items:start;gap:0 14px;padding:14px 0 2px}   /* roomier, evenly spaced (Zeke, Oct 31 2026): margins, not row gaps, so a missing grade line leaves no extra gap */
   #lres .lc:not(.hl) .det>*{grid-column:1/-1;margin:0}
   #lres .lc:not(.hl) .det>.pdet,#lres .lc:not(.hl) .det>.muted{margin-bottom:20px}
-  #lres .lc:not(.hl) .det>.prow{grid-column:1;grid-row:3;align-self:center}
-  #lres .lc:not(.hl) .det>.hbtns{grid-column:2;grid-row:3;align-self:center}
-  #lres .lc:not(.hl) .det>.srcd{grid-column:3;grid-row:3/span 2;margin:0 0 0 16px}
-  #lres .lc:not(.hl) .det>.btab:not(.srcd){grid-row:4;margin-top:8px}#lres .lc:not(.hl) .det:has(>.srcd[open])>.btab:not(.srcd){grid-column:1/3}
+  #lres .lc:not(.hl) .det>.inv{grid-row:3;margin-bottom:16px}   /* ammo on hand, over the price row */
+  #lres .lc:not(.hl) .det>.prow{grid-column:1;grid-row:4;align-self:center}
+  #lres .lc:not(.hl) .det>.hbtns{grid-column:2;grid-row:4;align-self:center}
+  #lres .lc:not(.hl) .det>.srcd{grid-column:3;grid-row:4/span 2;margin:0 0 0 16px}
+  #lres .lc:not(.hl) .det>.btab:not(.srcd){grid-row:5;margin-top:8px}#lres .lc:not(.hl) .det:has(>.srcd[open])>.btab:not(.srcd){grid-column:1/3}
   #lres .pdet .srcb::before{content:"▸\00a0 "}#lres .pdet .srcb.on::before{content:"▾\00a0 "}
   #lres .pdet .psub{color:var(--muted);font-size:.9rem;font-weight:600;margin-bottom:20px}
   #lres .pdet .tiles{display:flex;flex-wrap:wrap;gap:14px clamp(18px,2.4vw,40px)}
@@ -325,6 +327,26 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 @media(hover:hover){.fav:hover{opacity:1;color:var(--best)}.lc .trow .fav:not(.on){opacity:0}.lc:hover .trow .fav:not(.on){opacity:.55}.lc .trow .fav:not(.on):focus-visible{opacity:1}}   /* PC: an empty star shows only on the row under the mouse */
 .nw{white-space:nowrap}
 .favlink{margin-top:14px;display:inline-flex;align-items:center;gap:6px}.favic{color:var(--best);font-size:1.05em}
+.plinks{display:flex;flex-wrap:wrap;gap:0 26px}
+.invic{display:inline-flex;color:var(--accent)}.invic svg{width:17px;height:17px;fill:currentColor}
+/* ammo on hand (Nov 16 2026): the count box on an opened load, the tag in the lists, the Ammo on hand page */
+.inv{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:12px;cursor:default}
+.inv label{display:flex;align-items:center;gap:8px}
+.inv .l{font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.inv .invn{width:5.5em;padding:8px 10px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.inv .invs{display:flex;align-items:center;gap:6px}
+.inv .inva{width:4.2em;padding:8px;text-align:right;font-variant-numeric:tabular-nums}
+.inv .btn{padding:9px 12px;font-size:.85rem;white-space:nowrap}
+.chip.ivc{color:var(--muted);font-variant-numeric:tabular-nums}.chip.ivc.out{color:var(--danger)}
+.ivsum{display:flex;flex-wrap:wrap;gap:4px 22px;align-items:baseline;margin-top:14px}.ivsum b{font-size:1.3rem}
+.ivgrp{display:flex;justify-content:space-between;align-items:baseline;gap:12px}.ivgrp .muted{font-size:.85rem;font-weight:600;white-space:nowrap}
+.ivrow{padding:12px 14px;margin-bottom:8px}
+.ivrow .ivtop{display:flex;align-items:flex-start;gap:10px}
+.ivrow .ivnm{flex:1;min-width:0;text-align:left;background:none;border:0;padding:0;font:inherit;font-weight:700;line-height:1.3;color:var(--text);cursor:pointer;word-break:break-word}
+.ivrow .ivnm:hover{color:var(--accent)}
+.ivrow .ivx{background:none;border:0;color:var(--muted);font:inherit;font-size:1.2rem;line-height:1;padding:0 2px;cursor:pointer}.ivrow .ivx:hover{color:var(--danger)}
+.ivrow .ivsub{font-size:.82rem;color:var(--muted);margin-top:3px}
+.ivrow .inv{margin-top:10px}
 #flist .lc .st{margin-left:0}
 #flist .lc.open{border-color:var(--accent)}#flist .lc.open .st{display:none}
 .fdet{margin:12px 0 2px;border-top:1px solid var(--border);padding-top:12px;cursor:default}
@@ -845,9 +867,11 @@ const FAV_KEY="cartridge_calc_favs_v1";
 let FAVS=null;
 function readFavs(){
   if(FAVS)return FAVS;FAVS=new Set();
-  try{for(const k of JSON.parse(localStorage.getItem(FAV_KEY)||"[]")||[]){const p=String(k).split("|");if(p.length<3){FAVS.add(k);continue;}const n=RENAMED[p[1]]||p[1];FAVS.add(`${movedCat(p[0],n)}|${(SPLIT[n]||[n])[0]}|${p.slice(2).join("|")}`);}}catch(e){}
+  try{for(const k of JSON.parse(localStorage.getItem(FAV_KEY)||"[]")||[])FAVS.add(savedKey(k));}catch(e){}
   return FAVS;
 }
+// a saved pickKey after cartridge renames / moves / splits (favorites, ammo on hand)
+function savedKey(k){const p=String(k).split("|");if(p.length<3)return k;const n=RENAMED[p[1]]||p[1];return `${movedCat(p[0],n)}|${(SPLIT[n]||[n])[0]}|${p.slice(2).join("|")}`;}
 function toggleFav(k){const f=readFavs();if(f.has(k))f.delete(k);else f.add(k);try{localStorage.setItem(FAV_KEY,JSON.stringify([...f]));}catch(e){}return f.has(k);}
 const STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3-4.6-4.4 6.3-.9z"/></svg>';
 const favBtn=k=>{const on=readFavs().has(k);return `<button class="fav${on?" on":""}" data-fav="${esc(k)}" aria-pressed="${on}" aria-label="Favorite" title="${on?"Remove from favorites":"Add to favorites"}">${STAR}</button>`;};
@@ -859,6 +883,36 @@ function wireFavs(root,after){
     e.stopPropagation();const on=toggleFav(b.dataset.fav);
     root.querySelectorAll(".fav").forEach(x=>{if(x.dataset.fav!==b.dataset.fav)return;x.classList.toggle("on",on);x.setAttribute("aria-pressed",on);x.title=on?"Remove from favorites":"Add to favorites";});
     if(after)after();
+  });
+}
+// ammo on hand (Zeke, Nov 16 2026): how many rounds of each load you have, by pickKey like favorites
+// (a handload by its id), kept on this device in its own key so sync can carry it later:
+// {key: {n: rounds, t: "YYYY-MM-DD" of the last change}}. A count of 0 stays listed ("run out").
+const INV_KEY="cartridge_calc_inventory_v1";
+let INV=null,INV_STEP=20;   // INV_STEP: the last "how many" typed beside Shot / Add
+function readInv(){
+  if(INV)return INV;INV={};
+  try{const o=JSON.parse(localStorage.getItem(INV_KEY)||"{}")||{};for(const [k,v] of Object.entries(o)){const n=Math.round(+(v&&v.n));if(n>=0)INV[savedKey(k)]={n,t:String(v.t||"")};}}catch(e){}
+  return INV;
+}
+function writeInv(){try{localStorage.setItem(INV_KEY,JSON.stringify(readInv()));}catch(e){}}
+function setInv(k,n){const v=readInv();if(n==null)delete v[k];else v[k]={n:Math.max(0,Math.round(n)),t:new Date().toISOString().slice(0,10)};writeInv();}
+const invOf=k=>{const v=readInv()[k];return v?v.n:null;};
+const INV_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V10c0-3 1.3-5.3 2-7 .7 1.7 2 4 2 7v11zm6 0V10c0-3 1.3-5.3 2-7 .7 1.7 2 4 2 7v11zm6 0V10c0-3 1.3-5.3 2-7 .7 1.7 2 4 2 7v11z"/></svg>';
+// a "120 on hand" tag beside a load's name in the lists
+const invChip=k=>{const n=invOf(k);return n==null?"":`<span class="chip ivc${n?"":" out"}">${n?n.toLocaleString()+" on hand":"none on hand"}</span>`;};
+// the count box on an opened load: type the count, or take rounds off (Shot) / put them on (Add)
+const invBox=k=>{const n=invOf(k);return `<div class="inv" data-inv="${esc(k)}"><label><span class="l">On hand</span><input class="invn" inputmode="numeric" value="${n==null?"":n}" placeholder="0" aria-label="Rounds on hand"><span class="muted">rounds</span></label><span class="invs"><input class="inva" inputmode="numeric" value="${INV_STEP}" aria-label="How many rounds"><button class="btn invm" title="Take these rounds off the count">− Shot</button><button class="btn invp" title="Add these rounds to the count">+ Add</button></span></div>`;};
+function wireInv(root,after){
+  root.querySelectorAll(".inv").forEach(box=>{
+    const k=box.dataset.inv,num=box.querySelector(".invn"),amt=box.querySelector(".inva");
+    box.onclick=e=>e.stopPropagation();box.onkeydown=e=>{e.stopPropagation();if(e.key==="Enter"&&e.target.tagName==="INPUT")e.target.blur();};
+    const done=()=>{root.querySelectorAll(".inv").forEach(b=>{if(b.dataset.inv===k)b.querySelector(".invn").value=invOf(k)==null?"":invOf(k);});if(after)after();};
+    num.onchange=()=>{const t=num.value.replace(/[,\s]/g,""),v=parseInt(t,10);setInv(k,t===""?null:v>=0?v:(invOf(k)||0));done();};
+    amt.oninput=()=>{const v=parseInt(amt.value,10);if(v>0)INV_STEP=v;};
+    const step=sign=>{const v=parseInt(amt.value,10);if(!(v>0)){amt.focus();return;}setInv(k,(invOf(k)||0)+sign*v);done();};
+    box.querySelector(".invm").onclick=()=>step(-1);
+    box.querySelector(".invp").onclick=()=>step(1);
   });
 }
 const priceKey=(cat,it)=>`${cat.title}|${it.cartridge}|${it.label}`;
@@ -941,7 +995,7 @@ function lastCat(){try{return localStorage.getItem("cartridge_calc_cat");}catch(
 function drawChrome(){
   const nav=$("#nav");
   nav.innerHTML=NAVS.map(([k,t,ic])=>{
-    const on=NAV.mode===k||k==="loads"&&NAV.mode==="favs";   // Favorite loads belongs to the Load Dictionary
+    const on=NAV.mode===k||k==="loads"&&(NAV.mode==="favs"||NAV.mode==="inv");   // Favorite loads and Ammo on hand belong to the Load Dictionary
     return `<button data-nav="${k}" class="${on?"on":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
       (on&&k==="loads"?`<div class="sub">${menuEntries().map(e=>{
         const btn=c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}${c.group?" child":""}">${esc(catName(c))}</button>`;
@@ -958,7 +1012,7 @@ function drawChrome(){
 // so the browser's back arrow and the phone's back button step back through the app's pages
 // instead of leaving it. how: "pop" (moving through history, add nothing), "replace" (swap
 // this entry), else a new entry. depth counts the app's entries before this one.
-const NAV_MODES=["home","loads","h2h","hand","settings","favs"];
+const NAV_MODES=["home","loads","h2h","hand","settings","favs","inv"];
 const navState=()=>({mode:NAV.mode,cat:NAV.cat?NAV.cat.title:null});
 const navURL=()=>NAV.mode==="home"?location.pathname+location.search:"#"+NAV.mode+(NAV.cat?"/"+encodeURIComponent(NAV.cat.title):"");
 function navRecord(how){
@@ -993,7 +1047,7 @@ function navigate(mode,cat,hid,how){   // hid: the handload the Handloads tab op
   if(NAV.cat&&NAV.cat.group)OPEN_GROUPS.add(NAV.cat.group);   // back on the list, its drop-down is open
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
-  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="hand")showHand(hid);else if(mode==="favs")showFavs();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
+  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="hand")showHand(hid);else if(mode==="favs")showFavs();else if(mode==="inv")showInv();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
   window.scrollTo(0,0);
   fitMenu();
 }
@@ -1052,8 +1106,9 @@ function showPicker(mode){
       const [g,cs]=e,shown=OPEN_GROUPS.has(g);
       return `<button class="cat grp" data-group="${esc(g)}" aria-expanded="${shown}"><b>${esc(g)}&nbsp; ${shown?"▾":"▸"}</b><span class="b">${esc((DATA.group_blurbs||{})[g]||"")}</span><span class="c">${count(cs)}</span></button>`+(shown?cs.map(card).join(""):"");
     }).join("")}</div>
-    <button class="link favlink" id="favgo">${STAR_TXT} Favorite loads${favCount()?` (${favCount()})`:""} ›</button>`;
-  $("#favgo").onclick=()=>navigate("favs");
+    <div class="plinks"><button class="link favlink" id="favgo">${STAR_TXT} Favorite loads${favCount()?` (${favCount()})`:""} ›</button>
+    <button class="link favlink" id="invgo"><span class="invic">${INV_ICON}</span> Ammo on hand${invTotal()?` (${invTotal().toLocaleString()} rounds)`:""} ›</button></div>`;
+  $("#favgo").onclick=()=>navigate("favs");$("#invgo").onclick=()=>navigate("inv");
   app.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
   app.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
 }
@@ -1086,6 +1141,7 @@ function showFavs(){
     return `<div class="fdet"><div class="psub">(${esc(facts)})</div>
       <div class="tiles">${tiles.map(([l,v,k])=>`<div class="tile"><span class="l">${l}</span><span class="tv">${l==="HITS"?v:esc(v)}${GRADES&&r.sc?fbadge(r.sc[k]):""}</span></div>`).join("")}</div>
       ${GRADES?`<div class="muted" style="font-size:.8rem;margin-top:10px">Overall ${r.grade} · ${r.overall.toFixed(0)} · ranks #${r.rank} of ${r.peers} ${esc(it.cartridge)} loads.</div>`:""}
+      ${invBox(pickKey(c,it))}
       <details class="btab srcd fsrc"${F.srcOpen?" open":""}><summary>${it.handload?"Disclaimer":"About these figures"}</summary><div class="note">${esc(note)}</div></details>
       ${ballisticHTML(it,c,F.btOpen)}
       <div class="hbtns"><button class="btn fh2h">${h2hText(c,it)}</button><button class="link fdict">Open in Load Dictionary ›</button></div></div>`;
@@ -1103,10 +1159,11 @@ function showFavs(){
       return `<h3 class="hgrp">${esc(list[0][1].cartridge)} <small>· ${esc(catName(c0))}</small></h3><div class="lgrid" style="margin-top:0;--lcols:${cols}"><div class="lhead"><span class="ln">Load</span><span>${gs?"Grains":"Shot"}</span><span>Use</span><span>Velocity at ${g(d)} yd</span><span>Energy</span><span>Price</span>${GRADES?"<span>Grade</span>":""}</div>${list.map(([c,it])=>{
         const r=handGrade(c,it),k=pickKey(c,it),use=it.handload?"Handload":(it.purpose||it.group||"—");
         const open=F.open===k;
-        return `<div class="lc${it.handload?" hl":""}${open?" open":""}" data-k="${esc(k)}" tabindex="0" role="button" aria-expanded="${open}" aria-label="${esc(it.load)}: show its figures"><div class="top"><div class="nm">${esc(it.load)}${gs?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}<span class="chip">${esc(use)}</span></div>${GRADES?`<div class="sc">${badge(r.grade)}</div>`:""}${favBtn(k)}</div>
-          <div class="trow"><span class="ln">${starName(it.load,k)}</span><span>${gs?g(it.bullet_gr):esc(shotSize(it)[2])}</span><span>${esc(use)}</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
+        return `<div class="lc${it.handload?" hl":""}${open?" open":""}" data-k="${esc(k)}" tabindex="0" role="button" aria-expanded="${open}" aria-label="${esc(it.load)}: show its figures"><div class="top"><div class="nm">${esc(it.load)}${gs?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}<span class="chip">${esc(use)}</span>${invChip(k)}</div>${GRADES?`<div class="sc">${badge(r.grade)}</div>`:""}${favBtn(k)}</div>
+          <div class="trow"><span class="ln">${starName(it.load,k)}${invChip(k)}</span><span>${gs?g(it.bullet_gr):esc(shotSize(it)[2])}</span><span>${esc(use)}</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
           <div class="st"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span>${r.st.cost==null?"no cost given":`<b>${money(r.st.cost)}</b> a round`}</span><span>at ${g(r.dist)} yd</span></div>${open?favDetail(c,it,r):""}</div>`;}).join("")}</div>`;}).join("");
     wireFavs($("#flist"),()=>{if(!favItems().some(([c,it])=>pickKey(c,it)===F.open))F.open=null;});
+    wireInv($("#flist"),draw);
     $("#flist").querySelectorAll(".lc").forEach(el=>{
       const p=all.find(([c,it])=>pickKey(c,it)===el.dataset.k);if(!p)return;const [c,it]=p;
       const k=el.dataset.k,toggle=()=>{F.open=F.open===k?null:k;draw();const o=$("#flist .lc.open");if(o&&o.getBoundingClientRect().bottom>innerHeight)o.scrollIntoView({block:"nearest"});};
@@ -1119,6 +1176,48 @@ function showFavs(){
       el.querySelector(".fdict").onclick=()=>{shared[c.title]=Object.assign({},shared[c.title],{goFav:{cart:it.cartridge,key:it.hid||it.label,load:it.load}});navigate("loads",c);};
       const hb=el.querySelector(".fh2h");
       hb.onclick=()=>{const pk=pickKey(c,it);if(H2H.includes(pk)||H2H.length>=H2H_MAX){navigate("h2h");return;}H2H.push(pk);hb.textContent=h2hText(c,it);};
+    });
+  }
+  draw();
+}
+
+// ---------- Ammo on hand ----------
+// every load with a count (factory or handload), grouped by cartridge like Favorite loads, with
+// each cartridge's total, the grand total and what it's worth at your prices; counts change in place
+function invItems(){
+  const v=readInv(),out=[];if(!Object.keys(v).length)return out;
+  for(const c of CATEGORIES.filter(hasDetail)){syncHand(c);for(const it of state.detail[c.title]){const k=pickKey(c,it);if(v[k])out.push([c,it,k,v[k].n]);}}
+  return out;
+}
+const invTotal=()=>invItems().reduce((t,x)=>t+x[3],0);
+function showInv(){
+  document.title=`${APP_TITLE} — Ammo on hand`;
+  app.classList.remove("dict","h2hp","home","picker");app.classList.add("wide","handp");
+  app.innerHTML=`<div class="phead"><button class="link back" id="iback">‹ Categories</button><h2>Ammo on hand</h2><p class="sub">How many rounds of each load you have, saved on this device. Open any load in the Load Dictionary or Handloads to add it here; count rounds down with Shot after a range trip.</p></div><div id="ilist"></div>`;
+  $("#iback").onclick=()=>navigate("loads");
+  function draw(){
+    const all=invItems(),prices=readPrices();
+    if(!all.length){$("#ilist").innerHTML=`<div class="card hempty"><b>Nothing counted yet</b><p class="muted" style="margin:6px 0 0">Open a load in the Load Dictionary or Handloads and type how many rounds you have in its On hand box.</p></div>`;return;}
+    // price per round: your price, else the catalog estimate; a handload without a cost has none
+    const each=(c,it)=>{if(it.handload)return it.default_cost>0?it.default_cost:null;const p=prices[priceKey(c,it)];return typeof p==="number"?p:it.default_cost;};
+    let rounds=0,worth=0,unpriced=false;
+    for(const [c,it,,n] of all){rounds+=n;const e=each(c,it);if(e==null){if(n)unpriced=true;}else worth+=e*n;}
+    const groups=new Map();
+    all.sort((a,b)=>CATEGORIES.indexOf(a[0])-CATEGORIES.indexOf(b[0])||a[1].cartridge.localeCompare(b[1].cartridge)||lineCmp({it:a[1]},{it:b[1]}))
+      .forEach(p=>{const k=p[0].title+"|"+p[1].cartridge;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(p);});
+    $("#ilist").innerHTML=`<div class="ivsum"><span><b>${rounds.toLocaleString()}</b> rounds</span><span><b>${all.length}</b> load${all.length===1?"":"s"}</span>${worth||!unpriced?`<span>worth about <b>$${Math.round(worth).toLocaleString()}</b>${unpriced?' <small class="muted">(handloads without a cost left out)</small>':""}</span>`:""}</div>`+
+      [...groups.values()].map(list=>{
+        const sub=list.reduce((t,x)=>t+x[3],0),c0=list[0][0];
+        return `<h3 class="hgrp ivgrp"><span>${esc(list[0][1].cartridge)} <small>· ${esc(catName(c0))}</small></span><span class="muted">${sub.toLocaleString()} rounds</span></h3>`+list.map(([c,it,k,n])=>{
+          const e=each(c,it),use=it.handload?"Handload":(it.purpose||it.group||"");
+          const sub2=[c.grain_style?`${g(it.bullet_gr)} gr`:"",use,e==null?"":`${money(e)} a round`].filter(Boolean).join("  ·  ");
+          return `<div class="card ivrow" data-k="${esc(k)}"><div class="ivtop"><button class="ivnm" title="Open in Load Dictionary">${esc(it.load)}</button>${n?"":'<span class="chip ivc out">none on hand</span>'}<button class="ivx" title="Take off this list" aria-label="Take ${esc(it.load)} off this list">×</button></div>
+            <div class="ivsub">${esc(sub2)}</div>${invBox(k)}</div>`;}).join("");}).join("");
+    wireInv($("#ilist"),draw);
+    $("#ilist").querySelectorAll(".ivrow").forEach(el=>{
+      const p=all.find(x=>x[2]===el.dataset.k);if(!p)return;const [c,it,k]=p;
+      el.querySelector(".ivnm").onclick=()=>{shared[c.title]=Object.assign({},shared[c.title],{goFav:{cart:it.cartridge,key:it.hid||it.label,load:it.load}});navigate("loads",c);};
+      el.querySelector(".ivx").onclick=()=>{if(!confirm(`Take "${it.load}" off Ammo on hand? Its count (${invOf(k)}) is forgotten.`))return;setInv(k,null);draw();};
     });
   }
   draw();
@@ -1219,9 +1318,9 @@ function showHand(openId){
     $("#hlist").innerHTML=[...groups.values()].map(list=>`<h3 class="hgrp">${esc(list[0][1].cartridge)} <small>· ${esc(list[0][0].title)}</small></h3><div class="lgrid" style="margin-top:0;--lcols:${cols}">${lhead(handGrade(list[0][0],list[0][1]).dist)}${list.map(([c,it])=>{
       const r=handGrade(c,it),rec=it.rec,open=H.open===rec.id,cp=costParts(rec),hasP=cp.b||cp.p||cp.pr||cp.br;
       const bullet=[rec.bullet_maker,rec.bullet].filter(Boolean).join(" ")||"Bullet";
-      return `<div class="lc hl ${open?"open":""}" data-id="${esc(rec.id)}"><div class="top"><div class="nm">${esc(it.load)}</div>
+      return `<div class="lc hl ${open?"open":""}" data-id="${esc(rec.id)}"><div class="top"><div class="nm">${esc(it.load)}${invChip(pickKey(c,it))}</div>
         ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">#${r.rank} of ${r.peers}</span></div>`:""}</div>
-        <div class="trow"><span class="ln">${esc(it.load)}</span><span class="bp">${esc(bullet)} · ${g(it.bullet_gr)} gr</span><span class="bp">${esc(rec.powder||"—")} · ${g(it.powder_gr)} gr</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
+        <div class="trow"><span class="ln">${esc(it.load)}${invChip(pickKey(c,it))}</span><span class="bp">${esc(bullet)} · ${g(it.bullet_gr)} gr</span><span class="bp">${esc(rec.powder||"—")} · ${g(it.powder_gr)} gr</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
         <div class="st" style="margin-left:0"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span>${r.st.cost==null?"no cost given":`<b>${money(r.st.cost)}</b> a round`}</span><span>at ${g(r.dist)} yd</span></div>
         ${open?`<div class="hdet">
           <span>Bullet</span><span>${esc(bullet)} · ${g(it.bullet_gr)} gr${rec.diameter_in?` · ${g(+rec.diameter_in)} in`:""} · BC ${g(it.bc_g1)}</span>
@@ -1232,6 +1331,7 @@ function showHand(openId){
           ${rec.notes?`<span>Notes</span><span style="font-weight:500">${esc(rec.notes)}</span>`:""}
           ${GRADES?`<span>Grade</span><span style="font-weight:500">${r.grade} · ${r.overall.toFixed(0)}, ranks #${r.rank} of ${r.peers} ${esc(it.cartridge)} loads in the Load Dictionary</span>`:""}
         </div>
+        ${invBox(pickKey(c,it))}
         <div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn d hdel">Delete</button></div>
         <div class="hlinks"><button class="link hdict">Open in Load Dictionary ›</button><button class="link hh2h">${esc(h2hText(c,it))}</button></div>`:""}
       </div>`;}).join("")}</div>`).join("");
@@ -1245,6 +1345,7 @@ function showHand(openId){
       el.querySelector(".hdict").onclick=()=>{shared[c.title]=Object.assign({},shared[c.title],{goHand:id});navigate("loads",c);};
       el.querySelector(".hh2h").onclick=()=>{const k=pickKey(c,it);if(H2H.includes(k)||H2H.length>=H2H_MAX){navigate("h2h");return;}H2H.push(k);draw();};
     });
+    wireInv($("#hlist"),draw);
     if(openId){const el=$("#hlist .lc.open");if(el)el.scrollIntoView({block:"center"});openId=null;}
   }
   $("#hq").oninput=e=>{H.q=e.target.value;draw();};
@@ -1752,7 +1853,7 @@ function openLoads(cat,pane){
     $$("#lcnt").textContent=`${rows.length} of ${out.rows.length} loads at ${g(out.dist)} yards`+(L.purpose!=="All"?` · ${L.purpose} only`:"")+(out.multi&&GRADES?" · ranked within each load type":"");
     // PC (>=900 px): the list reads as a table like the desktop app's, one row per load with its
     // figures in columns; phones keep the cards (.top) and never show .lhead / .trow
-    const tcols=[GRADES&&["#","score",r=>r.rank,"auto"],["Load","brand",r=>`${starName(cat.grain_style?r.it.load:makeLabel(r.it,cat),pickKey(cat,r.it))}${r.it.handload?'<span class="chip">Handload</span>':""}${warn(r.it)}`,"minmax(9em,1fr)"]]
+    const tcols=[GRADES&&["#","score",r=>r.rank,"auto"],["Load","brand",r=>`${starName(cat.grain_style?r.it.load:makeLabel(r.it,cat),pickKey(cat,r.it))}${r.it.handload?'<span class="chip">Handload</span>':""}${invChip(pickKey(cat,r.it))}${warn(r.it)}`,"minmax(9em,1fr)"]]
       .concat(cat.grain_style?[["Grains","grain",r=>g(r.it.bullet_gr),"auto"],["Barrel",null,r=>out.barrel||r.it.barrel_in?g(out.barrel||r.it.barrel_in)+'"':"—","auto"],["Use",null,r=>esc(purposeOf(r.it)||"—"),"auto"]]
         :[["Shot","shot",r=>esc(shotSize(r.it)[2]),"auto"],[cat.payload_col,null,r=>g(r.st.weight),"auto"]])
       .concat([["Velocity","velocity",r=>r.st.velocity.toFixed(0),"auto"],["Energy","energy",r=>r.st.energy.toFixed(0),"auto"],["Recoil","recoil",r=>r.st.recoil.toFixed(1),"auto"]])
@@ -1768,7 +1869,7 @@ function openLoads(cat,pane){
       const fb=k=>GRADES&&r.sc[k]!=null?fbadge(r.sc[k]):`<span style="width:32px"></span>`;
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top">${GRADES?`<span class="rk">#${r.rank}</span>`:""}
-        <div class="nm">${open?`<small class="ct">${esc(it.cartridge||$$("#lc").value)}</small>`:""}${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}${warn(it)}</div>
+        <div class="nm">${open?`<small class="ct">${esc(it.cartridge||$$("#lc").value)}</small>`:""}${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}${invChip(pickKey(cat,it))}${warn(it)}</div>
         ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}${favBtn(pickKey(cat,it))}</div>
         <div class="trow">${tcols.map(c=>`<span${c[0]==="Load"?' class="ln"':c[0]==="#"?' class="rk"':""}>${c[2](r)}</span>`).join("")}</div>
         ${open?`<div class="det">
@@ -1792,6 +1893,7 @@ function openLoads(cat,pane){
           ${cat.terminal?`<div class="row fr"><span class="muted">Taylor KO</span><span class="v">${r.st.taylor.toFixed(1)}</span>${fb("taylor")}</div>
           <div class="row fr"><span class="muted">HITS</span><span class="v">${r.st.hits.toFixed(0)} <small class="muted">(${hitsClass(r.st.hits)})</small></span>${fb("hits")}</div>`:""}
           ${GRADES?`<div class="muted" style="font-size:.8rem;margin-top:4px">Overall ${r.grade} · ${r.overall.toFixed(0)} · ranks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}. Grades compare loads of this cartridge only.</div>`:""}
+          ${invBox(pickKey(cat,it))}
           ${ballisticHTML(it,cat,L.btOpen)}
           <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button></div>
           ${it.handload?`<div class="hbtns"><button class="btn hedit">Edit in Handloads ›</button></div>
@@ -1806,7 +1908,7 @@ function openLoads(cat,pane){
       // default is brand (product line), so it switches between the two)
       $$("#ls").value=k==="brand"?(cur==="brand"?"brandl":cur==="brandl"&&GRADES?"score":"brand")
         :k==="grain"&&cur==="grain"?"grainl":k===cur||k==="grain"&&cur==="grainl"?DEFAULT_SORT():k;render();});
-    wireFavs(box);
+    wireFavs(box);wireInv(box,render);
     box.querySelectorAll(".lc").forEach(c=>{
       const lab=c.dataset.i;
       c.onclick=e=>{if(e.target.closest(".prow,.hbtns,.btab"))return;L.open=L.open===lab?null:lab;render();};
@@ -2098,7 +2200,7 @@ $("#ver").textContent=VERSION_TEXT;
     if(openModalClose){openModalClose();return;}
     if(NAV.mode==="home")AppPlugin.exitApp();
     else if(history.state&&history.state.depth>0)history.back();
-    else if(NAV.cat||NAV.mode==="favs")navigate("loads",null,null,"replace");
+    else if(NAV.cat||NAV.mode==="favs"||NAV.mode==="inv")navigate("loads",null,null,"replace");
     else navigate("home",null,null,"replace");
   });
 })();
