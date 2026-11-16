@@ -61,6 +61,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   figures; a click opens that load's figures in place (Zeke, Nov 7 2026: favDetail / FavoritesView._details:
   the dictionary panel's facts line and tiles, About these figures, ballistic table, + Head to Head), and its
   "Open in Load Dictionary ›" opens it there (goFav / FavoritesView._open); the star removes it.
+- Ammo on hand (Nov 16 2026, Zeke; web / Android only, no desktop): an "On hand" box on every opened load
+  (Load Dictionary, Favorite loads, Handloads) with a "how many" box, "− Shot" and "+ Add" (invBox / wireInv); a
+  "120 on hand" tag beside the name in the lists (invChip). Kept by pickKey in localStorage
+  cartridge_calc_inventory_v1 ({key: {n, t: last-change date}}, its own key so handload sync can carry it;
+  savedKey follows renamed / moved cartridges like favorites). "Ammo on hand (N rounds) ›" beside Favorite loads
+  under the category cards opens the page (#inv, showInv): totals, worth at your prices, grouped by cartridge,
+  × takes a load off (a count of 0 stays listed as "none on hand").
 - Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
   (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
   card and the sidebar entry open / close them (menu_entries / menuEntries, open_groups / OPEN_GROUPS,
