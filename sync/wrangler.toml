@@ -1,4 +1,5 @@
-# Load Lore sync Worker (Cloudflare). Deploy: cd sync && npx wrangler deploy
+# Load Lore sync Worker (Cloudflare). Cloudflare Workers Builds deploys it on every push to next
+# (project load-lore-sync, root directory /sync); by hand: cd sync && npx wrangler deploy
 name = "load-lore-sync"
 main = "worker.js"
 compatibility_date = "2026-11-01"
