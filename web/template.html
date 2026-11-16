@@ -294,6 +294,7 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .g2,.g3{display:grid;gap:8px;margin-top:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
 .g2>div,.g3>div{min-width:0}
 .g3.gpw{grid-template-columns:2fr 1fr 1fr}
+.fhint{display:block;font-size:.72rem;line-height:1.25;color:var(--muted);margin-top:3px}   /* where a typed figure comes from (handload form) */
 @media(max-width:340px){.g3{grid-template-columns:1fr 1fr}}
 .lc.hl{border-left:3px solid var(--accent)}
 .hbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
@@ -1745,7 +1746,7 @@ function handDialog(rec,done){
     <label class="l" style="margin-top:14px">BULLET NAME</label><input id="hbn" autocomplete="off" placeholder="optional, e.g. ELD-M">
     <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal" placeholder="optional"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal" placeholder="optional"></div></div>
     <div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("hpw")}</div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN)</label><input id="hcol" inputmode="decimal" placeholder="optional"></div></div>
-    <div class="g3"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"></div><div><label class="l">BARREL (IN)</label><input id="hbl2" inputmode="decimal" placeholder="optional"></div><div><label class="l">PURPOSE</label><select id="hpu">${PURPOSES.map(x=>`<option>${x}</option>`).join("")}</select></div></div>
+    <div class="g3"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"><small class="fhint">from manual or chrono</small></div><div><label class="l">BARREL (IN)</label><input id="hbl2" inputmode="decimal" placeholder="optional"><small class="fhint">manual's test barrel or yours</small></div><div><label class="l">PURPOSE</label><select id="hpu">${PURPOSES.map(x=>`<option>${x}</option>`).join("")}</select></div></div>
     <details class="btab hcd" id="hcd"><summary>Cost (optional breakdown)</summary>
     <div class="g3"><div><label class="l">BULLET $ EACH</label><input id="hcb" inputmode="decimal"></div><div><label class="l">POWDER $ / LB</label><input id="hcp" inputmode="decimal"></div><div><label class="l">PRIMER $ EACH</label><input id="hcr" inputmode="decimal"></div></div>
     <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div></details>
