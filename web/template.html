@@ -47,6 +47,10 @@ body{padding:max(16px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inse
 .nav>button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nav>button.on{color:var(--on-accent);background:var(--accent)}
 .nav .sub{display:none}
+/* menus (Zeke, Nov 16 2026): phones show five tabs (Home, Head to Head, Load Dictionary, My Bench,
+   Settings); the PC sidebar lists every page in two groups, Loads and My Bench (.pc rows, .nh headings) */
+.nav .pc,.nav .nh{display:none}
+.nav>[data-nav=home]{order:0}.nav>[data-nav=h2h]{order:1}.nav>[data-nav=loads]{order:2}.nav>[data-nav=bench]{order:3}.nav>[data-nav=settings]{order:4}
 .cmp{display:none;font-style:normal}
 .side{display:contents}
 .side .nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--side);border-top:1px solid var(--border);padding:6px 10px calc(6px + env(safe-area-inset-bottom));border-radius:14px 14px 0 0}
@@ -66,6 +70,13 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .fcard .ic{width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center}
 .fcard .ic svg{width:22px;height:22px;stroke:var(--on-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fcard b{font-size:1.15rem}.fcard span{color:var(--muted);font-size:.92rem;line-height:1.45}
+.fcard .cnt{color:var(--accent);font-weight:700;font-size:.85rem}
+/* My Bench cards: icon beside the text on phones too, so all four fit on one screen */
+.feat.bench{grid-template-columns:1fr;gap:10px}
+.feat.bench .fcard{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:2px;padding:14px 16px;border-radius:12px}
+.feat.bench .fcard .ic{grid-row:span 3;width:36px;height:36px;border-radius:9px}.feat.bench .fcard .ic svg{width:20px;height:20px}
+.feat.bench .fcard b{font-size:1rem}.feat.bench .fcard span{font-size:.85rem}.feat.bench .fcard .cnt{grid-column:2;margin-top:2px}
+.benchnote{color:var(--muted);font-size:.85rem;margin:14px 0 0}.benchnote .link{font-size:inherit;padding:0}
 .pick{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:560px){.feat,.pick{grid-template-columns:1fr 1fr}.pick .cat.grp,.pick .cat.child{grid-column:1/-1}}   /* two columns: a drop-down on its own rows */
 @media(min-width:900px){
@@ -88,7 +99,11 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
   .wrap.home,.wrap.picker{max-width:560px}
   /* PC (Zeke, Oct 25 2026): Load Dictionary above Head to Head in the sidebar (phones keep NAVS),
      Home and category cards in one column at the desktop app's sizes; fitMenu zooms the page */
-  .nav>button[data-nav=h2h]{order:1}.nav>button[data-nav=hand]{order:2}.nav>.sub.hsub{order:2}.nav>button[data-nav=settings]{order:3}
+  .nav>*,.nav>[data-nav]{order:0}   /* the sidebar keeps the page order: Loads, then My Bench */
+  .nav .pc{display:flex}.nav .ph{display:none}
+  .nav .nh{display:block;background:none;border:0;font:inherit;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:14px 12px 4px;cursor:default}
+  .nav>button.nh{display:block;flex-direction:row;min-height:0;cursor:pointer;border-radius:8px;background:none;font-size:.7rem;padding:14px 12px 4px}
+  .nav>button.nh:hover{color:var(--text)}.nav>button.nh.on{color:var(--accent);background:none}
   .feat,.pick{grid-template-columns:1fr;gap:10px}
   .fcard{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:2px;padding:16px 18px;border-radius:12px}
   .fcard .ic{grid-row:span 2;width:36px;height:36px;border-radius:9px}.fcard .ic svg{width:20px;height:20px}
@@ -303,13 +318,12 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .setrow{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .setrow b{font-size:.98rem}.setrow .muted{font-size:.85rem}
 .setrow select{max-width:220px}
-.setrow.nw{flex-wrap:nowrap}.setrow.nw>div{flex:1;min-width:0}
+.setrow.nw{flex-wrap:nowrap;white-space:normal}.setrow.nw>div{flex:1;min-width:0}
 .setrow .size{font-size:0}.setrow .size button{font-size:.95rem;min-width:52px;min-height:42px}
 .safety{font-size:.78rem;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:14px;line-height:1.4}
 .costlbl{font-weight:700;margin-top:10px}
 /* Handloads tab */
 .htools{display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center}
-.htools .sp{flex:1}.htools .hlk{display:flex;gap:14px}
 .scode{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.scode b{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.35rem;letter-spacing:.06em;padding:8px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);user-select:all}
 /* phones: the disclaimer sits at the bottom of the page, or under the list once it's taller;
    PC keeps it right under the list (Zeke) */
@@ -327,9 +341,6 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lc .trow .fav{margin:0 0 0 8px;vertical-align:-4px}.lc .trow .fav svg{width:17px;height:17px}
 @media(hover:hover){.fav:hover{opacity:1;color:var(--best)}.lc .trow .fav:not(.on){opacity:0}.lc:hover .trow .fav:not(.on){opacity:.55}.lc .trow .fav:not(.on):focus-visible{opacity:1}}   /* PC: an empty star shows only on the row under the mouse */
 .nw{white-space:nowrap}
-.favlink{margin-top:14px;display:inline-flex;align-items:center;gap:6px}.favic{color:var(--best);font-size:1.05em}
-.plinks{display:flex;flex-wrap:wrap;gap:0 26px}
-.invic{display:inline-flex;color:var(--accent)}.invic svg{width:17px;height:17px;fill:currentColor}
 /* ammo on hand (Nov 16 2026): the count box on an opened load, the tag in the lists, the Ammo on hand page */
 .inv{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:12px;cursor:default}
 .inv label{display:flex;align-items:center;gap:8px}
@@ -932,7 +943,6 @@ function readInv(){
 function writeInv(){try{localStorage.setItem(INV_KEY,JSON.stringify(readInv()));}catch(e){}syncSoon();}
 function setInv(k,n){const v=readInv();if(n==null)delete v[k];else v[k]={n:Math.max(0,Math.round(n)),t:new Date().toISOString().slice(0,10)};writeInv();}
 const invOf=k=>{const v=readInv()[k];return v?v.n:null;};
-const INV_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V10c0-3 1.3-5.3 2-7 .7 1.7 2 4 2 7v11zm6 0V10c0-3 1.3-5.3 2-7 .7 1.7 2 4 2 7v11zm6 0V10c0-3 1.3-5.3 2-7 .7 1.7 2 4 2 7v11z"/></svg>';
 // a "120 on hand" tag beside a load's name in the lists
 const invChip=k=>{const n=invOf(k);return n==null?"":`<span class="chip ivc${n?"":" out"}">${n?n.toLocaleString()+" on hand":"none on hand"}</span>`;};
 // the count box on an opened load: type the count, or take rounds off (Shot) / put them on (Add)
@@ -982,15 +992,29 @@ const ICON={
   h2h:'<svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 7a3 3 0 0 0 6 0L7 7zM17 7l-3 7a3 3 0 0 0 6 0l-3-7z"/></svg>',
   loads:'<svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg>',
   hand:'<svg viewBox="0 0 24 24"><path d="M9.5 3h5v4.5l2 3V21h-9V10.5l2-3z"/><path d="M7.5 14h9"/></svg>',
-  settings:'<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>'};
+  settings:'<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>',
+  bench:'<svg viewBox="0 0 24 24"><path d="M3 10h18M5 10v10M19 10v10M5 15h14"/><path d="M8 10V6h3v4M14 10V4h2v6"/></svg>',
+  ladder:'<svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M6 20v-5M10 20v-8M14 20v-9M18 20v-9.5"/><path d="M5 9l4-3 4 1.5 6-3.5"/></svg>',
+  favs:'<svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z"/></svg>',
+  inv:'<svg viewBox="0 0 24 24"><path d="M3 8l9-4 9 4v11l-9 4-9-4z"/><path d="M3 8l9 4 9-4M12 12v11"/></svg>'};
 // Settings (theme, text size, S-F grades): a tab on phones, the bottom of the sidebar on wide screens
 // the tools: key, title, Home-screen blurb (same as TOOLS in the desktop app)
 const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or your own handload, in one sortable list."],
   ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges or categories."],
-  ["hand","Handloads","Build and save your own reloads. They show up in the Load Dictionary and can go head to head."]];
-const toolTitle=k=>(TOOLS.find(t=>t[0]===k)||TOOLS[0])[1];
-// the Load Dictionary, the main tool, sits in the middle of the phone's tab bar
-const NAVS=[["home","Home",ICON.home],["h2h","Head to Head",ICON.h2h],["loads","Load Dictionary",ICON.loads],["hand","Handloads",ICON.hand],["settings","Settings",ICON.settings]];
+  ["bench","My Bench","Your handloads, ladder tests, favorite loads and ammo on hand, in one place."]];
+// My Bench's pages: key, title, blurb (Zeke, Nov 16 2026)
+const BENCH=[["hand","Handloads","Build and save your own reloads. They show up in the Load Dictionary and can go head to head."],
+  ["ladder","Ladder tests","Log a powder ladder's chronograph speeds and find the flattest spot."],
+  ["favs","Favorite loads","Loads you starred in the Load Dictionary."],
+  ["inv","Ammo on hand","How many rounds of each load you have."]];
+const toolTitle=k=>(TOOLS.concat(BENCH).find(t=>t[0]===k)||TOOLS[0])[1];
+const BENCH_MODES=["bench","hand","ladder","favs","inv"];
+// the menus: [key, title, icon, where]. Phones show the "ph" and shared rows as five tabs, the Load
+// Dictionary (the main tool) in the middle; the PC sidebar shows the shared and "pc" rows in this
+// order, under two headings: Loads, and My Bench (its heading opens the My Bench page)
+const NAVS=[["home","Home",ICON.home],["nh","Loads"],["loads","Load Dictionary",ICON.loads],["h2h","Head to Head",ICON.h2h],
+  ["bench","My Bench",ICON.bench,"ph"],["nh","My Bench","bench"],
+  ...BENCH.map(([k,t])=>[k,t,ICON[k],"pc"]),["settings","Settings",ICON.settings]];
 const H2H_MIN=2,H2H_MAX=5,H2H=[],H2H_DISTANCE=0;   // Head to Head picks (pickKey), any category
 const pickKey=(cat,it)=>cat.title+"|"+it.cartridge+"|"+(it.hid||it.label);
 // S-F grades on / off (Settings), shared by both tools and remembered
@@ -1028,28 +1052,26 @@ function toggleGroup(name){
 function lastCat(){try{return localStorage.getItem("cartridge_calc_cat");}catch(e){return null;}}
 function drawChrome(){
   const nav=$("#nav");
-  nav.innerHTML=NAVS.map(([k,t,ic])=>{
-    const on=NAV.mode===k||k==="loads"&&(NAV.mode==="favs"||NAV.mode==="inv")||k==="hand"&&NAV.mode==="ladder";   // Favorite loads and Ammo on hand belong to the Load Dictionary, Ladder tests to Handloads
-    return `<button data-nav="${k}" class="${on?"on":""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
+  nav.innerHTML=NAVS.map(([k,t,ic,where])=>{
+    if(k==="nh")return ic?`<button class="nh${NAV.mode===ic?" on":""}" data-nav="${ic}">${t}</button>`:`<div class="nh">${t}</div>`;
+    const on=NAV.mode===k||where==="ph"&&BENCH_MODES.includes(NAV.mode);   // the phone's My Bench tab stays lit on its pages
+    return `<button data-nav="${k}" class="${on?"on":""}${where?" "+where:""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
       (on&&k==="loads"?`<div class="sub">${menuEntries().map(e=>{
         const btn=c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}${c.group?" child":""}">${esc(catName(c))}</button>`;
         if(!Array.isArray(e))return btn(e);
         const [g,cs]=e,shown=cs.includes(NAV.cat)||OPEN_GROUPS.has(g);
         return `<button data-group="${esc(g)}" aria-expanded="${shown}">${esc(g)}&nbsp; ${shown?"▾":"▸"}</button>`+(shown?cs.map(btn).join(""):"");
-      }).join("")}</div>`:"")+
-      // Handloads: its two pages, your handloads and ladder tests (Zeke, Nov 16 2026)
-      (on&&k==="hand"?`<div class="sub hsub">${[["hand","Your handloads"],["ladder","Ladder tests"]].map(([m,t])=>`<button data-hsub="${m}" class="${NAV.mode===m?"on":""}">${t}</button>`).join("")}</div>`:"");
+      }).join("")}</div>`:"");
   }).join("");
   nav.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>navigate(b.dataset.nav));
   nav.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate("loads",CATEGORIES.find(c=>c.title===b.dataset.cat)));
   nav.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
-  nav.querySelectorAll("[data-hsub]").forEach(b=>b.onclick=()=>navigate(b.dataset.hsub));
 }
 // In-app history: every page change is a browser history entry (#settings, #loads/Handgun...),
 // so the browser's back arrow and the phone's back button step back through the app's pages
 // instead of leaving it. how: "pop" (moving through history, add nothing), "replace" (swap
 // this entry), else a new entry. depth counts the app's entries before this one.
-const NAV_MODES=["home","loads","h2h","hand","settings","favs","inv","ladder"];
+const NAV_MODES=["home","loads","h2h","bench","hand","settings","favs","inv","ladder"];
 const navState=()=>({mode:NAV.mode,cat:NAV.cat?NAV.cat.title:null,sub:NAV.sub||null});   // sub: the open ladder test
 const navURL=()=>NAV.mode==="home"?location.pathname+location.search:"#"+NAV.mode+(NAV.cat?"/"+encodeURIComponent(NAV.cat.title):NAV.sub?"/"+encodeURIComponent(NAV.sub):"");
 function navRecord(how){
@@ -1085,15 +1107,15 @@ function navigate(mode,cat,hid,how){   // hid: the handload the Handloads tab op
   if(NAV.cat&&NAV.cat.group)OPEN_GROUPS.add(NAV.cat.group);   // back on the list, its drop-down is open
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
-  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="hand")showHand(hid);else if(mode==="favs")showFavs();else if(mode==="inv")showInv();else if(mode==="ladder")showLadder(NAV.sub);else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
+  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="bench")showBench();else if(mode==="hand")showHand(hid);else if(mode==="favs")showFavs();else if(mode==="inv")showInv();else if(mode==="ladder")showLadder(NAV.sub);else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
   window.scrollTo(0,0);
   fitMenu();
 }
 // PC: Home, the category list and Settings zoom with the window (up to 1.15x, steps of 5%),
 // like the desktop app's App._menu_layout; the rest of the app keeps its size
-const MENU_W={home:560,picker:560,settings:680};
+const MENU_W={home:560,picker:560,settings:680,bench:560};
 function fitMenu(){
-  const page=NAV.mode==="home"||NAV.mode==="settings"?NAV.mode:NAV.mode==="loads"&&!NAV.cat?"picker":null;
+  const page=NAV.mode==="home"||NAV.mode==="settings"||NAV.mode==="bench"?NAV.mode:NAV.mode==="loads"&&!NAV.cat?"picker":null;
   app.style.zoom="";app.style.maxWidth="";
   if(!page||!matchMedia("(min-width:900px)").matches)return;
   app.style.maxWidth=MENU_W[page]+"px";
@@ -1110,6 +1132,19 @@ function showHome(){
   <div class="homenote" data-nosnippet>Figures are estimates. Nothing you see here is reloading data. <button class="link" data-go="settings">Disclaimer in Settings ›</button></div>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
 }
+// My Bench (Zeke, Nov 16 2026): the user's own pages, a card each with a count
+function benchCounts(){
+  const n=(x,w,ws)=>`${x.toLocaleString()} ${x===1?w:ws||w+"s"}`;
+  return {hand:n(readHand().length,"handload"),ladder:n(readLadders().length,"test"),favs:n(favCount(),"load"),inv:n(invTotal(),"round")+" on hand"};
+}
+function showBench(){
+  document.title=`${APP_TITLE} — My Bench`;app.classList.remove("dict","h2hp","handp","wide","home","picker");app.classList.add("home");
+  const cnt=benchCounts();
+  app.innerHTML=`<div class="phead"><h2>My Bench</h2><p class="sub">Your own loads and notes, saved on this device.</p></div>
+  <div class="feat bench">${BENCH.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span><span class="cnt">${cnt[k]}</span></button>`).join("")}</div>
+  <p class="benchnote">Sync, back up and restore are in <button class="link" data-go="settings">Settings ›</button></p>`;
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
+}
 // GitHub's mark (Octicons mark-github), drawn in the text colour
 const GITHUB_MARK="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z";
 function showSettings(){
@@ -1120,6 +1155,11 @@ function showSettings(){
     <div class="setrow"><b>Text size</b>${sizeCtl()}</div>
     <div class="setrow nw"><div><b>S–F grades</b><div class="muted">Show the grades in the Load Dictionary and Head to Head</div></div>${gradesBtn()}</div>
     </div>
+    <div class="sethead">Data</div><div class="setgroup">
+    <div class="setrow nw"><div><b>Sync between devices</b><div class="muted" id="sytxt"></div></div><button class="btn" id="setsync">Sync</button></div>
+    <div class="setrow nw"><div><b>Back up handloads</b><div class="muted">Save your handloads as a file you can restore on any device</div></div><button class="btn" id="setbak">Back up</button></div>
+    <div class="setrow nw"><div><b>Restore handloads</b><div class="muted">Add the handloads from a backup file</div></div><button class="btn" id="setres">Restore</button></div>
+    </div>
     <div class="sethead">About</div><div class="setgroup">
     <div class="setrow nw"><div><b>Source code</b><div class="muted">Free and open source: code, issues and releases on GitHub</div></div><a class="ghlink" href="${esc(DATA.repo||"")}" target="_blank" rel="noopener" title="Open on GitHub" aria-label="Open on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="${GITHUB_MARK}"/></svg></a></div>
     <div class="setrow"><div><b>Disclaimer</b><div class="muted" style="white-space:pre-line">${esc(DATA.about||"")}</div></div></div>
@@ -1128,6 +1168,12 @@ function showSettings(){
   </div>`;
   wireSize(app);wireGrades(app);
   $("#theme2").onchange=e=>applyTheme(e.target.value);
+  const syt=()=>{const st=syncState(),el=$("#sytxt");if(!el)return;
+    el.textContent=st?(st.err?st.err:`On${st.at?`, last synced ${syncAgo(st.at)}`:""}`):"Keep handloads, ladder tests, ammo on hand, favorites and prices the same on your devices";};
+  syt();
+  $("#setsync").onclick=()=>syncDialog(syt);
+  $("#setbak").onclick=backupHand;
+  $("#setres").onclick=()=>restoreHand(()=>{});
 }
 function showPicker(mode){
   document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","home");app.classList.add("picker");
@@ -1143,10 +1189,7 @@ function showPicker(mode){
       // Handgun: a drop-down; its categories show indented under it once it is tapped
       const [g,cs]=e,shown=OPEN_GROUPS.has(g);
       return `<button class="cat grp" data-group="${esc(g)}" aria-expanded="${shown}"><b>${esc(g)}&nbsp; ${shown?"▾":"▸"}</b><span class="b">${esc((DATA.group_blurbs||{})[g]||"")}</span><span class="c">${count(cs)}</span></button>`+(shown?cs.map(card).join(""):"");
-    }).join("")}</div>
-    <div class="plinks"><button class="link favlink" id="favgo">${STAR_TXT} Favorite loads${favCount()?` (${favCount()})`:""} ›</button>
-    <button class="link favlink" id="invgo"><span class="invic">${INV_ICON}</span> Ammo on hand${invTotal()?` (${invTotal().toLocaleString()} rounds)`:""} ›</button></div>`;
-  $("#favgo").onclick=()=>navigate("favs");$("#invgo").onclick=()=>navigate("inv");
+    }).join("")}</div>`;
   app.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>navigate(mode,CATEGORIES.find(c=>c.title===b.dataset.cat)));
   app.querySelectorAll("[data-group]").forEach(b=>b.onclick=()=>toggleGroup(b.dataset.group));
 }
@@ -1154,7 +1197,6 @@ function showPicker(mode){
 // ---------- Favorite loads ----------
 // every starred load of every category, grouped by cartridge like the Handloads tab, with its
 // Load Dictionary figures (that category's distance and weights); a click opens it in the dictionary
-const STAR_TXT='<span class="favic" aria-hidden="true">★</span>';
 function favItems(){
   const f=readFavs(),out=[];if(!f.size)return out;
   for(const c of CATEGORIES.filter(hasDetail)){syncHand(c);for(const it of state.detail[c.title])if(f.has(pickKey(c,it)))out.push([c,it]);}
@@ -1164,8 +1206,8 @@ const favCount=()=>favItems().length;
 function showFavs(){
   document.title=`${APP_TITLE} — Favorite loads`;
   app.classList.remove("dict","h2hp","home","picker");app.classList.add("wide","handp");
-  app.innerHTML=`<div class="phead"><button class="link back" id="fback">‹ Categories</button><h2>Favorite loads</h2><p class="sub">Loads you starred in the Load Dictionary, saved on this device.</p></div><div id="flist"></div>`;
-  $("#fback").onclick=()=>navigate("loads");
+  app.innerHTML=`<div class="phead"><button class="link back" id="fback">‹ My Bench</button><h2>Favorite loads</h2><p class="sub">Loads you starred in the Load Dictionary, saved on this device.</p></div><div id="flist"></div>`;
+  $("#fback").onclick=()=>navigate("bench");
   const F={open:null,srcOpen:false,btOpen:false};
   // an opened favorite: the dictionary's facts line and figure tiles, its notes, ballistic table,
   // Head to Head and a link on to the Load Dictionary
@@ -1231,8 +1273,8 @@ const invTotal=()=>invItems().reduce((t,x)=>t+x[3],0);
 function showInv(){
   document.title=`${APP_TITLE} — Ammo on hand`;
   app.classList.remove("dict","h2hp","home","picker");app.classList.add("wide","handp");
-  app.innerHTML=`<div class="phead"><button class="link back" id="iback">‹ Categories</button><h2>Ammo on hand</h2><p class="sub">How many rounds of each load you have, saved on this device. Open any load in the Load Dictionary or Handloads to add it here; count rounds down with Shot after a range trip.</p></div><div id="ilist"></div>`;
-  $("#iback").onclick=()=>navigate("loads");
+  app.innerHTML=`<div class="phead"><button class="link back" id="iback">‹ My Bench</button><h2>Ammo on hand</h2><p class="sub">How many rounds of each load you have, saved on this device. Open any load in the Load Dictionary or Handloads to add it here; count rounds down with Shot after a range trip.</p></div><div id="ilist"></div>`;
+  $("#iback").onclick=()=>navigate("bench");
   function draw(){
     const all=invItems(),prices=readPrices();
     if(!all.length){$("#ilist").innerHTML=`<div class="card hempty"><b>Nothing counted yet</b><p class="muted" style="margin:6px 0 0">Open a load in the Load Dictionary or Handloads and type how many rounds you have in its On hand box.</p></div>`;return;}
@@ -1325,8 +1367,8 @@ function showHand(openId){
   document.title=`${APP_TITLE} — ${toolTitle("hand")}`;
   app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide","handp");
   const H={open:openId||null,q:"",cat:"All"};
-  app.innerHTML=`<div class="hpage"><div class="phead"><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
-    <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button><button class="link" id="hlad">Ladder tests ›</button><span class="sp"></span><span class="hlk"><button class="link" id="hsync">Sync</button><button class="link" id="hbak">Back up</button><button class="link" id="hres">Restore</button></span></div>
+  app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="hgob">‹ My Bench</button><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
+    <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button></div>
     <div id="hsearch" style="margin-top:12px"><input id="hq" type="search" placeholder="Search: name, cartridge, bullet or powder" autocomplete="off" aria-label="Search your handloads"></div>
     <div class="chips" id="hcats" role="group" aria-label="Category"></div>
     <div id="hlist"></div>
@@ -1388,10 +1430,7 @@ function showHand(openId){
   }
   $("#hq").oninput=e=>{H.q=e.target.value;draw();};
   $("#hnew").onclick=()=>handDialog(null,r=>{H.open=r.id;H.q="";$("#hq").value="";draw();});
-  $("#hsync").onclick=()=>syncDialog(draw);
-  $("#hlad").onclick=()=>navigate("ladder");
-  $("#hbak").onclick=backupHand;
-  $("#hres").onclick=()=>restoreHand(draw);
+  $("#hgob").onclick=()=>navigate("bench");
   draw();
 }
 // back up / restore: the same CSV as the desktop app's my_handloads.csv, so a backup from the
@@ -1516,7 +1555,7 @@ function syncApply(d){
     localStorage.setItem(INV_KEY,JSON.stringify(d.inv));INV=null;writeLadders(d.ladders);
   }catch(e){}
   syncApplying=false;
-  if(!(syncRedraw&&syncRedraw())&&!openModalClose&&(NAV.mode==="hand"||NAV.mode==="favs"))navigate(NAV.mode,null,null,"replace");
+  if(!(syncRedraw&&syncRedraw())&&!openModalClose&&(NAV.mode==="hand"||NAV.mode==="favs"||NAV.mode==="inv"||NAV.mode==="bench"||NAV.mode==="ladder"&&!NAV.sub))navigate(NAV.mode,null,null,"replace");
 }
 async function syncCall(method,code,body){
   const r=await fetch(SYNC_URL+"/v1/sync",{method,cache:"no-store",
@@ -1568,7 +1607,7 @@ function syncDialog(after){
     if(!SYNC_URL){box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3><p class="muted">Sync isn't set up in this version.</p><div class="btns"><button class="btn" id="syx">Close</button></div>`;}
     else if(st){
       box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3>
-        <p style="margin:0 0 8px">This device is synced. To add another device, open Handloads there, tap “Sync” and “I have a code”, and type:</p>
+        <p style="margin:0 0 8px">This device is synced. To add another device, open Settings there, tap “Sync” and “I have a code”, and type:</p>
         <div class="scode"><b id="syc">${esc(fmtCode(st.code))}</b><button class="btn" id="sycp">Copy</button></div>
         <p class="muted" style="margin:10px 0 0" aria-live="polite">${syncBusy?"Syncing…":st.err?`<span style="color:var(--danger)">${esc(st.err)}</span>`:st.at?`Last synced ${syncAgo(st.at)}.`:""} ${esc(counts())}.</p>
         <div class="btns"><button class="btn p" id="syn"${syncBusy?" disabled":""}>Sync now</button><button class="btn" id="sys">Stop syncing here</button><button class="btn" id="syx">Close</button></div>
@@ -1880,7 +1919,7 @@ function showLadder(id){
 }
 function ladderList(){
   const all=readLadders().sort((a,b)=>(b.created||"").localeCompare(a.created||""));
-  app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="lgoh">‹ Handloads</button><h2>Ladder tests</h2><p class="sub">Log the powder charges of a ladder test and each shot's chronograph velocity. The app finds the flattest spot, where a little more or less powder changes the speed least, and the most consistent charge.</p></div>
+  app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="lgoh">‹ My Bench</button><h2>Ladder tests</h2><p class="sub">Log the powder charges of a ladder test and each shot's chronograph velocity. The app finds the flattest spot, where a little more or less powder changes the speed least, and the most consistent charge.</p></div>
     <div class="htools"><button class="btn p" id="lnew">+&nbsp; New ladder test</button></div>
     <div id="llist">${all.length?all.map(t=>{
       const a=ladderAnalysis(t),grs=a.rows.map(r=>r.gr);
@@ -1889,7 +1928,7 @@ function ladderList(){
         ${a.best?`<span class="lbest">Flattest spot: ${g(a.best.gr)} gr</span>`:""}</button>`;}).join(""):
       `<div class="card hempty"><b>No ladder tests yet</b><p class="muted" style="margin:6px 0 0">Tap “+ New ladder test”, enter the charges you loaded, then type each shot's velocity from your chronograph.</p></div>`}</div>
     <div class="note hnote"><b class="dis">YOUR OWN RESULTS</b>${esc(LADDER_NOTE)}</div></div>`;
-  $("#lgoh").onclick=()=>navigate("hand");
+  $("#lgoh").onclick=()=>navigate("bench");
   $("#lnew").onclick=()=>ladderDialog(null,t=>navigate("ladder",null,t.id));
   app.querySelectorAll(".ltest").forEach(b=>b.onclick=()=>navigate("ladder",null,b.dataset.id));
 }
@@ -2629,8 +2668,9 @@ syncSoon(0);   // pick up changes made on the other devices
     if(openModalClose){openModalClose();return;}
     if(NAV.mode==="home")AppPlugin.exitApp();
     else if(history.state&&history.state.depth>0)history.back();
-    else if(NAV.cat||NAV.mode==="favs"||NAV.mode==="inv")navigate("loads",null,null,"replace");
-    else if(NAV.mode==="ladder")NAV.sub?navigate("ladder",null,null,"replace"):navigate("hand",null,null,"replace");
+    else if(NAV.cat)navigate("loads",null,null,"replace");
+    else if(NAV.mode==="ladder"&&NAV.sub)navigate("ladder",null,null,"replace");
+    else if(NAV.mode!=="bench"&&BENCH_MODES.includes(NAV.mode))navigate("bench",null,null,"replace");
     else navigate("home",null,null,"replace");
   });
 })();
