@@ -202,6 +202,16 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open
   pickSheet too (sheetSelect puts a clear button over a <select>; powder has "Other powder (type
   it)"); pickSheet over a dialog hands the back button back to the dialog when it closes.
+- Sync between devices (Nov 16 2026, Zeke; web + Android only, not desktop): Handloads › "Sync" (syncDialog)
+  links devices with a 12-character code (no 0/O, 1/I/L, U; shown XXXX-XXXX-XXXX), no accounts. sync/worker.js
+  (Cloudflare Worker + D1, address sync.loadlore.net, deployed with wrangler from sync/) keeps one copy per code, stored
+  under the code's SHA-256; 1 MB cap, rate limits, copies unused 2 years removed. The copy holds handloads,
+  favorites and saved prices (not theme / text size / grades switch). The web keeps cartridge_calc_sync_v1
+  {code, rev, base, at, err}: base = the copy it last agreed on; syncMerge is a 3-way merge per handload id /
+  favorite / price key (one side changed: take it; both: this device's; a delete loses to an edit). writeHand,
+  writePrices and toggleFav call syncSoon (1.5 s later); also at start, on visibilitychange and online. PUT sends
+  the rev it merged with; a 409 hands back the newer copy to merge again. A 404 (copy deleted elsewhere) unlinks.
+  The address is SYNC in build_web.py (DATA.sync_url; LOADLORE_SYNC overrides, empty turns sync off).
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), Handloads, Settings; the PC sidebar (NAV_ORDER; web: CSS order at >=900 px, Oct 25) has
   the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).

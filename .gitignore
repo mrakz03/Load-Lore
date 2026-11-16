@@ -13,4 +13,5 @@ dist/
 .venv/
 /LoadLore/
 node_modules/
+.wrangler/
 /android/

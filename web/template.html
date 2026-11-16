@@ -307,7 +307,8 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .costlbl{font-weight:700;margin-top:10px}
 /* Handloads tab */
 .htools{display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center}
-.htools .sp{flex:1}
+.htools .sp{flex:1}.htools .hlk{display:flex;gap:14px}
+.scode{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.scode b{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.35rem;letter-spacing:.06em;padding:8px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);user-select:all}
 /* phones: the disclaimer sits at the bottom of the page, or under the list once it's taller;
    PC keeps it right under the list (Zeke) */
 @media(max-width:899px){
@@ -838,7 +839,7 @@ for(const cat of CATEGORIES){
 }
 // saved price keys: old cartridge names, and "150 gr  ·  Load" labels (weight first, before v1.5)
 function readPrices(){try{const o=JSON.parse(localStorage.getItem(PRICE_KEY)||"{}")||{},out={};for(const [k,v] of Object.entries(o)){const p=k.split("|");if(p.length<3){out[k]=v;continue;}const r=p.slice(2).join("|"),m=/^(\d+(?:\.\d+)?) gr  ·  (.+)$/.exec(r),n=RENAMED[p[1]]||p[1],cat=movedCat(p[0],n);for(const c of SPLIT[n]||[n])out[`${cat}|${c}|${m?`${m[2]}  ·  ${m[1]} gr`:r}`]=v;}return out;}catch(e){return {};}}
-function writePrices(o){try{localStorage.setItem(PRICE_KEY,JSON.stringify(o));return true;}catch(e){return false;}}
+function writePrices(o){try{localStorage.setItem(PRICE_KEY,JSON.stringify(o));syncSoon();return true;}catch(e){return false;}}
 // favorite loads (Zeke, Nov 7 2026): a list of pickKeys ("Centerfire Rifle|6.5 Creedmoor|label", a
 // handload by its id) kept on this device; renamed / moved cartridges follow like saved prices
 const FAV_KEY="cartridge_calc_favs_v1";
@@ -848,7 +849,7 @@ function readFavs(){
   try{for(const k of JSON.parse(localStorage.getItem(FAV_KEY)||"[]")||[]){const p=String(k).split("|");if(p.length<3){FAVS.add(k);continue;}const n=RENAMED[p[1]]||p[1];FAVS.add(`${movedCat(p[0],n)}|${(SPLIT[n]||[n])[0]}|${p.slice(2).join("|")}`);}}catch(e){}
   return FAVS;
 }
-function toggleFav(k){const f=readFavs();if(f.has(k))f.delete(k);else f.add(k);try{localStorage.setItem(FAV_KEY,JSON.stringify([...f]));}catch(e){}return f.has(k);}
+function toggleFav(k){const f=readFavs();if(f.has(k))f.delete(k);else f.add(k);try{localStorage.setItem(FAV_KEY,JSON.stringify([...f]));}catch(e){}syncSoon();return f.has(k);}
 const STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3-4.6-4.4 6.3-.9z"/></svg>';
 const favBtn=k=>{const on=readFavs().has(k);return `<button class="fav${on?" on":""}" data-fav="${esc(k)}" aria-pressed="${on}" aria-label="Favorite" title="${on?"Remove from favorites":"Add to favorites"}">${STAR}</button>`;};
 // a table row's name with its star: the star stays on the line of the name's last word
@@ -1145,7 +1146,7 @@ const HAND_KEY="cartridge_calc_hand_v1";
 const POWDERS=DATA.powders||[], BULLETS=DATA.bullets||[];
 const PURPOSES=["Hunting","Varmint","Target","Match","Defense","Subsonic"];
 function readHand(){try{return canonRows(JSON.parse(localStorage.getItem(HAND_KEY)||"[]"));}catch(e){return [];}}
-function writeHand(a){try{localStorage.setItem(HAND_KEY,JSON.stringify(a));return true;}catch(e){return false;}}
+function writeHand(a){try{localStorage.setItem(HAND_KEY,JSON.stringify(a));syncSoon();return true;}catch(e){return false;}}
 // a handload's name: its own, else maker + bullet + weight (+ powder), like handload_label in the
 // desktop app (a backup from there can have no name)
 const handName=r=>r.name||([r.bullet_maker,r.bullet].filter(Boolean).join(" ")||"Handload")+` ${g(+r.bullet_gr)} gr`+(r.powder?` + ${r.powder} ${g(+r.powder_gr)} gr`:"");
@@ -1189,7 +1190,7 @@ function showHand(openId){
   app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide","handp");
   const H={open:openId||null,q:"",cat:"All"};
   app.innerHTML=`<div class="hpage"><div class="phead"><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
-    <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button><span class="sp"></span><button class="link" id="hbak">Back up</button><button class="link" id="hres">Restore</button></div>
+    <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button><span class="sp"></span><span class="hlk"><button class="link" id="hsync">Sync</button><button class="link" id="hbak">Back up</button><button class="link" id="hres">Restore</button></span></div>
     <div id="hsearch" style="margin-top:12px"><input id="hq" type="search" placeholder="Search: name, cartridge, bullet or powder" autocomplete="off" aria-label="Search your handloads"></div>
     <div class="chips" id="hcats" role="group" aria-label="Category"></div>
     <div id="hlist"></div>
@@ -1249,6 +1250,7 @@ function showHand(openId){
   }
   $("#hq").oninput=e=>{H.q=e.target.value;draw();};
   $("#hnew").onclick=()=>handDialog(null,r=>{H.open=r.id;H.q="";$("#hq").value="";draw();});
+  $("#hsync").onclick=()=>syncDialog(draw);
   $("#hbak").onclick=backupHand;
   $("#hres").onclick=()=>restoreHand(draw);
   draw();
@@ -1322,6 +1324,156 @@ function restoreHand(after){
     catch(e){alert(e.message);}
   };
 }
+// ---------- sync between devices (Nov 2026, Zeke) ----------
+// A sync code (12 letters / digits, no account) keeps handloads, favorite loads and saved prices the
+// same on every device that has it: sync/worker.js (Cloudflare) keeps one copy per code. Each device
+// remembers the copy it last agreed on (base): a three-way merge per handload / favorite / price
+// keeps whichever side changed (an edit on both: this device's wins; a delete loses to an edit).
+// Synced after every change (a moment later), at start and when the app comes back to the front.
+// var, not const: writeHand / writePrices can run before this line
+var SYNC_URL=(DATA.sync_url||"").replace(/\/$/,""),SYNC_KEY="cartridge_calc_sync_v1";
+var syncTimer=0,syncBusy=null,syncAgain=false,syncApplying=false,syncRedraw=null;
+function syncState(){try{const s=JSON.parse(localStorage.getItem(SYNC_KEY)||"null");return s&&s.code?s:null;}catch(e){return null;}}
+function setSyncState(s){try{if(s)localStorage.setItem(SYNC_KEY,JSON.stringify(s));else localStorage.removeItem(SYNC_KEY);}catch(e){}}
+const fmtCode=c=>c.replace(/(.{4})(?=.)/g,"$1-");
+const syncLocal=()=>({v:1,hand:readHand(),favs:[...readFavs()],prices:readPrices()});
+// one value per handload id / favorite / price key, as text (a row's keys sorted, so the same row
+// reads the same on every device)
+const rowText=r=>JSON.stringify(r,Object.keys(r).sort());
+function syncMaps(d){
+  d=d||{};const h=new Map(),f=new Map(),p=new Map();
+  for(const r of canonRows(d.hand))if(r&&r.id)h.set(r.id,rowText(r));
+  for(const k of Array.isArray(d.favs)?d.favs:[])f.set(String(k),"1");
+  for(const [k,v] of Object.entries(d.prices&&typeof d.prices==="object"?d.prices:{}))p.set(k,JSON.stringify(v));
+  return [h,f,p];
+}
+function merge3(b,l,s){
+  const out=new Map();
+  for(const k of new Set([...l.keys(),...s.keys(),...b.keys()])){
+    const bv=b.get(k),lv=l.get(k),sv=s.get(k);
+    const v=lv===sv?lv:lv===bv?sv:sv===bv?lv:lv!==undefined?lv:sv;
+    if(v!==undefined)out.set(k,v);
+  }
+  return out;
+}
+function syncMerge(base,loc,srv){
+  const [bh,bf,bp]=syncMaps(base),[lh,lf,lp]=syncMaps(loc),[sh,sf,sp]=syncMaps(srv);
+  const h=merge3(bh,lh,sh),f=merge3(bf,lf,sf),p=merge3(bp,lp,sp);
+  return {v:1,hand:[...h.values()].map(x=>JSON.parse(x)),favs:[...f.keys()],prices:Object.fromEntries([...p].map(([k,v])=>[k,JSON.parse(v)]))};
+}
+const syncSame=(a,b)=>{const x=syncMaps(a),y=syncMaps(b);return x.every((m,i)=>m.size===y[i].size&&[...m].every(([k,v])=>y[i].get(k)===v));};
+// save merged data on this device without starting another sync
+function syncApply(d){
+  syncApplying=true;
+  try{writeHand(d.hand);localStorage.setItem(FAV_KEY,JSON.stringify(d.favs));FAVS=null;writePrices(d.prices);}catch(e){}
+  syncApplying=false;
+  if(!(syncRedraw&&syncRedraw())&&!openModalClose&&(NAV.mode==="hand"||NAV.mode==="favs"))navigate(NAV.mode,null,null,"replace");
+}
+async function syncCall(method,code,body){
+  const r=await fetch(SYNC_URL+"/v1/sync",{method,cache:"no-store",
+    headers:Object.assign({"Content-Type":"application/json"},code?{Authorization:"Bearer "+code}:{}),body:body?JSON.stringify(body):undefined});
+  let j=null;try{j=await r.json();}catch(e){}
+  return [r.status,j||{}];
+}
+function syncSoon(ms){
+  if(syncApplying||!SYNC_URL||!syncState())return;
+  clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncNow().catch(()=>{}),ms==null?1500:ms);
+}
+function syncNow(){
+  if(syncBusy){syncAgain=true;return syncBusy;}
+  syncBusy=(async()=>{
+    try{do{syncAgain=false;await syncOnce();}while(syncAgain);}
+    finally{syncBusy=null;if(syncRedraw)syncRedraw();}
+  })();
+  return syncBusy;
+}
+async function syncOnce(){
+  let st=syncState();if(!st||!SYNC_URL)return;
+  const fail=msg=>{st=syncState();if(st){st.err=msg;setSyncState(st);}};
+  try{
+    let [code,res]=await syncCall("GET",st.code);
+    for(let tries=0;tries<4;tries++){
+      if(code===404||code===401){setSyncState(null);localStorage.setItem(SYNC_KEY+"_gone","1");if(syncRedraw)syncRedraw();return;}
+      if(code!==200&&code!==409){fail(res.error||`The sync server answered ${code}.`);return;}
+      const loc=syncLocal(),merged=syncMerge(st.base,loc,res.data);
+      if(!syncSame(merged,loc))syncApply(merged);
+      if(syncSame(merged,res.data)){Object.assign(st,{rev:res.rev,base:merged,at:Date.now(),err:""});setSyncState(st);return;}
+      const [c2,r2]=await syncCall("PUT",st.code,{rev:res.rev,data:merged});
+      if(c2===200){Object.assign(st,{rev:r2.rev,base:merged,at:Date.now(),err:""});setSyncState(st);return;}
+      [code,res]=[c2,r2];   // 409: changed on another device meanwhile; merge with that and try again
+    }
+    fail("Couldn't sync: the copy kept changing. Try again.");
+  }catch(e){fail("Couldn't reach the sync server. It syncs when you're back online.");}
+}
+function syncAgo(t){
+  const s=Math.round((Date.now()-t)/1000);
+  return s<60?"just now":s<3600?`${Math.round(s/60)} min ago`:s<86400?`${Math.round(s/3600)} h ago`:new Date(t).toLocaleDateString();
+}
+function syncDialog(after){
+  const [m,close]=modal(`<div id="syb"></div>`),box=$("#syb",m);
+  let mode="";
+  const counts=()=>{const d=syncLocal(),n=(x,w)=>`${x} ${w}${x===1?"":"s"}`;return `${n(d.hand.length,"handload")}, ${n(d.favs.length,"favorite")} and ${n(Object.keys(d.prices).length,"saved price")} on this device`;};
+  const intro=`<p class="muted" style="margin:0 0 10px">Keep your handloads, favorites and prices the same on all your devices. No account needed. Keep your code private: anyone who has it can see and change your handloads.</p>`;
+  function draw(){
+    const st=syncState();
+    if(!SYNC_URL){box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3><p class="muted">Sync isn't set up in this version.</p><div class="btns"><button class="btn" id="syx">Close</button></div>`;}
+    else if(st){
+      box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3>
+        <p style="margin:0 0 8px">This device is synced. To add another device, open Handloads there, tap “Sync” and “I have a code”, and type:</p>
+        <div class="scode"><b id="syc">${esc(fmtCode(st.code))}</b><button class="btn" id="sycp">Copy</button></div>
+        <p class="muted" style="margin:10px 0 0" aria-live="polite">${syncBusy?"Syncing…":st.err?`<span style="color:var(--danger)">${esc(st.err)}</span>`:st.at?`Last synced ${syncAgo(st.at)}.`:""} ${esc(counts())}.</p>
+        <div class="btns"><button class="btn p" id="syn"${syncBusy?" disabled":""}>Sync now</button><button class="btn" id="sys">Stop syncing here</button><button class="btn" id="syx">Close</button></div>
+        <button class="link" id="syd" style="color:var(--danger);margin-top:8px">Delete the synced copy</button>`;
+      $("#sycp",box).onclick=async()=>{try{await navigator.clipboard.writeText(fmtCode(st.code));}catch(e){}$("#sycp",box).textContent="Copied ✓";};
+      $("#syn",box).onclick=()=>{syncNow();draw();};
+      $("#sys",box).onclick=()=>{if(!confirm(`Stop syncing on this device? Its handloads stay here. To link it again later you need the code: ${fmtCode(st.code)}`))return;setSyncState(null);draw();};
+      $("#syd",box).onclick=async()=>{
+        if(!confirm("Delete the copy kept online under this code? Your handloads stay on this device, and your other devices stop syncing."))return;
+        try{const [c]=await syncCall("DELETE",st.code);if(c!==204&&c!==404)throw 0;setSyncState(null);draw();}
+        catch(e){alert("Couldn't reach the sync server. Try again when you're online.");}
+      };
+    }else if(mode==="have"){
+      box.innerHTML=`<h3 style="margin:0 0 6px">Use a sync code</h3>
+        <p class="muted" style="margin:0 0 10px">Type the code shown on your other device. Handloads, favorites and prices from both devices are kept: nothing is deleted.</p>
+        <input id="syi" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX" aria-label="Sync code" style="font-family:monospace;letter-spacing:.08em;text-transform:uppercase">
+        <p class="muted" id="sye" style="margin:8px 0 0;color:var(--danger)" aria-live="polite"></p>
+        <div class="btns"><button class="btn p" id="syl">Sync</button><button class="btn" id="syb2">Back</button></div>`;
+      const inp=$("#syi",box);inp.focus();
+      const go=async()=>{
+        const c=inp.value.toUpperCase().replace(/[^0-9A-Z]/g,"");
+        if(c.length!==12){$("#sye",box).textContent="A sync code has 12 letters and numbers.";return;}
+        $("#syl",box).disabled=true;$("#sye",box).textContent="";
+        try{
+          const [code,res]=await syncCall("GET",c);
+          if(code!==200)throw new Error(code===404||code===401?"No handloads are saved under that code. Check it on your other device.":res.error||`The sync server answered ${code}.`);
+          setSyncState({code:c,rev:0,base:{},at:0});await syncNow();mode="";draw();
+        }catch(e){$("#syl",box).disabled=false;$("#sye",box).textContent=e.message&&!/fetch|network/i.test(e.message)?e.message:"Couldn't reach the sync server. Check your connection.";}
+      };
+      $("#syl",box).onclick=go;inp.onkeydown=e=>{if(e.key==="Enter")go();};
+      $("#syb2",box).onclick=()=>{mode="";draw();};
+    }else{
+      let gone=false;try{gone=localStorage.getItem(SYNC_KEY+"_gone")==="1";localStorage.removeItem(SYNC_KEY+"_gone");}catch(e){}
+      box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3>${gone?`<p style="margin:0 0 8px;color:var(--danger)">The synced copy was deleted from another device, so this device stopped syncing. Its handloads are still here.</p>`:""}${intro}
+        <p class="muted" id="sye" style="margin:0;color:var(--danger)" aria-live="polite"></p>
+        <div class="btns"><button class="btn p" id="syg">Get a sync code</button><button class="btn" id="syh">I have a code</button><button class="btn" id="syx">Close</button></div>`;
+      $("#syh",box).onclick=()=>{mode="have";draw();};
+      $("#syg",box).onclick=async()=>{
+        $("#syg",box).disabled=true;
+        try{
+          const d=syncLocal(),[code,res]=await syncCall("POST",null,{data:d});
+          if(code!==201)throw new Error(res.error||`The sync server answered ${code}.`);
+          setSyncState({code:res.code,rev:res.rev,base:d,at:Date.now()});draw();
+        }catch(e){$("#syg",box).disabled=false;$("#sye",box).textContent=e.message&&!/fetch|network/i.test(e.message)?e.message:"Couldn't reach the sync server. Check your connection.";}
+      };
+    }
+    const x=$("#syx",box);if(x)x.onclick=close;
+  }
+  syncRedraw=()=>{if(!m.isConnected){syncRedraw=null;return false;}draw();if(after)after();return true;};
+  draw();
+}
+// at start, when the app comes back to the front, and when the connection returns
+addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){const s=syncState();if(s&&Date.now()-(s.at||0)>20000)syncSoon(0);}});
+addEventListener("online",()=>syncSoon(0));
 // every cartridge a handload can be for, across the bullet categories: [{text, cat, cart}]; a
 // cartridge in two categories (9mm Luger) gets its category's tag ("9mm Luger  ·  Carbine")
 const CAT_TAGS=DATA.cat_tags||{};
@@ -2088,6 +2240,7 @@ function modal(inner){
 $("#ver").textContent=VERSION_TEXT;
 // start on the page the address names (a reload, or a link to #settings), else Home
 {const [m,c]=navFrom(history.state&&history.state.app?history.state:null);navigate(m,c,null,"replace");}
+syncSoon(0);   // pick up changes made on the other devices
 // Android back button (Capacitor App plugin): close a dialog, then go back to the previous page
 // (the same history the browser's back arrow uses); with no earlier page, step up the menus
 // (category -> category list -> Home); only Home closes the app
