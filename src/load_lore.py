@@ -85,26 +85,46 @@ BULLETS_FILENAME = "bullets.csv"
 HANDLOAD_FIELDS = ["id", "category", "cartridge", "name", "bullet_maker", "bullet", "bullet_gr",
                    "diameter_in", "bc_g1", "powder", "powder_gr", "muzzle_fps", "barrel_in",
                    "purpose", "cost", "bullet_cost", "powder_cost_lb", "primer_cost",
-                   "brass_cost", "brass_reuse", "notes"]
+                   "brass_cost", "brass_reuse", "notes", "col_in"]   # col_in: cartridge overall length (web, Nov 2026)
 PURPOSES = ["Hunting", "Varmint", "Target", "Match", "Defense", "Subsonic"]
-POWDERS = [
-    "H4350", "H4831SC", "H1000", "Varget", "H4895", "H335", "H322", "CFE 223", "Benchmark",
-    "Lil'Gun", "H110", "H4198", "Titegroup", "Longshot", "Universal", "Clays", "HS-6", "H380",
-    "Retumbo", "Superformance", "H414", "H4227",
-    "IMR 4064", "IMR 4350", "IMR 4895", "IMR 4831", "IMR 3031", "IMR 7828", "IMR 4198",
-    "IMR 8208 XBR", "IMR 4227", "IMR 4759",
-    "Reloder 7", "Reloder 10X", "Reloder 15", "Reloder 16", "Reloder 17", "Reloder 19",
-    "Reloder 22", "Reloder 23", "Reloder 25", "Reloder 26", "Reloder 33", "Reloder 50",
-    "Unique", "Bullseye", "Power Pistol", "Blue Dot", "Red Dot", "2400", "Green Dot", "Herco",
-    "Sport Pistol", "Winchester 231", "Winchester 296", "Winchester 748", "Winchester 760",
-    "Winchester AutoComp", "Winchester WSF", "Winchester StaBall 6.5",
-    "Accurate 2230", "Accurate 2460", "Accurate 2520", "Accurate 4350", "Accurate 5744",
-    "Accurate No.2", "Accurate No.5", "Accurate No.7", "Accurate No.9",
-    "Vihtavuori N140", "Vihtavuori N150", "Vihtavuori N160", "Vihtavuori N165",
-    "Vihtavuori N133", "Vihtavuori N550", "Vihtavuori N320", "Vihtavuori N340",
-    "Vihtavuori N350", "Ramshot Big Boy", "Ramshot TAC", "Ramshot X-Terminator",
-    "Ramshot Enforcer", "Ramshot Silhouette", "Ramshot Competition", "Norma 202", "Norma 203B",
-]
+# Handload powders by maker (Zeke, Nov 16 2026: the web form lists them under brand headings).
+# Names are what saved handloads hold, so keep an old name when a list changes.
+POWDER_BRANDS = {
+    "Accurate": ["Accurate No.2", "Accurate No.5", "Accurate No.7", "Accurate No.9", "Accurate 1680",
+                 "Accurate 2015", "Accurate 2200", "Accurate 2230", "Accurate 2460", "Accurate 2495",
+                 "Accurate 2520", "Accurate 2700", "Accurate 3100", "Accurate 4064", "Accurate 4350",
+                 "Accurate 5744", "Accurate LT-30", "Accurate LT-32", "Accurate MagPro"],
+    "Alliant": ["2400", "20/28", "300-MP", "American Select", "AR-Comp", "BE-86", "Blue Dot", "Bullseye",
+                "Clay Dot", "e3", "Extra-Lite", "Green Dot", "Herco", "Power Pistol", "Power Pro 2000-MR",
+                "Power Pro 4000-MR", "Power Pro Varmint", "Promo", "Red Dot", "Reloder 7", "Reloder 10X",
+                "Reloder 15", "Reloder TS 15.5", "Reloder 16", "Reloder 17", "Reloder 19", "Reloder 22",
+                "Reloder 23", "Reloder 25", "Reloder 26", "Reloder 33", "Reloder 50", "Sport Pistol",
+                "Steel", "Unique"],
+    "Hodgdon": ["Benchmark", "CFE 223", "CFE BLK", "CFE Pistol", "Clays", "H110", "H322", "H335",
+                "H380", "H414", "H1000", "H4198", "H4227", "H4350", "H4831", "H4831SC", "H4895",
+                "H50BMG", "HP-38", "HS-6", "Hybrid 100V", "International", "LEVERevolution", "Lil'Gun",
+                "Longshot", "Retumbo", "Superformance", "Titegroup", "Universal", "US 869", "Varget"],
+    "IMR": ["IMR 3031", "IMR 4007 SSC", "IMR 4064", "IMR 4166", "IMR 4198", "IMR 4227", "IMR 4320",
+            "IMR 4350", "IMR 4451", "IMR 4756", "IMR 4759", "IMR 4831", "IMR 4895", "IMR 4955",
+            "IMR 7625", "IMR 700-X", "IMR 7828", "IMR 7977", "IMR 800-X", "IMR 8133", "IMR 8208 XBR",
+            "IMR Blue", "IMR Red", "IMR Target", "IMR Unequal", "Trail Boss"],
+    "Norma": ["Norma 200", "Norma 201", "Norma 202", "Norma 203B", "Norma 204", "Norma 217",
+              "Norma MRP", "Norma URP"],
+    "Ramshot": ["Ramshot Big Boy", "Ramshot Competition", "Ramshot Enforcer", "Ramshot Hunter",
+                "Ramshot LRT", "Ramshot Magnum", "Ramshot Silhouette", "Ramshot TAC", "Ramshot True Blue",
+                "Ramshot X-Terminator", "Ramshot Zip"],
+    "Vihtavuori": ["Vihtavuori 3N37", "Vihtavuori 3N38", "Vihtavuori 20N29", "Vihtavuori 24N41",
+                   "Vihtavuori N105", "Vihtavuori N110", "Vihtavuori N120", "Vihtavuori N130",
+                   "Vihtavuori N133", "Vihtavuori N135", "Vihtavuori N140", "Vihtavuori N150",
+                   "Vihtavuori N160", "Vihtavuori N165", "Vihtavuori N170", "Vihtavuori N310", "Vihtavuori N320",
+                   "Vihtavuori N330", "Vihtavuori N340", "Vihtavuori N350", "Vihtavuori N540", "Vihtavuori N550",
+                   "Vihtavuori N555", "Vihtavuori N560", "Vihtavuori N565", "Vihtavuori N570"],
+    "Winchester": ["Winchester 231", "Winchester 244", "Winchester 296", "Winchester 572", "Winchester 748",
+                   "Winchester 760", "Winchester AutoComp", "Winchester StaBall 6.5", "Winchester StaBall HD",
+                   "Winchester StaBall Match", "Winchester Super Handicap", "Winchester Super-Target",
+                   "Winchester WSF", "Winchester WST"],
+}
+POWDERS = [p for b in sorted(POWDER_BRANDS, key=str.lower) for p in POWDER_BRANDS[b]]
 # metric key -> (display name, higher is better?)
 METRICS = {
     "velocity": ("Velocity", True),
