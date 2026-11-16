@@ -11,7 +11,7 @@ routes = [{ pattern = "sync.loadlore.net", custom_domain = true }]
 [[d1_databases]]
 binding = "DB"
 database_name = "load-lore-sync"
-database_id = "PASTE-THE-DATABASE-ID-HERE"   # printed by: npx wrangler d1 create load-lore-sync
+database_id = "65363fdc-b45c-4a2a-b5eb-6939c6c1fac8"
 
 # 60 requests a minute per address; 5 new sync codes a minute per address
 # (namespace ids are any numbers not used by another Worker of the account)
