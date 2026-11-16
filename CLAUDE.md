@@ -205,8 +205,10 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   search pop-up with a mouse, bottom sheet on touch, powders under maker headings (POWDER_BRANDS in
   load_lore.py, web DATA.powder_brands; POWDERS = brands A-Z), a last row 'Use "typed"' keeps an unlisted powder.
   Tidy form (Zeke, Nov 16 2026, web): Load name, Cartridge, then sections (.hsec, small heading + thin line):
-  Bullet (one search box #hbs: library bullets that fit, under maker headings, picking fills weight / diameter /
-  BC; 'Use "typed"' splits a leading maker name off; replaced Bullet maker / library / Other maker / Bullet name),
+  Bullet (Maker #hbmk + Bullet #hbs search boxes, Zeke asked for two: Maker lists makers with a fitting library
+  bullet, Bullet that maker's fitting bullets, or every maker's under headings while no maker is picked; a typed
+  maker has no list; picking fills weight / diameter / BC; 'Use "typed"' on either; replaced Bullet maker /
+  library / Other maker / Bullet name),
   Powder and seating (powder, charge, C.O.L.), Results (velocity, barrel, with grey .fhint notes "from manual or
   chrono" / "manual's test barrel or yours"), then a "More details (purpose, cost, notes)" drop-down (details.hcd),
   open when the handload has a cost, notes or a purpose other than Hunting. Optional boxes show "optional".
