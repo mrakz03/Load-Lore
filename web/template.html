@@ -351,7 +351,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lpick .l{font-size:.72rem;font-weight:700;letter-spacing:.04em;color:var(--muted)}.lpick b{font-size:1.15rem}.lpick>span:last-child{color:var(--muted);font-size:.85rem}
 @media(max-width:600px){.lpick{grid-template-columns:auto 1fr}.lpick>span:last-child{grid-column:1/-1}}
 .lmk{margin-top:12px}.lmk select{max-width:16em}
-.lwarn{color:var(--danger);font-weight:700}
+.lwarn{color:var(--danger);font-weight:700}.lwarn.lmine{color:var(--text);font-weight:600;font-size:.9rem}
 .lch{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline;margin-bottom:6px}.lch .muted{font-size:.8rem}
 .lchart svg{display:block;max-width:100%;overflow:visible}
 .lchart text{fill:var(--muted);font-size:12px;font-family:inherit}.lchart text.ax{font-weight:700;font-size:11px}
@@ -1565,7 +1565,7 @@ function handDialog(rec,done){
 const LADDER_KEY="cartridge_calc_ladder_v1";
 function readLadders(){try{const a=JSON.parse(localStorage.getItem(LADDER_KEY)||"[]");return Array.isArray(a)?a.filter(t=>t&&t.id&&Array.isArray(t.charges)):[];}catch(e){return [];}}
 function writeLadders(a){try{localStorage.setItem(LADDER_KEY,JSON.stringify(a));return true;}catch(e){return false;}}
-const LADDER_NOTE="These are your own test results, not load data. Work up from a published reloading manual's starting charge, never go over its maximum, and stop at the first sign of pressure.";
+const LADDER_NOTE="These are your own test results, not load data. The app only does the math on the speeds you type in: it doesn't check pressure or safety, and its picks are not a recommended charge. Work up from a published reloading manual's starting charge, never go over its maximum, and stop at the first sign of pressure.";
 // the velocities typed for a charge ("2650 2662, 2648"): numbers from 100 to 6000 fps
 const parseShots=s=>String(s||"").split(/[\s,;]+/).map(Number).filter(v=>isFinite(v)&&v>=100&&v<=6000);
 function shotStats(shots){
@@ -1634,7 +1634,7 @@ function ladderPage(t){
       <div class="hbtns" style="margin-top:8px"><button class="btn" id="ledit">Edit details</button><button class="btn d" id="ldel">Delete</button></div></div>
     <div class="card lsum" id="lsum"></div>
     <div class="card lchart" id="lchart"></div>
-    <h3 class="hgrp">Charges</h3><p class="note" style="margin-top:-4px">Type each shot's velocity in fps, separated by spaces. Tick “Pressure signs” on a charge that showed any: it and every charge above it are left out of the picks.</p>
+    <h3 class="hgrp">Charges</h3><p class="note" style="margin-top:-4px">Type each shot's velocity in fps, separated by spaces. Tick “Pressure signs” on a charge where you saw any: it and every charge above it are left out of the picks. The app can't detect pressure; the box only records what you saw.</p>
     <div id="lrows"></div>
     <div class="htools" style="margin-top:10px"><button class="btn" id="ladd">+&nbsp; Add charge</button></div>
     <div class="note hnote"><b class="dis">YOUR OWN RESULTS</b>${esc(LADDER_NOTE)}<br><br>${esc(SOURCE_NOTES.handload)}</div></div>`;
@@ -1670,7 +1670,7 @@ function ladderPage(t){
     else lines.push(`<p style="margin:0"><b>No clear flat spot.</b> <span class="muted">The speed rises about evenly${a.overall!=null?` (${a.overall.toFixed(0)} fps per grain)`:""}. Smaller steps or more shots per charge may show one.</span></p>`);
     if(a.steadiest)lines.push(`<div class="lpick"><span class="l">MOST CONSISTENT</span><b>${g(a.steadiest.gr)} gr</b><span>SD ${a.steadiest.sd.toFixed(1)} fps, ES ${fps0(a.steadiest.es)} fps over ${a.steadiest.n} shots${a.steadiest.n<5?" (five or more shots give a truer SD)":""}</span></div>`);
     if(a.tight)lines.push(`<div class="lpick"><span class="l">SMALLEST GROUP</span><b>${g(a.tight.gr)} gr</b><span>${g(a.tight.group)} in</span></div>`);
-    if(a.stop)lines.push(`<p class="lwarn" style="margin:10px 0 0">⚠ Pressure signs at ${g(a.stop.gr)} gr: that charge and any above it are left out.</p>`);
+    if(a.stop)lines.push(`<p class="lwarn lmine" style="margin:10px 0 0">You marked pressure signs at ${g(a.stop.gr)} gr, so that charge and the ones above it are left out of the picks.</p>`);
     const pick=a.best||a.steadiest||a.ok[a.ok.length-1];
     if(a.ok.length)lines.push(`<div class="lmk"><label class="l" for="lmks">MAKE A HANDLOAD FROM</label><div class="prow" style="margin-top:0"><select id="lmks">${a.ok.map(r=>`<option value="${r.gr}"${r===pick?" selected":""}>${g(r.gr)} gr  ·  ${fps0(r.mean)} fps</option>`).join("")}</select><button class="btn p" id="lmkb">Make handload</button></div></div>`);
     sum.innerHTML=lines.join("");

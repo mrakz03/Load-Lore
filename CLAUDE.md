@@ -211,7 +211,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   neighbouring charges with the least fps per grain, only if at most half the ladder's overall fps per grain
   (else "No clear flat spot"), its middle charge picked; most consistent = lowest SD of charges with 3+ shots;
   smallest group. SVG chart (mean line, slowest-fastest bars, flat spot shaded). "Make handload" opens
-  handDialog prefilled with the chosen charge and its average speed. LADDER_NOTE: your own results, not load data.
+  handDialog prefilled with the chosen charge and its average speed. LADDER_NOTE: your own results, not load data; the app does not check pressure (the Pressure signs box only records what the user saw, worded "You marked...").
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), Handloads, Settings; the PC sidebar (NAV_ORDER; web: CSS order at >=900 px, Oct 25) has
   the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
