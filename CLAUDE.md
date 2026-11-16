@@ -56,7 +56,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   desktop: a narrow "★" column after Load, click the cell; its heading sorts favorites first). Kept by
   pick_key / pickKey text ("category|cartridge|label", a handload by its id): web localStorage
   cartridge_calc_favs_v1, desktop settings.json "favorites" (renamed / moved cartridges follow like
-  prices). "★ Favorite loads (N) ›" under the category cards opens the Favorite loads page (web #favs,
+  prices). My Bench's Favorite loads card opens the Favorite loads page (web #favs,
   showFavs; desktop FavoritesView / show_favs): starred loads grouped by cartridge with their dictionary
   figures; a click opens that load's figures in place (Zeke, Nov 7 2026: favDetail / FavoritesView._details:
   the dictionary panel's facts line and tiles, About these figures, ballistic table, + Head to Head), and its
@@ -65,8 +65,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (Load Dictionary, Favorite loads, Handloads) with a "how many" box, "− Shot" and "+ Add" (invBox / wireInv); a
   "120 on hand" tag beside the name in the lists (invChip). Kept by pickKey in localStorage
   cartridge_calc_inventory_v1 ({key: {n, t: last-change date}}, its own key so handload sync can carry it;
-  savedKey follows renamed / moved cartridges like favorites). "Ammo on hand (N rounds) ›" beside Favorite loads
-  under the category cards opens the page (#inv, showInv): totals, worth at your prices, grouped by cartridge,
+  savedKey follows renamed / moved cartridges like favorites). My Bench's Ammo on hand card opens the page (#inv, showInv): totals, worth at your prices, grouped by cartridge,
   × takes a load off (a count of 0 stays listed as "none on hand").
 - Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
   (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
@@ -194,7 +193,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   The safety line (tab, form, open handload) is HANDLOAD_NOTE, Zeke's LEGAL.md disclaimer verbatim
   (web gets it as DATA.hand_note), under a bold "DISCLAIMER" heading in the tab and form (disclaimer() /
   .dis). PC (desktop, web >=900 px) shows it right under the list; phones pin it to the bottom of
-  the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore use the
+  the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore (Settings > Data) use the
   my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
   replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
   The form's cost parts sit in a "Cost (optional breakdown)" drop-down (Zeke, Nov 2 2026: web
@@ -209,7 +208,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   On touch screens the form's pickers (cartridge, bullet maker, bullet, powder, purpose) open
   pickSheet too (sheetSelect puts a clear button over a <select>; powder has "Other powder (type
   it)"); pickSheet over a dialog hands the back button back to the dialog when it closes.
-- Sync between devices (Nov 16 2026, Zeke; web + Android only, not desktop): Handloads › "Sync" (syncDialog)
+- Sync between devices (Nov 16 2026, Zeke; web + Android only, not desktop): Settings > Data > "Sync" (syncDialog)
   links devices with a 12-character code (no 0/O, 1/I/L, U; shown XXXX-XXXX-XXXX), no accounts. sync/worker.js
   (Cloudflare Worker + D1, address sync.loadlore.net, deployed with wrangler from sync/) keeps one copy per code, stored
   under the code's SHA-256; 1 MB cap, rate limits, copies unused 2 years removed. The copy holds handloads,
@@ -219,9 +218,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   writePrices and toggleFav call syncSoon (1.5 s later); also at start, on visibilitychange and online. PUT sends
   the rev it merged with; a 409 hands back the newer copy to merge again. A 404 (copy deleted elsewhere) unlinks.
   The address is SYNC in build_web.py (DATA.sync_url; LOADLORE_SYNC overrides, empty turns sync off).
-- Ladder tests (Nov 16 2026, Zeke; web / Android only, no desktop): "Ladder tests ›" on the Handloads tab opens
-  #ladder (showLadder / ladderList / ladderPage; an open test is #ladder/<id>, NAV.sub; the Handloads tab stays
-  lit; on PC its sidebar entry opens a sub-list "Your handloads" / "Ladder tests" like the Load Dictionary's, .sub.hsub). A test: cartridge (handCarts list or a typed one), bullet, weight, powder, barrel, date, notes, and
+- Ladder tests (Nov 16 2026, Zeke; web / Android only, no desktop): My Bench's Ladder tests card opens
+  #ladder (showLadder / ladderList / ladderPage; an open test is #ladder/<id>, NAV.sub; its own sidebar row on PC, the My Bench tab on phones). A test: cartridge (handCarts list or a typed one), bullet, weight, powder, barrel, date, notes, and
   charges {gr, shots (typed velocities), group, pressure}; kept in localStorage cartridge_calc_ladder_v1 (its own
   key, so sync can carry it). ladderAnalysis: per charge n / mean / SD / ES (two rows of one charge pooled); a
   charge with "Pressure signs" and every charge above it are left out of the picks; flattest spot = the three
@@ -230,8 +228,17 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   smallest group. SVG chart (mean line, slowest-fastest bars, flat spot shaded). "Make handload" opens
   handDialog prefilled with the chosen charge and its average speed. The test form's "Copy from a handload ›" (only when there are handloads) fills cartridge, bullet, weight, powder and barrel from one, never a charge. LADDER_NOTE: your own results, not load data; the app does not check pressure (the Pressure signs box only records what the user saw, worded "You marked...").
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
-  middle), Handloads, Settings; the PC sidebar (NAV_ORDER; web: CSS order at >=900 px, Oct 25) has
-  the Load Dictionary above Head to Head. Home cards keep the Load Dictionary first (TOOLS).
+  middle), My Bench, Settings; the PC sidebar has the Load Dictionary above Head to Head. Home cards keep
+  the Load Dictionary first (TOOLS: Load Dictionary, Head to Head, My Bench).
+- Menu clean-up (Nov 16 2026, Zeke; web / Android, desktop unchanged): each page is reached from one place.
+  My Bench (#bench, showBench; BENCH list, BENCH_MODES) holds Handloads, Ladder tests, Favorite loads and Ammo
+  on hand as cards with counts (benchCounts); their pages have "‹ My Bench" back links and the phone's My Bench
+  tab stays lit on them. The PC sidebar lists every page in NAVS order under two headings (.nh): LOADS (Load
+  Dictionary with its category sub-list, Head to Head) and MY BENCH (the heading opens the My Bench page, then
+  the four pages as .pc rows); phones show only the five tabs (.ph row = My Bench), ordered by CSS order.
+  Sync, Back up and Restore live only in Settings > Data (between Display and About). No links to Favorite
+  loads / Ammo on hand under the category cards, no Ladder tests / Sync / Back up links on the Handloads tab.
+  Android back: a My Bench page -> My Bench -> Home.
 - PC web load list (Oct 27 2026, Zeke): at >=900 px the dictionary's load list (#lres) is one table like
   the desktop app's (.lhead / .trow on a CSS subgrid, columns fit their figures, same columns as LoadsView;
   sortable headers set the #ls sort; clicking the sorted header again goes back to the default order, Grains goes heaviest -> lightest -> default, desktop _sort_by the same; Zeke, Oct 28 2026). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
