@@ -395,6 +395,7 @@ button.lcart.ph{color:var(--muted)}button.lcart:focus-visible{outline:2px solid 
 .hcost{display:grid;grid-template-columns:max-content max-content;gap:2px 14px;font-weight:600}
 .hcost span:nth-child(even){text-align:right}
 .hcost .t{border-top:1px solid var(--border);padding-top:3px;font-weight:800}
+.shrow{justify-content:flex-end;margin-top:14px}
 .hlinks{display:flex;gap:4px 18px;flex-wrap:wrap;margin-top:4px}
 .hempty{margin-top:18px;text-align:center;padding:28px 18px}
 .links{align-items:center;gap:8px}.links .link.m{white-space:nowrap}
@@ -1042,6 +1043,7 @@ function navFrom(st){
   return [mode,mode==="loads"&&st.cat?CATEGORIES.find(c=>c.title===st.cat)||null:null,mode==="ladder"&&st.sub||null];
 }
 addEventListener("popstate",e=>{
+  if(!(e.state&&e.state.app)&&openShared(location.hash))return;   // a #share/ link typed or pasted into the address bar
   // back with a dialog or pop-up open closes it and stays on the page
   if(openModalClose){
     openModalClose();
@@ -1230,6 +1232,7 @@ function showH2H(){
 
 // ---------- handloads ----------
 const HAND_KEY="cartridge_calc_hand_v1";
+const VIEW_HAND=[];   // handloads from a shared link, in memory only (syncHand shows them as .peek; Sharing below)
 const POWDERS=DATA.powders||[], BULLETS=DATA.bullets||[], POWDER_BRAND=DATA.powder_brands||{};
 // a powder box (handload and ladder forms): a <select> under a clear button that opens the same search
 // pop-up / bottom sheet as the cartridge box, powders under their maker's heading (Zeke, Nov 16 2026);
@@ -1270,9 +1273,11 @@ function syncHand(cat){
   for(let i=arr.length-1;i>=0;i--)if(arr[i].handload)arr.splice(i,1);
   if(!cat.grain_style)return;
   const seen=new Set(arr.map(x=>x.cartridge+"|"+x.label));
-  for(const r of readHand()){
+  const mine=readHand(),ids=new Set(mine.map(r=>r.id));
+  for(const r of mine.concat(VIEW_HAND.filter(r=>!ids.has(r.id)))){
     if(r.category!==cat.title)continue;
     const it=handItem(r,cat);let base=it.label,n=1;
+    if(VIEW_HAND.includes(r))it.peek=true;   // from a shared link: shown, not saved
     while(seen.has(it.cartridge+"|"+it.label)){n++;it.label=`${base} (${n})`;}
     seen.add(it.cartridge+"|"+it.label);arr.push(it);
   }
@@ -1305,7 +1310,7 @@ function showHand(openId){
     <div class="note hnote"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div></div>`;
   const items=()=>{
     const out=[];
-    for(const c of CATEGORIES.filter(c=>c.grain_style&&state.detail[c.title])){syncHand(c);for(const it of state.detail[c.title])if(it.handload)out.push([c,it]);}
+    for(const c of CATEGORIES.filter(c=>c.grain_style&&state.detail[c.title])){syncHand(c);for(const it of state.detail[c.title])if(it.handload&&!it.peek)out.push([c,it]);}
     return out;
   };
   function draw(){
@@ -1342,7 +1347,7 @@ function showHand(openId){
           ${rec.notes?`<span>Notes</span><span style="font-weight:500">${esc(rec.notes)}</span>`:""}
           ${GRADES?`<span>Grade</span><span style="font-weight:500">${r.grade} · ${r.overall.toFixed(0)}, ranks #${r.rank} of ${r.peers} ${esc(it.cartridge)} loads in the Load Dictionary</span>`:""}
         </div>
-        <div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn d hdel">Delete</button></div>
+        <div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn hshare">Share</button><button class="btn d hdel">Delete</button></div>
         <div class="hlinks"><button class="link hdict">Open in Load Dictionary ›</button><button class="link hh2h">${esc(h2hText(c,it))}</button><button class="link hlad">Start ladder test ›</button></div>`:""}
       </div>`;}).join("")}</div>`).join("");
     $("#hlist").querySelectorAll(".lc").forEach(el=>{
@@ -1352,6 +1357,7 @@ function showHand(openId){
       el.querySelector(".hedit").onclick=()=>handDialog(rows.find(x=>x.id===id),r=>{H.open=r.id;draw();});
       el.querySelector(".hdup").onclick=()=>{const all2=readHand(),n=Object.assign({},it.rec,{id:newHid(),name:(it.rec.name||it.load)+" (copy)"});all2.push(n);writeHand(all2);H.open=n.id;draw();};
       el.querySelector(".hdel").onclick=()=>{if(!confirm(`Delete "${it.label}"?`))return;writeHand(readHand().filter(x=>x.id!==id));const k=pickKey(c,it),i=H2H.indexOf(k);if(i>=0)H2H.splice(0,H2H.length,...H2H.filter(x=>x!==k));H.open=null;draw();};
+      el.querySelector(".hshare").onclick=()=>shareLoad(c,it);
       el.querySelector(".hdict").onclick=()=>{shared[c.title]=Object.assign({},shared[c.title],{goHand:id});navigate("loads",c);};
       // a new ladder test filled in from this handload like "Copy from a handload" (no charge; Zeke, Nov 17 2026)
       el.querySelector(".hlad").onclick=()=>ladderDialog(null,t=>navigate("ladder",null,t.id),it.rec);
@@ -2273,7 +2279,7 @@ function openLoads(cat,pane){
     $$("#lcnt").textContent=`${rows.length} of ${out.rows.length} loads at ${g(out.dist)} yards`+(L.purpose!=="All"?` · ${L.purpose} only`:"")+(out.multi&&GRADES?" · ranked within each load type":"");
     // PC (>=900 px): the list reads as a table like the desktop app's, one row per load with its
     // figures in columns; phones keep the cards (.top) and never show .lhead / .trow
-    const tcols=[GRADES&&["#","score",r=>r.rank,"auto"],["Load","brand",r=>`${starName(cat.grain_style?r.it.load:makeLabel(r.it,cat),pickKey(cat,r.it))}${r.it.handload?'<span class="chip">Handload</span>':""}${warn(r.it)}`,"minmax(9em,1fr)"]]
+    const tcols=[GRADES&&["#","score",r=>r.rank,"auto"],["Load","brand",r=>`${r.it.peek?esc(r.it.load):starName(cat.grain_style?r.it.load:makeLabel(r.it,cat),pickKey(cat,r.it))}${r.it.handload?`<span class="chip">${r.it.peek?"Shared handload":"Handload"}</span>`:""}${warn(r.it)}`,"minmax(9em,1fr)"]]
       .concat(cat.grain_style?[["Grains","grain",r=>g(r.it.bullet_gr),"auto"],["Barrel",null,r=>out.barrel||r.it.barrel_in?g(out.barrel||r.it.barrel_in)+'"':"—","auto"],["Use",null,r=>esc(purposeOf(r.it)||"—"),"auto"]]
         :[["Shot","shot",r=>esc(shotSize(r.it)[2]),"auto"],[cat.payload_col,null,r=>g(r.st.weight),"auto"]])
       .concat([["Velocity","velocity",r=>r.st.velocity.toFixed(0),"auto"],["Energy","energy",r=>r.st.energy.toFixed(0),"auto"],["Recoil","recoil",r=>r.st.recoil.toFixed(1),"auto"]])
@@ -2289,8 +2295,8 @@ function openLoads(cat,pane){
       const fb=k=>GRADES&&r.sc[k]!=null?fbadge(r.sc[k]):`<span style="width:32px"></span>`;
       const payload=cat.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top">${GRADES?`<span class="rk">#${r.rank}</span>`:""}
-        <div class="nm">${open?`<small class="ct">${esc(it.cartridge||$$("#lc").value)}</small>`:""}${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?'<span class="chip">Handload</span>':""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}${warn(it)}</div>
-        ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}${favBtn(pickKey(cat,it))}</div>
+        <div class="nm">${open?`<small class="ct">${esc(it.cartridge||$$("#lc").value)}</small>`:""}${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?`<span class="chip">${it.peek?"Shared handload":"Handload"}</span>`:""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}${warn(it)}</div>
+        ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}${it.peek?"":favBtn(pickKey(cat,it))}</div>
         <div class="trow">${tcols.map(c=>`<span${c[0]==="Load"?' class="ln"':c[0]==="#"?' class="rk"':""}>${c[2](r)}</span>`).join("")}</div>
         ${open?`<div class="det">
           <div class="pdet"><div class="psub">${esc([it.cartridge||$$("#lc").value,it.handload?"":payload,cat.grain_style?(out.barrel?`estimated figures for your ${g(out.barrel)} in barrel`:testBarrelText(it)):"",it.sg?`stability ${it.sg.toFixed(2)} in a 1:${g(it.twist)} twist: ${stabilityText(it.sg)}`:""].filter(Boolean).join("  ·  "))}</div>
@@ -2315,8 +2321,8 @@ function openLoads(cat,pane){
           <div class="row fr"><span class="muted">HITS</span><span class="v">${r.st.hits.toFixed(0)} <small class="muted">(${hitsClass(r.st.hits)})</small></span>${fb("hits")}</div>`:""}
           ${GRADES?`<div class="muted" style="font-size:.8rem;margin-top:4px">Overall ${r.grade} · ${r.overall.toFixed(0)} · ranks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}. Grades compare loads of this cartridge only.</div>`:""}
           ${ballisticHTML(it,cat,L.btOpen)}
-          <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button></div>
-          ${it.handload?`<div class="hbtns"><button class="btn hedit">Edit in Handloads ›</button></div>
+          <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button><button class="btn shb">Share</button></div>
+          ${it.handload?`<div class="hbtns">${it.peek?`<button class="btn p hsave">Save to my handloads</button>`:`<button class="btn hedit">Edit in Handloads ›</button>`}</div>
           <div class="note">${esc([fireSourceNote(cat,it,out.barrel),SOURCE_NOTES.handload].filter(Boolean).join(" "))}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
           <!-- where the figures come from, folded away behind a link (Zeke, Oct 31 2026) -->
           <details class="btab srcd"${L.srcOpen?" open":""}><summary>About these figures</summary><div class="note">${esc((fireSourceNote(cat,it,out.barrel)?fireSourceNote(cat,it,out.barrel)+" Listed figures: ":"")+(SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE))} Catalog price estimate: $${it.default_cost.toFixed(2)}.</div></details></div>`}`:""}
@@ -2344,6 +2350,18 @@ function openLoads(cat,pane){
         if(picks.includes(pickKey(cat,it))||picks.length>=H2H_MAX){navigate("h2h");return;}
         picks.push(pickKey(cat,it));hb.textContent=h2hText(cat,it);
       };
+      const shb=c.querySelector(".shb");
+      if(shb&&it)shb.onclick=()=>{
+        const o={},d=parseFloat($$("#ld").value),gv=parseFloat($$("#lg").value);
+        if(!isNaN(d)&&d!==cat.default_distance)o.d=d;
+        if(L.fireOpen||cat.barrel_in&&($$("#lb").value.trim()||$$("#lt").value.trim())){
+          if(cat.barrel_in){const b=parseFloat($$("#lb").value),t=parseTwist($$("#lt").value);if(b>0)o.b=b;if(t>0)o.w=t;}
+          if(!isNaN(gv)&&gv!==L.gunAuto)o.g=gv;
+        }
+        shareLoad(cat,it,o);
+      };
+      const hs=c.querySelector(".hsave");
+      if(hs&&it)hs.onclick=()=>{saveShared(it.rec);shared[cat.title]=Object.assign({},shared[cat.title],{goFav:{cart:it.cartridge,key:it.hid,load:it.load}});navigate("loads",cat,null,"replace");};
       if(it&&it.handload){
         if(!c.querySelector(".hedit"))return;
         c.querySelector(".hedit").onclick=()=>navigate("hand",null,it.rec.id);   // adding / editing lives in the Handloads tab
@@ -2585,8 +2603,16 @@ function openH2H(pane){
       const live=cells.filter(Boolean),vTop=Math.max(...live.map(c=>c[0])),eTop=Math.max(...live.map(c=>c[1]));
       h+=`<tr><td class="yd v">${g(yd)}</td>${cells.map(c=>!c?`<td class="l0 gap">—</td><td class="gap">—</td>`:`<td class="l0${c[0]>=vTop-1e-9?" v best":""}">${fmt0(c[0])}</td><td class="${c[1]>=eTop-1e-9?"v best":""}">${fmt0(c[1])}</td>`).join("")}</tr>`;
     }
-    box.innerHTML=h+`</tbody></table></div></div>`+phoneView(rows,dist,keys,most,badge,payload,setups);
+    box.innerHTML=h+`</tbody></table></div></div>`+phoneView(rows,dist,keys,most,badge,payload,setups)+`<div class="hbtns shrow"><button class="btn shb">Share this comparison</button></div>`;
     box.querySelectorAll("[data-yd]").forEach(c=>c.onclick=()=>{H.drYd=+c.dataset.yd;render();});
+    box.querySelector(".shb").onclick=()=>{
+      const o={t:"c",p:ps.map(([c,it,s])=>{const x=[c.title,it.cartridge,it.hid||it.label];
+        if(fireOpen){const gv=parseFloat(s.gun),b=parseFloat(s.brl),t=parseTwist(s.tw);x.push(gv>0?gv:0,c.barrel_in&&b>0?b:0,c.barrel_in&&t>0?t:0);while(x.length>3&&!x[x.length-1])x.pop();}
+        return x;}),r:ps.filter(([,it])=>it.handload).map(([,it])=>handShare(it.rec))};
+      if(dist!==H2H_DISTANCE)o.d=dist;
+      if(!o.r.length)delete o.r;
+      shareLink(`Head to Head: ${rows.map(r=>r.it.label.split("  ·  ")[0]).join(" vs ")}`,shareURL(o));
+    };
   }
   drawSlots();save();
   // "+ Add a load" adds an empty row and opens nothing (Zeke: it used to copy the last row's
@@ -2595,6 +2621,78 @@ function openH2H(pane){
   $$("#hd").addEventListener("input",render);
   $$("#hfire").onclick=()=>{fireOpen=!fireOpen;drawSlots();render();};
   render();
+}
+
+// ---------- Sharing (Zeke, Nov 17 2026) ----------
+// a Load Dictionary load, a handload or a Head to Head comparison as a loadlore.net link: everything
+// is in the address (#share/ + base64url JSON), nothing is uploaded. Opening it shows the same load
+// (and firearm setup) or comparison; a handload is shown, not saved, until "Save to my handloads".
+//   load:  {t:"l", c: category, k: cartridge, n: label or handload id, d: distance, b: barrel, w: twist, g: gun, r: handload}
+//   H2H:   {t:"c", p: [[category, cartridge, label or id, gun, barrel, twist]...], d: distance, r: [handloads]}
+const SITE=DATA.site||"https://loadlore.net/";
+function b64u(s){let t="";new TextEncoder().encode(s).forEach(x=>t+=String.fromCharCode(x));return btoa(t).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+function unb64u(s){const t=atob(s.replace(/-/g,"+").replace(/_/g,"/"));return new TextDecoder().decode(Uint8Array.from(t,c=>c.charCodeAt(0)));}
+const shareURL=o=>SITE+"#share/"+b64u(JSON.stringify(o));
+// a handload's own fields, blanks left out (the id comes along so opening it twice shows it once)
+const handShare=r=>Object.fromEntries(HAND_FIELDS.filter(k=>r[k]!=null&&r[k]!=="").map(k=>[k,r[k]]));
+function shareLoad(cat,it,o){
+  o=Object.assign({t:"l",c:cat.title,k:it.cartridge,n:it.hid||it.label},o||{});
+  if(it.handload)o.r=handShare(it.rec);
+  shareLink(`${it.label}  ·  ${it.cartridge}${it.handload?" (handload)":""}`,shareURL(o));
+}
+// phones: the system share sheet (Capacitor Share in the Android app, navigator.share in a phone
+// browser); PC, or no share sheet: a dialog with the link and a Copy button
+async function shareLink(title,url){
+  const P=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Share;
+  try{
+    if(P&&P.share){await P.share({title,text:title,url,dialogTitle:"Share"});return;}
+    if(navigator.share&&matchMedia("(pointer: coarse)").matches){await navigator.share({title,text:title,url});return;}
+  }catch(e){if(e&&(e.name==="AbortError"||/cancel/i.test(e.message||"")))return;}
+  const [m,close]=modal(`<h3 style="margin:0 0 4px">Share</h3><p class="muted" style="margin:0 0 12px">${esc(title)}</p>
+    <input id="shu" readonly value="${esc(url)}" aria-label="Link">
+    <p class="muted" style="font-size:.82rem;margin:8px 0 0">Anyone with this link sees the same figures on Load Lore. Nothing is uploaded: it's all in the link.</p>
+    <div class="hbtns"><button class="btn p" id="shc">Copy link</button><button class="btn" id="shx">Close</button></div>`);
+  const u=$("#shu",m);u.onfocus=()=>u.select();
+  $("#shc",m).onclick=async()=>{try{await navigator.clipboard.writeText(url);}catch(e){u.select();document.execCommand("copy");}$("#shc",m).textContent="Copied ✓";};
+  $("#shx",m).onclick=close;
+}
+// keep a shared handload (same id: opening the link again shows yours)
+function saveShared(r){
+  const rs=readHand();if(!rs.some(x=>x.id===r.id)){rs.push(r);writeHand(rs);}
+  const i=VIEW_HAND.indexOf(r);if(i>=0)VIEW_HAND.splice(i,1);
+}
+// a #share/ address: show what it holds (the entry becomes that page's own address); false if it isn't one
+function openShared(hash){
+  if(!/^#share\//.test(hash||""))return false;
+  if(app._leave){try{app._leave();}catch(e){}app._leave=null;}   // the page you're on keeps its values first, then the link's go in
+  let o=null;try{o=JSON.parse(unb64u(hash.slice(7)));}catch(e){}
+  const catOf=t=>CATEGORIES.find(c=>c.title===t&&hasDetail(c));
+  const peek=rs=>{const mine=new Set(readHand().map(r=>r.id));
+    for(const r of canonRows(Array.isArray(rs)?rs:rs?[rs]:[])){if(r&&r.id&&r.cartridge&&!mine.has(r.id)&&!VIEW_HAND.some(x=>x.id===r.id))VIEW_HAND.push(r);}};
+  const num=v=>typeof v==="number"&&isFinite(v)&&v>0?v:null;
+  if(o&&o.t==="l"){
+    peek(o.r);
+    const cart=o.r?canonRows([o.r])[0].cartridge:canon(String(o.k||""));
+    const c=catOf(o.r?canonRows([o.r])[0].category:movedCat(String(o.c||""),cart));
+    if(c){
+      const b=num(o.b),w=num(o.w),gv=num(o.g),d=typeof o.d==="number"&&o.d>=0?o.d:null;
+      shared[c.title]=Object.assign({},shared[c.title],{cart,dist:g(d!=null?d:c.default_distance),fireOpen:!!(b||w||gv),
+        barrel:b?g(b):"",twist:w?g(w):"",gun:gv?g(gv):undefined,gunAuto:undefined,goFav:{cart,key:String(o.n||""),load:String(o.n||"")}});
+      navigate("loads",c,null,"replace");return true;
+    }
+  }
+  if(o&&o.t==="c"&&Array.isArray(o.p)){
+    peek(o.r);
+    const ps=o.p.filter(x=>Array.isArray(x)&&x.length>=3).slice(0,H2H_MAX).map(x=>{const k=canon(String(x[1]));return [movedCat(String(x[0]),k),k,String(x[2]),num(x[3]),num(x[4]),num(x[5])];});
+    H2H.splice(0,H2H.length,...ps.map(x=>x.slice(0,3).join("|")));
+    H2HS.dist=typeof o.d==="number"&&o.d>=0?g(o.d):g(H2H_DISTANCE);
+    H2HS.guns=ps.map(x=>x[3]?g(x[3]):"");H2HS.brls=ps.map(x=>x[4]?g(x[4]):"");H2HS.tws=ps.map(x=>x[5]?g(x[5]):"");
+    H2HS.fireOpen=ps.some(x=>x[3]||x[4]||x[5]);
+    navigate("h2h",null,null,"replace");return true;
+  }
+  navigate("home",null,null,"replace");
+  modal(`<h3 style="margin:0 0 6px">Link not found</h3><p class="muted" style="margin:0">This shared link is incomplete or from a newer version of Load Lore.</p>`);
+  return true;
 }
 
 let openModalClose=null;   // the open dialog's close(), for the Android back button
@@ -2609,7 +2707,7 @@ function modal(inner){
 
 $("#ver").textContent=VERSION_TEXT;
 // start on the page the address names (a reload, or a link to #settings), else Home
-{const [m,c,sub]=navFrom(history.state&&history.state.app?history.state:null);navigate(m,c,sub,"replace");}
+if(!openShared(location.hash)){const [m,c,sub]=navFrom(history.state&&history.state.app?history.state:null);navigate(m,c,sub,"replace");}
 syncSoon(0);   // pick up changes made on the other devices
 // Android back button (Capacitor App plugin): close a dialog, then go back to the previous page
 // (the same history the browser's back arrow uses); with no earlier page, step up the menus

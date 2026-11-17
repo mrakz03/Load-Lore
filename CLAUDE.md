@@ -64,6 +64,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
 - Ammo on hand (Nov 16 2026) was removed (Zeke, Nov 17 2026): no On hand box, tags, page or My Bench card.
   Old counts stay in localStorage cartridge_calc_inventory_v1 (left alone, nothing reads it); a sync copy's
   "inv" part is passed through unchanged (syncMerge keeps parts it doesn't use), so older apps keep theirs.
+- Sharing (Nov 17 2026, Zeke; web + Android only): a "Share" button on an opened Load Dictionary load and on an
+  opened handload (Handloads tab), "Share this comparison" under Head to Head's results. The link is
+  SITE (DATA.site) + "#share/" + base64url JSON (shareURL; load {t:"l",c,k,n,d,b,w,g,r}, H2H {t:"c",p,d,r}),
+  nothing uploaded. Android: @capacitor/share sheet; phone browsers navigator.share; PC a dialog with Copy link.
+  openShared (start-up and popstate) opens it with the sender's distance / firearm setup and replaces the
+  #share entry. A shared handload goes in VIEW_HAND (memory only; syncHand marks it .peek: "Shared handload"
+  chip, no star, "Save to my handloads" keeps it with the same id); the Handloads tab skips .peek.
 - Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
   (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
   card and the sidebar entry open / close them (menu_entries / menuEntries, open_groups / OPEN_GROUPS,
