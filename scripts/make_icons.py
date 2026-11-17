@@ -1,10 +1,9 @@
-"""Draws the app icon and writes every size the three builds need into assets/.
+"""Draws the app icon and writes every size the web and Android builds need into assets/.
 
     pip install pillow        (only needed to regenerate the icons, not to run the app)
     python3 scripts/make_icons.py
 
-assets/icon.png            1024 px master; the desktop app's window icon; Linux .desktop icon
-assets/icon.ico            Windows .exe, installer and shortcuts (16-256 px)
+assets/icon.png            1024 px master; the web page's tab icon
 assets/android/res/...     Android launcher icons (legacy + adaptive), copied in by the CI build
 assets/web/...             web version: home-screen icons (iPhone apple-touch-icon, manifest icons)
 """
@@ -15,7 +14,7 @@ from PIL import Image, ImageDraw
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets")
 
-# Classic theme colors (THEMES in src/load_lore.py)
+# Classic theme colors (THEMES in web/tables.py)
 BG_TOP, BG_BOTTOM = (31, 36, 46), (14, 16, 20)
 BORDER = (45, 51, 63)
 ACCENT, ON_ACCENT = (76, 141, 255), (255, 255, 255)
@@ -141,8 +140,6 @@ def write(img, *parts):
 def main():
     master = full_icon(1024)
     write(master, "icon.png")
-    master.save(os.path.join(OUT, "icon.ico"),
-                sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
     write(full_icon(180, square=True), "web", "apple-touch-icon.png")
     for px in (192, 512):
         write(full_icon(px), "web", f"icon-{px}.png")

@@ -1,0 +1,31 @@
+# Load Lore sync Worker (Cloudflare). Cloudflare Workers Builds deploys it on every push to next
+# (project load-lore-sync, root directory /sync); by hand: cd sync && npx wrangler deploy
+name = "load-lore-sync"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+# the app talks to https://sync.loadlore.net (SYNC_URL in web/build_web.py); Cloudflare makes the
+# DNS record for it on the first deploy
+routes = [{ pattern = "sync.loadlore.net", custom_domain = true }]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "load-lore-sync"
+database_id = "65363fdc-b45c-4a2a-b5eb-6939c6c1fac8"
+
+# 60 requests a minute per address; 5 new sync codes a minute per address
+# (namespace ids are any numbers not used by another Worker of the account)
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+simple = { limit = 60, period = 60 }
+
+[[ratelimits]]
+name = "NEW_LIMITER"
+namespace_id = "1002"
+simple = { limit = 5, period = 60 }
+
+# once a day: remove copies nobody has opened for two years
+[triggers]
+crons = ["17 4 * * *"]

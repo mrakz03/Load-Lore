@@ -1,13 +1,12 @@
 """Regenerates www/index.html (the phone/web version) from the CSV files.
 Run after editing any data/*.csv or web/template.html:   python3 web/build_web.py
 """
-import json, os, shutil, sys
+import json, os, shutil
 
 here = os.path.dirname(os.path.abspath(__file__))
 root = os.path.dirname(here)
-sys.path.insert(0, os.path.join(root, "src"))
 import csv
-import load_lore as c
+import tables as c
 data = os.path.join(root, "data")
 cats = []
 for cat in c.CATEGORIES:
@@ -41,6 +40,9 @@ SITE = "https://loadlore.net/"
 # point there, the tab title says (beta), search engines are asked not to list it, and Settings shows
 # "beta" + the commit (Cloudflare gives it as CF_PAGES_COMMIT_SHA)
 BETA = os.environ.get("LOADLORE_BETA", "")
+# handload sync (sync/worker.js on Cloudflare); LOADLORE_SYNC=<address> points a test build elsewhere,
+# LOADLORE_SYNC= (empty) leaves sync out
+SYNC = os.environ.get("LOADLORE_SYNC", "https://sync.loadlore.net")
 if BETA and c.APP_VERSION == "dev":
     c.APP_VERSION = ("beta " + os.environ.get("CF_PAGES_COMMIT_SHA", "")[:7]).strip()
 tpl = open(os.path.join(here, "template.html"), encoding="utf-8").read()
@@ -50,7 +52,7 @@ if BETA:
                       '<title>In Like Flint - Load Lore (beta)</title>\n<meta name="robots" content="noindex">', 1)
 os.makedirs(os.path.join(here, "www"), exist_ok=True)
 with open(os.path.join(here, "www", "index.html"), "w", encoding="utf-8") as f:
-    f.write(tpl.replace("__SITE__", SITE).replace("__DATA__", json.dumps({"version": c.APP_VERSION, "beta": bool(BETA), "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "group_blurbs": c.GROUP_BLURBS, "cat_tags": c.CAT_TAGS, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "moved": c.MOVED_CATEGORIES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "barrel": {"n": c.BARREL_N, "revolvers": c.STANDARD_REVOLVERS, "magnums": c.MAGNUM_REVOLVERS, "rimfire": c.RIMFIRE_HANDGUN, "min": c.BARREL_MIN, "max": c.BARREL_MAX, "max_in": c.BARREL_MAX_IN, "max_cat": c.BARREL_MAX_CAT}, "twist": {"min": c.TWIST_MIN, "max": c.TWIST_MAX, "stable": c.SG_STABLE, "sg_min": c.SG_MIN, "copper": c._COPPER.pattern, "long": c._LONG.pattern, "blunt": c._BLUNT.pattern}, "fire_notes": {x.title: c.firearm_note(x) for x in c.CATEGORIES}, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS, "hand_fields": c.HANDLOAD_FIELDS, "hand_note": c.HANDLOAD_NOTE, "lines": c.LINE_PREFIXES}, ensure_ascii=False)))
+    f.write(tpl.replace("__SITE__", SITE).replace("__DATA__", json.dumps({"version": c.APP_VERSION, "beta": bool(BETA), "about": c.ABOUT_TEXT, "repo": c.REPO_PAGE, "themes": c.THEMES, "default_theme": c.DEFAULT_THEME, "group_blurbs": c.GROUP_BLURBS, "cat_tags": c.CAT_TAGS, "renamed": c.RENAMED_CARTRIDGES, "split": c.SPLIT_CARTRIDGES, "moved": c.MOVED_CATEGORIES, "gun_lb": c.GUN_LB, "gun_max": c.GUN_LB_MAX, "barrel": {"n": c.BARREL_N, "revolvers": c.STANDARD_REVOLVERS, "magnums": c.MAGNUM_REVOLVERS, "rimfire": c.RIMFIRE_HANDGUN, "min": c.BARREL_MIN, "max": c.BARREL_MAX, "max_in": c.BARREL_MAX_IN, "max_cat": c.BARREL_MAX_CAT}, "twist": {"min": c.TWIST_MIN, "max": c.TWIST_MAX, "stable": c.SG_STABLE, "sg_min": c.SG_MIN, "copper": c._COPPER.pattern, "long": c._LONG.pattern, "blunt": c._BLUNT.pattern}, "fire_notes": {x.title: c.firearm_note(x) for x in c.CATEGORIES}, "categories": cats, "diameters": c.DIAMETERS, "bullets": bullets, "powders": c.POWDERS, "powder_brands": {p: b for b, ps in c.POWDER_BRANDS.items() for p in ps}, "primers": c.PRIMERS, "primer_brands": {p: b for b, ps in c.PRIMER_BRANDS.items() for p in ps}, "hand_fields": c.HANDLOAD_FIELDS, "hand_note": c.HANDLOAD_NOTE, "lines": c.LINE_PREFIXES, "sync_url": SYNC, "site": SITE}, ensure_ascii=False)))
 shutil.copyfile(os.path.join(root, "assets", "icon.png"), os.path.join(here, "www", "icon.png"))  # browser tab icon
 # home-screen icons (scripts/make_icons.py draws them); the manifest's "browser" display keeps
 # "Add to Home screen" a plain shortcut: no install prompt
