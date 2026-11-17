@@ -64,7 +64,7 @@ Keep your own loads and see how they grade against factory ammo of the same cart
 
 - **+ New handload**: pick the cartridge, bullet (from the built-in library or type your own), powder and charge, velocity, barrel length, purpose and cost (a total, or worked out from components and brass reuse).
 - Edit, duplicate or delete handloads, see them listed with the factory loads in the Load Dictionary, or put them head to head.
-- **Sync** keeps your handloads, ladder tests, ammo on hand, favorite loads and prices the same on your phone and computer (website and Android app): get a sync code on one device and type it on the other. No account is needed. Anyone with the code can see and change the synced copy, so keep it to yourself.
+- **Sync** keeps your handloads, ladder tests, favorite loads and prices the same on your phone and computer (website and Android app): get a sync code on one device and type it on the other. No account is needed. Anyone with the code can see and change the synced copy, so keep it to yourself.
 - **Back up / Restore** saves your handloads as a CSV file, so you can move them between computer and phone.
 
 The app does not check pressure or safety. Always follow a published load manual.
