@@ -2,6 +2,14 @@
 
 Working notes for contributors and AI coding assistants: the rules the code follows and why.
 
+Web only (Nov 2026, Zeke): the Windows / Linux desktop app (src/load_lore.py, Tkinter) was removed for v1.15
+(its last releases were v1.14.x, which tell users the app lives at loadlore.net (Back up there, Restore on the
+web: same my_handloads.csv format) and that there are no more desktop updates (has_desktop_files)). Its code is kept on the `desktop` branch (from v1.14.2). The
+app is web/template.html; Android wraps it. The tables build_web.py hands the page as DATA (categories,
+THEMES, GUN_LB, BARREL_*, PRODUCT_LINES, RENAMED_CARTRIDGES...) are in web/tables.py. Notes below still
+name desktop functions or classes (LoadsView, App, snake_case names beside the web's camelCase ones):
+that is history; only the web half exists now.
+
 App name (Oct 2026): "In Like Flint - Load Lore" inside the app (APP_TITLE / web APP_TITLE, window
 title, README heading); device menus show just "Load Lore" (issue #27: installer AppName and
 shortcuts, .desktop Name, capacitor appName). File names were renamed too (Oct 2026): src/load_lore.py,
@@ -13,12 +21,11 @@ Windows AppId, and the web's cartridge_calc_* localStorage keys (saved handloads
 
 Grades ammo S–F on velocity, energy, recoil, cost (plus Taylor KO and HITS;
 default weights 3/3/1/3/3/3, Shotgun keeps Taylor KO and HITS at 0: no bullet diameter).
-Desktop app: src/load_lore.py (Tkinter, stdlib only). Phone/web: web/template.html,
-built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK in CI).
+The app: web/template.html, built with web/tables.py and data/*.csv by `python3 web/build_web.py`
+into web/www (Capacitor wraps it as an APK in CI).
 
 ## Rules
-- Desktop and web scoring must stay in parity (same formulas, same data).
-- Data lives in data/*.csv. After editing any CSV or the template, rebuild the web version.
+- Data lives in data/*.csv. After editing any CSV, web/tables.py or the template, rebuild the web version.
 - Two tools plus Handloads (Oct 2026; Compare Cartridges and "Add your own caliber" were removed): Load
   Dictionary (LoadsView / openLoads, the old Compare Loads, plus an S-F grades on/off switch kept
   in settings.json show_grades / localStorage, off by default (Oct 25 2026); a saved choice is kept) and Head to Head (HeadToHeadView / openH2H, 2-5
@@ -355,55 +362,28 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   to the commercial cartridge, saved prices to both.
 - Metric cartridges are named with "mm" (7.62x51mm NATO, 7.62x54mmR). When renaming a
   cartridge, add old -> new to RENAMED_CARTRIDGES so users' saved files keep matching.
-- Colour themes live in THEMES (load_lore.py); build_web.py passes the same table to
+- Colour themes live in THEMES (web/tables.py); build_web.py passes the table to
   the web version. Classic is the default and the original look. Use the palette globals
   (BG, SURFACE, TEXT, ACCENT, ON_ACCENT, DANGER, HAND_FG...) / CSS variables, never hard-coded colours.
   Head to Head winners use BEST / --best (a theme's optional "best" colour, else its accent). Graphite's
   is gold (Zeke Oct 31 2026: its grey accent read like plain text; he chose gold text, no cell tint).
-- Desktop UI sizes come from measured text (App.fit_columns, _sidebar_width), not fixed pixel
-  counts: fonts are in points and grow with screen DPI, so fixed widths cut text off on HiDPI.
-  The Load column fits the longest full name, re-measured per cartridge; grow_to_fit widens
-  the window for it and gives the room back later, never below the width the user chose.
-  LoadsView.fit_table_height sets the table's row count from the window height so the
-  selected load's (larger) panel fits without scrolling: at most OPEN_ROWS while a load is open,
-  the full height when closed (min 6 rows, then the page scrolls).
-  App.px() scales by text size AND screen DPI (self.dpi, 96 dpi = 1.0). On Windows,
-  sharp_on_windows() declares DPI awareness before Tk starts, otherwise Windows stretches the
-  window and it looks blurry (issue #5).
-
-- Desktop look follows the web (Oct 2026): rounded boxes are RoundBox (a canvas behind a .body
-  Frame, smooth corners from corner_png, keep some padding or the body covers the corners), with
-  App.card / App.button / App.chip (Pill) / App.field (rounded entry or drop-down, accent outline
-  on focus) / Badge / close_button. Sidebar icons are the web's ICONS drawn by icon_png (stdlib PNG).
-
-- App icon: scripts/make_icons.py (needs Pillow) draws assets/icon.png, icon.ico and the Android
-  launcher icons in assets/android/res. CI bakes icon.ico into the .exe/installer, bundles
-  icon.png for the window icon (icon_path), ships it in the Linux tar for the .desktop entry,
-  and copies assets/android/res over the Capacitor project after `cap add android`.
+- App icon: scripts/make_icons.py (needs Pillow) draws assets/icon.png (web tab icon), assets/web
+  (home-screen icons) and the Android launcher icons in assets/android/res; CI copies those over the
+  Capacitor project after `cap add android`.
 
 ## Release
-- Desktop end of life (Nov 2026, Zeke): Windows / Linux builds continue for v1.14.x fix releases only;
-  v1.15 on is web + Android. The desktop Home card (App._moved_card) says so and points to loadlore.net
-  and Back up; Settings > Updates says "No more desktop updates" once the latest release has no desktop
-  files (has_desktop_files). Before the desktop app is removed from next, a `desktop` branch is made
-  from the last 1.14.x release so it can be relaunched (tags and releases keep it too).
+- Desktop end of life (Nov 2026, Zeke): Windows / Linux builds ended with v1.14.x; v1.15 on is web +
+  Android. The `desktop` branch (made from v1.14.2) keeps the desktop app, its installer and the old
+  release.yml with the Windows / Linux jobs, so it can be relaunched from there.
 - Build artifacts (the files on an Actions run page) are kept 7 days (retention-days); releases
   keep their own copies. Old private Load-Lore-old artifacts counted against the 500 MB free quota.
-- In-app updates (Windows/Linux, Settings > Updates, App.check_updates / start_update): asks the
-  GitHub latest-release API, downloads the Setup.exe (run with /SILENT; the .iss [Run] entry with
-  Check: WizardSilent reopens the app) or the Linux tar (install_linux_update swaps the files in
-  place like install.sh), checked against SHA256SUMS.txt from the release job. "Check at start"
-  (settings.json check_updates) is off by default. Release files carry the version
-  (LoadLore-v1.7.4-dev-Setup.exe, -Windows.zip, -Linux.tar.gz, .apk; release_asset matches them).
-  v1.7.3-dev and older only look for CartridgeCalculator-Setup.exe / -Linux.tar.gz, which releases
-  no longer ship (the maintainer's call, Oct 24 2026): those copies are reinstalled by hand, and the
-  installer / install.sh move the old folder and user files.
-  SHA256SUMS.txt keeps its name.
-  Tags are vX.Y.Z, optionally with a suffix for a test build (v1.7.2-dev sorts after 1.7.1, before
-  1.7.2: version_tuple); a release marked "pre-release" on GitHub is skipped by the latest-release API.
-git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Setup.exe + zip), Linux
-(tar with install.sh), Android (APK). Pull main first so the tag lands on the latest commit.
-- APP_VERSION in load_lore.py stays "dev" in the repo; CI sets it from the tag.
+- Tags are vX.Y.Z, optionally with a suffix for a test build (v1.7.2-dev). Don't mark a release
+  "pre-release": the old desktop copies' updater reads the latest release (since v1.13 it only says
+  there are no more desktop updates when that release has no LoadLore-*-Setup.exe / -Linux.tar.gz).
+git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds the Android APK, publishes the
+release (APK + SHA256SUMS.txt), then pages.yml deploys the site. Pull main first so the tag lands on
+the latest commit.
+- APP_VERSION in web/tables.py stays "dev" in the repo; CI sets it from the tag.
 - Web version on GitHub Pages (Oct 27 2026, .github/workflows/pages.yml): a successful v* release build
   (workflow_run after "Build and release") or a manual run (Actions tab) builds main with build_web.py and
   deploys web/www (version = newest v* tag). A plain push to main does not deploy (Zeke, Oct 28 2026). Needs Settings > Pages > Source: GitHub
@@ -417,15 +397,12 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   (A first try pushed to a second repo, Load-Lore-beta; Zeke preferred no extra repo.)
 - Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the maintainer saves
   the middle number (v1.6) for bigger releases.
-- Installers upgrade in place and clear old shipped data (ammo_*, loads_*, bullets.csv) first.
 - APK updates install over the old app only once the ANDROID_DEBUG_KEYSTORE secret is set
   (a debug.keystore made with keytool, base64 in the secret; the maintainer keeps the file); until then testers must uninstall the old APK first.
 
 ## Testing
-- Desktop: python3.12 has Tk here (the default python3 doesn't); drive App headlessly under
-  xvfb-run, patching messagebox so popups don't block. Try `tk scaling 2.0` for HiDPI.
 - Web: Playwright from /opt/node-tools/node_modules against web/www/index.html.
-- Parity: compare score_loads/h2h_rows/h2h_downrange with the web's scoreLoads/h2hRows/h2hDownrange.
+- build_web.py's output should only change where you meant it to: diff web/www/index.html before / after.
 
 ## Data notes
 - No loads were ever deleted (checked against the user's older load files, Oct 2026). The
@@ -523,8 +500,6 @@ git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds Windows (Set
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
 ## Known to-dos
-- Desktop layout fixed for HiDPI and checked under Xvfb; confirm on the real Fedora and
-  Windows machines.
 - The generic "typical" rows (7.62x54mmR, 5.45x39mm, 7.62x25mm Tokarev, .38 Super, .32 S&W Long)
   were taken out of Compare Loads (Oct 2026); with Compare Cartridges gone they are only in
   ammo_*.csv. They could come back as branded loads from steel-case import data (Wolf, Tula, PPU).

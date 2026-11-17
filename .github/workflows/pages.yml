@@ -41,8 +41,8 @@ jobs:
           # the site read ".1.11.3" (Oct 29 2026); a leading "." is dropped too
           t=$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)
           v=dev; [ -n "$t" ] && v="${t#v}" && v="${v#.}"
-          sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" src/load_lore.py
-          grep -q "^APP_VERSION = \"$v\"" src/load_lore.py
+          sed -i "s/^APP_VERSION = .*/APP_VERSION = \"$v\"/" web/tables.py
+          grep -q "^APP_VERSION = \"$v\"" web/tables.py
       - run: python web/build_web.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

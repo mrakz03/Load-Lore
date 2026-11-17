@@ -4,7 +4,7 @@
 
 A field guide to factory ammunition. Look up major brand's loads for a cartridge, get specs for each load, check their ballistic tables, and put up to five loads head to head. Reloaders can add their own handloads and see how they stack up.
 
-**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also comes as an Android app. The Windows and Linux desktop app is being retired: it gets small fixes through v1.14.x, and from v1.15 on everything new is on the website.
+**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also comes as an Android app.
 
 > **Still in development.** Most of it works well, but you may run into rough edges, a load whose figures need fixing, or a missing factory load. If something looks wrong or you have any suggestions, please [open an issue](https://github.com/mrakz03/Load-Lore/issues).
 
@@ -70,7 +70,7 @@ Keep your own loads and see how they grade against factory ammo of the same cart
 The app does not check pressure or safety. Always follow a published load manual.
 
 ### Settings
-- Theme, text size and the grades on/off switch. On Windows and Linux, Settings also has **Check for updates**.
+- Theme, text size and the grades on/off switch.
 
 <br>
 
@@ -89,21 +89,9 @@ Each factor is scored against the typical (median) load of the same cartridge: t
 ## Download and install
 The easiest way is the web version at **[loadlore.net](https://loadlore.net)**: it runs in any browser, on a computer or phone, and is always up to date. Your handloads and settings stay in that browser (use **Back up** in Handloads to move them).
 
-The apps are on the [Releases](https://github.com/mrakz03/Load-Lore/releases) page.
+The Android app is on the [Releases](https://github.com/mrakz03/Load-Lore/releases) page: install `LoadLore-v<version>.apk` (allow installs from your browser or file manager when asked).
 
-**The desktop app's last updates are v1.14.x.** From v1.15 on, releases have only the Android app and new loads and features go to the website. Your desktop copy keeps working. To move your handloads, press **Back up** in its Handloads tab, then **Restore** on loadlore.net and choose that file (saved prices and settings don't carry over).
-
-- **Windows**: run `LoadLore-v<version>-Setup.exe`. No admin password needed, and a newer installer upgrades in place, keeping your handloads and settings. The installer isn't code-signed, so if Windows says "Windows protected your PC", click More info, then Run anyway. A portable .zip is also available.
-- **Linux**: unpack and run the installer, which adds the app to your launcher. Run it again with a newer release to update, or with `--uninstall` to remove it.
-  ```
-  tar xzf LoadLore-v*-Linux.tar.gz
-  bash LoadLore/install.sh
-  ```
-- **Android**: install `LoadLore-v<version>.apk` (allow installs from your browser or file manager when asked).
-
-**Updating (Windows and Linux):** in Settings press **Check for updates**, then **Update**. The download is checked against the release's `SHA256SUMS.txt` and installed over the old version; your data is kept. **Check at start** asks you whenever a new version is out. The app only contacts GitHub when you ask it to.
-
-Upgrading from v1.7.3-dev or older (when the app was called Cartridge Calculator)? Run the new installer or install.sh once by hand. It moves your handloads and settings over.
+**Used the Windows or Linux app?** Its last updates were v1.14.x (Nov 2026); everything it did is on the website. Your copy keeps working, but gets no new loads. To move your handloads, press **Back up** in its Handloads tab, then **Restore** on loadlore.net and choose that file. Saved prices and settings don't carry over. The desktop app's code is kept on the [`desktop` branch](https://github.com/mrakz03/Load-Lore/tree/desktop).
 
 <br>
 
@@ -111,18 +99,14 @@ Upgrading from v1.7.3-dev or older (when the app was called Cartridge Calculator
 
 ### Repository layout
 ```
-src/load_lore.py              desktop app (single file, Python standard library + Tkinter only)
-web/template.html             phone/web app (single page, no framework)
-web/build_web.py              embeds the CSV data into web/www/index.html
+web/template.html             the app (single page, no framework): scoring, ballistics, every page
+web/build_web.py              embeds the CSV data and web/tables.py into web/www/index.html
+web/tables.py                 categories, themes, gun weights, barrel limits, product lines, cartridge renames
 data/loads_*.csv              factory loads, one file per category (loads_pcc.csv: Pistol Caliber Carbine)
 data/ammo_*.csv               cartridge list (cartridges with no factory loads can still hold handloads)
 data/bullets.csv              bullet library for the handload form (weight, diameter, approximate G1 BC)
 assets/                       app icons (drawn by scripts/make_icons.py, needs Pillow)
-scripts/build_linux.sh        build from source and install on Fedora / Linux
-scripts/install_linux.sh      installer shipped in the Linux release (as install.sh)
-scripts/build_windows.bat     build the Windows .exe locally
-scripts/windows_installer.iss Inno Setup script for the Windows installer (built in CI)
-.github/workflows/release.yml builds Windows, Linux and Android
+.github/workflows/release.yml builds the Android app for a v* tag and publishes the release
 .github/workflows/pages.yml   publishes the web version to loadlore.net (GitHub Pages)
 package.json, capacitor.config.json   Android wrapper (Capacitor)
 research/                     where each added load came from (pcc_sources.tsv for the carbine loads)
@@ -130,21 +114,20 @@ research/                     where each added load came from (pcc_sources.tsv f
 
 ### Running from source
 ```
-python3 src/load_lore.py                   # desktop app (needs Tk: python3-tkinter)
 python3 web/build_web.py                   # then open web/www/index.html in a browser
 ```
-The desktop and web versions share the same formulas and data and must stay in step: after editing any CSV or `web/template.html`, run `python3 web/build_web.py`. The site at loadlore.net is rebuilt from `main` after each release (or by running the Pages workflow by hand); a plain push doesn't change it. Your own handloads (`my_handloads.csv`) and settings (`settings.json`) are git-ignored.
+After editing any CSV, `web/tables.py` or `web/template.html`, run `python3 web/build_web.py` again. The site at loadlore.net is rebuilt from `main` after each release (or by running the Pages workflow by hand); a plain push doesn't change it.
 
 ### Data files
 - `loads_*.csv` columns: cartridge, load, bullet_gr, muzzle_fps, bc_g1, powder_gr, default_cost, default, source, group, barrel_in (test barrel), purpose, and optionally diameter_in. Every load name starts with its brand; shotguns use `group` for the load type.
 - `ammo_*.csv` holds generic, unbranded loads and provides the cartridge list.
 - .223 Remington / 5.56x45mm NATO and .308 Winchester / 7.62x51mm NATO are separate cartridges; a NATO load says so in its name (5.56, M193, M855, 7.62x51, M80).
-- When renaming or splitting a cartridge, add it to `RENAMED_CARTRIDGES` or `SPLIT_CARTRIDGES` in `src/load_lore.py` so saved handloads and prices still match. Bullet diameters are in the `DIAMETERS` table there.
+- When renaming or splitting a cartridge, add it to `RENAMED_CARTRIDGES` or `SPLIT_CARTRIDGES` in `web/tables.py` so saved handloads and prices still match. Bullet diameters are in the `DIAMETERS` table there.
 
 <br>
 
 ## Contributing
-Bug reports, load corrections and ideas are welcome as [GitHub issues](https://github.com/mrakz03/Load-Lore/issues). For a data fix, name the load and link the maker's catalog page or website. Pull requests should keep the desktop and web versions in step. `CLAUDE.md` has the project's detailed working notes. I have shit to do IRL so I might not be the fastest at looking at your forks/PRs, but please feel free to improve this program and send over any suggestions!
+Bug reports, load corrections and ideas are welcome as [GitHub issues](https://github.com/mrakz03/Load-Lore/issues). For a data fix, name the load and link the maker's catalog page or website. `CLAUDE.md` has the project's detailed working notes. I have shit to do IRL so I might not be the fastest at looking at your forks/PRs, but please feel free to improve this program and send over any suggestions!
 
 <br>
 
