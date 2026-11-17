@@ -2,7 +2,7 @@
 
 <img src="assets/icon.png" alt="App icon: a rifle cartridge standing on a book" width="96" align="right">
 
-A field guide to factory ammunition. Look up major brand's loads for a cartridge, get specs for each load, check their ballistic tables, and put up to five loads head to head. Reloaders can add their own handloads and see how they stack up.
+A field guide to factory ammunition. Look up major brand's loads for a cartridge, get specs for each load, check their ballistic tables, and put up to five loads head to head. Reloaders can keep their handloads and ladder tests on My Bench and see how they stack up.
 
 **Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also comes as an Android app.
 
@@ -49,7 +49,9 @@ Look up every load for a cartridge, graded and ranked.
   - **about your figures**: click to see data for where given figures came from;
   - **ballistic table**: velocity, energy, bullet drop and wind drift out to 500 yd (rifles) or a shorter range (handguns, rimfire, slugs);
   - **your price**: type what you actually pay per round and the cost grade updates;
-  - **+ Head to Head** to add the load to your head-head comparison.
+  - **+ Head to Head** to add the load to your head-head comparison;
+  - **Share** to send someone a link that opens the same load (nothing is uploaded: the link holds it).
+- **Favorites.** Tap the star on any load to keep it on your Favorite loads page.
 
 ### Head to Head
 Compare 2 to 5 loads side by side, from any cartridge or category (a .308 against a 6.5 Creedmoor, or a 12 gauge slug against a .30-30).
@@ -58,19 +60,26 @@ Compare 2 to 5 loads side by side, from any cartridge or category (a .308 agains
 - See every figure side by side with the leader highlighted, how many factors each load wins, each load's grade from the Load Dictionary, and a downrange table.
 - **Firearm setup for each load** gives each load its own gun weight, barrel and twist. Pick the same load twice to compare it from, say, a 10.5 in and a 16 in barrel.
 - On phones the comparison is shown as easy-to-scroll cards.
+- **Share this comparison** makes a link that opens the same comparison.
 
-### Handloads
-Keep your own loads and see how they grade against factory ammo of the same cartridge.
+### My Bench
+Your own things in one place: Handloads, Ladder tests and Favorite loads.
 
-- **+ New handload**: pick the cartridge, bullet (from the built-in library or type your own), powder and charge, velocity, barrel length, purpose and cost (a total, or worked out from components and brass reuse).
-- Edit, duplicate or delete handloads, see them listed with the factory loads in the Load Dictionary, or put them head to head.
-- **Sync** keeps your handloads, ladder tests, favorite loads and prices the same on your phone and computer (website and Android app): get a sync code on one device and type it on the other. No account is needed. Anyone with the code can see and change the synced copy, so keep it to yourself.
-- **Back up / Restore** saves your handloads as a CSV file, so you can move them between computer and phone.
+**Handloads**: keep your own loads and see how they compare with factory ammo of the same cartridge.
+- **+ New handload**: pick the cartridge (or add one that isn't listed), the bullet maker and bullet (from the built-in library of over 1,300 bullets, or your own), powder, primer, charge, C.O.L., velocity and barrel length. Purpose, cost and notes are optional.
+- Edit, duplicate or delete handloads, see them listed with the factory loads in the Load Dictionary, put them head to head, or share one as a link.
+
+**Ladder tests**: record the velocities (and group sizes) of each powder charge in a ladder. The app shows each charge's average, SD and ES on a chart, points out the flattest spot and the most consistent charge, and turns the charge you pick into a handload.
+
+**Favorite loads**: every load you starred, grouped by cartridge, with its figures one click away.
 
 The app does not check pressure or safety. Always follow a published load manual.
 
 ### Settings
-- Theme, text size and the grades on/off switch.
+- **Display**: theme, text size and the grades on/off switch.
+- **Data**:
+  - **Sync** keeps your handloads, ladder tests, favorite loads and prices the same on your phone and computer (website and Android app): get a sync code on one device and type it on the other. No account is needed. Anyone with the code can see and change the synced copy, so keep it to yourself. (Also on the Handloads page.)
+  - **Back up / Restore** saves your handloads as a CSV file, so you can move them between computer and phone.
 
 <br>
 
@@ -87,11 +96,11 @@ Each factor is scored against the typical (median) load of the same cartridge: t
 <br> 
 
 ## Download and install
-The easiest way is the web version at **[loadlore.net](https://loadlore.net)**: it runs in any browser, on a computer or phone, and is always up to date. Your handloads and settings stay in that browser (use **Back up** in Handloads to move them).
+The easiest way is the web version at **[loadlore.net](https://loadlore.net)**: it runs in any browser, on a computer or phone, and is always up to date. Your handloads and settings stay in that browser (use **Sync**, or **Back up** in Settings, to move them).
 
 The Android app is on the [Releases](https://github.com/mrakz03/Load-Lore/releases) page: install `LoadLore-v<version>.apk` (allow installs from your browser or file manager when asked).
 
-**Used the Windows or Linux app?** Its last updates were v1.14.x (Nov 2026); everything it did is on the website. Your copy keeps working, but gets no new loads. To move your handloads, press **Back up** in its Handloads tab, then **Restore** on loadlore.net and choose that file. Saved prices and settings don't carry over. The desktop app's code is kept on the [`desktop` branch](https://github.com/mrakz03/Load-Lore/tree/desktop).
+**Used the Windows or Linux app?** Its last updates were v1.14.x (Nov 2026); everything it did is on the website. Your copy keeps working, but gets no new loads. To move your handloads, press **Back up** in its Handloads tab, then **Restore** in loadlore.net's Settings and choose that file. Saved prices and settings don't carry over. The desktop app's code is kept on the [`desktop` branch](https://github.com/mrakz03/Load-Lore/tree/desktop).
 
 <br>
 
@@ -109,6 +118,7 @@ assets/                       app icons (drawn by scripts/make_icons.py, needs P
 .github/workflows/release.yml builds the Android app for a v* tag and publishes the release
 .github/workflows/pages.yml   publishes the web version to loadlore.net (GitHub Pages)
 package.json, capacitor.config.json   Android wrapper (Capacitor)
+sync/                         sync server (Cloudflare Worker + D1) behind the Sync button
 research/                     where each added load came from (pcc_sources.tsv for the carbine loads)
 ```
 
