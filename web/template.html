@@ -308,9 +308,10 @@ th:nth-child(1){background:var(--surface2);z-index:2}
 .g3.gpw{grid-template-columns:2fr 1fr 1fr}
 input.hoth{margin-top:6px}
 .hsec{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}.hsec>h4{margin:0 0 10px;font-size:.95rem}.hsec>h4+.g2,.hsec>h4+.g3{margin-top:0}   /* handload form groups (Zeke, Nov 16 2026) */
+.fsub{margin:18px 0 8px;font-size:.95rem}   /* a small heading over a group of optional boxes (ladder charges) */
 .opt{font-weight:400;letter-spacing:0;text-transform:none;opacity:.8}   /* "(optional)" after a form label (Zeke, Nov 2026) */
 .fhint{display:block;font-size:.72rem;line-height:1.25;color:var(--muted);margin-top:3px}   /* where a typed figure comes from (handload form) */
-@media(max-width:340px){.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g2,.g3{row-gap:12px}.g3,.g3.gpw{grid-template-columns:1fr 1fr}.g3.gpw>div:first-child{grid-column:1/-1}}   /* phones: two boxes a row so labels stay on one line (Zeke, Nov 17 2026) */
 .lc.hl{border-left:3px solid var(--accent)}
 .hbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .hbtns .btn{padding:9px 14px;font-size:.85rem}
@@ -403,7 +404,7 @@ a.ghlink svg{width:28px;height:28px;fill:currentColor}
 .lr2 .sp{flex:1}.lr2 .pchk{margin-top:0}.lr2 .pchk label{font-size:.85rem}.lr2 .lx{color:var(--danger);font-size:.85rem}
 @media(max-width:600px){.lr1{grid-template-columns:1fr 1fr}.lr1>div:nth-child(2){grid-column:1/-1;grid-row:2}}   /* phones: charge and group, then the velocities full width */
 button.lcart{width:100%;text-align:left;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:11px 10px;font:inherit;font-size:1rem;cursor:pointer}
-button.lcart.ph{color:var(--muted)}button.lcart:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button.lcart.ph{color:var(--muted)}.gpr{margin-top:14px}button.lcart:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .hdet{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 16px;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;font-size:.92rem}
 .hdet>span:nth-child(odd){color:var(--muted)}
 .hdet>span:nth-child(even){font-weight:600;min-width:0;overflow-wrap:anywhere}
@@ -1255,17 +1256,22 @@ function showH2H(){
 const HAND_KEY="cartridge_calc_hand_v1";
 const VIEW_HAND=[];   // handloads from a shared link, in memory only (syncHand shows them as .peek; Sharing below)
 const POWDERS=DATA.powders||[], BULLETS=DATA.bullets||[], POWDER_BRAND=DATA.powder_brands||{};
-// a powder box (handload and ladder forms): a <select> under a clear button that opens the same search
-// pop-up / bottom sheet as the cartridge box, powders under their maker's heading (Zeke, Nov 16 2026);
-// a powder that isn't listed is typed in the search and kept as its own option
-const powderSelect=id=>`<div><select id="${id}"><option value="">Choose…</option>${[...new Set(POWDERS.map(p=>POWDER_BRAND[p]||"Other"))].map(b=>`<optgroup label="${esc(b)}">${POWDERS.filter(p=>(POWDER_BRAND[p]||"Other")===b).map(p=>`<option>${esc(p)}</option>`).join("")}</optgroup>`).join("")}</select></div>`;
-function powderBox(sel,touch){
+const PRIMERS=DATA.primers||[], PRIMER_BRAND=DATA.primer_brands||{};
+// a powder or primer box (handload and ladder forms): a <select> under a clear button that opens the same
+// search pop-up / bottom sheet as the cartridge box, under their maker's heading (powders Zeke, Nov 16 2026,
+// primers Nov 17 2026); one that isn't listed is typed in the search and kept as its own option
+const listSelect=(id,list,brand,blank)=>`<div><select id="${id}"><option value="">${blank??"Choose…"}</option>${[...new Set(list.map(p=>brand[p]||"Other"))].map(b=>`<optgroup label="${esc(b)}">${list.filter(p=>(brand[p]||"Other")===b).map(p=>`<option>${esc(p)}</option>`).join("")}</optgroup>`).join("")}</select></div>`;
+const powderSelect=id=>listSelect(id,POWDERS,POWDER_BRAND);
+const primerSelect=id=>listSelect(id,PRIMERS,PRIMER_BRAND,"");
+const powderBox=(sel,touch)=>listBox(sel,touch,POWDERS,POWDER_BRAND,"powder");
+const primerBox=(sel,touch)=>listBox(sel,touch,PRIMERS,PRIMER_BRAND,"primer");
+function listBox(sel,touch,list,brand,noun){
   const set=v=>{v=(v||"").trim();if(v&&![...sel.options].some(o=>o.value===v)){const o=document.createElement("option");o.textContent=v;sel.appendChild(o);}sel.value=v;};
-  const items=POWDERS.map(p=>({p,b:POWDER_BRAND[p]||"Other"})),wrap=sel.parentElement,cv=document.createElement("button");
-  cv.type="button";cv.className="selcover";cv.setAttribute("aria-label","Choose a powder");
+  const items=list.map(p=>({p,b:brand[p]||"Other"})),wrap=sel.parentElement,cv=document.createElement("button");
+  cv.type="button";cv.className="selcover";cv.setAttribute("aria-label","Choose a "+noun);
   wrap.style.position="relative";sel.tabIndex=-1;wrap.appendChild(cv);
-  const o={text:x=>x.p,find:x=>x.b+" "+x.p,head:x=>x.b,none:"powder",cur:()=>items.find(x=>x.p===sel.value),pick:x=>set(x.p),
-    add:{text:t=>t?`+ Use “${t}”`:"+ Type a powder that isn't listed",
+  const o={text:x=>x.p,find:x=>x.b+" "+x.p,head:x=>x.b,none:noun,cur:()=>items.find(x=>x.p===sel.value),pick:x=>set(x.p),
+    add:{text:t=>t?`+ Use “${t}”`:`+ Type a ${noun} that isn't listed`,
       pick:t=>{if(t)set(t.split(/\s+/).join(" ").slice(0,60));else{open("");const sq=document.querySelector(".sheetbg .sq");if(sq)sq.focus();}}}};
   const open=typed=>touch?pickSheet(items,o):pickSheet(items,o,{el:sel,input:cv,typed:typed||""});
   cv.onclick=()=>open();
@@ -1274,7 +1280,7 @@ function powderBox(sel,touch){
     if(["ArrowDown","ArrowUp","Enter"," "].includes(e.key)){e.preventDefault();open();}
     else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();open(e.key);}
   };
-  sel.setPowder=set;
+  sel.setPowder=sel.setPick=set;
 }
 const PURPOSES=["Hunting","Varmint","Target","Match","Defense","Subsonic"];
 function readHand(){try{return canonRows(JSON.parse(localStorage.getItem(HAND_KEY)||"[]"));}catch(e){return [];}}
@@ -1324,7 +1330,7 @@ function showHand(openId){
   app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide","handp");
   const H={open:openId||null,q:"",cat:"All"};
   app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="hgob">‹ My Bench</button><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
-    <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button></div>
+    <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button><button class="btn" id="hsync">Sync</button><span class="muted" id="hsyt" style="font-size:.88rem"></span></div>
     <div id="hsearch" style="margin-top:12px"><input id="hq" type="search" placeholder="Search: name, cartridge, bullet or powder" autocomplete="off" aria-label="Search your handloads"></div>
     <div class="chips" id="hcats" role="group" aria-label="Category"></div>
     <div id="hlist"></div>
@@ -1342,7 +1348,7 @@ function showHand(openId){
     $("#hcats").innerHTML=cats.length>1?[["All",all.length],...cats.map(t=>[t,all.filter(([c])=>c.title===t).length])].map(([t,n])=>`<button data-c="${esc(t)}" class="${H.cat===t?"on":""}" aria-pressed="${H.cat===t}">${esc(t)}<small>${n}</small></button>`).join(""):"";
     $("#hcats").querySelectorAll("button").forEach(b=>b.onclick=()=>{H.cat=b.dataset.c;draw();});
     const words=H.q.toLowerCase().split(/\s+/).filter(Boolean);
-    const shown=all.filter(([c,it])=>(H.cat==="All"||c.title===H.cat)&&words.every(w=>[it.label,it.cartridge,it.rec.bullet_maker,it.rec.bullet,it.rec.powder,it.rec.notes].join(" ").toLowerCase().includes(w)));
+    const shown=all.filter(([c,it])=>(H.cat==="All"||c.title===H.cat)&&words.every(w=>[it.label,it.cartridge,it.rec.bullet_maker,it.rec.bullet,it.rec.powder,it.rec.primer,it.rec.notes].join(" ").toLowerCase().includes(w)));
     if(!all.length){$("#hlist").innerHTML=`<div class="card hempty"><b>No handloads yet</b><p class="muted" style="margin:6px 0 0">Tap “+ New handload” to add your first. It's graded against the factory loads of its cartridge.</p></div>`;return;}
     if(!shown.length){$("#hlist").innerHTML=`<div class="muted" style="margin-top:14px">No handloads match.</div>`;return;}
     const groups=new Map();
@@ -1361,6 +1367,7 @@ function showHand(openId){
         ${open?`<div class="hdet">
           <span>Bullet</span><span>${esc(bullet)} · ${g(it.bullet_gr)} gr${rec.diameter_in?` · ${g(+rec.diameter_in)} in`:""} · BC ${g(it.bc_g1)}</span>
           <span>Powder</span><span>${rec.powder?esc(rec.powder)+" · ":""}${g(it.powder_gr)} gr</span>
+          ${rec.primer?`<span>Primer</span><span>${esc(rec.primer)}</span>`:""}
           ${+rec.col_in?`<span>C.O.L.</span><span>${(+rec.col_in).toFixed(3)} in</span>`:""}
           <span>Velocity</span><span>${g(it.muzzle_fps)} fps${it.barrel_in?` from a ${g(it.barrel_in)} in barrel`:""}</span>
           ${it.purpose?`<span>Purpose</span><span>${esc(it.purpose)}</span>`:""}
@@ -1388,6 +1395,10 @@ function showHand(openId){
   }
   $("#hq").oninput=e=>{H.q=e.target.value;draw();};
   $("#hnew").onclick=()=>handDialog(null,r=>{H.open=r.id;H.q="";$("#hq").value="";draw();});
+  // Sync here too (Zeke, Nov 17 2026: the Handloads page is where most people will look for it); the same
+  // dialog as Settings > Data, with a short status beside the button once this device is synced
+  const hsyt=()=>{const el=$("#hsyt"),st=syncState();if(el)el.textContent=st?(st.err?"Sync: not up to date":st.at?`Synced ${syncAgo(st.at)}`:"Sync on"):"";};
+  $("#hsync").onclick=()=>syncDialog(hsyt);hsyt();
   $("#hgob").onclick=()=>navigate("bench");
   draw();
 }
@@ -1681,7 +1692,8 @@ function handDialog(rec,done){
     <div class="note hnew" hidden>The type sets the usual gun weight, sight-in distance and barrel math.</div>
     <div class="hsec"><h4>Bullet</h4><div class="g2" style="margin-top:0"><div><label class="l">MAKER</label><div><select id="hbmk" aria-label="Bullet maker"></select></div><input id="hbmo" class="hoth" hidden autocomplete="off" placeholder="maker name" aria-label="Bullet maker"></div><div><label class="l">BULLET</label><div><select id="hbs" aria-label="Bullet"></select></div><input id="hbno" class="hoth" hidden autocomplete="off" placeholder="bullet name" aria-label="Bullet name"></div></div><small class="fhint">pick a bullet to fill in weight, diameter and BC</small>
     <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN) <span class="opt">(optional)</span></label><input id="hdm" inputmode="decimal"></div><div><label class="l">BC (G1) <span class="opt">(optional)</span></label><input id="hbc" inputmode="decimal"></div></div></div>
-    <div class="hsec"><h4>Powder and seating</h4><div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("hpw")}</div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN) <span class="opt">(optional)</span></label><input id="hcol" inputmode="decimal"></div></div></div>
+    <div class="hsec"><h4>Powder, primer and seating</h4><div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("hpw")}</div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN) <span class="opt">(optional)</span></label><input id="hcol" inputmode="decimal"></div></div>
+    <div class="gpr"><label class="l">PRIMER <span class="opt">(optional)</span></label>${primerSelect("hpr")}</div></div>
     <div class="hsec"><h4>Velocity</h4><div class="g2"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"><small class="fhint">from manual or chrono</small></div><div><label class="l">BARREL (IN) <span class="opt">(optional)</span></label><input id="hbl2" inputmode="decimal"><small class="fhint">manual's test barrel or yours</small></div></div></div>
     <details class="btab hcd" id="hcd"><summary>More details <span class="muted" style="font-weight:500">(purpose, cost, notes)</span></summary>
     <div class="g2"><div><label class="l">PURPOSE</label><select id="hpu">${PURPOSES.map(x=>`<option>${x}</option>`).join("")}</select></div><div><label class="l">NOTES <span class="opt">(optional)</span></label><input id="hno" autocomplete="off"></div></div>
@@ -1778,7 +1790,7 @@ function handDialog(rec,done){
     if(["ArrowDown","ArrowUp","Enter"," "].includes(e.key)){e.preventDefault();openCart();}
     else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();openCart(e.key);}
   };
-  powderBox(q("#hpw"),touch);
+  powderBox(q("#hpw"),touch);primerBox(q("#hpr"),touch);
   if(touch){
     sheetSelect("hpu","purpose");sheetSelect("hnt","cartridge type");
   }
@@ -1787,7 +1799,7 @@ function handDialog(rec,done){
   const o0=opts.find(o=>o.cart===rec.cartridge&&o.cat.title===rec.category)||opts.find(o=>o.cart===rec.cartridge);
   val("hc",o0?o0.text:rec.cartridge);val("hnn","");val("hnd","");showNew();
   setBul(rec.bullet_maker,rec.bullet);val("hn",rec.name);val("hgr",rec.bullet_gr);val("hdm",rec.diameter_in);val("hbc",rec.bc_g1);
-  q("#hpw").setPowder(rec.powder);val("hpg",rec.powder_gr);val("hcol",rec.col_in);val("hfps",rec.muzzle_fps);val("hbl2",rec.barrel_in);
+  q("#hpw").setPowder(rec.powder);q("#hpr").setPick(rec.primer);val("hpg",rec.powder_gr);val("hcol",rec.col_in);val("hfps",rec.muzzle_fps);val("hbl2",rec.barrel_in);
   q("#hpu").value=rec.purpose||"Hunting";
   val("hcb",rec.bullet_cost);val("hcp",rec.powder_cost_lb);val("hcr",rec.primer_cost);val("hcs",rec.brass_cost);q("#hcu").value=rec.brass_reuse||5;
   const hasParts=+rec.bullet_cost||+rec.powder_cost_lb||+rec.primer_cost||+rec.brass_cost;
@@ -1827,7 +1839,7 @@ function handDialog(rec,done){
       let name=q("#hn").value.trim();
       if(!name)name=[mk,bn,g(gr)+" gr"].filter(Boolean).join(" ")+(pw?` + ${pw} ${g(pg)} gr`:` + ${g(pg)} gr`);
       r=Object.assign({id:edit?rec.id:"h"+Date.now()+Math.random().toString(36).slice(2,6),category:cat.title,cartridge:cart,name,bullet_maker:mk,bullet:bn,
-        bullet_gr:gr,diameter_in:dm,bc_g1:bc,powder:pw,powder_gr:pg,muzzle_fps:fps,barrel_in:bl||0,col_in:col||0,purpose:q("#hpu").value,cost:cost>0?+cost.toFixed(4):0,notes:q("#hno").value.trim()},
+        bullet_gr:gr,diameter_in:dm,bc_g1:bc,powder:pw,powder_gr:pg,muzzle_fps:fps,barrel_in:bl||0,col_in:col||0,primer:q("#hpr").value.trim(),purpose:q("#hpu").value,cost:cost>0?+cost.toFixed(4):0,notes:q("#hno").value.trim()},
         tot>0?{bullet_cost:0,powder_cost_lb:0,primer_cost:0,brass_cost:0,brass_reuse:5}:parts);
     }catch(e){alert(e.message);return;}
     const rows=readHand();const i=rows.findIndex(x=>x.id===r.id);
@@ -1884,7 +1896,7 @@ function ladderAnalysis(t){
   return res;
 }
 const ladderName=t=>t.name||[t.cartridge,t.powder].filter(Boolean).join("  ·  ")||"Ladder test";
-const ladderFacts=t=>[t.cartridge,t.bullet_gr?`${t.bullet?t.bullet+" ":""}${g(t.bullet_gr)} gr`:t.bullet,t.powder,t.col_in?`C.O.L. ${(+t.col_in).toFixed(3)} in`:"",t.barrel_in?`${g(t.barrel_in)} in barrel`:""].filter(Boolean).join("  ·  ");
+const ladderFacts=t=>[t.cartridge,t.bullet_gr?`${t.bullet?t.bullet+" ":""}${g(t.bullet_gr)} gr`:t.bullet,t.powder,t.primer,t.col_in?`C.O.L. ${(+t.col_in).toFixed(3)} in`:"",t.barrel_in?`${g(t.barrel_in)} in barrel`:""].filter(Boolean).join("  ·  ");
 const fps0=v=>v==null?"—":Math.round(v).toLocaleString();
 function showLadder(id){
   document.title=`${APP_TITLE} — Ladder tests`;
@@ -1961,7 +1973,7 @@ function ladderPage(t){
       const makers=[...new Set(BULLETS.map(b=>b.maker))].sort((x,y)=>y.length-x.length);
       const bt=(t.bullet||"").trim(),mkr=makers.find(m=>bt.toLowerCase().startsWith(m.toLowerCase()+" "))||"";
       handDialog({category:t.category,cartridge:t.cartridge,bullet_maker:mkr,bullet:mkr?bt.slice(mkr.length).trim():bt,bullet_gr:t.bullet_gr,
-        powder:t.powder,powder_gr:r.gr,muzzle_fps:Math.round(r.mean),barrel_in:t.barrel_in,col_in:t.col_in,
+        powder:t.powder,primer:t.primer,powder_gr:r.gr,muzzle_fps:Math.round(r.mean),barrel_in:t.barrel_in,col_in:t.col_in,
         notes:`From ladder test "${ladderName(t)}": ${r.n} shot${r.n>1?"s":""}${r.sd!=null?`, SD ${r.sd.toFixed(1)} fps`:""}`},h=>navigate("hand",null,h.id));
     };
     drawChart(a);
@@ -2015,10 +2027,11 @@ function ladderDialog(t,done,from){
     <label class="l" style="margin-top:12px">CARTRIDGE</label><button type="button" class="lcart" id="lcb"></button>
     <div class="g2"><div><label class="l">BULLET <span class="opt">(optional)</span></label><input id="lbu" autocomplete="off"></div><div><label class="l">WEIGHT (GR) <span class="opt">(optional)</span></label><input id="lbw" inputmode="decimal"></div></div>
     <div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("lpw")}</div><div><label class="l">BARREL (IN) <span class="opt">(optional)</span></label><input id="lbr" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN) <span class="opt">(optional)</span></label><input id="lcol" inputmode="decimal"></div></div>
-    ${edit?"":`<div class="g3" style="align-items:end"><div><label class="l">FIRST CHARGE (GR) <span class="opt">(optional)</span></label><input id="lc0" inputmode="decimal"></div><div><label class="l">STEP (GR) <span class="opt">(optional)</span></label><input id="lcs" inputmode="decimal"></div><div><label class="l">NUMBER OF CHARGES <span class="opt">(optional)</span></label><input id="lcn" inputmode="numeric" placeholder="e.g. 5"></div></div>
+    <div class="gpr"><label class="l">PRIMER <span class="opt">(optional)</span></label>${primerSelect("lpr")}</div>
+    ${edit?"":`<h4 class="fsub">Charges <span class="opt">(optional)</span></h4><div class="g3" style="margin-top:0"><div><label class="l">FIRST CHARGE (GR)</label><input id="lc0" inputmode="decimal"></div><div><label class="l">STEP (GR)</label><input id="lcs" inputmode="decimal"></div><div><label class="l">NUMBER OF CHARGES</label><input id="lcn" inputmode="numeric" placeholder="e.g. 5"></div></div>
     <div class="note">The lightest charge, the step between charges and the number of charges fill in the ladder. You can add, change or remove them later.</div>`}
     <div class="g2"><div><label class="l">TEST NAME <span class="opt">(optional)</span></label><input id="lnm" autocomplete="off"></div><div><label class="l">DATE</label><input id="ldt" type="date"></div></div>
-    <label class="l" style="margin-top:14px">NOTES (PRIMER, BRASS, WEATHER...) <span class="opt">(optional)</span></label><input id="lno" autocomplete="off">
+    <label class="l" style="margin-top:14px">NOTES (BRASS, WEATHER...) <span class="opt">(optional)</span></label><input id="lno" autocomplete="off">
     <div class="safety"><b class="dis">YOUR OWN RESULTS</b>${esc(LADDER_NOTE)}</div>
     <div class="btns"><button class="btn p" id="lsv">${edit?"Save changes":"Start test"}</button><button class="btn" id="lcx">Cancel</button></div>`);
   const q=x=>$(x,m),touch=matchMedia("(pointer:coarse)").matches,cb=q("#lcb");
@@ -2031,15 +2044,15 @@ function ladderDialog(t,done,from){
   cb.onkeydown=e=>{if(e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&e.key!==" "){e.preventDefault();open(e.key);}};
   showCart();
   const val=(id,v)=>{q("#"+id).value=v==null||v===0?"":v;};
-  powderBox(q("#lpw"),touch);
-  val("lbu",t.bullet);val("lbw",t.bullet_gr);q("#lpw").setPowder(t.powder);val("lbr",t.barrel_in);val("lcol",t.col_in);val("lnm",t.name);val("lno",t.notes);
+  powderBox(q("#lpw"),touch);primerBox(q("#lpr"),touch);
+  val("lbu",t.bullet);val("lbw",t.bullet_gr);q("#lpw").setPowder(t.powder);q("#lpr").setPick(t.primer);val("lbr",t.barrel_in);val("lcol",t.col_in);val("lnm",t.name);val("lno",t.notes);
   q("#ldt").value=t.created||new Date().toISOString().slice(0,10);
   // copy the cartridge, bullet, weight, powder, C.O.L. and barrel from one of your handloads (Zeke, Nov 16
   // 2026); the charges stay as typed, so nothing suggests a powder charge
   const fh=q("#lfromh");
   const copy=r=>{
     pk={cart:r.cartridge,cat:CATEGORIES.find(c=>c.title===r.category)||null};showCart();
-    val("lbu",[r.bullet_maker,r.bullet].filter(Boolean).join(" "));val("lbw",+r.bullet_gr||"");q("#lpw").setPowder(r.powder);val("lbr",+r.barrel_in||"");val("lcol",+r.col_in||"");
+    val("lbu",[r.bullet_maker,r.bullet].filter(Boolean).join(" "));val("lbw",+r.bullet_gr||"");q("#lpw").setPowder(r.powder);q("#lpr").setPick(r.primer);val("lbr",+r.barrel_in||"");val("lcol",+r.col_in||"");
   };
   if(fh)fh.onclick=()=>pickSheet(hands,{text:r=>handName(r),find:r=>[handName(r),r.cartridge,r.bullet_maker,r.bullet,r.powder].join(" "),head:r=>r.cartridge,none:"handload",cur:()=>null,
     pick:copy},touch?null:{el:fh,input:fh,typed:""});
@@ -2051,7 +2064,7 @@ function ladderDialog(t,done,from){
     try{
       if(!pk)throw new Error("Choose a cartridge.");
       n={cartridge:pk.cart,category:pk.cat?pk.cat.title:"",bullet:q("#lbu").value.trim(),bullet_gr:num("lbw","Bullet weight",1,2000),
-        powder:q("#lpw").value.trim(),barrel_in:num("lbr","Barrel length",1,60),col_in:num("lcol","C.O.L.",0.3,8),name:q("#lnm").value.trim(),notes:q("#lno").value.trim(),
+        powder:q("#lpw").value.trim(),primer:q("#lpr").value.trim(),barrel_in:num("lbr","Barrel length",1,60),col_in:num("lcol","C.O.L.",0.3,8),name:q("#lnm").value.trim(),notes:q("#lno").value.trim(),
         created:q("#ldt").value||new Date().toISOString().slice(0,10)};
       if(!edit){
         const c0=num("lc0","The first charge",0.1,300),st=num("lcs","The step",0.01,10),cn=num("lcn","The number of charges",1,30);
@@ -2334,6 +2347,7 @@ function openLoads(cat,pane){
           <div class="row fr"><span class="muted">Recoil</span><span class="v">${r.st.recoil.toFixed(1)} ft-lbs</span>${fb("recoil")}</div>
           ${it.handload?(()=>{const r0=it.rec,cp=costParts(r0),hasP=cp.b||cp.p||cp.pr||cp.br;return `<div class="row"><span class="muted">Bullet</span><span class="v">${esc([r0.bullet_maker,r0.bullet].filter(Boolean).join(" ")||"custom")}, ${g(it.bullet_gr)} gr</span><span style="width:32px"></span></div>
           <div class="row"><span class="muted">Powder</span><span class="v">${esc(r0.powder||"—")} ${g(it.powder_gr)} gr</span><span style="width:32px"></span></div>
+          ${r0.primer?`<div class="row"><span class="muted">Primer</span><span class="v">${esc(r0.primer)}</span><span style="width:32px"></span></div>`:""}
           ${+r0.col_in?`<div class="row"><span class="muted">C.O.L.</span><span class="v">${(+r0.col_in).toFixed(3)} in</span><span style="width:32px"></span></div>`:""}
           ${hasP?`<div class="row"><span class="muted">Cost breakdown</span><span class="v" style="font-size:.85rem;font-weight:600">bullet $${cp.b.toFixed(2)} · powder $${cp.p.toFixed(2)} · primer $${cp.pr.toFixed(2)} · brass $${cp.br.toFixed(2)}</span><span style="width:32px"></span></div>`:""}
           ${r0.notes?`<div class="row"><span class="muted">Notes</span><span class="v" style="font-weight:500">${esc(r0.notes)}</span><span style="width:32px"></span></div>`:""}`;})():""}

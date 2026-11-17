@@ -85,7 +85,8 @@ BULLETS_FILENAME = "bullets.csv"
 HANDLOAD_FIELDS = ["id", "category", "cartridge", "name", "bullet_maker", "bullet", "bullet_gr",
                    "diameter_in", "bc_g1", "powder", "powder_gr", "muzzle_fps", "barrel_in",
                    "purpose", "cost", "bullet_cost", "powder_cost_lb", "primer_cost",
-                   "brass_cost", "brass_reuse", "notes", "col_in"]   # col_in: cartridge overall length (web, Nov 2026)
+                   "brass_cost", "brass_reuse", "notes", "col_in", "primer"]
+# col_in: cartridge overall length, primer: primer maker / type (web, Nov 2026; the desktop form keeps them)
 PURPOSES = ["Hunting", "Varmint", "Target", "Match", "Defense", "Subsonic"]
 # Handload powders by maker (Zeke, Nov 16 2026: the web form lists them under brand headings).
 # Names are what saved handloads hold, so keep an old name when a list changes.
@@ -125,6 +126,30 @@ POWDER_BRANDS = {
                    "Winchester WSF", "Winchester WST"],
 }
 POWDERS = [p for b in sorted(POWDER_BRANDS, key=str.lower) for p in POWDER_BRANDS[b]]
+# Handload primers by maker (Zeke, Nov 17 2026: the web form's Primer box lists them under maker headings
+# like the powders). Names are what saved handloads hold; another primer can be typed in.
+PRIMER_BRANDS = {
+    "CCI": ["CCI 400 Small Rifle", "CCI 41 Small Rifle Military", "CCI 450 Small Rifle Magnum",
+            "CCI BR4 Small Rifle Bench Rest", "CCI 200 Large Rifle", "CCI 250 Large Rifle Magnum",
+            "CCI BR2 Large Rifle Bench Rest", "CCI 34 Large Rifle Military", "CCI 35 .50 BMG Military",
+            "CCI 500 Small Pistol", "CCI 550 Small Pistol Magnum", "CCI 300 Large Pistol",
+            "CCI 350 Large Pistol Magnum"],
+    "Federal": ["Federal 205 Small Rifle", "Federal 205M Small Rifle Match", "Federal 205MAR Small Rifle AR Match",
+                "Federal 210 Large Rifle", "Federal 210M Large Rifle Match", "Federal 215 Large Rifle Magnum",
+                "Federal 215M Large Rifle Magnum Match", "Federal 100 Small Pistol",
+                "Federal 100M Small Pistol Match", "Federal 200 Small Pistol Magnum", "Federal 150 Large Pistol",
+                "Federal 155 Large Pistol Magnum"],
+    "Fiocchi": ["Fiocchi Small Rifle", "Fiocchi Small Rifle Magnum", "Fiocchi Large Rifle",
+                "Fiocchi Small Pistol", "Fiocchi Large Pistol"],
+    "Murom": ["Murom KVB-223 Small Rifle", "Murom KVB-7 Large Rifle"],
+    "Remington": ["Remington 6 1/2 Small Rifle", "Remington 7 1/2 Small Rifle Bench Rest",
+                  "Remington 9 1/2 Large Rifle", "Remington 9 1/2M Large Rifle Magnum",
+                  "Remington 1 1/2 Small Pistol", "Remington 5 1/2 Small Pistol Magnum",
+                  "Remington 2 1/2 Large Pistol"],
+    "Winchester": ["Winchester WSR Small Rifle", "Winchester WLR Large Rifle", "Winchester WLRM Large Rifle Magnum",
+                   "Winchester WSP Small Pistol", "Winchester WSPM Small Pistol Magnum", "Winchester WLP Large Pistol"],
+}
+PRIMERS = [p for b in sorted(PRIMER_BRANDS, key=str.lower) for p in PRIMER_BRANDS[b]]
 # metric key -> (display name, higher is better?)
 METRICS = {
     "velocity": ("Velocity", True),
@@ -3634,7 +3659,8 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
                    powder=V["powder"].get().strip(), powder_gr=f"{charge:g}", muzzle_fps=f"{fps:g}",
                    barrel_in=f"{barrel:g}" if barrel else "", purpose=V["purpose"].get(),
                    cost=f"{cost:.4f}" if cost and cost > 0 else "", notes=V["notes"].get().strip(),
-                   **{k: "" if v is None else f"{v:g}" for k, v in parts.items()})
+                   **{k: "" if v is None else f"{v:g}" for k, v in parts.items()},
+                   **{k: ex.get(k) or "" for k in ("col_in", "primer")})   # web-only fields kept
         try:
             app.save_handload(row)
         except OSError as exc:
