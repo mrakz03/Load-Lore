@@ -378,7 +378,7 @@ into web/www (Capacitor wraps it as an APK in CI).
 - Build artifacts (the files on an Actions run page) are kept 7 days (retention-days); releases
   keep their own copies. Old private Load-Lore-old artifacts counted against the 500 MB free quota.
 - Tags are vX.Y.Z, optionally with a suffix for a test build (v1.7.2-dev). Don't mark a release
-  "pre-release": the old desktop copies' updater reads the latest release (since v1.13 it only says
+  "pre-release": the old desktop copies' updater reads the latest release (since v1.14 it only says
   there are no more desktop updates when that release has no LoadLore-*-Setup.exe / -Linux.tar.gz).
 git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds the Android APK, publishes the
 release (APK + SHA256SUMS.txt), then pages.yml deploys the site. Pull main first so the tag lands on
