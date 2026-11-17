@@ -3463,7 +3463,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
         show_new()
         new_name.focus_set()
         new_name.icursor("end")
-    lab("LOAD NAME (OPTIONAL)", 5, 0, 3)
+    lab("LOAD NAME (optional)", 5, 0, 3)
     ent(V["name"], 6, 0, 3)
 
     section("BULLET", 7)
@@ -3493,7 +3493,7 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
                hint="Powder", own=True)
     ent(V["powder_gr"], 17, 1)
     ent(V["muzzle_fps"], 17, 2)
-    lab("BARREL LENGTH (IN, OPTIONAL)", 18, 0, 2)
+    lab("BARREL LENGTH (IN) (optional)", 18, 0, 2)
     ent(V["barrel_in"], 19, 0)
 
     # the cost parts sit in a drop-down, closed unless this handload has a cost already
@@ -3522,10 +3522,10 @@ def open_handload_dialog(app, parent, existing=None, duplicate=False, on_saved=N
         for w in cost_rows:
             w.grid() if cost_open[0] else w.grid_remove()
         cost_toggle.config(text=("\u25be" if cost_open[0] else "\u25b8")
-                           + "  COST (OPTIONAL BREAKDOWN)")
+                           + "  COST (optional breakdown)")
     cost_toggle.bind("<Button-1>", lambda e: show_cost(True))
     show_cost()
-    lab("NOTES (OPTIONAL)", 27, 0, 3)
+    lab("NOTES (optional)", 27, 0, 3)
     ent(V["notes"], 28, 0, 3)
     note = tk.Frame(body, bg=body.cget("bg"))
     note.grid(row=29, column=0, columnspan=3, sticky="ew", padx=18, pady=(10, 0))

@@ -332,6 +332,12 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   bullet of that size exists (5.7x28mm lists .224 rifle bullets): bullet_fits / bulletFits. A new bullet row
   needs its use set (handgun lines: XTP, Gold Dot, Sports Master, XPB, TAC-XP, ASP...; "both" for lever /
   handgun bullets like FTX .44/.45 Colt and Barnes Buster .44/.45/.500).
+- Optional form boxes (Nov 17 2026, Zeke): no "optional" placeholder inside the box; the label ends with a
+  small grey lowercase "(optional)" (web span.opt, desktop label text "... (optional)"). Placeholders that
+  give an example stay ("e.g. Deer load", "e.g. 5"). A new optional field gets the tag too. Form rows
+  (.g2 / .g3 cells are subgrids) keep their boxes level. Labels stay on one line (Zeke): on phones (<=600 px) .g3 rows
+  are two boxes a row (Powder full width), and a group of optional boxes gets one heading tag instead
+  (ladder "Charges (optional)", h4.fsub; handload "Cost (optional)").
 - bullets.csv BCs are approximate; load figures are estimates; no safety validation of reloads.
 - Recoil (recoil_ftlbs / recoil): standard free recoil, bullet + powder gas at GAS_FPS 4000, gas counted
   once (a 1.75x gas factor read 40-60% high; fixed Oct 2026 against Chuck Hawks' recoil table).
