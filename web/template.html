@@ -77,6 +77,19 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .feat.bench .fcard .ic{grid-row:span 3;width:36px;height:36px;border-radius:9px}.feat.bench .fcard .ic svg{width:20px;height:20px}
 .feat.bench .fcard b{font-size:1rem}.feat.bench .fcard span{font-size:.85rem}.feat.bench .fcard .cnt{grid-column:2;margin-top:2px}
 .benchnote{color:var(--muted);font-size:.85rem;margin:14px 0 0}.benchnote .link{font-size:inherit;padding:0}
+/* Home's two group cards (Loads, My Bench): a heading, then a row per page split by thin lines */
+.hgroups{display:grid;grid-template-columns:1fr;gap:14px}
+.hgrp2{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.hgh{display:flex;flex-direction:column;gap:4px;width:100%;background:none;border:0;padding:16px 18px 12px;text-align:left;color:var(--text);font:inherit}
+.hgh b{font-size:1.25rem}.hgh span{color:var(--muted);font-size:.9rem;line-height:1.4}
+button.hgh{cursor:pointer}.hgh .chev{color:var(--muted);font-weight:400}
+@media(hover:hover){button.hgh:hover .chev,button.hgh:hover b{color:var(--accent)}}
+.hrow{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:2px;width:100%;background:none;border:0;border-top:1px solid var(--border);padding:13px 18px;text-align:left;color:var(--text);font:inherit;cursor:pointer}
+@media(hover:hover){.hrow:hover{background:var(--surface2)}}
+.hrow .ic{grid-row:span 2;width:36px;height:36px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+.hrow .ic svg{width:20px;height:20px;stroke:var(--on-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hrow b{font-size:1rem}.hrow span{color:var(--muted);font-size:.85rem;line-height:1.4}
+.hrow .cnt{color:var(--accent);font-weight:700;font-size:.8rem;margin-left:4px}
 .pick{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:560px){.feat,.pick{grid-template-columns:1fr 1fr}.pick .cat.grp,.pick .cat.child{grid-column:1/-1}}   /* two columns: a drop-down on its own rows */
 @media(min-width:900px){
@@ -961,6 +974,10 @@ const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or y
 const BENCH=[["hand","Handloads","Build and save your own reloads. They show up in the Load Dictionary and can go head to head."],
   ["ladder","Ladder tests","Log a powder ladder's chronograph speeds and find the flattest spot."],
   ["favs","Favorite loads","Loads you starred in the Load Dictionary."]];
+// Home (Zeke, Nov 17 2026): two big cards matching the PC sidebar's groups: [title, blurb, page its
+// heading opens, its pages]
+const HOME_GROUPS=[["Loads","Look up factory loads and compare them.",null,["loads","h2h"]],
+  ["My Bench","Your own loads and notes, saved on this device.","bench",["hand","ladder","favs"]]];
 const toolTitle=k=>(TOOLS.concat(BENCH).find(t=>t[0]===k)||TOOLS[0])[1];
 const BENCH_MODES=["bench","hand","ladder","favs"];
 // the menus: [key, title, icon, where]. Phones show the "ph" and shared rows as five tabs, the Load
@@ -1083,7 +1100,9 @@ addEventListener("resize",()=>{clearTimeout(fitMenuJob);fitMenuJob=setTimeout(fi
 function showHome(){
   document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","picker");app.classList.add("home");
   app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Explore the velocity, energy, recoil and cost of over 3,500 commercially available rounds, or put loads head to head.</p></div>
-  <div class="feat" data-nosnippet>${TOOLS.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span></button>`).join("")}</div>
+  <div class="hgroups" data-nosnippet>${HOME_GROUPS.map(([t,b,go,keys])=>{const cnt=go?benchCounts():{};
+    return `<section class="hgrp2"><${go?`button class="hgh" data-go="${go}"`:`div class="hgh"`}><b>${t}${go?` <span class="chev">›</span>`:""}</b><span>${b}</span></${go?"button":"div"}>
+    ${keys.map(k=>{const [,tt,bb]=TOOLS.concat(BENCH).find(x=>x[0]===k);return `<button class="hrow" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${tt}${cnt[k]?` <span class="cnt">${cnt[k]}</span>`:""}</b><span>${bb}</span></button>`;}).join("")}</section>`;}).join("")}</div>
   <div class="homenote" data-nosnippet>Figures are estimates. Nothing you see here is reloading data. <button class="link" data-go="settings">Disclaimer in Settings ›</button></div>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
 }
@@ -1994,8 +2013,8 @@ function ladderDialog(t,done,from){
     <label class="l" style="margin-top:12px">CARTRIDGE</label><button type="button" class="lcart" id="lcb"></button>
     <div class="g2"><div><label class="l">BULLET</label><input id="lbu" autocomplete="off" placeholder="optional"></div><div><label class="l">WEIGHT (GR)</label><input id="lbw" inputmode="decimal" placeholder="optional"></div></div>
     <div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("lpw")}</div><div><label class="l">BARREL (IN)</label><input id="lbr" inputmode="decimal" placeholder="optional"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN)</label><input id="lcol" inputmode="decimal" placeholder="optional"></div></div>
-    ${edit?"":`<div class="g3" style="align-items:end"><div><label class="l">FIRST CHARGE (GR)</label><input id="lc0" inputmode="decimal" placeholder="optional"></div><div><label class="l">STEP (GR)</label><input id="lcs" inputmode="decimal" placeholder="optional"></div><div><label class="l">CHARGES</label><input id="lcn" inputmode="numeric" placeholder="optional"></div></div>
-    <div class="note">Optional: fills in the ladder's charges. You can add, change or remove them later.</div>`}
+    ${edit?"":`<div class="g3" style="align-items:end"><div><label class="l">FIRST CHARGE (GR)</label><input id="lc0" inputmode="decimal" placeholder="optional"></div><div><label class="l">STEP (GR)</label><input id="lcs" inputmode="decimal" placeholder="optional"></div><div><label class="l">NUMBER OF CHARGES</label><input id="lcn" inputmode="numeric" placeholder="e.g. 5"></div></div>
+    <div class="note">Optional: the lightest charge, the step between charges and the number of charges fill in the ladder. You can add, change or remove them later.</div>`}
     <div class="g2"><div><label class="l">TEST NAME</label><input id="lnm" autocomplete="off" placeholder="optional"></div><div><label class="l">DATE</label><input id="ldt" type="date"></div></div>
     <label class="l" style="margin-top:14px">NOTES (PRIMER, BRASS, WEATHER...)</label><input id="lno" autocomplete="off" placeholder="optional">
     <div class="safety"><b class="dis">YOUR OWN RESULTS</b>${esc(LADDER_NOTE)}</div>
