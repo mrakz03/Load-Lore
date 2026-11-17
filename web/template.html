@@ -303,10 +303,12 @@ td:nth-child(-n+2),th:nth-child(-n+2){text-align:left}
 td:nth-child(1),th:nth-child(1){position:sticky;left:0;background:var(--surface)}
 th:nth-child(1){background:var(--surface2);z-index:2}
 .g2,.g3{display:grid;gap:8px;margin-top:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
-.g2>div,.g3>div{min-width:0}
+.g2>div,.g3>div{min-width:0;display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:0;align-content:start}
+.g2>div>*,.g3>div>*{min-width:0}.g2>div>label.l,.g3>div>label.l{align-self:end}   /* boxes in a row line up when one label wraps, e.g. "(optional)" (Nov 2026) */
 .g3.gpw{grid-template-columns:2fr 1fr 1fr}
 input.hoth{margin-top:6px}
 .hsec{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}.hsec>h4{margin:0 0 10px;font-size:.95rem}.hsec>h4+.g2,.hsec>h4+.g3{margin-top:0}   /* handload form groups (Zeke, Nov 16 2026) */
+.opt{font-weight:400;letter-spacing:0;text-transform:none;opacity:.8}   /* "(optional)" after a form label (Zeke, Nov 2026) */
 .fhint{display:block;font-size:.72rem;line-height:1.25;color:var(--muted);margin-top:3px}   /* where a typed figure comes from (handload form) */
 @media(max-width:340px){.g3{grid-template-columns:1fr 1fr}}
 .lc.hl{border-left:3px solid var(--accent)}
@@ -1672,18 +1674,18 @@ function handDialog(rec,done){
   const pickOf=t=>{t=(t||"").trim();const lo=t.toLowerCase();return opts.find(o=>o.text===t)||opts.find(o=>o.text.toLowerCase()===lo)||opts.find(o=>o.cart.toLowerCase()===lo)||null;};
   const [m,close]=modal(`
     <h3 style="margin:0 0 4px">${edit?"Edit handload":"New handload"}</h3>
-    <label class="l" style="margin-top:12px">LOAD NAME</label><input id="hn" autocomplete="off" placeholder="optional, e.g. Deer load">
+    <label class="l" style="margin-top:12px">LOAD NAME <span class="opt">(optional)</span></label><input id="hn" autocomplete="off" placeholder="e.g. Deer load">
     <label class="l" style="margin-top:14px">CARTRIDGE</label><div><select id="hc"><option value="">Choose…</option>${[...new Set(opts.map(o=>o.cat))].map(c=>`<optgroup label="${esc(catName(c))}">${opts.filter(o=>o.cat===c).map(o=>`<option value="${esc(o.text)}">${esc(o.cart)}</option>`).join("")}</optgroup>`).join("")}<option value="${NEWC}">New cartridge (below)</option></select></div>
     <div class="hnew" hidden style="margin-top:12px"><label class="l">NEW CARTRIDGE NAME</label><input id="hnn" autocomplete="off" placeholder="e.g. .32-20 Winchester"></div>
     <div class="g2 hnew" hidden><div><label class="l">TYPE</label><select id="hnt">${HAND_KINDS.map(c=>`<option value="${esc(c.title)}">${esc(catName(c))}</option>`).join("")}</select></div><div><label class="l">BULLET DIAMETER (IN)</label><input id="hnd" inputmode="decimal" placeholder="e.g. .312"></div></div>
     <div class="note hnew" hidden>The type sets the usual gun weight, sight-in distance and barrel math.</div>
-    <div class="hsec"><h4>Bullet</h4><div class="g2" style="margin-top:0"><div><label class="l">MAKER</label><div><select id="hbmk" aria-label="Bullet maker"></select></div><input id="hbmo" class="hoth" hidden autocomplete="off" placeholder="maker (optional)" aria-label="Bullet maker"></div><div><label class="l">BULLET</label><div><select id="hbs" aria-label="Bullet"></select></div><input id="hbno" class="hoth" hidden autocomplete="off" placeholder="bullet name (optional)" aria-label="Bullet name"></div></div><small class="fhint">pick a bullet to fill in weight, diameter and BC</small>
-    <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN)</label><input id="hdm" inputmode="decimal" placeholder="optional"></div><div><label class="l">BC (G1)</label><input id="hbc" inputmode="decimal" placeholder="optional"></div></div></div>
-    <div class="hsec"><h4>Powder and seating</h4><div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("hpw")}</div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN)</label><input id="hcol" inputmode="decimal" placeholder="optional"></div></div></div>
-    <div class="hsec"><h4>Velocity</h4><div class="g2"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"><small class="fhint">from manual or chrono</small></div><div><label class="l">BARREL (IN)</label><input id="hbl2" inputmode="decimal" placeholder="optional"><small class="fhint">manual's test barrel or yours</small></div></div></div>
+    <div class="hsec"><h4>Bullet</h4><div class="g2" style="margin-top:0"><div><label class="l">MAKER</label><div><select id="hbmk" aria-label="Bullet maker"></select></div><input id="hbmo" class="hoth" hidden autocomplete="off" placeholder="maker name" aria-label="Bullet maker"></div><div><label class="l">BULLET</label><div><select id="hbs" aria-label="Bullet"></select></div><input id="hbno" class="hoth" hidden autocomplete="off" placeholder="bullet name" aria-label="Bullet name"></div></div><small class="fhint">pick a bullet to fill in weight, diameter and BC</small>
+    <div class="g3"><div><label class="l">WEIGHT (GR)</label><input id="hgr" inputmode="decimal"></div><div><label class="l">DIAMETER (IN) <span class="opt">(optional)</span></label><input id="hdm" inputmode="decimal"></div><div><label class="l">BC (G1) <span class="opt">(optional)</span></label><input id="hbc" inputmode="decimal"></div></div></div>
+    <div class="hsec"><h4>Powder and seating</h4><div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("hpw")}</div><div><label class="l">CHARGE (GR)</label><input id="hpg" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN) <span class="opt">(optional)</span></label><input id="hcol" inputmode="decimal"></div></div></div>
+    <div class="hsec"><h4>Velocity</h4><div class="g2"><div><label class="l">VELOCITY (FPS)</label><input id="hfps" inputmode="decimal"><small class="fhint">from manual or chrono</small></div><div><label class="l">BARREL (IN) <span class="opt">(optional)</span></label><input id="hbl2" inputmode="decimal"><small class="fhint">manual's test barrel or yours</small></div></div></div>
     <details class="btab hcd" id="hcd"><summary>More details <span class="muted" style="font-weight:500">(purpose, cost, notes)</span></summary>
-    <div class="g2"><div><label class="l">PURPOSE</label><select id="hpu">${PURPOSES.map(x=>`<option>${x}</option>`).join("")}</select></div><div><label class="l">NOTES</label><input id="hno" autocomplete="off" placeholder="optional"></div></div>
-    <div class="hsec"><h4>Cost <span class="muted" style="font-weight:500">(optional)</span></h4>
+    <div class="g2"><div><label class="l">PURPOSE</label><select id="hpu">${PURPOSES.map(x=>`<option>${x}</option>`).join("")}</select></div><div><label class="l">NOTES <span class="opt">(optional)</span></label><input id="hno" autocomplete="off"></div></div>
+    <div class="hsec"><h4>Cost <span class="opt">(optional)</span></h4>
     <div class="g3"><div><label class="l">BULLET $ EACH</label><input id="hcb" inputmode="decimal"></div><div><label class="l">POWDER $ / LB</label><input id="hcp" inputmode="decimal"></div><div><label class="l">PRIMER $ EACH</label><input id="hcr" inputmode="decimal"></div></div>
     <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div>
     <div class="costlbl" id="hcost"></div></div></details>
@@ -1928,7 +1930,7 @@ function ladderPage(t){
     $("#lrows").innerHTML=t.charges.map((c,i)=>`<div class="lrow${c.pressure?" pr":""}" data-i="${i}">
       <div class="lr1"><div><label class="l">CHARGE (GR)</label><input class="lgr" inputmode="decimal" value="${esc(c.gr==null?"":c.gr)}" aria-label="Charge in grains"></div>
       <div><label class="l">VELOCITIES (FPS)</label><input class="lv" autocomplete="off" value="${esc(c.shots||"")}" placeholder="e.g. 2650 2662 2648" aria-label="Velocities in fps"></div>
-      <div><label class="l">GROUP (IN)</label><input class="lgp" inputmode="decimal" value="${esc(c.group||"")}" placeholder="optional" aria-label="Group size in inches"></div></div>
+      <div><label class="l">GROUP (IN) <span class="opt">(optional)</span></label><input class="lgp" inputmode="decimal" value="${esc(c.group||"")}" aria-label="Group size in inches"></div></div>
       <div class="lr2"><span class="lst"></span><span class="sp"></span><span class="pchk"><label><input type="checkbox" class="lpr"${c.pressure?" checked":""}>Pressure signs</label></span><button class="link lx" aria-label="Remove this charge">Remove</button></div></div>`).join("");
     $("#lrows").querySelectorAll(".lrow").forEach(el=>{
       const c=t.charges[+el.dataset.i],st=el.querySelector(".lst");rowStats(c,st);
@@ -2011,12 +2013,12 @@ function ladderDialog(t,done,from){
   const [m,close]=modal(`<h3 style="margin:0 0 4px">${edit?"Edit ladder test":"New ladder test"}</h3>
     ${hands.length?'<button type="button" class="link" id="lfromh">Copy from a handload ›</button>':""}
     <label class="l" style="margin-top:12px">CARTRIDGE</label><button type="button" class="lcart" id="lcb"></button>
-    <div class="g2"><div><label class="l">BULLET</label><input id="lbu" autocomplete="off" placeholder="optional"></div><div><label class="l">WEIGHT (GR)</label><input id="lbw" inputmode="decimal" placeholder="optional"></div></div>
-    <div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("lpw")}</div><div><label class="l">BARREL (IN)</label><input id="lbr" inputmode="decimal" placeholder="optional"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN)</label><input id="lcol" inputmode="decimal" placeholder="optional"></div></div>
-    ${edit?"":`<div class="g3" style="align-items:end"><div><label class="l">FIRST CHARGE (GR)</label><input id="lc0" inputmode="decimal" placeholder="optional"></div><div><label class="l">STEP (GR)</label><input id="lcs" inputmode="decimal" placeholder="optional"></div><div><label class="l">NUMBER OF CHARGES</label><input id="lcn" inputmode="numeric" placeholder="e.g. 5"></div></div>
-    <div class="note">Optional: the lightest charge, the step between charges and the number of charges fill in the ladder. You can add, change or remove them later.</div>`}
-    <div class="g2"><div><label class="l">TEST NAME</label><input id="lnm" autocomplete="off" placeholder="optional"></div><div><label class="l">DATE</label><input id="ldt" type="date"></div></div>
-    <label class="l" style="margin-top:14px">NOTES (PRIMER, BRASS, WEATHER...)</label><input id="lno" autocomplete="off" placeholder="optional">
+    <div class="g2"><div><label class="l">BULLET <span class="opt">(optional)</span></label><input id="lbu" autocomplete="off"></div><div><label class="l">WEIGHT (GR) <span class="opt">(optional)</span></label><input id="lbw" inputmode="decimal"></div></div>
+    <div class="g3 gpw"><div><label class="l">POWDER</label>${powderSelect("lpw")}</div><div><label class="l">BARREL (IN) <span class="opt">(optional)</span></label><input id="lbr" inputmode="decimal"></div><div><label class="l" title="Cartridge overall length">C.O.L. (IN) <span class="opt">(optional)</span></label><input id="lcol" inputmode="decimal"></div></div>
+    ${edit?"":`<div class="g3" style="align-items:end"><div><label class="l">FIRST CHARGE (GR) <span class="opt">(optional)</span></label><input id="lc0" inputmode="decimal"></div><div><label class="l">STEP (GR) <span class="opt">(optional)</span></label><input id="lcs" inputmode="decimal"></div><div><label class="l">NUMBER OF CHARGES <span class="opt">(optional)</span></label><input id="lcn" inputmode="numeric" placeholder="e.g. 5"></div></div>
+    <div class="note">The lightest charge, the step between charges and the number of charges fill in the ladder. You can add, change or remove them later.</div>`}
+    <div class="g2"><div><label class="l">TEST NAME <span class="opt">(optional)</span></label><input id="lnm" autocomplete="off"></div><div><label class="l">DATE</label><input id="ldt" type="date"></div></div>
+    <label class="l" style="margin-top:14px">NOTES (PRIMER, BRASS, WEATHER...) <span class="opt">(optional)</span></label><input id="lno" autocomplete="off">
     <div class="safety"><b class="dis">YOUR OWN RESULTS</b>${esc(LADDER_NOTE)}</div>
     <div class="btns"><button class="btn p" id="lsv">${edit?"Save changes":"Start test"}</button><button class="btn" id="lcx">Cancel</button></div>`);
   const q=x=>$(x,m),touch=matchMedia("(pointer:coarse)").matches,cb=q("#lcb");
