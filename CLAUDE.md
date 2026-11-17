@@ -193,6 +193,8 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore (Settings > Data) use the
   my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
   replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
+  An opened handload's links (web/Android) end with "Start ladder test ›" (Zeke, Nov 17 2026): a new ladder test
+  filled in from it like the ladder form's "Copy from a handload" (ladderDialog(..., from); no charge copied).
   The form's cost parts sit in a drop-down (Zeke, Nov 2 2026: web details.hcd, now "More details";
   desktop cost_toggle / show_cost), closed unless the handload already has a cost.
   Form order (Zeke, Nov 16 2026): LOAD NAME (OPTIONAL) first, then cartridge. C.O.L. (cartridge overall

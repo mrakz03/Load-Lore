@@ -1343,7 +1343,7 @@ function showHand(openId){
           ${GRADES?`<span>Grade</span><span style="font-weight:500">${r.grade} · ${r.overall.toFixed(0)}, ranks #${r.rank} of ${r.peers} ${esc(it.cartridge)} loads in the Load Dictionary</span>`:""}
         </div>
         <div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn d hdel">Delete</button></div>
-        <div class="hlinks"><button class="link hdict">Open in Load Dictionary ›</button><button class="link hh2h">${esc(h2hText(c,it))}</button></div>`:""}
+        <div class="hlinks"><button class="link hdict">Open in Load Dictionary ›</button><button class="link hh2h">${esc(h2hText(c,it))}</button><button class="link hlad">Start ladder test ›</button></div>`:""}
       </div>`;}).join("")}</div>`).join("");
     $("#hlist").querySelectorAll(".lc").forEach(el=>{
       const id=el.dataset.id,p=shown.find(([,it])=>it.rec.id===id);if(!p)return;const [c,it]=p;
@@ -1353,6 +1353,8 @@ function showHand(openId){
       el.querySelector(".hdup").onclick=()=>{const all2=readHand(),n=Object.assign({},it.rec,{id:newHid(),name:(it.rec.name||it.load)+" (copy)"});all2.push(n);writeHand(all2);H.open=n.id;draw();};
       el.querySelector(".hdel").onclick=()=>{if(!confirm(`Delete "${it.label}"?`))return;writeHand(readHand().filter(x=>x.id!==id));const k=pickKey(c,it),i=H2H.indexOf(k);if(i>=0)H2H.splice(0,H2H.length,...H2H.filter(x=>x!==k));H.open=null;draw();};
       el.querySelector(".hdict").onclick=()=>{shared[c.title]=Object.assign({},shared[c.title],{goHand:id});navigate("loads",c);};
+      // a new ladder test filled in from this handload like "Copy from a handload" (no charge; Zeke, Nov 17 2026)
+      el.querySelector(".hlad").onclick=()=>ladderDialog(null,t=>navigate("ladder",null,t.id),it.rec);
       el.querySelector(".hh2h").onclick=()=>{const k=pickKey(c,it);if(H2H.includes(k)||H2H.length>=H2H_MAX){navigate("h2h");return;}H2H.push(k);draw();};
     });
     if(openId){const el=$("#hlist .lc.open");if(el)el.scrollIntoView({block:"center"});openId=null;}
@@ -1975,7 +1977,8 @@ function ladderPage(t){
 }
 // the new / edit form of a ladder test: cartridge (the handload form's list, or a typed one),
 // bullet, powder, barrel; a new test can fill in its charges from a start charge, step and count
-function ladderDialog(t,done){
+// from: a handload to copy from at the start (the Handloads tab's "Start ladder test")
+function ladderDialog(t,done,from){
   const edit=!!t;t=t||{};
   const opts=handCarts();
   let pk=t.cartridge?{cart:t.cartridge,cat:CATEGORIES.find(c=>c.title===t.category)||null}:null;
@@ -2007,11 +2010,13 @@ function ladderDialog(t,done){
   // copy the cartridge, bullet, weight, powder, C.O.L. and barrel from one of your handloads (Zeke, Nov 16
   // 2026); the charges stay as typed, so nothing suggests a powder charge
   const fh=q("#lfromh");
+  const copy=r=>{
+    pk={cart:r.cartridge,cat:CATEGORIES.find(c=>c.title===r.category)||null};showCart();
+    val("lbu",[r.bullet_maker,r.bullet].filter(Boolean).join(" "));val("lbw",+r.bullet_gr||"");q("#lpw").setPowder(r.powder);val("lbr",+r.barrel_in||"");val("lcol",+r.col_in||"");
+  };
   if(fh)fh.onclick=()=>pickSheet(hands,{text:r=>handName(r),find:r=>[handName(r),r.cartridge,r.bullet_maker,r.bullet,r.powder].join(" "),head:r=>r.cartridge,none:"handload",cur:()=>null,
-    pick:r=>{
-      pk={cart:r.cartridge,cat:CATEGORIES.find(c=>c.title===r.category)||null};showCart();
-      val("lbu",[r.bullet_maker,r.bullet].filter(Boolean).join(" "));val("lbw",+r.bullet_gr||"");q("#lpw").setPowder(r.powder);val("lbr",+r.barrel_in||"");val("lcol",+r.col_in||"");
-    }},touch?null:{el:fh,input:fh,typed:""});
+    pick:copy},touch?null:{el:fh,input:fh,typed:""});
+  if(from)copy(from);
   q("#lcx").onclick=close;
   q("#lsv").onclick=()=>{
     const num=(id,label,lo,hi)=>{const s=q("#"+id).value.trim();if(!s)return null;const v=Number(s);if(!isFinite(v)||v<lo||v>hi)throw new Error(`${label} must be between ${g(lo)} and ${g(hi)}.`);return v;};
