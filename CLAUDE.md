@@ -61,12 +61,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   figures; a click opens that load's figures in place (Zeke, Nov 7 2026: favDetail / FavoritesView._details:
   the dictionary panel's facts line and tiles, About these figures, ballistic table, + Head to Head), and its
   "Open in Load Dictionary ›" opens it there (goFav / FavoritesView._open); the star removes it.
-- Ammo on hand (Nov 16 2026, Zeke; web / Android only, no desktop): an "On hand" box on every opened load
-  (Load Dictionary, Favorite loads, Handloads) with a "how many" box, "− Shot" and "+ Add" (invBox / wireInv); a
-  "120 on hand" tag beside the name in the lists (invChip). Kept by pickKey in localStorage
-  cartridge_calc_inventory_v1 ({key: {n, t: last-change date}}, its own key so handload sync can carry it;
-  savedKey follows renamed / moved cartridges like favorites). My Bench's Ammo on hand card opens the page (#inv, showInv): totals, worth at your prices, grouped by cartridge,
-  × takes a load off (a count of 0 stays listed as "none on hand").
+- Ammo on hand (Nov 16 2026) was removed (Zeke, Nov 17 2026): no On hand box, tags, page or My Bench card.
+  Old counts stay in localStorage cartridge_calc_inventory_v1 (left alone, nothing reads it); a sync copy's
+  "inv" part is passed through unchanged (syncMerge keeps parts it doesn't use), so older apps keep theirs.
 - Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
   (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
   card and the sidebar entry open / close them (menu_entries / menuEntries, open_groups / OPEN_GROUPS,
@@ -228,7 +225,7 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   links devices with a 12-character code (no 0/O, 1/I/L, U; shown XXXX-XXXX-XXXX), no accounts. sync/worker.js
   (Cloudflare Worker + D1, address sync.loadlore.net, deployed with wrangler from sync/) keeps one copy per code, stored
   under the code's SHA-256; 1 MB cap, rate limits, copies unused 2 years removed. The copy holds handloads,
-  ladder tests, ammo on hand (inventory), favorites and saved prices (SYNC_PARTS; not theme / text size / grades switch). The web keeps cartridge_calc_sync_v1
+  ladder tests, favorites and saved prices (SYNC_PARTS; not theme / text size / grades switch). The web keeps cartridge_calc_sync_v1
   {code, rev, base, at, err}: base = the copy it last agreed on; syncMerge is a 3-way merge per handload id /
   favorite / price key (one side changed: take it; both: this device's; a delete loses to an edit). writeHand,
   writePrices and toggleFav call syncSoon (1.5 s later); also at start, on visibilitychange and online. PUT sends
@@ -247,13 +244,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   middle), My Bench, Settings; the PC sidebar has the Load Dictionary above Head to Head. Home cards keep
   the Load Dictionary first (TOOLS: Load Dictionary, Head to Head, My Bench).
 - Menu clean-up (Nov 16 2026, Zeke; web / Android, desktop unchanged): each page is reached from one place.
-  My Bench (#bench, showBench; BENCH list, BENCH_MODES) holds Handloads, Ladder tests, Favorite loads and Ammo
-  on hand as cards with counts (benchCounts); their pages have "‹ My Bench" back links and the phone's My Bench
+  My Bench (#bench, showBench; BENCH list, BENCH_MODES) holds Handloads, Ladder tests and Favorite loads
+  as cards with counts (benchCounts); their pages have "‹ My Bench" back links and the phone's My Bench
   tab stays lit on them. The PC sidebar lists every page in NAVS order under two headings (.nh): LOADS (Load
   Dictionary with its category sub-list, Head to Head) and MY BENCH (the heading opens the My Bench page, then
-  the four pages as .pc rows); phones show only the five tabs (.ph row = My Bench), ordered by CSS order.
+  the three pages as .pc rows); phones show only the five tabs (.ph row = My Bench), ordered by CSS order.
   Sync, Back up and Restore live only in Settings > Data (between Display and About). No links to Favorite
-  loads / Ammo on hand under the category cards, no Ladder tests / Sync / Back up links on the Handloads tab.
+  loads under the category cards, no Ladder tests / Sync / Back up links on the Handloads tab.
   Android back: a My Bench page -> My Bench -> Home.
 - PC web load list (Oct 27 2026, Zeke): at >=900 px the dictionary's load list (#lres) is one table like
   the desktop app's (.lhead / .trow on a CSS subgrid, columns fit their figures, same columns as LoadsView;
