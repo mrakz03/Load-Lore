@@ -210,6 +210,13 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   (handload + ladder forms: powderSelect / powderBox) are a <select> with a .selcover like the cartridge box:
   search pop-up with a mouse, bottom sheet on touch, powders under maker headings (POWDER_BRANDS in
   load_lore.py, web DATA.powder_brands; POWDERS = brands A-Z), a last row 'Use "typed"' keeps an unlisted powder.
+  Primer (Zeke, Nov 17 2026): optional "primer" (last HANDLOAD_FIELDS column, text) in the "Powder, primer and
+  seating" section, label "PRIMER (optional)", a full-width box like the powder box (listSelect / listBox: PRIMER_BRANDS
+  in load_lore.py, web DATA.primer_brands; names hold maker + number + size, e.g. "CCI 400 Small Rifle"; another can
+  be typed). Shown in the opened handload, searched, on the ladder form (copied both ways), carried by backups, sync
+  and share (they use HAND_FIELDS / whole rows). The desktop form has no box but keeps col_in / primer on save.
+  The Handloads page has a "Sync" button beside "+ New handload" (Zeke, Nov 17 2026), the same syncDialog as
+  Settings > Data, with "Synced 5 min ago" beside it once this device syncs.
   Tidy form (Zeke, Nov 16 2026, web): Load name, Cartridge, then sections (.hsec, small heading + thin line):
   Bullet (Maker #hbmk + Bullet #hbs search boxes, Zeke asked for two: Maker lists makers with a fitting library
   bullet, Bullet that maker's fitting bullets, or every maker's under headings while no maker is picked; picking
