@@ -1,13 +1,12 @@
 """Regenerates www/index.html (the phone/web version) from the CSV files.
 Run after editing any data/*.csv or web/template.html:   python3 web/build_web.py
 """
-import json, os, shutil, sys
+import json, os, shutil
 
 here = os.path.dirname(os.path.abspath(__file__))
 root = os.path.dirname(here)
-sys.path.insert(0, os.path.join(root, "src"))
 import csv
-import load_lore as c
+import tables as c
 data = os.path.join(root, "data")
 cats = []
 for cat in c.CATEGORIES:

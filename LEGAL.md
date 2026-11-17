@@ -45,14 +45,11 @@ are estimates made for this app. No catalog text, photos or logos are included.
 
 ## Third-party software in the release builds
 
-The source code uses only the Python standard library. The release builds bundle:
+The web app uses no third-party code (its build script uses only the Python standard library).
+The Android app bundles:
 
 | Component | Used in | License |
 |---|---|---|
-| Python runtime | Windows .exe, Linux build (via PyInstaller) | PSF License 2.0 |
-| Tcl/Tk (Tkinter) | Windows .exe, Linux build | Tcl/Tk license (BSD-style) |
-| PyInstaller bootloader | Windows .exe, Linux build | GPL 2.0 with a bootloader exception that allows any license for the bundled app |
-| Inno Setup | Windows installer (Setup.exe) | Inno Setup license (free, permissive) |
 | Capacitor (@capacitor/core, android, app, cli) | Android APK | MIT |
 | AndroidX and other Android libraries pulled in by Capacitor | Android APK | Apache 2.0 |
 

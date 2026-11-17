@@ -1448,7 +1448,7 @@ function backupHand(){
   const csv=handCSV(rows),name="my_handloads.csv";
   const native=window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform();
   const [m,close]=modal(`<h3 style="margin:0 0 6px">Back up handloads</h3>
-    <p class="muted" style="margin:0 0 10px">${rows.length} handload${rows.length>1?"s":""} as a CSV file (the same file the desktop app keeps). ${native?"Copy it, then paste it into a note or an email to yourself.":"Save the file, or copy the text."} Restore it on any device with “Restore”.</p>
+    <p class="muted" style="margin:0 0 10px">${rows.length} handload${rows.length>1?"s":""} as a CSV file. ${native?"Copy it, then paste it into a note or an email to yourself.":"Save the file, or copy the text."} Restore it on any device with “Restore”.</p>
     <textarea id="bkt" readonly rows="6" style="width:100%;font-size:.75rem;font-family:monospace;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px">${esc(csv)}</textarea>
     <div class="btns">${native?"":'<button class="btn p" id="bks">Save file</button>'}<button class="btn ${native?"p":""}" id="bkc">Copy</button><button class="btn" id="bkx">Close</button></div>`);
   $("#bkx",m).onclick=close;
@@ -1458,7 +1458,7 @@ function backupHand(){
 }
 function restoreHand(after){
   const [m,close]=modal(`<h3 style="margin:0 0 6px">Restore handloads</h3>
-    <p class="muted" style="margin:0 0 10px">Choose a backup file (my_handloads.csv from the desktop app works too), or paste its text. Handloads you already have are kept; ones in the backup are added, or updated if they came from here.</p>
+    <p class="muted" style="margin:0 0 10px">Choose a backup file (my_handloads.csv from the old desktop app works too), or paste its text. Handloads you already have are kept; ones in the backup are added, or updated if they came from here.</p>
     <input type="file" id="rsf" accept=".csv,text/csv,text/plain" style="padding:8px">
     <label class="l" style="margin-top:12px">OR PASTE THE BACKUP</label>
     <textarea id="rst" rows="6" style="width:100%;font-size:.75rem;font-family:monospace;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px"></textarea>
