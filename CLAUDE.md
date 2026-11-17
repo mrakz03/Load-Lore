@@ -248,8 +248,9 @@ built by `python3 web/build_web.py` into web/www (Capacitor wraps it as an APK i
   smallest group. SVG chart (mean line, slowest-fastest bars, flat spot shaded). "Make handload" opens
   handDialog prefilled with the chosen charge and its average speed. The test form's "Copy from a handload ›" (only when there are handloads) fills cartridge, bullet, weight, powder and barrel from one, never a charge. LADDER_NOTE: your own results, not load data; the app does not check pressure (the Pressure signs box only records what the user saw, worded "You marked...").
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
-  middle), My Bench, Settings; the PC sidebar has the Load Dictionary above Head to Head. Home cards keep
-  the Load Dictionary first (TOOLS: Load Dictionary, Head to Head, My Bench).
+  middle), My Bench, Settings; the PC sidebar has the Load Dictionary above Head to Head. Web Home (Zeke, Nov 17 2026)
+  is two big cards matching the sidebar groups (HOME_GROUPS: Loads = Load Dictionary + Head to Head; My Bench =
+  Handloads, Ladder tests, Favorite loads with counts; its heading opens #bench). Desktop Home keeps TOOLS.
 - Menu clean-up (Nov 16 2026, Zeke; web / Android, desktop unchanged): each page is reached from one place.
   My Bench (#bench, showBench; BENCH list, BENCH_MODES) holds Handloads, Ladder tests and Favorite loads
   as cards with counts (benchCounts); their pages have "‹ My Bench" back links and the phone's My Bench
