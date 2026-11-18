@@ -740,3 +740,4 @@ cartridge	load	bullet_gr	muzzle_fps	barrel_in	source
 .40 S&W	Speer Lawman Training Total Metal Jacket (1050 fps) (est.)	165	1135	16	estimate: Speer 2026 catalog 1050 fps from 4 in x (16/4)^0.057
 .40 S&W	Speer Lawman Clean-Fire Training Total Metal Jacket (est.)	165	1135	16	estimate: Speer 2026 catalog 1050 fps from 4 in x (16/4)^0.057
 .45 ACP	Speer Lawman Clean-Fire Training Total Metal Jacket (est.)	230	905	16	estimate: Speer 2026 catalog 845 fps from 5 in x (16/5)^0.057
+.357 Magnum	Remington UMC Semi-Jacketed Hollow Point (est.)	125	1970	16	estimate: handload-list 1450 fps from 4 in x (16/4)^0.221 (magnum cartridges)
