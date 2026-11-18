@@ -125,6 +125,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 SIG,Speer Gold Dot Personal Protection Hollow Point,125,1350,0.144,8.4,1.83,,catalog,,4,Defense
 .357 SIG,Speer Lawman Training Total Metal Jacket,125,1325,0.150,8.4,0.94,,catalog,,4,Target
 .357 SIG,Speer Lawman Clean-Fire Training Total Metal Jacket,125,1350,0.150,8.4,0.98,,catalog,,4,Target
+.38 S&W,Remington Performance Wheelgun Lead Round Nose,146,685,0.126,2.5,1.10,yes,catalog,,4,Target
 .38 Super,Federal American Eagle JHP,115,1130,0.123,5.4,0.87,,catalog,,5,Defense
 .38 Super,Buffalo Bore JHP +P,115,1450,0.123,8.9,1.92,,partial,,,Defense
 .38 Super,Buffalo Bore Barnes TAC-XP +P (lead-free),115,1450,0.124,8.9,2.46,,partial,,,Defense

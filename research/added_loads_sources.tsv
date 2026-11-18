@@ -1253,3 +1253,56 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 30 Super Carry	Speer Gold Dot Personal Protection Hollow Point	115	1150	0.142	catalog	Speer 2026 catalog, 24261GD (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
 .45 GAP	Speer Lawman Clean-Fire Training Total Metal Jacket	200	990	0.102	catalog	Speer 2026 catalog, 53980 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
 .45 GAP	Remington UMC Full Metal Jacket	230	880	0.162	catalog	Remington 2026 catalog, L45GAP4 (G1 0.162); price estimated; powder charge estimated
+.17 Hornet	Federal American Eagle Tipped Varmint	20	3610	0.185	catalog	Federal 2026 catalog, AE17H20TVP (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.17 Hornet	Hornady Superformance Varmint V-MAX	20	3650	0.185	catalog	Hornady 2026 catalog, 83005 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.17 Hornet	Winchester Varmint-X Polymer Tip Rapid Expansion	20	3650	0.185	catalog	Winchester 2026 catalog, X17P (G1 0.185); price estimated; powder charge estimated
+.17 Remington	Nosler Varmageddon FBHP	20	4200	0.118	catalog	Nosler 2026 Product Guide, 65100 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.17 Remington	Nosler Varmageddon FB Tipped	20	4200	0.183	catalog	Nosler 2026 Product Guide, 65105 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.17 Remington	Remington Hollow Point	25	4040	0.187	catalog	Remington 2026 catalog, R17R2 (G1 0.187); price estimated; powder charge estimated
+.22 Nosler	Nosler Varmageddon FB Tipped	53	3450	0.300	catalog	Nosler 2026 Product Guide, 65177 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.22 Nosler	Nosler Ballistic Tip Varmint	55	3500	0.264	catalog	Nosler 2026 Product Guide, 61030 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.22 Nosler	Nosler E-Tip Lead-Free	55	3500	0.302	catalog	Nosler 2026 Product Guide, 40140 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.22 Nosler	Nosler Varmageddon FBHP	62	3250	0.248	catalog	Nosler 2026 Product Guide, 65180 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.22 Nosler	Nosler Trophy Grade AccuBond	70	2950	0.367	catalog	Nosler 2026 Product Guide, 60918 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.22 Nosler	Nosler Match Grade RDF	70	3000	0.425	catalog	Nosler 2026 Product Guide, 60124 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.25-20 Winchester	Remington Pointed Soft Point	86	1460	0.190	catalog	Remington 2026 catalog, R25202 (G1 0.19); price estimated; powder charge estimated
+.25-20 Winchester	Winchester Super-X Soft Point	86	1460	0.191	catalog	Winchester 2026 catalog, X25202 (G1 0.191); price estimated; powder charge estimated
+.257 Weatherby Magnum	Hornady Outfitter CX	90	3625	0.275	catalog	Hornady 2026 catalog, 813624 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.257 Weatherby Magnum	Nosler E-Tip Lead-Free	100	3450	0.413	catalog	Nosler 2026 Product Guide, 12035 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.257 Weatherby Magnum	Hornady Precision Hunter ELD-X	110	3240	0.470	catalog	Hornady 2026 catalog, 81364 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.257 Weatherby Magnum	Nosler Trophy Grade AccuBond	110	3300	0.415	catalog	Nosler 2026 Product Guide, 60012 / 12015 (same load) (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.257 Weatherby Magnum	Nosler Trophy Grade Partition	115	3250	0.391	catalog	Nosler 2026 Product Guide, 12043 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.264 Winchester Magnum	Nosler Trophy Grade Partition	125	3200	0.452	catalog	Nosler 2026 Product Guide, 14072 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.264 Winchester Magnum	Nosler Trophy Grade AccuBond	130	3100	0.492	catalog	Nosler 2026 Product Guide, 60019 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.264 Winchester Magnum	Nosler Trophy Grade Partition	140	2950	0.494	catalog	Nosler 2026 Product Guide, 14083 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.264 Winchester Magnum	Remington Core-Lokt Pointed Soft Point	140	3030	0.384	catalog	Remington 2026 catalog, R264W2 (G1 0.384); price estimated; powder charge estimated
+.264 Winchester Magnum	Winchester Power-Point	140	3030	0.384	catalog	Winchester 2026 catalog, X2642 (G1 0.384); price estimated; powder charge estimated
+6.5-284 Norma	Nosler Trophy Grade AccuBond	140	2750	0.514	catalog	Nosler 2026 Product Guide, 60040 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+6.5-284 Norma	Nosler Match Grade Custom Competition	140	2750	0.533	catalog	Nosler 2026 Product Guide, 44166 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.270 Weatherby Magnum	Nosler Trophy Grade AccuBond Long Range	150	3080	0.598	catalog	Nosler 2026 Product Guide, 60150 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler Trophy Grade AccuBond	140	3100	0.482	catalog	Nosler 2026 Product Guide, 60043 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler Ballistic Tip	140	3100	0.482	catalog	Nosler 2026 Product Guide, 43504 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler E-Tip Lead-Free	140	3100	0.487	catalog	Nosler 2026 Product Guide, 40067 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Federal Premium Trophy Copper	140	3075	0.489	catalog	Federal 2026 catalog, P280AITC1 (G1 0.489); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler Trophy Grade AccuBond Long Range	150	2930	0.547	catalog	Nosler 2026 Product Guide, 60116 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Federal Premium Terminal Ascent	155	2930	0.586	catalog	Federal 2026 catalog, P280AITA1 (G1 0.586); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler Trophy Grade AccuBond	160	2950	0.528	catalog	Nosler 2026 Product Guide, 60076 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler Trophy Grade Partition	160	2950	0.478	catalog	Nosler 2026 Product Guide, 60044 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Hornady Precision Hunter ELD-X	162	2850	0.638	catalog	Hornady 2026 catalog, 85586 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Federal Premium Berger Hybrid Hunter	168	2830	0.566	catalog	Federal 2026 catalog, P280AIBCH1 (G1 0.566); price estimated; powder charge estimated
+7mm Backcountry	Federal Premium Terminal Ascent	155	3300	0.586	catalog	Federal 2026 catalog, P7BCTA1 (G1 0.586); price estimated; powder charge estimated
+7mm Backcountry	Federal Premium Barnes LRX	168	3150	0.513	catalog	Federal 2026 catalog, P7BCLRX1 (G1 0.513); price estimated; powder charge estimated
+7mm Backcountry	Federal Premium Terminal Ascent	170	3150	0.645	catalog	Federal 2026 catalog, P7BCTA3 (G1 0.645); price estimated; powder charge estimated
+7mm Backcountry	Federal Fusion Tipped	175	3125	0.582	catalog	Federal 2026 catalog, F7BCTFS2 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+7mm Backcountry	Federal Premium Berger Elite Hunter	195	3000	0.755	catalog	Federal 2026 catalog, P7BCEH1 (G1 0.755); price estimated; powder charge estimated
+.300 H&H Magnum	Nosler Trophy Grade AccuBond	180	2850	0.504	catalog	Nosler 2026 Product Guide, 60060 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.300 H&H Magnum	Nosler Trophy Grade Partition	180	2850	0.471	catalog	Nosler 2026 Product Guide, 20063 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+8mm Remington Magnum	Nosler Ballistic Tip	180	3100	0.391	catalog	Nosler 2026 Product Guide, 24410 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+8mm Remington Magnum	Nosler Trophy Grade AccuBond	200	3000	0.453	catalog	Nosler 2026 Product Guide, 24400 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+8mm Remington Magnum	Nosler Trophy Grade Partition	200	3000	0.352	catalog	Nosler 2026 Product Guide, 24405 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.38-40 Winchester	Winchester Power-Point	180	1160	0.172	catalog	Winchester 2026 catalog, X3840 (G1 0.172); price estimated; powder charge estimated
+.405 Winchester	Hornady Custom InterLock SP	300	2200	0.252	catalog	Hornady 2026 catalog, 8241 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.450 Marlin	Hornady LEVERevolution FTX	325	2225	0.231	catalog	Hornady 2026 catalog, 82750 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.32-20 Winchester	Remington Lead Round Nose	100	1210	0.166	catalog	Remington 2026 catalog, R32201 (G1 0.166); price estimated; powder charge estimated
+.32-20 Winchester	Winchester Super-X Lead Flat Nose	100	1210	0.166	catalog	Winchester 2026 catalog, X32201 (G1 0.166); price estimated; powder charge estimated
+.38 S&W	Remington Performance Wheelgun Lead Round Nose	146	685	0.126	catalog	Remington 2026 catalog, RPW38SW (G1 0.126); price estimated; powder charge estimated
