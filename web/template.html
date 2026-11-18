@@ -1585,7 +1585,7 @@ function syncDialog(after){
     if(!SYNC_URL){box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3><p class="muted">Sync isn't set up in this version.</p><div class="btns"><button class="btn" id="syx">Close</button></div>`;}
     else if(st){
       box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3>
-        <p style="margin:0 0 8px">This device is synced. To add another device, open Sync there (Settings or Handloads), tap “Receive data with a code” and type:</p>
+        <p style="margin:0 0 8px">This device is synced. To add another device, open Sync there (Settings or Handloads), tap “Link with a code” and type:</p>
         <div class="scode"><b id="syc">${esc(fmtCode(st.code))}</b><button class="btn" id="sycp">Copy</button></div>
         <p class="muted" style="margin:10px 0 0" aria-live="polite">${syncBusy?"Syncing…":st.err?`<span style="color:var(--danger)">${esc(st.err)}</span>`:st.at?`Last synced ${syncAgo(st.at)}.`:""} ${esc(counts())}.</p>
         <div class="btns"><button class="btn p" id="syn"${syncBusy?" disabled":""}>Sync now</button><button class="btn" id="sys">Stop syncing here</button><button class="btn" id="syx">Close</button></div>
@@ -1599,11 +1599,11 @@ function syncDialog(after){
         catch(e){alert("Couldn't reach the sync server. Try again when you're online.");}
       };
     }else if(mode==="have"){
-      box.innerHTML=`<h3 style="margin:0 0 6px">Receive data with a code</h3>
-        <p class="muted" style="margin:0 0 10px">Type the code from the sending device. Both devices' loads are combined. Nothing is deleted.</p>
+      box.innerHTML=`<h3 style="margin:0 0 6px">Link with a code</h3>
+        <p class="muted" style="margin:0 0 10px">Type the code from your first device. Your loads are combined. Nothing is deleted.</p>
         <input id="syi" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX" aria-label="Sync code" style="font-family:monospace;letter-spacing:.08em;text-transform:uppercase">
         <p class="muted" id="sye" style="margin:8px 0 0;color:var(--danger)" aria-live="polite"></p>
-        <div class="btns"><button class="btn p" id="syl">Receive</button><button class="btn" id="syb2">Back</button></div>`;
+        <div class="btns"><button class="btn p" id="syl">Link</button><button class="btn" id="syb2">Back</button></div>`;
       const inp=$("#syi",box);inp.focus();
       const go=async()=>{
         const c=inp.value.toUpperCase().replace(/[^0-9A-Z]/g,"");
@@ -1621,10 +1621,10 @@ function syncDialog(after){
       let gone=false;try{gone=localStorage.getItem(SYNC_KEY+"_gone")==="1";localStorage.removeItem(SYNC_KEY+"_gone");}catch(e){}
       box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3>${gone?`<p style="margin:0 0 8px;color:var(--danger)">The synced copy was deleted from another device, so this device stopped syncing. Its handloads are still here.</p>`:""}${intro}
         <div class="sopts">
-          <button class="sopt" id="syg"><b>Send data from this device</b><small>Makes a code to type on your other device.</small></button>
-          <button class="sopt" id="syh"><b>Receive data with a code</b><small>Type the code from the sending device. Loads are combined, nothing is deleted.</small></button>
+          <button class="sopt" id="syg"><b>Start syncing</b><small>On your first device. Gives you a code.</small></button>
+          <button class="sopt" id="syh"><b>Link with a code</b><small>On your other devices. Your loads are combined.</small></button>
         </div>
-        <p class="muted" style="margin:0">Works both ways once linked. Keep your code private.</p>
+        <p class="muted" style="margin:0">Linked devices stay in sync on their own. Keep your code private.</p>
         <p class="muted" id="sye" style="margin:8px 0 0;color:var(--danger)" aria-live="polite"></p>
         <div class="btns"><button class="btn" id="syx">Close</button></div>`;
       $("#syh",box).onclick=()=>{mode="have";draw();};
