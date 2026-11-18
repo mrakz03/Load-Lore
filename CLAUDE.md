@@ -243,7 +243,9 @@ into web/www (Capacitor wraps it as an APK in CI).
   On touch screens the form's pickers (cartridge, bullet, powder, purpose) open
   pickSheet too (sheetSelect puts a clear button over a <select>; powder: powderBox); pickSheet over a dialog hands the back button back to the dialog when it closes.
 - Sync between devices (Nov 16 2026, Zeke; web + Android only, not desktop): Settings > Data > "Sync" (syncDialog)
-  links devices with a 12-character code (no 0/O, 1/I/L, U; shown XXXX-XXXX-XXXX), no accounts. sync/worker.js
+  links devices with a 12-character code (no 0/O, 1/I/L, U; shown XXXX-XXXX-XXXX), no accounts.
+  The dialog (Zeke, Nov 18 2026) offers two cards: "Start syncing from this device" (first device: makes the code and
+  sends its data) and "Join with a code" (other devices: both sides combined, nothing deleted), then says it works both ways. sync/worker.js
   (Cloudflare Worker + D1, address sync.loadlore.net, deployed with wrangler from sync/) keeps one copy per code, stored
   under the code's SHA-256; 1 MB cap, rate limits, copies unused 2 years removed. The copy holds handloads,
   ladder tests, favorites and saved prices (SYNC_PARTS; not theme / text size / grades switch). The web keeps cartridge_calc_sync_v1
