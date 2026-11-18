@@ -1212,3 +1212,18 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 .40 S&W	Speer Lawman Clean-Fire Training Total Metal Jacket	165	1050	0.139	catalog	Speer 2026 catalog, part 53982 (4 in test barrel); BC fitted to its 100 yd velocity 911 fps; powder as the nearest-weight load of the cartridge; price same Speer line in this cartridge
 .45 ACP	Speer Lawman Clean-Fire Training Total Metal Jacket	230	845	0.157	catalog	Speer 2026 catalog, part 53885 (5 in test barrel); BC fitted to its 100 yd velocity 773 fps; powder as the nearest-weight load of the cartridge; price .45 ACP Target median x Speer line ratio 1.10
 .38 Special	Speer Lawman Training Total Metal Jacket	125	875	0.133	catalog	velocity corrected 865 -> 875 fps from the Speer 2026 catalog, part 53733
+.360 Buckhammer	Remington Core-Lokt Copper	160	2275	0.190	catalog	Remington 2026 catalog, RCC360BH3 (G1 0.19); price estimated; powder charge estimated
+.360 Buckhammer	Federal Power-Shok SP	180	2374	0.178	catalog	Federal 2026 catalog, 360BHAS (2374 fps); BC + price Lucky Gunner listing (G1 0.178, $32.00/20); powder charge estimated
+.360 Buckhammer	Remington Core-Lokt Soft Point	180	2400	0.163	catalog	Remington 2026 catalog, R360BH4 (G1 0.163); price estimated; powder charge estimated
+.360 Buckhammer	Remington Core-Lokt Tipped	180	2400	0.212	catalog	Remington 2026 catalog, RT360BH4 (G1 0.212); price estimated; powder charge estimated
+.360 Buckhammer	Federal Power-Shok SP	200	2200	0.181	catalog	Federal 2026 catalog, 360BHBS (misprinted "1,197" fps; 2200 fps from Lucky Gunner listing and the 100 yd figure); BC + price Lucky Gunner (G1 0.181, $32.00/20); powder charge estimated
+.360 Buckhammer	Fiocchi Field Dynamics SP	200	2200	0.184	partial	Fiocchi 2026 catalog, 360BHB (2200 fps; BC of the Remington 200 gr Core-Lokt SP, same weight and type); price estimated; powder charge estimated
+.360 Buckhammer	Remington Core-Lokt Soft Point	200	2180	0.184	catalog	Remington 2026 catalog, R360BH2 (2180 fps, G1 0.184); price estimated; powder charge estimated
+.360 Buckhammer	Federal Premium Hammerdown Bonded Soft Point	220	2000	0.263	catalog	Federal 2026 catalog, LG360BH1 (G1 0.263); price estimated; powder charge estimated
+.360 Buckhammer	Remington Subsonic Bonded Hollow Point	250	1030	0.230	partial	Remington 27745 (S360BH5), 1030 fps from ssusa.org new-product note (2026 catalog prints no figures); BC scaled from the Remington 200 gr Core-Lokt SP; price = MSRP $47.99/20; powder charge estimated
+.400 Legend	Winchester Deer Season XP Extreme Point	190	2400	0.198	catalog	Winchester 2026 catalog, X400DS (G1 0.198); price estimated; powder charge estimated
+.400 Legend	Hornady American Whitetail InterLock SP	210	2200	0.199	catalog	Hornady 2026 catalog, 82461 (2200 fps; BC fitted to the catalog 100-300 yd velocities); 16 in test barrel per thefirearmblog.com launch note; price estimated; powder charge estimated
+.400 Legend	Remington Core-Lokt Soft Point	210	2250	0.207	catalog	Remington 2026 catalog, R400L1 (G1 0.207); price estimated; powder charge estimated
+.400 Legend	Nosler Whitetail Country Straight-Wall	215	2250	0.215	published	Nosler 2026 Product Guide, 40138 (2250 fps); G1 0.215, 24 in barrel and $40.95/20 from thefirearmblog.com SHOT 2026 note; powder charge estimated
+.400 Legend	Winchester Power-Point	215	2250	0.206	catalog	Winchester 2026 catalog, X4001 (G1 0.206); price estimated; powder charge estimated
+.400 Legend	Winchester Super Suppressed Open Tip (subsonic)	300	1060	0.318	catalog	Winchester 2026 catalog, SUP400 (G1 0.318); price estimated; powder charge estimated

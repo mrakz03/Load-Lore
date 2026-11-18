@@ -1407,6 +1407,15 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .358 Winchester,Buffalo Bore Supercharged Spitzer BT,225,2500,0.331,59.2,2.73,,partial,,,Hunting
 .358 Winchester,Buffalo Bore Supercharged Barnes TSX (lead-free),225,2500,0.426,59.2,3.52,,partial,,,Hunting
 .358 Winchester,Buffalo Bore Supercharged Spitzer,250,2350,0.409,58.1,2.85,,partial,,,Hunting
+.360 Buckhammer,Remington Core-Lokt Copper,160,2275,0.190,30.6,2.40,,catalog,,,Hunting
+.360 Buckhammer,Federal Power-Shok SP,180,2374,0.178,37.5,1.60,,catalog,,24,Hunting
+.360 Buckhammer,Remington Core-Lokt Soft Point,180,2400,0.163,38.4,1.60,yes,catalog,,,Hunting
+.360 Buckhammer,Remington Core-Lokt Tipped,180,2400,0.212,38.4,2.00,,catalog,,,Hunting
+.360 Buckhammer,Federal Power-Shok SP,200,2200,0.181,35.8,1.60,,catalog,,24,Hunting
+.360 Buckhammer,Fiocchi Field Dynamics SP,200,2200,0.184,35.8,1.45,,partial,,,Hunting
+.360 Buckhammer,Remington Core-Lokt Soft Point,200,2180,0.184,35.2,1.60,,catalog,,,Hunting
+.360 Buckhammer,Federal Premium Hammerdown Bonded Soft Point,220,2000,0.263,32.6,2.40,,catalog,,24,Hunting
+.360 Buckhammer,Remington Subsonic Bonded Hollow Point,250,1030,0.230,9.8,2.40,,partial,,,Subsonic
 9.3x62mm,Sellier & Bellot FMJ,232,2507,0.421,54.0,2.77,,partial,,24,Target
 9.3x62mm,Hornady Dangerous Game InterLock SP-RP,286,2360,0.407,67.0,3.05,yes,catalog,,24,Hunting
 9.3x62mm,Federal Premium Barnes Triple-Shock X,250,2400,0.361,53.3,4.19,,catalog,,24,Hunting
@@ -1445,6 +1454,12 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .375 Ruger,Buffalo Bore Dangerous Game Barnes TSX (lead-free),300,2600,0.518,85.3,6.83,,partial,,,Hunting
 .38-55 Winchester,Winchester Super-X Power-Point,255,1320,0.354,16,2.75,yes,catalog,,,Hunting
 .38-55 Winchester,Buffalo Bore Heavy JFN Bonded Core,255,1950,0.245,34.9,4.29,,partial,,,Hunting
+.400 Legend,Winchester Deer Season XP Extreme Point,190,2400,0.198,40.5,1.90,,catalog,,20,Hunting
+.400 Legend,Hornady American Whitetail InterLock SP,210,2200,0.199,37.6,1.90,,catalog,,16,Hunting
+.400 Legend,Remington Core-Lokt Soft Point,210,2250,0.207,39.3,1.75,,catalog,,,Hunting
+.400 Legend,Nosler Whitetail Country Straight-Wall,215,2250,0.215,40.3,2.05,,published,,24,Hunting
+.400 Legend,Winchester Power-Point,215,2250,0.206,40.3,1.75,yes,catalog,,20,Hunting
+.400 Legend,Winchester Super Suppressed Open Tip (subsonic),300,1060,0.318,12.5,2.00,,catalog,,,Subsonic
 .416 Remington Magnum,Hornady Dangerous Game DGS,400,2400,0.324,97.0,6.36,,catalog,,24,Hunting
 .416 Remington Magnum,Hornady Dangerous Game DGX Bonded,400,2400,0.324,97.0,9.55,yes,catalog,,24,Hunting
 .416 Remington Magnum,Federal Premium Safari Swift A-Frame,400,2400,0.367,85.3,10.93,,catalog,,24,Hunting
