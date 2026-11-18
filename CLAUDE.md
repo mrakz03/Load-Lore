@@ -422,8 +422,7 @@ the latest commit.
 - Full catalog check (Oct 2026): every load in the 2026 Hornady (ballistics pages), Fiocchi, CCI/Blazer,
   PMC, ELEY, Remington, Winchester and Federal catalogs was matched against the data; the 47 missing
   ones were added (in research/added_loads_sources.tsv). Left out on purpose: cartridges the app doesn't
-  have (Hornady Dangerous Game / Weatherby / Marlin Express etc.,
-  7mm Backcountry, 338 Federal, Nitro Express, WSSMs, Fiocchi Heritage oddities), rimfire/handgun
+  have (Hornady Dangerous Game / Marlin Express etc., Nitro Express, WSSMs, Fiocchi Heritage oddities), rimfire/handgun
   shotshells, less-lethal rounds, loads printed without ballistics, Remington bucket packs, and loads
   with no payload given (Hornady #4 Buck / Heavy Magnum Coyote / .410 Triple Defense, Winchester PDX1).
   Catalog misprints fixed from the energy column: Winchester S308M2 "652 gr" = 168 gr,
@@ -511,6 +510,13 @@ the latest commit.
   CCI and Speer catalogs. BCs the catalogs don't print fitted to their downrange speeds (Federal / Remington handgun
   tables step 25 yd, CCI / Speer 50 yd). New Nosler line "E-Tip" (Nosler E-Tip Lead-Free). No 30 Super Carry / .45 GAP
   PCC rows (no carbines). Remington UMC .357 Magnum 125 SJHP R23970 (the catalog misprints it JSP) also added.
+- Nov 18 2026 (Zeke, later): 17 more cartridges, 53 loads from the 2026 catalogs (Nosler Product Guide, Hornady,
+  Federal, Remington, Winchester): .17 Hornet, .17 Remington, .22 Nosler, .25-20 / .32-20 / .38-40 Winchester,
+  .257 / .270 Weatherby Magnum, .264 Winchester Magnum, 6.5-284 Norma, .280 Ackley Improved, 7mm Backcountry,
+  .300 H&H Magnum, 8mm Remington Magnum, .405 Winchester, .450 Marlin (rifle) and .38 S&W (Handgun). Nosler's guide
+  prints no BC: fitted to its 100 yd steps; Nosler NCA / TGA rows with the same bullet and speed are one load. New
+  Nosler lines Ballistic Tip and Varmageddon. Not added (no catalog figures): 7mm Weatherby Magnum, 6.5 Weatherby
+  RPM, and Weatherby's own loads (weatherby.com).
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
