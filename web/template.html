@@ -1579,7 +1579,7 @@ function syncDialog(after){
   const counts=()=>{const d=syncLocal(),n=(x,w)=>`${x} ${w}${x===1?"":"s"}`;return `${n(d.hand.length,"handload")}, ${n(d.ladders.length,"ladder test")}, ${n(d.favs.length,"favorite")} and ${n(Object.keys(d.prices).length,"saved price")} on this device`;};
   // Zeke (Nov 18 2026): say which device starts (makes the code, sends its loads) and which joins
   // (types the code; both devices' loads are combined, nothing deleted), and that it then works both ways
-  const intro=`<p class="muted" style="margin:0 0 10px">Keep your handloads, ladder tests, favorites and prices the same on all your devices. No account needed.</p>`;
+  const intro=`<p class="muted" style="margin:0 0 10px">Keep your handloads, ladder tests, favorites and prices the same on all your devices.</p>`;
   function draw(){
     const st=syncState();
     if(!SYNC_URL){box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3><p class="muted">Sync isn't set up in this version.</p><div class="btns"><button class="btn" id="syx">Close</button></div>`;}
@@ -1600,7 +1600,7 @@ function syncDialog(after){
       };
     }else if(mode==="have"){
       box.innerHTML=`<h3 style="margin:0 0 6px">Join with a code</h3>
-        <p class="muted" style="margin:0 0 10px">Type the code shown on the device that is already syncing. This device's handloads, ladder tests, favorites and prices are added to the ones there, and both devices end up with all of them. Nothing is deleted.</p>
+        <p class="muted" style="margin:0 0 10px">Type the code from the device that's already syncing. Both devices' loads are combined. Nothing is deleted.</p>
         <input id="syi" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX" aria-label="Sync code" style="font-family:monospace;letter-spacing:.08em;text-transform:uppercase">
         <p class="muted" id="sye" style="margin:8px 0 0;color:var(--danger)" aria-live="polite"></p>
         <div class="btns"><button class="btn p" id="syl">Join</button><button class="btn" id="syb2">Back</button></div>`;
@@ -1621,10 +1621,10 @@ function syncDialog(after){
       let gone=false;try{gone=localStorage.getItem(SYNC_KEY+"_gone")==="1";localStorage.removeItem(SYNC_KEY+"_gone");}catch(e){}
       box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3>${gone?`<p style="margin:0 0 8px;color:var(--danger)">The synced copy was deleted from another device, so this device stopped syncing. Its handloads are still here.</p>`:""}${intro}
         <div class="sopts">
-          <button class="sopt" id="syg"><b>Start syncing from this device</b><small>First device only. Makes a code and sends this device's handloads, ladder tests, favorites and prices to the sync copy.</small></button>
-          <button class="sopt" id="syh"><b>Join with a code</b><small>Your other devices. Type the code from the first device: both devices' loads are combined, nothing is deleted.</small></button>
+          <button class="sopt" id="syg"><b>Start syncing from this device</b><small>On your first device. Makes a code.</small></button>
+          <button class="sopt" id="syh"><b>Join with a code</b><small>On your other devices. Loads are combined, nothing is deleted.</small></button>
         </div>
-        <p class="muted" style="margin:0">Once linked it works both ways: a change on any device shows up on the others. Keep your code private: anyone who has it can see and change your handloads.</p>
+        <p class="muted" style="margin:0">Works both ways once linked. Keep your code private.</p>
         <p class="muted" id="sye" style="margin:8px 0 0;color:var(--danger)" aria-live="polite"></p>
         <div class="btns"><button class="btn" id="syx">Close</button></div>`;
       $("#syh",box).onclick=()=>{mode="have";draw();};
