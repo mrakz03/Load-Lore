@@ -422,7 +422,7 @@ the latest commit.
 - Full catalog check (Oct 2026): every load in the 2026 Hornady (ballistics pages), Fiocchi, CCI/Blazer,
   PMC, ELEY, Remington, Winchester and Federal catalogs was matched against the data; the 47 missing
   ones were added (in research/added_loads_sources.tsv). Left out on purpose: cartridges the app doesn't
-  have (Hornady Dangerous Game / Weatherby / Marlin Express etc., 30 Super Carry,
+  have (Hornady Dangerous Game / Weatherby / Marlin Express etc.,
   7mm Backcountry, 338 Federal, Nitro Express, WSSMs, Fiocchi Heritage oddities), rimfire/handgun
   shotshells, less-lethal rounds, loads printed without ballistics, Remington bucket packs, and loads
   with no payload given (Hornady #4 Buck / Heavy Magnum Coyote / .410 Triple Defense, Winchester PDX1).
@@ -506,6 +506,11 @@ the latest commit.
   to the catalog's downrange speeds; Remington's subsonic (1030 fps) from its launch note, BC scaled. Powder charges
   estimated (60 ft-lbs per grain), most prices estimated. Barrel limit 22 in for both. Left out: Barnes .400 Legend
   (no published velocity). Sources in added_loads_sources.tsv.
+- Nov 18 2026 (Zeke, same evening): 7x57mm Mauser (6 loads), .32 Winchester Special (5), .338 Federal (4),
+  30 Super Carry (8, Handgun) and .45 GAP (2, Handgun) from the 2026 Federal, Remington, Winchester, Hornady, Nosler,
+  CCI and Speer catalogs. BCs the catalogs don't print fitted to their downrange speeds (Federal / Remington handgun
+  tables step 25 yd, CCI / Speer 50 yd). New Nosler line "E-Tip" (Nosler E-Tip Lead-Free). No 30 Super Carry / .45 GAP
+  PCC rows (no carbines). Remington UMC .357 Magnum 125 SJHP R23970 (the catalog misprints it JSP) also added.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 

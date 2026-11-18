@@ -1228,3 +1228,28 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 .400 Legend	Winchester Power-Point	215	2250	0.206	catalog	Winchester 2026 catalog, X4001 (G1 0.206); price estimated; powder charge estimated
 .400 Legend	Winchester Super Suppressed Open Tip (subsonic)	300	1060	0.318	catalog	Winchester 2026 catalog, SUP400 (G1 0.318); price estimated; powder charge estimated
 .357 Magnum	Remington UMC Semi-Jacketed Hollow Point	125	1450	0.125	published	remington.com/handgun/umc-handgun/29-R23970.html (R23970, 1450 fps, 584 ft-lbs; the 2026 catalog prints R23970 as JSP); BC + powder of the Remington HTP 125 SJHP; 4 in barrel like the other Remington handgun loads; price estimated (100-round value pack)
+7x57mm Mauser	Federal Power-Shok SP	140	2660	0.430	catalog	Federal 2026 catalog, 7B (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+7x57mm Mauser	Remington Core-Lokt Pointed Soft Point	140	2660	0.390	catalog	Remington 2026 catalog, R7MSR1 (G1 0.39); price estimated; powder charge estimated
+7x57mm Mauser	Nosler Trophy Grade AccuBond	140	2700	0.488	catalog	Nosler 2026 Product Guide, 47118 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+7x57mm Mauser	Nosler E-Tip Lead-Free	140	2700	0.493	catalog	Nosler 2026 Product Guide, 40481 (ETA) (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+7x57mm Mauser	Winchester Power-Point	145	2660	0.355	catalog	Winchester 2026 catalog, X7MM1 (G1 0.355); price estimated; powder charge estimated
+7x57mm Mauser	Federal Power-Shok SPRN	175	2390	0.274	catalog	Federal 2026 catalog, 7A (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.32 Winchester Special	Hornady LEVERevolution FTX	165	2410	0.313	catalog	Hornady 2026 catalog, 82732 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.32 Winchester Special	Federal Power-Shok SPFN	170	2250	0.241	catalog	Federal 2026 catalog, 32A (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.32 Winchester Special	Remington Core-Lokt Soft Point	170	2250	0.239	catalog	Remington 2026 catalog, R32WS2 (G1 0.239); price estimated; powder charge estimated
+.32 Winchester Special	Remington Core-Lokt Tipped	170	2250	0.252	catalog	Remington 2026 catalog, RT32WSA (G1 0.252); price estimated; powder charge estimated
+.32 Winchester Special	Winchester Power-Point	170	2250	0.205	catalog	Winchester 2026 catalog, X32WS2 (G1 0.205); price estimated; powder charge estimated
+.338 Federal	Federal Fusion MSR	185	2680	0.381	catalog	Federal 2026 catalog, F338FMSR2 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.338 Federal	Federal Fusion	200	2700	0.420	catalog	Federal 2026 catalog, F338FFS2 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.338 Federal	Federal Premium Trophy Bonded Tip	200	2630	0.440	catalog	Federal 2026 catalog, P338FTT2 (G1 0.44); price estimated; powder charge estimated
+.338 Federal	Federal Premium Trophy Copper	200	2630	0.425	catalog	Federal 2026 catalog, P338FTC2 (G1 0.425); price estimated; powder charge estimated
+30 Super Carry	Federal Champion FMJ	90	1300	0.166	catalog	Federal 2026 catalog, C3090A (BC fitted to the catalog downrange velocities) (25 yd steps); price estimated; powder charge estimated
+30 Super Carry	Federal American Eagle FMJ FP	100	1250	0.166	catalog	Federal 2026 catalog, AE30SCA (BC fitted to the catalog downrange velocities) (25 yd steps); price estimated; powder charge estimated
+30 Super Carry	Federal Premium Personal Defense HST	100	1250	0.166	catalog	Federal 2026 catalog, P30HST1S (BC fitted to the catalog downrange velocities) (25 yd steps); price estimated; powder charge estimated
+30 Super Carry	Remington UMC Full Metal Jacket	100	1250	0.165	catalog	Remington 2026 catalog, L30SC (G1 0.165); price estimated; powder charge estimated
+30 Super Carry	Remington HTP Jacketed Hollow Point	100	1235	0.165	catalog	Remington 2026 catalog, RTP30SC (G1 0.165); price estimated; powder charge estimated
+30 Super Carry	Federal Personal Defense Punch JHP	103	1130	0.167	catalog	Federal 2026 catalog, PD30P1 (BC fitted to the catalog downrange velocities) (25 yd steps); price estimated; powder charge estimated
+30 Super Carry	CCI Blazer Brass FMJ FN	115	1150	0.151	catalog	CCI 2026 catalog, 5205 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+30 Super Carry	Speer Gold Dot Personal Protection Hollow Point	115	1150	0.142	catalog	Speer 2026 catalog, 24261GD (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.45 GAP	Speer Lawman Clean-Fire Training Total Metal Jacket	200	990	0.102	catalog	Speer 2026 catalog, 53980 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.45 GAP	Remington UMC Full Metal Jacket	230	880	0.162	catalog	Remington 2026 catalog, L45GAP4 (G1 0.162); price estimated; powder charge estimated
