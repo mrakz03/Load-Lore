@@ -734,6 +734,12 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 7mm-08 Remington,Nosler Whitetail Country Solid Base,140,2825,0.459,45.8,1.77,,published,,24,Hunting
 7mm-08 Remington,Federal Power-Shok SP,150,2650,0.420,43.2,1.75,,catalog,,24,Hunting
 7mm-08 Remington,Hornady Precision Hunter ELD-X,150,2770,0.586,47.2,2.25,,catalog,,24,Match
+7x57mm Mauser,Federal Power-Shok SP,140,2660,0.430,38.6,1.60,,catalog,,24,Hunting
+7x57mm Mauser,Remington Core-Lokt Pointed Soft Point,140,2660,0.390,38.6,1.75,yes,catalog,,,Hunting
+7x57mm Mauser,Nosler Trophy Grade AccuBond,140,2700,0.488,39.8,3.50,,catalog,,,Hunting
+7x57mm Mauser,Nosler E-Tip Lead-Free,140,2700,0.493,39.8,3.50,,catalog,,,Hunting
+7x57mm Mauser,Winchester Power-Point,145,2660,0.355,40.0,1.75,,catalog,,24,Hunting
+7x57mm Mauser,Federal Power-Shok SPRN,175,2390,0.274,38.9,1.60,,catalog,,24,Hunting
 .30 Carbine,Hornady Critical Defense FTX,110,2000,0.181,18.5,1.08,yes,catalog,,20,Defense
 .30 Carbine,Federal American Eagle FMJ,110,1990,0.168,16.1,0.82,,catalog,,24,Target
 .30 Carbine,Federal Power-Shok SPRN,110,1990,0.168,16.1,0.82,,catalog,,24,Hunting
@@ -1326,11 +1332,20 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 8x57mm Mauser,Buffalo Bore Barnes TSX (lead-free),200,2500,0.466,52.7,3.52,,partial,,,Hunting
 8x57mm Mauser,Sellier & Bellot Sierra GameKing SBT,220,2405,0.512,53.6,1.51,,partial,,24,Hunting
 8x57mm Mauser,PPU FMJ Boat Tail,250,2165,0.582,49.4,1.35,,partial,,24,Target
+.32 Winchester Special,Hornady LEVERevolution FTX,165,2410,0.313,34.9,2.20,,catalog,,24,Hunting
+.32 Winchester Special,Federal Power-Shok SPFN,170,2250,0.241,31.3,1.75,,catalog,,24,Hunting
+.32 Winchester Special,Remington Core-Lokt Soft Point,170,2250,0.239,31.3,1.90,,catalog,,,Hunting
+.32 Winchester Special,Remington Core-Lokt Tipped,170,2250,0.252,31.3,2.20,,catalog,,,Hunting
+.32 Winchester Special,Winchester Power-Point,170,2250,0.205,31.3,1.90,yes,catalog,,24,Hunting
 .338 ARC,Hornady BLACK MonoFlex,170,2075,0.314,30.8,2.93,,catalog,,16,Hunting
 .338 ARC,Hornady BLACK HP Match,175,2075,0.392,31.7,2.34,,catalog,,16,Match
 .338 ARC,Hornady BLACK FTX,215,1900,0.378,32.7,2.24,yes,catalog,,16,Hunting
 .338 ARC,Hornady FMJ (subsonic),285,1050,0.684,13.2,1.32,,catalog,,24,Subsonic
 .338 ARC,Hornady Subsonic SUB-X,307,1050,0.381,14.2,2.93,,catalog,,16,Subsonic
+.338 Federal,Federal Fusion MSR,185,2680,0.381,46.8,2.00,,catalog,,20,Hunting
+.338 Federal,Federal Fusion,200,2700,0.420,51.4,2.00,yes,catalog,,24,Hunting
+.338 Federal,Federal Premium Trophy Bonded Tip,200,2630,0.440,48.7,3.25,,catalog,,24,Hunting
+.338 Federal,Federal Premium Trophy Copper,200,2630,0.425,48.7,3.00,,catalog,,24,Hunting
 .338 Lapua Magnum,Black Hills Gold Hornady CX,225,2900,0.583,79.7,5.47,,partial,,24,Hunting
 .338 Lapua Magnum,Hornady Custom CX,240,2900,0.622,85.0,5.95,,catalog,,24,Hunting
 .338 Lapua Magnum,PPU Match Solid,240,2986,0.653,90.1,4.40,,partial,,24,Match
