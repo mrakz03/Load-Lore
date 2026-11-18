@@ -422,7 +422,7 @@ the latest commit.
 - Full catalog check (Oct 2026): every load in the 2026 Hornady (ballistics pages), Fiocchi, CCI/Blazer,
   PMC, ELEY, Remington, Winchester and Federal catalogs was matched against the data; the 47 missing
   ones were added (in research/added_loads_sources.tsv). Left out on purpose: cartridges the app doesn't
-  have (Hornady Dangerous Game / Weatherby / Marlin Express etc., 30 Super Carry, 360 Buckhammer,
+  have (Hornady Dangerous Game / Weatherby / Marlin Express etc., 30 Super Carry,
   7mm Backcountry, 338 Federal, Nitro Express, WSSMs, Fiocchi Heritage oddities), rimfire/handgun
   shotshells, less-lethal rounds, loads printed without ballistics, Remington bucket packs, and loads
   with no payload given (Hornady #4 Buck / Heavy Magnum Coyote / .410 Triple Defense, Winchester PDX1).
@@ -486,7 +486,7 @@ the latest commit.
   (BC from nosler.com, velocity from retailer listings: nosler.com shows none), Black Hills 6mm ARC MKX.
   Not added (no published velocity found): Remington Hard Cast / Core-Lokt 2026 loads, Barnes Harvest .223 and
   2026 additions, Black Hills 6.5 / .308 MKX, other Nosler Whitetail Country loads, rest of Hornady Backcountry
-  Defense. .400 Legend (new loads from Hornady, Barnes, Nosler, Remington) is not a cartridge in the app.
+  Defense. .400 Legend was added Nov 18 2026 (below).
   List: /mnt/project-files/catalogs/new-loads-2026-11-01.md (not in the repo).
 - Nov 7 2026 (Zeke): .300 Norma Magnum (5 loads: Norma Golden Target, Berger Hybrid Target / Hybrid OTM
   Tactical, Federal Gold Medal, Hornady Match) and .338 Norma Magnum (3: Norma, Black Hills, Berger), all
@@ -498,6 +498,14 @@ the latest commit.
   Champion Solid (1200 fps)" (the 2026 catalog prints it in the Champion table); renamed "Federal AutoMatch
   Solid" (own product line), the 1240 fps one is now plain "Federal Champion Solid". Every other Federal
   rimfire load in the 2026 catalog is in (the 716 bird-shot load has no ballistics).
+- Nov 18 2026 (Zeke): .360 Buckhammer (.358 bullets; 9 loads: Remington Core-Lokt SP 180 / 200, Core-Lokt Tipped
+  180, Core-Lokt Copper 160, Subsonic 250 BHP; Federal Power-Shok 180 / 200, HammerDown 220; Fiocchi Field Dynamics 200)
+  and .400 Legend (.400 bullets; 6 loads: Winchester Deer Season XP 190, Power-Point 215, Super Suppressed 300;
+  Remington Core-Lokt 210; Hornady American Whitetail 210; Nosler Whitetail Country 215), from the 2026 catalogs.
+  Federal's catalog misprints 360BHBS as "1,197" fps: 2200 (Lucky Gunner listing, 100 yd figure). Hornady 82461 BC fitted
+  to the catalog's downrange speeds; Remington's subsonic (1030 fps) from its launch note, BC scaled. Powder charges
+  estimated (60 ft-lbs per grain), most prices estimated. Barrel limit 22 in for both. Left out: Barnes .400 Legend
+  (no published velocity). Sources in added_loads_sources.tsv.
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 
