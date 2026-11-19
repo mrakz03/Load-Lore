@@ -71,6 +71,8 @@ Your own things in one place: Handloads, Ladder tests and Favorite loads.
 
 **Ladder tests**: record the velocities (and group sizes) of each powder charge in a ladder. The app shows each charge's average, SD and ES on a chart, points out the flattest spot and the most consistent charge, and turns the charge you pick into a handload.
 
+**Range log**: log a range trip for any load (a factory load or one of your handloads): date, firearm, barrel, distance, each shot's chronograph velocity and your group sizes. The app shows the average, SD and ES, the groups in MOA, and how far your speeds are from the load's listed speed (for your barrel length, when you give one).
+
 **Favorite loads**: every load you starred, grouped by cartridge, with its figures one click away.
 
 The app does not check pressure or safety. Always follow a published load manual.
@@ -78,7 +80,7 @@ The app does not check pressure or safety. Always follow a published load manual
 ### Settings
 - **Display**: theme, text size and the grades on/off switch.
 - **Data**:
-  - **Sync** keeps your handloads, ladder tests, favorite loads and prices the same on your phone and computer: get a sync code on one device and type it on the other. No account is needed. Anyone with the code can see and change the synced copy, so keep it to yourself. (Also on the Handloads page.)
+  - **Sync** keeps your handloads, ladder tests, range log, favorite loads and prices the same on your phone and computer: get a sync code on one device and type it on the other. No account is needed. Anyone with the code can see and change the synced copy, so keep it to yourself. (Also on the Handloads page.)
   - **Back up / Restore** saves your handloads as a CSV file, so you can move them between computer and phone.
 
 <br>
