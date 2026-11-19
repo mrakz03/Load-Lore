@@ -403,6 +403,7 @@ button.sopt:focus-visible{border-color:var(--accent)}@media (hover:hover){button
 .rt{display:flex;flex-direction:column;min-width:0}.rt .l{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .rt .v{font-size:1.08rem;font-weight:700;font-variant-numeric:tabular-nums}.rt .v small{font-size:.75rem;font-weight:600;color:var(--muted)}
 .rt.rdiff .v{color:var(--accent)}
+.rt.rgw{align-items:center;justify-self:start}.rt.rgw .v{text-align:center}   /* "Groups" centred over its figures (Zeke, Nov 19 2026) */
 @media(max-width:600px){.rts{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}.rt.rgw{grid-column:1/-1}}
 @media(hover:hover){.rent:hover{border-color:var(--accent);background:var(--surface2)}}
 .rst{font-size:.82rem;margin-top:6px;min-height:1em}
@@ -459,6 +460,7 @@ button.lcart.ph{color:var(--muted)}.gpr{margin-top:14px}button.lcart:focus-visib
 .firebtn{width:100%;display:flex;align-items:center;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:11px 32px 11px 10px;font:inherit;font-size:1rem;text-align:left;cursor:pointer;position:relative;min-height:46px}
 /* the summary wraps instead of being cut off, and gets two thirds of the row (Zeke, Oct 30 2026) */
 .firebtn span{white-space:normal;line-height:1.25}.nums:has(#lfb){grid-template-columns:minmax(7em,1fr) 2fr!important}
+.nums:has(#lfb)>div{display:flex;flex-direction:column}.nums:has(#lfb)>div>:last-child{flex:1}   /* the Distance box as tall as the Firearm setup box beside it (Zeke, Nov 19 2026) */
 .firebtn::after{content:"";position:absolute;right:14px;top:50%;width:6px;height:6px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:translateY(-70%) rotate(45deg)}
 .firebtn.on{border-color:var(--accent)}.firebtn.on::after{transform:translateY(-20%) rotate(-135deg)}
 .fire{margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg)}
