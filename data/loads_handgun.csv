@@ -53,6 +53,14 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 7.62x25mm Tokarev,Sellier & Bellot FMJ,85,1857,0.121,10.8,0.54,,partial,,,Target
 7.62x25mm Tokarev,PPU FMJ,85,1722,0.121,9.3,0.58,,partial,,9.8,Target
 7.62x25mm Tokarev,PPU JHP,85,1673,0.121,8.8,0.49,,partial,,9.8,Defense
+30 Super Carry,Federal Champion FMJ,90,1300,0.166,4.4,0.50,,catalog,,4,Target
+30 Super Carry,Federal American Eagle FMJ FP,100,1250,0.166,4.6,0.60,,catalog,,4,Target
+30 Super Carry,Federal Premium Personal Defense HST,100,1250,0.166,4.6,1.40,yes,catalog,,4,Defense
+30 Super Carry,Remington UMC Full Metal Jacket,100,1250,0.165,4.6,0.55,,catalog,,4,Target
+30 Super Carry,Remington HTP Jacketed Hollow Point,100,1235,0.165,4.5,1.20,,catalog,,4,Defense
+30 Super Carry,Federal Personal Defense Punch JHP,103,1130,0.167,3.8,1.10,,catalog,,4,Defense
+30 Super Carry,CCI Blazer Brass FMJ FN,115,1150,0.151,4.4,0.60,,catalog,,4,Target
+30 Super Carry,Speer Gold Dot Personal Protection Hollow Point,115,1150,0.142,4.4,1.40,,catalog,,4,Defense
 .32 ACP,Fiocchi Defense Dynamics SJHP,60,1100,0.084,2.2,1.57,,partial,,,Defense
 .32 ACP,Hornady Critical Defense FTX,60,1000,0.071,1.9,1.20,,catalog,,4,Defense
 .32 ACP,Hornady Custom XTP,60,1000,0.092,1.9,1.12,,catalog,,4,Defense
@@ -117,6 +125,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 SIG,Speer Gold Dot Personal Protection Hollow Point,125,1350,0.144,8.4,1.83,,catalog,,4,Defense
 .357 SIG,Speer Lawman Training Total Metal Jacket,125,1325,0.150,8.4,0.94,,catalog,,4,Target
 .357 SIG,Speer Lawman Clean-Fire Training Total Metal Jacket,125,1350,0.150,8.4,0.98,,catalog,,4,Target
+.38 S&W,Remington Performance Wheelgun Lead Round Nose,146,685,0.126,2.5,1.10,yes,catalog,,4,Target
 .38 Super,Federal American Eagle JHP,115,1130,0.123,5.4,0.87,,catalog,,5,Defense
 .38 Super,Buffalo Bore JHP +P,115,1450,0.123,8.9,1.92,,partial,,,Defense
 .38 Super,Buffalo Bore Barnes TAC-XP +P (lead-free),115,1450,0.124,8.9,2.46,,partial,,,Defense
@@ -361,6 +370,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 Magnum,Remington Golden Saber Brass Jacketed Hollow Point,125,1220,0.100,10.4,1.43,,catalog,,4,Defense
 .357 Magnum,Remington HTP Semi-Jacketed Hollow Point,125,1450,0.125,14.7,1.45,,catalog,,4,Defense
 .357 Magnum,Remington UMC Jacketed Soft Point,125,1450,0.127,14.7,0.86,,catalog,,4,Hunting
+.357 Magnum,Remington UMC Semi-Jacketed Hollow Point,125,1450,0.125,14.7,0.80,,published,,4,Defense
 .357 Magnum,Speer Gold Dot Personal Protection Hollow Point,125,1450,0.133,14.7,1.90,,partial,,,Defense
 .357 Magnum,Winchester Defender Bonded JHP,125,1325,0.132,12.3,1.25,,catalog,,4,Defense
 .357 Magnum,Winchester WinClean Brass Enclosed Base,125,1370,0.129,13.1,0.65,,catalog,,4,Target
@@ -847,6 +857,8 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .45 ACP,Buffalo Bore Outdoorsman Hard Cast FN +P,255,925,0.173,6.9,1.94,,partial,,,Hunting
 .45 ACP,Speer Gold Dot Personal Protection Hollow Point,230,890,0.147,5.7,1.80,,catalog,,5,Defense
 .45 ACP,Speer Lawman Clean-Fire Training Total Metal Jacket,230,845,0.157,5.2,0.61,,catalog,,5,Target
+.45 GAP,Speer Lawman Clean-Fire Training Total Metal Jacket,200,990,0.102,6.2,0.80,,catalog,,4,Target
+.45 GAP,Remington UMC Full Metal Jacket,230,880,0.162,5.6,0.75,yes,catalog,,5,Target
 .45 Colt,Hornady Critical Defense FTX,185,920,0.143,6.6,1.60,,catalog,,3,Defense
 .45 Colt,CCI Blazer Aluminum JHP,200,1000,0.142,8.5,0.96,,catalog,,7.26,Hunting
 .45 Colt,Fiocchi Hyperformance Hunt Barnes XPB,200,1010,0.133,8.7,2.57,,partial,,,Defense
@@ -922,3 +934,10 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .500 S&W Magnum,Buffalo Bore LFN-GC,440,1625,0.180,36.7,4.51,,partial,,,Hunting
 .500 S&W Magnum,Buffalo Bore LFN-GC Low Recoil,440,1325,0.180,24.4,4.51,,partial,,,Hunting
 .500 S&W Magnum,Buffalo Bore Hard Cast LBT-WFN-GC,500,1425,0.204,32.1,4.51,,partial,,,Hunting
+.410 Bore,"Federal Personal Defense .410 Handgun 2½"" 000 Buck (4 pellets)",272,850,0.06,5.3,1.70,,partial,,,Defense
+.410 Bore,"Federal Personal Defense .410 Handgun 2½"" #4 Shot (7/16 oz)",191,950,0.04,4.7,1.70,,partial,,,Defense
+.410 Bore,"Federal Personal Defense .410 Handgun 3"" 000 Buck (5 pellets)",340,775,0.06,5.5,1.35,,partial,,,Defense
+.410 Bore,"Federal Personal Defense .410 Handgun 3"" 4 Buck (9 pellets)",181,950,0.04,4.4,1.35,,partial,,,Defense
+.410 Bore,"Winchester Defender PDX1 .410 2½"" 3 Defense Discs + 12 BB",219,750,0.04,5,2.20,,partial,,,Defense
+.410 Bore,"Winchester Defender PDX1 .410 3"" 4 Defense Discs + 16 BB",292,750,0.04,5.5,2.30,,partial,,,Defense
+.410 Bore,"Hornady Critical Defense Triple Defense .410 2½"" FTX Slug + 2 Balls",235,750,0.06,5,1.10,,partial,,,Defense

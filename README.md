@@ -4,7 +4,7 @@
 
 A field guide to factory ammunition. Look up major brand's loads for a cartridge, get specs for each load, check their ballistic tables, and put up to five loads head to head. Reloaders can keep their handloads and ladder tests on My Bench and see how they stack up.
 
-**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also comes as an Android app.
+**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too).
 
 > **Still in development.** Most of it works well, but you may run into rough edges, a load whose figures need fixing, or a missing factory load. If something looks wrong or you have any suggestions, please [open an issue](https://github.com/mrakz03/Load-Lore/issues).
 
@@ -23,14 +23,16 @@ About 3,650 factory loads from 20 makers, in four categories (plus a Pistol Cali
 | Category | Cartridges | Loads |
 |---|---|---|
 | Centerfire Rifle | 74 | 1,506 |
-| Handgun | 30 | 909 |
+| Handgun (with .410 handgun shells) | 31 | 916 |
 | ↳ Pistol Caliber Carbine | 14 | 732 |
 | Rimfire Rifle | 7 | 128 |
-| Shotgun (10, 12, 16, 20, 28 gauge and .410 bore) | 6 | 1,124 |
+| Shotgun (10, 12, 16, 20, 28 gauge and .410 bore) | 6 | 1,120 |
 
 Velocity and bullet weight are the makers' own published figures, from the 2026 catalogs of Hornady, Federal, Winchester, Remington, Fiocchi, PMC, CCI/Blazer and ELEY and from the websites of SIG Sauer, Black Hills, Norma, Nosler, Lapua, Sellier & Bellot, PPU, Underwood, Buffalo Bore and Speer (plus a few loads from retailer listings). Prices and powder charges are estimates. The source of every added load is in `research/added_loads_sources.tsv`.
 
 **Pistol Caliber Carbine** covers handgun cartridges fired from carbines and lever guns (9mm, .357 Magnum, .44 Magnum, 10mm and more). Where a maker publishes a carbine velocity it is used; the rest are marked **(est.)** and worked out for a 16 in barrel from the maker's handgun figure.
+
+**.410 Bore** under Pistol / Revolver lists only the .410 shotshells their makers sell for .410 revolvers such as the Taurus Judge and S&W Governor (Federal Personal Defense .410 Handgun, Winchester Defender PDX1, Hornady Critical Defense Triple Defense), with the makers' handgun velocities. General .410 field and target shells stay under Shotgun.
 
 <br>
 
@@ -69,7 +71,9 @@ Your own things in one place: Handloads, Ladder tests and Favorite loads.
 - **+ New handload**: pick the cartridge (or add one that isn't listed), the bullet maker and bullet (from the built-in library of over 1,300 bullets, or your own), powder, primer, charge, C.O.L., velocity and barrel length. Purpose, cost and notes are optional.
 - Edit, duplicate or delete handloads, see them listed with the factory loads in the Load Dictionary, put them head to head, or share one as a link.
 
-**Ladder tests**: record the velocities (and group sizes) of each powder charge in a ladder. The app shows each charge's average, SD and ES on a chart, points out the flattest spot and the most consistent charge, and turns the charge you pick into a handload.
+**Ladder tests**: record the velocities (and group sizes) of each powder charge in a ladder. The app shows each charge's average, SD and ES on a chart, points out the flattest spot and the most consistent charge, and turns the charge you pick into a handload. **Share** sends a test as a link.
+
+**Range log**: log a range trip for any load (a factory load or one of your handloads): date, firearm, barrel, distance, each shot's chronograph velocity and your group sizes. The app shows the average, SD and ES, the groups in MOA, and how far your speeds are from the load's listed speed (for your barrel length, when you give one). An entry can be shared as a link too.
 
 **Favorite loads**: every load you starred, grouped by cartridge, with its figures one click away.
 
@@ -78,8 +82,8 @@ The app does not check pressure or safety. Always follow a published load manual
 ### Settings
 - **Display**: theme, text size and the grades on/off switch.
 - **Data**:
-  - **Sync** keeps your handloads, ladder tests, favorite loads and prices the same on your phone and computer (website and Android app): get a sync code on one device and type it on the other. No account is needed. Anyone with the code can see and change the synced copy, so keep it to yourself. (Also on the Handloads page.)
-  - **Back up / Restore** saves your handloads as a CSV file, so you can move them between computer and phone.
+  - **Sync** keeps your handloads, ladder tests, range log, favorite loads and prices the same on your phone and computer: get a sync code on one device and type it on the other. No account is needed. Anyone with the code can see and change the synced copy, so keep it to yourself. (Also on the Handloads page.)
+  - **Back up / Restore** saves your handloads, ladder tests and range log in one file, so you can move them between computer and phone. Restore also takes older handload backups (CSV).
 
 <br>
 
@@ -98,9 +102,9 @@ Each factor is scored against the typical (median) load of the same cartridge: t
 ## Download and install
 The easiest way is the web version at **[loadlore.net](https://loadlore.net)**: it runs in any browser, on a computer or phone, and is always up to date. Your handloads and settings stay in that browser (use **Sync**, or **Back up** in Settings, to move them).
 
-The Android app is on the [Releases](https://github.com/mrakz03/Load-Lore/releases) page: install `LoadLore-v<version>.apk` (allow installs from your browser or file manager when asked).
-
 **Used the Windows or Linux app?** Its last updates were v1.14.x (Nov 2026); everything it did is on the website. Your copy keeps working, but gets no new loads. To move your handloads, press **Back up** in its Handloads tab, then **Restore** in loadlore.net's Settings and choose that file. Saved prices and settings don't carry over. The desktop app's code is kept on the [`desktop` branch](https://github.com/mrakz03/Load-Lore/tree/desktop).
+
+**Used the Android test app?** It ended in Nov 2026 too: open loadlore.net in your phone's browser instead (Back up in the app, then Restore on the site, moves your handloads). Its code is kept on the [`android` branch](https://github.com/mrakz03/Load-Lore/tree/android).
 
 <br>
 
@@ -115,9 +119,10 @@ data/loads_*.csv              factory loads, one file per category (loads_pcc.cs
 data/ammo_*.csv               cartridge list (cartridges with no factory loads can still hold handloads)
 data/bullets.csv              bullet library for the handload form (weight, diameter, approximate G1 BC)
 assets/                       app icons (drawn by scripts/make_icons.py, needs Pillow)
-.github/workflows/release.yml builds the Android app for a v* tag and publishes the release
+.github/workflows/release.yml for a v* tag: checks the web build and publishes the release
 .github/workflows/pages.yml   publishes the web version to loadlore.net (GitHub Pages)
-package.json, capacitor.config.json   Android wrapper (Capacitor)
+.github/workflows/check.yml  web check (build + page smoke test) for pull requests
+scripts/check_web.mjs        that smoke test (Playwright)
 sync/                         sync server (Cloudflare Worker + D1) behind the Sync button
 research/                     where each added load came from (pcc_sources.tsv for the carbine loads)
 ```

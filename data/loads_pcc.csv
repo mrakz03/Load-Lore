@@ -533,6 +533,7 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .357 Magnum,Remington Golden Saber Brass Jacketed Hollow Point (est.),125,1655,0.100,10.4,1.43,,estimate,,16,Defense
 .357 Magnum,Remington HTP Semi-Jacketed Hollow Point (est.),125,1970,0.125,14.7,1.45,,estimate,,16,Defense
 .357 Magnum,Remington UMC Jacketed Soft Point (est.),125,1970,0.127,14.7,0.86,,estimate,,16,Hunting
+.357 Magnum,Remington UMC Semi-Jacketed Hollow Point (est.),125,1970,0.125,14.7,0.80,,estimate,,16,Defense
 .357 Magnum,Speer Gold Dot Personal Protection Hollow Point (est.),125,1970,0.133,14.7,1.90,,estimate,,16,Defense
 .357 Magnum,Winchester Defender Bonded JHP (est.),125,1800,0.132,12.3,1.25,,estimate,,16,Defense
 .357 Magnum,Winchester WinClean Brass Enclosed Base (est.),125,1860,0.129,13.1,0.65,,estimate,,16,Target

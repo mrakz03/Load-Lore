@@ -210,7 +210,7 @@ PRODUCT_LINES = {
     "IMI": ["Razor Core"],
     "Lapua": ["Mega", "Naturalis", "Scenar", "Scenar-L"],
     "Norma": ["Bondstrike", "Golden Target", "Oryx", "Tipstrike", "Whitetail"],
-    "Nosler": ["Trophy Grade", "Defense", "Match Grade", "Whitetail Country"],
+    "Nosler": ["Trophy Grade", "Ballistic Tip", "Defense", "E-Tip", "Match Grade", "Varmageddon", "Whitetail Country"],
     "PMC": ["Bronze", "X-TAC"],
     "PPU": ["GROM", "Z-GROM", "Match"],
     "Remington": ["Core-Lokt", "Core-Lokt Tipped", "Core-Lokt Copper", "Duck Club", "Express",
@@ -287,7 +287,7 @@ GUN_LB = {     # per category: the same cartridge can be in a rifle and a handgu
         ".375 Ruger": 9.5},
     "Handgun": {
         ".500 S&W Magnum": 4.5, ".460 S&W Magnum": 4.5, ".50 AE": 4.5, ".454 Casull": 3.5,
-        ".480 Ruger": 3.5, ".44 Magnum": 3.0, "4.6x30mm": 4.5},
+        ".480 Ruger": 3.5, ".44 Magnum": 3.0, "4.6x30mm": 4.5, ".410 Bore": 2.5},
     "Pistol Caliber Carbine": {      # lever guns run heavier than a 9mm carbine
         ".357 Magnum": 7.0, ".44 Magnum": 7.0, ".45 Colt": 7.0, ".44-40 Winchester": 7.5},
     "Shotgun": {"10 Gauge": 10.0},
@@ -303,7 +303,8 @@ GUN_LB_MAX = 60.0
 # published barrel-cut tests); a .22 gains little. An estimate: real barrels differ.
 BARREL_N = {"auto": 0.057, "revolver": 0.132, "magnum": 0.221, "rimfire": 0.07}
 
-STANDARD_REVOLVERS = (".38 Special", ".44 Special", ".45 Colt", ".44-40 Winchester", ".32 S&W Long")
+STANDARD_REVOLVERS = (".38 Special", ".44 Special", ".45 Colt", ".44-40 Winchester", ".32 S&W Long",
+                      ".410 Bore")     # .410 handgun shells: low-pressure, like a standard revolver load
 
 MAGNUM_REVOLVERS = (".454 Casull", ".480 Ruger")          # (and every "... Magnum")
 
@@ -321,6 +322,11 @@ BARREL_MAX_CAT = {"Centerfire Rifle": 28.0, "Rimfire Rifle": 24.0, "Handgun": 10
 
 BARREL_MAX_IN = {
     "Centerfire Rifle": {
+        ".17 Hornet": 24, ".17 Remington": 26, ".22 Nosler": 26, ".25-20 Winchester": 24,
+        ".257 Weatherby Magnum": 28, ".264 Winchester Magnum": 26, "6.5-284 Norma": 28,
+        ".270 Weatherby Magnum": 28, ".280 Ackley Improved": 26, "7mm Backcountry": 24,
+        ".300 H&H Magnum": 26, ".32-20 Winchester": 24, "8mm Remington Magnum": 26,
+        ".38-40 Winchester": 24, ".405 Winchester": 24, ".450 Marlin": 24,
         ".204 Ruger": 26, ".22 ARC": 24, ".22 Creedmoor": 26, ".22 Hornet": 24,
         ".22-250 Remington": 26, ".220 Swift": 26, ".222 Remington": 24, ".223 Remington": 26,
         ".224 Valkyrie": 24, ".243 Winchester": 26, ".25 Creedmoor": 24, ".25-06 Remington": 26,
@@ -330,22 +336,23 @@ BARREL_MAX_IN = {
         ".30-06 Springfield": 26, ".30-30 Winchester": 26, ".30-40 Krag": 30, ".300 Blackout": 20,
         ".300 Norma Magnum": 30, ".300 PRC": 26, ".300 Remington Ultra Mag": 26, ".300 Savage": 24,
         ".300 WSM": 26, ".300 Weatherby Magnum": 28, ".300 Winchester Magnum": 26,
-        ".303 British": 26, ".308 Winchester": 26, ".32-40 Winchester": 30, ".338 ARC": 20,
+        ".303 British": 26, ".308 Winchester": 26, ".32 Winchester Special": 26, ".32-40 Winchester": 30, ".338 ARC": 20, ".338 Federal": 24,
         ".338 Lapua Magnum": 30, ".338 Norma Magnum": 30, ".338 Winchester Magnum": 26,
         ".348 Winchester": 24, ".35 Remington": 22,
-        ".35 Whelen": 24, ".350 Legend": 22, ".358 Winchester": 22, ".375 H&H Magnum": 26,
-        ".375 Ruger": 24, ".38-55 Winchester": 28, ".416 Remington Magnum": 24,
+        ".35 Whelen": 24, ".350 Legend": 22, ".358 Winchester": 22, ".360 Buckhammer": 22,
+        ".375 H&H Magnum": 26, ".375 Ruger": 24, ".38-55 Winchester": 28, ".400 Legend": 22,
+        ".416 Remington Magnum": 24,
         ".444 Marlin": 24, ".45-70 Government": 34, ".450 Bushmaster": 22, ".458 Lott": 24,
         ".458 Winchester Magnum": 24, ".50 BMG": 36, "5.45x39mm": 20, "5.56x45mm NATO": 24,
         "6.5 Creedmoor": 28, "6.5 Grendel": 24, "6.5 PRC": 26, "6.5x55mm Swedish": 30,
         "6.8 Western": 24, "6.8mm SPC": 20, "6mm ARC": 24, "6mm Creedmoor": 28,
         "6mm Remington": 24, "7.62x39mm": 20, "7.62x51mm NATO": 26, "7.62x54mmR": 31,
         "7mm PRC": 26, "7mm Remington Magnum": 26, "7mm STW": 26, "7mm WSM": 24,
-        "7mm-08 Remington": 24, "8x57mm Mauser": 30, "9.3x62mm": 24},
+        "7mm-08 Remington": 24, "7x57mm Mauser": 30, "8x57mm Mauser": 30, "9.3x62mm": 24},
     "Rimfire Rifle": {".17 HMR": 24, ".17 Mach 2": 22, ".17 WSM": 24, ".22 LR": 28,
                       ".22 Long": 24, ".22 Short": 24, ".22 WMR": 24},
     "Handgun": {
-        ".22 LR": 10, ".22 WMR": 10, ".25 ACP": 3, ".32 ACP": 4, ".32 H&R Magnum": 7,
+        ".22 LR": 10, ".22 WMR": 10, ".410 Bore": 6.5, ".25 ACP": 3, ".38 S&W": 6, "30 Super Carry": 5, ".45 GAP": 5, ".32 ACP": 4, ".32 H&R Magnum": 7,
         ".32 S&W Long": 6, ".327 Federal Magnum": 7.5, ".357 Magnum": 10, ".357 SIG": 6,
         ".38 Special": 8.5, ".38 Super": 6, ".380 ACP": 4.5, ".40 S&W": 6, ".41 Magnum": 10.5,
         ".44 Magnum": 10.6, ".44 Special": 7.5, ".44-40 Winchester": 7.5, ".45 ACP": 6,
@@ -493,6 +500,30 @@ DIAMETERS = {
     ".257 Roberts": 0.257,
     ".35 Whelen": 0.358,
     ".358 Winchester": 0.358,
+    ".360 Buckhammer": 0.358,
+    ".32 Winchester Special": 0.321,
+    "7x57mm Mauser": 0.284,
+    ".338 Federal": 0.338,
+    "30 Super Carry": 0.312,
+    ".17 Hornet": 0.172,
+    ".17 Remington": 0.172,
+    ".22 Nosler": 0.224,
+    ".25-20 Winchester": 0.257,
+    ".257 Weatherby Magnum": 0.257,
+    ".264 Winchester Magnum": 0.264,
+    "6.5-284 Norma": 0.264,
+    ".270 Weatherby Magnum": 0.277,
+    ".280 Ackley Improved": 0.284,
+    "7mm Backcountry": 0.284,
+    ".300 H&H Magnum": 0.308,
+    ".32-20 Winchester": 0.312,
+    "8mm Remington Magnum": 0.323,
+    ".38-40 Winchester": 0.401,
+    ".405 Winchester": 0.411,
+    ".450 Marlin": 0.458,
+    ".38 S&W": 0.361,
+    ".45 GAP": 0.451,
+    ".400 Legend": 0.400,
     ".50 BMG": 0.51,
     ".300 Weatherby Magnum": 0.308,
     ".300 Remington Ultra Mag": 0.308,
@@ -593,6 +624,17 @@ def load_data(path, grain_style=True):
 # Centerfire Rifle to Pistol Caliber Carbine): saved handloads and prices follow them
 MOVED_CATEGORIES = {"Centerfire Rifle|.357 Magnum": "Pistol Caliber Carbine",
                     "Centerfire Rifle|.44 Magnum": "Pistol Caliber Carbine"}
+# single loads that moved, old "category|cartridge|label" -> new (Nov 19 2026: the .410 loads made
+# for handguns went from Shotgun to Handgun (Pistol / Revolver), Zeke): saved favorites, prices and
+# shared links follow them
+MOVED_LOADS = {
+    **{f"Shotgun|.410 Bore|Buckshot  ·  Federal Personal Defense .410 Handgun · {old}": f"Handgun|.410 Bore|{new}  ·  {gr} gr"
+       for old, new, gr in (
+           ('2½" 000 Buck · 4 pellets', 'Federal Personal Defense .410 Handgun 2½" 000 Buck (4 pellets)', 272),
+           ('2½" 4 Shot · 0.44 oz', 'Federal Personal Defense .410 Handgun 2½" #4 Shot (7/16 oz)', 191),
+           ('3" 000 Buck · 5 pellets', 'Federal Personal Defense .410 Handgun 3" 000 Buck (5 pellets)', 340),
+           ('3" 4 Buck · 9 pellets', 'Federal Personal Defense .410 Handgun 3" 4 Buck (9 pellets)', 181))},
+}
 
 # ---- the GitHub repo (Settings > Source code) ---- #
 UPDATE_REPO = "mrakz03/Load-Lore"

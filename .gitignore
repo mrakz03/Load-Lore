@@ -14,4 +14,3 @@ dist/
 /LoadLore/
 node_modules/
 .wrangler/
-/android/

@@ -5,7 +5,8 @@ Working notes for contributors and AI coding assistants: the rules the code foll
 Web only (Nov 2026, Zeke): the Windows / Linux desktop app (src/load_lore.py, Tkinter) was removed for v1.15
 (its last releases were v1.14.x, which tell users the app lives at loadlore.net (Back up there, Restore on the
 web: same my_handloads.csv format) and that there are no more desktop updates (has_desktop_files)). Its code is kept on the `desktop` branch (from v1.14.2). The
-app is web/template.html; Android wraps it. The tables build_web.py hands the page as DATA (categories,
+app is web/template.html. The Android app (Capacitor) was dropped too (Nov 19 2026, Zeke): its setup is kept
+on the `android` branch (ANDROID.md says how to bring it back). The tables build_web.py hands the page as DATA (categories,
 THEMES, GUN_LB, BARREL_*, PRODUCT_LINES, RENAMED_CARTRIDGES...) are in web/tables.py. Notes below still
 name desktop functions or classes (LoadsView, App, snake_case names beside the web's camelCase ones):
 that is history; only the web half exists now.
@@ -16,13 +17,13 @@ shortcuts, .desktop Name, capacitor appName). File names were renamed too (Oct 2
 LoadLore.exe / LoadLore, install folders ...\Programs\Load Lore and ~/.local/share/load-lore (an
 upgrade moves the old "Cartridge Calculator" / cartridge-calculator folder, user files included: the
 .iss [Code] + external [Files], install.sh OLD_APPDIR). Kept on purpose:
-Android appId com.cartridgecalc.app (changing it makes a new app: reinstall, handloads lost), the
+Android appId com.cartridgecalc.app (android branch; changing it makes a new app: reinstall, handloads lost), the
 Windows AppId, and the web's cartridge_calc_* localStorage keys (saved handloads/prices/settings).
 
 Grades ammo S–F on velocity, energy, recoil, cost (plus Taylor KO and HITS;
 default weights 3/3/1/3/3/3, Shotgun keeps Taylor KO and HITS at 0: no bullet diameter).
 The app: web/template.html, built with web/tables.py and data/*.csv by `python3 web/build_web.py`
-into web/www (Capacitor wraps it as an APK in CI).
+into web/www.
 
 ## Rules
 - Data lives in data/*.csv. After editing any CSV, web/tables.py or the template, rebuild the web version.
@@ -71,12 +72,14 @@ into web/www (Capacitor wraps it as an APK in CI).
 - Ammo on hand (Nov 16 2026) was removed (Zeke, Nov 17 2026): no On hand box, tags, page or My Bench card.
   Old counts stay in localStorage cartridge_calc_inventory_v1 (left alone, nothing reads it); a sync copy's
   "inv" part is passed through unchanged (syncMerge keeps parts it doesn't use), so older apps keep theirs.
-- Sharing (Nov 17 2026, Zeke; web + Android only): a "Share" button on an opened Load Dictionary load and on an
+- Sharing (Nov 17 2026, Zeke; web only): a "Share" button on an opened Load Dictionary load and on an
   opened handload (Handloads tab), "Share this comparison" under Head to Head's results. The link is
-  SITE (DATA.site) + "#share/" + base64url JSON (shareURL; load {t:"l",c,k,n,d,b,w,g,r}, H2H {t:"c",p,d,r}),
-  nothing uploaded. Android: @capacitor/share sheet; phone browsers navigator.share; PC a dialog with Copy link.
+  SITE (DATA.site) + "#share/" + base64url JSON (shareURL; load {t:"l",c,k,n,d,b,w,g,r}, H2H {t:"c",p,d,r}, ladder test {t:"t",x},
+  range log entry {t:"r",x}; Zeke, Nov 19 2026: "Share" on the ladder test page and in a range entry's edit form),
+  nothing uploaded. Phone browsers: navigator.share; PC a dialog with Copy link.
   openShared (start-up and popstate) opens it with the sender's distance / firearm setup and replaces the
-  #share entry. A shared handload goes in VIEW_HAND (memory only; syncHand marks it .peek: "Shared handload"
+  #share entry. A shared ladder test / range entry opens its page with a dialog (summary or rangeCard,
+  "Save to my ladder tests / range log", same id; one you already have just opens). A shared handload goes in VIEW_HAND (memory only; syncHand marks it .peek: "Shared handload"
   chip, no star, "Save to my handloads" keeps it with the same id); the Handloads tab skips .peek.
 - Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
   (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
@@ -93,6 +96,17 @@ into web/www (Capacitor wraps it as an APK in CI).
   for lever guns / carbines (Hammerdown, Syntech PCC, Gold Dot Carbine, LEVERevolution, American
   Lever Range) are PCC only, never in loads_handgun.csv. .357 / .44 Magnum left Centerfire Rifle
   (Zeke): MOVED_CATEGORIES moves saved handloads and prices. .22 LR / .22 WMR stay in Handgun.
+- .410 handgun loads (Nov 19 2026, Zeke): cartridge ".410 Bore" in Pistol / Revolver (loads_handgun.csv; Zeke
+  first had them as their own ".410 Handgun" drop-down entry, then wanted them in the Pistol / Revolver cartridge
+  list). ONLY shells their makers sell for .410 handguns (Judge / Governor), with the makers' handgun velocities:
+  Federal Personal Defense .410 Handgun (moved out of Shotgun: handgun figures), Winchester Defender PDX1, Hornady
+  Critical Defense Triple Defense; names give shell length, shot and pellets, bullet_gr = payload. Field / target /
+  general defense .410 shells (Remington Ultimate Defense, Winchester Super-X Buffered: shotgun-barrel figures) stay
+  in Shotgun. A shotshell cartridge (SHOT_CART: "Gauge" / "Bore") has no bullet diameter, so computeStats gives
+  Taylor KO / HITS null (left out of the grade, "—" in tables, no tiles) and handCarts leaves it out (no handloads).
+  Barrel math uses the standard revolver exponent (STANDARD_REVOLVERS), longest barrel 6.5 in (Judge), 2.5 lb gun.
+  MOVED_LOADS (old "category|cartridge|label" -> new key; movedLoad in the web) carries saved favorites, prices and
+  shared links of the moved Federal loads.
 - Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
   page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones),
   in two boxes, Display and About (rows split by thin lines, not one box each). About has a small
@@ -159,8 +173,6 @@ into web/www (Capacitor wraps it as an APK in CI).
   pushState with #loads/<category>, #h2h, #hand, #settings; Home has no hash), so the browser's back
   arrow and the phone's back button go to the previous in-app page; a reload or #address link opens
   that page (navFrom). Back with a dialog / pop-up open closes it and stays (popstate re-pushes).
-  Android: the @capacitor/app backButton listener closes a dialog, else history.back() (state.depth),
-  else steps category -> category list -> Home; only Home exits.
 - data/loads_*.csv: every load name starts with its brand (Federal, Hornady, SIG Sauer...).
   data/ammo_*.csv: generic loads, no brand names; now only the cartridge list (handload-only
   cartridges, handload dialog).
@@ -204,10 +216,11 @@ into web/www (Capacitor wraps it as an APK in CI).
   The safety line (tab, form, open handload) is HANDLOAD_NOTE, Zeke's LEGAL.md disclaimer verbatim
   (web gets it as DATA.hand_note), under a bold "DISCLAIMER" heading in the tab and form (disclaimer() /
   .dis). PC (desktop, web >=900 px) shows it right under the list; phones pin it to the bottom of
-  the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore (Settings > Data) use the
-  my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
-  replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
-  An opened handload's links (web/Android) end with "Start ladder test ›" (Zeke, Nov 17 2026): a new ladder test
+  the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore (Settings > Data; Zeke, Nov 19 2026)
+  use one Load Lore backup file, load_lore_backup_<date>.json {app, v:1, saved, hand, ladders, range} (backupData);
+  Restore (restoreText) takes it or a my_handloads.csv (older backups, the old desktop app: mergeHand -> mergeHandRows),
+  same id replaced, new added (mergeList for ladder tests / range log); Save file or Copy.
+  An opened handload's links (web) end with "Start ladder test ›" (Zeke, Nov 17 2026): a new ladder test
   filled in from it like the ladder form's "Copy from a handload" (ladderDialog(..., from); no charge copied).
   The form's cost parts sit in a drop-down (Zeke, Nov 2 2026: web details.hcd, now "More details";
   desktop cost_toggle / show_cost), closed unless the handload already has a cost.
@@ -242,17 +255,19 @@ into web/www (Capacitor wraps it as an APK in CI).
   other loads' grades are unchanged). Head to Head leaves cost out of its keys ("no cost given").
   On touch screens the form's pickers (cartridge, bullet, powder, purpose) open
   pickSheet too (sheetSelect puts a clear button over a <select>; powder: powderBox); pickSheet over a dialog hands the back button back to the dialog when it closes.
-- Sync between devices (Nov 16 2026, Zeke; web + Android only, not desktop): Settings > Data > "Sync" (syncDialog)
-  links devices with a 12-character code (no 0/O, 1/I/L, U; shown XXXX-XXXX-XXXX), no accounts. sync/worker.js
+- Sync between devices (Nov 16 2026, Zeke; web only): Settings > Data > "Sync" (syncDialog)
+  links devices with a 12-character code (no 0/O, 1/I/L, U; shown XXXX-XXXX-XXXX), no accounts.
+  The dialog (Zeke, Nov 18 2026; a one-time link, so worded as linking) offers two cards: "Start syncing" (first
+  device: gives the code) and "Link with a code" (other devices: loads combined, nothing deleted), then "Linked devices stay in sync on their own". sync/worker.js
   (Cloudflare Worker + D1, address sync.loadlore.net, deployed with wrangler from sync/) keeps one copy per code, stored
   under the code's SHA-256; 1 MB cap, rate limits, copies unused 2 years removed. The copy holds handloads,
-  ladder tests, favorites and saved prices (SYNC_PARTS; not theme / text size / grades switch). The web keeps cartridge_calc_sync_v1
+  ladder tests, range log, favorites and saved prices (SYNC_PARTS; not theme / text size / grades switch). The web keeps cartridge_calc_sync_v1
   {code, rev, base, at, err}: base = the copy it last agreed on; syncMerge is a 3-way merge per handload id /
   favorite / price key (one side changed: take it; both: this device's; a delete loses to an edit). writeHand,
   writePrices and toggleFav call syncSoon (1.5 s later); also at start, on visibilitychange and online. PUT sends
   the rev it merged with; a 409 hands back the newer copy to merge again. A 404 (copy deleted elsewhere) unlinks.
   The address is SYNC in build_web.py (DATA.sync_url; LOADLORE_SYNC overrides, empty turns sync off).
-- Ladder tests (Nov 16 2026, Zeke; web / Android only, no desktop): My Bench's Ladder tests card opens
+- Ladder tests (Nov 16 2026, Zeke; web only): My Bench's Ladder tests card opens
   #ladder (showLadder / ladderList / ladderPage; an open test is #ladder/<id>, NAV.sub; its own sidebar row on PC, the My Bench tab on phones). A test: cartridge (handCarts list or a typed one), bullet, weight, powder, barrel, date, notes, and
   charges {gr, shots (typed velocities), group, pressure}; kept in localStorage cartridge_calc_ladder_v1 (its own
   key, so sync can carry it). ladderAnalysis: per charge n / mean / SD / ES (two rows of one charge pooled); a
@@ -261,19 +276,38 @@ into web/www (Capacitor wraps it as an APK in CI).
   (else "No clear flat spot"), its middle charge picked; most consistent = lowest SD of charges with 3+ shots;
   smallest group. SVG chart (mean line, slowest-fastest bars, flat spot shaded). "Make handload" opens
   handDialog prefilled with the chosen charge and its average speed. The test form's "Copy from a handload ›" (only when there are handloads) fills cartridge, bullet, weight, powder and barrel from one, never a charge. LADDER_NOTE: your own results, not load data; the app does not check pressure (the Pressure signs box only records what the user saw, worded "You marked...").
+- Range log (Nov 19 2026, Zeke; web only): My Bench's Range log card opens #range (showRange; no sub-pages:
+  a click on an entry opens rangeDialog to edit / delete it). An entry: cartridge (handCarts or typed), load (a Load
+  Dictionary load or handload of that cartridge, stored as key = pickKey plus its label in "load", or a typed name with
+  key ""), date, distance (yd), firearm, barrel (in), shots (typed velocities, shotStats), groups (typed inches,
+  parseGroups), group_shots (shots per group, optional; Zeke, Nov 19 2026: shown as "5-shot groups"), notes. Kept in localStorage cartridge_calc_range_v1, synced as SYNC_PARTS "range" (old sync copies
+  without it just get an empty part). rangeStats compares the average with the load's listed muzzle speed (atBarrel
+  when a barrel is given: "(estimate)"); groups shown in MOA when a distance is given. The page groups entries by load
+  (most recent first) with a summary line (average fps off listed over all shots, best group). Entry points: "+ New
+  entry", the dictionary's opened load ("Add to range log", bullet categories, not on shared handloads; carries the
+  Firearm setup barrel) and an opened handload's "Add to range log ›" link. In Back up / Restore and share
+  links like ladder tests. Entry cards show the figures as labeled tiles (rangeTile / rangeCard).
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), My Bench, Settings; the PC sidebar has the Load Dictionary above Head to Head. Web Home (Zeke, Nov 17 2026)
   is two big cards matching the sidebar groups (HOME_GROUPS: Loads = Load Dictionary + Head to Head; My Bench =
   Handloads, Ladder tests, Favorite loads with counts; its heading opens #bench). Desktop Home keeps TOOLS.
-- Menu clean-up (Nov 16 2026, Zeke; web / Android, desktop unchanged): each page is reached from one place.
-  My Bench (#bench, showBench; BENCH list, BENCH_MODES) holds Handloads, Ladder tests and Favorite loads
+- Favorite loads moved from My Bench to Loads (Nov 19 2026, Zeke): PC sidebar under LOADS after Head to Head
+  (NAVS "pc" row), Home's Loads card (HOME_GROUPS, with its count), no longer in BENCH / BENCH_MODES / the My
+  Bench page; no "‹ My Bench" link on its page; phones light the Dictionary tab there (.phon).
+- Phone polish (Nov 19 2026, Zeke): phones (<900 px) show the app name as one slim line (hidden on Home,
+  body[data-mode]); the dictionary title is just the category on phones (h2 .ttl); compact category cards;
+  purpose chips (#lp) one sideways-scrolling row on phones; closed phone load cards carry a muted
+  "fps · ft-lbs · price" line (.mfig); velocity / energy use fmt0 (commas) everywhere; handload, ladder and
+  range forms fill the phone screen with Save / Cancel pinned (modal(inner,"full")); My Bench counts sit on
+  the title line like Home's. Head to Head's Share button: picker card on PC, after the results on phones.
+- Menu clean-up (Nov 16 2026, Zeke; web): each page is reached from one place.
+  My Bench (#bench, showBench; BENCH list, BENCH_MODES) holds Handloads, Ladder tests, Range log and Favorite loads
   as cards with counts (benchCounts); their pages have "‹ My Bench" back links and the phone's My Bench
   tab stays lit on them. The PC sidebar lists every page in NAVS order under two headings (.nh): LOADS (Load
   Dictionary with its category sub-list, Head to Head) and MY BENCH (the heading opens the My Bench page, then
   the three pages as .pc rows); phones show only the five tabs (.ph row = My Bench), ordered by CSS order.
   Sync, Back up and Restore live only in Settings > Data (between Display and About). No links to Favorite
   loads under the category cards, no Ladder tests / Sync / Back up links on the Handloads tab.
-  Android back: a My Bench page -> My Bench -> Home.
 - PC web load list (Oct 27 2026, Zeke): at >=900 px the dictionary's load list (#lres) is one table like
   the desktop app's (.lhead / .trow on a CSS subgrid, columns fit their figures, same columns as LoadsView;
   sortable headers set the #ls sort; clicking the sorted header again goes back to the default order, Grains goes heaviest -> lightest -> default, desktop _sort_by the same; Zeke, Oct 28 2026). Phones / <900 px keep the cards (.top); .lhead / .trow stay hidden there.
@@ -368,21 +402,22 @@ into web/www (Capacitor wraps it as an APK in CI).
   Head to Head winners use BEST / --best (a theme's optional "best" colour, else its accent). Graphite's
   is gold (Zeke Oct 31 2026: its grey accent read like plain text; he chose gold text, no cell tint).
 - App icon: scripts/make_icons.py (needs Pillow) draws assets/icon.png (web tab icon), assets/web
-  (home-screen icons) and the Android launcher icons in assets/android/res; CI copies those over the
-  Capacitor project after `cap add android`.
+  (home-screen icons). (The Android launcher icons it used to draw are on the android branch.)
 
 ## Release
-- Desktop end of life (Nov 2026, Zeke): Windows / Linux builds ended with v1.14.x; v1.15 on is web +
-  Android. The `desktop` branch (made from v1.14.2) keeps the desktop app, its installer and the old
+- Desktop end of life (Nov 2026, Zeke): Windows / Linux builds ended with v1.14.x; v1.15 on is web only. The `desktop` branch (made from v1.14.2) keeps the desktop app, its installer and the old
   release.yml with the Windows / Linux jobs, so it can be relaunched from there.
 - Build artifacts (the files on an Actions run page) are kept 7 days (retention-days); releases
   keep their own copies. Old private Load-Lore-old artifacts counted against the 500 MB free quota.
 - Tags are vX.Y.Z, optionally with a suffix for a test build (v1.7.2-dev). Don't mark a release
   "pre-release": the old desktop copies' updater reads the latest release (since v1.14 it only says
   there are no more desktop updates when that release has no LoadLore-*-Setup.exe / -Linux.tar.gz).
-git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds the Android APK, publishes the
-release (APK + SHA256SUMS.txt), then pages.yml deploys the site. Pull main first so the tag lands on
-the latest commit.
+git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions runs the web check (check.yml), publishes the
+release with no files, then pages.yml deploys the site.
+Pull main first so the tag lands on the latest commit.
+- Android dropped (Zeke, Nov 19 2026): no APK build or download; package.json, capacitor.config.json,
+  assets/android and the Android-only code (Capacitor back button, Share plugin, copy-only backup) are on the
+  `android` branch (ANDROID.md). Releases up to then may have an APK attached; they keep it.
 - APP_VERSION in web/tables.py stays "dev" in the repo; CI sets it from the tag.
 - Web version on GitHub Pages (Oct 27 2026, .github/workflows/pages.yml): a successful v* release build
   (workflow_run after "Build and release") or a manual run (Actions tab) builds main with build_web.py and
@@ -397,10 +432,13 @@ the latest commit.
   (A first try pushed to a second repo, Load-Lore-beta; Zeke preferred no extra repo.)
 - Versioning: small fix releases bump the last number (v1.5.1, v1.5.2); the maintainer saves
   the middle number (v1.6) for bigger releases.
-- APK updates install over the old app only once the ANDROID_DEBUG_KEYSTORE secret is set
-  (a debug.keystore made with keytool, base64 in the secret; the maintainer keeps the file); until then testers must uninstall the old APK first.
 
 ## Testing
+- PR check (Nov 19 2026, replaced the Android build as the check before merging): .github/workflows/check.yml
+  (Web check) builds the page and runs scripts/check_web.mjs (Playwright, PC + phone size: every page, every
+  category, a load opened in each, fails on any JS error). Runs on pull requests, by hand, and before releases.
+  Locally: `python3 web/build_web.py && node scripts/check_web.mjs` (playwright must resolve: e.g. a
+  node_modules symlink to /opt/node-tools/node_modules; node_modules/ is gitignored).
 - Web: Playwright from /opt/node-tools/node_modules against web/www/index.html.
 - build_web.py's output should only change where you meant it to: diff web/www/index.html before / after.
 
@@ -420,8 +458,7 @@ the latest commit.
 - Full catalog check (Oct 2026): every load in the 2026 Hornady (ballistics pages), Fiocchi, CCI/Blazer,
   PMC, ELEY, Remington, Winchester and Federal catalogs was matched against the data; the 47 missing
   ones were added (in research/added_loads_sources.tsv). Left out on purpose: cartridges the app doesn't
-  have (Hornady Dangerous Game / Weatherby / Marlin Express etc., 30 Super Carry, 360 Buckhammer,
-  7mm Backcountry, 338 Federal, Nitro Express, WSSMs, Fiocchi Heritage oddities), rimfire/handgun
+  have (Hornady Dangerous Game / Marlin Express etc., Nitro Express, WSSMs, Fiocchi Heritage oddities), rimfire/handgun
   shotshells, less-lethal rounds, loads printed without ballistics, Remington bucket packs, and loads
   with no payload given (Hornady #4 Buck / Heavy Magnum Coyote / .410 Triple Defense, Winchester PDX1).
   Catalog misprints fixed from the energy column: Winchester S308M2 "652 gr" = 168 gr,
@@ -484,7 +521,7 @@ the latest commit.
   (BC from nosler.com, velocity from retailer listings: nosler.com shows none), Black Hills 6mm ARC MKX.
   Not added (no published velocity found): Remington Hard Cast / Core-Lokt 2026 loads, Barnes Harvest .223 and
   2026 additions, Black Hills 6.5 / .308 MKX, other Nosler Whitetail Country loads, rest of Hornady Backcountry
-  Defense. .400 Legend (new loads from Hornady, Barnes, Nosler, Remington) is not a cartridge in the app.
+  Defense. .400 Legend was added Nov 18 2026 (below).
   List: /mnt/project-files/catalogs/new-loads-2026-11-01.md (not in the repo).
 - Nov 7 2026 (Zeke): .300 Norma Magnum (5 loads: Norma Golden Target, Berger Hybrid Target / Hybrid OTM
   Tactical, Federal Gold Medal, Hornady Match) and .338 Norma Magnum (3: Norma, Black Hills, Berger), all
@@ -496,6 +533,26 @@ the latest commit.
   Champion Solid (1200 fps)" (the 2026 catalog prints it in the Champion table); renamed "Federal AutoMatch
   Solid" (own product line), the 1240 fps one is now plain "Federal Champion Solid". Every other Federal
   rimfire load in the 2026 catalog is in (the 716 bird-shot load has no ballistics).
+- Nov 18 2026 (Zeke): .360 Buckhammer (.358 bullets; 9 loads: Remington Core-Lokt SP 180 / 200, Core-Lokt Tipped
+  180, Core-Lokt Copper 160, Subsonic 250 BHP; Federal Power-Shok 180 / 200, HammerDown 220; Fiocchi Field Dynamics 200)
+  and .400 Legend (.400 bullets; 6 loads: Winchester Deer Season XP 190, Power-Point 215, Super Suppressed 300;
+  Remington Core-Lokt 210; Hornady American Whitetail 210; Nosler Whitetail Country 215), from the 2026 catalogs.
+  Federal's catalog misprints 360BHBS as "1,197" fps: 2200 (Lucky Gunner listing, 100 yd figure). Hornady 82461 BC fitted
+  to the catalog's downrange speeds; Remington's subsonic (1030 fps) from its launch note, BC scaled. Powder charges
+  estimated (60 ft-lbs per grain), most prices estimated. Barrel limit 22 in for both. Left out: Barnes .400 Legend
+  (no published velocity). Sources in added_loads_sources.tsv.
+- Nov 18 2026 (Zeke, same evening): 7x57mm Mauser (6 loads), .32 Winchester Special (5), .338 Federal (4),
+  30 Super Carry (8, Handgun) and .45 GAP (2, Handgun) from the 2026 Federal, Remington, Winchester, Hornady, Nosler,
+  CCI and Speer catalogs. BCs the catalogs don't print fitted to their downrange speeds (Federal / Remington handgun
+  tables step 25 yd, CCI / Speer 50 yd). New Nosler line "E-Tip" (Nosler E-Tip Lead-Free). No 30 Super Carry / .45 GAP
+  PCC rows (no carbines). Remington UMC .357 Magnum 125 SJHP R23970 (the catalog misprints it JSP) also added.
+- Nov 18 2026 (Zeke, later): 17 more cartridges, 53 loads from the 2026 catalogs (Nosler Product Guide, Hornady,
+  Federal, Remington, Winchester): .17 Hornet, .17 Remington, .22 Nosler, .25-20 / .32-20 / .38-40 Winchester,
+  .257 / .270 Weatherby Magnum, .264 Winchester Magnum, 6.5-284 Norma, .280 Ackley Improved, 7mm Backcountry,
+  .300 H&H Magnum, 8mm Remington Magnum, .405 Winchester, .450 Marlin (rifle) and .38 S&W (Handgun). Nosler's guide
+  prints no BC: fitted to its 100 yd steps; Nosler NCA / TGA rows with the same bullet and speed are one load. New
+  Nosler lines Ballistic Tip and Varmageddon. Not added (no catalog figures): 7mm Weatherby Magnum, 6.5 Weatherby
+  RPM, and Weatherby's own loads (weatherby.com).
 - Still Hornady-only (no other maker in the catalogs): .22 ARC, .25 Creedmoor, .30 T/C, .338 ARC,
   7mm STW. .480 Ruger could use Buffalo Bore data.
 

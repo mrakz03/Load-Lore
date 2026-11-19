@@ -1212,3 +1212,100 @@ cartridge	load	bullet_gr	muzzle_fps	bc_g1	source_type	source
 .40 S&W	Speer Lawman Clean-Fire Training Total Metal Jacket	165	1050	0.139	catalog	Speer 2026 catalog, part 53982 (4 in test barrel); BC fitted to its 100 yd velocity 911 fps; powder as the nearest-weight load of the cartridge; price same Speer line in this cartridge
 .45 ACP	Speer Lawman Clean-Fire Training Total Metal Jacket	230	845	0.157	catalog	Speer 2026 catalog, part 53885 (5 in test barrel); BC fitted to its 100 yd velocity 773 fps; powder as the nearest-weight load of the cartridge; price .45 ACP Target median x Speer line ratio 1.10
 .38 Special	Speer Lawman Training Total Metal Jacket	125	875	0.133	catalog	velocity corrected 865 -> 875 fps from the Speer 2026 catalog, part 53733
+.360 Buckhammer	Remington Core-Lokt Copper	160	2275	0.190	catalog	Remington 2026 catalog, RCC360BH3 (G1 0.19); price estimated; powder charge estimated
+.360 Buckhammer	Federal Power-Shok SP	180	2374	0.178	catalog	Federal 2026 catalog, 360BHAS (2374 fps); BC + price Lucky Gunner listing (G1 0.178, $32.00/20); powder charge estimated
+.360 Buckhammer	Remington Core-Lokt Soft Point	180	2400	0.163	catalog	Remington 2026 catalog, R360BH4 (G1 0.163); price estimated; powder charge estimated
+.360 Buckhammer	Remington Core-Lokt Tipped	180	2400	0.212	catalog	Remington 2026 catalog, RT360BH4 (G1 0.212); price estimated; powder charge estimated
+.360 Buckhammer	Federal Power-Shok SP	200	2200	0.181	catalog	Federal 2026 catalog, 360BHBS (misprinted "1,197" fps; 2200 fps from Lucky Gunner listing and the 100 yd figure); BC + price Lucky Gunner (G1 0.181, $32.00/20); powder charge estimated
+.360 Buckhammer	Fiocchi Field Dynamics SP	200	2200	0.184	partial	Fiocchi 2026 catalog, 360BHB (2200 fps; BC of the Remington 200 gr Core-Lokt SP, same weight and type); price estimated; powder charge estimated
+.360 Buckhammer	Remington Core-Lokt Soft Point	200	2180	0.184	catalog	Remington 2026 catalog, R360BH2 (2180 fps, G1 0.184); price estimated; powder charge estimated
+.360 Buckhammer	Federal Premium Hammerdown Bonded Soft Point	220	2000	0.263	catalog	Federal 2026 catalog, LG360BH1 (G1 0.263); price estimated; powder charge estimated
+.360 Buckhammer	Remington Subsonic Bonded Hollow Point	250	1030	0.230	partial	Remington 27745 (S360BH5), 1030 fps from ssusa.org new-product note (2026 catalog prints no figures); BC scaled from the Remington 200 gr Core-Lokt SP; price = MSRP $47.99/20; powder charge estimated
+.400 Legend	Winchester Deer Season XP Extreme Point	190	2400	0.198	catalog	Winchester 2026 catalog, X400DS (G1 0.198); price estimated; powder charge estimated
+.400 Legend	Hornady American Whitetail InterLock SP	210	2200	0.199	catalog	Hornady 2026 catalog, 82461 (2200 fps; BC fitted to the catalog 100-300 yd velocities); 16 in test barrel per thefirearmblog.com launch note; price estimated; powder charge estimated
+.400 Legend	Remington Core-Lokt Soft Point	210	2250	0.207	catalog	Remington 2026 catalog, R400L1 (G1 0.207); price estimated; powder charge estimated
+.400 Legend	Nosler Whitetail Country Straight-Wall	215	2250	0.215	published	Nosler 2026 Product Guide, 40138 (2250 fps); G1 0.215, 24 in barrel and $40.95/20 from thefirearmblog.com SHOT 2026 note; powder charge estimated
+.400 Legend	Winchester Power-Point	215	2250	0.206	catalog	Winchester 2026 catalog, X4001 (G1 0.206); price estimated; powder charge estimated
+.400 Legend	Winchester Super Suppressed Open Tip (subsonic)	300	1060	0.318	catalog	Winchester 2026 catalog, SUP400 (G1 0.318); price estimated; powder charge estimated
+.357 Magnum	Remington UMC Semi-Jacketed Hollow Point	125	1450	0.125	published	remington.com/handgun/umc-handgun/29-R23970.html (R23970, 1450 fps, 584 ft-lbs; the 2026 catalog prints R23970 as JSP); BC + powder of the Remington HTP 125 SJHP; 4 in barrel like the other Remington handgun loads; price estimated (100-round value pack)
+7x57mm Mauser	Federal Power-Shok SP	140	2660	0.430	catalog	Federal 2026 catalog, 7B (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+7x57mm Mauser	Remington Core-Lokt Pointed Soft Point	140	2660	0.390	catalog	Remington 2026 catalog, R7MSR1 (G1 0.39); price estimated; powder charge estimated
+7x57mm Mauser	Nosler Trophy Grade AccuBond	140	2700	0.488	catalog	Nosler 2026 Product Guide, 47118 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+7x57mm Mauser	Nosler E-Tip Lead-Free	140	2700	0.493	catalog	Nosler 2026 Product Guide, 40481 (ETA) (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+7x57mm Mauser	Winchester Power-Point	145	2660	0.355	catalog	Winchester 2026 catalog, X7MM1 (G1 0.355); price estimated; powder charge estimated
+7x57mm Mauser	Federal Power-Shok SPRN	175	2390	0.274	catalog	Federal 2026 catalog, 7A (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.32 Winchester Special	Hornady LEVERevolution FTX	165	2410	0.313	catalog	Hornady 2026 catalog, 82732 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.32 Winchester Special	Federal Power-Shok SPFN	170	2250	0.241	catalog	Federal 2026 catalog, 32A (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.32 Winchester Special	Remington Core-Lokt Soft Point	170	2250	0.239	catalog	Remington 2026 catalog, R32WS2 (G1 0.239); price estimated; powder charge estimated
+.32 Winchester Special	Remington Core-Lokt Tipped	170	2250	0.252	catalog	Remington 2026 catalog, RT32WSA (G1 0.252); price estimated; powder charge estimated
+.32 Winchester Special	Winchester Power-Point	170	2250	0.205	catalog	Winchester 2026 catalog, X32WS2 (G1 0.205); price estimated; powder charge estimated
+.338 Federal	Federal Fusion MSR	185	2680	0.381	catalog	Federal 2026 catalog, F338FMSR2 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.338 Federal	Federal Fusion	200	2700	0.420	catalog	Federal 2026 catalog, F338FFS2 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.338 Federal	Federal Premium Trophy Bonded Tip	200	2630	0.440	catalog	Federal 2026 catalog, P338FTT2 (G1 0.44); price estimated; powder charge estimated
+.338 Federal	Federal Premium Trophy Copper	200	2630	0.425	catalog	Federal 2026 catalog, P338FTC2 (G1 0.425); price estimated; powder charge estimated
+30 Super Carry	Federal Champion FMJ	90	1300	0.166	catalog	Federal 2026 catalog, C3090A (BC fitted to the catalog downrange velocities) (25 yd steps); price estimated; powder charge estimated
+30 Super Carry	Federal American Eagle FMJ FP	100	1250	0.166	catalog	Federal 2026 catalog, AE30SCA (BC fitted to the catalog downrange velocities) (25 yd steps); price estimated; powder charge estimated
+30 Super Carry	Federal Premium Personal Defense HST	100	1250	0.166	catalog	Federal 2026 catalog, P30HST1S (BC fitted to the catalog downrange velocities) (25 yd steps); price estimated; powder charge estimated
+30 Super Carry	Remington UMC Full Metal Jacket	100	1250	0.165	catalog	Remington 2026 catalog, L30SC (G1 0.165); price estimated; powder charge estimated
+30 Super Carry	Remington HTP Jacketed Hollow Point	100	1235	0.165	catalog	Remington 2026 catalog, RTP30SC (G1 0.165); price estimated; powder charge estimated
+30 Super Carry	Federal Personal Defense Punch JHP	103	1130	0.167	catalog	Federal 2026 catalog, PD30P1 (BC fitted to the catalog downrange velocities) (25 yd steps); price estimated; powder charge estimated
+30 Super Carry	CCI Blazer Brass FMJ FN	115	1150	0.151	catalog	CCI 2026 catalog, 5205 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+30 Super Carry	Speer Gold Dot Personal Protection Hollow Point	115	1150	0.142	catalog	Speer 2026 catalog, 24261GD (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.45 GAP	Speer Lawman Clean-Fire Training Total Metal Jacket	200	990	0.102	catalog	Speer 2026 catalog, 53980 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.45 GAP	Remington UMC Full Metal Jacket	230	880	0.162	catalog	Remington 2026 catalog, L45GAP4 (G1 0.162); price estimated; powder charge estimated
+.17 Hornet	Federal American Eagle Tipped Varmint	20	3610	0.185	catalog	Federal 2026 catalog, AE17H20TVP (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.17 Hornet	Hornady Superformance Varmint V-MAX	20	3650	0.185	catalog	Hornady 2026 catalog, 83005 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.17 Hornet	Winchester Varmint-X Polymer Tip Rapid Expansion	20	3650	0.185	catalog	Winchester 2026 catalog, X17P (G1 0.185); price estimated; powder charge estimated
+.17 Remington	Nosler Varmageddon FBHP	20	4200	0.118	catalog	Nosler 2026 Product Guide, 65100 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.17 Remington	Nosler Varmageddon FB Tipped	20	4200	0.183	catalog	Nosler 2026 Product Guide, 65105 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.17 Remington	Remington Hollow Point	25	4040	0.187	catalog	Remington 2026 catalog, R17R2 (G1 0.187); price estimated; powder charge estimated
+.22 Nosler	Nosler Varmageddon FB Tipped	53	3450	0.300	catalog	Nosler 2026 Product Guide, 65177 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.22 Nosler	Nosler Ballistic Tip Varmint	55	3500	0.264	catalog	Nosler 2026 Product Guide, 61030 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.22 Nosler	Nosler E-Tip Lead-Free	55	3500	0.302	catalog	Nosler 2026 Product Guide, 40140 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.22 Nosler	Nosler Varmageddon FBHP	62	3250	0.248	catalog	Nosler 2026 Product Guide, 65180 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.22 Nosler	Nosler Trophy Grade AccuBond	70	2950	0.367	catalog	Nosler 2026 Product Guide, 60918 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.22 Nosler	Nosler Match Grade RDF	70	3000	0.425	catalog	Nosler 2026 Product Guide, 60124 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.25-20 Winchester	Remington Pointed Soft Point	86	1460	0.190	catalog	Remington 2026 catalog, R25202 (G1 0.19); price estimated; powder charge estimated
+.25-20 Winchester	Winchester Super-X Soft Point	86	1460	0.191	catalog	Winchester 2026 catalog, X25202 (G1 0.191); price estimated; powder charge estimated
+.257 Weatherby Magnum	Hornady Outfitter CX	90	3625	0.275	catalog	Hornady 2026 catalog, 813624 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.257 Weatherby Magnum	Nosler E-Tip Lead-Free	100	3450	0.413	catalog	Nosler 2026 Product Guide, 12035 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.257 Weatherby Magnum	Hornady Precision Hunter ELD-X	110	3240	0.470	catalog	Hornady 2026 catalog, 81364 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.257 Weatherby Magnum	Nosler Trophy Grade AccuBond	110	3300	0.415	catalog	Nosler 2026 Product Guide, 60012 / 12015 (same load) (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.257 Weatherby Magnum	Nosler Trophy Grade Partition	115	3250	0.391	catalog	Nosler 2026 Product Guide, 12043 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.264 Winchester Magnum	Nosler Trophy Grade Partition	125	3200	0.452	catalog	Nosler 2026 Product Guide, 14072 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.264 Winchester Magnum	Nosler Trophy Grade AccuBond	130	3100	0.492	catalog	Nosler 2026 Product Guide, 60019 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.264 Winchester Magnum	Nosler Trophy Grade Partition	140	2950	0.494	catalog	Nosler 2026 Product Guide, 14083 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.264 Winchester Magnum	Remington Core-Lokt Pointed Soft Point	140	3030	0.384	catalog	Remington 2026 catalog, R264W2 (G1 0.384); price estimated; powder charge estimated
+.264 Winchester Magnum	Winchester Power-Point	140	3030	0.384	catalog	Winchester 2026 catalog, X2642 (G1 0.384); price estimated; powder charge estimated
+6.5-284 Norma	Nosler Trophy Grade AccuBond	140	2750	0.514	catalog	Nosler 2026 Product Guide, 60040 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+6.5-284 Norma	Nosler Match Grade Custom Competition	140	2750	0.533	catalog	Nosler 2026 Product Guide, 44166 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.270 Weatherby Magnum	Nosler Trophy Grade AccuBond Long Range	150	3080	0.598	catalog	Nosler 2026 Product Guide, 60150 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler Trophy Grade AccuBond	140	3100	0.482	catalog	Nosler 2026 Product Guide, 60043 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler Ballistic Tip	140	3100	0.482	catalog	Nosler 2026 Product Guide, 43504 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler E-Tip Lead-Free	140	3100	0.487	catalog	Nosler 2026 Product Guide, 40067 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Federal Premium Trophy Copper	140	3075	0.489	catalog	Federal 2026 catalog, P280AITC1 (G1 0.489); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler Trophy Grade AccuBond Long Range	150	2930	0.547	catalog	Nosler 2026 Product Guide, 60116 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Federal Premium Terminal Ascent	155	2930	0.586	catalog	Federal 2026 catalog, P280AITA1 (G1 0.586); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler Trophy Grade AccuBond	160	2950	0.528	catalog	Nosler 2026 Product Guide, 60076 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Nosler Trophy Grade Partition	160	2950	0.478	catalog	Nosler 2026 Product Guide, 60044 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Hornady Precision Hunter ELD-X	162	2850	0.638	catalog	Hornady 2026 catalog, 85586 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.280 Ackley Improved	Federal Premium Berger Hybrid Hunter	168	2830	0.566	catalog	Federal 2026 catalog, P280AIBCH1 (G1 0.566); price estimated; powder charge estimated
+7mm Backcountry	Federal Premium Terminal Ascent	155	3300	0.586	catalog	Federal 2026 catalog, P7BCTA1 (G1 0.586); price estimated; powder charge estimated
+7mm Backcountry	Federal Premium Barnes LRX	168	3150	0.513	catalog	Federal 2026 catalog, P7BCLRX1 (G1 0.513); price estimated; powder charge estimated
+7mm Backcountry	Federal Premium Terminal Ascent	170	3150	0.645	catalog	Federal 2026 catalog, P7BCTA3 (G1 0.645); price estimated; powder charge estimated
+7mm Backcountry	Federal Fusion Tipped	175	3125	0.582	catalog	Federal 2026 catalog, F7BCTFS2 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+7mm Backcountry	Federal Premium Berger Elite Hunter	195	3000	0.755	catalog	Federal 2026 catalog, P7BCEH1 (G1 0.755); price estimated; powder charge estimated
+.300 H&H Magnum	Nosler Trophy Grade AccuBond	180	2850	0.504	catalog	Nosler 2026 Product Guide, 60060 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.300 H&H Magnum	Nosler Trophy Grade Partition	180	2850	0.471	catalog	Nosler 2026 Product Guide, 20063 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+8mm Remington Magnum	Nosler Ballistic Tip	180	3100	0.391	catalog	Nosler 2026 Product Guide, 24410 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+8mm Remington Magnum	Nosler Trophy Grade AccuBond	200	3000	0.453	catalog	Nosler 2026 Product Guide, 24400 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+8mm Remington Magnum	Nosler Trophy Grade Partition	200	3000	0.352	catalog	Nosler 2026 Product Guide, 24405 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.38-40 Winchester	Winchester Power-Point	180	1160	0.172	catalog	Winchester 2026 catalog, X3840 (G1 0.172); price estimated; powder charge estimated
+.405 Winchester	Hornady Custom InterLock SP	300	2200	0.252	catalog	Hornady 2026 catalog, 8241 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.450 Marlin	Hornady LEVERevolution FTX	325	2225	0.231	catalog	Hornady 2026 catalog, 82750 (BC fitted to the catalog downrange velocities); price estimated; powder charge estimated
+.32-20 Winchester	Remington Lead Round Nose	100	1210	0.166	catalog	Remington 2026 catalog, R32201 (G1 0.166); price estimated; powder charge estimated
+.32-20 Winchester	Winchester Super-X Lead Flat Nose	100	1210	0.166	catalog	Winchester 2026 catalog, X32201 (G1 0.166); price estimated; powder charge estimated
+.38 S&W	Remington Performance Wheelgun Lead Round Nose	146	685	0.126	catalog	Remington 2026 catalog, RPW38SW (G1 0.126); price estimated; powder charge estimated
+.410 Bore	Winchester Defender PDX1 .410 2½" 3 Defense Discs + 12 BB	219	750	0.04	catalog	Winchester 2026 catalog, S410PDX1 (750 fps); ½ oz payload from retailer listings (dcfguns / deguns S41045PD "1/2 oz 3 defense discs 12 BBs"); BC set like #4 buck; price Lucky Gunner 10-rd box; powder charge estimated
+.410 Bore	Winchester Defender PDX1 .410 3" 4 Defense Discs + 16 BB	292	750	0.04	catalog	Winchester 2026 catalog, S413PDX1 (750 fps); payload scaled from the 2½" load (4 discs + 16 BB vs 3 + 12); Lucky Gunner: "designed for the Taurus Judge"; price Lucky Gunner 10-rd box; powder charge estimated
+.410 Bore	Hornady Critical Defense Triple Defense .410 2½" FTX Slug + 2 Balls	235	750	0.06	catalog	Hornady 2026 catalog, 86238 (750 fps); 235 gr payload from Lucky Gunner listing (294 ft-lbs); BC set like 000 buck; price Lucky Gunner; powder charge estimated
