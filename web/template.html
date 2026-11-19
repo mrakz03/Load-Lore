@@ -393,11 +393,16 @@ button.sopt:focus-visible{border-color:var(--accent)}@media (hover:hover){button
   .fdet .tiles{display:flex;flex-wrap:wrap;gap:14px clamp(18px,2.4vw,40px)}.fdet .tile .tv{font-size:1.27rem}}
 .hgrp{margin:20px 0 8px;font-size:1rem}.hgrp small{color:var(--muted);font-weight:600}
 /* Range log (Nov 2026): entries grouped by load, each with its speeds, groups and the listed speed */
-.rgrp+.rgrp{margin-top:6px}.rsum{margin:-4px 0 8px;font-size:.85rem}
+#rlist{padding-bottom:22px}.rgrp+.rgrp{margin-top:6px}.rsum{margin:-4px 0 8px;font-size:.85rem}
 .rents{display:grid;gap:10px}
 @media(min-width:720px){.rents{grid-template-columns:1fr 1fr}}
 .rent{display:flex;flex-direction:column;gap:4px;text-align:left;color:var(--text);font:inherit;font-size:.9rem;cursor:pointer}
-.rent .rhd{font-size:.8rem;font-weight:700}.rent .muted{font-size:.85rem}.rent .rdiff{color:var(--accent);font-weight:700;font-size:.85rem}
+.rent{gap:8px}.rent .rhd{font-size:.8rem;font-weight:700}.rent .muted{font-size:.85rem}.rent .rft{font-size:.78rem}.rent .rno{font-size:.88rem}
+.rts{display:flex;flex-wrap:wrap;gap:8px 22px;padding-top:8px;border-top:1px solid var(--border)}
+.rt{display:flex;flex-direction:column;min-width:0}.rt .l{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.rt .v{font-size:1.08rem;font-weight:700;font-variant-numeric:tabular-nums}.rt .v small{font-size:.75rem;font-weight:600;color:var(--muted)}
+.rt.rdiff .v{color:var(--accent)}
+@media(max-width:600px){.rts{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}.rt.rgw{grid-column:1/-1}}
 @media(hover:hover){.rent:hover{border-color:var(--accent);background:var(--surface2)}}
 .rst{font-size:.82rem;margin-top:6px;min-height:1em}
 @media(min-width:601px){.rgg{grid-template-columns:2fr 1fr}}
@@ -2162,13 +2167,18 @@ function showRange(){
   // grouped by load, the load used most recently first
   const groups=new Map();
   for(const e of all){const p=rangeLoad(e),k=p?pickKey(...p):e.category+"|"+e.cartridge+"|"+(e.load||"");if(!groups.has(k))groups.set(k,[]);groups.get(k).push(e);}
+  // one entry: a heading line, then the figures as small labeled tiles (Zeke, Nov 19 2026: easier to read than one line)
+  const tile=(l,v,u,cls)=>`<span class="rt${cls?" "+cls:""}"><span class="l">${l}</span><span class="v">${v}${u?` <small>${u}</small>`:""}</span></span>`;
   const entry=e=>{
-    const r=rangeStats(e),s=r.s,yd=+e.dist||0;
+    const r=rangeStats(e),s=r.s,yd=+e.dist||0,gs=+e.group_shots||0;
     const head=[e.date,e.gun,+e.barrel_in?`${g(+e.barrel_in)} in barrel`:""].filter(Boolean).map(esc).join("  ·  ");
-    const vel=s.n?`<b>${s.n}</b> shot${s.n>1?"s":""}  ·  avg <b>${fps0(s.mean)}</b> fps${s.sd!=null?`  ·  SD <b>${s.sd.toFixed(1)}</b>  ·  ES <b>${fps0(s.es)}</b>`:""}`:"";
-    const cmp=r.diff!=null?`<span class="rdiff">${diffText(r.diff,r.listed)} vs listed ${fps0(r.listed)} fps${r.est?" (estimate)":""}</span>`:"";
-    const gs=+e.group_shots||0,grp=r.gr.length?`${gs?`${gs}-shot g`:"G"}roup${r.gr.length>1?"s":""} ${r.gr.map(g).join(", ")} in${yd?` at ${g(yd)} yd`:""}${r.gr.length>1?`  ·  avg <b>${r.gavg.toFixed(2)}</b> in`:""}${yd?`  ·  <b>${moa(r.gr.length>1?r.gavg:r.gmin,yd).toFixed(2)}</b> MOA`:""}`:"";
-    return `<button class="card rent" data-id="${esc(e.id)}"><span class="muted rhd">${head||"No date"}</span>${vel?`<span>${vel}</span>`:""}${cmp}${grp?`<span>${grp}</span>`:""}${e.notes?`<span class="muted">${esc(e.notes)}</span>`:""}${!vel&&!grp&&!e.notes?`<span class="muted">No speeds or groups yet</span>`:""}</button>`;
+    const vt=s.n?[tile("Avg speed",fps0(s.mean),"fps"),r.diff!=null?tile("Vs listed",signed(r.diff),`fps (${r.diff>=0?"+":"−"}${Math.abs(r.diff/r.listed*100).toFixed(1)}%)`,"rdiff"):"",
+      s.sd!=null?tile("SD",s.sd.toFixed(1)):"",s.sd!=null?tile("ES",fps0(s.es)):"",tile("Shots",s.n)].join(""):"";
+    const gin=r.gr.length>1?r.gavg:r.gmin;
+    const gt=r.gr.length?[tile(`Group${r.gr.length>1?"s":""}${gs?` (${gs}-shot)`:""}`,r.gr.map(g).join("  ·  "),"in","rgw"),r.gr.length>1?tile("Avg group",gin.toFixed(2),"in"):"",
+      yd?tile(`MOA at ${g(yd)} yd`,moa(gin,yd).toFixed(2)):""].join(""):"";
+    const foot=r.listed?`Listed ${fps0(r.listed)} fps${r.est?` for a ${g(+e.barrel_in)} in barrel (estimate)`:""}`:"";
+    return `<button class="card rent" data-id="${esc(e.id)}"><span class="muted rhd">${head||"No date"}</span>${vt?`<span class="rts">${vt}</span>`:""}${gt?`<span class="rts">${gt}</span>`:""}${e.notes?`<span class="rno">${esc(e.notes)}</span>`:""}${foot&&s.n?`<span class="muted rft">${foot}</span>`:""}${!vt&&!gt&&!e.notes?`<span class="muted">No speeds or groups yet</span>`:""}</button>`;
   };
   const summary=list=>{
     let n=0,sum=0,best=null;
