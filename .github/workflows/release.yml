@@ -1,5 +1,5 @@
 name: Build and release
-# Push a tag like v1.0 to build the Android app and publish a GitHub Release (the website
+# Push a tag like v1.0 to build the Android app (a test artifact only) and publish a GitHub Release (the website
 # deploys after it: pages.yml). Windows / Linux builds ended with v1.14.x (Nov 2026; the desktop branch keeps them).
 # Run manually (Actions tab > Run workflow) to just build the files without releasing.
 on:
@@ -72,17 +72,11 @@ jobs:
         with: { name: android, path: "LoadLore-${{ env.VTAG }}.apk", retention-days: 7 }
 
   release:
+    # The release holds no files (Zeke, Nov 2026: the APK is no longer offered for download; the
+    # android build above stays as a 7-day artifact for testing). The release still marks the version
+    # and starts pages.yml, which deploys loadlore.net.
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [android]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
-        with: { path: out, merge-multiple: true }
-      - name: Checksums
-        working-directory: out
-        run: sha256sum LoadLore-* > SHA256SUMS.txt && cat SHA256SUMS.txt
       - uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            out/LoadLore-*
-            out/SHA256SUMS.txt

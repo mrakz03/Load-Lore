@@ -4,7 +4,7 @@
 
 A field guide to factory ammunition. Look up major brand's loads for a cartridge, get specs for each load, check their ballistic tables, and put up to five loads head to head. Reloaders can keep their handloads and ladder tests on My Bench and see how they stack up.
 
-**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too). It also comes as an Android app.
+**Try it in your browser at [loadlore.net](https://loadlore.net)**, no install needed (it works on phones too).
 
 > **Still in development.** Most of it works well, but you may run into rough edges, a load whose figures need fixing, or a missing factory load. If something looks wrong or you have any suggestions, please [open an issue](https://github.com/mrakz03/Load-Lore/issues).
 
@@ -78,7 +78,7 @@ The app does not check pressure or safety. Always follow a published load manual
 ### Settings
 - **Display**: theme, text size and the grades on/off switch.
 - **Data**:
-  - **Sync** keeps your handloads, ladder tests, favorite loads and prices the same on your phone and computer (website and Android app): get a sync code on one device and type it on the other. No account is needed. Anyone with the code can see and change the synced copy, so keep it to yourself. (Also on the Handloads page.)
+  - **Sync** keeps your handloads, ladder tests, favorite loads and prices the same on your phone and computer: get a sync code on one device and type it on the other. No account is needed. Anyone with the code can see and change the synced copy, so keep it to yourself. (Also on the Handloads page.)
   - **Back up / Restore** saves your handloads as a CSV file, so you can move them between computer and phone.
 
 <br>
@@ -98,8 +98,6 @@ Each factor is scored against the typical (median) load of the same cartridge: t
 ## Download and install
 The easiest way is the web version at **[loadlore.net](https://loadlore.net)**: it runs in any browser, on a computer or phone, and is always up to date. Your handloads and settings stay in that browser (use **Sync**, or **Back up** in Settings, to move them).
 
-The Android app is on the [Releases](https://github.com/mrakz03/Load-Lore/releases) page: install `LoadLore-v<version>.apk` (allow installs from your browser or file manager when asked).
-
 **Used the Windows or Linux app?** Its last updates were v1.14.x (Nov 2026); everything it did is on the website. Your copy keeps working, but gets no new loads. To move your handloads, press **Back up** in its Handloads tab, then **Restore** in loadlore.net's Settings and choose that file. Saved prices and settings don't carry over. The desktop app's code is kept on the [`desktop` branch](https://github.com/mrakz03/Load-Lore/tree/desktop).
 
 <br>
@@ -115,7 +113,7 @@ data/loads_*.csv              factory loads, one file per category (loads_pcc.cs
 data/ammo_*.csv               cartridge list (cartridges with no factory loads can still hold handloads)
 data/bullets.csv              bullet library for the handload form (weight, diameter, approximate G1 BC)
 assets/                       app icons (drawn by scripts/make_icons.py, needs Pillow)
-.github/workflows/release.yml builds the Android app for a v* tag and publishes the release
+.github/workflows/release.yml for a v* tag: publishes the release (Android build kept as a test artifact)
 .github/workflows/pages.yml   publishes the web version to loadlore.net (GitHub Pages)
 package.json, capacitor.config.json   Android wrapper (Capacitor)
 sync/                         sync server (Cloudflare Worker + D1) behind the Sync button
