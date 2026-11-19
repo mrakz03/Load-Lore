@@ -73,10 +73,12 @@ into web/www (Capacitor wraps it as an APK in CI).
   "inv" part is passed through unchanged (syncMerge keeps parts it doesn't use), so older apps keep theirs.
 - Sharing (Nov 17 2026, Zeke; web + Android only): a "Share" button on an opened Load Dictionary load and on an
   opened handload (Handloads tab), "Share this comparison" under Head to Head's results. The link is
-  SITE (DATA.site) + "#share/" + base64url JSON (shareURL; load {t:"l",c,k,n,d,b,w,g,r}, H2H {t:"c",p,d,r}),
+  SITE (DATA.site) + "#share/" + base64url JSON (shareURL; load {t:"l",c,k,n,d,b,w,g,r}, H2H {t:"c",p,d,r}, ladder test {t:"t",x},
+  range log entry {t:"r",x}; Zeke, Nov 19 2026: "Share" on the ladder test page and in a range entry's edit form),
   nothing uploaded. Android: @capacitor/share sheet; phone browsers navigator.share; PC a dialog with Copy link.
   openShared (start-up and popstate) opens it with the sender's distance / firearm setup and replaces the
-  #share entry. A shared handload goes in VIEW_HAND (memory only; syncHand marks it .peek: "Shared handload"
+  #share entry. A shared ladder test / range entry opens its page with a dialog (summary or rangeCard,
+  "Save to my ladder tests / range log", same id; one you already have just opens). A shared handload goes in VIEW_HAND (memory only; syncHand marks it .peek: "Shared handload"
   chip, no star, "Save to my handloads" keeps it with the same id); the Handloads tab skips .peek.
 - Handgun is a drop-down (Oct 28 2026, Zeke): Category.group="Handgun" on two categories, Handgun
   (menu "Pistol / Revolver", title kept so saved data matches) and Pistol Caliber Carbine; the picker
@@ -204,9 +206,10 @@ into web/www (Capacitor wraps it as an APK in CI).
   The safety line (tab, form, open handload) is HANDLOAD_NOTE, Zeke's LEGAL.md disclaimer verbatim
   (web gets it as DATA.hand_note), under a bold "DISCLAIMER" heading in the tab and form (disclaimer() /
   .dis). PC (desktop, web >=900 px) shows it right under the list; phones pin it to the bottom of
-  the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore (Settings > Data) use the
-  my_handloads.csv format (handload_csv_text / handCSV, merge_handload_rows / mergeHand: same id
-  replaced, new added); the phone copies the CSV to the clipboard (no file save in Capacitor).
+  the page, centred (.hpage flex column, .hnote margin-top:auto), or under the list once that is taller. Back up / Restore (Settings > Data; Zeke, Nov 19 2026)
+  use one Load Lore backup file, load_lore_backup_<date>.json {app, v:1, saved, hand, ladders, range} (backupData);
+  Restore (restoreText) takes it or a my_handloads.csv (older backups, the old desktop app: mergeHand -> mergeHandRows),
+  same id replaced, new added (mergeList for ladder tests / range log); the phone copies the text (no file save in Capacitor).
   An opened handload's links (web/Android) end with "Start ladder test ›" (Zeke, Nov 17 2026): a new ladder test
   filled in from it like the ladder form's "Copy from a handload" (ladderDialog(..., from); no charge copied).
   The form's cost parts sit in a drop-down (Zeke, Nov 2 2026: web details.hcd, now "More details";
@@ -267,13 +270,13 @@ into web/www (Capacitor wraps it as an APK in CI).
   a click on an entry opens rangeDialog to edit / delete it). An entry: cartridge (handCarts or typed), load (a Load
   Dictionary load or handload of that cartridge, stored as key = pickKey plus its label in "load", or a typed name with
   key ""), date, distance (yd), firearm, barrel (in), shots (typed velocities, shotStats), groups (typed inches,
-  parseGroups), notes. Kept in localStorage cartridge_calc_range_v1, synced as SYNC_PARTS "range" (old sync copies
+  parseGroups), group_shots (shots per group, optional; Zeke, Nov 19 2026: shown as "5-shot groups"), notes. Kept in localStorage cartridge_calc_range_v1, synced as SYNC_PARTS "range" (old sync copies
   without it just get an empty part). rangeStats compares the average with the load's listed muzzle speed (atBarrel
   when a barrel is given: "(estimate)"); groups shown in MOA when a distance is given. The page groups entries by load
   (most recent first) with a summary line (average fps off listed over all shots, best group). Entry points: "+ New
   entry", the dictionary's opened load ("Add to range log", bullet categories, not on shared handloads; carries the
-  Firearm setup barrel) and an opened handload's "Add to range log ›" link. Not in Back up / Restore (handloads CSV
-  only) or share links, like ladder tests.
+  Firearm setup barrel) and an opened handload's "Add to range log ›" link. In Back up / Restore and share
+  links like ladder tests. Entry cards show the figures as labeled tiles (rangeTile / rangeCard).
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), My Bench, Settings; the PC sidebar has the Load Dictionary above Head to Head. Web Home (Zeke, Nov 17 2026)
   is two big cards matching the sidebar groups (HOME_GROUPS: Loads = Load Dictionary + Head to Head; My Bench =
