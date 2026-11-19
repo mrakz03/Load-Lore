@@ -382,9 +382,11 @@ into web/www (Capacitor wraps it as an APK in CI).
 - Tags are vX.Y.Z, optionally with a suffix for a test build (v1.7.2-dev). Don't mark a release
   "pre-release": the old desktop copies' updater reads the latest release (since v1.14 it only says
   there are no more desktop updates when that release has no LoadLore-*-Setup.exe / -Linux.tar.gz).
-git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds the Android APK, publishes the
-release (APK + SHA256SUMS.txt), then pages.yml deploys the site. Pull main first so the tag lands on
-the latest commit.
+git tag vX.Y.Z && git push origin vX.Y.Z  → GitHub Actions builds the Android APK (kept only as a 7-day
+run artifact for testing), publishes the release with no files, then pages.yml deploys the site.
+Pull main first so the tag lands on the latest commit.
+- No APK download (Zeke, Nov 19 2026): releases, README and the site don't offer the APK; the Android
+  build stays in CI (Capacitor kept, e.g. for an app store later).
 - APP_VERSION in web/tables.py stays "dev" in the repo; CI sets it from the tag.
 - Web version on GitHub Pages (Oct 27 2026, .github/workflows/pages.yml): a successful v* release build
   (workflow_run after "Build and release") or a manual run (Actions tab) builds main with build_web.py and
