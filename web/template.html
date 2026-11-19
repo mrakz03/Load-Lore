@@ -2168,7 +2168,7 @@ function showRange(){
     const head=[e.date,e.gun,+e.barrel_in?`${g(+e.barrel_in)} in barrel`:""].filter(Boolean).map(esc).join("  ·  ");
     const vel=s.n?`<b>${s.n}</b> shot${s.n>1?"s":""}  ·  avg <b>${fps0(s.mean)}</b> fps${s.sd!=null?`  ·  SD <b>${s.sd.toFixed(1)}</b>  ·  ES <b>${fps0(s.es)}</b>`:""}`:"";
     const cmp=r.diff!=null?`<span class="rdiff">${diffText(r.diff,r.listed)} vs listed ${fps0(r.listed)} fps${r.est?" (estimate)":""}</span>`:"";
-    const grp=r.gr.length?`Group${r.gr.length>1?"s":""} ${r.gr.map(g).join(", ")} in${yd?` at ${g(yd)} yd`:""}${r.gr.length>1?`  ·  avg <b>${r.gavg.toFixed(2)}</b> in`:""}${yd?`  ·  <b>${moa(r.gr.length>1?r.gavg:r.gmin,yd).toFixed(2)}</b> MOA`:""}`:"";
+    const grp=r.gr.length?`Group${r.gr.length>1?"s":""}: ${r.gr.map(g).join(", ")} in${yd?` at ${g(yd)} yd`:""}${r.gr.length>1?`  ·  avg <b>${r.gavg.toFixed(2)}</b> in`:""}${yd?`  ·  <b>${moa(r.gr.length>1?r.gavg:r.gmin,yd).toFixed(2)}</b> MOA`:""}`:"";
     return `<button class="card rent" data-id="${esc(e.id)}"><span class="muted rhd">${head||"No date"}</span>${vel?`<span>${vel}</span>`:""}${cmp}${grp?`<span>${grp}</span>`:""}${e.notes?`<span class="muted">${esc(e.notes)}</span>`:""}${!vel&&!grp&&!e.notes?`<span class="muted">No speeds or groups yet</span>`:""}</button>`;
   };
   const summary=list=>{
