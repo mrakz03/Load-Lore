@@ -148,6 +148,16 @@ CATEGORIES = (
              group="Handgun", barrel_in=16,
              note="Loads marked (est.) have no published carbine velocity: it is worked out from "
                   "the maker's handgun figure for a 16 in barrel."),
+    # .410 shotshells made for .410 revolvers / pistols (Taurus Judge, S&W Governor; Zeke, Nov 19 2026):
+    # only loads their makers sell for handguns, with the makers' handgun velocities
+    Category(".410 Handgun", ".410 shotshells made for Judge and Governor revolvers",
+             "ammo_410_handgun.csv", 0, 100, 2.5, "HANDGUN WEIGHT (LB)",
+             cartridge_label="GAUGE", payload_row="Payload",
+             payload_col="Payload (gr)", grain_style=False, show_oz=True,
+             terminal=False, weights=(3, 3, 1, 3, 0, 0),
+             loads_filename="loads_410_handgun.csv", step_yd=10, zero_yd=15, sight_in=0.6,
+             group="Handgun",
+             note="Only .410 loads their makers sell for handguns; velocities are the makers' figures."),
     Category("Rimfire Rifle", "Small-bore rimfire rounds",
              "ammo_rimfire_rifle.csv", 0, 500, 5.0, "RIFLE WEIGHT (LB)",
              weights=(3, 3, 1, 6, 3, 3),
@@ -161,7 +171,7 @@ CATEGORIES = (
 )
 
 # a drop-down menu entry's own line in the category list (Handgun: Pistol / Revolver, PCC)
-GROUP_BLURBS = {"Handgun": "Pistols, revolvers and pistol caliber carbines"}
+GROUP_BLURBS = {"Handgun": "Pistols, revolvers, pistol caliber carbines and .410 handguns"}
 
 # a category's short tag, after a cartridge that is in two categories ("9mm Luger  ·  Carbine")
 CAT_TAGS = {"Centerfire Rifle": "Rifle", "Handgun": "Pistol / Revolver",
@@ -623,6 +633,11 @@ def load_data(path, grain_style=True):
 # Centerfire Rifle to Pistol Caliber Carbine): saved handloads and prices follow them
 MOVED_CATEGORIES = {"Centerfire Rifle|.357 Magnum": "Pistol Caliber Carbine",
                     "Centerfire Rifle|.44 Magnum": "Pistol Caliber Carbine"}
+# single loads that left a category ("category|cartridge|label"; Nov 19 2026: Federal's .410
+# Handgun loads went from Shotgun to .410 Handgun, since their figures are from handgun barrels)
+MOVED_CATEGORIES.update({f"Shotgun|.410 Bore|Buckshot  ·  Federal Personal Defense .410 Handgun · {x}": ".410 Handgun"
+                         for x in ('2½" 000 Buck · 4 pellets', '2½" 4 Shot · 0.44 oz',
+                                   '3" 000 Buck · 5 pellets', '3" 4 Buck · 9 pellets')})
 
 # ---- the GitHub repo (Settings > Source code) ---- #
 UPDATE_REPO = "mrakz03/Load-Lore"
