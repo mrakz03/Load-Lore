@@ -1,10 +1,9 @@
-"""Draws the app icon and writes every size the web and Android builds need into assets/.
+"""Draws the app icon and writes every size the web version needs into assets/.
 
     pip install pillow        (only needed to regenerate the icons, not to run the app)
     python3 scripts/make_icons.py
 
 assets/icon.png            1024 px master; the web page's tab icon
-assets/android/res/...     Android launcher icons (legacy + adaptive), copied in by the CI build
 assets/web/...             web version: home-screen icons (iPhone apple-touch-icon, manifest icons)
 """
 import os
@@ -91,10 +90,10 @@ def draw_symbol(d, s, ox=0.0, oy=0.0):
     draw_cartridge(d, Xc, Yc)
 
 
-def full_icon(size, round_mask=False, square=False):
+def full_icon(size, square=False):
     n = size * SS
     img = Image.new("RGBA", (n, n), (0, 0, 0, 0))
-    # vertical gradient background in a rounded square (or circle)
+    # vertical gradient background in a rounded square
     grad = Image.new("RGBA", (n, n))
     gd = ImageDraw.Draw(grad)
     for y in range(n):
@@ -104,29 +103,14 @@ def full_icon(size, round_mask=False, square=False):
     md = ImageDraw.Draw(mask)
     if square:                                      # iOS rounds the corners itself
         md.rectangle([0, 0, n - 1, n - 1], fill=255)
-    elif round_mask:
-        md.ellipse([0, 0, n - 1, n - 1], fill=255)
     else:
         md.rounded_rectangle([0, 0, n - 1, n - 1], radius=int(n * 0.215), fill=255)
     img.paste(grad, (0, 0), mask)
     d = ImageDraw.Draw(img)
-    if not round_mask and not square:
+    if not square:
         d.rounded_rectangle([0, 0, n - 1, n - 1], radius=int(n * 0.215), outline=BORDER,
                             width=max(1, n // 128))
-    inset = 0.12 if round_mask else 0.0             # keep the badge inside a round icon
-    s = n / 1024 * (1 - 2 * inset)
-    draw_symbol(d, s, n * inset, n * inset)
-    return img.resize((size, size), Image.LANCZOS)
-
-
-def adaptive_foreground(size):
-    """Android adaptive icon foreground: the symbol inside the 72/108 safe zone, transparent."""
-    n = size * SS
-    img = Image.new("RGBA", (n, n), (0, 0, 0, 0))
-    d = ImageDraw.Draw(img)
-    safe = n * 66 / 108
-    s = safe / 1024
-    draw_symbol(d, s, (n - safe) / 2, (n - safe) / 2)
+    draw_symbol(d, n / 1024, 0, 0)
     return img.resize((size, size), Image.LANCZOS)
 
 
@@ -143,28 +127,6 @@ def main():
     write(full_icon(180, square=True), "web", "apple-touch-icon.png")
     for px in (192, 512):
         write(full_icon(px), "web", f"icon-{px}.png")
-    res = ("android", "res")
-    for dpi, legacy, fg in (("mdpi", 48, 108), ("hdpi", 72, 162), ("xhdpi", 96, 216),
-                            ("xxhdpi", 144, 324), ("xxxhdpi", 192, 432)):
-        write(full_icon(legacy), *res, f"mipmap-{dpi}", "ic_launcher.png")
-        write(full_icon(legacy, round_mask=True), *res, f"mipmap-{dpi}", "ic_launcher_round.png")
-        write(adaptive_foreground(fg), *res, f"mipmap-{dpi}", "ic_launcher_foreground.png")
-    hexbg = "#%02x%02x%02x" % BG_BOTTOM
-    adaptive = ('<?xml version="1.0" encoding="utf-8"?>\n'
-                '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n'
-                '    <background android:drawable="@color/cc_icon_background"/>\n'
-                '    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>\n'
-                '</adaptive-icon>\n')
-    for name in ("ic_launcher.xml", "ic_launcher_round.xml"):
-        path = os.path.join(OUT, *res, "mipmap-anydpi-v26", name)
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, "w", encoding="utf-8") as fh:
-            fh.write(adaptive)
-    values = os.path.join(OUT, *res, "values")
-    os.makedirs(values, exist_ok=True)
-    with open(os.path.join(values, "cc_icon_background.xml"), "w", encoding="utf-8") as fh:
-        fh.write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n'
-                 f'    <color name="cc_icon_background">{hexbg}</color>\n</resources>\n')
     print("wrote icons to", OUT)
 
 
