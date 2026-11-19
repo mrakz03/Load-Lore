@@ -1333,7 +1333,7 @@ function showHand(openId){
   document.title=`${APP_TITLE} — ${toolTitle("hand")}`;
   app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide","handp");
   const H={open:openId||null,q:"",cat:"All"};
-  app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="hgob">‹ My Bench</button><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
+  app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="hgob">‹ My Bench</button><h2>${toolTitle("hand")}</h2><p class="sub">Build and save your own reloads. They show up in the Load Dictionary and can go head to head.</p></div>
     <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button><button class="btn" id="hsync">Sync</button><span class="muted" id="hsyt" style="font-size:.88rem"></span></div>
     <div id="hsearch" style="margin-top:12px"><input id="hq" type="search" placeholder="Search: name, cartridge, bullet or powder" autocomplete="off" aria-label="Search your handloads"></div>
     <div class="chips" id="hcats" role="group" aria-label="Category"></div>
