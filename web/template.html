@@ -46,6 +46,7 @@ body{padding:max(16px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inse
 .nav>button{flex:1;background:none;border:0;color:var(--muted);font:inherit;font-weight:700;font-size:.74rem;padding:7px 4px 6px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:54px}
 .nav>button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nav>button.on{color:var(--on-accent);background:var(--accent)}
+@media(max-width:899px){.nav>button.phon{color:var(--on-accent);background:var(--accent)}}
 .nav .sub{display:none}
 /* menus (Zeke, Nov 16 2026): phones show five tabs (Home, Head to Head, Load Dictionary, My Bench,
    Settings); the PC sidebar lists every page in two groups, Loads and My Bench (.pc rows, .nh headings) */
@@ -1003,22 +1004,23 @@ const ICON={
 // the tools: key, title, Home-screen blurb (same as TOOLS in the desktop app)
 const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or your own handload, in one sortable list."],
   ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges or categories."],
-  ["bench","My Bench","Your handloads, ladder tests, range log and favorite loads, in one place."]];
+  ["favs","Favorite loads","Loads you starred in the Load Dictionary."],
+  ["bench","My Bench","Your handloads, ladder tests and range log, in one place."]];
 // My Bench's pages: key, title, blurb (Zeke, Nov 16 2026)
 const BENCH=[["hand","Handloads","Build and save your own reloads. They show up in the Load Dictionary and can go head to head."],
   ["ladder","Ladder tests","Log a powder ladder's chronograph speeds and find the flattest spot."],
-  ["range","Range log","Your speeds and groups from the range, next to the listed figures."],
-  ["favs","Favorite loads","Loads you starred in the Load Dictionary."]];
+  ["range","Range log","Your speeds and groups from the range, next to the listed figures."]];
+// Favorite loads moved from My Bench to Loads (Zeke, Nov 19 2026): sidebar, Home card, phone Dictionary tab
 // Home (Zeke, Nov 17 2026): two big cards matching the PC sidebar's groups: [title, blurb, page its
 // heading opens, its pages]
-const HOME_GROUPS=[["Loads","Look up factory loads and compare them.",null,["loads","h2h"]],
-  ["My Bench","Your own loads and notes, saved on this device.","bench",["hand","ladder","range","favs"]]];
+const HOME_GROUPS=[["Loads","Look up factory loads and compare them.",null,["loads","h2h","favs"]],
+  ["My Bench","Your own loads and notes, saved on this device.","bench",["hand","ladder","range"]]];
 const toolTitle=k=>(TOOLS.concat(BENCH).find(t=>t[0]===k)||TOOLS[0])[1];
-const BENCH_MODES=["bench","hand","ladder","range","favs"];
+const BENCH_MODES=["bench","hand","ladder","range"];
 // the menus: [key, title, icon, where]. Phones show the "ph" and shared rows as five tabs, the Load
 // Dictionary (the main tool) in the middle; the PC sidebar shows the shared and "pc" rows in this
 // order, under two headings: Loads, and My Bench (its heading opens the My Bench page)
-const NAVS=[["home","Home",ICON.home],["nh","Loads"],["loads","Load Dictionary",ICON.loads],["h2h","Head to Head",ICON.h2h],
+const NAVS=[["home","Home",ICON.home],["nh","Loads"],["loads","Load Dictionary",ICON.loads],["h2h","Head to Head",ICON.h2h],["favs","Favorite loads",ICON.favs,"pc"],
   ["bench","My Bench",ICON.bench,"ph"],["nh","My Bench","bench"],
   ...BENCH.map(([k,t])=>[k,t,ICON[k],"pc"]),["settings","Settings",ICON.settings]];
 const H2H_MIN=2,H2H_MAX=5,H2H=[],H2H_DISTANCE=0;   // Head to Head picks (pickKey), any category
@@ -1061,7 +1063,8 @@ function drawChrome(){
   nav.innerHTML=NAVS.map(([k,t,ic,where])=>{
     if(k==="nh")return ic?`<button class="nh${NAV.mode===ic?" on":""}" data-nav="${ic}">${t}</button>`:`<div class="nh">${t}</div>`;
     const on=NAV.mode===k||where==="ph"&&BENCH_MODES.includes(NAV.mode);   // the phone's My Bench tab stays lit on its pages
-    return `<button data-nav="${k}" class="${on?"on":""}${where?" "+where:""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
+    const phon=k==="loads"&&NAV.mode==="favs";   // phones: the Dictionary tab stays lit on Favorite loads
+    return `<button data-nav="${k}" class="${on?"on":""}${phon?" phon":""}${where?" "+where:""}" ${on?'aria-current="page"':""}>${ic}<span>${t.replace("Load ","<i class='cmp'>Load </i>")}</span></button>`+
       (on&&k==="loads"?`<div class="sub">${menuEntries().map(e=>{
         const btn=c=>`<button data-cat="${esc(c.title)}" class="${NAV.cat===c?"on":""}${c.group?" child":""}">${esc(catName(c))}</button>`;
         if(!Array.isArray(e))return btn(e);
@@ -1136,7 +1139,7 @@ addEventListener("resize",()=>{clearTimeout(fitMenuJob);fitMenuJob=setTimeout(fi
 function showHome(){
   document.title=APP_TITLE;app.classList.remove("dict","h2hp","handp","wide","picker");app.classList.add("home");
   app.innerHTML=`<div class="hero"><h2><small>In Like Flint</small>Load Lore</h2><p>Explore the velocity, energy, recoil and cost of over 3,500 commercially available rounds, or put loads head to head.</p></div>
-  <div class="hgroups" data-nosnippet>${HOME_GROUPS.map(([t,b,go,keys])=>{const cnt=go?benchCounts():{};
+  <div class="hgroups" data-nosnippet>${HOME_GROUPS.map(([t,b,go,keys])=>{const cnt=benchCounts();
     return `<section class="hgrp2"><${go?`button class="hgh" data-go="${go}"`:`div class="hgh"`}><b>${t}${go?` <span class="chev">›</span>`:""}</b><span>${b}</span></${go?"button":"div"}>
     ${keys.map(k=>{const [,tt,bb]=TOOLS.concat(BENCH).find(x=>x[0]===k);return `<button class="hrow" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${tt}${cnt[k]?` <span class="cnt">${cnt[k]}</span>`:""}</b><span>${bb}</span></button>`;}).join("")}</section>`;}).join("")}</div>
   <div class="homenote" data-nosnippet>Figures are estimates. Nothing you see here is reloading data. <button class="link" data-go="settings">Disclaimer in Settings ›</button></div>`;
@@ -1216,8 +1219,7 @@ const favCount=()=>favItems().length;
 function showFavs(){
   document.title=`${APP_TITLE} — Favorite loads`;
   app.classList.remove("dict","h2hp","home","picker");app.classList.add("wide","handp");
-  app.innerHTML=`<div class="phead"><button class="link back" id="fback">‹ My Bench</button><h2>Favorite loads</h2><p class="sub">Loads you starred in the Load Dictionary, saved on this device.</p></div><div id="flist"></div>`;
-  $("#fback").onclick=()=>navigate("bench");
+  app.innerHTML=`<div class="phead"><h2>Favorite loads</h2><p class="sub">Loads you starred in the Load Dictionary, saved on this device.</p></div><div id="flist"></div>`;
   const F={open:null,srcOpen:false,btOpen:false};
   // an opened favorite: the dictionary's facts line and figure tiles, its notes, ballistic table,
   // Head to Head and a link on to the Load Dictionary
@@ -2166,7 +2168,7 @@ function showRange(){
     const head=[e.date,e.gun,+e.barrel_in?`${g(+e.barrel_in)} in barrel`:""].filter(Boolean).map(esc).join("  ·  ");
     const vel=s.n?`<b>${s.n}</b> shot${s.n>1?"s":""}  ·  avg <b>${fps0(s.mean)}</b> fps${s.sd!=null?`  ·  SD <b>${s.sd.toFixed(1)}</b>  ·  ES <b>${fps0(s.es)}</b>`:""}`:"";
     const cmp=r.diff!=null?`<span class="rdiff">${diffText(r.diff,r.listed)} vs listed ${fps0(r.listed)} fps${r.est?" (estimate)":""}</span>`:"";
-    const grp=r.gr.length?`Group${r.gr.length>1?"s":""} ${r.gr.map(g).join(", ")} in${yd?` at ${g(yd)} yd`:""}${r.gr.length>1?`  ·  avg <b>${r.gavg.toFixed(2)}</b> in`:""}${yd?`  ·  <b>${moa(r.gr.length>1?r.gavg:r.gmin,yd).toFixed(2)}</b> MOA`:""}`:"";
+    const grp=r.gr.length?`Group${r.gr.length>1?"s":""}: ${r.gr.map(g).join(", ")} in${yd?` at ${g(yd)} yd`:""}${r.gr.length>1?`  ·  avg <b>${r.gavg.toFixed(2)}</b> in`:""}${yd?`  ·  <b>${moa(r.gr.length>1?r.gavg:r.gmin,yd).toFixed(2)}</b> MOA`:""}`:"";
     return `<button class="card rent" data-id="${esc(e.id)}"><span class="muted rhd">${head||"No date"}</span>${vel?`<span>${vel}</span>`:""}${cmp}${grp?`<span>${grp}</span>`:""}${e.notes?`<span class="muted">${esc(e.notes)}</span>`:""}${!vel&&!grp&&!e.notes?`<span class="muted">No speeds or groups yet</span>`:""}</button>`;
   };
   const summary=list=>{
