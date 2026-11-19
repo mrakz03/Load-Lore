@@ -519,7 +519,10 @@ button.lcart.ph{color:var(--muted)}.gpr{margin-top:14px}button.lcart:focus-visib
 .sheet.pop .slist .hd{position:static;padding:12px 10px 4px;background:none;border-bottom:0;font-size:.68rem}
 .selcover{position:absolute;inset:0;background:none;border:0;padding:0;cursor:pointer}
 .t3v{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px}
-.t3v video{width:min(100%,720px);max-height:80vh;border-radius:12px;background:#000;pointer-events:none}
+.t3v figure{margin:0;width:min(100%,720px);display:flex;flex-direction:column;gap:6px}
+.t3v video{width:100%;max-height:80vh;border-radius:12px;background:#000;pointer-events:none}
+.t3v figcaption{font-size:.75rem;color:#c8ccd4;text-align:center;line-height:1.4}
+.t3v figcaption a{color:inherit;text-decoration:underline}
 .sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:flex;align-items:flex-end}
 .sheet{width:100%;max-height:85vh;max-height:85dvh;max-height:min(85dvh,calc(100% - 16px));display:flex;flex-direction:column;background:var(--surface);border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.35);padding-bottom:env(safe-area-inset-bottom);animation:sheetup .18s ease-out}
 @keyframes sheetup{from{transform:translateY(40%);opacity:.4}}
@@ -2422,7 +2425,7 @@ function cueT3(cat,it){
   if(++_t3n<3)return;
   try{sessionStorage.setItem("cartridge_calc_t3","1");}catch(e){}
   const bg=document.createElement("div");bg.className="t3v";
-  bg.innerHTML=`<video playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" src="t3.mp4"></video><button class="primary hidden">\u25B6 Tap to play</button>`;
+  bg.innerHTML=`<figure><video playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" src="t3.mp4"></video><figcaption>Paul Harrell &middot; <a href="https://youtu.be/wH7_7pJfoGU" target="_blank" rel="noopener noreferrer">Personal Protection: Shooting While in Bed</a></figcaption></figure><button class="primary hidden">\u25B6 Tap to play</button>`;
   const v=bg.querySelector("video"),b=bg.querySelector("button");let timer;
   const keys=e=>{if(e.target===b)return;e.preventDefault();e.stopPropagation();};
   const done=()=>{clearTimeout(timer);bg.parentNode&&bg.parentNode.removeChild(bg);removeEventListener("keydown",keys,true);};
