@@ -18,14 +18,13 @@ Please read [LEGAL.md](LEGAL.md) before using the app: figures are estimates, th
 
 ## What's inside
 
-About 3,650 factory loads from 20 makers, in four categories (plus Pistol Caliber Carbine and .410 Handgun sections under Handgun):
+About 3,650 factory loads from 20 makers, in four categories (plus a Pistol Caliber Carbine section under Handgun):
 
 | Category | Cartridges | Loads |
 |---|---|---|
 | Centerfire Rifle | 74 | 1,506 |
-| Handgun | 30 | 909 |
+| Handgun (with .410 handgun shells) | 31 | 916 |
 | ↳ Pistol Caliber Carbine | 14 | 732 |
-| ↳ .410 Handgun | 1 | 7 |
 | Rimfire Rifle | 7 | 128 |
 | Shotgun (10, 12, 16, 20, 28 gauge and .410 bore) | 6 | 1,120 |
 
@@ -33,7 +32,7 @@ Velocity and bullet weight are the makers' own published figures, from the 2026 
 
 **Pistol Caliber Carbine** covers handgun cartridges fired from carbines and lever guns (9mm, .357 Magnum, .44 Magnum, 10mm and more). Where a maker publishes a carbine velocity it is used; the rest are marked **(est.)** and worked out for a 16 in barrel from the maker's handgun figure.
 
-**.410 Handgun** lists only the .410 shotshells their makers sell for .410 revolvers such as the Taurus Judge and S&W Governor (Federal Personal Defense .410 Handgun, Winchester Defender PDX1, Hornady Critical Defense Triple Defense), with the makers' handgun velocities. General .410 field and target shells stay under Shotgun.
+**.410 Bore** under Pistol / Revolver lists only the .410 shotshells their makers sell for .410 revolvers such as the Taurus Judge and S&W Governor (Federal Personal Defense .410 Handgun, Winchester Defender PDX1, Hornady Critical Defense Triple Defense), with the makers' handgun velocities. General .410 field and target shells stay under Shotgun.
 
 <br>
 
@@ -42,7 +41,7 @@ Velocity and bullet weight are the makers' own published figures, from the 2026 
 ### Load Dictionary
 Look up every load for a cartridge, graded and ranked.
 
-- **Pick a cartridge.** Choose a category (Handgun opens Pistol / Revolver, Pistol Caliber Carbine or .410 Handgun), then search for a cartridge.
+- **Pick a cartridge.** Choose a category (Handgun opens Pistol / Revolver, or Pistol Caliber Carbine), then search for a cartridge.
 - **Filter and sort.** Filter by purpose (Hunting, Defense, Match...) or by typing a brand or load name. Hide +P / +P+ loads with a check box. Sort by grade, price, velocity, energy, recoil, bullet weight or, for shotguns, shot size.
 - **Grades.** This setting is off by default, to not distract you from the data shown. If enabled, each load gets a letter from S to F for velocity, energy, recoil, cost, Taylor KO and HITS, plus an overall grade. Loads are graded against others of the *same* cartridge, so an average load is a B.
   - **Scoring weights.** If grades are enabled, these options will appear. Choose how much each factor counts toward the overall grade (0 ignores it).
@@ -116,7 +115,7 @@ The easiest way is the web version at **[loadlore.net](https://loadlore.net)**: 
 web/template.html             the app (single page, no framework): scoring, ballistics, every page
 web/build_web.py              embeds the CSV data and web/tables.py into web/www/index.html
 web/tables.py                 categories, themes, gun weights, barrel limits, product lines, cartridge renames
-data/loads_*.csv              factory loads, one file per category (loads_pcc.csv: Pistol Caliber Carbine, loads_410_handgun.csv: .410 Handgun)
+data/loads_*.csv              factory loads, one file per category (loads_pcc.csv: Pistol Caliber Carbine)
 data/ammo_*.csv               cartridge list (cartridges with no factory loads can still hold handloads)
 data/bullets.csv              bullet library for the handload form (weight, diameter, approximate G1 BC)
 assets/                       app icons (drawn by scripts/make_icons.py, needs Pillow)

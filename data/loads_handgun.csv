@@ -934,3 +934,10 @@ cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,
 .500 S&W Magnum,Buffalo Bore LFN-GC,440,1625,0.180,36.7,4.51,,partial,,,Hunting
 .500 S&W Magnum,Buffalo Bore LFN-GC Low Recoil,440,1325,0.180,24.4,4.51,,partial,,,Hunting
 .500 S&W Magnum,Buffalo Bore Hard Cast LBT-WFN-GC,500,1425,0.204,32.1,4.51,,partial,,,Hunting
+.410 Bore,"Federal Personal Defense .410 Handgun 2½"" 000 Buck (4 pellets)",272,850,0.06,5.3,1.70,,partial,,,Defense
+.410 Bore,"Federal Personal Defense .410 Handgun 2½"" #4 Shot (7/16 oz)",191,950,0.04,4.7,1.70,,partial,,,Defense
+.410 Bore,"Federal Personal Defense .410 Handgun 3"" 000 Buck (5 pellets)",340,775,0.06,5.5,1.35,,partial,,,Defense
+.410 Bore,"Federal Personal Defense .410 Handgun 3"" 4 Buck (9 pellets)",181,950,0.04,4.4,1.35,,partial,,,Defense
+.410 Bore,"Winchester Defender PDX1 .410 2½"" 3 Defense Discs + 12 BB",219,750,0.04,5,2.20,,partial,,,Defense
+.410 Bore,"Winchester Defender PDX1 .410 3"" 4 Defense Discs + 16 BB",292,750,0.04,5.5,2.30,,partial,,,Defense
+.410 Bore,"Hornady Critical Defense Triple Defense .410 2½"" FTX Slug + 2 Balls",235,750,0.06,5,1.10,,partial,,,Defense
