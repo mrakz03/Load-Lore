@@ -1173,8 +1173,8 @@ function showSettings(){
     </div>
     <div class="sethead">Data</div><div class="setgroup">
     <div class="setrow nw"><div><b>Sync between devices</b><div class="muted" id="sytxt"></div></div><button class="btn" id="setsync">Sync</button></div>
-    <div class="setrow nw"><div><b>Back up handloads</b><div class="muted">Save your handloads as a file you can restore on any device</div></div><button class="btn" id="setbak">Back up</button></div>
-    <div class="setrow nw"><div><b>Restore handloads</b><div class="muted">Add the handloads from a backup file</div></div><button class="btn" id="setres">Restore</button></div>
+    <div class="setrow nw"><div><b>Back up</b><div class="muted">Save your handloads, ladder tests and range log as a file you can restore on any device</div></div><button class="btn" id="setbak">Back up</button></div>
+    <div class="setrow nw"><div><b>Restore</b><div class="muted">Add what's in a backup file</div></div><button class="btn" id="setres">Restore</button></div>
     </div>
     <div class="sethead">About</div><div class="setgroup">
     <div class="setrow nw"><div><b>Source code</b><div class="muted">Free and open source: code, issues and releases on GitHub</div></div><a class="ghlink" href="${esc(DATA.repo||"")}" target="_blank" rel="noopener" title="Open on GitHub" aria-label="Open on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="${GITHUB_MARK}"/></svg></a></div>
@@ -1466,9 +1466,14 @@ function mergeHand(text){
   const t=parseCSV(text);if(!t.length)throw new Error("That isn't a handload backup.");
   const head=t[0].map(x=>x.trim());
   if(!["cartridge","bullet_gr","muzzle_fps"].every(k=>head.includes(k)))throw new Error("That isn't a handload backup (no cartridge / bullet_gr / muzzle_fps columns).");
+  return mergeHandRows(t.slice(1).map(line=>{const r={};head.forEach((k,i)=>{r[k]=(line[i]||"").trim();});return r;}));
+}
+// handload rows (from a CSV or a Load Lore backup file) into the saved handloads
+function mergeHandRows(list){
   const known=new Set(CATEGORIES.filter(c=>c.grain_style).map(c=>c.title)),rows=readHand();let add=0,rep=0,skip=0;
-  for(const line of t.slice(1)){
-    const r={};head.forEach((k,i)=>{r[k]=(line[i]||"").trim();});
+  for(const r0 of list){
+    if(!r0||typeof r0!=="object"){skip++;continue;}
+    const r={};for(const [k,v] of Object.entries(r0))r[k]=v==null?"":String(v).trim();
     r.cartridge=canon(r.cartridge);
     r.category=movedCat(r.category,r.cartridge);
     const ok=known.has(r.category)&&r.cartridge&&["bullet_gr","muzzle_fps","bc_g1","powder_gr"].every(k=>+r[k]>0)&&!(+r.cost<0);   // cost optional
@@ -1482,32 +1487,60 @@ function mergeHand(text){
   if(!writeHand(rows))throw new Error("Couldn't save: storage isn't available.");
   return [add,rep,skip];
 }
+// Back up (Settings > Data, Zeke Nov 19 2026): handloads, ladder tests and the range log in one
+// Load Lore backup file (JSON); Restore takes it, or a handloads CSV (older backups, the old desktop app)
+const backupData=()=>({app:"Load Lore",v:1,saved:new Date().toISOString().slice(0,10),hand:readHand(),ladders:readLadders(),range:readRange()});
+const backupCounts=d=>{const n=(x,w,ws)=>`${x} ${x===1?w:ws}`;return [n(d.hand.length,"handload","handloads"),n(d.ladders.length,"ladder test","ladder tests"),n(d.range.length,"range log entry","range log entries")];};
+const andList=a=>a.length>1?a.slice(0,-1).join(", ")+" and "+a[a.length-1]:a.join("");
 function backupHand(){
-  const rows=readHand();
-  if(!rows.length){alert("You have no handloads to back up yet.");return;}
-  const csv=handCSV(rows),name="my_handloads.csv";
+  const d=backupData();
+  if(!d.hand.length&&!d.ladders.length&&!d.range.length){alert("You have no handloads, ladder tests or range log entries to back up yet.");return;}
+  const txt=JSON.stringify(d,null,1),name=`load_lore_backup_${d.saved}.json`;
   const native=window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform();
-  const [m,close]=modal(`<h3 style="margin:0 0 6px">Back up handloads</h3>
-    <p class="muted" style="margin:0 0 10px">${rows.length} handload${rows.length>1?"s":""} as a CSV file. ${native?"Copy it, then paste it into a note or an email to yourself.":"Save the file, or copy the text."} Restore it on any device with “Restore”.</p>
-    <textarea id="bkt" readonly rows="6" style="width:100%;font-size:.75rem;font-family:monospace;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px">${esc(csv)}</textarea>
+  const [m,close]=modal(`<h3 style="margin:0 0 6px">Back up</h3>
+    <p class="muted" style="margin:0 0 10px">${esc(andList(backupCounts(d)))} in one file. ${native?"Copy it, then paste it into a note or an email to yourself.":"Save the file, or copy the text."} Restore it on any device with “Restore”.</p>
+    <textarea id="bkt" readonly rows="6" style="width:100%;font-size:.75rem;font-family:monospace;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px">${esc(txt)}</textarea>
     <div class="btns">${native?"":'<button class="btn p" id="bks">Save file</button>'}<button class="btn ${native?"p":""}" id="bkc">Copy</button><button class="btn" id="bkx">Close</button></div>`);
   $("#bkx",m).onclick=close;
-  $("#bkc",m).onclick=async()=>{const t=$("#bkt",m);try{await navigator.clipboard.writeText(csv);}catch(e){t.select();document.execCommand("copy");}$("#bkc",m).textContent="Copied ✓";};
+  $("#bkc",m).onclick=async()=>{const t=$("#bkt",m);try{await navigator.clipboard.writeText(txt);}catch(e){t.select();document.execCommand("copy");}$("#bkc",m).textContent="Copied ✓";};
   const sv=$("#bks",m);
-  if(sv)sv.onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);};
+  if(sv)sv.onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"application/json"}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);};
+}
+// ladder tests / range log entries from a backup: same id replaced, new ones added. [added, replaced]
+function mergeList(list,read,write,ok){
+  const all=read();let add=0,rep=0;
+  for(const x of Array.isArray(list)?list:[]){
+    if(!x||typeof x!=="object"||!x.id||!ok(x))continue;
+    const i=all.findIndex(y=>y.id===x.id);
+    if(i>=0){all[i]=x;rep++;}else{all.push(x);add++;}
+  }
+  if((add||rep)&&!write(all))throw new Error("Couldn't save: storage isn't available.");
+  return [add,rep];
+}
+// a backup's text (Load Lore backup file or handloads CSV) -> what was restored, as a sentence
+function restoreText(text){
+  text=String(text||"").replace(/^\ufeff/,"").trim();
+  if(!text)throw new Error("Choose a backup file or paste its text.");
+  if(text[0]!=="{"){const [a,r,s]=mergeHand(text);return `Restored handloads: ${a} new, ${r} updated`+(s?`, ${s} skipped (not a rifle, handgun or rimfire handload, or missing figures)`:"")+".";}
+  let d;try{d=JSON.parse(text);}catch(e){throw new Error("That backup can't be read. Paste all of its text.");}
+  if(!d||typeof d!=="object"||!("hand" in d||"ladders" in d||"range" in d))throw new Error("That isn't a Load Lore backup.");
+  const out=[];
+  if(Array.isArray(d.hand)&&d.hand.length){const [a,r,s]=mergeHandRows(d.hand);out.push(`handloads ${a} new, ${r} updated${s?`, ${s} skipped`:""}`);}
+  const [la,lr]=mergeList(d.ladders,readLadders,writeLadders,t=>Array.isArray(t.charges));if(la||lr)out.push(`ladder tests ${la} new, ${lr} updated`);
+  const [ra,rr]=mergeList(d.range,readRange,writeRange,e=>!!e.cartridge);if(ra||rr)out.push(`range log ${ra} new, ${rr} updated`);
+  return out.length?`Restored: ${out.join("; ")}.`:"Nothing to restore in that backup.";
 }
 function restoreHand(after){
-  const [m,close]=modal(`<h3 style="margin:0 0 6px">Restore handloads</h3>
-    <p class="muted" style="margin:0 0 10px">Choose a backup file (my_handloads.csv from the old desktop app works too), or paste its text. Handloads you already have are kept; ones in the backup are added, or updated if they came from here.</p>
-    <input type="file" id="rsf" accept=".csv,text/csv,text/plain" style="padding:8px">
+  const [m,close]=modal(`<h3 style="margin:0 0 6px">Restore</h3>
+    <p class="muted" style="margin:0 0 10px">Choose a backup file, or paste its text. Older handload backups (my_handloads.csv) work too. Nothing you have is deleted: items in the backup are added, or updated if they came from here.</p>
+    <input type="file" id="rsf" accept=".json,.csv,application/json,text/csv,text/plain" style="padding:8px">
     <label class="l" style="margin-top:12px">OR PASTE THE BACKUP</label>
     <textarea id="rst" rows="6" style="width:100%;font-size:.75rem;font-family:monospace;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px"></textarea>
     <div class="btns"><button class="btn p" id="rsg">Restore</button><button class="btn" id="rsx">Cancel</button></div>`);
   $("#rsx",m).onclick=close;
   $("#rsf",m).onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{$("#rst",m).value=rd.result;};rd.readAsText(f);};
   $("#rsg",m).onclick=()=>{
-    try{const [a,r,s]=mergeHand($("#rst",m).value);close();
-      alert(`Restored: ${a} new, ${r} updated`+(s?`, ${s} skipped (not a rifle, handgun or rimfire handload, or missing figures)`:"")+".");after();}
+    try{const msg=restoreText($("#rst",m).value);close();alert(msg);after();}
     catch(e){alert(e.message);}
   };
 }
@@ -1971,7 +2004,7 @@ function ladderPage(t){
   const save=()=>{const all=readLadders(),i=all.findIndex(x=>x.id===t.id);if(i>=0)all[i]=t;else all.push(t);writeLadders(all);};
   app.innerHTML=`<div class="hpage ladp"><div class="phead"><button class="link lback" id="lgol">‹ Ladder tests</button><h2>${esc(ladderName(t))}</h2>
       <p class="sub">${esc(ladderFacts(t))}${t.notes?`<br>${esc(t.notes)}`:""}</p>
-      <div class="hbtns" style="margin-top:8px"><button class="btn" id="ledit">Edit details</button><button class="btn d" id="ldel">Delete</button></div></div>
+      <div class="hbtns" style="margin-top:8px"><button class="btn" id="ledit">Edit details</button><button class="btn" id="lshare">Share</button><button class="btn d" id="ldel">Delete</button></div></div>
     <div class="card lsum" id="lsum"></div>
     <div class="card lchart" id="lchart"></div>
     <h3 class="hgrp">Charges</h3><p class="note" style="margin-top:-4px">Type each shot's velocity in fps, separated by spaces. Tick “Pressure signs” on a charge where you saw any: it and every charge above it are left out of the picks. The app can't detect pressure; the box only records what you saw.</p>
@@ -1980,6 +2013,7 @@ function ladderPage(t){
     <div class="note hnote"><b class="dis">YOUR OWN RESULTS</b>${esc(LADDER_NOTE)}<br><br>${esc(SOURCE_NOTES.handload)}</div></div>`;
   $("#lgol").onclick=()=>navigate("ladder");
   $("#ledit").onclick=()=>ladderDialog(t,n=>{Object.assign(t,n);ladderPage(t);});
+  $("#lshare").onclick=()=>shareLink(`Ladder test: ${ladderName(t)}`,shareURL({t:"t",x:t}));
   $("#ldel").onclick=()=>{if(!confirm(`Delete the ladder test "${ladderName(t)}"?`))return;writeLadders(readLadders().filter(x=>x.id!==t.id));navigate("ladder",null,null,"replace");};
   const rowStats=(c,el)=>{
     const s=shotStats(c.shots),bad=String(c.shots||"").split(/[\s,;]+/).filter(Boolean).length-s.n;
@@ -2160,6 +2194,20 @@ function rangeStats(e){
 const rangeName=e=>{const p=rangeLoad(e);return p?p[1].label:e.load||"Load";};
 const signed=v=>(v>0?"+":v<0?"−":"±")+Math.abs(Math.round(v)).toLocaleString();
 const diffText=(d,listed)=>`${signed(d)} fps (${d>=0?"+":"−"}${Math.abs(d/listed*100).toFixed(1)}%)`;
+// one entry: a heading line, then the figures as small labeled tiles (Zeke, Nov 19 2026: easier to read than one line)
+const rangeTile=(l,v,u,cls)=>`<span class="rt${cls?" "+cls:""}"><span class="l">${l}</span><span class="v">${v}${u?` <small>${u}</small>`:""}</span></span>`;
+function rangeCard(e,tag){
+  tag=tag||"button";
+  const r=rangeStats(e),s=r.s,yd=+e.dist||0,gs=+e.group_shots||0;
+  const head=[e.date,e.gun,+e.barrel_in?`${g(+e.barrel_in)} in barrel`:""].filter(Boolean).map(esc).join("  ·  ");
+  const vt=s.n?[rangeTile("Avg speed",fps0(s.mean),"fps"),r.diff!=null?rangeTile("Vs listed",signed(r.diff),`fps (${r.diff>=0?"+":"−"}${Math.abs(r.diff/r.listed*100).toFixed(1)}%)`,"rdiff"):"",
+    s.sd!=null?rangeTile("SD",s.sd.toFixed(1)):"",s.sd!=null?rangeTile("ES",fps0(s.es)):"",rangeTile("Shots",s.n)].join(""):"";
+  const gin=r.gr.length>1?r.gavg:r.gmin;
+  const gt=r.gr.length?[rangeTile(`Group${r.gr.length>1?"s":""}${gs?` (${gs}-shot)`:""}`,r.gr.map(g).join("  ·  "),"in","rgw"),r.gr.length>1?rangeTile("Avg group",gin.toFixed(2),"in"):"",
+    yd?rangeTile(`MOA at ${g(yd)} yd`,moa(gin,yd).toFixed(2)):""].join(""):"";
+  const foot=r.listed?`Listed ${fps0(r.listed)} fps${r.est?` for a ${g(+e.barrel_in)} in barrel (estimate)`:""}`:"";
+  return `<${tag} class="card rent" data-id="${esc(e.id)}"><span class="muted rhd">${head||"No date"}</span>${vt?`<span class="rts">${vt}</span>`:""}${gt?`<span class="rts">${gt}</span>`:""}${e.notes?`<span class="rno">${esc(e.notes)}</span>`:""}${foot&&s.n?`<span class="muted rft">${foot}</span>`:""}${!vt&&!gt&&!e.notes?`<span class="muted">No speeds or groups yet</span>`:""}</${tag}>`;
+}
 function showRange(){
   document.title=`${APP_TITLE} — Range log`;
   app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide");
@@ -2167,19 +2215,6 @@ function showRange(){
   // grouped by load, the load used most recently first
   const groups=new Map();
   for(const e of all){const p=rangeLoad(e),k=p?pickKey(...p):e.category+"|"+e.cartridge+"|"+(e.load||"");if(!groups.has(k))groups.set(k,[]);groups.get(k).push(e);}
-  // one entry: a heading line, then the figures as small labeled tiles (Zeke, Nov 19 2026: easier to read than one line)
-  const tile=(l,v,u,cls)=>`<span class="rt${cls?" "+cls:""}"><span class="l">${l}</span><span class="v">${v}${u?` <small>${u}</small>`:""}</span></span>`;
-  const entry=e=>{
-    const r=rangeStats(e),s=r.s,yd=+e.dist||0,gs=+e.group_shots||0;
-    const head=[e.date,e.gun,+e.barrel_in?`${g(+e.barrel_in)} in barrel`:""].filter(Boolean).map(esc).join("  ·  ");
-    const vt=s.n?[tile("Avg speed",fps0(s.mean),"fps"),r.diff!=null?tile("Vs listed",signed(r.diff),`fps (${r.diff>=0?"+":"−"}${Math.abs(r.diff/r.listed*100).toFixed(1)}%)`,"rdiff"):"",
-      s.sd!=null?tile("SD",s.sd.toFixed(1)):"",s.sd!=null?tile("ES",fps0(s.es)):"",tile("Shots",s.n)].join(""):"";
-    const gin=r.gr.length>1?r.gavg:r.gmin;
-    const gt=r.gr.length?[tile(`Group${r.gr.length>1?"s":""}${gs?` (${gs}-shot)`:""}`,r.gr.map(g).join("  ·  "),"in","rgw"),r.gr.length>1?tile("Avg group",gin.toFixed(2),"in"):"",
-      yd?tile(`MOA at ${g(yd)} yd`,moa(gin,yd).toFixed(2)):""].join(""):"";
-    const foot=r.listed?`Listed ${fps0(r.listed)} fps${r.est?` for a ${g(+e.barrel_in)} in barrel (estimate)`:""}`:"";
-    return `<button class="card rent" data-id="${esc(e.id)}"><span class="muted rhd">${head||"No date"}</span>${vt?`<span class="rts">${vt}</span>`:""}${gt?`<span class="rts">${gt}</span>`:""}${e.notes?`<span class="rno">${esc(e.notes)}</span>`:""}${foot&&s.n?`<span class="muted rft">${foot}</span>`:""}${!vt&&!gt&&!e.notes?`<span class="muted">No speeds or groups yet</span>`:""}</button>`;
-  };
   const summary=list=>{
     let n=0,sum=0,best=null;
     for(const e of list){const r=rangeStats(e);if(r.diff!=null){n+=r.s.n;sum+=r.diff*r.s.n;}
@@ -2192,7 +2227,7 @@ function showRange(){
   app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="rgoh">‹ My Bench</button><h2>Range log</h2><p class="sub">Log each trip's chronograph speeds and groups for a load. They show next to the load's listed speed.</p></div>
     <div class="htools"><button class="btn p" id="rnew">+&nbsp; New entry</button></div>
     <div id="rlist">${groups.size?[...groups.values()].map(list=>{const e0=list[0],p=rangeLoad(e0);
-      return `<section class="rgrp"><h3 class="hgrp">${esc(rangeName(e0))} <small>· ${esc(e0.cartridge)}${p&&p[1].handload?" · handload":""}</small></h3><p class="rsum muted">${esc(summary(list))}</p><div class="rents">${list.map(entry).join("")}</div></section>`;}).join(""):
+      return `<section class="rgrp"><h3 class="hgrp">${esc(rangeName(e0))} <small>· ${esc(e0.cartridge)}${p&&p[1].handload?" · handload":""}</small></h3><p class="rsum muted">${esc(summary(list))}</p><div class="rents">${list.map(e=>rangeCard(e)).join("")}</div></section>`;}).join(""):
       `<div class="card hempty"><b>No entries yet</b><p class="muted" style="margin:6px 0 0">Tap “+ New entry”, pick the load you shot, then type each shot's velocity and your group sizes.</p></div>`}</div>
     <div class="note hnote"><b class="dis">YOUR OWN RESULTS</b>${esc(RANGE_NOTE)}</div></div>`;
   $("#rgoh").onclick=()=>navigate("bench");
@@ -2217,7 +2252,7 @@ function rangeDialog(e,done,from,pre){
     <div class="g2 rgg"><div><label class="l">GROUPS (IN) <span class="opt">(optional)</span></label><input id="rgp" autocomplete="off" placeholder="e.g. 0.8 1.1"></div><div><label class="l">SHOTS PER GROUP <span class="opt">(optional)</span></label><input id="rgs" inputmode="numeric" placeholder="e.g. 5"></div></div>
     <label class="l" style="margin-top:14px">NOTES (WEATHER, ZERO...) <span class="opt">(optional)</span></label><input id="rno" autocomplete="off">
     <div class="safety"><b class="dis">YOUR OWN RESULTS</b>${esc(RANGE_NOTE)}</div>
-    <div class="btns"><button class="btn p" id="rsv">${edit?"Save changes":"Save"}</button><button class="btn" id="rcx">Cancel</button>${edit?`<button class="btn d" id="rdl">Delete</button>`:""}</div>`,"full");
+    <div class="btns"><button class="btn p" id="rsv">${edit?"Save changes":"Save"}</button><button class="btn" id="rcx">Cancel</button>${edit?`<button class="btn" id="rshr">Share</button><button class="btn d" id="rdl">Delete</button>`:""}</div>`,"full");
   const q=x=>$(x,m),cb=q("#rcb"),lb=q("#rlb");
   const loadsOf=()=>pk&&pk.cat&&state.detail[pk.cat.title]?(syncHand(pk.cat),state.detail[pk.cat.title].filter(x=>x.cartridge===pk.cart&&!x.peek)
     .sort((a,b)=>(b.handload?1:0)-(a.handload?1:0)||lineCmp({it:a},{it:b}))):[];
@@ -2251,6 +2286,8 @@ function rangeDialog(e,done,from,pre){
   q("#rsh").oninput=showStats;q("#rbr").oninput=showStats;
   show();
   q("#rcx").onclick=close;
+  const shr=q("#rshr");
+  if(shr)shr.onclick=()=>{const x=readRange().find(y=>y.id===e.id)||e;shareLink(`Range log: ${rangeName(x)}  ·  ${x.cartridge}`,shareURL({t:"r",x}));};
   const dl=q("#rdl");
   if(dl)dl.onclick=()=>{if(!confirm("Delete this range entry?"))return;writeRange(readRange().filter(x=>x.id!==e.id));close();done(null);};
   q("#rsv").onclick=()=>{
@@ -2860,6 +2897,7 @@ function openH2H(pane){
 // (and firearm setup) or comparison; a handload is shown, not saved, until "Save to my handloads".
 //   load:  {t:"l", c: category, k: cartridge, n: label or handload id, d: distance, b: barrel, w: twist, g: gun, r: handload}
 //   H2H:   {t:"c", p: [[category, cartridge, label or id, gun, barrel, twist]...], d: distance, r: [handloads]}
+//   ladder test: {t:"t", x: the test}; range log entry: {t:"r", x: the entry}
 const SITE=DATA.site||"https://loadlore.net/";
 function b64u(s){let t="";new TextEncoder().encode(s).forEach(x=>t+=String.fromCharCode(x));return btoa(t).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
 function unb64u(s){const t=atob(s.replace(/-/g,"+").replace(/_/g,"/"));return new TextDecoder().decode(Uint8Array.from(t,c=>c.charCodeAt(0)));}
@@ -2920,6 +2958,28 @@ function openShared(hash){
     H2HS.guns=ps.map(x=>x[3]?g(x[3]):"");H2HS.brls=ps.map(x=>x[4]?g(x[4]):"");H2HS.tws=ps.map(x=>x[5]?g(x[5]):"");
     H2HS.fireOpen=ps.some(x=>x[3]||x[4]||x[5]);
     navigate("h2h",null,null,"replace");return true;
+  }
+  // a ladder test or range log entry (Zeke, Nov 19 2026): shown in a dialog over its page until
+  // "Save"; the same id means it's already yours, so it just opens
+  if(o&&(o.t==="t"||o.t==="r")&&o.x&&typeof o.x==="object"&&o.x.id){
+    const lad=o.t==="t",x=o.x;
+    if(lad?Array.isArray(x.charges):!!x.cartridge){
+      const read=lad?readLadders:readRange,write=lad?writeLadders:writeRange,mine=read().find(y=>y.id===x.id);
+      if(mine&&lad){navigate("ladder",null,x.id,"replace");return true;}
+      navigate(lad?"ladder":"range",null,null,"replace");
+      if(mine)return true;
+      let body;
+      if(lad){const a=ladderAnalysis(x),grs=a.rows.map(r=>r.gr);
+        body=`<p style="margin:0 0 4px"><b>${esc(ladderName(x))}</b></p><p class="muted" style="margin:0 0 8px">${esc(ladderFacts(x))}</p>
+          <p class="muted" style="margin:0">${x.charges.length} charge${x.charges.length===1?"":"s"}${grs.length?`  ·  ${g(grs[0])}–${g(grs[grs.length-1])} gr`:""}${x.created?`  ·  ${esc(x.created)}`:""}${a.best?`  ·  flattest spot ${g(a.best.gr)} gr`:""}</p>`;}
+      else body=`<p style="margin:0 0 8px"><b>${esc(rangeName(x))}</b> <span class="muted">· ${esc(x.cartridge)}</span></p>${rangeCard(x,"div")}`;
+      const [m,close]=modal(`<h3 style="margin:0 0 10px">Shared ${lad?"ladder test":"range log entry"}</h3>${body}
+        <div class="safety"><b class="dis">THEIR OWN RESULTS</b>${esc(lad?LADDER_NOTE:RANGE_NOTE)}</div>
+        <div class="btns"><button class="btn p" id="shs">Save to my ${lad?"ladder tests":"range log"}</button><button class="btn" id="shx">Close</button></div>`);
+      $("#shx",m).onclick=close;
+      $("#shs",m).onclick=()=>{const all=read();if(!all.some(y=>y.id===x.id)){all.push(x);write(all);}close();navigate(lad?"ladder":"range",null,lad?x.id:null,"replace");};
+      return true;
+    }
   }
   navigate("home",null,null,"replace");
   modal(`<h3 style="margin:0 0 6px">Link not found</h3><p class="muted" style="margin:0">This shared link is incomplete or from a newer version of Load Lore.</p>`);
