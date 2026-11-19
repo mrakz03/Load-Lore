@@ -415,7 +415,8 @@ button.lcart.ph{color:var(--muted)}.gpr{margin-top:14px}button.lcart:focus-visib
 .hcost{display:grid;grid-template-columns:max-content max-content;gap:2px 14px;font-weight:600}
 .hcost span:nth-child(even){text-align:right}
 .hcost .t{border-top:1px solid var(--border);padding-top:3px;font-weight:800}
-.shrow{justify-content:flex-end;margin-top:14px}
+.hshr{margin-left:auto}.hshr:empty{display:none}.shrow{display:none;justify-content:flex-end;margin-top:14px}
+@media(max-width:600px){.hshr{display:none}.shrow{display:flex}}.hshr .btn{padding:9px 14px;font-size:.85rem}
 .hlinks{display:flex;gap:4px 18px;flex-wrap:wrap;margin-top:4px}
 .hempty{margin-top:18px;text-align:center;padding:28px 18px}
 .links{align-items:center;gap:8px}.links .link.m{white-space:nowrap}
@@ -1333,7 +1334,7 @@ function showHand(openId){
   document.title=`${APP_TITLE} — ${toolTitle("hand")}`;
   app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide","handp");
   const H={open:openId||null,q:"",cat:"All"};
-  app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="hgob">‹ My Bench</button><h2>${toolTitle("hand")}</h2><p class="sub">Your own reloads, from every category. Each one is graded against the factory loads of its cartridge, the same as in the Load Dictionary, and can go head to head.</p></div>
+  app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="hgob">‹ My Bench</button><h2>${toolTitle("hand")}</h2><p class="sub">Build and save your own reloads. They show up in the Load Dictionary and can go head to head.</p></div>
     <div class="htools"><button class="btn p" id="hnew">+&nbsp; New handload</button><button class="btn" id="hsync">Sync</button><span class="muted" id="hsyt" style="font-size:.88rem"></span></div>
     <div id="hsearch" style="margin-top:12px"><input id="hq" type="search" placeholder="Search: name, cartridge, bullet or powder" autocomplete="off" aria-label="Search your handloads"></div>
     <div class="chips" id="hcats" role="group" aria-label="Category"></div>
@@ -2532,6 +2533,7 @@ function openH2H(pane){
     <div class="gunrow">
       <div><label class="l">DISTANCE (YD)</label><input id="hd" inputmode="decimal"></div>
       <button class="link" id="hfire" aria-expanded="false"></button>
+      <div class="hshr" id="hshr"></div>
     </div>
     <div class="note hidden" id="hfnote"></div>
   </div>
@@ -2611,6 +2613,7 @@ function openH2H(pane){
   }
   function render(){
     const box=$$("#hres");
+    $$("#hshr").innerHTML="";   // only once there are results
     const dist=parseFloat($$("#hd").value),ps=pickedSlots(),pk=ps.map(([c,it])=>[c,it]),far=pk.length?Math.max(...pk.map(([c])=>c.max_distance)):H2H_DISTANCE;
     // a blank box (or the boxes hidden): the load's cartridge's typical gun
     const guns=ps.map(([,,s])=>fireOpen&&String(s.gun).trim()?Number(String(s.gun).trim()):null);
@@ -2649,9 +2652,11 @@ function openH2H(pane){
       const live=cells.filter(Boolean),vTop=Math.max(...live.map(c=>c[0])),eTop=Math.max(...live.map(c=>c[1]));
       h+=`<tr><td class="yd v">${g(yd)}</td>${cells.map(c=>!c?`<td class="l0 gap">—</td><td class="gap">—</td>`:`<td class="l0${c[0]>=vTop-1e-9?" v best":""}">${fmt0(c[0])}</td><td class="${c[1]>=eTop-1e-9?"v best":""}">${fmt0(c[1])}</td>`).join("")}</tr>`;
     }
+    // Share sits in the picker card, end of the distance row, not under the results; phones: after the cards (Zeke, Nov 19 2026)
+    $$("#hshr").innerHTML=`<button class="btn shb">Share this comparison</button>`;
     box.innerHTML=h+`</tbody></table></div></div>`+phoneView(rows,dist,keys,most,badge,payload,setups)+`<div class="hbtns shrow"><button class="btn shb">Share this comparison</button></div>`;
     box.querySelectorAll("[data-yd]").forEach(c=>c.onclick=()=>{H.drYd=+c.dataset.yd;render();});
-    box.querySelector(".shb").onclick=()=>{
+    const share=()=>{
       const o={t:"c",p:ps.map(([c,it,s])=>{const x=[c.title,it.cartridge,it.hid||it.label];
         if(fireOpen){const gv=parseFloat(s.gun),b=parseFloat(s.brl),t=parseTwist(s.tw);x.push(gv>0?gv:0,c.barrel_in&&b>0?b:0,c.barrel_in&&t>0?t:0);while(x.length>3&&!x[x.length-1])x.pop();}
         return x;}),r:ps.filter(([,it])=>it.handload).map(([,it])=>handShare(it.rec))};
@@ -2659,6 +2664,7 @@ function openH2H(pane){
       if(!o.r.length)delete o.r;
       shareLink(`Head to Head: ${rows.map(r=>r.it.label.split("  ·  ")[0]).join(" vs ")}`,shareURL(o));
     };
+    $$("#hshr .shb").onclick=share;box.querySelector(".shrow .shb").onclick=share;
   }
   drawSlots();save();
   // "+ Add a load" adds an empty row and opens nothing (Zeke: it used to copy the last row's
