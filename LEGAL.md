@@ -46,12 +46,6 @@ are estimates made for this app. No catalog text, photos or logos are included.
 ## Third-party software in the release builds
 
 The web app uses no third-party code (its build script uses only the Python standard library).
-The Android app bundles:
-
-| Component | Used in | License |
-|---|---|---|
-| Capacitor (@capacitor/core, android, app, cli) | Android APK | MIT |
-| AndroidX and other Android libraries pulled in by Capacitor | Android APK | Apache 2.0 |
 
 The app icon is drawn by scripts/make_icons.py with the Inter (SIL Open Font
 License 1.1) or DejaVu Sans (Bitstream Vera / public domain) font; drawing

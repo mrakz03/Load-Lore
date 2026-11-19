@@ -105,6 +105,8 @@ The easiest way is the web version at **[loadlore.net](https://loadlore.net)**: 
 
 **Used the Windows or Linux app?** Its last updates were v1.14.x (Nov 2026); everything it did is on the website. Your copy keeps working, but gets no new loads. To move your handloads, press **Back up** in its Handloads tab, then **Restore** in loadlore.net's Settings and choose that file. Saved prices and settings don't carry over. The desktop app's code is kept on the [`desktop` branch](https://github.com/mrakz03/Load-Lore/tree/desktop).
 
+**Used the Android test app?** It ended in Nov 2026 too: open loadlore.net in your phone's browser instead (Back up in the app, then Restore on the site, moves your handloads). Its code is kept on the [`android` branch](https://github.com/mrakz03/Load-Lore/tree/android).
+
 <br>
 
 ## For developers
@@ -118,9 +120,10 @@ data/loads_*.csv              factory loads, one file per category (loads_pcc.cs
 data/ammo_*.csv               cartridge list (cartridges with no factory loads can still hold handloads)
 data/bullets.csv              bullet library for the handload form (weight, diameter, approximate G1 BC)
 assets/                       app icons (drawn by scripts/make_icons.py, needs Pillow)
-.github/workflows/release.yml for a v* tag: publishes the release (Android build kept as a test artifact)
+.github/workflows/release.yml for a v* tag: checks the web build and publishes the release
 .github/workflows/pages.yml   publishes the web version to loadlore.net (GitHub Pages)
-package.json, capacitor.config.json   Android wrapper (Capacitor)
+.github/workflows/check.yml  web check (build + page smoke test) for pull requests
+scripts/check_web.mjs        that smoke test (Playwright)
 sync/                         sync server (Cloudflare Worker + D1) behind the Sync button
 research/                     where each added load came from (pcc_sources.tsv for the carbine loads)
 ```

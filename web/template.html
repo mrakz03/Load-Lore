@@ -1499,15 +1499,13 @@ function backupHand(){
   const d=backupData();
   if(!d.hand.length&&!d.ladders.length&&!d.range.length){alert("You have no handloads, ladder tests or range log entries to back up yet.");return;}
   const txt=JSON.stringify(d,null,1),name=`load_lore_backup_${d.saved}.json`;
-  const native=window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform();
   const [m,close]=modal(`<h3 style="margin:0 0 6px">Back up</h3>
-    <p class="muted" style="margin:0 0 10px">${esc(andList(backupCounts(d)))} in one file. ${native?"Copy it, then paste it into a note or an email to yourself.":"Save the file, or copy the text."} Restore it on any device with “Restore”.</p>
+    <p class="muted" style="margin:0 0 10px">${esc(andList(backupCounts(d)))} in one file. Save the file, or copy the text. Restore it on any device with “Restore”.</p>
     <textarea id="bkt" readonly rows="6" style="width:100%;font-size:.75rem;font-family:monospace;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px">${esc(txt)}</textarea>
-    <div class="btns">${native?"":'<button class="btn p" id="bks">Save file</button>'}<button class="btn ${native?"p":""}" id="bkc">Copy</button><button class="btn" id="bkx">Close</button></div>`);
+    <div class="btns"><button class="btn p" id="bks">Save file</button><button class="btn" id="bkc">Copy</button><button class="btn" id="bkx">Close</button></div>`);
   $("#bkx",m).onclick=close;
   $("#bkc",m).onclick=async()=>{const t=$("#bkt",m);try{await navigator.clipboard.writeText(txt);}catch(e){t.select();document.execCommand("copy");}$("#bkc",m).textContent="Copied ✓";};
-  const sv=$("#bks",m);
-  if(sv)sv.onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"application/json"}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);};
+  $("#bks",m).onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"application/json"}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);};
 }
 // ladder tests / range log entries from a backup: same id replaced, new ones added. [added, replaced]
 function mergeList(list,read,write,ok){
@@ -1937,7 +1935,7 @@ function handDialog(rec,done){
 // a handloader's own ladder test: powder charges in small steps, each one's chronograph
 // velocities, and which charge is steadiest: the flattest stretch of the velocity curve (a
 // "node", where a little more or less powder changes the speed least) and the lowest SD.
-// Kept in its own localStorage key so handload sync can carry it later; web / Android only.
+// Kept in its own localStorage key so handload sync can carry it later; web only.
 const LADDER_KEY="cartridge_calc_ladder_v1";
 function readLadders(){try{const a=JSON.parse(localStorage.getItem(LADDER_KEY)||"[]");return Array.isArray(a)?a.filter(t=>t&&t.id&&Array.isArray(t.charges)):[];}catch(e){return [];}}
 function writeLadders(a){try{localStorage.setItem(LADDER_KEY,JSON.stringify(a));syncSoon();return true;}catch(e){return false;}}
@@ -2171,7 +2169,7 @@ function ladderDialog(t,done,from){
 // what a load really did at the range: the date, the load (a Load Dictionary load or one of your
 // handloads, or a typed one), the firearm, each shot's chronograph velocity and the group sizes,
 // next to the load's listed muzzle velocity (for your barrel, when you give one: atBarrel).
-// Kept in its own localStorage key, carried by sync (SYNC_PARTS "range"); web / Android only.
+// Kept in its own localStorage key, carried by sync (SYNC_PARTS "range"); web only.
 const RANGE_KEY="cartridge_calc_range_v1";
 function readRange(){try{const a=JSON.parse(localStorage.getItem(RANGE_KEY)||"[]");return Array.isArray(a)?a.filter(e=>e&&e.id&&e.cartridge):[];}catch(e){return [];}}
 function writeRange(a){try{localStorage.setItem(RANGE_KEY,JSON.stringify(a));syncSoon();return true;}catch(e){return false;}}
@@ -2343,7 +2341,7 @@ function searchBox(box,items,o){
 }
 // the picker for a searchBox. Phones: a panel up from the bottom with a title, a search bar (the
 // keyboard opens only when it's tapped) and the list; a tap picks and closes it, so do the
-// backdrop, × and the Android back button. anchor {el, input, typed} (mouse / keyboard): the same
+// backdrop, × and the back button. anchor {el, input, typed} (mouse / keyboard): the same
 // panel as a pop-up under anchor.el, the cursor in its search bar; Up/Down move, Enter picks,
 // Esc, Tab or a click outside closes, and the focus goes back to anchor.input
 function pickSheet(items,o,anchor){
@@ -2912,12 +2910,10 @@ function shareLoad(cat,it,o){
   if(it.handload)o.r=handShare(it.rec);
   shareLink(`${it.label}  ·  ${it.cartridge}${it.handload?" (handload)":""}`,shareURL(o));
 }
-// phones: the system share sheet (Capacitor Share in the Android app, navigator.share in a phone
-// browser); PC, or no share sheet: a dialog with the link and a Copy button
+// phones: the system share sheet (navigator.share); PC, or no share sheet: a dialog with the link
+// and a Copy button
 async function shareLink(title,url){
-  const P=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Share;
   try{
-    if(P&&P.share){await P.share({title,text:title,url,dialogTitle:"Share"});return;}
     if(navigator.share&&matchMedia("(pointer: coarse)").matches){await navigator.share({title,text:title,url});return;}
   }catch(e){if(e&&(e.name==="AbortError"||/cancel/i.test(e.message||"")))return;}
   const [m,close]=modal(`<h3 style="margin:0 0 4px">Share</h3><p class="muted" style="margin:0 0 12px">${esc(title)}</p>
@@ -2989,7 +2985,7 @@ function openShared(hash){
   return true;
 }
 
-let openModalClose=null;   // the open dialog's close(), for the Android back button
+let openModalClose=null;   // the open dialog's close(), for the back button (popstate)
 function modal(inner,cls){   // cls "full": a form that fills the phone screen, Save pinned at the bottom
   const m=el(`<div class="modal${cls?" "+cls:""}"><div class="card">${inner}</div></div>`);
   document.body.appendChild(m);document.body.style.overflow="hidden";
@@ -3003,22 +2999,6 @@ $("#ver").textContent=VERSION_TEXT;
 // start on the page the address names (a reload, or a link to #settings), else Home
 if(!openShared(location.hash)){const [m,c,sub]=navFrom(history.state&&history.state.app?history.state:null);navigate(m,c,sub,"replace");}
 syncSoon(0);   // pick up changes made on the other devices
-// Android back button (Capacitor App plugin): close a dialog, then go back to the previous page
-// (the same history the browser's back arrow uses); with no earlier page, step up the menus
-// (category -> category list -> Home); only Home closes the app
-(function(){
-  const AppPlugin=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
-  if(!AppPlugin||!AppPlugin.addListener)return;
-  AppPlugin.addListener("backButton",()=>{
-    if(openModalClose){openModalClose();return;}
-    if(NAV.mode==="home")AppPlugin.exitApp();
-    else if(history.state&&history.state.depth>0)history.back();
-    else if(NAV.cat)navigate("loads",null,null,"replace");
-    else if(NAV.mode==="ladder"&&NAV.sub)navigate("ladder",null,null,"replace");
-    else if(NAV.mode!=="bench"&&BENCH_MODES.includes(NAV.mode))navigate("bench",null,null,"replace");
-    else navigate("home",null,null,"replace");
-  });
-})();
 </script>
 </body>
 </html>

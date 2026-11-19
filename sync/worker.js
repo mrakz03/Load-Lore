@@ -1,5 +1,5 @@
 // Load Lore sync: keeps a copy of a user's handloads, favorite loads and prices under a sync code,
-// so the web site and the Android app on different devices can share them. No accounts: the code
+// so the web site on different devices can share them. No accounts: the code
 // (12 random letters / digits, about 59 bits) is the only key, so it works like a password.
 // Only a SHA-256 hash of the code is stored, never the code itself.
 //
