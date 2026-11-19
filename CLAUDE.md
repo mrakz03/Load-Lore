@@ -278,6 +278,12 @@ into web/www (Capacitor wraps it as an APK in CI).
   middle), My Bench, Settings; the PC sidebar has the Load Dictionary above Head to Head. Web Home (Zeke, Nov 17 2026)
   is two big cards matching the sidebar groups (HOME_GROUPS: Loads = Load Dictionary + Head to Head; My Bench =
   Handloads, Ladder tests, Favorite loads with counts; its heading opens #bench). Desktop Home keeps TOOLS.
+- Phone polish (Nov 19 2026, Zeke): phones (<900 px) show the app name as one slim line (hidden on Home,
+  body[data-mode]); the dictionary title is just the category on phones (h2 .ttl); compact category cards;
+  purpose chips (#lp) one sideways-scrolling row on phones; closed phone load cards carry a muted
+  "fps · ft-lbs · price" line (.mfig); velocity / energy use fmt0 (commas) everywhere; handload, ladder and
+  range forms fill the phone screen with Save / Cancel pinned (modal(inner,"full")); My Bench counts sit on
+  the title line like Home's. Head to Head's Share button: picker card on PC, after the results on phones.
 - Menu clean-up (Nov 16 2026, Zeke; web / Android, desktop unchanged): each page is reached from one place.
   My Bench (#bench, showBench; BENCH list, BENCH_MODES) holds Handloads, Ladder tests, Range log and Favorite loads
   as cards with counts (benchCounts); their pages have "‹ My Bench" back links and the phone's My Bench

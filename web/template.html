@@ -74,8 +74,8 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 /* My Bench cards: icon beside the text on phones too, so all four fit on one screen */
 .feat.bench{grid-template-columns:1fr;gap:10px}
 .feat.bench .fcard{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:2px;padding:14px 16px;border-radius:12px}
-.feat.bench .fcard .ic{grid-row:span 3;width:36px;height:36px;border-radius:9px}.feat.bench .fcard .ic svg{width:20px;height:20px}
-.feat.bench .fcard b{font-size:1rem}.feat.bench .fcard span{font-size:.85rem}.feat.bench .fcard .cnt{grid-column:2;margin-top:2px;font-size:.72rem;font-weight:600}
+.feat.bench .fcard .ic{grid-row:span 2;width:36px;height:36px;border-radius:9px}.feat.bench .fcard .ic svg{width:20px;height:20px}
+.feat.bench .fcard b{font-size:1rem}.feat.bench .fcard span{font-size:.85rem}.feat.bench .fcard b .cnt{margin-left:4px;font-size:.72rem;font-weight:600;color:var(--accent)}   /* on the title line, like Home (Zeke, Nov 19 2026) */
 .benchnote{color:var(--muted);font-size:.85rem;margin:14px 0 0}.benchnote .link{font-size:inherit;padding:0}
 /* Home's two group cards (Loads, My Bench): a heading, then a row per page split by thin lines */
 .hgroups{display:grid;grid-template-columns:1fr;gap:14px}
@@ -90,7 +90,7 @@ button.hgh{cursor:pointer}.hgh .chev{color:var(--muted);font-weight:400}
 .hrow .ic svg{width:20px;height:20px;stroke:var(--on-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .hrow b{font-size:1rem}.hrow span{color:var(--muted);font-size:.85rem;line-height:1.4}
 .hrow .cnt{color:var(--accent);font-weight:600;font-size:.72rem;margin-left:4px}   /* counts a step under the muted text (Zeke, Nov 19 2026); My Bench page matches */
-.pick{display:grid;grid-template-columns:1fr;gap:12px}
+.pick{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:560px){.feat,.pick{grid-template-columns:1fr 1fr}.pick .cat.grp,.pick .cat.child{grid-column:1/-1}}   /* two columns: a drop-down on its own rows */
 @media(min-width:900px){
   body{padding:0}
@@ -129,6 +129,8 @@ button.hgh{cursor:pointer}.hgh .chev{color:var(--muted);font-weight:400}
 .lc .top{display:flex;gap:10px;align-items:flex-start}
 .lc .rk{font-weight:800;color:var(--muted);min-width:2.2em;font-size:.9rem;padding-top:2px}
 .lc .nm{flex:1;min-width:0;font-weight:700;line-height:1.3;word-break:break-word}
+.lc .mfig{color:var(--muted);font-size:.82rem;margin-top:6px;font-variant-numeric:tabular-nums}   /* phones: speed, energy, price without a tap (Zeke, Nov 19 2026) */
+@media(min-width:900px){#lres .lc .mfig{display:none}}
 .lc .st{display:flex;flex-wrap:wrap;gap:4px 14px;margin:6px 0 0 calc(2.2em + 10px);font-size:.85rem;color:var(--muted)}
 .lc .st b{color:var(--text);font-weight:600}
 .lc .nm .wt{white-space:nowrap}
@@ -226,6 +228,10 @@ button.hgh{cursor:pointer}.hgh .chev{color:var(--muted);font-weight:400}
 .chips button{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:99px;padding:8px 13px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;min-height:38px}
 .chips button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .chips button small{opacity:.75;font-weight:600;margin-left:3px}
+@media(max-width:600px){   /* phones: the purpose chips are one row that scrolls sideways (Zeke, Nov 19 2026) */
+  #lp{flex-wrap:nowrap;overflow-x:auto;margin-left:-18px;margin-right:-18px;padding:0 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #lp::-webkit-scrollbar{display:none}#lp button{flex:none}
+}
 .sortrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 @media(max-width:480px){.sortrow{grid-template-columns:1fr}}
 .pchk{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px}
@@ -239,15 +245,16 @@ button.hgh{cursor:pointer}.hgh .chev{color:var(--muted);font-weight:400}
 
 h1{font-size:1.45rem;margin:0}
 h2{font-size:1.45rem;margin:6px 0 0}
+@media(max-width:600px){h2 .ttl{display:none}}   /* phones: the category name alone; the tab says Dictionary */
 .muted{color:var(--muted)}
 .sub{color:var(--muted);margin:4px 0 18px;font-size:.95rem}
-.cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;color:var(--text);cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:6px;min-height:118px}
+.cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 16px;text-align:left;color:var(--text);cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:2px}
 .cat:active{background:var(--surface2);border-color:var(--accent)}
 @media(hover:hover){.cat:hover{background:var(--surface2);border-color:var(--accent)}}   /* phones: no hover left stuck on a tapped card */
 .cat.child{margin-left:28px}   /* Pistol / Revolver and Pistol Caliber Carbine, under Handgun */
-.cat b{font-size:1.1rem}.cat span.b{color:var(--muted);font-size:.85rem}.cat span.c{color:var(--accent);font-size:.78rem;font-weight:700;margin-top:auto}
+.cat b{font-size:1.05rem}.cat span.b{color:var(--muted);font-size:.85rem}.cat span.c{color:var(--accent);font-size:.78rem;font-weight:700;margin-top:6px}
 @media(min-width:900px){   /* PC: compact category cards like the desktop app's */
-  .cat{padding:14px 18px;min-height:0;gap:2px}
+  .cat{padding:14px 18px}
   .cat b{font-size:1rem}.cat span.c{font-size:.76rem;margin-top:8px}
 }
 .link{background:none;border:0;color:var(--accent);font:inherit;font-weight:700;font-size:.9rem;padding:6px 0;cursor:pointer}
@@ -288,6 +295,12 @@ hr{border:0;border-top:1px solid var(--border);margin:10px 0}
 .note{font-size:.78rem;color:var(--muted);line-height:1.45;margin-top:8px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:16px;z-index:10}
 .modal .card{width:100%;max-width:640px;margin:auto}
+@media(max-width:600px){   /* phones: forms fill the screen, Save / Cancel stay in view at the bottom (Zeke, Nov 19 2026) */
+  .modal.full{padding:0;background:var(--surface)}
+  .modal.full>.card{max-width:none;min-height:100%;margin:0;border:0;border-radius:0;padding:max(16px,env(safe-area-inset-top)) 16px 0}
+  .modal.full>.card>.btns:last-child{position:sticky;bottom:0;z-index:2;background:var(--surface);margin:18px -16px 0;padding:12px 16px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--border)}
+  .modal.full>.card>.btns:last-child .btn.p{flex:1}
+}
 .three{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
 .help{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.4}
 .tblwrap .pc{display:none}
@@ -318,7 +331,10 @@ input.hoth{margin-top:6px}
 .hbtns .btn.d{color:var(--danger)}
 /* phone: a line under the app name, Home and the two menus sit a little lower */
 @media(max-width:899px){
-  .brand{border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:14px}
+  .brand{border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px}
+  /* one slim line: "In Like Flint  Load Lore" with the version at the right; Home has its own title (Zeke, Nov 19 2026) */
+  .brand>div{display:flex;align-items:baseline;gap:6px;width:100%}.brand b{font-size:.95rem}.brand .ver{margin:0 0 0 auto}
+  body[data-mode=home] .brand{display:none}
   /* Home and the category list sit centred between the header and the bottom tabs (Zeke,
      Oct 2026); taller than the space, they start at the top and scroll */
   .shell{display:flex;flex-direction:column;min-height:calc(100vh - max(16px,env(safe-area-inset-top)) - 84px - env(safe-area-inset-bottom));min-height:calc(100dvh - max(16px,env(safe-area-inset-top)) - 84px - env(safe-area-inset-bottom))}
@@ -1092,7 +1108,8 @@ addEventListener("popstate",e=>{
 function navigate(mode,cat,hid,how){   // hid: the handload the Handloads tab opens, or the ladder test to open
   if(app._leave){try{app._leave();}catch(e){}}
   app._leave=null;app.onkeydown=null;
-  NAV.mode=mode;NAV.cat=mode==="loads"?(cat||null):null;   // Head to Head has no category
+  NAV.mode=mode;NAV.cat=mode==="loads"?(cat||null):null;
+  document.body.dataset.mode=mode;   // phones hide the header on Home   // Head to Head has no category
   NAV.sub=mode==="ladder"?(hid||null):null;
   if(how!=="pop")navRecord(how);
   if(NAV.cat&&NAV.cat.group)OPEN_GROUPS.add(NAV.cat.group);   // back on the list, its drop-down is open
@@ -1134,7 +1151,7 @@ function showBench(){
   document.title=`${APP_TITLE} — My Bench`;app.classList.remove("dict","h2hp","handp","wide","home","picker");app.classList.add("home");
   const cnt=benchCounts();
   app.innerHTML=`<div class="phead"><h2>My Bench</h2><p class="sub">Your own loads and notes, saved on this device.</p></div>
-  <div class="feat bench">${BENCH.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t}</b><span>${b}</span><span class="cnt">${cnt[k]}</span></button>`).join("")}</div>
+  <div class="feat bench">${BENCH.map(([k,t,b])=>`<button class="fcard" data-go="${k}"><div class="ic">${ICON[k]}</div><b>${t} <span class="cnt">${cnt[k]}</span></b><span>${b}</span></button>`).join("")}</div>
   <p class="benchnote">Sync, back up and restore are in <button class="link" data-go="settings">Settings ›</button></p>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
 }
@@ -1208,7 +1225,7 @@ function showFavs(){
     const edited=!it.handload&&typeof readPrices()[priceKey(c,it)]==="number";
     const payload=c.show_oz?`${it.bullet_gr.toFixed(0)} gr (${(it.bullet_gr/GRAINS_PER_OZ).toFixed(2)} oz)`:`${g(it.bullet_gr)} gr`;
     const facts=[it.handload?"":payload,c.grain_style?testBarrelText(it):"",r.dist?`at ${g(r.dist)} yd`:""].filter(Boolean).join("  ·  ");
-    const tiles=[["Velocity",r.st.velocity.toFixed(0)+" fps","velocity"],["Energy",r.st.energy.toFixed(0)+" ft-lbs","energy"],["Recoil",r.st.recoil.toFixed(1)+" ft-lbs","recoil"],["Cost",money(r.st.cost)+(edited?" ✎":""),"cost"]]
+    const tiles=[["Velocity",fmt0(r.st.velocity)+" fps","velocity"],["Energy",fmt0(r.st.energy)+" ft-lbs","energy"],["Recoil",r.st.recoil.toFixed(1)+" ft-lbs","recoil"],["Cost",money(r.st.cost)+(edited?" ✎":""),"cost"]]
       .concat(c.terminal?[["Taylor KO",r.st.taylor.toFixed(1),"taylor"],["HITS",`${r.st.hits.toFixed(0)} <small>${hitsClass(r.st.hits)}</small>`,"hits"]]:[]);
     const note=it.handload?SOURCE_NOTES.handload:`${SOURCE_NOTES[it.source]||DEFAULT_SOURCE_NOTE} Catalog price estimate: $${it.default_cost.toFixed(2)}.`;
     return `<div class="fdet"><div class="psub">(${esc(facts)})</div>
@@ -1232,8 +1249,8 @@ function showFavs(){
         const r=handGrade(c,it),k=pickKey(c,it),use=it.handload?"Handload":(it.purpose||it.group||"—");
         const open=F.open===k;
         return `<div class="lc${it.handload?" hl":""}${open?" open":""}" data-k="${esc(k)}" tabindex="0" role="button" aria-expanded="${open}" aria-label="${esc(it.load)}: show its figures"><div class="top"><div class="nm">${esc(it.load)}${gs?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}<span class="chip">${esc(use)}</span></div>${GRADES?`<div class="sc">${badge(r.grade)}</div>`:""}${favBtn(k)}</div>
-          <div class="trow"><span class="ln">${starName(it.load,k)}</span><span>${gs?g(it.bullet_gr):esc(shotSize(it)[2])}</span><span>${esc(use)}</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
-          <div class="st"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span>${r.st.cost==null?"no cost given":`<b>${money(r.st.cost)}</b> a round`}</span><span>at ${g(r.dist)} yd</span></div>${open?favDetail(c,it,r):""}</div>`;}).join("")}</div>`;}).join("");
+          <div class="trow"><span class="ln">${starName(it.load,k)}</span><span>${gs?g(it.bullet_gr):esc(shotSize(it)[2])}</span><span>${esc(use)}</span><span>${fmt0(r.st.velocity)} fps</span><span>${fmt0(r.st.energy)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
+          <div class="st"><span><b>${fmt0(r.st.velocity)}</b> fps</span><span><b>${fmt0(r.st.energy)}</b> ft-lbs</span><span>${r.st.cost==null?"no cost given":`<b>${money(r.st.cost)}</b> a round`}</span><span>at ${g(r.dist)} yd</span></div>${open?favDetail(c,it,r):""}</div>`;}).join("")}</div>`;}).join("");
     wireFavs($("#flist"),()=>{if(!favItems().some(([c,it])=>pickKey(c,it)===F.open))F.open=null;});
     $("#flist").querySelectorAll(".lc").forEach(el=>{
       const p=all.find(([c,it])=>pickKey(c,it)===el.dataset.k);if(!p)return;const [c,it]=p;
@@ -1256,7 +1273,7 @@ function openCategory(cat,tab){
   tab=tab||"loads";
   document.title=`${APP_TITLE} — ${catName(cat)}`;
   app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide","dict");
-  app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2>${toolTitle(tab)} · ${esc(catName(cat))}</h2></div><div id="pane"></div>`;
+  app.innerHTML=`<div class="phead"><button class="link back" data-back>‹&nbsp; Categories</button><h2><span class="ttl">${toolTitle(tab)} · </span>${esc(catName(cat))}</h2></div><div id="pane"></div>`;
   $("[data-back]",app).onclick=()=>navigate(tab);
   openLoads(cat,$("#pane",app));
 }
@@ -1378,8 +1395,8 @@ function showHand(openId){
       const bullet=[rec.bullet_maker,rec.bullet].filter(Boolean).join(" ")||"Bullet";
       return `<div class="lc hl ${open?"open":""}" data-id="${esc(rec.id)}"><div class="top"><div class="nm">${esc(it.load)}</div>
         ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">#${r.rank} of ${r.peers}</span></div>`:""}</div>
-        <div class="trow"><span class="ln">${esc(it.load)}</span><span class="bp">${esc(bullet)} · ${g(it.bullet_gr)} gr</span><span class="bp">${esc(rec.powder||"—")} · ${g(it.powder_gr)} gr</span><span>${r.st.velocity.toFixed(0)} fps</span><span>${r.st.energy.toFixed(0)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
-        <div class="st" style="margin-left:0"><span><b>${r.st.velocity.toFixed(0)}</b> fps</span><span><b>${r.st.energy.toFixed(0)}</b> ft-lbs</span><span>${r.st.cost==null?"no cost given":`<b>${money(r.st.cost)}</b> a round`}</span><span>at ${g(r.dist)} yd</span></div>
+        <div class="trow"><span class="ln">${esc(it.load)}</span><span class="bp">${esc(bullet)} · ${g(it.bullet_gr)} gr</span><span class="bp">${esc(rec.powder||"—")} · ${g(it.powder_gr)} gr</span><span>${fmt0(r.st.velocity)} fps</span><span>${fmt0(r.st.energy)} ft-lbs</span><span>${money(r.st.cost)}</span>${GRADES?`<span>${badge(r.grade)}</span>`:""}</div>
+        <div class="st" style="margin-left:0"><span><b>${fmt0(r.st.velocity)}</b> fps</span><span><b>${fmt0(r.st.energy)}</b> ft-lbs</span><span>${r.st.cost==null?"no cost given":`<b>${money(r.st.cost)}</b> a round`}</span><span>at ${g(r.dist)} yd</span></div>
         ${open?`<div class="hdet">
           <span>Bullet</span><span>${esc(bullet)} · ${g(it.bullet_gr)} gr${rec.diameter_in?` · ${g(+rec.diameter_in)} in`:""} · BC ${g(it.bc_g1)}</span>
           <span>Powder</span><span>${rec.powder?esc(rec.powder)+" · ":""}${g(it.powder_gr)} gr</span>
@@ -1726,7 +1743,7 @@ function handDialog(rec,done){
     <div class="g3"><div><label class="l">BRASS $ EACH</label><input id="hcs" inputmode="decimal"></div><div><label class="l">BRASS REUSES</label><input id="hcu" inputmode="decimal"></div><div><label class="l">OR TOTAL $ / ROUND</label><input id="hct" inputmode="decimal"></div></div>
     <div class="costlbl" id="hcost"></div></div></details>
     <div class="safety"><b class="dis">DISCLAIMER</b>${esc(SOURCE_NOTES.handload)}</div>
-    <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button><button class="btn" id="hclear">Clear</button></div>`);
+    <div class="btns"><button class="btn p" id="hsave">${edit?"Save changes":"Save handload"}</button><button class="btn" id="hcancel">Cancel</button><button class="btn" id="hclear">Clear</button></div>`,"full");
   const q=x=>$(x,m);
   const isNew=()=>q("#hc").value===NEWC;
   const diaOf=c=>{
@@ -2057,7 +2074,7 @@ function ladderDialog(t,done,from){
     <div class="g2"><div><label class="l">TEST NAME <span class="opt">(optional)</span></label><input id="lnm" autocomplete="off"></div><div><label class="l">DATE</label><input id="ldt" type="date"></div></div>
     <label class="l" style="margin-top:14px">NOTES (BRASS, WEATHER...) <span class="opt">(optional)</span></label><input id="lno" autocomplete="off">
     <div class="safety"><b class="dis">YOUR OWN RESULTS</b>${esc(LADDER_NOTE)}</div>
-    <div class="btns"><button class="btn p" id="lsv">${edit?"Save changes":"Start test"}</button><button class="btn" id="lcx">Cancel</button></div>`);
+    <div class="btns"><button class="btn p" id="lsv">${edit?"Save changes":"Start test"}</button><button class="btn" id="lcx">Cancel</button></div>`,"full");
   const q=x=>$(x,m),touch=matchMedia("(pointer:coarse)").matches,cb=q("#lcb");
   const showCart=()=>{cb.textContent=pk?pk.cart:"Choose a cartridge";cb.classList.toggle("ph",!pk);};
   const o={text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>catName(o.cat),none:"cartridge",
@@ -2189,7 +2206,7 @@ function rangeDialog(e,done,from,pre){
     <label class="l" style="margin-top:14px">GROUPS (IN) <span class="opt">(optional)</span></label><input id="rgp" autocomplete="off" placeholder="e.g. 0.8 1.1">
     <label class="l" style="margin-top:14px">NOTES (WEATHER, ZERO...) <span class="opt">(optional)</span></label><input id="rno" autocomplete="off">
     <div class="safety"><b class="dis">YOUR OWN RESULTS</b>${esc(RANGE_NOTE)}</div>
-    <div class="btns"><button class="btn p" id="rsv">${edit?"Save changes":"Save"}</button><button class="btn" id="rcx">Cancel</button>${edit?`<button class="btn d" id="rdl">Delete</button>`:""}</div>`);
+    <div class="btns"><button class="btn p" id="rsv">${edit?"Save changes":"Save"}</button><button class="btn" id="rcx">Cancel</button>${edit?`<button class="btn d" id="rdl">Delete</button>`:""}</div>`,"full");
   const q=x=>$(x,m),cb=q("#rcb"),lb=q("#rlb");
   const loadsOf=()=>pk&&pk.cat&&state.detail[pk.cat.title]?(syncHand(pk.cat),state.detail[pk.cat.title].filter(x=>x.cartridge===pk.cart&&!x.peek)
     .sort((a,b)=>(b.handload?1:0)-(a.handload?1:0)||lineCmp({it:a},{it:b}))):[];
@@ -2476,7 +2493,7 @@ function openLoads(cat,pane){
     const tcols=[GRADES&&["#","score",r=>r.rank,"auto"],["Load","brand",r=>`${r.it.peek?esc(r.it.load):starName(cat.grain_style?r.it.load:makeLabel(r.it,cat),pickKey(cat,r.it))}${r.it.handload?`<span class="chip">${r.it.peek?"Shared handload":"Handload"}</span>`:""}${warn(r.it)}`,"minmax(9em,1fr)"]]
       .concat(cat.grain_style?[["Grains","grain",r=>g(r.it.bullet_gr),"auto"],["Barrel",null,r=>out.barrel||r.it.barrel_in?g(out.barrel||r.it.barrel_in)+'"':"—","auto"],["Use",null,r=>esc(purposeOf(r.it)||"—"),"auto"]]
         :[["Shot","shot",r=>esc(shotSize(r.it)[2]),"auto"],[cat.payload_col,null,r=>g(r.st.weight),"auto"]])
-      .concat([["Velocity","velocity",r=>r.st.velocity.toFixed(0),"auto"],["Energy","energy",r=>r.st.energy.toFixed(0),"auto"],["Recoil","recoil",r=>r.st.recoil.toFixed(1),"auto"]])
+      .concat([["Velocity","velocity",r=>fmt0(r.st.velocity),"auto"],["Energy","energy",r=>fmt0(r.st.energy),"auto"],["Recoil","recoil",r=>r.st.recoil.toFixed(1),"auto"]])
       .concat(cat.terminal?[["Taylor","taylor",r=>r.st.taylor.toFixed(1),"auto"],["HITS","hits",r=>r.st.hits.toFixed(0),"auto"]]:[])
       .concat([["Price","cost",r=>money(r.st.cost)+(!r.it.handload&&typeof L.prices[priceKey(cat,r.it)]==="number"?" ✎":""),"auto"]])
       .concat(GRADES?[["Score","score",r=>r.overall.toFixed(0),"auto"],["Grade","score",r=>badge(r.grade),"auto"]]:[]).filter(Boolean);
@@ -2491,10 +2508,11 @@ function openLoads(cat,pane){
       return `<div class="lc ${open?"open":""} ${it.handload?"hl":""}" data-i="${esc(keyOf(it))}"><div class="top">${GRADES?`<span class="rk">#${r.rank}</span>`:""}
         <div class="nm">${open?`<small class="ct">${esc(it.cartridge||$$("#lc").value)}</small>`:""}${esc(it.load)}${cat.grain_style?` · <span class="wt">${g(it.bullet_gr)} gr</span>`:""}${it.handload?`<span class="chip">${it.peek?"Shared handload":"Handload"}</span>`:""}${purposeOf(it)&&L.purpose==="All"&&!it.handload?`<span class="chip">${esc(purposeOf(it))}</span>`:""}${warn(it)}</div>
         ${GRADES?`<div class="sc">${badge(r.grade)}<span class="n">${r.overall.toFixed(0)}</span></div>`:""}${it.peek?"":favBtn(pickKey(cat,it))}</div>
+        ${open?"":`<div class="mfig">${fmt0(r.st.velocity)} fps · ${fmt0(r.st.energy)} ft-lbs · ${money(r.st.cost)}</div>`}
         <div class="trow">${tcols.map(c=>`<span${c[0]==="Load"?' class="ln"':c[0]==="#"?' class="rk"':""}>${c[2](r)}</span>`).join("")}</div>
         ${open?`<div class="det">
           <div class="pdet"><div class="psub">${esc([it.cartridge||$$("#lc").value,it.handload?"":payload,cat.grain_style?(out.barrel?`estimated figures for your ${g(out.barrel)} in barrel`:testBarrelText(it)):"",it.sg?`stability ${it.sg.toFixed(2)} in a 1:${g(it.twist)} twist: ${stabilityText(it.sg)}`:""].filter(Boolean).join("  ·  "))}</div>
-          <div class="tiles">${[["Velocity",r.st.velocity.toFixed(0)+" fps","velocity"],["Energy",r.st.energy.toFixed(0)+" ft-lbs","energy"],["Recoil",r.st.recoil.toFixed(1)+" ft-lbs","recoil"],["Price",money(r.st.cost)+(edited?" ✎":""),"cost"]]
+          <div class="tiles">${[["Velocity",fmt0(r.st.velocity)+" fps","velocity"],["Energy",fmt0(r.st.energy)+" ft-lbs","energy"],["Recoil",r.st.recoil.toFixed(1)+" ft-lbs","recoil"],["Price",money(r.st.cost)+(edited?" ✎":""),"cost"]]
             .concat(cat.terminal?[["Taylor KO",r.st.taylor.toFixed(1),"taylor"],["HITS",`${r.st.hits.toFixed(0)} <small>(${hitsClass(r.st.hits)})</small>`,"hits"]]:[])
             .map(([l,v,k])=>`<div class="tile"><span class="l">${l}</span><span class="tv">${l==="HITS"?v:esc(v)}${GRADES?fbadge(r.sc[k]):""}</span></div>`).join("")}${it.handload?"":`<button class="srcb${L.srcOpen?" on":""}">About these figures</button>`}</div></div>
           ${it.handload?"":`<div class="row fr"><span class="muted">${cat.grain_style?"Bullet weight":"Payload"}</span><span class="v">${payload}</span><span style="width:32px"></span></div>`}
@@ -2502,8 +2520,8 @@ function openLoads(cat,pane){
           ${out.barrel?`<div class="row fr"><span class="muted">Figures for</span><span class="v">${g(out.barrel)} in barrel <small class="muted">(estimate)</small></span><span style="width:32px"></span></div>`:""}
           ${it.sg?`<div class="row fr"><span class="muted">Spin stability</span><span class="v">${it.sg.toFixed(2)} in 1:${g(it.twist)} · ${esc(stabilityText(it.sg))} <small class="muted">(estimate)</small></span><span style="width:32px"></span></div>`:""}
           ${purposeOf(it)?`<div class="row fr"><span class="muted">Purpose</span><span class="v">${esc(purposeOf(it))}</span><span style="width:32px"></span></div>`:""}
-          <div class="row fr"><span class="muted">Velocity</span><span class="v">${r.st.velocity.toFixed(0)} fps</span>${fb("velocity")}</div>
-          <div class="row fr"><span class="muted">Energy</span><span class="v">${r.st.energy.toFixed(0)} ft-lbs</span>${fb("energy")}</div>
+          <div class="row fr"><span class="muted">Velocity</span><span class="v">${fmt0(r.st.velocity)} fps</span>${fb("velocity")}</div>
+          <div class="row fr"><span class="muted">Energy</span><span class="v">${fmt0(r.st.energy)} ft-lbs</span>${fb("energy")}</div>
           <div class="row fr"><span class="muted">Recoil</span><span class="v">${r.st.recoil.toFixed(1)} ft-lbs</span>${fb("recoil")}</div>
           ${it.handload?(()=>{const r0=it.rec,cp=costParts(r0),hasP=cp.b||cp.p||cp.pr||cp.br;return `<div class="row"><span class="muted">Bullet</span><span class="v">${esc([r0.bullet_maker,r0.bullet].filter(Boolean).join(" ")||"custom")}, ${g(it.bullet_gr)} gr</span><span style="width:32px"></span></div>
           <div class="row"><span class="muted">Powder</span><span class="v">${esc(r0.powder||"—")} ${g(it.powder_gr)} gr</span><span style="width:32px"></span></div>
@@ -2898,8 +2916,8 @@ function openShared(hash){
 }
 
 let openModalClose=null;   // the open dialog's close(), for the Android back button
-function modal(inner){
-  const m=el(`<div class="modal"><div class="card">${inner}</div></div>`);
+function modal(inner,cls){   // cls "full": a form that fills the phone screen, Save pinned at the bottom
+  const m=el(`<div class="modal${cls?" "+cls:""}"><div class="card">${inner}</div></div>`);
   document.body.appendChild(m);document.body.style.overflow="hidden";
   const close=()=>{m.remove();document.body.style.overflow="";if(openModalClose===close)openModalClose=null;};
   openModalClose=close;
