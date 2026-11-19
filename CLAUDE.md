@@ -95,15 +95,17 @@ into web/www (Capacitor wraps it as an APK in CI).
   for lever guns / carbines (Hammerdown, Syntech PCC, Gold Dot Carbine, LEVERevolution, American
   Lever Range) are PCC only, never in loads_handgun.csv. .357 / .44 Magnum left Centerfire Rifle
   (Zeke): MOVED_CATEGORIES moves saved handloads and prices. .22 LR / .22 WMR stay in Handgun.
-- .410 Handgun (Nov 19 2026, Zeke): a third Handgun drop-down entry (Category ".410 Handgun", group
-  "Handgun", shotgun-style: grain_style / terminal False, payload, scored within load type, 2.5 lb gun,
-  no barrel / twist, 10 yd steps to 100). data/loads_410_handgun.csv holds ONLY .410 shells their makers
-  sell for .410 handguns (Judge / Governor), with the makers' handgun velocities: Federal Personal Defense
-  .410 Handgun (moved out of Shotgun: their figures are handgun ones; MOVED_CATEGORIES has per-load
-  "category|cartridge|label" keys, movedCat takes the label, so saved favorites / prices / shares follow),
-  Winchester Defender PDX1, Hornady Critical Defense Triple Defense. Field / target / general defense .410
-  shells (Remington Ultimate Defense, Winchester Super-X Buffered: shotgun-barrel figures) stay in Shotgun.
-  Not handload categories (HAND_KINDS = grain_style). ammo_410_handgun.csv is a header only.
+- .410 handgun loads (Nov 19 2026, Zeke): cartridge ".410 Bore" in Pistol / Revolver (loads_handgun.csv; Zeke
+  first had them as their own ".410 Handgun" drop-down entry, then wanted them in the Pistol / Revolver cartridge
+  list). ONLY shells their makers sell for .410 handguns (Judge / Governor), with the makers' handgun velocities:
+  Federal Personal Defense .410 Handgun (moved out of Shotgun: handgun figures), Winchester Defender PDX1, Hornady
+  Critical Defense Triple Defense; names give shell length, shot and pellets, bullet_gr = payload. Field / target /
+  general defense .410 shells (Remington Ultimate Defense, Winchester Super-X Buffered: shotgun-barrel figures) stay
+  in Shotgun. A shotshell cartridge (SHOT_CART: "Gauge" / "Bore") has no bullet diameter, so computeStats gives
+  Taylor KO / HITS null (left out of the grade, "—" in tables, no tiles) and handCarts leaves it out (no handloads).
+  Barrel math uses the standard revolver exponent (STANDARD_REVOLVERS), longest barrel 6.5 in (Judge), 2.5 lb gun.
+  MOVED_LOADS (old "category|cartridge|label" -> new key; movedLoad in the web) carries saved favorites, prices and
+  shared links of the moved Federal loads.
 - Settings (Oct 2026, issue #17): theme, text size and the S-F grades switch live on one Settings
   page (show_settings / showSettings), reached from the bottom-left of the sidebar (a tab on phones),
   in two boxes, Display and About (rows split by thin lines, not one box each). About has a small
