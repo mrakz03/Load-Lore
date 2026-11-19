@@ -248,7 +248,7 @@ into web/www (Capacitor wraps it as an APK in CI).
   device: gives the code) and "Link with a code" (other devices: loads combined, nothing deleted), then "Linked devices stay in sync on their own". sync/worker.js
   (Cloudflare Worker + D1, address sync.loadlore.net, deployed with wrangler from sync/) keeps one copy per code, stored
   under the code's SHA-256; 1 MB cap, rate limits, copies unused 2 years removed. The copy holds handloads,
-  ladder tests, favorites and saved prices (SYNC_PARTS; not theme / text size / grades switch). The web keeps cartridge_calc_sync_v1
+  ladder tests, range log, favorites and saved prices (SYNC_PARTS; not theme / text size / grades switch). The web keeps cartridge_calc_sync_v1
   {code, rev, base, at, err}: base = the copy it last agreed on; syncMerge is a 3-way merge per handload id /
   favorite / price key (one side changed: take it; both: this device's; a delete loses to an edit). writeHand,
   writePrices and toggleFav call syncSoon (1.5 s later); also at start, on visibilitychange and online. PUT sends
@@ -263,12 +263,23 @@ into web/www (Capacitor wraps it as an APK in CI).
   (else "No clear flat spot"), its middle charge picked; most consistent = lowest SD of charges with 3+ shots;
   smallest group. SVG chart (mean line, slowest-fastest bars, flat spot shaded). "Make handload" opens
   handDialog prefilled with the chosen charge and its average speed. The test form's "Copy from a handload ›" (only when there are handloads) fills cartridge, bullet, weight, powder and barrel from one, never a charge. LADDER_NOTE: your own results, not load data; the app does not check pressure (the Pressure signs box only records what the user saw, worded "You marked...").
+- Range log (Nov 19 2026, Zeke; web / Android only): My Bench's Range log card opens #range (showRange; no sub-pages:
+  a click on an entry opens rangeDialog to edit / delete it). An entry: cartridge (handCarts or typed), load (a Load
+  Dictionary load or handload of that cartridge, stored as key = pickKey plus its label in "load", or a typed name with
+  key ""), date, distance (yd), firearm, barrel (in), shots (typed velocities, shotStats), groups (typed inches,
+  parseGroups), notes. Kept in localStorage cartridge_calc_range_v1, synced as SYNC_PARTS "range" (old sync copies
+  without it just get an empty part). rangeStats compares the average with the load's listed muzzle speed (atBarrel
+  when a barrel is given: "(estimate)"); groups shown in MOA when a distance is given. The page groups entries by load
+  (most recent first) with a summary line (average fps off listed over all shots, best group). Entry points: "+ New
+  entry", the dictionary's opened load ("Add to range log", bullet categories, not on shared handloads; carries the
+  Firearm setup barrel) and an opened handload's "Add to range log ›" link. Not in Back up / Restore (handloads CSV
+  only) or share links, like ladder tests.
 - Tab order (Oct 2026, Zeke): phones (NAVS) Home, Head to Head, Load Dictionary (the main tool, in the
   middle), My Bench, Settings; the PC sidebar has the Load Dictionary above Head to Head. Web Home (Zeke, Nov 17 2026)
   is two big cards matching the sidebar groups (HOME_GROUPS: Loads = Load Dictionary + Head to Head; My Bench =
   Handloads, Ladder tests, Favorite loads with counts; its heading opens #bench). Desktop Home keeps TOOLS.
 - Menu clean-up (Nov 16 2026, Zeke; web / Android, desktop unchanged): each page is reached from one place.
-  My Bench (#bench, showBench; BENCH list, BENCH_MODES) holds Handloads, Ladder tests and Favorite loads
+  My Bench (#bench, showBench; BENCH list, BENCH_MODES) holds Handloads, Ladder tests, Range log and Favorite loads
   as cards with counts (benchCounts); their pages have "‹ My Bench" back links and the phone's My Bench
   tab stays lit on them. The PC sidebar lists every page in NAVS order under two headings (.nh): LOADS (Load
   Dictionary with its category sub-list, Head to Head) and MY BENCH (the heading opens the My Bench page, then

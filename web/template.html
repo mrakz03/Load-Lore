@@ -376,6 +376,15 @@ button.sopt:focus-visible{border-color:var(--accent)}@media (hover:hover){button
 @media(min-width:900px){#flist .lc>.fdet{grid-column:1/-1;margin:6px 0 4px}#flist .lgrid .lc.open{box-shadow:inset 3px 0 0 var(--accent)}
   .fdet .tiles{display:flex;flex-wrap:wrap;gap:14px clamp(18px,2.4vw,40px)}.fdet .tile .tv{font-size:1.27rem}}
 .hgrp{margin:20px 0 8px;font-size:1rem}.hgrp small{color:var(--muted);font-weight:600}
+/* Range log (Nov 2026): entries grouped by load, each with its speeds, groups and the listed speed */
+.rgrp+.rgrp{margin-top:6px}.rsum{margin:-4px 0 8px;font-size:.85rem}
+.rents{display:grid;gap:10px}
+@media(min-width:720px){.rents{grid-template-columns:1fr 1fr}}
+.rent{display:flex;flex-direction:column;gap:4px;text-align:left;color:var(--text);font:inherit;font-size:.9rem;cursor:pointer}
+.rent .rhd{font-size:.8rem;font-weight:700}.rent .muted{font-size:.85rem}.rent .rdiff{color:var(--accent);font-weight:700;font-size:.85rem}
+@media(hover:hover){.rent:hover{border-color:var(--accent);background:var(--surface2)}}
+.rst{font-size:.82rem;margin-top:6px;min-height:1em}
+.lcart:disabled{opacity:.6;cursor:default}
 /* Ladder tests (Nov 2026): list cards, the summary, the chart and one row per charge */
 .lback{display:block;padding:0 0 6px;font-size:.85rem}
 #llist{display:grid;gap:10px;margin-top:14px}
@@ -972,22 +981,24 @@ const ICON={
   settings:'<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>',
   bench:'<svg viewBox="0 0 24 24"><path d="M3 10h18M5 10v10M19 10v10M5 15h14"/><path d="M8 10V6h3v4M14 10V4h2v6"/></svg>',
   ladder:'<svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M6 20v-5M10 20v-8M14 20v-9M18 20v-9.5"/><path d="M5 9l4-3 4 1.5 6-3.5"/></svg>',
+  range:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',
   favs:'<svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z"/></svg>'};
 // Settings (theme, text size, S-F grades): a tab on phones, the bottom of the sidebar on wide screens
 // the tools: key, title, Home-screen blurb (same as TOOLS in the desktop app)
 const TOOLS=[["loads","Load Dictionary","Every load of a cartridge, factory or your own handload, in one sortable list."],
   ["h2h","Head to Head","Put 2 to 5 loads side by side, even from different cartridges or categories."],
-  ["bench","My Bench","Your handloads, ladder tests and favorite loads, in one place."]];
+  ["bench","My Bench","Your handloads, ladder tests, range log and favorite loads, in one place."]];
 // My Bench's pages: key, title, blurb (Zeke, Nov 16 2026)
 const BENCH=[["hand","Handloads","Build and save your own reloads. They show up in the Load Dictionary and can go head to head."],
   ["ladder","Ladder tests","Log a powder ladder's chronograph speeds and find the flattest spot."],
+  ["range","Range log","Your speeds and groups from the range, next to the listed figures."],
   ["favs","Favorite loads","Loads you starred in the Load Dictionary."]];
 // Home (Zeke, Nov 17 2026): two big cards matching the PC sidebar's groups: [title, blurb, page its
 // heading opens, its pages]
 const HOME_GROUPS=[["Loads","Look up factory loads and compare them.",null,["loads","h2h"]],
-  ["My Bench","Your own loads and notes, saved on this device.","bench",["hand","ladder","favs"]]];
+  ["My Bench","Your own loads and notes, saved on this device.","bench",["hand","ladder","range","favs"]]];
 const toolTitle=k=>(TOOLS.concat(BENCH).find(t=>t[0]===k)||TOOLS[0])[1];
-const BENCH_MODES=["bench","hand","ladder","favs"];
+const BENCH_MODES=["bench","hand","ladder","range","favs"];
 // the menus: [key, title, icon, where]. Phones show the "ph" and shared rows as five tabs, the Load
 // Dictionary (the main tool) in the middle; the PC sidebar shows the shared and "pc" rows in this
 // order, under two headings: Loads, and My Bench (its heading opens the My Bench page)
@@ -1050,7 +1061,7 @@ function drawChrome(){
 // so the browser's back arrow and the phone's back button step back through the app's pages
 // instead of leaving it. how: "pop" (moving through history, add nothing), "replace" (swap
 // this entry), else a new entry. depth counts the app's entries before this one.
-const NAV_MODES=["home","loads","h2h","bench","hand","settings","favs","ladder"];
+const NAV_MODES=["home","loads","h2h","bench","hand","settings","favs","ladder","range"];
 const navState=()=>({mode:NAV.mode,cat:NAV.cat?NAV.cat.title:null,sub:NAV.sub||null});   // sub: the open ladder test
 const navURL=()=>NAV.mode==="home"?location.pathname+location.search:"#"+NAV.mode+(NAV.cat?"/"+encodeURIComponent(NAV.cat.title):NAV.sub?"/"+encodeURIComponent(NAV.sub):"");
 function navRecord(how){
@@ -1087,7 +1098,7 @@ function navigate(mode,cat,hid,how){   // hid: the handload the Handloads tab op
   if(NAV.cat&&NAV.cat.group)OPEN_GROUPS.add(NAV.cat.group);   // back on the list, its drop-down is open
   if(NAV.cat){try{localStorage.setItem("cartridge_calc_cat",NAV.cat.title);}catch(e){}}
   drawChrome();
-  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="bench")showBench();else if(mode==="hand")showHand(hid);else if(mode==="favs")showFavs();else if(mode==="ladder")showLadder(NAV.sub);else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
+  if(mode==="home")showHome();else if(mode==="settings")showSettings();else if(mode==="h2h")showH2H();else if(mode==="bench")showBench();else if(mode==="hand")showHand(hid);else if(mode==="favs")showFavs();else if(mode==="ladder")showLadder(NAV.sub);else if(mode==="range")showRange();else if(NAV.cat)openCategory(NAV.cat,mode);else showPicker(mode);
   window.scrollTo(0,0);
   fitMenu();
 }
@@ -1117,7 +1128,7 @@ function showHome(){
 // My Bench (Zeke, Nov 16 2026): the user's own pages, a card each with a count
 function benchCounts(){
   const n=(x,w,ws)=>`${x.toLocaleString()} ${x===1?w:ws||w+"s"}`;
-  return {hand:n(readHand().length,"handload"),ladder:n(readLadders().length,"test"),favs:n(favCount(),"load")};
+  return {hand:n(readHand().length,"handload"),ladder:n(readLadders().length,"test"),range:n(readRange().length,"entry","entries"),favs:n(favCount(),"load")};
 }
 function showBench(){
   document.title=`${APP_TITLE} — My Bench`;app.classList.remove("dict","h2hp","handp","wide","home","picker");app.classList.add("home");
@@ -1151,7 +1162,7 @@ function showSettings(){
   wireSize(app);wireGrades(app);
   $("#theme2").onchange=e=>applyTheme(e.target.value);
   const syt=()=>{const st=syncState(),el=$("#sytxt");if(!el)return;
-    el.textContent=st?(st.err?st.err:`On${st.at?`, last synced ${syncAgo(st.at)}`:""}`):"Keep handloads, ladder tests, favorites and prices the same on your devices";};
+    el.textContent=st?(st.err?st.err:`On${st.at?`, last synced ${syncAgo(st.at)}`:""}`):"Keep handloads, ladder tests, range log, favorites and prices the same on your devices";};
   syt();
   $("#setsync").onclick=()=>syncDialog(syt);
   $("#setbak").onclick=backupHand;
@@ -1381,7 +1392,7 @@ function showHand(openId){
           ${GRADES?`<span>Grade</span><span style="font-weight:500">${r.grade} · ${r.overall.toFixed(0)}, ranks #${r.rank} of ${r.peers} ${esc(it.cartridge)} loads in the Load Dictionary</span>`:""}
         </div>
         <div class="hbtns"><button class="btn p hedit">Edit</button><button class="btn hdup">Duplicate</button><button class="btn hshare">Share</button><button class="btn d hdel">Delete</button></div>
-        <div class="hlinks"><button class="link hdict">Open in Load Dictionary ›</button><button class="link hh2h">${esc(h2hText(c,it))}</button><button class="link hlad">Start ladder test ›</button></div>`:""}
+        <div class="hlinks"><button class="link hdict">Open in Load Dictionary ›</button><button class="link hh2h">${esc(h2hText(c,it))}</button><button class="link hlad">Start ladder test ›</button><button class="link hrng">Add to range log ›</button></div>`:""}
       </div>`;}).join("")}</div>`).join("");
     $("#hlist").querySelectorAll(".lc").forEach(el=>{
       const id=el.dataset.id,p=shown.find(([,it])=>it.rec.id===id);if(!p)return;const [c,it]=p;
@@ -1394,6 +1405,7 @@ function showHand(openId){
       el.querySelector(".hdict").onclick=()=>{shared[c.title]=Object.assign({},shared[c.title],{goHand:id});navigate("loads",c);};
       // a new ladder test filled in from this handload like "Copy from a handload" (no charge; Zeke, Nov 17 2026)
       el.querySelector(".hlad").onclick=()=>ladderDialog(null,t=>navigate("ladder",null,t.id),it.rec);
+      el.querySelector(".hrng").onclick=()=>rangeDialog(null,()=>navigate("range"),[c,it]);
       el.querySelector(".hh2h").onclick=()=>{const k=pickKey(c,it);if(H2H.includes(k)||H2H.length>=H2H_MAX){navigate("h2h");return;}H2H.push(k);draw();};
     });
     if(openId){const el=$("#hlist .lc.open");if(el)el.scrollIntoView({block:"center"});openId=null;}
@@ -1488,10 +1500,10 @@ var syncTimer=0,syncBusy=null,syncAgain=false,syncApplying=false,syncRedraw=null
 function syncState(){try{const s=JSON.parse(localStorage.getItem(SYNC_KEY)||"null");return s&&s.code?s:null;}catch(e){return null;}}
 function setSyncState(s){try{if(s)localStorage.setItem(SYNC_KEY,JSON.stringify(s));else localStorage.removeItem(SYNC_KEY);}catch(e){}}
 const fmtCode=c=>c.replace(/(.{4})(?=.)/g,"$1-");
-const syncLocal=()=>({v:1,hand:readHand(),favs:[...readFavs()],prices:readPrices(),ladders:readLadders()});
+const syncLocal=()=>({v:1,hand:readHand(),favs:[...readFavs()],prices:readPrices(),ladders:readLadders(),range:readRange()});
 // what the copy holds (an older copy may also hold "inv", the removed Ammo on hand counts: kept as
 // it is, see syncMerge); each part is a set of items by id / key, merged one item at a time
-const SYNC_PARTS=[["hand","list"],["favs","set"],["prices","map"],["ladders","list"]];
+const SYNC_PARTS=[["hand","list"],["favs","set"],["prices","map"],["ladders","list"],["range","list"]];
 // a value as text with every object's keys sorted, so the same item reads the same on every device
 const stable=v=>Array.isArray(v)?"["+v.map(stable).join(",")+"]":v&&typeof v==="object"?"{"+Object.keys(v).sort().filter(k=>v[k]!==undefined).map(k=>JSON.stringify(k)+":"+stable(v[k])).join(",")+"}":JSON.stringify(v===undefined?null:v);
 function syncMaps(d){
@@ -1529,10 +1541,10 @@ function syncApply(d){
   syncApplying=true;
   try{
     writeHand(d.hand);localStorage.setItem(FAV_KEY,JSON.stringify(d.favs));FAVS=null;writePrices(d.prices);
-    writeLadders(d.ladders);
+    writeLadders(d.ladders);writeRange(d.range);
   }catch(e){}
   syncApplying=false;
-  if(!(syncRedraw&&syncRedraw())&&!openModalClose&&(NAV.mode==="hand"||NAV.mode==="favs"||NAV.mode==="bench"||NAV.mode==="ladder"&&!NAV.sub))navigate(NAV.mode,null,null,"replace");
+  if(!(syncRedraw&&syncRedraw())&&!openModalClose&&(NAV.mode==="hand"||NAV.mode==="favs"||NAV.mode==="bench"||NAV.mode==="range"||NAV.mode==="ladder"&&!NAV.sub))navigate(NAV.mode,null,null,"replace");
 }
 async function syncCall(method,code,body){
   const r=await fetch(SYNC_URL+"/v1/sync",{method,cache:"no-store",
@@ -1577,10 +1589,10 @@ function syncAgo(t){
 function syncDialog(after){
   const [m,close]=modal(`<div id="syb"></div>`),box=$("#syb",m);
   let mode="";
-  const counts=()=>{const d=syncLocal(),n=(x,w)=>`${x} ${w}${x===1?"":"s"}`;return `${n(d.hand.length,"handload")}, ${n(d.ladders.length,"ladder test")}, ${n(d.favs.length,"favorite")} and ${n(Object.keys(d.prices).length,"saved price")} on this device`;};
+  const counts=()=>{const d=syncLocal(),n=(x,w)=>`${x} ${w}${x===1?"":"s"}`;return `${n(d.hand.length,"handload")}, ${n(d.ladders.length,"ladder test")}, ${d.range.length} range log entr${d.range.length===1?"y":"ies"}, ${n(d.favs.length,"favorite")} and ${n(Object.keys(d.prices).length,"saved price")} on this device`;};
   // Zeke (Nov 18 2026): say which device starts (makes the code, sends its loads) and which joins
   // (types the code; both devices' loads are combined, nothing deleted), and that it then works both ways
-  const intro=`<p class="muted" style="margin:0 0 10px">Keep your handloads, ladder tests, favorites and prices the same on all your devices.</p>`;
+  const intro=`<p class="muted" style="margin:0 0 10px">Keep your handloads, ladder tests, range log, favorites and prices the same on all your devices.</p>`;
   function draw(){
     const st=syncState();
     if(!SYNC_URL){box.innerHTML=`<h3 style="margin:0 0 6px">Sync between devices</h3><p class="muted">Sync isn't set up in this version.</p><div class="btns"><button class="btn" id="syx">Close</button></div>`;}
@@ -2095,6 +2107,142 @@ function ladderDialog(t,done,from){
   if(!touch)cb.focus();
 }
 
+// ---------- Range log (Zeke, Nov 2026) ----------
+// what a load really did at the range: the date, the load (a Load Dictionary load or one of your
+// handloads, or a typed one), the firearm, each shot's chronograph velocity and the group sizes,
+// next to the load's listed muzzle velocity (for your barrel, when you give one: atBarrel).
+// Kept in its own localStorage key, carried by sync (SYNC_PARTS "range"); web / Android only.
+const RANGE_KEY="cartridge_calc_range_v1";
+function readRange(){try{const a=JSON.parse(localStorage.getItem(RANGE_KEY)||"[]");return Array.isArray(a)?a.filter(e=>e&&e.id&&e.cartridge):[];}catch(e){return [];}}
+function writeRange(a){try{localStorage.setItem(RANGE_KEY,JSON.stringify(a));syncSoon();return true;}catch(e){return false;}}
+const RANGE_NOTE="Listed speeds are the maker's (or your handload's) figures. With your own barrel length they are estimates.";
+// group sizes typed as "0.8 1.1, 0.95": numbers from 0.01 to 100 in
+const parseGroups=s=>String(s||"").split(/[\s,;]+/).map(Number).filter(v=>isFinite(v)&&v>=0.01&&v<=100);
+const moa=(inch,yd)=>yd>0?inch/(1.047*yd/100):null;
+// the entry's load in the Load Dictionary (renamed / moved cartridges follow like favorites), or null
+function rangeLoad(e){
+  const c=CATEGORIES.find(x=>x.title===e.category);
+  if(!c||!e.key||!state.detail[c.title])return null;
+  syncHand(c);const k=savedKey(e.key),it=state.detail[c.title].find(x=>!x.peek&&pickKey(c,x)===k);
+  return it?[c,it]:null;
+}
+// the entry's figures: shots, groups and the listed speed it is compared with
+function rangeStats(e){
+  const s=shotStats(e.shots),gr=parseGroups(e.groups),p=rangeLoad(e),out={s,gr,p,listed:null,diff:null};
+  if(gr.length){out.gavg=gr.reduce((a,b)=>a+b,0)/gr.length;out.gmin=Math.min(...gr);}
+  if(p){const [c,it]=p,at=+e.barrel_in&&c.barrel_in?atBarrel(it,c,+e.barrel_in):it;out.listed=at.muzzle_fps;out.est=!!at.base;}
+  if(out.listed&&s.n)out.diff=s.mean-out.listed;
+  return out;
+}
+const rangeName=e=>{const p=rangeLoad(e);return p?p[1].label:e.load||"Load";};
+const signed=v=>(v>0?"+":v<0?"−":"±")+Math.abs(Math.round(v)).toLocaleString();
+const diffText=(d,listed)=>`${signed(d)} fps (${d>=0?"+":"−"}${Math.abs(d/listed*100).toFixed(1)}%)`;
+function showRange(){
+  document.title=`${APP_TITLE} — Range log`;
+  app.classList.remove("dict","h2hp","handp","home","picker");app.classList.add("wide");
+  const all=readRange().sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.id<a.id?-1:1));
+  // grouped by load, the load used most recently first
+  const groups=new Map();
+  for(const e of all){const p=rangeLoad(e),k=p?pickKey(...p):e.category+"|"+e.cartridge+"|"+(e.load||"");if(!groups.has(k))groups.set(k,[]);groups.get(k).push(e);}
+  const entry=e=>{
+    const r=rangeStats(e),s=r.s,yd=+e.dist||0;
+    const head=[e.date,e.gun,+e.barrel_in?`${g(+e.barrel_in)} in barrel`:""].filter(Boolean).map(esc).join("  ·  ");
+    const vel=s.n?`<b>${s.n}</b> shot${s.n>1?"s":""}  ·  avg <b>${fps0(s.mean)}</b> fps${s.sd!=null?`  ·  SD <b>${s.sd.toFixed(1)}</b>  ·  ES <b>${fps0(s.es)}</b>`:""}`:"";
+    const cmp=r.diff!=null?`<span class="rdiff">${diffText(r.diff,r.listed)} vs listed ${fps0(r.listed)} fps${r.est?" (estimate)":""}</span>`:"";
+    const grp=r.gr.length?`Group${r.gr.length>1?"s":""} ${r.gr.map(g).join(", ")} in${yd?` at ${g(yd)} yd`:""}${r.gr.length>1?`  ·  avg <b>${r.gavg.toFixed(2)}</b> in`:""}${yd?`  ·  <b>${moa(r.gr.length>1?r.gavg:r.gmin,yd).toFixed(2)}</b> MOA`:""}`:"";
+    return `<button class="card rent" data-id="${esc(e.id)}"><span class="muted rhd">${head||"No date"}</span>${vel?`<span>${vel}</span>`:""}${cmp}${grp?`<span>${grp}</span>`:""}${e.notes?`<span class="muted">${esc(e.notes)}</span>`:""}${!vel&&!grp&&!e.notes?`<span class="muted">No speeds or groups yet</span>`:""}</button>`;
+  };
+  const summary=list=>{
+    let n=0,sum=0,best=null;
+    for(const e of list){const r=rangeStats(e);if(r.diff!=null){n+=r.s.n;sum+=r.diff*r.s.n;}
+      const yd=+e.dist||0;if(r.gr.length&&yd){const m=moa(r.gmin,yd);if(!best||m<best.m)best={m,in:r.gmin,yd};}}
+    const bits=[`${list.length} entr${list.length===1?"y":"ies"}`];
+    if(n)bits.push(`your speeds average ${Math.abs(Math.round(sum/n))} fps ${sum>=0?"faster":"slower"} than listed (${n} shot${n>1?"s":""})`);
+    if(best)bits.push(`best group ${g(best.in)} in at ${g(best.yd)} yd (${best.m.toFixed(2)} MOA)`);
+    return bits.join("  ·  ");
+  };
+  app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="rgoh">‹ My Bench</button><h2>Range log</h2><p class="sub">Log each trip's chronograph speeds and groups for a load. They show next to the load's listed speed.</p></div>
+    <div class="htools"><button class="btn p" id="rnew">+&nbsp; New entry</button></div>
+    <div id="rlist">${groups.size?[...groups.values()].map(list=>{const e0=list[0],p=rangeLoad(e0);
+      return `<section class="rgrp"><h3 class="hgrp">${esc(rangeName(e0))} <small>· ${esc(e0.cartridge)}${p&&p[1].handload?" · handload":""}</small></h3><p class="rsum muted">${esc(summary(list))}</p><div class="rents">${list.map(entry).join("")}</div></section>`;}).join(""):
+      `<div class="card hempty"><b>No entries yet</b><p class="muted" style="margin:6px 0 0">Tap “+ New entry”, pick the load you shot, then type each shot's velocity and your group sizes.</p></div>`}</div>
+    <div class="note hnote"><b class="dis">YOUR OWN RESULTS</b>${esc(RANGE_NOTE)}</div></div>`;
+  $("#rgoh").onclick=()=>navigate("bench");
+  $("#rnew").onclick=()=>rangeDialog(null,()=>showRange());
+  app.querySelectorAll(".rent").forEach(b=>b.onclick=()=>{const e=readRange().find(x=>x.id===b.dataset.id);if(e)rangeDialog(e,()=>showRange());});
+}
+// the new / edit form of a range entry. from: [category, load] to start with (Handloads, Load
+// Dictionary); pre: other values to fill in (the dictionary's barrel)
+function rangeDialog(e,done,from,pre){
+  const edit=!!e;e=Object.assign({},pre||{},e||{});
+  const opts=handCarts(),touch=matchMedia("(pointer:coarse)").matches;
+  let pk=null,ld=null;   // pk {cart, cat}; ld {it} (a listed load) or {name} (a typed one)
+  if(from){pk={cart:from[1].cartridge,cat:from[0]};ld={it:from[1]};}
+  else if(e.cartridge){pk={cart:e.cartridge,cat:CATEGORIES.find(c=>c.title===e.category)||null};const p=rangeLoad(e);ld=p?{it:p[1]}:e.load?{name:e.load}:null;}
+  const [m,close]=modal(`<h3 style="margin:0 0 4px">${edit?"Edit range entry":"New range entry"}</h3>
+    <label class="l" style="margin-top:12px">CARTRIDGE</label><button type="button" class="lcart" id="rcb"></button>
+    <label class="l" style="margin-top:12px">LOAD</label><button type="button" class="lcart" id="rlb"></button>
+    <div class="g2"><div><label class="l">DATE</label><input id="rdt" type="date"></div><div><label class="l">DISTANCE (YD) <span class="opt">(optional)</span></label><input id="rds" inputmode="decimal" placeholder="e.g. 100"></div></div>
+    <div class="g2"><div><label class="l">FIREARM <span class="opt">(optional)</span></label><input id="rgn" autocomplete="off" placeholder="e.g. Tikka T3x"></div><div><label class="l">BARREL (IN) <span class="opt">(optional)</span></label><input id="rbr" inputmode="decimal"></div></div>
+    <label class="l" style="margin-top:14px">VELOCITIES (FPS) <span class="opt">(optional)</span></label><input id="rsh" autocomplete="off" placeholder="e.g. 2650 2662 2648">
+    <div class="rst muted" id="rss"></div>
+    <label class="l" style="margin-top:14px">GROUPS (IN) <span class="opt">(optional)</span></label><input id="rgp" autocomplete="off" placeholder="e.g. 0.8 1.1">
+    <label class="l" style="margin-top:14px">NOTES (WEATHER, ZERO...) <span class="opt">(optional)</span></label><input id="rno" autocomplete="off">
+    <div class="safety"><b class="dis">YOUR OWN RESULTS</b>${esc(RANGE_NOTE)}</div>
+    <div class="btns"><button class="btn p" id="rsv">${edit?"Save changes":"Save"}</button><button class="btn" id="rcx">Cancel</button>${edit?`<button class="btn d" id="rdl">Delete</button>`:""}</div>`);
+  const q=x=>$(x,m),cb=q("#rcb"),lb=q("#rlb");
+  const loadsOf=()=>pk&&pk.cat&&state.detail[pk.cat.title]?(syncHand(pk.cat),state.detail[pk.cat.title].filter(x=>x.cartridge===pk.cart&&!x.peek)
+    .sort((a,b)=>(b.handload?1:0)-(a.handload?1:0)||lineCmp({it:a},{it:b}))):[];
+  // the compared speed under the velocity box: your average against the load's listed speed
+  const showStats=()=>{
+    const s=shotStats(q("#rsh").value),b=parseFloat(q("#rbr").value),it=ld&&ld.it;
+    const at=it&&pk.cat&&b>0&&pk.cat.barrel_in?atBarrel(it,pk.cat,b):it,listed=at&&at.muzzle_fps;
+    q("#rss").innerHTML=[s.n?`${s.n} shot${s.n>1?"s":""}  ·  avg ${fps0(s.mean)} fps${s.sd!=null?`  ·  SD ${s.sd.toFixed(1)}  ·  ES ${fps0(s.es)}`:""}`:"",
+      listed?`Listed ${fps0(listed)} fps${at.base?` for a ${g(b)} in barrel (estimate)`:it.barrel_in?` from a ${g(it.barrel_in)} in barrel`:""}${s.n?`: yours ${diffText(s.mean-listed,listed)}`:""}`:""].filter(Boolean).join("<br>");
+  };
+  const show=()=>{
+    cb.textContent=pk?pk.cart:"Choose a cartridge";cb.classList.toggle("ph",!pk);
+    lb.textContent=ld?(ld.it?ld.it.label:ld.name):pk?"Choose a load":"Choose a cartridge first";lb.classList.toggle("ph",!ld);lb.disabled=!pk;
+    showStats();
+  };
+  const oc={text:o=>o.cart,find:o=>o.text+" "+o.cat.title,head:o=>catName(o.cat),none:"cartridge",
+    cur:()=>pk&&opts.find(x=>x.cart===pk.cart&&(!pk.cat||x.cat===pk.cat)),pick:x=>{if(!pk||pk.cart!==x.cart||pk.cat!==x.cat)ld=null;pk={cart:x.cart,cat:x.cat};show();},
+    add:{text:s=>s?`Use “${s}”`:"Type a cartridge that isn't listed",pick:s=>{if(s){pk={cart:s.split(/\s+/).join(" ").slice(0,60),cat:null};ld=null;show();}}}};
+  const ol={text:x=>x.label,find:x=>x.label,head:x=>x.handload?"Your handloads":"Factory loads",none:"load",
+    cur:()=>ld&&ld.it,pick:x=>{ld={it:x};show();},
+    add:{text:s=>s?`Use “${s}”`:"Type a load that isn't listed",pick:s=>{if(s){ld={name:s.split(/\s+/).join(" ").slice(0,80)};show();}}}};
+  const wire=(btn,items,o)=>{
+    const open=typed=>pickSheet(items(),o,touch?null:{el:btn,input:btn,typed:typed||""});
+    btn.onclick=()=>open();
+    btn.onkeydown=ev=>{if(ev.key.length===1&&!ev.ctrlKey&&!ev.metaKey&&!ev.altKey&&ev.key!==" "){ev.preventDefault();open(ev.key);}};
+  };
+  wire(cb,()=>opts,oc);wire(lb,loadsOf,ol);
+  const val=(id,v)=>{q("#"+id).value=v==null||v===0?"":v;};
+  val("rds",e.dist);val("rgn",e.gun);val("rbr",e.barrel_in);val("rsh",e.shots);val("rgp",e.groups);val("rno",e.notes);
+  q("#rdt").value=e.date||new Date().toISOString().slice(0,10);
+  q("#rsh").oninput=showStats;q("#rbr").oninput=showStats;
+  show();
+  q("#rcx").onclick=close;
+  const dl=q("#rdl");
+  if(dl)dl.onclick=()=>{if(!confirm("Delete this range entry?"))return;writeRange(readRange().filter(x=>x.id!==e.id));close();done(null);};
+  q("#rsv").onclick=()=>{
+    const num=(id,label,lo,hi)=>{const s=q("#"+id).value.trim();if(!s)return null;const v=Number(s);if(!isFinite(v)||v<lo||v>hi)throw new Error(`${label} must be between ${g(lo)} and ${g(hi)}.`);return v;};
+    let n;
+    try{
+      if(!pk)throw new Error("Choose a cartridge.");
+      if(!ld)throw new Error("Choose a load, or type one that isn't listed.");
+      n={cartridge:pk.cart,category:pk.cat?pk.cat.title:"",key:ld.it?pickKey(pk.cat,ld.it):"",load:ld.it?ld.it.label:ld.name,
+        date:q("#rdt").value||new Date().toISOString().slice(0,10),dist:num("rds","The distance",1,3000),gun:q("#rgn").value.trim(),
+        barrel_in:num("rbr","The barrel length",1,60),shots:q("#rsh").value.trim(),groups:q("#rgp").value.trim(),notes:q("#rno").value.trim()};
+    }catch(err){alert(err.message);return;}
+    const all=readRange();
+    if(edit){const i=all.findIndex(x=>x.id===e.id);n=Object.assign({},all[i]||e,n);if(i>=0)all[i]=n;else all.push(n);}
+    else{n.id="r"+Date.now()+Math.random().toString(36).slice(2,6);all.push(n);}
+    if(!writeRange(all)){alert("Couldn't save: browser storage isn't available.");return;}
+    close();done(n);
+  };
+  if(!touch)(pk?lb:cb).focus();
+}
 // ---------- Load Dictionary tab ----------
 // a box that picks from a list through a search (issue #24; cartridges too since Oct 2026; a
 // picker panel since Oct 2026): every typed word must be in the name. o: text(x) = box text,
@@ -2368,7 +2516,7 @@ function openLoads(cat,pane){
           <div class="row fr"><span class="muted">HITS</span><span class="v">${r.st.hits.toFixed(0)} <small class="muted">(${hitsClass(r.st.hits)})</small></span>${fb("hits")}</div>`:""}
           ${GRADES?`<div class="muted" style="font-size:.8rem;margin-top:4px">Overall ${r.grade} · ${r.overall.toFixed(0)} · ranks #${r.rank} of ${r.peers}${out.multi?" "+esc(it.group)+" loads":" "+esc(it.cartridge)+" loads"}. Grades compare loads of this cartridge only.</div>`:""}
           ${ballisticHTML(it,cat,L.btOpen)}
-          <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button><button class="btn shb">Share</button></div>
+          <div class="hbtns"><button class="btn h2hb">${h2hText(cat,it)}</button><button class="btn shb">Share</button>${it.peek||!cat.grain_style?"":`<button class="btn rgb">Add to range log</button>`}</div>
           ${it.handload?`<div class="hbtns">${it.peek?`<button class="btn p hsave">Save to my handloads</button>`:`<button class="btn hedit">Edit in Handloads ›</button>`}</div>
           <div class="note">${esc([fireSourceNote(cat,it,out.barrel),SOURCE_NOTES.handload].filter(Boolean).join(" "))}</div></div>`:`<div class="prow"><span class="muted" style="font-size:.85rem">Your price $</span><input class="pin" inputmode="decimal" value="${r.st.cost.toFixed(2)}" aria-label="Your price per round"><button class="btn p setp">Set</button>${edited?`<button class="btn clrp">Use estimate</button>`:""}</div>
           <!-- where the figures come from, folded away behind a link (Zeke, Oct 31 2026) -->
@@ -2407,6 +2555,8 @@ function openLoads(cat,pane){
         }
         shareLoad(cat,it,o);
       };
+      const rgb=c.querySelector(".rgb");
+      if(rgb&&it)rgb.onclick=()=>{const b=parseFloat($$("#lb").value);rangeDialog(null,()=>navigate("range"),[cat,it],{barrel_in:cat.barrel_in&&b>0?b:null});};
       const hs=c.querySelector(".hsave");
       if(hs&&it)hs.onclick=()=>{saveShared(it.rec);shared[cat.title]=Object.assign({},shared[cat.title],{goFav:{cart:it.cartridge,key:it.hid,load:it.load}});navigate("loads",cat,null,"replace");};
       if(it&&it.handload){
