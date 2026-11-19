@@ -281,6 +281,9 @@ into web/www (Capacitor wraps it as an APK in CI).
   middle), My Bench, Settings; the PC sidebar has the Load Dictionary above Head to Head. Web Home (Zeke, Nov 17 2026)
   is two big cards matching the sidebar groups (HOME_GROUPS: Loads = Load Dictionary + Head to Head; My Bench =
   Handloads, Ladder tests, Favorite loads with counts; its heading opens #bench). Desktop Home keeps TOOLS.
+- Favorite loads moved from My Bench to Loads (Nov 19 2026, Zeke): PC sidebar under LOADS after Head to Head
+  (NAVS "pc" row), Home's Loads card (HOME_GROUPS, with its count), no longer in BENCH / BENCH_MODES / the My
+  Bench page; no "‹ My Bench" link on its page; phones light the Dictionary tab there (.phon); Android back -> Home.
 - Phone polish (Nov 19 2026, Zeke): phones (<900 px) show the app name as one slim line (hidden on Home,
   body[data-mode]); the dictionary title is just the category on phones (h2 .ttl); compact category cards;
   purpose chips (#lp) one sideways-scrolling row on phones; closed phone load cards carry a muted
