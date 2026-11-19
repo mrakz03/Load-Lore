@@ -1,0 +1,8 @@
+cartridge,load,bullet_gr,muzzle_fps,bc_g1,powder_gr,default_cost,default,source,group,barrel_in,purpose
+.410 Bore,"Federal Personal Defense .410 Handgun · 2½"" 000 Buck · 4 pellets",271.8,850,0.06,5.3,1.70,,partial,Buckshot,,Defense
+.410 Bore,"Federal Personal Defense .410 Handgun · 2½"" 4 Shot · 0.44 oz",191.4,950,0.04,4.7,1.70,,partial,Buckshot,,Defense
+.410 Bore,"Federal Personal Defense .410 Handgun · 3"" 000 Buck · 5 pellets",339.8,775,0.06,5.5,1.35,,partial,Buckshot,,Defense
+.410 Bore,"Federal Personal Defense .410 Handgun · 3"" 4 Buck · 9 pellets",181.2,950,0.04,4.4,1.35,,partial,Buckshot,,Defense
+.410 Bore,"Winchester Defender PDX1 · 2½"" 3 Defense Discs + 12 BB · ½ oz",218.8,750,0.04,5,2.20,yes,partial,Buckshot,,Defense
+.410 Bore,"Winchester Defender PDX1 · 3"" 4 Defense Discs + 16 BB · 0.67 oz",291.7,750,0.04,5.5,2.30,,partial,Buckshot,,Defense
+.410 Bore,"Hornady Critical Defense Triple Defense · 2½"" FTX Slug + 2 Balls · 235 gr",235,750,0.06,5,1.10,,partial,Slug,,Defense
