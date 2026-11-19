@@ -75,7 +75,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .feat.bench{grid-template-columns:1fr;gap:10px}
 .feat.bench .fcard{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:2px;padding:14px 16px;border-radius:12px}
 .feat.bench .fcard .ic{grid-row:span 3;width:36px;height:36px;border-radius:9px}.feat.bench .fcard .ic svg{width:20px;height:20px}
-.feat.bench .fcard b{font-size:1rem}.feat.bench .fcard span{font-size:.85rem}.feat.bench .fcard .cnt{grid-column:2;margin-top:2px}
+.feat.bench .fcard b{font-size:1rem}.feat.bench .fcard span{font-size:.85rem}.feat.bench .fcard .cnt{grid-column:2;margin-top:2px;font-size:.72rem;font-weight:600}
 .benchnote{color:var(--muted);font-size:.85rem;margin:14px 0 0}.benchnote .link{font-size:inherit;padding:0}
 /* Home's two group cards (Loads, My Bench): a heading, then a row per page split by thin lines */
 .hgroups{display:grid;grid-template-columns:1fr;gap:14px}
@@ -89,7 +89,7 @@ button.hgh{cursor:pointer}.hgh .chev{color:var(--muted);font-weight:400}
 .hrow .ic{grid-row:span 2;width:36px;height:36px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center}
 .hrow .ic svg{width:20px;height:20px;stroke:var(--on-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .hrow b{font-size:1rem}.hrow span{color:var(--muted);font-size:.85rem;line-height:1.4}
-.hrow .cnt{color:var(--accent);font-weight:700;font-size:.8rem;margin-left:4px}
+.hrow .cnt{color:var(--accent);font-weight:600;font-size:.72rem;margin-left:4px}   /* counts a step under the muted text (Zeke, Nov 19 2026); My Bench page matches */
 .pick{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:560px){.feat,.pick{grid-template-columns:1fr 1fr}.pick .cat.grp,.pick .cat.child{grid-column:1/-1}}   /* two columns: a drop-down on its own rows */
 @media(min-width:900px){
