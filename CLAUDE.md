@@ -267,7 +267,7 @@ into web/www (Capacitor wraps it as an APK in CI).
   a click on an entry opens rangeDialog to edit / delete it). An entry: cartridge (handCarts or typed), load (a Load
   Dictionary load or handload of that cartridge, stored as key = pickKey plus its label in "load", or a typed name with
   key ""), date, distance (yd), firearm, barrel (in), shots (typed velocities, shotStats), groups (typed inches,
-  parseGroups), notes. Kept in localStorage cartridge_calc_range_v1, synced as SYNC_PARTS "range" (old sync copies
+  parseGroups), group_shots (shots per group, optional; Zeke, Nov 19 2026: shown as "5-shot groups"), notes. Kept in localStorage cartridge_calc_range_v1, synced as SYNC_PARTS "range" (old sync copies
   without it just get an empty part). rangeStats compares the average with the load's listed muzzle speed (atBarrel
   when a barrel is given: "(estimate)"); groups shown in MOA when a distance is given. The page groups entries by load
   (most recent first) with a summary line (average fps off listed over all shots, best group). Entry points: "+ New

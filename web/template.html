@@ -400,6 +400,7 @@ button.sopt:focus-visible{border-color:var(--accent)}@media (hover:hover){button
 .rent .rhd{font-size:.8rem;font-weight:700}.rent .muted{font-size:.85rem}.rent .rdiff{color:var(--accent);font-weight:700;font-size:.85rem}
 @media(hover:hover){.rent:hover{border-color:var(--accent);background:var(--surface2)}}
 .rst{font-size:.82rem;margin-top:6px;min-height:1em}
+@media(min-width:601px){.rgg{grid-template-columns:2fr 1fr}}
 .lcart:disabled{opacity:.6;cursor:default}
 /* Ladder tests (Nov 2026): list cards, the summary, the chart and one row per charge */
 .lback{display:block;padding:0 0 6px;font-size:.85rem}
@@ -2166,16 +2167,16 @@ function showRange(){
     const head=[e.date,e.gun,+e.barrel_in?`${g(+e.barrel_in)} in barrel`:""].filter(Boolean).map(esc).join("  ·  ");
     const vel=s.n?`<b>${s.n}</b> shot${s.n>1?"s":""}  ·  avg <b>${fps0(s.mean)}</b> fps${s.sd!=null?`  ·  SD <b>${s.sd.toFixed(1)}</b>  ·  ES <b>${fps0(s.es)}</b>`:""}`:"";
     const cmp=r.diff!=null?`<span class="rdiff">${diffText(r.diff,r.listed)} vs listed ${fps0(r.listed)} fps${r.est?" (estimate)":""}</span>`:"";
-    const grp=r.gr.length?`Group${r.gr.length>1?"s":""} ${r.gr.map(g).join(", ")} in${yd?` at ${g(yd)} yd`:""}${r.gr.length>1?`  ·  avg <b>${r.gavg.toFixed(2)}</b> in`:""}${yd?`  ·  <b>${moa(r.gr.length>1?r.gavg:r.gmin,yd).toFixed(2)}</b> MOA`:""}`:"";
+    const gs=+e.group_shots||0,grp=r.gr.length?`${gs?`${gs}-shot g`:"G"}roup${r.gr.length>1?"s":""} ${r.gr.map(g).join(", ")} in${yd?` at ${g(yd)} yd`:""}${r.gr.length>1?`  ·  avg <b>${r.gavg.toFixed(2)}</b> in`:""}${yd?`  ·  <b>${moa(r.gr.length>1?r.gavg:r.gmin,yd).toFixed(2)}</b> MOA`:""}`:"";
     return `<button class="card rent" data-id="${esc(e.id)}"><span class="muted rhd">${head||"No date"}</span>${vel?`<span>${vel}</span>`:""}${cmp}${grp?`<span>${grp}</span>`:""}${e.notes?`<span class="muted">${esc(e.notes)}</span>`:""}${!vel&&!grp&&!e.notes?`<span class="muted">No speeds or groups yet</span>`:""}</button>`;
   };
   const summary=list=>{
     let n=0,sum=0,best=null;
     for(const e of list){const r=rangeStats(e);if(r.diff!=null){n+=r.s.n;sum+=r.diff*r.s.n;}
-      const yd=+e.dist||0;if(r.gr.length&&yd){const m=moa(r.gmin,yd);if(!best||m<best.m)best={m,in:r.gmin,yd};}}
+      const yd=+e.dist||0;if(r.gr.length&&yd){const m=moa(r.gmin,yd);if(!best||m<best.m)best={m,in:r.gmin,yd,n:+e.group_shots||0};}}
     const bits=[`${list.length} entr${list.length===1?"y":"ies"}`];
     if(n)bits.push(`your speeds average ${Math.abs(Math.round(sum/n))} fps ${sum>=0?"faster":"slower"} than listed (${n} shot${n>1?"s":""})`);
-    if(best)bits.push(`best group ${g(best.in)} in at ${g(best.yd)} yd (${best.m.toFixed(2)} MOA)`);
+    if(best)bits.push(`best ${best.n?best.n+"-shot ":""}group ${g(best.in)} in at ${g(best.yd)} yd (${best.m.toFixed(2)} MOA)`);
     return bits.join("  ·  ");
   };
   app.innerHTML=`<div class="hpage"><div class="phead"><button class="link lback" id="rgoh">‹ My Bench</button><h2>Range log</h2><p class="sub">Log each trip's chronograph speeds and groups for a load. They show next to the load's listed speed.</p></div>
@@ -2203,7 +2204,7 @@ function rangeDialog(e,done,from,pre){
     <div class="g2"><div><label class="l">FIREARM <span class="opt">(optional)</span></label><input id="rgn" autocomplete="off" placeholder="e.g. Tikka T3x"></div><div><label class="l">BARREL (IN) <span class="opt">(optional)</span></label><input id="rbr" inputmode="decimal"></div></div>
     <label class="l" style="margin-top:14px">VELOCITIES (FPS) <span class="opt">(optional)</span></label><input id="rsh" autocomplete="off" placeholder="e.g. 2650 2662 2648">
     <div class="rst muted" id="rss"></div>
-    <label class="l" style="margin-top:14px">GROUPS (IN) <span class="opt">(optional)</span></label><input id="rgp" autocomplete="off" placeholder="e.g. 0.8 1.1">
+    <div class="g2 rgg"><div><label class="l">GROUPS (IN) <span class="opt">(optional)</span></label><input id="rgp" autocomplete="off" placeholder="e.g. 0.8 1.1"></div><div><label class="l">SHOTS PER GROUP <span class="opt">(optional)</span></label><input id="rgs" inputmode="numeric" placeholder="e.g. 5"></div></div>
     <label class="l" style="margin-top:14px">NOTES (WEATHER, ZERO...) <span class="opt">(optional)</span></label><input id="rno" autocomplete="off">
     <div class="safety"><b class="dis">YOUR OWN RESULTS</b>${esc(RANGE_NOTE)}</div>
     <div class="btns"><button class="btn p" id="rsv">${edit?"Save changes":"Save"}</button><button class="btn" id="rcx">Cancel</button>${edit?`<button class="btn d" id="rdl">Delete</button>`:""}</div>`,"full");
@@ -2235,7 +2236,7 @@ function rangeDialog(e,done,from,pre){
   };
   wire(cb,()=>opts,oc);wire(lb,loadsOf,ol);
   const val=(id,v)=>{q("#"+id).value=v==null||v===0?"":v;};
-  val("rds",e.dist);val("rgn",e.gun);val("rbr",e.barrel_in);val("rsh",e.shots);val("rgp",e.groups);val("rno",e.notes);
+  val("rds",e.dist);val("rgn",e.gun);val("rbr",e.barrel_in);val("rsh",e.shots);val("rgp",e.groups);val("rgs",e.group_shots);val("rno",e.notes);
   q("#rdt").value=e.date||new Date().toISOString().slice(0,10);
   q("#rsh").oninput=showStats;q("#rbr").oninput=showStats;
   show();
@@ -2250,7 +2251,7 @@ function rangeDialog(e,done,from,pre){
       if(!ld)throw new Error("Choose a load, or type one that isn't listed.");
       n={cartridge:pk.cart,category:pk.cat?pk.cat.title:"",key:ld.it?pickKey(pk.cat,ld.it):"",load:ld.it?ld.it.label:ld.name,
         date:q("#rdt").value||new Date().toISOString().slice(0,10),dist:num("rds","The distance",1,3000),gun:q("#rgn").value.trim(),
-        barrel_in:num("rbr","The barrel length",1,60),shots:q("#rsh").value.trim(),groups:q("#rgp").value.trim(),notes:q("#rno").value.trim()};
+        barrel_in:num("rbr","The barrel length",1,60),shots:q("#rsh").value.trim(),groups:q("#rgp").value.trim(),group_shots:num("rgs","Shots per group",2,100),notes:q("#rno").value.trim()};
     }catch(err){alert(err.message);return;}
     const all=readRange();
     if(edit){const i=all.findIndex(x=>x.id===e.id);n=Object.assign({},all[i]||e,n);if(i>=0)all[i]=n;else all.push(n);}
