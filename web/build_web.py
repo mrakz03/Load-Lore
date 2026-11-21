@@ -10,10 +10,10 @@ import tables as c
 data = os.path.join(root, "data")
 cats = []
 for cat in c.CATEGORIES:
-    loads, problems = c.load_data(os.path.join(data, cat.filename), cat.grain_style)
+    loads, problems = c.load_data(os.path.join(data, cat.filename))
     if problems:
         raise SystemExit(f"{cat.filename}: {problems}")
-    detail, dprob = c.load_data(os.path.join(data, cat.loads_filename), cat.grain_style)
+    detail, dprob = c.load_data(os.path.join(data, cat.loads_filename))
     if dprob:
         raise SystemExit(f"{cat.loads_filename}: {dprob}")
     cats.append(dict(title=cat.title, blurb=cat.blurb, default_distance=cat.default_distance,
@@ -26,11 +26,11 @@ for cat in c.CATEGORIES:
         test_max=c.longest_test_barrels(detail),
         detail=[dict(cartridge=x.cartridge, load=x.load, bullet_gr=x.bullet_gr, muzzle_fps=x.muzzle_fps,
                      bc_g1=x.bc_g1, powder_gr=x.powder_gr, default_cost=x.default_cost,
-                     is_default=x.is_default, source=x.source, group=x.group,
+                     source=x.source, group=x.group,
                      diameter_in=x.diameter_in or 0, barrel_in=x.barrel_in, purpose=x.purpose) for x in detail],
-        loads=[dict(cartridge=x.cartridge, load=x.load, bullet_gr=x.bullet_gr, muzzle_fps=x.muzzle_fps,
-                    bc_g1=x.bc_g1, powder_gr=x.powder_gr, default_cost=x.default_cost,
-                    is_default=x.is_default, source=x.source, group=x.group) for x in loads]))
+        # ammo_*.csv: only its cartridge list is used (cartridges with no factory loads can still
+        # hold handloads; shotguns take no handloads)
+        carts=list(dict.fromkeys(x.cartridge for x in loads)) if cat.grain_style else []))
 bullets = [dict(maker=r["maker"], name=r["name"], diameter=float(r["diameter_in"]), weight=float(r["weight_gr"]),
                bc=float(r["bc_g1"]), type=r["type"], use=r.get("use") or "")
            for r in csv.DictReader(open(os.path.join(data, "bullets.csv"), encoding="utf-8-sig"))]
