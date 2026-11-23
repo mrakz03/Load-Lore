@@ -111,7 +111,7 @@ DEFAULT_WEIGHTS = (3, 3, 1, 3, 3, 3)
 class Category:
     title: str
     blurb: str
-    filename: str
+    filename: str                # ammo_*.csv: its cartridge list (cartridges without factory loads); "" = none
     default_distance: float      # yards
     max_distance: float          # yards
     default_gun_lb: float
@@ -153,7 +153,7 @@ CATEGORIES = (
              weights=(3, 3, 1, 6, 3, 3),
              loads_filename="loads_rimfire_rifle.csv", step_yd=50, zero_yd=50, barrel_in=24),
     Category("Shotgun", "Birdshot, buckshot and slugs",
-             "ammo_shotgun.csv", 0, 300, 7.5, "SHOTGUN WEIGHT (LB)",
+             "", 0, 300, 7.5, "SHOTGUN WEIGHT (LB)",
              cartridge_label="GAUGE", payload_row="Payload",
              payload_col="Payload (gr)", grain_style=False, show_oz=True,
              terminal=False, weights=(3, 3, 1, 3, 0, 0),
