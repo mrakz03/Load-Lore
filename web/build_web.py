@@ -10,7 +10,7 @@ import tables as c
 data = os.path.join(root, "data")
 cats = []
 for cat in c.CATEGORIES:
-    loads, problems = c.load_data(os.path.join(data, cat.filename))
+    loads, problems = c.load_data(os.path.join(data, cat.filename)) if cat.filename else ([], [])
     if problems:
         raise SystemExit(f"{cat.filename}: {problems}")
     detail, dprob = c.load_data(os.path.join(data, cat.loads_filename))
