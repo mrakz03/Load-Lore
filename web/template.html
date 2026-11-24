@@ -519,7 +519,10 @@ button.lcart.ph{color:var(--muted)}.gpr{margin-top:14px}button.lcart:focus-visib
 .sheet.pop .slist .hd{position:static;padding:12px 10px 4px;background:none;border-bottom:0;font-size:.68rem}
 .selcover{position:absolute;inset:0;background:none;border:0;padding:0;cursor:pointer}
 .t3v{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px}
-.t3v video{width:min(100%,720px);max-height:80vh;border-radius:12px;background:#000;pointer-events:none}
+.t3v figure{margin:0;width:min(100%,720px);display:flex;flex-direction:column;gap:6px}
+.t3v video{width:100%;max-height:80vh;border-radius:12px;background:#000;pointer-events:none}
+.t3v figcaption{font-size:.75rem;color:#c8ccd4;text-align:center;line-height:1.4}
+.t3v figcaption a{color:inherit;text-decoration:underline}
 .sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:flex;align-items:flex-end}
 .sheet{width:100%;max-height:85vh;max-height:85dvh;max-height:min(85dvh,calc(100% - 16px));display:flex;flex-direction:column;background:var(--surface);border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.35);padding-bottom:env(safe-area-inset-bottom);animation:sheetup .18s ease-out}
 @keyframes sheetup{from{transform:translateY(40%);opacity:.4}}
@@ -672,7 +675,7 @@ const canonRows = a => (Array.isArray(a) ? a : []).map(r => {
 const PRICE_KEY = "cartridge_calc_prices_v1";
 const GRADES_KEY = "cartridge_calc_grades";
 
-const CATEGORIES = DATA.categories;   // title, blurb, distances, labels, flags, weights, loads
+const CATEGORIES = DATA.categories;   // title, blurb, distances, labels, flags, weights, load lists
 const G1 = [[0,.2629],[.05,.2558],[.1,.2487],[.15,.2413],[.2,.2344],[.25,.2278],[.3,.2214],[.35,.2155],[.4,.2104],[.45,.2061],[.5,.2032],[.55,.202],[.6,.2034],[.7,.2165],[.725,.223],[.75,.2313],[.775,.2417],[.8,.2546],[.825,.2706],[.85,.2901],[.875,.3136],[.9,.3415],[.925,.3734],[.95,.4084],[.975,.4448],[1,.4805],[1.025,.5136],[1.05,.5427],[1.075,.5677],[1.1,.5883],[1.125,.6053],[1.15,.6191],[1.2,.6393],[1.25,.6518],[1.3,.6589],[1.35,.6621],[1.4,.6625],[1.45,.6607],[1.5,.6573],[1.55,.6528],[1.6,.6474],[1.65,.6413],[1.7,.6347],[1.75,.628],[1.8,.621],[1.85,.6141],[1.9,.6072],[1.95,.6003],[2,.5934],[2.05,.5867],[2.1,.5804],[2.15,.5743],[2.2,.5685],[2.25,.563],[2.3,.5577],[2.35,.5527],[2.4,.5481],[2.45,.5438],[2.5,.5397],[2.6,.5325],[2.7,.5264],[2.8,.5211],[2.9,.5168],[3,.5133],[3.1,.5105],[3.2,.5084],[3.3,.5067],[3.4,.5054],[3.5,.504],[3.6,.503],[3.7,.5022],[3.8,.5016],[3.9,.501],[4,.5006],[4.2,.4998],[4.4,.4995],[4.6,.4992],[4.8,.499],[5,.4988]];
 const FT_PER_M=3.280839895, YD_PER_M=1.093613298, SOS=340.3, RHO=1.225, LBIN2=703.0696;
 const KDRAG = RHO*Math.PI/(8*LBIN2);
@@ -945,9 +948,9 @@ function shotSize(it){
 const PRESSURES=["+P","+P+"];
 // "+P+", "+P" or "" from a load's name (Federal Train+Protect and +Peak aren't +P)
 function pressureOf(name){name=name||"";return /\+P\+/.test(name)?"+P+":/\+P(?![A-Za-z+])/.test(name)?"+P":"";}
-const state = {loads:{}};     // title -> array of load objects
+const state = {loads:{}};     // title -> the ammo_*.csv cartridges as {cartridge} (withHandloadOnly)
 for(const cat of CATEGORIES){
-  state.loads[cat.title]=cat.loads.map(x=>Object.assign({},x,{label:makeLabel(x,cat)}));
+  state.loads[cat.title]=(cat.carts||[]).map(cartridge=>({cartridge}));
 }
 state.detail={};
 for(const cat of CATEGORIES){
@@ -1343,7 +1346,7 @@ function writeHand(a){try{localStorage.setItem(HAND_KEY,JSON.stringify(a));syncS
 const handName=r=>r.name||([r.bullet_maker,r.bullet].filter(Boolean).join(" ")||"Handload")+` ${g(+r.bullet_gr)} gr`+(r.powder?` + ${r.powder} ${g(+r.powder_gr)} gr`:"");
 function handItem(r,cat){
   const it={cartridge:r.cartridge,load:handName(r),bullet_gr:+r.bullet_gr,muzzle_fps:+r.muzzle_fps,bc_g1:+r.bc_g1,powder_gr:+r.powder_gr,
-    default_cost:+r.cost||0,source:"handload",group:"",is_default:false,barrel_in:+r.barrel_in||0,purpose:r.purpose||"",
+    default_cost:+r.cost||0,source:"handload",group:"",barrel_in:+r.barrel_in||0,purpose:r.purpose||"",
     diameter_in:+r.diameter_in||0,handload:true,hid:r.id,rec:r};
   it.label=makeLabel(it,cat);return it;
 }
@@ -1456,10 +1459,7 @@ function showHand(openId){
   $("#hgob").onclick=()=>navigate("bench");
   draw();
 }
-// back up / restore: the same CSV as the desktop app's my_handloads.csv, so a backup from the
-// phone restores on the computer and the other way round
-function csvCell(v){v=v==null?"":String(v);return /[",\r\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v;}
-function handCSV(rows){return [HAND_FIELDS.join(",")].concat(rows.map(r=>HAND_FIELDS.map(k=>csvCell(r[k]==null||r[k]===0&&/cost|barrel|diameter|col_in/.test(k)&&!r[k]?"":r[k])).join(","))).join("\r\n")+"\r\n";}
+// Restore still reads a handloads CSV (my_handloads.csv from older backups and the old desktop app)
 function parseCSV(text){
   const out=[];let row=[],cell="",q=false;
   text=text.replace(/^\ufeff/,"");
@@ -2422,7 +2422,7 @@ function cueT3(cat,it){
   if(++_t3n<3)return;
   try{sessionStorage.setItem("cartridge_calc_t3","1");}catch(e){}
   const bg=document.createElement("div");bg.className="t3v";
-  bg.innerHTML=`<video playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" src="t3.mp4"></video><button class="primary hidden">\u25B6 Tap to play</button>`;
+  bg.innerHTML=`<figure><video playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" src="t3.mp4"></video><figcaption>Paul Harrell &middot; <a href="https://youtu.be/wH7_7pJfoGU" target="_blank" rel="noopener noreferrer">Personal Protection: Shooting While in Bed</a></figcaption></figure><button class="primary hidden">\u25B6 Tap to play</button>`;
   const v=bg.querySelector("video"),b=bg.querySelector("button");let timer;
   const keys=e=>{if(e.target===b)return;e.preventDefault();e.stopPropagation();};
   const done=()=>{clearTimeout(timer);bg.parentNode&&bg.parentNode.removeChild(bg);removeEventListener("keydown",keys,true);};

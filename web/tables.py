@@ -111,7 +111,7 @@ DEFAULT_WEIGHTS = (3, 3, 1, 3, 3, 3)
 class Category:
     title: str
     blurb: str
-    filename: str
+    filename: str                # ammo_*.csv: its cartridge list (cartridges without factory loads); "" = none
     default_distance: float      # yards
     max_distance: float          # yards
     default_gun_lb: float
@@ -153,7 +153,7 @@ CATEGORIES = (
              weights=(3, 3, 1, 6, 3, 3),
              loads_filename="loads_rimfire_rifle.csv", step_yd=50, zero_yd=50, barrel_in=24),
     Category("Shotgun", "Birdshot, buckshot and slugs",
-             "ammo_shotgun.csv", 0, 300, 7.5, "SHOTGUN WEIGHT (LB)",
+             "", 0, 300, 7.5, "SHOTGUN WEIGHT (LB)",
              cartridge_label="GAUGE", payload_row="Payload",
              payload_col="Payload (gr)", grain_style=False, show_oz=True,
              terminal=False, weights=(3, 3, 1, 3, 0, 0),
@@ -371,7 +371,7 @@ def longest_test_barrels(loads):
     cartridges (7.62x39mm, .350 Legend) in 24 in barrels no rifle is sold with."""
     out = {}
     for x in loads:
-        if x.barrel_in and not x.handload:
+        if x.barrel_in:
             out[x.cartridge] = max(out.get(x.cartridge, 0.0), x.barrel_in)
     return out
 
@@ -561,24 +561,11 @@ class Load:
     bc_g1: float
     powder_gr: float
     default_cost: float
-    is_default: bool = False       # preselected when the cartridge is chosen
     source: str = ""               # published / partial / approx / custom (informational)
     group: str = ""                # shotgun load type (Target, Buckshot, ...)
     barrel_in: float = 0.0         # test barrel length in inches (0 = not listed)
     purpose: str = ""              # Hunting / Varmint / Target / Match / Defense / Subsonic
     diameter_in: float = 0.0       # bullet diameter; 0 = look it up from the cartridge name
-    label: str = ""                # text shown in the load dropdown
-    handload: bool = False         # one of your own reloads (my_handloads.csv)
-    hid: str = ""                  # handload id
-    info: object = None            # handload record (bullet, powder, cost breakdown, notes)
-
-def make_label(item, grain_style):
-    if grain_style:
-        base = f"{item.bullet_gr:g} gr"
-        return f"{item.load}  ·  {base}" if item.load else base
-    if item.group and item.load:
-        return f"{item.group}  ·  {item.load}"
-    return item.load or f"{item.bullet_gr:g} gr"
 
 def _opt_float(text):
     try:
@@ -586,7 +573,7 @@ def _opt_float(text):
     except (TypeError, ValueError):
         return 0.0
 
-def load_data(path, grain_style=True):
+def load_data(path):
     """Read a CSV. Returns (loads, problems) where problems is a list of strings."""
     loads, problems = [], []
     with open(path, newline="", encoding="utf-8-sig") as fh:
@@ -605,7 +592,6 @@ def load_data(path, grain_style=True):
                     bc_g1=float(row["bc_g1"]),
                     powder_gr=float(row["powder_gr"]),
                     default_cost=float(row["default_cost"]),
-                    is_default=row.get("default", "").lower() in ("yes", "y", "1", "true", "x"),
                     source=row.get("source", ""),
                     group=row.get("group", ""),
                     barrel_in=_opt_float(row.get("barrel_in", "")),
@@ -614,7 +600,6 @@ def load_data(path, grain_style=True):
                 )
                 if min(item.bullet_gr, item.muzzle_fps, item.bc_g1, item.powder_gr) <= 0:
                     raise ValueError("values must be positive")
-                item.label = make_label(item, grain_style)
                 loads.append(item)
             except (KeyError, ValueError) as exc:
                 problems.append(f"Line {line_no} ({name}): {exc}")
